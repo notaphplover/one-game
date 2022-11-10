@@ -1,0 +1,18 @@
+{
+  "author": "Multiple authors",
+  "name": "@one-game-js/backend-typescript-config",
+  "description": "common typescript config for backend packages",
+  "license": "See license in \"LICENSE\" file",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "devDependencies": {
+    "@one-game-js/backend-prettier-config": "workspace:../backend-prettier-config"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  }
+}
