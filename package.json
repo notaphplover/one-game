@@ -3,9 +3,10 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "dependencies": {},
   "description": "One game",
-  "devDependencies": {},
+  "devDependencies": {
+    "turbo": "^1.6.3"
+  },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
     "game"
