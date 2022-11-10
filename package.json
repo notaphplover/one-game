@@ -1,0 +1,22 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "dependencies": {},
+  "description": "One game",
+  "devDependencies": {},
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "keywords": [
+    "game"
+  ],
+  "license": "See license in \"LICENSE\" file",
+  "name": "root",
+  "packageManager": "pnpm@7.15.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {}
+}
