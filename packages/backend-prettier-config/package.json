@@ -1,0 +1,16 @@
+{
+  "author": "Multiple authors",
+  "name": "@one-game-js/backend-prettier-config",
+  "description": "common prettier config for backend packages",
+  "main": "index.js",
+  "license": "See license in \"LICENSE\" file",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  }
+}
