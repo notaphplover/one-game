@@ -1,0 +1,19 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Backend jest config for backend packages",
+  "devDependencies": {
+    "@jest/types": "29.3.1"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "main": "index.js",
+  "name": "@one-game-js/backend-jest-config",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  }
+}
