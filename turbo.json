@@ -3,19 +3,12 @@
   "pipeline": {
     "build": {
       "dependsOn": [
-        "build:clean",
         "^build"
       ],
       "inputs": [
         "src/**/*.ts"
       ],
       "outputs": [
-        "dist/**",
-        "lib/**"
-      ]
-    },
-    "build:clean": {
-      "inputs": [
         "dist/**",
         "lib/**"
       ]
