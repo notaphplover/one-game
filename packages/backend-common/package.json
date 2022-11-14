@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
-  "main": "index.js",
+  "main": "lib/index.js",
   "name": "@one-game-js/backend-common",
   "publishConfig": {
     "access": "public"
@@ -34,7 +34,8 @@
     "build": "tsc --build tsconfig.json",
     "build:clean": "rimraf lib",
     "format": "prettier --write ./src/**/*.ts",
-    "lint": "eslint --ext ts --ignore-path .gitignore ./src"
+    "lint": "eslint --ext ts --ignore-path .gitignore ./src",
+    "prebuild": "pnpm run build:clean"
   },
   "version": "0.1.0"
 }

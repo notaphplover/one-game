@@ -1,10 +1,9 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "@one-game-js/backend-typescript-config/tsconfig.base.composite.json",
+  "extends": "@one-game-js/backend-typescript-config/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./lib",
-    "rootDir": "./src",
-    "tsBuildInfoFile": "./lib/tsconfig.tsbuildinfo"
+    "rootDir": "./src"
   },
   "include": ["src"]
 }
