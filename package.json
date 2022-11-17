@@ -5,6 +5,10 @@
   },
   "description": "One game",
   "devDependencies": {
+    "@one-game-js/eslint-config-backend": "workspace:./packages/eslint-config-backend",
+    "@one-game-js/backend-jest-config": "workspace:./packages/backend-jest-config",
+    "@one-game-js/backend-prettier-config": "workspace:./packages/backend-prettier-config",
+    "@one-game-js/backend-typescript-config": "workspace:./packages/backend-typescript-config",
     "turbo": "^1.6.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
