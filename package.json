@@ -23,5 +23,8 @@
     "type": "git",
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
-  "scripts": {}
+  "scripts": {
+    "build:all": "turbo run build",
+    "lint:all": "turbo run lint"
+  }
 }
