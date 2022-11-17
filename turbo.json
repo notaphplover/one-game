@@ -13,6 +13,18 @@
         "lib/**"
       ]
     },
+    "backend-api-models#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "src/**/*.ts",
+        "schemas/**/*.json"
+      ],
+      "outputs": [
+        "lib/**"
+      ]
+    },
     "format": {
       "inputs": [
         "src/**/*.ts"
