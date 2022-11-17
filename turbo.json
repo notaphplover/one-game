@@ -40,6 +40,60 @@
       "inputs": [
         "src/**/*.ts"
       ]
+    },
+    "test": {
+      "inputs": [
+        "src/**/*.ts"
+      ],
+      "outputs": []
+    },
+    "test:integration:js": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "dist/**",
+        "lib/**"
+      ],
+      "outputs": []
+    },
+    "test:js": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "dist/**",
+        "lib/**"
+      ],
+      "outputs": []
+    },
+    "test:js:coverage": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "dist/**",
+        "lib/**"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
+    },
+    "test:uncommitted": {
+      "inputs": [
+        "src/**/*.ts"
+      ],
+      "outputs": []
+    },
+    "test:unit:js": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "dist/**",
+        "lib/**"
+      ],
+      "outputs": []
     }
   }
 }
