@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "$id": "http://onegame.schemas/api/v1/cards/colored-card.json",
+  "title": "ColoredCard",
+  "allOf": [
+    { "$ref": "http://onegame.schemas/api/v1/cards/base-card.json" },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "$ref": "http://onegame.schemas/api/v1/cards/card-color.json"
+        }
+      },
+      "required": ["color"]
+    }
+  ]
+}
