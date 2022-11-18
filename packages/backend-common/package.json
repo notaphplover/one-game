@@ -5,9 +5,6 @@
   },
   "description": "Backend common patterns",
   "devDependencies": {
-    "@one-game-js/eslint-config-backend": "workspace:../eslint-config-backend",
-    "@one-game-js/backend-prettier-config": "workspace:../backend-prettier-config",
-    "@one-game-js/backend-typescript-config": "workspace:../backend-typescript-config",
     "@typescript-eslint/eslint-plugin": "5.42.1",
     "@typescript-eslint/parser": "5.42.1",
     "eslint": "8.27.0",

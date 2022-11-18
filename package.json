@@ -5,6 +5,10 @@
   },
   "description": "One game",
   "devDependencies": {
+    "@one-game-js/eslint-config-backend": "workspace:./packages/eslint-config-backend",
+    "@one-game-js/backend-jest-config": "workspace:./packages/backend-jest-config",
+    "@one-game-js/backend-prettier-config": "workspace:./packages/backend-prettier-config",
+    "@one-game-js/backend-typescript-config": "workspace:./packages/backend-typescript-config",
     "turbo": "^1.6.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
@@ -19,5 +23,14 @@
     "type": "git",
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
-  "scripts": {}
+  "scripts": {
+    "build:all": "turbo run build",
+    "lint:all": "turbo run lint",
+    "test:integration:js": "turbo test:integration:js",
+    "test:js": "turbo run test:js",
+    "test:js:coverage": "turbo run test:js:coverage",
+    "test:uncommitted": "turbo run test:uncommitted --filter [HEAD]",
+    "test:unit:js": "turbo run test:unit:js",
+    "test": "turbo run test"
+  }
 }

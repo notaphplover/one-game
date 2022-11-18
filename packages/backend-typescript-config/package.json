@@ -6,9 +6,6 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "devDependencies": {
-    "@one-game-js/backend-prettier-config": "workspace:../backend-prettier-config"
-  },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "private": true,
   "repository": {
