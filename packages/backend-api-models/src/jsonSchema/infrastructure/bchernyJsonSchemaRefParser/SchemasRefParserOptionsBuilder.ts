@@ -1,4 +1,4 @@
-import { FileInfo, Options } from '@apidevtools/json-schema-ref-parser';
+import { FileInfo, Options } from '@bcherny/json-schema-ref-parser';
 import { Builder, UseCase } from '@one-game-js/backend-common';
 
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';

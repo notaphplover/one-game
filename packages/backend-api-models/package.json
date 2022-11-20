@@ -4,7 +4,6 @@
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "9.0.9",
     "@bcherny/json-schema-ref-parser": "9.0.9",
     "@one-game-js/backend-common": "workspace:../backend-common",
     "glob": "8.0.3",
