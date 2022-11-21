@@ -25,12 +25,15 @@ export interface JsonSchema202012UnknownProperties {
   [key: string]: JsonValue;
 }
 
-export type JsonSchema202012Object = JsonSchema202012CoreVocabularyProperties &
-  JsonSchema202012UnknownProperties &
-  JsonSchema202012SubschemeAppliedProperties &
-  JsonSchema202012UnevaluatedLocationProperties &
-  JsonSchema202012StructuralValidationProperties &
-  JsonSchema202012MetadataAnnotationsProperties;
+export type JsonSchema202012KnownPropertiesObject =
+  JsonSchema202012CoreVocabularyProperties &
+    JsonSchema202012SubschemeAppliedProperties &
+    JsonSchema202012UnevaluatedLocationProperties &
+    JsonSchema202012StructuralValidationProperties &
+    JsonSchema202012MetadataAnnotationsProperties;
+
+export type JsonSchema202012Object = JsonSchema202012KnownPropertiesObject &
+  JsonSchema202012UnknownProperties;
 
 // https://json-schema.org/draft/2020-12/json-schema-core.html#name-a-vocabulary-for-applying-s
 export interface JsonSchema202012SubschemeAppliedProperties {
@@ -92,8 +95,12 @@ export interface JsonSchema202012MetadataAnnotationsProperties {
   writeOnly?: boolean;
 }
 
-export type JsonRootSchema202012Object = JsonSchema202012Object &
-  JsonRootSchema202012CoreVocabularyProperties;
+export type JsonRootSchema202012KnownPropertiesObject =
+  JsonSchema202012KnownPropertiesObject &
+    JsonRootSchema202012CoreVocabularyProperties;
+
+export type JsonRootSchema202012Object =
+  JsonRootSchema202012KnownPropertiesObject & JsonSchema202012UnknownProperties;
 
 export type JsonSchema202012 = JsonSchema202012Boolean | JsonSchema202012Object;
 
