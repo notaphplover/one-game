@@ -23,5 +23,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added `JsonValue`.
+- Added `JsonRootSchema202012`.
+- Added `JsonRootSchema202012Object`.
+- Added `JsonSchema202012`.
+- Added `JsonSchema202012Object`.
+- Added `traverseJsonSchema`.
+
 
 
