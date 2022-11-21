@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft/2020-12/schema",
   "$id": "http://onegame.schemas/api/v1/cards/card-number.json",
-  "title": "CardNumber",
+  "title": "CardNumberV1",
   "type": "integer",
   "maximum": 9,
   "minimum": 0
