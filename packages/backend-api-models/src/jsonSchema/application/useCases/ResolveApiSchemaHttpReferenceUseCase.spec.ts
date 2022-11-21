@@ -23,11 +23,15 @@ describe(ResolveApiSchemaHttpReferenceUseCase.name, () => {
 
   describe('.handle', () => {
     describe('having a ResolveApiSchemaHttpReferenceQuery', () => {
+      let schemasRootDirectoryFixture: string;
       let resolveApiSchemaHttpReferenceQueryFixture: ResolveApiSchemaHttpReferenceQuery;
 
       beforeAll(() => {
+        schemasRootDirectoryFixture = '/root/directory';
         resolveApiSchemaHttpReferenceQueryFixture = {
-          schemasRootDirectory: '/root/directory',
+          referenceHostToSchemasRootDirectoryMap: new Map([
+            ['sample.com', schemasRootDirectoryFixture],
+          ]),
           url: 'https://sample.com/root/directory/schema/path',
         };
       });
@@ -64,7 +68,7 @@ describe(ResolveApiSchemaHttpReferenceUseCase.name, () => {
         it('should call path.join()', () => {
           expect(path.join).toHaveBeenCalledTimes(1);
           expect(path.join).toHaveBeenCalledWith(
-            resolveApiSchemaHttpReferenceQueryFixture.schemasRootDirectory,
+            schemasRootDirectoryFixture,
             '',
             'root',
             'directory',
@@ -123,12 +127,17 @@ describe(ResolveApiSchemaHttpReferenceUseCase.name, () => {
     });
 
     describe('having a ResolveApiSchemaHttpReferenceQuery with a callback', () => {
+      let schemasRootDirectoryFixture: string;
       let resolveApiSchemaHttpReferenceQueryFixture: ResolveApiSchemaHttpReferenceQuery;
 
       beforeAll(() => {
+        schemasRootDirectoryFixture = '/root/directory';
+
         resolveApiSchemaHttpReferenceQueryFixture = {
           callback: jest.fn(),
-          schemasRootDirectory: '/root/directory',
+          referenceHostToSchemasRootDirectoryMap: new Map([
+            ['sample.com', schemasRootDirectoryFixture],
+          ]),
           url: 'https://sample.com/root/directory/schema/path',
         };
       });
@@ -165,7 +174,7 @@ describe(ResolveApiSchemaHttpReferenceUseCase.name, () => {
         it('should call path.join()', () => {
           expect(path.join).toHaveBeenCalledTimes(1);
           expect(path.join).toHaveBeenCalledWith(
-            resolveApiSchemaHttpReferenceQueryFixture.schemasRootDirectory,
+            schemasRootDirectoryFixture,
             '',
             'root',
             'directory',

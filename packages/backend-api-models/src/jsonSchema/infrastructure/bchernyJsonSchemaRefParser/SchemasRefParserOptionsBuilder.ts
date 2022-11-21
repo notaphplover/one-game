@@ -1,6 +1,7 @@
 import { FileInfo, Options } from '@bcherny/json-schema-ref-parser';
 import { Builder, UseCase } from '@one-game-js/backend-common';
 
+import { API_SCHEMA_HOST } from '../../application/models/apiSchemaHost';
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
 
 export class SchemasRefParserOptionsBuilder
@@ -32,7 +33,9 @@ export class SchemasRefParserOptionsBuilder
             const resolveApiSchemaHttpReferenceQuery: ResolveApiSchemaHttpReferenceQuery =
               {
                 callback,
-                schemasRootDirectory: schemasRootDirectory,
+                referenceHostToSchemasRootDirectoryMap: new Map([
+                  [API_SCHEMA_HOST, schemasRootDirectory],
+                ]),
                 url: file.url,
               };
 
