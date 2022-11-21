@@ -8,6 +8,7 @@ import {
 } from '@bcherny/json-schema-ref-parser';
 import { UseCase } from '@one-game-js/backend-common';
 
+import { API_SCHEMA_HOST } from '../../application/models/apiSchemaHost';
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { SchemasRefParserOptionsBuilder } from './SchemasRefParserOptionsBuilder';
 
@@ -140,7 +141,9 @@ describe(SchemasRefParserOptionsBuilder.name, () => {
                 const expectedResolveApiSchemaHttpReferenceQuery: ResolveApiSchemaHttpReferenceQuery =
                   {
                     callback: callbackFixture,
-                    schemasRootDirectory: schemasRootDirectoryFixture,
+                    referenceHostToSchemasRootDirectoryMap: new Map([
+                      [API_SCHEMA_HOST, schemasRootDirectoryFixture],
+                    ]),
                     url: fileInfoFixture.url,
                   };
 

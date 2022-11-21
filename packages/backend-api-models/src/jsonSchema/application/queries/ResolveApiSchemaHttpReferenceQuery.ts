@@ -2,6 +2,6 @@ export interface ResolveApiSchemaHttpReferenceQuery {
   callback?:
     | ((error: Error | null, data: string | null) => unknown)
     | undefined;
-  schemasRootDirectory: string;
+  referenceHostToSchemasRootDirectoryMap: Map<string, string>;
   url: string;
 }
