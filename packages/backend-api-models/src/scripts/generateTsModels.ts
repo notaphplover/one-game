@@ -27,7 +27,7 @@ const globAsPromised: (
   options?: glob.IOptions | undefined,
 ) => Promise<string[]> = promisify(glob);
 
-function arrayHasFourElements<T>(value: T[]): value is T[] & [T, T, T, T] {
+function arrayHasFourElements<T>(value: T[]): value is [T, T, T, T, ...T[]] {
   const fourElementArrayLength: number = 4;
 
   return value.length >= fourElementArrayLength;
@@ -37,7 +37,7 @@ async function generateAllSchemas(
   sourceFolder: string,
   destinationFolder: string,
 ): Promise<void> {
-  const schemasGlob: string = `${sourceFolder}/api/types.json`;
+  const schemasGlob: string = `${sourceFolder}/*/types.json`;
 
   const filePaths: string[] = await globAsPromised(schemasGlob, {
     cwd: '.',

@@ -19,7 +19,7 @@
       ],
       "inputs": [
         "src/**/*.ts",
-        "schemas/**/*.json"
+        "schemas/src/**/*.json"
       ],
       "outputs": [
         "lib/**"
