@@ -1,6 +1,6 @@
 import { JsonValue } from './JsonValue';
 
-export type NonEmptyArray<T> = [T] & T[];
+export type NonEmptyArray<T> = [T, ...T[]];
 
 // https://json-schema.org/draft/2020-12/json-schema-core.html#name-boolean-json-schemas
 export type JsonSchema202012Boolean = boolean;
@@ -92,11 +92,11 @@ export interface JsonSchema202012MetadataAnnotationsProperties {
   writeOnly?: boolean;
 }
 
-export type JsonSchema202012RootObject = JsonSchema202012Object &
+export type JsonRootSchema202012Object = JsonSchema202012Object &
   JsonRootSchema202012CoreVocabularyProperties;
 
 export type JsonSchema202012 = JsonSchema202012Boolean | JsonSchema202012Object;
 
 export type JsonRootSchema202012 =
   | JsonSchema202012Boolean
-  | JsonSchema202012RootObject;
+  | JsonRootSchema202012Object;
