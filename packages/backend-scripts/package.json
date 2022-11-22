@@ -1,0 +1,19 @@
+{
+  "name": "@one-game-js/backend-scripts",
+  "private": true,
+  "description": "common scripts for one game backend packages",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "author": "Multiple authors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "type": "module",
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "bin": {
+    "backend-get-affected-projects": "./bin/getAffectedProjects.js"
+  }
+}
