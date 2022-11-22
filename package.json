@@ -7,6 +7,7 @@
   "devDependencies": {
     "@one-game-js/backend-jest-config": "workspace:./packages/backend-jest-config",
     "@one-game-js/backend-prettier-config": "workspace:./packages/backend-prettier-config",
+    "@one-game-js/backend-scripts": "workspace:./packages/backend-scripts",
     "@one-game-js/backend-typescript-config": "workspace:./packages/backend-typescript-config",
     "@one-game-js/eslint-config-backend": "workspace:./packages/eslint-config-backend",
     "husky": "^8.0.2",
