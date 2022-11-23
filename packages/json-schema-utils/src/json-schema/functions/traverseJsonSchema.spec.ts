@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { JsonRootSchema202012Fixtures } from '../../json-schema/models/JsonRootSchema202012Fixtures';
+import { JsonRootSchema202012Fixtures } from '../../json-schema/fixtures/JsonRootSchema202012Fixtures';
 import {
   JsonSchema202012,
   JsonRootSchema202012Object,

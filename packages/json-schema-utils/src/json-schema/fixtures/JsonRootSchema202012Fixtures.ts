@@ -1,4 +1,4 @@
-import { JsonRootSchema202012Object } from './JsonSchema202012';
+import { JsonRootSchema202012Object } from '../models/JsonSchema202012';
 
 export class JsonRootSchema202012Fixtures {
   public static get any(): JsonRootSchema202012Object {

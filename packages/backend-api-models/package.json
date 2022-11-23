@@ -6,6 +6,7 @@
   "dependencies": {
     "@bcherny/json-schema-ref-parser": "9.0.9",
     "@one-game-js/backend-common": "workspace:../backend-common",
+    "@one-game-js/json-schema-utils": "workspace:../json-schema-utils",
     "glob": "8.0.3",
     "json-schema-to-typescript": "11.0.2"
   },

@@ -3,8 +3,8 @@ import {
   JsonRootSchema202012KnownPropertiesObject,
   JsonRootSchema202012Object,
   JsonSchema202012,
-} from '../../json-schema/models/JsonSchema202012';
-import { TraverseJsonSchemaCallbackParams } from '../../json-schema/models/TraverseJsonSchemaCallbackParams';
+} from '../models/JsonSchema202012';
+import { TraverseJsonSchemaCallbackParams } from '../models/TraverseJsonSchemaCallbackParams';
 
 type JsonRootSchema202012SchemaProperty =
   | JsonSchema202012

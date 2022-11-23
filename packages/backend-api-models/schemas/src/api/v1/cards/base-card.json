@@ -3,7 +3,6 @@
   "$id": "http://onegame.schemas/api/v1/cards/base-card.json",
   "title": "BaseCardV1",
   "type": "object",
-  "additionalProperties": false,
   "properties": {
     "kind": {
       "$ref": "http://onegame.schemas/api/v1/cards/card-kind.json"

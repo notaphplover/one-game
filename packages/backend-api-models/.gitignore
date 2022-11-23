@@ -6,3 +6,5 @@
 
 # Turborepo files
 .turbo/
+
+/schemas/generated
