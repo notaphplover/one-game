@@ -42,13 +42,15 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "build": "pnpm run build:ts && pnpm run schemas:generate:ts && pnpm run build:ts",
+    "build": "pnpm run build:ts && pnpm run schemas:generate && pnpm run build:ts",
     "build:clean": "rimraf lib",
     "build:ts": "tsc --build tsconfig.json",
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "prebuild": "pnpm run build:clean",
+    "schemas:generate": "pnpm run schemas:generate:ts && pnpm run schemas:generate:relative",
     "schemas:generate:ts": "node ./lib/scripts/generateTsModels ./schemas/src ./src/models",
+    "schemas:generate:relative": "node ./lib/scripts/generateRelativeSchemas ./schemas/src ./schemas/generated/relative",
     "test": "jest --config=jest.config.mjs --runInBand",
     "test:integration:js": "pnpm run test:js --selectProjects Integration",
     "test:js": "jest --config=jest.js.config.mjs --runInBand",

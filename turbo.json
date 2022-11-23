@@ -22,7 +22,9 @@
         "schemas/src/**/*.json"
       ],
       "outputs": [
-        "lib/**"
+        "lib/**",
+        "schemas/generated/**/*.json",
+        "src/models/**/*.ts"
       ]
     },
     "format": {
