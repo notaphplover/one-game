@@ -9,10 +9,17 @@ export type Types = TypesV1;
 export type TypesV1 = CardV1;
 export type CardV1 = NormalCardV1;
 export type NormalCardV1 = ColoredCardV1 & {
-  number: CardNumberV1;
+  kind?: 'normal';
+  number?: CardNumberV1;
+  [k: string]: unknown | undefined;
+} & {
+  color?: true;
+  kind?: true;
+  number: true;
 };
 export type ColoredCardV1 = BaseCardV1 & {
   color: CardColorV1;
+  [k: string]: unknown | undefined;
 };
 export type CardKindV1 =
   | 'blank'
@@ -27,4 +34,5 @@ export type CardNumberV1 = number;
 
 export interface BaseCardV1 {
   kind: CardKindV1;
+  [k: string]: unknown | undefined;
 }

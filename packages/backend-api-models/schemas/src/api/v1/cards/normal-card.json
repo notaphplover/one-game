@@ -6,13 +6,25 @@
     { "$ref": "http://onegame.schemas/api/v1/cards/colored-card.json" },
     {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
+        "kind": {
+          "const": "normal",
+          "type": "string"
+        },
         "number": {
           "$ref": "http://onegame.schemas/api/v1/cards/card-number.json"
         }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "color": true,
+        "kind": true,
+        "number": true
       },
-      "required": ["number"]
+      "required": ["color, kind", "number"]
     }
   ]
 }

@@ -108,7 +108,7 @@ function getDestinationPath(
     path.join(
       sourceFolder,
       path.relative(sourceFolder, destinationFolder),
-      filePath,
+      path.relative(sourceFolder, filePath),
     ),
   );
 

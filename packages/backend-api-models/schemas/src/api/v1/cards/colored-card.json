@@ -6,7 +6,6 @@
     { "$ref": "http://onegame.schemas/api/v1/cards/base-card.json" },
     {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "color": {
           "$ref": "http://onegame.schemas/api/v1/cards/card-color.json"

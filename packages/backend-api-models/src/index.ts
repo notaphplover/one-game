@@ -1,1 +1,1 @@
-export * as models from './models/schemas/api/types';
+export * as models from './models/api/types';
