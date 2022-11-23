@@ -1,4 +1,7 @@
-import { JsonRootSchema202012Object } from '../models/JsonSchema202012';
+import {
+  JsonRootSchema202012Object,
+  JsonSchema202012Type,
+} from '../models/JsonSchema202012';
 
 export class JsonRootSchema202012Fixtures {
   public static get any(): JsonRootSchema202012Object {
@@ -17,7 +20,7 @@ export class JsonRootSchema202012Fixtures {
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -54,7 +57,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -70,7 +73,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -86,7 +89,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -102,7 +105,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -118,7 +121,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -134,7 +137,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -152,7 +155,7 @@ automatic control (null)`,
       ...JsonRootSchema202012Fixtures.any,
       patternProperties: {
         '^[a-z0-9]+$': {
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -169,7 +172,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
             title: 'Enabled',
-            type: ['boolean', 'null'],
+            type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
           },
         },
       ],
@@ -181,7 +184,7 @@ automatic control (null)`,
       ...JsonRootSchema202012Fixtures.any,
       properties: {
         z39: {
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
@@ -204,7 +207,7 @@ automatic control (null)`,
 disabled (false), or under
 automatic control (null)`,
           title: 'Enabled',
-          type: ['boolean', 'null'],
+          type: [JsonSchema202012Type.boolean, JsonSchema202012Type.null],
         },
       },
     };
