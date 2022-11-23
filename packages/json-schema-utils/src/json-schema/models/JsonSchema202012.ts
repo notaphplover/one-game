@@ -7,8 +7,10 @@ export type JsonSchema202012Boolean = boolean;
 
 // https://json-schema.org/draft/2020-12/json-schema-core.html#name-the-json-schema-core-vocabu
 export interface JsonSchema202012CoreVocabularyProperties {
+  $anchor?: string;
   $comments?: string;
   $defs?: Record<string, JsonSchema202012>;
+  $dynamicAnchor?: string;
   $dynamicRef?: string;
   $id?: string;
   $ref?: string;
@@ -30,6 +32,8 @@ export type JsonSchema202012KnownPropertiesObject =
     JsonSchema202012SubschemeAppliedProperties &
     JsonSchema202012UnevaluatedLocationProperties &
     JsonSchema202012StructuralValidationProperties &
+    JsonSchema202012FormatProperties &
+    JsonSchema202012StringContentEncodedProperties &
     JsonSchema202012MetadataAnnotationsProperties;
 
 export type JsonSchema202012Object = JsonSchema202012KnownPropertiesObject &
@@ -80,8 +84,81 @@ export interface JsonSchema202012StructuralValidationProperties {
   multipleOf?: number;
   pattern?: string;
   required?: string[];
-  type?: string | string[];
+  type?: JsonSchema202012Type | JsonSchema202012Type[];
   uniqueItems?: boolean;
+}
+
+// https://json-schema.org/draft/2020-12/json-schema-validation.html#name-validation-keywords-for-any
+export enum JsonSchema202012Type {
+  array = 'array',
+  boolean = 'boolean',
+  integer = 'integer',
+  null = 'null',
+  number = 'number',
+  object = 'object',
+  string = 'string',
+}
+
+// https://json-schema.org/draft/2020-12/json-schema-validation.html#name-vocabularies-for-semantic-c
+export interface JsonSchema202012FormatProperties {
+  format?: JsonSchema202012CustomFormat | JsonSchema202012Format;
+}
+
+// https://json-schema.org/draft/2020-12/json-schema-validation.html#name-custom-format-attributes
+export type JsonSchema202012CustomFormat = string;
+
+// https://json-schema.org/draft/2020-12/json-schema-validation.html#name-defined-formats
+export enum JsonSchema202012Format {
+  dateTime = 'date-time',
+  date = 'date',
+  duration = 'duration',
+  email = 'email',
+  hostname = 'hostname',
+  idnEmail = 'idn-email',
+  idnHostname = 'idn-hostname',
+  ipV4 = 'ipv4',
+  ipV6 = 'ipv6',
+  iri = 'iri',
+  iriReference = 'iri-reference',
+  jsonPointer = 'json-pointer',
+  regex = 'regex',
+  relativeJsonPointer = 'relative-json-pointer',
+  time = 'time',
+  uri = 'uri',
+  uriReference = 'uri-reference',
+  uriTemplate = 'uri-template',
+  uuid = 'uuid',
+}
+
+// https://json-schema.org/draft/2020-12/json-schema-validation.html#name-a-vocabulary-for-the-conten
+export interface JsonSchema202012StringContentEncodedProperties {
+  contentEncoding?:
+    | JsonSchema202012BaseContentEncoding
+    | JsonSchema202012MimeContentTransferEncoding;
+  contentMediaType?: string;
+  contentSchema?: JsonSchema202012;
+}
+
+/*
+ * https://json-schema.org/draft/2020-12/json-schema-validation.html#name-contentencoding
+ * - https://www.rfc-editor.org/rfc/rfc4648.html
+ */
+export enum JsonSchema202012BaseContentEncoding {
+  base32 = 'base32',
+  base32hex = 'base32hex',
+  base64 = 'base64',
+  base64url = 'base64url',
+  hex = 'hex',
+}
+
+export enum JsonSchema202012MimeContentTransferEncoding {
+  base64 = 'base64',
+  bit7 = '7bit',
+  bit8 = '8bit',
+  binary = 'binary',
+  ietfToken = 'ietf-token',
+  quotedPrintable = 'quoted-printable',
+  xToken = 'x-token',
 }
 
 // https://json-schema.org/draft/2020-12/json-schema-validation.html#name-a-vocabulary-for-basic-meta
