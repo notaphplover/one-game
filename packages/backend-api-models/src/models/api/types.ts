@@ -6,16 +6,21 @@
  */
 
 export type Types = TypesV1;
-export type TypesV1 = CardV1;
+export type TypesV1 =
+  | CardV1
+  | UserCreateQueryV1
+  | UserIdTokenCreateQueryV1
+  | UserIdUpdateQueryV1
+  | UserV1;
 export type CardV1 = NormalCardV1;
 export type NormalCardV1 = ColoredCardV1 & {
   kind?: 'normal';
   number?: CardNumberV1;
   [k: string]: unknown | undefined;
 } & {
-  color?: true;
-  kind?: true;
-  number: true;
+  color: unknown;
+  kind: unknown;
+  number: unknown;
 };
 export type ColoredCardV1 = BaseCardV1 & {
   color: CardColorV1;
@@ -35,4 +40,21 @@ export type CardNumberV1 = number;
 export interface BaseCardV1 {
   kind: CardKindV1;
   [k: string]: unknown | undefined;
+}
+export interface UserCreateQueryV1 {
+  email: string;
+  name: string;
+  password: string;
+}
+export interface UserIdTokenCreateQueryV1 {
+  email: string;
+  password: string;
+}
+export interface UserIdUpdateQueryV1 {
+  code?: string;
+  name?: string;
+}
+export interface UserV1 {
+  id: string;
+  name: string;
 }

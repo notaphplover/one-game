@@ -20,11 +20,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "color": true,
-        "kind": true,
-        "number": true
+        "color": {},
+        "kind": {},
+        "number": {}
       },
-      "required": ["color, kind", "number"]
+      "required": ["color", "kind", "number"]
     }
   ]
 }

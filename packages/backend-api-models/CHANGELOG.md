@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `CardNumber`.
 - Added `ColoredCard`.
 - Added `NormalCard`.
+- Added `UserCreateQueryV1`.
+- Added `UserIdTokenCreateQueryV1`.
+- Added `UserIdUpdateQueryV1`.
+- Added `UserV1`.
 
 
 
