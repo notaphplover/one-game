@@ -3,6 +3,10 @@
   "title": "TypesV1",
   "$id": "http://onegame.schemas/api/v1/types.json",
   "oneOf": [
-    { "$ref": "http://onegame.schemas/api/v1/cards/card.json" }
+    { "$ref": "http://onegame.schemas/api/v1/cards/card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/users/user-create-query.json" },
+    { "$ref": "http://onegame.schemas/api/v1/users/user-id-token-create-query.json" },
+    { "$ref": "http://onegame.schemas/api/v1/users/user-id-update-query.json" },
+    { "$ref": "http://onegame.schemas/api/v1/users/user.json" }
   ]
 }

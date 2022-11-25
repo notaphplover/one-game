@@ -9,10 +9,15 @@ import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
 import { Builder, UseCase } from '@one-game-js/backend-common';
 import glob from 'glob';
 import { compile } from 'json-schema-to-typescript';
+import { Options } from 'prettier';
 
 import { ResolveApiSchemaHttpReferenceQuery } from '../jsonSchema/application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { ResolveApiSchemaHttpReferenceUseCase } from '../jsonSchema/application/useCases/ResolveApiSchemaHttpReferenceUseCase';
 import { SchemasRefParserOptionsBuilder } from '../jsonSchema/infrastructure/bchernyJsonSchemaRefParser/SchemasRefParserOptionsBuilder';
+
+const backendPrettierOptions: Options =
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+  require('@one-game-js/backend-prettier-config') as Options;
 
 const resolveApiSchemaHttpReferenceUseCase: UseCase<
   ResolveApiSchemaHttpReferenceQuery,
@@ -93,6 +98,7 @@ async function generateTypescriptModelFromSchema(
     declareExternallyReferenced: true,
     ignoreMinAndMaxItems: true,
     strictIndexSignatures: true,
+    style: backendPrettierOptions,
     unknownAny: true,
   });
 

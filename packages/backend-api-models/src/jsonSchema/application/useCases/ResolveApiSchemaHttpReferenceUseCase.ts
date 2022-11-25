@@ -79,6 +79,9 @@ export class ResolveApiSchemaHttpReferenceUseCase
         readableStream.on('end', function () {
           resolve(Buffer.concat(bufs));
         });
+        readableStream.on('error', (error: Error) => {
+          reject(error);
+        });
       },
     );
   }
