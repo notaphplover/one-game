@@ -1,6 +1,9 @@
 # node modules
 /node_modules/
 
+# Test coverage report
+/coverage
+
 # Compiled files
 /lib/
 
