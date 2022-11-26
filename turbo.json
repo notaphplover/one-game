@@ -13,7 +13,7 @@
         "lib/**"
       ]
     },
-    "backend-api-models#build": {
+    "@one-game-js/backend-api-models#build": {
       "dependsOn": [
         "^build"
       ],
