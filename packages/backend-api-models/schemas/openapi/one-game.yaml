@@ -1,0 +1,386 @@
+openapi: 3.1.0
+info:
+  title: One game API
+  version: '1.0'
+servers:
+  - url: 'http://127.0.0.1:8000'
+    description: Local development server
+components:
+  schemas:
+    ActiveGameSlotCardsV1:
+      $ref: '../generated/relative/api/v1/games/active-game-slot-cards.json'
+    ErrorV1:
+      $ref: '../generated/relative/api/v1/errors/error.json'
+    CardV1:
+      $ref: '../generated/relative/api/v1/cards/card.json'
+    GameCreateQueryV1:
+      $ref: '../generated/relative/api/v1/games/game-create-query.json'
+    GameIdSlotIdUpdateQueryV1:
+      $ref: '../generated/relative/api/v1/games/game-id-slot-id-update-query.json'
+    GameIdUpdateQueryV1:
+      $ref: '../generated/relative/api/v1/games/game-id-update-query.json'
+    GameSlotV1:
+      $ref: '../generated/relative/api/v1/games/game-slot.json'
+    GameV1:
+      $ref: '../generated/relative/api/v1/games/game.json'
+    NonStartedGameV1:
+      $ref: '../generated/relative/api/v1/games/non-started-game.json'
+    UserCreateQueryV1:
+      $ref: '../generated/relative/api/v1/users/user-create-query.json'
+    UserIdUpdateQueryV1:
+      $ref: '../generated/relative/api/v1/users/user-id-update-query.json'
+    UserV1:
+      $ref: '../generated/relative/api/v1/users/user.json'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /games:
+    post:
+      summary: Create a game
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameCreateQueryV1'
+      responses:
+        '200':
+          description: Game created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonStartedGameV1'
+        '400':
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+
+  /games/{gameId}:
+    get:
+      summary: Get a game
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Id of the game to get
+      responses:
+        '200':
+          description: Game found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+    patch:
+      summary: Update a game
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Id of the game to update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameIdUpdateQueryV1'
+      responses:
+        '200':
+          description: Game updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+
+  /games/{gameId}/slot/{gameSlotIndex}:
+    get:
+      summary: Get a game slot
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Id of the game containing the game slot to get
+        - in: path
+          name: gameSlotIndex
+          schema:
+            type: integer
+          required: true
+          description: Index of the game slot to get
+      responses:
+        '200':
+          description: Game slot found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSlotV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '404':
+          description: Game or game slot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+    patch:
+      summary: Update a game slot
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameIdSlotIdUpdateQueryV1'
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Id of the game containing the game slot to update
+        - in: path
+          name: gameSlotIndex
+          schema:
+            type: integer
+          required: true
+          description: Index of the game slot to update
+      responses:
+        '200':
+          description: Game slot updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSlotV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '404':
+          description: Game or game slot not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+
+  /games/{gameId}/slot/{gameSlotIndex}/cards:
+    get:
+      summary: Get a game slot cards
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Id of the game containing the game slot to get
+        - in: path
+          name: gameSlotIndex
+          schema:
+            type: integer
+          required: true
+          description: Index of the game slot to get
+      responses:
+        '200':
+          description: Game slot cards found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveGameSlotCardsV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '422':
+          description: Game slot cards not processable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+
+
+  /users:
+    post:
+      summary: Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateQueryV1'
+      responses:
+        '200':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserV1'
+        '400':
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security: []
+
+  /users/{userId}:
+    get:
+      summary: Get a user by ID
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: Id of the user to get
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
+    patch:
+      summary: Update a user by its id
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: Id of the user to update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIdUpdateQueryV1'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserV1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV1'
+      security:
+        - bearerAuth: []
