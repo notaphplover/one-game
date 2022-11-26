@@ -3,6 +3,12 @@
   "$id": "http://onegame.schemas/api/v1/cards/card.json",
   "title": "CardV1",
   "anyOf": [
-    { "$ref": "http://onegame.schemas/api/v1/cards/normal-card.json" }
+    { "$ref": "http://onegame.schemas/api/v1/cards/blank-card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/cards/draw-card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/cards/normal-card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/cards/reverse-card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/cards/skip-card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/cards/wild-card.json" },
+    { "$ref": "http://onegame.schemas/api/v1/cards/wild-draw-4-card.json" }
   ]
 }
