@@ -9,7 +9,7 @@ export function jsonSchemaRefToResourceLocation(
   baseRef?: string | undefined,
 ): ResourceLocation {
   const urlObject: URL = new URL(ref, baseRef);
-  const urlHost: string = urlObject.hostname;
+  const urlHost: string = urlObject.host;
   const urlPathName: string = urlObject.pathname;
 
   const schemasRootDirectory: string | undefined =
