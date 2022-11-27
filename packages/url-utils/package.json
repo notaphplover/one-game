@@ -3,10 +3,9 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "JSON Schema utils",
+  "description": "URL utils",
   "devDependencies": {
     "@jest/globals": "29.3.1",
-    "@types/glob": "8.0.0",
     "@types/node": "18.11.9",
     "@typescript-eslint/eslint-plugin": "5.44.0",
     "@typescript-eslint/parser": "5.44.0",
@@ -16,7 +15,6 @@
     "eslint-plugin-jest": "27.1.6",
     "eslint-plugin-prettier": "4.2.1",
     "jest": "29.3.1",
-    "jest-mock": "29.3.1",
     "prettier": "2.8.0",
     "rimraf": "3.0.2",
     "ts-jest": "29.0.3",
@@ -26,7 +24,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/json-schema-utils",
+  "name": "@one-game-js/url-utils",
   "publishConfig": {
     "access": "public"
   },
