@@ -9,7 +9,7 @@ import { OpenApi3Dot1ServerObject } from './OpenApi3Dot1ServerObject';
 
 // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#operationObject
 export interface OpenApi3Dot1OperationObject {
-  callbacks?: Map<
+  callbacks?: Record<
     string,
     OpenApi3Dot1CallbackObject | OpenApi3Dot1ReferenceObject
   >;

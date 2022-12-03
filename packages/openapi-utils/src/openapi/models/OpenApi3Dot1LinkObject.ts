@@ -7,7 +7,7 @@ export interface OpenApi3Dot1LinkObject {
   description?: string;
   operationId?: string;
   operationRef?: string;
-  parameters?: Map<string, JsonValue>;
+  parameters?: Record<string, JsonValue>;
   requestBody?: JsonValue;
   server?: OpenApi3Dot1ServerObject;
 }

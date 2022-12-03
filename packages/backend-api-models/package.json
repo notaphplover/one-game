@@ -9,6 +9,7 @@
     "@jest/globals": "29.3.1",
     "@one-game-js/backend-common": "workspace:../backend-common",
     "@one-game-js/json-schema-utils": "workspace:../json-schema-utils",
+    "@one-game-js/openapi-utils": "workspace:../openapi-utils",
     "@types/glob": "8.0.0",
     "@types/node": "18.11.10",
     "@typescript-eslint/eslint-plugin": "5.45.0",

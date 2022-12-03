@@ -22,7 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 
 ### Added
-Added `OpenApi3Dot1`.
 Added `OpenApi3Dot1CallbackObject`.
 Added `OpenApi3Dot1ComponentsObject`.
 Added `OpenApi3Dot1ContactObject`.
@@ -41,6 +40,7 @@ Added `OpenApi3Dot1OauthFlowObjectClientCredentials`.
 Added `OpenApi3Dot1OauthFlowObjectImplicit`.
 Added `OpenApi3Dot1OauthFlowObjectPassword`.
 Added `OpenApi3Dot1OauthFlowsObject`.
+Added `OpenApi3Dot1Object`.
 Added `OpenApi3Dot1OperationObject`.
 Added `OpenApi3Dot1ParameterObject`.
 Added `OpenApi3Dot1ParameterObjectIn`.
@@ -65,6 +65,7 @@ Added `OpenApi3Dot1ServerObject`.
 Added `OpenApi3Dot1ServerVariableObject`.
 Added `OpenApi3Dot1TagObject`.
 Added `OpenApi3Dot1XmlObject`.
+Added `traverseOpenApiObjectJsonSchemas`.
 
 
 

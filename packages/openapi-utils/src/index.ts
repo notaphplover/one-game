@@ -1,4 +1,4 @@
-import { OpenApi3Dot1 } from './openapi/models/OpenApi3Dot1';
+import { traverseOpenApiObjectJsonSchemas } from './openapi/functions/traverseOpenApiObjectJsonSchemas';
 import { OpenApi3Dot1CallbackObject } from './openapi/models/OpenApi3Dot1CallbackObject';
 import { OpenApi3Dot1ComponentsObject } from './openapi/models/OpenApi3Dot1ComponentsObject';
 import { OpenApi3Dot1ContactObject } from './openapi/models/OpenApi3Dot1ContactObject';
@@ -17,6 +17,7 @@ import { OpenApi3Dot1OauthFlowObjectClientCredentials } from './openapi/models/O
 import { OpenApi3Dot1OauthFlowObjectImplicit } from './openapi/models/OpenApi3Dot1OauthFlowObjectImplicit';
 import { OpenApi3Dot1OauthFlowObjectPassword } from './openapi/models/OpenApi3Dot1OauthFlowObjectPassword';
 import { OpenApi3Dot1OauthFlowsObject } from './openapi/models/OpenApi3Dot1OauthFlowsObject';
+import { OpenApi3Dot1Object } from './openapi/models/OpenApi3Dot1Object';
 import { OpenApi3Dot1OperationObject } from './openapi/models/OpenApi3Dot1OperationObject';
 import { OpenApi3Dot1ParameterObject } from './openapi/models/OpenApi3Dot1ParameterObject';
 import { OpenApi3Dot1ParameterObjectIn } from './openapi/models/OpenApi3Dot1ParameterObjectIn';
@@ -42,10 +43,14 @@ import { OpenApi3Dot1ServerVariableObject } from './openapi/models/OpenApi3Dot1S
 import { OpenApi3Dot1TagObject } from './openapi/models/OpenApi3Dot1TagObject';
 import { OpenApi3Dot1XmlObject } from './openapi/models/OpenApi3Dot1XmlObject';
 
-export { OpenApi3Dot1ParameterObjectIn, OpenApi3Dot1SecuritySchemeObjectType };
+export {
+  OpenApi3Dot1ParameterObjectIn,
+  OpenApi3Dot1SecuritySchemeObjectType,
+  traverseOpenApiObjectJsonSchemas,
+};
 
 export type {
-  OpenApi3Dot1,
+  OpenApi3Dot1Object,
   OpenApi3Dot1CallbackObject,
   OpenApi3Dot1ComponentsObject,
   OpenApi3Dot1ContactObject,
