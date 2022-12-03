@@ -19,7 +19,10 @@ describe(traverseJsonSchema.name, () => {
 
   describe('when called', () => {
     beforeAll(() => {
-      traverseJsonSchema(JsonRootSchema202012Fixtures.any, callbackMock);
+      traverseJsonSchema(
+        { schema: JsonRootSchema202012Fixtures.any },
+        callbackMock,
+      );
     });
 
     afterAll(() => {
@@ -32,7 +35,6 @@ describe(traverseJsonSchema.name, () => {
           jsonPointer: '',
           parentJsonPointer: undefined,
           parentSchema: undefined,
-          rootSchema: JsonRootSchema202012Fixtures.any,
           schema: JsonRootSchema202012Fixtures.any,
         };
 
@@ -52,7 +54,7 @@ describe(traverseJsonSchema.name, () => {
     '(key to schema map) having a schema with "%s"',
     (schemaKey: string, schemaFixture: JsonRootSchema202012Object): void => {
       beforeAll(() => {
-        traverseJsonSchema(schemaFixture, callbackMock);
+        traverseJsonSchema({ schema: schemaFixture }, callbackMock);
       });
 
       afterAll(() => {
@@ -65,7 +67,6 @@ describe(traverseJsonSchema.name, () => {
             jsonPointer: '',
             parentJsonPointer: undefined,
             parentSchema: undefined,
-            rootSchema: schemaFixture,
             schema: schemaFixture,
           };
 
@@ -96,7 +97,6 @@ describe(traverseJsonSchema.name, () => {
               jsonPointer: `/${schemaKey}/${subschemaKey}`,
               parentJsonPointer: '',
               parentSchema: schemaFixture,
-              rootSchema: schemaFixture,
               schema: subschema,
             };
 
@@ -118,7 +118,7 @@ describe(traverseJsonSchema.name, () => {
     '(schema array) having a schema with "%s"',
     (schemaKey: string, schemaFixture: JsonRootSchema202012Object): void => {
       beforeAll(() => {
-        traverseJsonSchema(schemaFixture, callbackMock);
+        traverseJsonSchema({ schema: schemaFixture }, callbackMock);
       });
 
       afterAll(() => {
@@ -131,7 +131,6 @@ describe(traverseJsonSchema.name, () => {
             jsonPointer: '',
             parentJsonPointer: undefined,
             parentSchema: undefined,
-            rootSchema: schemaFixture,
             schema: schemaFixture,
           };
 
@@ -154,7 +153,6 @@ describe(traverseJsonSchema.name, () => {
               jsonPointer: `/${schemaKey}/${subschemaIndex}`,
               parentJsonPointer: '',
               parentSchema: schemaFixture,
-              rootSchema: schemaFixture,
               schema: subschema,
             };
 
@@ -188,7 +186,7 @@ describe(traverseJsonSchema.name, () => {
     '(schema) having a schema with "%s"',
     (schemaKey: string, schemaFixture: JsonRootSchema202012Object): void => {
       beforeAll(() => {
-        traverseJsonSchema(schemaFixture, callbackMock);
+        traverseJsonSchema({ schema: schemaFixture }, callbackMock);
       });
 
       afterAll(() => {
@@ -201,7 +199,6 @@ describe(traverseJsonSchema.name, () => {
             jsonPointer: '',
             parentJsonPointer: undefined,
             parentSchema: undefined,
-            rootSchema: schemaFixture,
             schema: schemaFixture,
           };
 
@@ -223,7 +220,6 @@ describe(traverseJsonSchema.name, () => {
             jsonPointer: `/${schemaKey}`,
             parentJsonPointer: '',
             parentSchema: schemaFixture,
-            rootSchema: schemaFixture,
             schema: subschema,
           };
 
