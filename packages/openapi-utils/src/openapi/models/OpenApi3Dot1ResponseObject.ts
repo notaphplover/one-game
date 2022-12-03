@@ -5,7 +5,7 @@ import { OpenApi3Dot1ReferenceObject } from './OpenApi3Dot1ReferenceObject';
 
 // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#responseObject
 export interface OpenApi3Dot1ResponseObject {
-  content?: Map<string, OpenApi3Dot1MediaTypeObject>;
+  content?: Record<string, OpenApi3Dot1MediaTypeObject>;
   description: string;
   headers?: Record<
     string,

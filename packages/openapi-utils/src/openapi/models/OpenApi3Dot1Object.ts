@@ -9,7 +9,7 @@ import { OpenApi3Dot1ServerObject } from './OpenApi3Dot1ServerObject';
 import { OpenApi3Dot1TagObject } from './OpenApi3Dot1TagObject';
 
 // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#openapi-object
-export interface OpenApi3Dot1 {
+export interface OpenApi3Dot1Object {
   components?: OpenApi3Dot1ComponentsObject;
   externalDocs?: OpenApi3Dot1ExternalDocumentationObject;
   info: OpenApi3Dot1InfoObject;

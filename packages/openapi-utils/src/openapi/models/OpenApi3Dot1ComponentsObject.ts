@@ -23,7 +23,7 @@ export interface OpenApi3Dot1ComponentsObject {
     string,
     OpenApi3Dot1HeaderObject | OpenApi3Dot1ReferenceObject
   >;
-  links: Record<string, OpenApi3Dot1LinkObject | OpenApi3Dot1ReferenceObject>;
+  links?: Record<string, OpenApi3Dot1LinkObject | OpenApi3Dot1ReferenceObject>;
   parameters?: Record<
     string,
     OpenApi3Dot1ParameterObject | OpenApi3Dot1ReferenceObject
@@ -32,7 +32,7 @@ export interface OpenApi3Dot1ComponentsObject {
     string,
     OpenApi3Dot1PathItemObject | OpenApi3Dot1ReferenceObject
   >;
-  requestBodies: Record<
+  requestBodies?: Record<
     string,
     OpenApi3Dot1RequestBodyObject | OpenApi3Dot1ReferenceObject
   >;

@@ -6,6 +6,9 @@ export interface OpenApi3Dot1EncodingObject {
   allowReserved?: boolean;
   contentType?: string;
   explode?: boolean;
-  headers?: Map<string, OpenApi3Dot1HeaderObject | OpenApi3Dot1ReferenceObject>;
+  headers?: Record<
+    string,
+    OpenApi3Dot1HeaderObject | OpenApi3Dot1ReferenceObject
+  >;
   style?: string;
 }
