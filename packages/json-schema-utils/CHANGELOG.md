@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `jsonSchemaRefToResourceLocation`.
 - Added `ResourceLocation`.
 - Added `ResourceLocationType`.
+- Added `TraverseJsonSchemaCallbackParams`.
+- Added `TraverseJsonSchemaParams`.
 - Added `traverseJsonSchema`.
 
 

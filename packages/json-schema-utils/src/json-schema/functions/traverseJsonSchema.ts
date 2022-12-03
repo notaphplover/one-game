@@ -1,10 +1,10 @@
 import {
-  JsonRootSchema202012,
   JsonRootSchema202012KnownPropertiesObject,
   JsonRootSchema202012Object,
   JsonSchema202012,
 } from '../models/JsonSchema202012';
 import { TraverseJsonSchemaCallbackParams } from '../models/TraverseJsonSchemaCallbackParams';
+import { TraverseJsonSchemaParams } from '../models/TraverseJsonSchemaParams';
 
 type JsonRootSchema202012SchemaProperty =
   | JsonSchema202012
@@ -47,22 +47,21 @@ const jsonRootSchema202012ObjectPropertyToHandlerMap: {
 };
 
 export function traverseJsonSchema(
-  schema: JsonRootSchema202012,
+  params: TraverseJsonSchemaParams,
   callback: (params: TraverseJsonSchemaCallbackParams) => void,
 ): void {
-  traverseSchema(
+  traverseJsonSchemaFromParams(
     {
-      jsonPointer: '',
+      jsonPointer: params.jsonPointer ?? '',
       parentJsonPointer: undefined,
       parentSchema: undefined,
-      rootSchema: schema,
-      schema: schema,
+      schema: params.schema,
     },
     callback,
   );
 }
 
-function traverseSchema(
+function traverseJsonSchemaFromParams(
   params: TraverseJsonSchemaCallbackParams,
   callback: (params: TraverseJsonSchemaCallbackParams) => void,
 ): void {
@@ -97,11 +96,10 @@ function traverseDirectChildSchema(
     jsonPointer: `${params.jsonPointer}/${escapeJsonPtr(key)}`,
     parentJsonPointer: params.jsonPointer,
     parentSchema: params.schema,
-    rootSchema: params.rootSchema,
     schema: childSchema,
   };
 
-  traverseSchema(traverseChildSchemaCallbackParams, callback);
+  traverseJsonSchemaFromParams(traverseChildSchemaCallbackParams, callback);
 }
 
 function traverseDirectChildSchemaArray(
@@ -116,11 +114,10 @@ function traverseDirectChildSchemaArray(
         jsonPointer: `${params.jsonPointer}/${escapeJsonPtr(key)}/${index}`,
         parentJsonPointer: params.jsonPointer,
         parentSchema: params.schema,
-        rootSchema: params.rootSchema,
         schema,
       };
 
-    traverseSchema(traverseChildSchemaCallbackParams, callback);
+    traverseJsonSchemaFromParams(traverseChildSchemaCallbackParams, callback);
   }
 }
 
@@ -136,11 +133,10 @@ function traverseDirectChildSchemaMap(
         jsonPointer: `${params.jsonPointer}/${escapeJsonPtr(key)}/${mapKey}`,
         parentJsonPointer: params.jsonPointer,
         parentSchema: params.schema,
-        rootSchema: params.rootSchema,
         schema,
       };
 
-    traverseSchema(traverseChildSchemaCallbackParams, callback);
+    traverseJsonSchemaFromParams(traverseChildSchemaCallbackParams, callback);
   }
 }
 

@@ -80,15 +80,15 @@ async function generateRelativeReferencedFromSchema(
   const jsonSchema: JsonRootSchema202012 = schema as JsonRootSchema202012;
 
   traverseJsonSchema(
-    jsonSchema,
+    { schema: jsonSchema },
     (
       traverseJsonSchemaCallbackParams: TraverseJsonSchemaCallbackParams,
     ): void => {
       const schema: JsonSchema202012 = traverseJsonSchemaCallbackParams.schema;
 
       if (typeof schema === 'object' && schema.$ref !== undefined) {
-        const rootSchema: JsonRootSchema202012 =
-          traverseJsonSchemaCallbackParams.rootSchema as JsonRootSchema202012Object;
+        const rootSchema: JsonRootSchema202012Object =
+          jsonSchema as JsonRootSchema202012Object;
 
         const resourceLocation: ResourceLocation =
           jsonSchemaRefToResourceLocation(

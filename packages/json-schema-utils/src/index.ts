@@ -12,6 +12,7 @@ import {
 } from './json-schema/models/JsonSchema202012';
 import { JsonValue } from './json-schema/models/JsonValue';
 import { TraverseJsonSchemaCallbackParams } from './json-schema/models/TraverseJsonSchemaCallbackParams';
+import { TraverseJsonSchemaParams } from './json-schema/models/TraverseJsonSchemaParams';
 import { ResourceLocation } from './resource/models/ResourceLocation';
 import { ResourceLocationType } from './resource/models/ResourceLocationType';
 
@@ -33,4 +34,5 @@ export type {
   JsonValue,
   ResourceLocation,
   TraverseJsonSchemaCallbackParams,
+  TraverseJsonSchemaParams,
 };
