@@ -12,6 +12,12 @@ import {
   traverseJsonSchema,
   TraverseJsonSchemaCallbackParams,
 } from '@one-game-js/json-schema-utils';
+import {
+  OpenApi3Dot1ComponentsObject,
+  OpenApi3Dot1Object,
+  OpenApi3Dot1SchemaObject,
+  traverseOpenApiObjectJsonSchemas,
+} from '@one-game-js/openapi-utils';
 import glob from 'glob';
 import yaml from 'yaml';
 
@@ -79,8 +85,8 @@ Found ${duplicatedNamesSet.size} duplicated names (${duplicatedNamesStringified}
 }
 
 function checkDuplicatedSchemas(
-  jsonSchemaEntries: JsonSchemaEntry[],
-  openApiComponentsSchemas: Record<string, unknown>,
+  jsonSchemaEntries: Iterable<JsonSchemaEntry>,
+  openApiComponentsSchemas: Record<string, OpenApi3Dot1SchemaObject>,
 ): void {
   for (const jsonSchemaEntry of jsonSchemaEntries) {
     if (jsonSchemaEntry.alias in openApiComponentsSchemas) {
@@ -91,6 +97,34 @@ function checkDuplicatedSchemas(
       );
     }
   }
+}
+
+function traverseOpenApiJsonSchemas(
+  idToJsonSchemaEntriesMap: Map<string, JsonSchemaEntry>,
+  openApiObject: OpenApi3Dot1Object,
+): void {
+  traverseOpenApiObjectJsonSchemas(
+    openApiObject,
+    (params: TraverseJsonSchemaCallbackParams): void => {
+      if (params.schema !== true && params.schema !== false) {
+        if (
+          (params.schema as JsonRootSchema202012Object).$schema !== undefined
+        ) {
+          delete (params.schema as Partial<JsonRootSchema202012Object>).$schema;
+        }
+
+        if (params.schema.$ref !== undefined) {
+          const jsonSchemaEntry: JsonSchemaEntry | undefined =
+            idToJsonSchemaEntriesMap.get(params.schema.$ref);
+
+          if (jsonSchemaEntry !== undefined) {
+            params.schema.$ref =
+              buildOpenApiComponentSchemaRef(jsonSchemaEntry);
+          }
+        }
+      }
+    },
+  );
 }
 
 async function generateAllSchemas(
@@ -104,24 +138,28 @@ async function generateAllSchemas(
     cwd: '.',
   });
 
-  const jsonSchemaEntries: JsonSchemaEntry[] = await parseJsonSchemaFiles(
-    filePaths,
-  );
+  const idToJsonSchemaEntriesMap: Map<string, JsonSchemaEntry> =
+    await parseJsonSchemaFiles(filePaths);
 
   const openApiFileContentBuffer: Buffer = await fs.readFile(openApiFilePath);
   const stringifiedOpenApiFileContent: string =
     openApiFileContentBuffer.toString();
 
-  const openApi: Record<string, unknown> = yaml.parse(
+  const openApi: OpenApi3Dot1Object = yaml.parse(
     stringifiedOpenApiFileContent,
-  ) as Record<string, unknown>;
+  ) as OpenApi3Dot1Object;
 
-  const openApiComponentsSchemas: Record<string, unknown> =
+  const openApiComponentsSchemas: Record<string, OpenApi3Dot1SchemaObject> =
     getOrCreateOpenApiComponentSchemas(openApi);
 
-  checkDuplicatedSchemas(jsonSchemaEntries, openApiComponentsSchemas);
+  checkDuplicatedSchemas(
+    idToJsonSchemaEntriesMap.values(),
+    openApiComponentsSchemas,
+  );
 
-  for (const jsonSchemaEntry of jsonSchemaEntries) {
+  traverseOpenApiJsonSchemas(idToJsonSchemaEntriesMap, openApi);
+
+  for (const jsonSchemaEntry of idToJsonSchemaEntriesMap.values()) {
     openApiComponentsSchemas[jsonSchemaEntry.alias] = jsonSchemaEntry.schema;
   }
 
@@ -131,36 +169,27 @@ async function generateAllSchemas(
 }
 
 function getOrCreateOpenApiComponentSchemas(
-  openApi: Record<string, unknown>,
-): Record<string, unknown> {
-  if (
-    openApi['components'] === null ||
-    typeof openApi['components'] !== 'object'
-  ) {
-    openApi['components'] = {};
+  openApi: OpenApi3Dot1Object,
+): Record<string, OpenApi3Dot1SchemaObject> {
+  if (openApi.components === undefined) {
+    openApi.components = {};
   }
 
-  const openApiComponents: Record<string, unknown> = openApi[
-    'components'
-  ] as Record<string, unknown>;
+  const openApiComponents: OpenApi3Dot1ComponentsObject = openApi.components;
 
-  if (
-    openApiComponents['schemas'] === null ||
-    typeof openApiComponents['schemas'] !== 'object'
-  ) {
-    openApiComponents['schemas'] = {};
+  if (openApiComponents.schemas === undefined) {
+    openApiComponents.schemas = {};
   }
 
-  const openApiComponentsSchemas: Record<string, unknown> = openApiComponents[
-    'schemas'
-  ] as Record<string, unknown>;
+  const openApiComponentsSchemas: Record<string, OpenApi3Dot1SchemaObject> =
+    openApiComponents.schemas;
 
   return openApiComponentsSchemas;
 }
 
 async function parseJsonSchemaFiles(
   filePaths: string[],
-): Promise<JsonSchemaEntry[]> {
+): Promise<Map<string, JsonSchemaEntry>> {
   const jsonSchemaEntries: JsonSchemaEntry[] = await Promise.all(
     filePaths.map(async (filePath: string) => parseJsonSchemaFile(filePath)),
   );
@@ -180,7 +209,7 @@ async function parseJsonSchemaFiles(
     transformJsonSchemaRefs(jsonSchemaEntry.schema, idToJsonSchemaEntriesMap);
   }
 
-  return jsonSchemaEntries;
+  return idToJsonSchemaEntriesMap;
 }
 
 async function parseJsonSchemaFile(path: string): Promise<JsonSchemaEntry> {
