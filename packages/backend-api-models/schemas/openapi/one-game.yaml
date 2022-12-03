@@ -6,31 +6,6 @@ servers:
   - url: 'http://127.0.0.1:8000'
     description: Local development server
 components:
-  schemas:
-    ActiveGameSlotCardsV1:
-      $ref: '../generated/relative/api/v1/games/active-game-slot-cards.json'
-    ErrorV1:
-      $ref: '../generated/relative/api/v1/errors/error.json'
-    CardV1:
-      $ref: '../generated/relative/api/v1/cards/card.json'
-    GameCreateQueryV1:
-      $ref: '../generated/relative/api/v1/games/game-create-query.json'
-    GameIdSlotIdUpdateQueryV1:
-      $ref: '../generated/relative/api/v1/games/game-id-slot-id-update-query.json'
-    GameIdUpdateQueryV1:
-      $ref: '../generated/relative/api/v1/games/game-id-update-query.json'
-    GameSlotV1:
-      $ref: '../generated/relative/api/v1/games/game-slot.json'
-    GameV1:
-      $ref: '../generated/relative/api/v1/games/game.json'
-    NonStartedGameV1:
-      $ref: '../generated/relative/api/v1/games/non-started-game.json'
-    UserCreateQueryV1:
-      $ref: '../generated/relative/api/v1/users/user-create-query.json'
-    UserIdUpdateQueryV1:
-      $ref: '../generated/relative/api/v1/users/user-id-update-query.json'
-    UserV1:
-      $ref: '../generated/relative/api/v1/users/user.json'
   securitySchemes:
     bearerAuth:
       type: http
@@ -45,32 +20,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GameCreateQueryV1'
+              $ref: 'http://onegame.schemas/api/v1/games/game-create-query.json'
       responses:
         '200':
           description: Game created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NonStartedGameV1'
+                $ref: 'http://onegame.schemas/api/v1/games/non-started-game.json'
         '400':
           description: BadRequest
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
 
@@ -90,25 +65,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameV1'
+                $ref: 'http://onegame.schemas/api/v1/games/game.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '404':
           description: Game not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
     patch:
@@ -124,32 +99,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GameIdUpdateQueryV1'
+              $ref: 'http://onegame.schemas/api/v1/games/game-id-update-query.json'
       responses:
         '200':
           description: Game updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameV1'
+                $ref: 'http://onegame.schemas/api/v1/games/game.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '404':
           description: Game not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
 
@@ -175,25 +150,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameSlotV1'
+                $ref: 'http://onegame.schemas/api/v1/games/game-slot.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '404':
           description: Game or game slot not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
     patch:
@@ -202,7 +177,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GameIdSlotIdUpdateQueryV1'
+              $ref: 'http://onegame.schemas/api/v1/games/game-id-slot-id-update-query.json'
       parameters:
         - in: path
           name: gameId
@@ -222,25 +197,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GameSlotV1'
+                $ref: 'http://onegame.schemas/api/v1/games/game-slot.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '404':
           description: Game or game slot not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
 
@@ -266,25 +241,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActiveGameSlotCardsV1'
+                $ref: 'http://onegame.schemas/api/v1/games/active-game-slot-cards.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '422':
           description: Game slot cards not processable
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
 
@@ -296,26 +271,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCreateQueryV1'
+              $ref: 'http://onegame.schemas/api/v1/users/user-create-query.json'
       responses:
         '200':
           description: User created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserV1'
+                $ref: 'http://onegame.schemas/api/v1/users/user.json'
         '400':
           description: BadRequest
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security: []
 
   /users/{userId}:
@@ -334,19 +309,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserV1'
+                $ref: 'http://onegame.schemas/api/v1/users/user.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '404':
           description: User not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
     patch:
@@ -362,25 +337,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserIdUpdateQueryV1'
+              $ref: 'http://onegame.schemas/api/v1/users/user-id-update-query.json'
       responses:
         '200':
           description: User updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserV1'
+                $ref: 'http://onegame.schemas/api/v1/users/user.json'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorV1'
+                $ref: 'http://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
