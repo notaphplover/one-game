@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "http://onegame.schemas/api/v1/cards/card-array.json",
+  "$id": "https://onegame.schemas/api/v1/cards/card-array.json",
   "title": "CardArrayV1",
   "type": "array",
   "items": {
-    "$ref": "http://onegame.schemas/api/v1/cards/card.json"
+    "$ref": "https://onegame.schemas/api/v1/cards/card.json"
   }
 }
