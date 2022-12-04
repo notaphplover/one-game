@@ -1,3 +1,3 @@
 export interface Port<TParams, TResult> {
-  adapt(params: TParams): Promise<TResult>;
+  call(params: TParams): Promise<TResult>;
 }
