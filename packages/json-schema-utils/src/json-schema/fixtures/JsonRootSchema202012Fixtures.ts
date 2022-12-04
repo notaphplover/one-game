@@ -6,7 +6,7 @@ import {
 export class JsonRootSchema202012Fixtures {
   public static get any(): JsonRootSchema202012Object {
     return {
-      $schema: 'http://json-schema.org/draft/2020-12/schema',
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
     };
   }
 
