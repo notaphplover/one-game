@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameSlotV1",
+  "$id": "https://onegame.schemas/api/v1/games/game-slot.json",
+  "anyOf": [
+    { "$ref": "https://onegame.schemas/api/v1/games/active-game-slot.json" },
+    { "$ref": "https://onegame.schemas/api/v1/games/non-started-game-slot.json" }
+  ]
+}

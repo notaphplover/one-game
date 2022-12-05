@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/cards/card-color.json",
+  "title": "CardColorV1",
+  "type": "string",
+  "enum": [
+    "blue",
+    "green",
+    "red",
+    "yellow"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/non-started-game-slot.json",
+  "title": "NonStartedGameSlotV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "userId": {
+      "type": ["null", "string"]
+    }
+  },
+  "required": [
+    "userId"
+  ]
+}

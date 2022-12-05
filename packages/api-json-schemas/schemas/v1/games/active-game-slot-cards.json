@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/active-game-slot-cards.json",
+  "title": "ActiveGameSlotCardsV1",
+  "$ref": "https://onegame.schemas/api/v1/cards/card-array.json"
+}

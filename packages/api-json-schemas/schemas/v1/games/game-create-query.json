@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/game-create-query.json",
+  "title": "GameCreateQueryV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "gameSlotsAmount": {
+      "type": "integer"
+    },
+    "gameSpec": {
+      "$ref": "https://onegame.schemas/api/v1/games/game-spec.json"
+    }
+  },
+  "required": [
+    "gameSlotsAmount",
+    "gameSpec"
+  ]
+}
