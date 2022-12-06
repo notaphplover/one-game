@@ -19,12 +19,11 @@
       ],
       "inputs": [
         "src/**/*.ts",
-        "schemas/src/**/*.json"
+        "../schemas/src/**/*.json"
       ],
       "outputs": [
         "lib/**",
-        "schemas/generated/**/*.json",
-        "src/models/**/*.ts"
+        "src/models/types.ts"
       ]
     },
     "format": {
