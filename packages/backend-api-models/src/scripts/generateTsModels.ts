@@ -3,11 +3,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { argv } from 'node:process';
-import { promisify } from 'node:util';
 
 import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
+import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
 import { Builder, UseCase } from '@one-game-js/backend-common';
-import glob from 'glob';
+import {
+  JsonRootSchema202012,
+  JsonRootSchema202012Object,
+} from '@one-game-js/json-schema-utils';
 import { compile } from 'json-schema-to-typescript';
 import { Options } from 'prettier';
 
@@ -15,125 +18,139 @@ import { ResolveApiSchemaHttpReferenceQuery } from '../jsonSchema/application/qu
 import { ResolveApiSchemaHttpReferenceUseCase } from '../jsonSchema/application/useCases/ResolveApiSchemaHttpReferenceUseCase';
 import { SchemasRefParserOptionsBuilder } from '../jsonSchema/infrastructure/bchernyJsonSchemaRefParser/SchemasRefParserOptionsBuilder';
 
+const ROOT_TYPE_SCHEMA_TS_TYPE_ALIAS: string = 'Types';
+
+const ROOT_TYPE_SCHEMA_ID: string = 'https://onegame.schemas/api/types.json';
+
 const backendPrettierOptions: Options =
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
   require('@one-game-js/backend-prettier-config') as Options;
 
-const resolveApiSchemaHttpReferenceUseCase: UseCase<
-  ResolveApiSchemaHttpReferenceQuery,
-  Buffer
-> = new ResolveApiSchemaHttpReferenceUseCase();
+const apiV1TypesJsonSchemasPromise: Promise<JsonRootSchema202012[]> =
+  readApiJsonSchemas();
 
-const schemasRefParserOptionsBuilder: Builder<$RefOptions, [string]> =
-  new SchemasRefParserOptionsBuilder(resolveApiSchemaHttpReferenceUseCase);
+async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<
+  UseCase<ResolveApiSchemaHttpReferenceQuery, Buffer>
+> {
+  const apiV1TypesJsonSchemas: JsonRootSchema202012[] =
+    await apiV1TypesJsonSchemasPromise;
 
-const globAsPromised: (
-  pattern: string,
-  options?: glob.IOptions | undefined,
-) => Promise<string[]> = promisify(glob);
+  const apiV1JsonSchemaIdToBufferMap: Map<string, Buffer> = new Map(
+    apiV1TypesJsonSchemas.map(jsonRootSchema202012ToIdToBufferMapEntry),
+  );
 
-function arrayHasFourElements<T>(value: T[]): value is [T, T, T, T, ...T[]] {
-  const fourElementArrayLength: number = 4;
+  const resolveApiSchemaHttpReferenceUseCase: UseCase<
+    ResolveApiSchemaHttpReferenceQuery,
+    Buffer
+  > = new ResolveApiSchemaHttpReferenceUseCase(apiV1JsonSchemaIdToBufferMap);
+
+  return resolveApiSchemaHttpReferenceUseCase;
+}
+
+async function getSchemasRefParserOptionsBuilder(): Promise<
+  Builder<$RefOptions>
+> {
+  const resolveApiSchemaHttpReferenceUseCase: UseCase<
+    ResolveApiSchemaHttpReferenceQuery,
+    Buffer
+  > = await getResolveApiSchemaHttpReferenceUseCasePromise();
+
+  const schemasRefParserOptionsBuilder: Builder<$RefOptions> =
+    new SchemasRefParserOptionsBuilder(resolveApiSchemaHttpReferenceUseCase);
+
+  return schemasRefParserOptionsBuilder;
+}
+
+function jsonRootSchema202012ToIdToBufferMapEntry(
+  jsonRootSchema202012: JsonRootSchema202012,
+): [string, Buffer] {
+  if (typeof jsonRootSchema202012 === 'boolean') {
+    throw new Error('Unexpected JSON root schema');
+  } else {
+    if (jsonRootSchema202012.$id === undefined) {
+      throw new Error('Unexpected JSON root object schema without "$id" field');
+    } else {
+      return [
+        jsonRootSchema202012.$id,
+        Buffer.from(JSON.stringify(jsonRootSchema202012)),
+      ];
+    }
+  }
+}
+
+function arrayHasThreeElements<T>(value: T[]): value is [T, T, T, ...T[]] {
+  const fourElementArrayLength: number = 3;
 
   return value.length >= fourElementArrayLength;
 }
 
-async function generateAllSchemas(
-  sourceFolder: string,
-  destinationFolder: string,
-): Promise<void> {
-  const schemasGlob: string = `${sourceFolder}/*/types.json`;
+async function generateAllSchemas(destinationPath: string): Promise<void> {
+  const apiJsonSchemas: JsonRootSchema202012[] =
+    await apiV1TypesJsonSchemasPromise;
 
-  const filePaths: string[] = await globAsPromised(schemasGlob, {
-    cwd: '.',
-  });
+  const apiV1TypesJsonSchema: JsonRootSchema202012Object | undefined =
+    apiJsonSchemas.find(isApiTypesJsonRootSchemaObject);
 
-  await Promise.all(
-    filePaths.map(async (filePath: string) =>
-      generateTypescriptModelFromSchemaPath(
-        filePath,
-        sourceFolder,
-        getDestinationPath(sourceFolder, destinationFolder, filePath),
-      ),
-    ),
-  );
-}
-
-async function generateTypescriptModelFromSchemaPath(
-  schemaPath: string,
-  schemasRootDirectory: string,
-  modelDestinationPath: string,
-): Promise<void> {
-  const schemaBuffer: Buffer = await fs.readFile(schemaPath);
-  const schemaContent: string = schemaBuffer.toString();
+  if (apiV1TypesJsonSchema === undefined) {
+    throw new Error('Api V1 types not found!');
+  }
 
   const tsModel: string = await generateTypescriptModelFromSchema(
-    path.basename(schemaPath),
-    JSON.parse(schemaContent) as Record<string, unknown>,
-    schemasRootDirectory,
+    ROOT_TYPE_SCHEMA_TS_TYPE_ALIAS,
+    apiV1TypesJsonSchema,
   );
 
-  await fs.mkdir(path.dirname(modelDestinationPath), { recursive: true });
+  await fs.mkdir(path.dirname(destinationPath), { recursive: true });
 
-  await fs.writeFile(modelDestinationPath, tsModel);
+  await fs.writeFile(destinationPath, tsModel);
 }
 
 async function generateTypescriptModelFromSchema(
   schemaName: string,
-  schema: Record<string, unknown>,
-  schemasRootDirectory: string,
+  schema: JsonRootSchema202012Object,
 ): Promise<string> {
-  const refParserOptions: $RefOptions =
-    schemasRefParserOptionsBuilder.build(schemasRootDirectory);
+  const schemasRefParserOptionsBuilder: Builder<$RefOptions> =
+    await getSchemasRefParserOptionsBuilder();
 
-  const tsModel: string = await compile(schema, schemaName, {
-    $refOptions: refParserOptions,
-    bannerComment: `/* eslint-disable */
+  const refParserOptions: $RefOptions = schemasRefParserOptionsBuilder.build();
+
+  const tsModel: string = await compile(
+    schema as Record<string, unknown>,
+    schemaName,
+    {
+      $refOptions: refParserOptions,
+      bannerComment: `/* eslint-disable */
 /**
  * This file was automatically generated by json-schema-to-typescript.
  * DO NOT MODIFY IT BY HAND. Instead, modify the source JSONSchema file,
  * and run the generation script to regenerate this file.
  */`,
-    cwd: schemasRootDirectory,
-    declareExternallyReferenced: true,
-    ignoreMinAndMaxItems: true,
-    strictIndexSignatures: true,
-    style: backendPrettierOptions,
-    unknownAny: true,
-  });
+      cwd: '.',
+      declareExternallyReferenced: true,
+      ignoreMinAndMaxItems: true,
+      strictIndexSignatures: true,
+      style: backendPrettierOptions,
+      unknownAny: true,
+    },
+  );
 
   return tsModel;
 }
 
-function getDestinationPath(
-  sourceFolder: string,
-  destinationFolder: string,
-  filePath: string,
-): string {
-  const destinationPath: path.ParsedPath = path.parse(
-    path.join(
-      sourceFolder,
-      path.relative(sourceFolder, destinationFolder),
-      path.relative(sourceFolder, filePath),
-    ),
+function isApiTypesJsonRootSchemaObject(
+  apiJsonSchema: JsonRootSchema202012,
+): apiJsonSchema is JsonRootSchema202012Object {
+  return (
+    typeof apiJsonSchema === 'object' &&
+    apiJsonSchema.$id === ROOT_TYPE_SCHEMA_ID
   );
-
-  const stringifiedDestinationPath: string = path.format({
-    dir: destinationPath.dir,
-    ext: '.ts',
-    name: destinationPath.name,
-    root: destinationPath.root,
-  });
-
-  return stringifiedDestinationPath;
 }
 
 void (async () => {
-  if (arrayHasFourElements(argv)) {
-    const sourceFolder: string = argv[2];
-    const destinationFolder: string = argv[3];
+  if (arrayHasThreeElements(argv)) {
+    const destinationFolder: string = argv[2];
 
-    await generateAllSchemas(sourceFolder, destinationFolder);
+    await generateAllSchemas(destinationFolder);
   } else {
     throw new Error('Invalid args!');
   }
