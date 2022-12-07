@@ -3,8 +3,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { argv } from 'node:process';
-import { promisify } from 'node:util';
 
+import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
@@ -18,13 +18,7 @@ import {
   OpenApi3Dot1SchemaObject,
   traverseOpenApiObjectJsonSchemas,
 } from '@one-game-js/openapi-utils';
-import glob from 'glob';
 import yaml from 'yaml';
-
-const globAsPromised: (
-  pattern: string,
-  options?: glob.IOptions | undefined,
-) => Promise<string[]> = promisify(glob);
 
 interface JsonSchemaEntry {
   $id: string;
@@ -132,14 +126,8 @@ async function generateAllSchemas(
   openApiFilePath: string,
   destinationPath: string,
 ): Promise<void> {
-  const schemasGlob: string = `${sourceFolder}/**/*.json`;
-
-  const filePaths: string[] = await globAsPromised(schemasGlob, {
-    cwd: '.',
-  });
-
   const idToJsonSchemaEntriesMap: Map<string, JsonSchemaEntry> =
-    await parseJsonSchemaFiles(filePaths);
+    await parseJsonSchemaFiles();
 
   const openApiFileContentBuffer: Buffer = await fs.readFile(openApiFilePath);
   const stringifiedOpenApiFileContent: string =
@@ -187,11 +175,9 @@ function getOrCreateOpenApiComponentSchemas(
   return openApiComponentsSchemas;
 }
 
-async function parseJsonSchemaFiles(
-  filePaths: string[],
-): Promise<Map<string, JsonSchemaEntry>> {
-  const jsonSchemaEntries: JsonSchemaEntry[] = await Promise.all(
-    filePaths.map(async (filePath: string) => parseJsonSchemaFile(filePath)),
+async function parseJsonSchemaFiles(): Promise<Map<string, JsonSchemaEntry>> {
+  const jsonSchemaEntries: JsonSchemaEntry[] = (await readApiJsonSchemas()).map(
+    parseJsonSchema,
   );
 
   checkDuplicatedIdsAndNames(jsonSchemaEntries);
@@ -212,18 +198,7 @@ async function parseJsonSchemaFiles(
   return idToJsonSchemaEntriesMap;
 }
 
-async function parseJsonSchemaFile(path: string): Promise<JsonSchemaEntry> {
-  const schemaContentBuffer: Buffer = await fs.readFile(path);
-  const schemaStringifiedContent: string = schemaContentBuffer.toString();
-
-  return parseJsonSchema(schemaStringifiedContent);
-}
-
-function parseJsonSchema(stringifiedSchema: string): JsonSchemaEntry {
-  const schema: JsonRootSchema202012 = JSON.parse(
-    stringifiedSchema,
-  ) as JsonRootSchema202012;
-
+function parseJsonSchema(schema: JsonRootSchema202012): JsonSchemaEntry {
   if (schema === true || schema === false) {
     throw new Error(
       'Unexpected boolean JSON schema. Expecting an object JSON schema.',
@@ -233,7 +208,7 @@ function parseJsonSchema(stringifiedSchema: string): JsonSchemaEntry {
       throw new Error(
         `Unexpected object JSON schema. Expecting an object JSON schema with "$id" and "title" properties.
 
-${stringifiedSchema}`,
+${JSON.stringify(schema)}`,
       );
     } else {
       return {
