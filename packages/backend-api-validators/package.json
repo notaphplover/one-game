@@ -50,6 +50,7 @@
   },
   "version": "0.1.0",
   "dependencies": {
+    "@one-game-js/api-json-schemas-provider": "workspace:../api-json-schemas-provider",
     "ajv": "^8.11.2"
   }
 }
