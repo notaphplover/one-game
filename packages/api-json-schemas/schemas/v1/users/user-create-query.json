@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/users/user-create-query.json",
+  "title": "UserCreateQueryV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": ["email", "name", "password"]
+}

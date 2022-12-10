@@ -1,8 +1,0 @@
-{
-  "$schema": "http://json-schema.org/draft/2020-12/schema",
-  "title": "Types",
-  "$id": "http://onegame.schemas/api/types.json",
-  "anyOf": [
-    { "$ref": "http://onegame.schemas/api/v1/types.json" }
-  ]
-}

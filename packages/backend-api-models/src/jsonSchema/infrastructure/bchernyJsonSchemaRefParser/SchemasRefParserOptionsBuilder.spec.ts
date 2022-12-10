@@ -8,7 +8,6 @@ import {
 } from '@bcherny/json-schema-ref-parser';
 import { UseCase } from '@one-game-js/backend-common';
 
-import { API_SCHEMA_HOST } from '../../application/models/apiSchemaHost';
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { SchemasRefParserOptionsBuilder } from './SchemasRefParserOptionsBuilder';
 
@@ -31,20 +30,12 @@ describe(SchemasRefParserOptionsBuilder.name, () => {
 
   describe('.build', () => {
     describe('having a schemasRootDirectory', () => {
-      let schemasRootDirectoryFixture: string;
-
-      beforeAll(() => {
-        schemasRootDirectoryFixture = '/schemas/root/directory';
-      });
-
       describe('when called', () => {
         let result: unknown;
         let resultAsOptions: Options;
 
         beforeAll(() => {
-          result = schemasRefParserOptionsBuilder.build(
-            schemasRootDirectoryFixture,
-          );
+          result = schemasRefParserOptionsBuilder.build();
           resultAsOptions = result as Options;
         });
 
@@ -141,9 +132,6 @@ describe(SchemasRefParserOptionsBuilder.name, () => {
                 const expectedResolveApiSchemaHttpReferenceQuery: ResolveApiSchemaHttpReferenceQuery =
                   {
                     callback: callbackFixture,
-                    referenceHostToSchemasRootDirectoryMap: new Map([
-                      [API_SCHEMA_HOST, schemasRootDirectoryFixture],
-                    ]),
                     url: fileInfoFixture.url,
                   };
 

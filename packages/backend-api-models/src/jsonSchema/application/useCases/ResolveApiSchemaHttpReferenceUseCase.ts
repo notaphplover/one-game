@@ -1,6 +1,4 @@
-import fs from 'node:fs/promises';
 import http from 'node:http';
-import path from 'node:path';
 import stream from 'node:stream';
 
 import { UseCase } from '@one-game-js/backend-common';
@@ -10,23 +8,29 @@ import { ResolveApiSchemaHttpReferenceQuery } from '../queries/ResolveApiSchemaH
 export class ResolveApiSchemaHttpReferenceUseCase
   implements UseCase<ResolveApiSchemaHttpReferenceQuery, Buffer>
 {
+  readonly #uriToApiSchemaBufferMap: Map<string, Buffer>;
+
+  constructor(uriToJsonSchemaBufferMap: Map<string, Buffer>) {
+    this.#uriToApiSchemaBufferMap = uriToJsonSchemaBufferMap;
+  }
+
   public async handle(
     resolveApiSchemaHttpReferenceQuery: ResolveApiSchemaHttpReferenceQuery,
   ): Promise<Buffer> {
     try {
-      let fileContentBuffer: Buffer;
+      let fileContentBuffer: Buffer | undefined;
 
-      const filePath: string | undefined = this.#tryGetFilePath(
-        resolveApiSchemaHttpReferenceQuery.referenceHostToSchemasRootDirectoryMap,
-        resolveApiSchemaHttpReferenceQuery.url,
-      );
+      const apiSchemaBufferOrUndefined: Buffer | undefined =
+        this.#uriToApiSchemaBufferMap.get(
+          resolveApiSchemaHttpReferenceQuery.url,
+        );
 
-      if (filePath === undefined) {
+      if (apiSchemaBufferOrUndefined === undefined) {
         fileContentBuffer = await this.#defaultHandleRemoteRef(
           resolveApiSchemaHttpReferenceQuery.url,
         );
       } else {
-        fileContentBuffer = await fs.readFile(filePath);
+        fileContentBuffer = apiSchemaBufferOrUndefined;
       }
 
       if (resolveApiSchemaHttpReferenceQuery.callback !== undefined) {
@@ -84,29 +88,5 @@ export class ResolveApiSchemaHttpReferenceUseCase
         });
       },
     );
-  }
-
-  #tryGetFilePath(
-    referenceHostToSchemasRootDirectoryMap: Map<string, string>,
-    url: string,
-  ): string | undefined {
-    const urlObject: URL = new URL(url);
-
-    const urlHost: string = urlObject.hostname;
-
-    const urlPathName: string = urlObject.pathname;
-
-    const schemasRootDirectory: string | undefined =
-      referenceHostToSchemasRootDirectoryMap.get(urlHost);
-
-    let filePath: string | undefined;
-
-    if (schemasRootDirectory === undefined) {
-      filePath = undefined;
-    } else {
-      filePath = path.join(schemasRootDirectory, ...urlPathName.split('/'));
-    }
-
-    return filePath;
   }
 }

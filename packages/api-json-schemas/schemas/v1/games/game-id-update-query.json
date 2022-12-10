@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/game-id-update-query.json",
+  "title": "GameIdUpdateQueryV1",
+  "anyOf": [
+    { "$ref": "https://onegame.schemas/api/v1/games/game-id-draw-cards-query.json" },
+    { "$ref": "https://onegame.schemas/api/v1/games/game-id-pass-turn-query.json" },
+    { "$ref": "https://onegame.schemas/api/v1/games/game-id-play-cards-query.json" }
+  ]
+}

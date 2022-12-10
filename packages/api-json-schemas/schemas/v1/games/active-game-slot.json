@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/active-game-slot.json",
+  "title": "ActiveGameSlotV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "cardsAmount": {
+      "type": "integer"
+    },
+    "userId": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "cardsAmount",
+    "userId"
+  ]
+}

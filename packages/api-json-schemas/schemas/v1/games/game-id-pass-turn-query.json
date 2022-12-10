@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/game-id-pass-turn-query.json",
+  "title": "GameIdPassTurnQueryV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "passTurn",
+      "type": "string"
+    },
+    "slotIndex": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "kind",
+    "slotIndex"
+  ]
+}
