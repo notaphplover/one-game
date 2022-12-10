@@ -5,11 +5,8 @@ import {
 import Ajv, { ErrorObject, ValidateFunction } from 'ajv/dist/2020';
 
 import { Validator } from '../../../../common/application/modules/Validator';
-import { ValidatorProvider } from '../../../../common/application/modules/ValidatorProvider';
 
-export class AjvJsonSchemaValidatorProvider<TId extends string = string>
-  implements ValidatorProvider<TId>
-{
+export class AjvJsonSchemaValidatorProvider<TId extends string = string> {
   readonly #idToValidatorMap: Map<string, Validator<unknown>>;
   readonly #ajvInstance: Ajv;
   #initializeIsCalled: boolean;
