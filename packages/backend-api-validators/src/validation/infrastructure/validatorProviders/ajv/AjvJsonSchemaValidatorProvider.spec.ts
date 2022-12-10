@@ -23,7 +23,7 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
     (Ajv as unknown as jest.Mock<() => Ajv>).mockReturnValue(ajvMock);
   });
 
-  describe('.constructor', () => {
+  describe('.initialize', () => {
     describe('having a jsonSchema array with a boolean jsonSchema', () => {
       let schemaFixture: JsonRootSchema202012;
 
@@ -39,8 +39,11 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
+          const ajvJsonSchemaValidatorProvider: AjvJsonSchemaValidatorProvider =
+            new AjvJsonSchemaValidatorProvider(async () => schemasFixture);
+
           try {
-            new AjvJsonSchemaValidatorProvider(schemasFixture);
+            await ajvJsonSchemaValidatorProvider.initialize();
           } catch (error: unknown) {
             result = error;
           }
@@ -78,8 +81,11 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
+          const ajvJsonSchemaValidatorProvider: AjvJsonSchemaValidatorProvider =
+            new AjvJsonSchemaValidatorProvider(async () => schemasFixture);
+
           try {
-            new AjvJsonSchemaValidatorProvider(schemasFixture);
+            await ajvJsonSchemaValidatorProvider.initialize();
           } catch (error: unknown) {
             result = error;
           }
@@ -101,9 +107,7 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
         });
       });
     });
-  });
 
-  describe('.initialize', () => {
     describe('when called', () => {
       let schemaFixture: JsonRootSchema202012Object;
       let jsonSchemaValidatorMock: jest.Mock<ValidateFunction<unknown>> &
@@ -124,9 +128,9 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
 
         ajvMock.compile.mockReturnValueOnce(jsonSchemaValidatorMock);
 
-        ajvJsonSchemaValidatorProvider = new AjvJsonSchemaValidatorProvider([
-          schemaFixture,
-        ]);
+        ajvJsonSchemaValidatorProvider = new AjvJsonSchemaValidatorProvider(
+          async () => [schemaFixture],
+        );
 
         await ajvJsonSchemaValidatorProvider.initialize();
       });
@@ -155,7 +159,9 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
       let result: unknown;
 
       beforeAll(async () => {
-        ajvJsonSchemaValidatorProvider = new AjvJsonSchemaValidatorProvider([]);
+        ajvJsonSchemaValidatorProvider = new AjvJsonSchemaValidatorProvider(
+          async () => [],
+        );
 
         await ajvJsonSchemaValidatorProvider.initialize();
 
@@ -223,9 +229,9 @@ describe(AjvJsonSchemaValidatorProvider.name, () => {
 
         ajvMock.compile.mockReturnValueOnce(jsonSchemaValidatorMock);
 
-        ajvJsonSchemaValidatorProvider = new AjvJsonSchemaValidatorProvider([
-          schemaFixture,
-        ]);
+        ajvJsonSchemaValidatorProvider = new AjvJsonSchemaValidatorProvider(
+          async () => [schemaFixture],
+        );
 
         await ajvJsonSchemaValidatorProvider.initialize();
       });

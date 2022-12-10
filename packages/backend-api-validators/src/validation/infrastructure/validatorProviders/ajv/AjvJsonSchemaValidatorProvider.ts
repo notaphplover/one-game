@@ -13,15 +13,14 @@ export class AjvJsonSchemaValidatorProvider<TId extends string = string>
   readonly #idToValidatorMap: Map<string, Validator<unknown>>;
   readonly #ajvInstance: Ajv;
   #initializeIsCalled: boolean;
-  readonly #jsonSchemas: JsonRootSchema202012Object[];
+  readonly #jsonSchemasBuildFn: () => Promise<JsonRootSchema202012[]>;
 
-  constructor(jsonSchemas: JsonRootSchema202012[]) {
+  constructor(jsonSchemasBuildFn: () => Promise<JsonRootSchema202012[]>) {
     this.#idToValidatorMap = new Map();
     this.#ajvInstance = new Ajv();
     this.#initializeIsCalled = false;
 
-    this.#validateJsonSchemas(jsonSchemas);
-    this.#jsonSchemas = jsonSchemas as JsonRootSchema202012Object[];
+    this.#jsonSchemasBuildFn = jsonSchemasBuildFn;
   }
 
   public provide<T>(id: TId): Validator<T> {
@@ -36,9 +35,17 @@ export class AjvJsonSchemaValidatorProvider<TId extends string = string>
   }
 
   public async initialize(): Promise<void> {
+    const jsonSchemas: JsonRootSchema202012[] =
+      await this.#jsonSchemasBuildFn();
+
+    this.#validateJsonSchemas(jsonSchemas);
+
+    const jsonSchemaObjects: JsonRootSchema202012Object[] =
+      jsonSchemas as JsonRootSchema202012Object[];
+
     this.#registerInitializeCall();
 
-    this.#initializeValidatorMap();
+    this.#initializeValidatorMap(jsonSchemaObjects);
   }
 
   #buildValidator(ajvValidateFn: ValidateFunction): Validator<unknown> {
@@ -61,13 +68,15 @@ export class AjvJsonSchemaValidatorProvider<TId extends string = string>
     return validator;
   }
 
-  #initializeValidatorMap(): void {
-    for (const jsonSchema of this.#jsonSchemas) {
+  #initializeValidatorMap(
+    jsonSchemaObjects: JsonRootSchema202012Object[],
+  ): void {
+    for (const jsonSchema of jsonSchemaObjects) {
       const jsonSchemaId: string = jsonSchema.$id as string;
       this.#ajvInstance.addSchema(jsonSchema, jsonSchemaId);
     }
 
-    for (const jsonSchema of this.#jsonSchemas) {
+    for (const jsonSchema of jsonSchemaObjects) {
       const ajvValidateFn: ValidateFunction =
         this.#ajvInstance.compile(jsonSchema);
 
