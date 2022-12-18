@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `Controller`.
 - Added `Entity`.
 - Added `Port`.
+- Added `PortAsync`.
 - Added `UseCase`.
 
 
