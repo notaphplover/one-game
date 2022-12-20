@@ -3,9 +3,11 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "Backend Cassandra integration",
+  "dependencies": {
+    "cassandra-driver": "^4.6.4"
+  },
+  "description": "Backend db integration",
   "devDependencies": {
-    "@bcherny/json-schema-ref-parser": "9.0.9",
     "@jest/globals": "29.3.1",
     "@one-game-js/backend-common": "workspace:../backend-common",
     "@types/node": "18.11.17",
@@ -27,7 +29,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/backend-cassandra-integration",
+  "name": "@one-game-js/backend-db",
   "publishConfig": {
     "access": "public"
   },
