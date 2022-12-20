@@ -5,9 +5,11 @@ import { UseCase } from './common/application/modules/UseCase';
 import { Entity } from './common/domain/models/Entity';
 import { Builder } from './common/domain/modules/Builder';
 import { BuilderAsync } from './common/domain/modules/BuilderAsync';
+import { Converter } from './common/domain/modules/Converter';
 
 export type {
   Controller,
+  Converter,
   Builder,
   BuilderAsync,
   Entity,
