@@ -20,7 +20,7 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@7.24.2",
+  "packageManager": "pnpm@7.24.3",
   "private": true,
   "repository": {
     "type": "git",
