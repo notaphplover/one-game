@@ -6,7 +6,7 @@
   "description": "Backend api models",
   "devDependencies": {
     "@bcherny/json-schema-ref-parser": "9.0.9",
-    "@jest/globals": "29.3.1",
+    "@jest/globals": "29.4.3",
     "@one-game-js/api-json-schemas-provider": "workspace:../api-json-schemas-provider",
     "@one-game-js/backend-common": "workspace:../backend-common",
     "@one-game-js/json-schema-utils": "workspace:../json-schema-utils",
