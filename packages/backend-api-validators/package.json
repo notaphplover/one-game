@@ -5,7 +5,7 @@
   },
   "description": "Backend api model validators",
   "devDependencies": {
-    "@jest/globals": "29.3.1",
+    "@jest/globals": "29.4.3",
     "@one-game-js/backend-common": "workspace:../backend-common",
     "@one-game-js/json-schema-utils": "workspace:../json-schema-utils",
     "@types/node": "18.11.18",
