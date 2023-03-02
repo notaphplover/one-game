@@ -22,13 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 
 ### Added
-- Added `Builder`.
-- Added `BuilderAsync`.
-- Added `Controller`.
-- Added `Entity`.
-- Added `Port`.
-- Added `PortAsync`.
-- Added `UseCase`.
+- Added `DeleteTypeOrmService`.
+- Added `FindTypeOrmService`.
+- Added `InsertTypeOrmService`.
+- Added `UpdateTypeOrmService`.
+- Added `QueryToFindQueryTypeOrmConverter`.
 
 
 

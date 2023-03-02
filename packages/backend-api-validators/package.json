@@ -6,8 +6,8 @@
   "description": "Backend api model validators",
   "devDependencies": {
     "@jest/globals": "29.4.3",
-    "@one-game-js/backend-common": "workspace:../backend-common",
-    "@one-game-js/json-schema-utils": "workspace:../json-schema-utils",
+    "@one-game-js/backend-common": "workspace:*",
+    "@one-game-js/json-schema-utils": "workspace:*",
     "@types/node": "18.14.4",
     "@typescript-eslint/eslint-plugin": "5.54.0",
     "@typescript-eslint/parser": "5.54.0",
@@ -50,7 +50,7 @@
   },
   "version": "0.1.0",
   "dependencies": {
-    "@one-game-js/api-json-schemas-provider": "workspace:../api-json-schemas-provider",
+    "@one-game-js/api-json-schemas-provider": "workspace:*",
     "ajv": "^8.11.2"
   }
 }
