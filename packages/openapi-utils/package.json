@@ -5,7 +5,7 @@
   },
   "description": "OpenAPI utils",
   "dependencies": {
-    "@one-game-js/json-schema-utils": "workspace:../json-schema-utils"
+    "@one-game-js/json-schema-utils": "workspace:*"
   },
   "devDependencies": {
     "@jest/globals": "29.4.3",
