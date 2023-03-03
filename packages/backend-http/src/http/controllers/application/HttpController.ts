@@ -1,4 +1,4 @@
-import { Builder, Controller } from '@one-game-js/backend-common';
+import { Builder, Handler } from '@one-game-js/backend-common';
 
 import { Request } from '../../models/application/Request';
 import { RequestWithBody } from '../../models/application/RequestWithBody';
@@ -9,19 +9,22 @@ export class HttpController<
   TParams extends unknown[] = unknown[],
   TRequest extends Request | RequestWithBody = Request | RequestWithBody,
   TResult = unknown,
-> implements Controller<TParams, TResult>
+> implements Handler<TParams, TResult>
 {
-  #requestBuilder: Builder<TRequest, TParams>;
-  #requestController: Controller<
-    TRequest,
+  readonly #requestBuilder: Builder<TRequest, TParams>;
+  readonly #requestController: Handler<
+    [TRequest],
     Response | ResponseWithBody<unknown>
   >;
-  #resultBuilder: Builder<TResult, [Response | ResponseWithBody<unknown>]>;
+  readonly #resultBuilder: Builder<
+    TResult,
+    [Response | ResponseWithBody<unknown>]
+  >;
 
   constructor(
     requestBuilder: Builder<TRequest, TParams>,
-    requestController: Controller<
-      TRequest,
+    requestController: Handler<
+      [TRequest],
       Response | ResponseWithBody<unknown>
     >,
     resultBuilder: Builder<TResult, [Response | ResponseWithBody<unknown>]>,
@@ -31,7 +34,7 @@ export class HttpController<
     this.#resultBuilder = resultBuilder;
   }
 
-  public async handle(params: TParams): Promise<TResult> {
+  public async handle(...params: TParams): Promise<TResult> {
     const appRequest: TRequest = this.#requestBuilder.build(...params);
     const appResponse: Response | ResponseWithBody<unknown> =
       await this.#requestController.handle(appRequest);
