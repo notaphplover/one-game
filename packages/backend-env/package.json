@@ -3,9 +3,8 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "Backend http library for one-game-js services",
+  "description": "Backend env library for one-game-js services",
   "dependencies": {
-    "http-status-codes": "2.2.0"
   },
   "devDependencies": {
     "@jest/globals": "29.4.3",
@@ -28,7 +27,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/backend-http",
+  "name": "@one-game-js/backend-env",
   "publishConfig": {
     "access": "public"
   },
