@@ -4,6 +4,9 @@
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "description": "Backend http library for one-game-js services",
+  "dependencies": {
+    "http-status-codes": "2.2.0"
+  },
   "devDependencies": {
     "@jest/globals": "29.4.3",
     "@one-game-js/backend-common": "workspace:*",
