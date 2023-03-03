@@ -6,6 +6,3 @@
 
 # Turborepo files
 .turbo/
-
-# Temp files
-/tmp
