@@ -3,9 +3,9 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "Backend env library for one-game-js services",
+  "description": "Backend jwt library for one-game-js services",
   "dependencies": {
-    "dotenv": "16.0.3"
+    "jsonwebtoken": "9.0.0"
   },
   "devDependencies": {
     "@jest/globals": "29.4.3",
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/backend-env",
+  "name": "@one-game-js/backend-jwt",
   "publishConfig": {
     "access": "public"
   },
