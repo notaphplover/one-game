@@ -5,6 +5,7 @@
   },
   "description": "Backend env library for one-game-js services",
   "dependencies": {
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "@jest/globals": "29.4.3",
