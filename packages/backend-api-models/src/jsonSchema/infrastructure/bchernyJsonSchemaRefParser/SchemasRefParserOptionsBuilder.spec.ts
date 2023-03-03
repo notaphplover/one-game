@@ -6,14 +6,14 @@ import {
   Options,
   ResolverOptions,
 } from '@bcherny/json-schema-ref-parser';
-import { UseCase } from '@one-game-js/backend-common';
+import { Handler } from '@one-game-js/backend-common';
 
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { SchemasRefParserOptionsBuilder } from './SchemasRefParserOptionsBuilder';
 
 describe(SchemasRefParserOptionsBuilder.name, () => {
   let resolveApiSchemaHttpReferenceUseCaseMock: jest.Mocked<
-    UseCase<ResolveApiSchemaHttpReferenceQuery, Buffer>
+    Handler<[ResolveApiSchemaHttpReferenceQuery], Buffer>
   >;
 
   let schemasRefParserOptionsBuilder: SchemasRefParserOptionsBuilder;

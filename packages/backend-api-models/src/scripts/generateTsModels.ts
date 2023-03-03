@@ -6,7 +6,7 @@ import { argv } from 'node:process';
 
 import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
 import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
-import { Builder, UseCase } from '@one-game-js/backend-common';
+import { Builder, Handler } from '@one-game-js/backend-common';
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
@@ -30,7 +30,7 @@ const apiV1TypesJsonSchemasPromise: Promise<JsonRootSchema202012[]> =
   readApiJsonSchemas();
 
 async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<
-  UseCase<ResolveApiSchemaHttpReferenceQuery, Buffer>
+  Handler<[ResolveApiSchemaHttpReferenceQuery], Buffer>
 > {
   const apiV1TypesJsonSchemas: JsonRootSchema202012[] =
     await apiV1TypesJsonSchemasPromise;
@@ -39,8 +39,8 @@ async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<
     apiV1TypesJsonSchemas.map(jsonRootSchema202012ToIdToBufferMapEntry),
   );
 
-  const resolveApiSchemaHttpReferenceUseCase: UseCase<
-    ResolveApiSchemaHttpReferenceQuery,
+  const resolveApiSchemaHttpReferenceUseCase: Handler<
+    [ResolveApiSchemaHttpReferenceQuery],
     Buffer
   > = new ResolveApiSchemaHttpReferenceUseCase(apiV1JsonSchemaIdToBufferMap);
 
@@ -50,8 +50,8 @@ async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<
 async function getSchemasRefParserOptionsBuilder(): Promise<
   Builder<$RefOptions>
 > {
-  const resolveApiSchemaHttpReferenceUseCase: UseCase<
-    ResolveApiSchemaHttpReferenceQuery,
+  const resolveApiSchemaHttpReferenceUseCase: Handler<
+    [ResolveApiSchemaHttpReferenceQuery],
     Buffer
   > = await getResolveApiSchemaHttpReferenceUseCasePromise();
 

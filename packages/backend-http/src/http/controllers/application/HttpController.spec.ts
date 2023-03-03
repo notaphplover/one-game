@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Controller } from '@one-game-js/backend-common';
+import { Builder, Handler } from '@one-game-js/backend-common';
 
 import { Request } from '../../models/application/Request';
 import { RequestWithBody } from '../../models/application/RequestWithBody';
@@ -13,7 +13,7 @@ describe(HttpController.name, () => {
     Builder<Request | RequestWithBody, unknown[]>
   >;
   let requestControllerMock: jest.Mocked<
-    Controller<Request | RequestWithBody, Response | ResponseWithBody<unknown>>
+    Handler<[Request | RequestWithBody], Response | ResponseWithBody<unknown>>
   >;
   let resultBuilderMock: jest.Mocked<
     Builder<unknown, [Response | ResponseWithBody<unknown>]>
@@ -64,7 +64,7 @@ describe(HttpController.name, () => {
         requestControllerMock.handle.mockResolvedValueOnce(responseFixture);
         resultBuilderMock.build.mockReturnValueOnce(resultFixture);
 
-        result = await httpController.handle([handlerParamFixture]);
+        result = await httpController.handle(handlerParamFixture);
       });
 
       afterAll(() => {
