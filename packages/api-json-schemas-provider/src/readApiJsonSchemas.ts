@@ -1,14 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'path';
-import { promisify } from 'util';
 
 import { JsonRootSchema202012 } from '@one-game-js/json-schema-utils';
 import glob from 'glob';
-
-const globAsPromised: (
-  pattern: string,
-  options?: glob.IOptions | undefined,
-) => Promise<string[]> = promisify(glob);
 
 const JSON_SCHEMAS_BLOB_SUFFIX: string = '**/*.json';
 
@@ -26,7 +20,7 @@ export async function readApiJsonSchemas(): Promise<JsonRootSchema202012[]> {
     JSON_SCHEMAS_BLOB_SUFFIX,
   );
 
-  const jsonSchemaPaths: string[] = await globAsPromised(jsonSchemasBlob);
+  const jsonSchemaPaths: string[] = await glob(jsonSchemasBlob);
 
   const jsonSchemas: JsonRootSchema202012[] = await Promise.all(
     jsonSchemaPaths.map(async (jsonSchemaPath: string) =>
