@@ -5,6 +5,7 @@
   },
   "description": "Backend jwt library for one-game-js services",
   "dependencies": {
+    "@types/jsonwebtoken": "9.0.1",
     "jsonwebtoken": "9.0.0"
   },
   "devDependencies": {
