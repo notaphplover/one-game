@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 
+import { EnvModule } from '../../../../foundation/env/modules/adapter/nest/EnvModule';
+
 @Module({
-  imports: [],
+  imports: [EnvModule],
 })
 export class AppModule {}
