@@ -5,6 +5,13 @@
   },
   "description": "Backend db library for one-game-js services",
   "dependencies": {
+    "@fastify/helmet": "^10.1.0",
+    "@nestjs/common": "^9.3.9",
+    "@nestjs/core": "^9.3.9",
+    "@nestjs/platform-fastify": "^9.3.9",
+    "fastify": "4.13.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
     "typeorm": "0.3.12"
   },
   "devDependencies": {
