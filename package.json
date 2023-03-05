@@ -10,9 +10,9 @@
     "@one-game-js/backend-scripts": "workspace:*",
     "@one-game-js/backend-typescript-config": "workspace:*",
     "@one-game-js/eslint-config-backend": "workspace:*",
-    "husky": "^8.0.2",
-    "lint-staged": "^13.0.3",
-    "turbo": "^1.6.3"
+    "husky": "8.0.2",
+    "lint-staged": "13.0.3",
+    "turbo": "1.6.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
@@ -30,6 +30,7 @@
     "build:all": "turbo run build",
     "lint:all": "turbo run lint",
     "prepare": "husky install",
+    "serve": "trap '' INT TERM; turbo run serve",
     "test:integration:js": "turbo test:integration:js",
     "test:js": "turbo run test:js",
     "test:js:coverage": "turbo run test:js:coverage",

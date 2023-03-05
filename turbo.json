@@ -2,119 +2,63 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "src/**/*.ts"
-      ],
-      "outputs": [
-        "dist/**",
-        "lib/**"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["dist/**", "lib/**"]
     },
     "@one-game-js/api-json-schemas#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "schemas/**/*.json"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["schemas/**/*.json"]
     },
     "@one-game-js/api-openapi-schema#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "schemas/src/one-game.yaml",
-        "src/**/*.ts"
-      ],
-      "outputs": [
-        "dist/**",
-        "lib/**",
-        "schemas/generated/one-game.yaml"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["schemas/src/one-game.yaml", "src/**/*.ts"],
+      "outputs": ["dist/**", "lib/**", "schemas/generated/one-game.yaml"]
     },
     "@one-game-js/backend-api-models#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "src/**/*.ts"
-      ],
-      "outputs": [
-        "lib/**",
-        "src/models/types.ts"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**", "src/models/types.ts"]
     },
     "format": {
-      "inputs": [
-        "src/**/*.ts"
-      ],
-      "outputs": [
-        "src/**/*.ts"
-      ]
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["src/**/*.ts"]
     },
     "lint": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "src/**/*.ts"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts"]
+    },
+    "serve": {
+      "cache": false,
+      "dependsOn": ["build"],
+      "persistent": true
     },
     "test": {
-      "inputs": [
-        "src/**/*.ts"
-      ],
+      "inputs": ["src/**/*.ts"],
       "outputs": []
     },
     "test:integration:js": {
-      "dependsOn": [
-        "build"
-      ],
-      "inputs": [
-        "dist/**",
-        "lib/**"
-      ],
+      "dependsOn": ["build"],
+      "inputs": ["dist/**", "lib/**"],
       "outputs": []
     },
     "test:js": {
-      "dependsOn": [
-        "build"
-      ],
-      "inputs": [
-        "dist/**",
-        "lib/**"
-      ],
+      "dependsOn": ["build"],
+      "inputs": ["dist/**", "lib/**"],
       "outputs": []
     },
     "test:js:coverage": {
-      "dependsOn": [
-        "build"
-      ],
-      "inputs": [
-        "dist/**",
-        "lib/**"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["build"],
+      "inputs": ["dist/**", "lib/**"],
+      "outputs": ["coverage/**"]
     },
     "test:uncommitted": {
-      "inputs": [
-        "src/**/*.ts"
-      ],
+      "inputs": ["src/**/*.ts"],
       "outputs": []
     },
     "test:unit:js": {
-      "dependsOn": [
-        "build"
-      ],
-      "inputs": [
-        "dist/**",
-        "lib/**"
-      ],
+      "dependsOn": ["build"],
+      "inputs": ["dist/**", "lib/**"],
       "outputs": []
     }
   }
