@@ -7,7 +7,7 @@ import {
 } from '@nestjs/platform-fastify';
 
 import { registerSignalHandlers } from '../actions/nestjs/registerSignalHandlers';
-import { AppModule } from '../modules/AppModule';
+import { AppModule } from '../modules/adapter/nest/AppModule';
 
 const SERVICE_PORT: number = 3000;
 
