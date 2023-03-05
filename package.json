@@ -30,6 +30,7 @@
     "build:all": "turbo run build",
     "lint:all": "turbo run lint",
     "prepare": "husky install",
+    "serve": "trap '' INT TERM; turbo run serve",
     "test:integration:js": "turbo test:integration:js",
     "test:js": "turbo run test:js",
     "test:js:coverage": "turbo run test:js:coverage",
