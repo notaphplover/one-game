@@ -18,16 +18,24 @@ export abstract class DotEnvLoader<TEnv extends Record<string, unknown>> {
   }
 
   #load(): TEnv {
-    dotenv.config({
+    const result: dotenv.DotenvConfigOutput = dotenv.config({
       path: this.#path,
     });
 
-    const env: TEnv = this.parseIndex();
+    if (result.parsed === undefined) {
+      if (result.error === undefined) {
+        throw new Error('Expected an error or a parse result');
+      } else {
+        throw result.error;
+      }
+    }
+
+    const env: TEnv = this._parseEnv(result.parsed);
 
     this.#env = env;
 
     return env;
   }
 
-  protected abstract parseIndex(): TEnv;
+  protected abstract _parseEnv(env: Record<string, string>): TEnv;
 }
