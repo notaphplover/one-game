@@ -9,7 +9,7 @@ export abstract class DotEnvLoader<TEnv extends Record<string, unknown>> {
     this.#path = path;
   }
 
-  public get index(): TEnv {
+  public get env(): TEnv {
     return this.#env ?? this.#load();
   }
 

@@ -55,7 +55,7 @@ describe(DotEnvLoader.name, () => {
           let result: unknown;
 
           beforeAll(() => {
-            result = dotEnvLoader.index;
+            result = dotEnvLoader.env;
           });
 
           it('should return env variables loaded', () => {
