@@ -28,6 +28,11 @@
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.ts"]
     },
+    "serve": {
+      "cache": false,
+      "dependsOn": ["build"],
+      "persistent": true
+    },
     "test": {
       "inputs": ["src/**/*.ts"],
       "outputs": []
