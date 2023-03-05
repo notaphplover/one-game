@@ -1,3 +1,3 @@
-export interface Environment extends Record<string, unknown> {
+export interface Environment {
   typeOrmDatasourceOptions: Record<string, unknown>;
 }

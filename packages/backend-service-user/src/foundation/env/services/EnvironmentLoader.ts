@@ -3,6 +3,7 @@ import { EnvLoader } from '@one-game-js/backend-env';
 import { cleanEnv, json } from 'envalid';
 
 import { Environment } from '../models/application/Environment';
+import { EnvironmentRaw } from '../models/application/EnvironmentRaw';
 
 const DOT_ENV_PATH: string = '.env';
 
@@ -17,8 +18,12 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
   }
 
   protected _parseEnv(env: Record<string, string>): Environment {
-    return cleanEnv(env, {
-      typeOrmDatasourceOptions: json(),
+    const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
+      TYPEORM_DATASOURCE_OPTIONS: json(),
     });
+
+    return {
+      typeOrmDatasourceOptions: rawEnvironment.TYPEORM_DATASOURCE_OPTIONS,
+    };
   }
 }
