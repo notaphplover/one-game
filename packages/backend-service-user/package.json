@@ -9,6 +9,7 @@
     "@nestjs/common": "9.3.9",
     "@nestjs/core": "9.3.9",
     "@nestjs/platform-fastify": "9.3.9",
+    "envalid": "^7.3.1",
     "fastify": "4.14.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.0",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@jest/globals": "29.4.3",
     "@one-game-js/backend-common": "workspace:*",
+    "@one-game-js/backend-env": "workspace:*",
     "@types/node": "18.14.6",
     "@typescript-eslint/eslint-plugin": "5.54.0",
     "@typescript-eslint/parser": "5.54.0",

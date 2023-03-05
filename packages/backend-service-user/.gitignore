@@ -6,3 +6,6 @@
 
 # Turborepo files
 .turbo/
+
+# env file
+.env

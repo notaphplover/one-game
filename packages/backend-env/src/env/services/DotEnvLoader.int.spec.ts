@@ -7,8 +7,8 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { DotEnvLoader } from './DotEnvLoader';
 
 class DotEnvLoaderTest extends DotEnvLoader<Record<string, unknown>> {
-  protected parseIndex(): Record<string, unknown> {
-    return { FOO: process.env['ENV_INT_TEST_FOO'] };
+  protected _parseEnv(env: Record<string, string>): Record<string, unknown> {
+    return { FOO: env['ENV_INT_TEST_FOO'] };
   }
 }
 
@@ -55,7 +55,7 @@ describe(DotEnvLoader.name, () => {
           let result: unknown;
 
           beforeAll(() => {
-            result = dotEnvLoader.index;
+            result = dotEnvLoader.env;
           });
 
           it('should return env variables loaded', () => {
