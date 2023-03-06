@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-export abstract class DotEnvLoader<TEnv extends Record<string, unknown>> {
+export abstract class DotEnvLoader<TEnv> {
   #env: TEnv | undefined;
   readonly #path: string;
 
