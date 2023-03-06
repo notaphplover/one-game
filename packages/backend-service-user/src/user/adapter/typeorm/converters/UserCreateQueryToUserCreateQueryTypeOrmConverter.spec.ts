@@ -29,6 +29,7 @@ describe(UserCreateQueryToUserCreateQueryTypeOrmConverter.name, () => {
 
     it('should return a user', () => {
       const expected: QueryDeepPartialEntity<UserDb> = {
+        email: userCreateQueryFixture.email,
         id: userCreateQueryFixture.id,
         name: userCreateQueryFixture.name,
       };
