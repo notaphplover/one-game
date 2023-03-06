@@ -1,4 +1,4 @@
-import { ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@one-game-js/backend-common';
 import {
   Repository,
   InsertResult,
@@ -13,19 +13,33 @@ export class InsertTypeOrmService<
   TQuery,
 > {
   readonly #repository: Repository<TModelDb>;
-  readonly #modelDbToModelConverter: ConverterAsync<TModelDb, TModel>;
-  readonly #setQueryToSetTypeOrmQueryConverter: ConverterAsync<
-    TQuery,
-    QueryDeepPartialEntity<TModelDb> | QueryDeepPartialEntity<TModelDb>[]
-  >;
+  readonly #modelDbToModelConverter:
+    | Converter<TModelDb, TModel>
+    | ConverterAsync<TModelDb, TModel>;
+  readonly #setQueryToSetTypeOrmQueryConverter:
+    | Converter<
+        TQuery,
+        QueryDeepPartialEntity<TModelDb> | QueryDeepPartialEntity<TModelDb>[]
+      >
+    | ConverterAsync<
+        TQuery,
+        QueryDeepPartialEntity<TModelDb> | QueryDeepPartialEntity<TModelDb>[]
+      >;
 
   constructor(
     repository: Repository<TModelDb>,
-    modelDbToModelConverter: ConverterAsync<TModelDb, TModel>,
-    setQueryToSetTypeOrmQueryConverter: ConverterAsync<
-      TQuery,
-      QueryDeepPartialEntity<TModelDb> | QueryDeepPartialEntity<TModelDb>[]
-    >,
+    modelDbToModelConverter:
+      | Converter<TModelDb, TModel>
+      | ConverterAsync<TModelDb, TModel>,
+    setQueryToSetTypeOrmQueryConverter:
+      | Converter<
+          TQuery,
+          QueryDeepPartialEntity<TModelDb> | QueryDeepPartialEntity<TModelDb>[]
+        >
+      | ConverterAsync<
+          TQuery,
+          QueryDeepPartialEntity<TModelDb> | QueryDeepPartialEntity<TModelDb>[]
+        >,
   ) {
     this.#repository = repository;
     this.#modelDbToModelConverter = modelDbToModelConverter;
