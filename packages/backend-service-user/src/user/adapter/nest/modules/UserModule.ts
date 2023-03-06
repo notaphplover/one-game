@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DbModule } from '../../../../foundation/db/modules/adapter/nest/DbModule';
+import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
 import { UserPersistenceTypeOrmAdapter } from '../../typeorm/adapters/UserPersistenceTypeOrmAdapter';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
 import { UserDbToUserConverter } from '../../typeorm/converters/UserDbToUserConverter';
