@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import { EnvModule } from '../../../../env/modules/adapter/nest/EnvModule';
-import { EnvironmentService } from '../../../../env/services/EnvironmentService';
+import { EnvModule } from '../../../../env/adapter/nest/modules/EnvModule';
+import { EnvironmentService } from '../../../../env/application/services/EnvironmentService';
 
 @Module({
   imports: [

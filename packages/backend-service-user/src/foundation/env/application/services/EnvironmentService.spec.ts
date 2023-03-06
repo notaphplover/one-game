@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Environment } from '../models/application/Environment';
+import { Environment } from '../models/Environment';
 import { EnvironmentLoader } from './EnvironmentLoader';
 import { EnvironmentService } from './EnvironmentService';
 

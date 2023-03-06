@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Environment } from '../models/application/Environment';
+import { Environment } from '../models/Environment';
 import { EnvironmentLoader } from './EnvironmentLoader';
 
 @Injectable()

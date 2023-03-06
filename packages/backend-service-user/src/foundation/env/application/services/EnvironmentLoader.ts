@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { EnvLoader } from '@one-game-js/backend-env';
 import { cleanEnv, json } from 'envalid';
 
-import { Environment } from '../models/application/Environment';
-import { EnvironmentRaw } from '../models/application/EnvironmentRaw';
+import { Environment } from '../models/Environment';
+import { EnvironmentRaw } from '../models/EnvironmentRaw';
 
 const DOT_ENV_PATH: string = '.env';
 
