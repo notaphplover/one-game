@@ -5,6 +5,7 @@ import { CommonModule } from '../../../../foundation/common/adapter/nest/modules
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
 import { UserCreateQueryV1ToUserCreateQueryConverter } from '../../../application/converters/UserCreateQueryV1ToUserCreateQueryConverter';
+import { UserToUserV1Converter } from '../../../application/converters/UserToUserV1Converter';
 import { userPersistenceOutputPortSymbol } from '../../../application/ports/output/UserPersistenceOutputPort';
 import { UserPersistenceTypeOrmAdapter } from '../../typeorm/adapters/UserPersistenceTypeOrmAdapter';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
@@ -24,6 +25,7 @@ import { CreateUserTypeOrmService } from '../../typeorm/services/CreateUserTypeO
     UserCreateQueryToUserCreateQueryTypeOrmConverter,
     UserCreateQueryV1ToUserCreateQueryConverter,
     UserDbToUserConverter,
+    UserToUserV1Converter,
     {
       provide: userPersistenceOutputPortSymbol,
       useClass: UserPersistenceTypeOrmAdapter,
