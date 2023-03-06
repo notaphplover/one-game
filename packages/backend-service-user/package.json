@@ -11,7 +11,7 @@
     "@nestjs/platform-fastify": "9.3.9",
     "@nestjs/typeorm": "^9.0.1",
     "envalid": "^7.3.1",
-    "fastify": "4.14.0",
+    "fastify": "4.14.1",
     "pg": "^8.9.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.0",
