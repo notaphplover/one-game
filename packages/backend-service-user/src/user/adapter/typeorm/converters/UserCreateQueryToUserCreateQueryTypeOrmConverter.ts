@@ -1,0 +1,18 @@
+import { Injectable } from '@nestjs/common';
+import { Converter } from '@one-game-js/backend-common';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
+
+import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
+import { UserDb } from '../models/UserDb';
+
+@Injectable()
+export class UserCreateQueryToUserCreateQueryTypeOrmConverter
+  implements Converter<UserCreateQuery, QueryDeepPartialEntity<UserDb>>
+{
+  public convert(input: UserCreateQuery): QueryDeepPartialEntity<UserDb> {
+    return {
+      id: input.id,
+      name: input.name,
+    };
+  }
+}

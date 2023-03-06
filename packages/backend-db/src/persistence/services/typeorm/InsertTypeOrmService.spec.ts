@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@one-game-js/backend-common';
 import { FindManyOptions, InsertResult, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
@@ -17,13 +17,17 @@ interface QueryTest {
 describe(InsertTypeOrmService.name, () => {
   let repositoryMock: jest.Mocked<Repository<ModelTest>>;
   let modelDbToModelConverterMock: jest.Mocked<
-    ConverterAsync<ModelTest, ModelTest>
+    Converter<ModelTest, ModelTest> | ConverterAsync<ModelTest, ModelTest>
   >;
   let setQueryToSetQueryTypeOrmConverterMock: jest.Mocked<
-    ConverterAsync<
-      QueryTest,
-      QueryDeepPartialEntity<ModelTest> | QueryDeepPartialEntity<ModelTest>[]
-    >
+    | Converter<
+        QueryTest,
+        QueryDeepPartialEntity<ModelTest> | QueryDeepPartialEntity<ModelTest>[]
+      >
+    | ConverterAsync<
+        QueryTest,
+        QueryDeepPartialEntity<ModelTest> | QueryDeepPartialEntity<ModelTest>[]
+      >
   >;
 
   let insertTypeOrmService: InsertTypeOrmService<
@@ -42,10 +46,23 @@ describe(InsertTypeOrmService.name, () => {
 
     modelDbToModelConverterMock = {
       convert: jest.fn(),
-    };
+    } as jest.Mocked<
+      Converter<ModelTest, ModelTest> | ConverterAsync<ModelTest, ModelTest>
+    >;
     setQueryToSetQueryTypeOrmConverterMock = {
       convert: jest.fn(),
-    };
+    } as jest.Mocked<
+      | Converter<
+          QueryTest,
+          | QueryDeepPartialEntity<ModelTest>
+          | QueryDeepPartialEntity<ModelTest>[]
+        >
+      | ConverterAsync<
+          QueryTest,
+          | QueryDeepPartialEntity<ModelTest>
+          | QueryDeepPartialEntity<ModelTest>[]
+        >
+    >;
 
     insertTypeOrmService = new InsertTypeOrmService(
       repositoryMock,
@@ -80,10 +97,20 @@ describe(InsertTypeOrmService.name, () => {
 
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
-        modelDbToModelConverterMock.convert.mockResolvedValueOnce(modelFixture);
-        setQueryToSetQueryTypeOrmConverterMock.convert.mockResolvedValueOnce(
-          typeOrmQueryFixture,
-        );
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelFixture);
+        (
+          setQueryToSetQueryTypeOrmConverterMock as jest.Mocked<
+            ConverterAsync<
+              QueryTest,
+              | QueryDeepPartialEntity<ModelTest>
+              | QueryDeepPartialEntity<ModelTest>[]
+            >
+          >
+        ).convert.mockResolvedValueOnce(typeOrmQueryFixture);
 
         result = await insertTypeOrmService.insertOne(queryFixture);
       });
@@ -150,10 +177,20 @@ describe(InsertTypeOrmService.name, () => {
 
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
-        modelDbToModelConverterMock.convert.mockResolvedValueOnce(modelFixture);
-        setQueryToSetQueryTypeOrmConverterMock.convert.mockResolvedValueOnce([
-          typeOrmQueryFixture,
-        ]);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelFixture);
+        (
+          setQueryToSetQueryTypeOrmConverterMock as jest.Mocked<
+            ConverterAsync<
+              QueryTest,
+              | QueryDeepPartialEntity<ModelTest>
+              | QueryDeepPartialEntity<ModelTest>[]
+            >
+          >
+        ).convert.mockResolvedValueOnce([typeOrmQueryFixture]);
 
         await insertTypeOrmService.insertOne(queryFixture);
       });
@@ -190,10 +227,20 @@ describe(InsertTypeOrmService.name, () => {
 
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
-        modelDbToModelConverterMock.convert.mockResolvedValueOnce(modelFixture);
-        setQueryToSetQueryTypeOrmConverterMock.convert.mockResolvedValueOnce(
-          [],
-        );
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelFixture);
+        (
+          setQueryToSetQueryTypeOrmConverterMock as jest.Mocked<
+            ConverterAsync<
+              QueryTest,
+              | QueryDeepPartialEntity<ModelTest>
+              | QueryDeepPartialEntity<ModelTest>[]
+            >
+          >
+        ).convert.mockResolvedValueOnce([]);
 
         try {
           await insertTypeOrmService.insertOne(queryFixture);
