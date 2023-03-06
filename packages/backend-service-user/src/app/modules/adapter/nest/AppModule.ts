@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { DbModule } from '../../../../foundation/db/modules/adapter/nest/DbModule';
+import { UserModule } from '../../../../user/adapter/nest/modules/UserModule';
 
 @Module({
-  imports: [DbModule],
+  imports: [UserModule],
 })
 export class AppModule {}
