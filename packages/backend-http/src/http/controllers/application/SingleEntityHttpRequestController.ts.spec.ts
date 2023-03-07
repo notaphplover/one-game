@@ -8,160 +8,121 @@ import { Response } from '../../models/application/Response';
 import { ResponseWithBody } from '../../models/application/ResponseWithBody';
 import { SingleEntityHttpRequestController } from './SingleEntityHttpRequestController';
 
+class SingleEntityHttpRequestControllerMock extends SingleEntityHttpRequestController<
+  Request | RequestWithBody,
+  unknown[],
+  unknown
+> {
+  readonly #useCaseHandlerMock: jest.Mock<
+    (...useCaseParams: unknown[]) => Promise<unknown>
+  >;
+
+  constructor(
+    requestParamHandler: Handler<[Request | RequestWithBody], unknown[]>,
+    responseBuilder: Builder<Response | ResponseWithBody<unknown>, [unknown]>,
+    useCaseHandler: jest.Mock<
+      (...useCaseParams: unknown[]) => Promise<unknown>
+    >,
+  ) {
+    super(requestParamHandler, responseBuilder);
+
+    this.#useCaseHandlerMock = useCaseHandler;
+  }
+
+  protected async _handleUseCase(
+    ...useCaseParams: unknown[]
+  ): Promise<unknown> {
+    return this.#useCaseHandlerMock(...useCaseParams);
+  }
+}
+
 describe(SingleEntityHttpRequestController.name, () => {
   let requestParamHandlerMock: jest.Mocked<
     Handler<[Request | RequestWithBody], unknown[]>
   >;
-  let useCaseHandlerMock: jest.Mocked<Handler<unknown[], unknown | undefined>>;
-  let apiModelBuilderMock: jest.Mocked<Builder<unknown, [unknown]>>;
   let responseBuilderMock: jest.Mocked<
     Builder<Response | ResponseWithBody<unknown>, [unknown | undefined]>
   >;
 
-  let singleEntityHttpRequestController: SingleEntityHttpRequestController<
-    Request | RequestWithBody,
-    unknown[],
-    unknown,
-    unknown
+  let useCaseHandlerMock: jest.Mock<
+    (...useCaseParams: unknown[]) => Promise<unknown>
   >;
+
+  let singleEntityHttpRequestController: SingleEntityHttpRequestControllerMock;
 
   beforeAll(() => {
     requestParamHandlerMock = {
       handle: jest.fn(),
     };
-    useCaseHandlerMock = {
-      handle: jest.fn(),
-    };
-    apiModelBuilderMock = {
-      build: jest.fn(),
-    };
+    useCaseHandlerMock = jest.fn();
     responseBuilderMock = {
       build: jest.fn(),
     };
 
-    singleEntityHttpRequestController = new SingleEntityHttpRequestController(
-      requestParamHandlerMock,
-      useCaseHandlerMock,
-      apiModelBuilderMock,
-      responseBuilderMock,
-    );
+    singleEntityHttpRequestController =
+      new SingleEntityHttpRequestControllerMock(
+        requestParamHandlerMock,
+        responseBuilderMock,
+        useCaseHandlerMock,
+      );
   });
 
-  describe('when called handler() and useCaseHandler.handle() returns a model', () => {
-    let result: unknown;
-
+  describe('.handle', () => {
     let requestFixture: Request | RequestWithBody;
-    let useCaseParamsFixture: unknown[];
-    let modelFixture: unknown;
-    let modelApiFixture: unknown;
-    let responseFixture: Response | ResponseWithBody<unknown>;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       requestFixture = Symbol() as unknown as Request | RequestWithBody;
-      useCaseParamsFixture = [Symbol()];
-      modelFixture = Symbol();
-      modelApiFixture = Symbol();
-      responseFixture = Symbol() as unknown as
-        | Response
-        | ResponseWithBody<unknown>;
-
-      requestParamHandlerMock.handle.mockResolvedValueOnce(
-        useCaseParamsFixture,
-      );
-      useCaseHandlerMock.handle.mockResolvedValueOnce(modelFixture);
-      apiModelBuilderMock.build.mockReturnValueOnce(modelApiFixture);
-      responseBuilderMock.build.mockReturnValueOnce(responseFixture);
-
-      result = await singleEntityHttpRequestController.handle(requestFixture);
     });
 
-    afterAll(() => {
-      jest.clearAllMocks();
-    });
+    describe('when called', () => {
+      let result: unknown;
 
-    it('should call requestParamHandler.handle()', () => {
-      expect(requestParamHandlerMock.handle).toHaveBeenCalledTimes(1);
-      expect(requestParamHandlerMock.handle).toHaveBeenCalledWith(
-        requestFixture,
-      );
-    });
+      let useCaseParamsFixture: unknown[];
+      let modelFixture: unknown;
+      let responseFixture: Response | ResponseWithBody<unknown>;
 
-    it('should call useCaseHandler.handle()', () => {
-      expect(useCaseHandlerMock.handle).toHaveBeenCalledTimes(1);
-      expect(useCaseHandlerMock.handle).toHaveBeenCalledWith(
-        ...useCaseParamsFixture,
-      );
-    });
+      beforeAll(async () => {
+        useCaseParamsFixture = [Symbol()];
+        modelFixture = Symbol();
+        responseFixture = Symbol() as unknown as
+          | Response
+          | ResponseWithBody<unknown>;
 
-    it('should call apiModelBuilder.build()', () => {
-      expect(apiModelBuilderMock.build).toHaveBeenCalledTimes(1);
-      expect(apiModelBuilderMock.build).toHaveBeenCalledWith(modelFixture);
-    });
+        requestParamHandlerMock.handle.mockResolvedValueOnce(
+          useCaseParamsFixture,
+        );
+        useCaseHandlerMock.mockResolvedValueOnce(modelFixture);
+        responseBuilderMock.build.mockReturnValueOnce(responseFixture);
 
-    it('should call responseBuilder.build()', () => {
-      expect(responseBuilderMock.build).toHaveBeenCalledTimes(1);
-      expect(responseBuilderMock.build).toHaveBeenCalledWith(modelApiFixture);
-    });
+        result = await singleEntityHttpRequestController.handle(requestFixture);
+      });
 
-    it('should return a response', () => {
-      expect(result).toBe(responseFixture);
-    });
-  });
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
 
-  describe('when called and useCaseHandler.handle() returns undefined', () => {
-    let result: unknown;
+      it('should call requestParamHandler.handle()', () => {
+        expect(requestParamHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(requestParamHandlerMock.handle).toHaveBeenCalledWith(
+          requestFixture,
+        );
+      });
 
-    let requestFixture: Request | RequestWithBody;
-    let useCaseParamsFixture: unknown[];
-    let modelFixture: unknown;
-    let responseFixture: Response | ResponseWithBody<unknown>;
+      it('should call useCaseHandler.handle()', () => {
+        expect(useCaseHandlerMock).toHaveBeenCalledTimes(1);
+        expect(useCaseHandlerMock).toHaveBeenCalledWith(
+          ...useCaseParamsFixture,
+        );
+      });
 
-    beforeAll(async () => {
-      requestFixture = Symbol() as unknown as Request | RequestWithBody;
-      useCaseParamsFixture = [Symbol()];
-      modelFixture = undefined;
-      responseFixture = Symbol() as unknown as
-        | Response
-        | ResponseWithBody<unknown>;
+      it('should call responseBuilder.build()', () => {
+        expect(responseBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(responseBuilderMock.build).toHaveBeenCalledWith(modelFixture);
+      });
 
-      requestParamHandlerMock.handle.mockResolvedValueOnce(
-        useCaseParamsFixture,
-      );
-      useCaseHandlerMock.handle.mockResolvedValueOnce(modelFixture);
-      responseBuilderMock.build.mockReturnValueOnce(responseFixture);
-
-      result = await singleEntityHttpRequestController.handle(requestFixture);
-    });
-
-    afterAll(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should call requestParamHandler.handle()', () => {
-      expect(requestParamHandlerMock.handle).toHaveBeenCalledTimes(1);
-      expect(requestParamHandlerMock.handle).toHaveBeenCalledWith(
-        requestFixture,
-      );
-    });
-
-    it('should call useCaseHandler.handle()', () => {
-      expect(useCaseHandlerMock.handle).toHaveBeenCalledTimes(1);
-      expect(useCaseHandlerMock.handle).toHaveBeenCalledWith(
-        ...useCaseParamsFixture,
-      );
-    });
-
-    it('should not call apiModelBuilder.build()', () => {
-      expect(apiModelBuilderMock.build).not.toHaveBeenCalled();
-    });
-
-    it('should call buildResponse()', () => {
-      expect(responseBuilderMock.build).toHaveBeenCalledTimes(1);
-      expect(responseBuilderMock.build).toHaveBeenCalledWith(undefined);
-    });
-
-    it('should return a response', () => {
-      expect(result).toBe(responseFixture);
+      it('should return a response', () => {
+        expect(result).toBe(responseFixture);
+      });
     });
   });
 });
