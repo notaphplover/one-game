@@ -1,9 +1,17 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 @Entity({
   name: 'User',
 })
 export class UserDb {
+  @Column({
+    length: 255,
+    name: 'name',
+    type: 'varchar',
+  })
+  @Index({ unique: true })
+  public readonly email!: string;
+
   @PrimaryColumn({
     length: 36,
     name: 'id',

@@ -9,10 +9,13 @@ import { UserDb } from '../models/UserDb';
 export class UserCreateQueryToUserCreateQueryTypeOrmConverter
   implements Converter<UserCreateQuery, QueryDeepPartialEntity<UserDb>>
 {
-  public convert(input: UserCreateQuery): QueryDeepPartialEntity<UserDb> {
+  public convert(
+    userCreateQuery: UserCreateQuery,
+  ): QueryDeepPartialEntity<UserDb> {
     return {
-      id: input.id,
-      name: input.name,
+      email: userCreateQuery.email,
+      id: userCreateQuery.id,
+      name: userCreateQuery.name,
     };
   }
 }
