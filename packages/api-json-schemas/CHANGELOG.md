@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `NonStartedGameV1`.
 - Added `NormalCardV1`.
 - Added `ReverseCardV1`.
+- Added `SchemaId` enum.
 - Added `SkipCardV1`.
 - Added `UserCreateQueryV1`.
 - Added `UserIdTokenCreateQueryV1`.
