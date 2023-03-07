@@ -15,8 +15,5 @@
       "type": "object"
     }
   },
-  "required": [
-    "code",
-    "description"
-  ]
+  "required": ["description"]
 }
