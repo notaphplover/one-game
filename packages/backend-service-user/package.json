@@ -21,10 +21,12 @@
   "devDependencies": {
     "@jest/globals": "29.5.0",
     "@one-game-js/backend-api-models": "workspace:*",
+    "@one-game-js/backend-api-validators": "workspace:*",
     "@one-game-js/backend-common": "workspace:*",
     "@one-game-js/backend-db": "workspace:*",
     "@one-game-js/backend-env": "workspace:*",
-    "@types/bcrypt": "^5.0.0",
+    "@one-game-js/backend-http": "workspace:*",
+    "@types/bcrypt": "5.0.0",
     "@types/node": "18.14.6",
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@typescript-eslint/parser": "5.54.1",

@@ -122,7 +122,7 @@ export interface BaseCardV1 {
   [k: string]: unknown | undefined;
 }
 export interface ErrorV1 {
-  code: string;
+  code?: string;
   description: string;
   parameters?: {
     [k: string]: unknown | undefined;
