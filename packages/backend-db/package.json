@@ -4,9 +4,11 @@
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "description": "Backend db library for one-game-js services",
+  "dependencies": {
+    "@one-game-js/backend-common": "workspace:*"
+  },
   "devDependencies": {
     "@jest/globals": "29.5.0",
-    "@one-game-js/backend-common": "workspace:*",
     "@types/node": "18.14.6",
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@typescript-eslint/parser": "5.54.1",
