@@ -13,7 +13,7 @@ components:
       bearerFormat: JWT
 
 paths:
-  /games:
+  /v1/games:
     post:
       summary: Create a game
       requestBody:
@@ -49,7 +49,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /games/{gameId}:
+  /v1/games/{gameId}:
     get:
       summary: Get a game
       parameters:
@@ -128,7 +128,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /games/{gameId}/slot/{gameSlotIndex}:
+  /v1/games/{gameId}/slot/{gameSlotIndex}:
     get:
       summary: Get a game slot
       parameters:
@@ -219,7 +219,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /games/{gameId}/slot/{gameSlotIndex}/cards:
+  /v1/games/{gameId}/slot/{gameSlotIndex}/cards:
     get:
       summary: Get a game slot cards
       parameters:
@@ -264,7 +264,7 @@ paths:
         - bearerAuth: []
 
 
-  /users:
+  /v1/users:
     post:
       summary: Create user
       requestBody:
@@ -273,8 +273,12 @@ paths:
             schema:
               $ref: 'https://onegame.schemas/api/v1/users/user-create-query.json'
       responses:
-        '201':
+        '200':
           description: User created
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/users/user.json'
         '400':
           description: BadRequest
           content:
@@ -289,7 +293,7 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security: []
 
-  /users/{userId}:
+  /v1/users/{userId}:
     get:
       summary: Get a user by ID
       parameters:

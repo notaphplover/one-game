@@ -16,6 +16,7 @@ export class UserCreateQueryToUserCreateQueryTypeOrmConverter
       email: userCreateQuery.email,
       id: userCreateQuery.id,
       name: userCreateQuery.name,
+      passwordHash: userCreateQuery.passwordHash,
     };
   }
 }
