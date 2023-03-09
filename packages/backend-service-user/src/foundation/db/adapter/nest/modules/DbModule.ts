@@ -3,6 +3,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { EnvModule } from '../../../../env/adapter/nest/modules/EnvModule';
 import { EnvironmentService } from '../../../../env/application/services/EnvironmentService';
+import { typeOrmEntities } from '../models/entities';
 
 @Module({
   imports: [
@@ -11,8 +12,10 @@ import { EnvironmentService } from '../../../../env/application/services/Environ
       inject: [EnvironmentService],
       useFactory: (
         environmentService: EnvironmentService,
-      ): TypeOrmModuleOptions =>
-        environmentService.getEnvironment().typeOrmDatasourceOptions,
+      ): TypeOrmModuleOptions => ({
+        ...environmentService.getEnvironment().typeOrmDatasourceOptions,
+        entities: typeOrmEntities,
+      }),
     }),
   ],
 })
