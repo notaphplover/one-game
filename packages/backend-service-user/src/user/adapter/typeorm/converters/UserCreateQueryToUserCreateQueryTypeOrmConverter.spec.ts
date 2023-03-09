@@ -32,6 +32,7 @@ describe(UserCreateQueryToUserCreateQueryTypeOrmConverter.name, () => {
         email: userCreateQueryFixture.email,
         id: userCreateQueryFixture.id,
         name: userCreateQueryFixture.name,
+        passwordHash: userCreateQueryFixture.passwordHash,
       };
 
       expect(result).toStrictEqual(expected);

@@ -6,7 +6,7 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 export class UserDb {
   @Column({
     length: 255,
-    name: 'name',
+    name: 'email',
     type: 'varchar',
   })
   @Index({ unique: true })
@@ -25,4 +25,12 @@ export class UserDb {
     type: 'varchar',
   })
   public readonly name!: string;
+
+  @Column({
+    length: 255,
+    name: 'password_hash',
+    type: 'varchar',
+  })
+  @Index({ unique: true })
+  public readonly passwordHash!: string;
 }
