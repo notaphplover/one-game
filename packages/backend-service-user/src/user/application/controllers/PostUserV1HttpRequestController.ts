@@ -41,9 +41,7 @@ export class PostUserV1HttpRequestController extends SingleEntityHttpRequestCont
 
   protected async _handleUseCase(
     userCreateQueryV1: apiModels.UserCreateQueryV1,
-  ): Promise<undefined> {
-    await this.#userManagementInputPort.create(userCreateQueryV1);
-
-    return undefined;
+  ): Promise<apiModels.UserV1> {
+    return this.#userManagementInputPort.create(userCreateQueryV1);
   }
 }
