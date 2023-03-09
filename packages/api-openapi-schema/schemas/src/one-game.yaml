@@ -273,8 +273,12 @@ paths:
             schema:
               $ref: 'https://onegame.schemas/api/v1/users/user-create-query.json'
       responses:
-        '201':
+        '200':
           description: User created
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/users/user.json'
         '400':
           description: BadRequest
           content:
