@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels, SchemaId } from '@one-game-js/backend-api-models';
+import { models as apiModels, SchemaId } from '@one-game-js/api-models';
 import {
   ApiJsonSchemasValidationProvider,
   Validator,

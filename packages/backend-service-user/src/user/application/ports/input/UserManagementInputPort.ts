@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels } from '@one-game-js/backend-api-models';
+import { models as apiModels } from '@one-game-js/api-models';
 import { Converter } from '@one-game-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';

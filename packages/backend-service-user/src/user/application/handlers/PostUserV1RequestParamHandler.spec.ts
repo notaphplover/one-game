@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/backend-api-models';
+import { models as apiModels } from '@one-game-js/api-models';
 import {
   ApiJsonSchemasValidationProvider,
   Validator,

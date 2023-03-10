@@ -1,4 +1,4 @@
-import { models as apiModels } from '@one-game-js/backend-api-models';
+import { models as apiModels } from '@one-game-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 import httpStatusCodes from 'http-status-codes';
 
