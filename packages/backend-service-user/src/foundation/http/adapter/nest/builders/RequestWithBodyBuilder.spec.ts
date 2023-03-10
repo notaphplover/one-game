@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { Request, RequestWithBody } from '@one-game-js/backend-http';
+import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { RequestWithBody } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
 import { RequestWithBodyBuilder } from './RequestWithBodyBuilder';
@@ -96,11 +97,12 @@ describe(RequestWithBodyBuilder.name, () => {
         });
 
         it('should throw an Error', () => {
-          const expectedProperties: Partial<Error> = {
-            message: 'Invalid body!',
+          const expectedProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message: 'Invalid body. Expecting a body, but none was found',
           };
 
-          expect(result).toBeInstanceOf(Error);
+          expect(result).toBeInstanceOf(AppError);
           expect(result).toStrictEqual(
             expect.objectContaining(expectedProperties),
           );

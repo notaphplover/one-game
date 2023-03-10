@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/backend-api-models';
 import { Builder, Handler } from '@one-game-js/backend-common';
 import {
+  ErrorV1ResponseFromErrorBuilder,
   RequestWithBody,
   Response,
   ResponseWithBody,
@@ -31,10 +32,19 @@ export class PostUserV1HttpRequestController extends SingleEntityHttpRequestCont
       Response | ResponseWithBody<unknown>,
       [apiModels.UserV1 | undefined]
     >,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    errorV1ResponseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(UserManagementInputPort)
     userManagementInputPort: UserManagementInputPort,
   ) {
-    super(requestParamHandler, responseBuilder);
+    super(
+      requestParamHandler,
+      responseBuilder,
+      errorV1ResponseFromErrorBuilder,
+    );
 
     this.#userManagementInputPort = userManagementInputPort;
   }

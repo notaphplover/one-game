@@ -4,11 +4,13 @@
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "description": "Backend api models",
+  "dependencies": {
+    "@one-game-js/backend-common": "workspace:*"
+  },
   "devDependencies": {
     "@bcherny/json-schema-ref-parser": "9.0.9",
     "@jest/globals": "29.5.0",
     "@one-game-js/api-json-schemas-provider": "workspace:*",
-    "@one-game-js/backend-common": "workspace:*",
     "@one-game-js/json-schema-utils": "workspace:*",
     "@one-game-js/openapi-utils": "workspace:*",
     "@types/node": "18.15.0",

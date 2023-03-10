@@ -20,11 +20,15 @@ class SingleEntityHttpRequestControllerMock extends SingleEntityHttpRequestContr
   constructor(
     requestParamHandler: Handler<[Request | RequestWithBody], unknown[]>,
     responseBuilder: Builder<Response | ResponseWithBody<unknown>, [unknown]>,
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     useCaseHandler: jest.Mock<
       (...useCaseParams: unknown[]) => Promise<unknown>
     >,
   ) {
-    super(requestParamHandler, responseBuilder);
+    super(requestParamHandler, responseBuilder, responseFromErrorBuilder);
 
     this.#useCaseHandlerMock = useCaseHandler;
   }
@@ -44,6 +48,10 @@ describe(SingleEntityHttpRequestController.name, () => {
     Builder<Response | ResponseWithBody<unknown>, [unknown | undefined]>
   >;
 
+  let responseFromErrorBuilderMock: jest.Mocked<
+    Builder<Response | ResponseWithBody<unknown>, [unknown]>
+  >;
+
   let useCaseHandlerMock: jest.Mock<
     (...useCaseParams: unknown[]) => Promise<unknown>
   >;
@@ -54,15 +62,19 @@ describe(SingleEntityHttpRequestController.name, () => {
     requestParamHandlerMock = {
       handle: jest.fn(),
     };
-    useCaseHandlerMock = jest.fn();
     responseBuilderMock = {
       build: jest.fn(),
     };
+    responseFromErrorBuilderMock = {
+      build: jest.fn(),
+    };
+    useCaseHandlerMock = jest.fn();
 
     singleEntityHttpRequestController =
       new SingleEntityHttpRequestControllerMock(
         requestParamHandlerMock,
         responseBuilderMock,
+        responseFromErrorBuilderMock,
         useCaseHandlerMock,
       );
   });
@@ -118,6 +130,47 @@ describe(SingleEntityHttpRequestController.name, () => {
       it('should call responseBuilder.build()', () => {
         expect(responseBuilderMock.build).toHaveBeenCalledTimes(1);
         expect(responseBuilderMock.build).toHaveBeenCalledWith(modelFixture);
+      });
+
+      it('should return a response', () => {
+        expect(result).toBe(responseFixture);
+      });
+    });
+
+    describe('when called, and an error is thrown', () => {
+      let result: unknown;
+
+      let errorFixture: Error;
+      let responseFixture: Response | ResponseWithBody<unknown>;
+
+      beforeAll(async () => {
+        errorFixture = new Error('Sample error');
+        responseFixture = Symbol() as unknown as
+          | Response
+          | ResponseWithBody<unknown>;
+
+        requestParamHandlerMock.handle.mockRejectedValueOnce(errorFixture);
+        responseFromErrorBuilderMock.build.mockReturnValueOnce(responseFixture);
+
+        result = await singleEntityHttpRequestController.handle(requestFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call requestParamHandler.handle()', () => {
+        expect(requestParamHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(requestParamHandlerMock.handle).toHaveBeenCalledWith(
+          requestFixture,
+        );
+      });
+
+      it('should call responseFromErrorBuilder.build()', () => {
+        expect(responseFromErrorBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(responseFromErrorBuilderMock.build).toHaveBeenCalledWith(
+          errorFixture,
+        );
       });
 
       it('should return a response', () => {

@@ -5,6 +5,7 @@ import {
   ApiJsonSchemasValidationProvider,
   Validator,
 } from '@one-game-js/backend-api-validators';
+import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 import { RequestWithBody } from '@one-game-js/backend-http';
 
 import { PostUserV1RequestParamHandler } from './PostUserV1RequestParamHandler';
@@ -97,13 +98,14 @@ describe(PostUserV1RequestParamHandler.name, () => {
       });
 
       it('should throw an Error()', () => {
-        const expectedProperties: Partial<Error> = {
+        const expectedProperties: Partial<AppError> = {
+          kind: AppErrorKind.contractViolation,
           message: JSON.stringify({
             description: userCreateQueryV1ValidatorMock.errors,
           }),
         };
 
-        expect(result).toBeInstanceOf(Error);
+        expect(result).toBeInstanceOf(AppError);
         expect(result).toStrictEqual(
           expect.objectContaining(expectedProperties),
         );

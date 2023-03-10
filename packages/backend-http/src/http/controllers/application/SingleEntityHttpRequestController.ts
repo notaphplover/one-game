@@ -16,6 +16,10 @@ export abstract class SingleEntityHttpRequestController<
     Response | ResponseWithBody<TModel>,
     [TModel | undefined]
   >;
+  readonly #responseFromErrorBuilder: Builder<
+    Response | ResponseWithBody<TModel>,
+    [unknown]
+  >;
 
   constructor(
     requestParamHandler: Handler<[TRequest], TUseCaseParams>,
@@ -23,24 +27,33 @@ export abstract class SingleEntityHttpRequestController<
       Response | ResponseWithBody<TModel>,
       [TModel | undefined]
     >,
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<TModel>,
+      [unknown]
+    >,
   ) {
     this.#requestParamHandler = requestParamHandler;
     this.#responseBuilder = responseBuilder;
+    this.#responseFromErrorBuilder = responseFromErrorBuilder;
   }
 
   public async handle(
     request: TRequest,
   ): Promise<Response | ResponseWithBody<unknown>> {
-    const useCaseParams: TUseCaseParams =
-      await this.#requestParamHandler.handle(request);
-    const model: TModel | undefined = await this._handleUseCase(
-      ...useCaseParams,
-    );
+    try {
+      const useCaseParams: TUseCaseParams =
+        await this.#requestParamHandler.handle(request);
+      const model: TModel | undefined = await this._handleUseCase(
+        ...useCaseParams,
+      );
 
-    const response: Response | ResponseWithBody<unknown> =
-      this.#responseBuilder.build(model);
+      const response: Response | ResponseWithBody<unknown> =
+        this.#responseBuilder.build(model);
 
-    return response;
+      return response;
+    } catch (error) {
+      return this.#responseFromErrorBuilder.build(error);
+    }
   }
 
   protected abstract _handleUseCase(

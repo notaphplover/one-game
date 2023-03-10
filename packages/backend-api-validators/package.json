@@ -4,9 +4,13 @@
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "description": "Backend api model validators",
+  "dependencies": {
+    "@one-game-js/backend-common": "workspace:*",
+    "@one-game-js/api-json-schemas-provider": "workspace:*",
+    "ajv": "8.12.0"
+  },
   "devDependencies": {
     "@jest/globals": "29.5.0",
-    "@one-game-js/backend-common": "workspace:*",
     "@one-game-js/json-schema-utils": "workspace:*",
     "@types/node": "18.15.0",
     "@typescript-eslint/eslint-plugin": "5.54.1",
@@ -48,9 +52,5 @@
     "test:uncommitted": "pnpm run test --changedSince=HEAD",
     "test:unit:js": "pnpm run test:js --selectProjects Unit"
   },
-  "version": "0.1.0",
-  "dependencies": {
-    "@one-game-js/api-json-schemas-provider": "workspace:*",
-    "ajv": "8.12.0"
-  }
+  "version": "0.1.0"
 }
