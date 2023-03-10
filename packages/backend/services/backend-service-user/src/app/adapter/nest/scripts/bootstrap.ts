@@ -6,10 +6,9 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 
+import { EnvironmentService } from '../../../../foundation/env/application/services/EnvironmentService';
 import { registerSignalHandlers } from '../actions/registerSignalHandlers';
 import { AppModule } from '../modules/AppModule';
-
-const SERVICE_PORT: number = 3000;
 
 async function bootstrap() {
   const logger: LoggerService = new ConsoleLogger();
@@ -27,9 +26,14 @@ async function bootstrap() {
       },
     );
 
+  const environmentService: EnvironmentService =
+    nestApplication.get(EnvironmentService);
+
   registerSignalHandlers(nestApplication, logger);
 
-  await nestApplication.listen(SERVICE_PORT);
+  const port: number = environmentService.getEnvironment().port;
+
+  await nestApplication.listen(port);
 
   logger.log(`Application is running on: ${await nestApplication.getUrl()}`);
 }
