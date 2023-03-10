@@ -1,19 +1,13 @@
 import { FileInfo, Options } from '@bcherny/json-schema-ref-parser';
-import { Builder, Handler } from '@one-game-js/backend-common';
 
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
+import { ResolveApiSchemaHttpReferenceUseCase } from '../../application/useCases/ResolveApiSchemaHttpReferenceUseCase';
 
-export class SchemasRefParserOptionsBuilder implements Builder<Options> {
-  readonly #resolveApiSchemaHttpReferenceUseCase: Handler<
-    [ResolveApiSchemaHttpReferenceQuery],
-    Buffer
-  >;
+export class SchemasRefParserOptionsBuilder {
+  readonly #resolveApiSchemaHttpReferenceUseCase: ResolveApiSchemaHttpReferenceUseCase;
 
   constructor(
-    resolveApiSchemaHttpReferenceUseCase: Handler<
-      [ResolveApiSchemaHttpReferenceQuery],
-      Buffer
-    >,
+    resolveApiSchemaHttpReferenceUseCase: ResolveApiSchemaHttpReferenceUseCase,
   ) {
     this.#resolveApiSchemaHttpReferenceUseCase =
       resolveApiSchemaHttpReferenceUseCase;

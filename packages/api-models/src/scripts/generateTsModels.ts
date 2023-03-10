@@ -6,7 +6,6 @@ import { argv } from 'node:process';
 
 import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
 import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
-import { Builder, Handler } from '@one-game-js/backend-common';
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
@@ -14,7 +13,6 @@ import {
 import { compile } from 'json-schema-to-typescript';
 import { Options } from 'prettier';
 
-import { ResolveApiSchemaHttpReferenceQuery } from '../jsonSchema/application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { ResolveApiSchemaHttpReferenceUseCase } from '../jsonSchema/application/useCases/ResolveApiSchemaHttpReferenceUseCase';
 import { SchemasRefParserOptionsBuilder } from '../jsonSchema/infrastructure/bchernyJsonSchemaRefParser/SchemasRefParserOptionsBuilder';
 
@@ -29,9 +27,7 @@ const backendPrettierOptions: Options =
 const apiV1TypesJsonSchemasPromise: Promise<JsonRootSchema202012[]> =
   readApiJsonSchemas();
 
-async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<
-  Handler<[ResolveApiSchemaHttpReferenceQuery], Buffer>
-> {
+async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<ResolveApiSchemaHttpReferenceUseCase> {
   const apiV1TypesJsonSchemas: JsonRootSchema202012[] =
     await apiV1TypesJsonSchemasPromise;
 
@@ -39,23 +35,17 @@ async function getResolveApiSchemaHttpReferenceUseCasePromise(): Promise<
     apiV1TypesJsonSchemas.map(jsonRootSchema202012ToIdToBufferMapEntry),
   );
 
-  const resolveApiSchemaHttpReferenceUseCase: Handler<
-    [ResolveApiSchemaHttpReferenceQuery],
-    Buffer
-  > = new ResolveApiSchemaHttpReferenceUseCase(apiV1JsonSchemaIdToBufferMap);
+  const resolveApiSchemaHttpReferenceUseCase: ResolveApiSchemaHttpReferenceUseCase =
+    new ResolveApiSchemaHttpReferenceUseCase(apiV1JsonSchemaIdToBufferMap);
 
   return resolveApiSchemaHttpReferenceUseCase;
 }
 
-async function getSchemasRefParserOptionsBuilder(): Promise<
-  Builder<$RefOptions>
-> {
-  const resolveApiSchemaHttpReferenceUseCase: Handler<
-    [ResolveApiSchemaHttpReferenceQuery],
-    Buffer
-  > = await getResolveApiSchemaHttpReferenceUseCasePromise();
+async function getSchemasRefParserOptionsBuilder(): Promise<SchemasRefParserOptionsBuilder> {
+  const resolveApiSchemaHttpReferenceUseCase: ResolveApiSchemaHttpReferenceUseCase =
+    await getResolveApiSchemaHttpReferenceUseCasePromise();
 
-  const schemasRefParserOptionsBuilder: Builder<$RefOptions> =
+  const schemasRefParserOptionsBuilder: SchemasRefParserOptionsBuilder =
     new SchemasRefParserOptionsBuilder(resolveApiSchemaHttpReferenceUseCase);
 
   return schemasRefParserOptionsBuilder;
@@ -109,7 +99,7 @@ async function generateTypescriptModelFromSchema(
   schemaName: string,
   schema: JsonRootSchema202012Object,
 ): Promise<string> {
-  const schemasRefParserOptionsBuilder: Builder<$RefOptions> =
+  const schemasRefParserOptionsBuilder: SchemasRefParserOptionsBuilder =
     await getSchemasRefParserOptionsBuilder();
 
   const refParserOptions: $RefOptions = schemasRefParserOptionsBuilder.build();

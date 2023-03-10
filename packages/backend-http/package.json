@@ -6,7 +6,7 @@
   "description": "Backend http library for one-game-js services",
   "dependencies": {
     "@one-game-js/backend-common": "workspace:*",
-    "@one-game-js/backend-api-models": "workspace:*",
+    "@one-game-js/api-models": "workspace:*",
     "http-status-codes": "2.2.0"
   },
   "devDependencies": {
