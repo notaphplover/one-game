@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  proxy:
+    image: nginx:1.23.3-alpine
+    environment:
+      - USER_SERVICE_BASE_URL=${USER_SERVICE_BASE_URL}
+    network_mode: 'host'
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./templates:/etc/nginx/templates
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/conf.d/redirect-headers.conf:/etc/nginx/conf.d/redirect-headers.conf

@@ -1,0 +1,1 @@
+proxy_pass ${USER_SERVICE_BASE_URL}/v1/users;
