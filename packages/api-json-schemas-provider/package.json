@@ -8,7 +8,7 @@
     "@jest/globals": "29.5.0",
     "@one-game-js/json-schema-utils": "workspace:*",
     "@types/glob": "8.1.0",
-    "@types/node": "18.14.6",
+    "@types/node": "18.15.0",
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@typescript-eslint/parser": "5.54.1",
     "eslint": "8.35.0",
