@@ -18,6 +18,7 @@ import {
   OpenApi3Dot1SchemaObject,
   traverseOpenApiObjectJsonSchemas,
 } from '@one-game-js/openapi-utils';
+import cloneDeep from 'clone-deep';
 import yaml from 'yaml';
 
 interface JsonSchemaEntry {
@@ -36,6 +37,22 @@ function buildOpenApiComponentSchemaRef(
   jsonSchemaEntry: JsonSchemaEntry,
 ): string {
   return `#/components/schemas/${jsonSchemaEntry.alias}`;
+}
+
+function buildOpenApiJsonSchema(
+  schema: JsonRootSchema202012,
+): JsonSchema202012 {
+  const schemaClone: JsonSchema202012 = cloneDeep(schema);
+
+  if (schemaClone !== true && schemaClone !== false) {
+    if (
+      (schemaClone as Partial<JsonRootSchema202012Object>).$schema !== undefined
+    ) {
+      delete (schemaClone as Partial<JsonRootSchema202012Object>).$schema;
+    }
+  }
+
+  return schemaClone;
 }
 
 function checkDuplicatedIdsAndNames(
@@ -101,12 +118,6 @@ function traverseOpenApiJsonSchemas(
     openApiObject,
     (params: TraverseJsonSchemaCallbackParams): void => {
       if (params.schema !== true && params.schema !== false) {
-        if (
-          (params.schema as JsonRootSchema202012Object).$schema !== undefined
-        ) {
-          delete (params.schema as Partial<JsonRootSchema202012Object>).$schema;
-        }
-
         if (params.schema.$ref !== undefined) {
           const jsonSchemaEntry: JsonSchemaEntry | undefined =
             idToJsonSchemaEntriesMap.get(params.schema.$ref);
@@ -147,7 +158,9 @@ async function generateAllSchemas(
   traverseOpenApiJsonSchemas(idToJsonSchemaEntriesMap, openApi);
 
   for (const jsonSchemaEntry of idToJsonSchemaEntriesMap.values()) {
-    openApiComponentsSchemas[jsonSchemaEntry.alias] = jsonSchemaEntry.schema;
+    openApiComponentsSchemas[jsonSchemaEntry.alias] = buildOpenApiJsonSchema(
+      jsonSchemaEntry.schema,
+    );
   }
 
   await fs.mkdir(path.dirname(destinationPath), { recursive: true });
