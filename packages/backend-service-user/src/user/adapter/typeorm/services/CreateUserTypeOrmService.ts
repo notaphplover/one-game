@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Converter } from '@one-game-js/backend-common';
-import { InsertTypeOrmService } from '@one-game-js/backend-db';
+import { InsertTypeOrmPostgresService } from '@one-game-js/backend-db';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
@@ -12,7 +12,7 @@ import { UserDbToUserConverter } from '../converters/UserDbToUserConverter';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class CreateUserTypeOrmService extends InsertTypeOrmService<
+export class CreateUserTypeOrmService extends InsertTypeOrmPostgresService<
   User,
   UserDb,
   UserCreateQuery
