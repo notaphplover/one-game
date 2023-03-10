@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { JwtAlgorithm } from '../../models/application/JwtAlgorithm';
-import { JwtServiceOptions } from '../../models/application/JwtServiceOptions';
+import { JwtAlgorithm } from '../../../application/models/JwtAlgorithm';
+import { JwtServiceOptions } from '../../../application/models/JwtServiceOptions';
 import { JsonWebTokenService } from './JsonWebTokenService';
 
 function assertJwtWithPayload(

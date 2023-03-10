@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { JwtAlgorithm } from '../../models/application/JwtAlgorithm';
+import { JwtAlgorithm } from '../../../application/models/JwtAlgorithm';
 
 export function convertToJsonwebtokenAlgorithm(
   algorithm: JwtAlgorithm,

@@ -1,6 +1,6 @@
-import { JwtAlgorithm } from './jwt/models/application/JwtAlgorithm';
-import { JwtServiceOptions } from './jwt/models/application/JwtServiceOptions';
-import { JsonWebTokenService } from './jwt/services/application/JsonWebTokenService';
+import { JsonWebTokenService } from './jwt/adapter/jsonwebtoken/services/JsonWebTokenService';
+import { JwtAlgorithm } from './jwt/application/models/JwtAlgorithm';
+import { JwtServiceOptions } from './jwt/application/models/JwtServiceOptions';
 
 export { JwtAlgorithm, JsonWebTokenService as JwtService };
 
