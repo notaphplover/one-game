@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EnvLoader } from '@one-game-js/backend-env';
-import { cleanEnv, json } from 'envalid';
+import { cleanEnv, json, port } from 'envalid';
 
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
@@ -19,11 +19,14 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
 
   protected _parseEnv(env: Record<string, string>): Environment {
     const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
-      TYPEORM_DATASOURCE_OPTIONS: json(),
+      ONE_JS_USER_SERVICE_PORT: port(),
+      ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS: json(),
     });
 
     return {
-      typeOrmDatasourceOptions: rawEnvironment.TYPEORM_DATASOURCE_OPTIONS,
+      port: rawEnvironment.ONE_JS_USER_SERVICE_PORT,
+      typeOrmDatasourceOptions:
+        rawEnvironment.ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS,
     };
   }
 }
