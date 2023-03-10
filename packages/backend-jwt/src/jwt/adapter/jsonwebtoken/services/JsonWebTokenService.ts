@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-import { convertToJsonwebtokenAlgorithm } from '../../converters/jsonwebtoken/convertToJsonwebtokenAlgorithm';
-import { JwtServiceOptions } from '../../models/application/JwtServiceOptions';
+import { JwtServiceOptions } from '../../../application/models/JwtServiceOptions';
+import { convertToJsonwebtokenAlgorithm } from '../converters/convertToJsonwebtokenAlgorithm';
 
 export class JsonWebTokenService<TToken extends Record<string, unknown>> {
   readonly #privateKey: string;

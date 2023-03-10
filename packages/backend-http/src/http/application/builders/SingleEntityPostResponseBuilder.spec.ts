@@ -2,15 +2,15 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import httpStatusCodes from 'http-status-codes';
 
-import { Response } from '../../models/application/Response';
-import { ResponseWithBody } from '../../models/application/ResponseWithBody';
-import { SingleEntityGetResponseBuilder } from './SingleEntityGetResponseBuilder';
+import { Response } from '../models/Response';
+import { ResponseWithBody } from '../models/ResponseWithBody';
+import { SingleEntityPostResponseBuilder } from './SingleEntityPostResponseBuilder';
 
-describe(SingleEntityGetResponseBuilder.name, () => {
-  let singleEntityGetResponseBuilder: SingleEntityGetResponseBuilder<unknown>;
+describe(SingleEntityPostResponseBuilder.name, () => {
+  let singleEntityPostResponseBuilder: SingleEntityPostResponseBuilder<unknown>;
 
   beforeAll(() => {
-    singleEntityGetResponseBuilder = new SingleEntityGetResponseBuilder();
+    singleEntityPostResponseBuilder = new SingleEntityPostResponseBuilder();
   });
 
   describe('.build', () => {
@@ -25,13 +25,13 @@ describe(SingleEntityGetResponseBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = singleEntityGetResponseBuilder.build(modelFixture);
+          result = singleEntityPostResponseBuilder.build(modelFixture);
         });
 
         it('should return a Response', () => {
           const expected: Response = {
             headers: { 'Content-Type': 'application/json' },
-            statusCode: httpStatusCodes.NOT_FOUND,
+            statusCode: httpStatusCodes.CREATED,
           };
 
           expect(result).toStrictEqual(expected);
@@ -50,7 +50,7 @@ describe(SingleEntityGetResponseBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = singleEntityGetResponseBuilder.build(modelFixture);
+          result = singleEntityPostResponseBuilder.build(modelFixture);
         });
 
         it('should return a Response', () => {

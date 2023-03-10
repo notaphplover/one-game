@@ -1,10 +1,10 @@
 import httpStatusCodes from 'http-status-codes';
 
-import { Response } from '../../models/application/Response';
-import { ResponseWithBody } from '../../models/application/ResponseWithBody';
+import { Response } from '../models/Response';
+import { ResponseWithBody } from '../models/ResponseWithBody';
 import { ResponseBuilder } from './ResponseBuilder';
 
-export class SingleEntityGetResponseBuilder<TModel> extends ResponseBuilder<
+export class SingleEntityPostResponseBuilder<TModel> extends ResponseBuilder<
   [TModel | undefined]
 > {
   public build(
@@ -15,7 +15,7 @@ export class SingleEntityGetResponseBuilder<TModel> extends ResponseBuilder<
     if (model === undefined) {
       httpResponse = {
         headers: this._getHttpResponseHeaders(),
-        statusCode: httpStatusCodes.NOT_FOUND,
+        statusCode: httpStatusCodes.CREATED,
       };
     } else {
       httpResponse = {

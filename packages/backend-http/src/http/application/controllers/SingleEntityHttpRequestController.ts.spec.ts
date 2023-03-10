@@ -2,10 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder, Handler } from '@one-game-js/backend-common';
 
-import { Request } from '../../models/application/Request';
-import { RequestWithBody } from '../../models/application/RequestWithBody';
-import { Response } from '../../models/application/Response';
-import { ResponseWithBody } from '../../models/application/ResponseWithBody';
+import { Request } from '../models/Request';
+import { RequestWithBody } from '../models/RequestWithBody';
+import { Response } from '../models/Response';
+import { ResponseWithBody } from '../models/ResponseWithBody';
 import { SingleEntityHttpRequestController } from './SingleEntityHttpRequestController';
 
 class SingleEntityHttpRequestControllerMock extends SingleEntityHttpRequestController<

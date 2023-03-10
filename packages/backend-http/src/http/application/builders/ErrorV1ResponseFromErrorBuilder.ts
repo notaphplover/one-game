@@ -2,7 +2,7 @@ import { models as apiModels } from '@one-game-js/backend-api-models';
 import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 import httpStatusCodes from 'http-status-codes';
 
-import { ResponseWithBody } from '../../models/application/ResponseWithBody';
+import { ResponseWithBody } from '../models/ResponseWithBody';
 import { ResponseBuilder } from './ResponseBuilder';
 
 export class ErrorV1ResponseFromErrorBuilder

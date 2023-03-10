@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 
-import { ResponseWithBody } from '../../models/application/ResponseWithBody';
+import { ResponseWithBody } from '../models/ResponseWithBody';
 import { ErrorV1ResponseFromErrorBuilder } from './ErrorV1ResponseFromErrorBuilder';
 
 describe(ErrorV1ResponseFromErrorBuilder, () => {
