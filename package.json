@@ -11,7 +11,7 @@
     "@one-game-js/backend-typescript-config": "workspace:*",
     "@one-game-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
-    "lint-staged": "13.1.2",
+    "lint-staged": "13.2.0",
     "turbo": "1.8.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
