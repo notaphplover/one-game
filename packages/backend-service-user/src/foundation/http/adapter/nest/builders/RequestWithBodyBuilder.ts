@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Builder } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 import { RequestWithBody } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
@@ -23,7 +23,10 @@ export class RequestWithBodyBuilder
 
   #parseBody(body: unknown): Record<string, unknown> {
     if (!this.#isBody(body)) {
-      throw new Error('Invalid body!');
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Invalid body. Expecting a body, but none was found',
+      );
     }
 
     return body;

@@ -4,7 +4,7 @@ import {
   ApiJsonSchemasValidationProvider,
   Validator,
 } from '@one-game-js/backend-api-validators';
-import { Handler } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind, Handler } from '@one-game-js/backend-common';
 import { RequestWithBody } from '@one-game-js/backend-http';
 
 interface ValidationErrorObject {
@@ -43,7 +43,10 @@ export class PostUserV1RequestParamHandler
         description: errorObject.error ?? MISSING_ERROR_DESCRIPTION_DESCRIPTION,
       };
 
-      throw new Error(JSON.stringify(errorV1));
+      throw new AppError(
+        AppErrorKind.contractViolation,
+        JSON.stringify(errorV1),
+      );
     }
   }
 

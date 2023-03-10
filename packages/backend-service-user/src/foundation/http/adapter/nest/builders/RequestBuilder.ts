@@ -1,7 +1,7 @@
 import { IncomingHttpHeaders } from 'http';
 
 import { Injectable } from '@nestjs/common';
-import { Builder } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 import { Request } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
@@ -70,7 +70,7 @@ export class RequestBuilder implements Builder<Request, [FastifyRequest]> {
       this.#filterOutUndefined(headers);
 
     if (!this.#isStringRecord(filteredHeaders)) {
-      throw new Error('Invalid request headers!');
+      throw new AppError(AppErrorKind.unknown, 'Invalid request headers!');
     }
 
     return filteredHeaders;
@@ -82,7 +82,7 @@ export class RequestBuilder implements Builder<Request, [FastifyRequest]> {
     }
 
     if (!this.#isStringOrStringArrayRecord(query)) {
-      throw new Error('Invalid request query!');
+      throw new AppError(AppErrorKind.unknown, 'Invalid request query!');
     }
 
     return query;
