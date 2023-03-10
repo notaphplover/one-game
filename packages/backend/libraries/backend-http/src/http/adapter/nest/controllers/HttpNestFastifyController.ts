@@ -1,13 +1,12 @@
 import { Builder, Handler } from '@one-game-js/backend-common';
-import {
-  Request,
-  RequestWithBody,
-  Response,
-  ResponseWithBody,
-} from '@one-game-js/backend-http';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-export class HttpNestController<
+import { Request } from '../../../application/models/Request';
+import { RequestWithBody } from '../../../application/models/RequestWithBody';
+import { Response } from '../../../application/models/Response';
+import { ResponseWithBody } from '../../../application/models/ResponseWithBody';
+
+export class HttpNestFastifyController<
   TRequest extends Request | RequestWithBody = Request | RequestWithBody,
 > implements Handler<[FastifyRequest, FastifyReply], void>
 {

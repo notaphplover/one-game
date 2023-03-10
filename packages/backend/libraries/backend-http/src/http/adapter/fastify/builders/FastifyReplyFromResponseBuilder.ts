@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import { Builder } from '@one-game-js/backend-common';
-import { Response, ResponseWithBody } from '@one-game-js/backend-http';
 import { FastifyReply } from 'fastify';
 
-@Injectable()
-export class ResponseBuilder
+import { Response } from '../../../application/models/Response';
+import { ResponseWithBody } from '../../../application/models/ResponseWithBody';
+
+export class FastifyReplyFromResponseBuilder
   implements
     Builder<FastifyReply, [Response | ResponseWithBody<unknown>, FastifyReply]>
 {

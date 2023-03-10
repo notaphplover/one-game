@@ -1,16 +1,17 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@one-game-js/backend-common';
-import { RequestWithBody } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
-import { RequestWithBodyBuilder } from './RequestWithBodyBuilder';
+import { RequestWithBody } from '../../../application/models/RequestWithBody';
+import { RequestWithBodyFromFastifyRequestBuilder } from './RequestWithBodyFromFastifyRequestBuilder';
 
-describe(RequestWithBodyBuilder.name, () => {
-  let requestWithBodyBuilder: RequestWithBodyBuilder;
+describe(RequestWithBodyFromFastifyRequestBuilder.name, () => {
+  let requestWithBodyFromFastifyRequestBuilder: RequestWithBodyFromFastifyRequestBuilder;
 
   beforeAll(() => {
-    requestWithBodyBuilder = new RequestWithBodyBuilder();
+    requestWithBodyFromFastifyRequestBuilder =
+      new RequestWithBodyFromFastifyRequestBuilder();
   });
 
   describe('.build', () => {
@@ -39,7 +40,9 @@ describe(RequestWithBodyBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = requestWithBodyBuilder.build(fastifyRequestFixture);
+          result = requestWithBodyFromFastifyRequestBuilder.build(
+            fastifyRequestFixture,
+          );
         });
 
         it('should return a RequestWithBody', () => {
@@ -90,7 +93,9 @@ describe(RequestWithBodyBuilder.name, () => {
 
         beforeAll(() => {
           try {
-            requestWithBodyBuilder.build(fastifyRequestFixture);
+            requestWithBodyFromFastifyRequestBuilder.build(
+              fastifyRequestFixture,
+            );
           } catch (error) {
             result = error;
           }

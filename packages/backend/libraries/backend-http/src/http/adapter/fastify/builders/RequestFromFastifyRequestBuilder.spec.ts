@@ -1,15 +1,15 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { Request } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
-import { RequestBuilder } from './RequestBuilder';
+import { Request } from '../../../application/models/Request';
+import { RequestFromFastifyRequestBuilder } from './RequestFromFastifyRequestBuilder';
 
-describe(RequestBuilder.name, () => {
-  let requestBuilder: RequestBuilder;
+describe(RequestFromFastifyRequestBuilder.name, () => {
+  let requestFromFastifyRequestBuilder: RequestFromFastifyRequestBuilder;
 
   beforeAll(() => {
-    requestBuilder = new RequestBuilder();
+    requestFromFastifyRequestBuilder = new RequestFromFastifyRequestBuilder();
   });
 
   describe('.build', () => {
@@ -35,7 +35,9 @@ describe(RequestBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = requestBuilder.build(fastifyRequestFixture);
+          result = requestFromFastifyRequestBuilder.build(
+            fastifyRequestFixture,
+          );
         });
 
         it('should return a Request', () => {
@@ -79,7 +81,9 @@ describe(RequestBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = requestBuilder.build(fastifyRequestFixture);
+          result = requestFromFastifyRequestBuilder.build(
+            fastifyRequestFixture,
+          );
         });
 
         it('should return a Request', () => {
@@ -121,7 +125,9 @@ describe(RequestBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = requestBuilder.build(fastifyRequestFixture);
+          result = requestFromFastifyRequestBuilder.build(
+            fastifyRequestFixture,
+          );
         });
 
         it('should return a Request', () => {

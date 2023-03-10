@@ -1,15 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Response, ResponseWithBody } from '@one-game-js/backend-http';
 import { FastifyReply } from 'fastify';
 
-import { ResponseBuilder } from './ResponseBuilder';
+import { Response } from '../../../application/models/Response';
+import { ResponseWithBody } from '../../../application/models/ResponseWithBody';
+import { FastifyReplyFromResponseBuilder } from './FastifyReplyFromResponseBuilder';
 
-describe(ResponseBuilder.name, () => {
-  let responseBuilder: ResponseBuilder;
+describe(FastifyReplyFromResponseBuilder.name, () => {
+  let fastifyReplyFromResponseBuilder: FastifyReplyFromResponseBuilder;
 
   beforeAll(() => {
-    responseBuilder = new ResponseBuilder();
+    fastifyReplyFromResponseBuilder = new FastifyReplyFromResponseBuilder();
   });
 
   describe('.build', () => {
@@ -41,7 +42,10 @@ describe(ResponseBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = responseBuilder.build(responseFixture, fastifyReplyMock);
+          result = fastifyReplyFromResponseBuilder.build(
+            responseFixture,
+            fastifyReplyMock,
+          );
         });
 
         afterAll(() => {
@@ -92,7 +96,10 @@ describe(ResponseBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = responseBuilder.build(responseFixture, fastifyReplyMock);
+          result = fastifyReplyFromResponseBuilder.build(
+            responseFixture,
+            fastifyReplyMock,
+          );
         });
 
         afterAll(() => {

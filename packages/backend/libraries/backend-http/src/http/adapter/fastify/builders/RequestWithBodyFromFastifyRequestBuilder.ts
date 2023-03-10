@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
 import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
-import { RequestWithBody } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
-import { RequestBuilder } from './RequestBuilder';
+import { RequestWithBody } from '../../../application/models/RequestWithBody';
+import { RequestFromFastifyRequestBuilder } from './RequestFromFastifyRequestBuilder';
 
-@Injectable()
-export class RequestWithBodyBuilder
-  extends RequestBuilder
+export class RequestWithBodyFromFastifyRequestBuilder
+  extends RequestFromFastifyRequestBuilder
   implements Builder<RequestWithBody, [FastifyRequest]>
 {
   public override build(fastifyRequest: FastifyRequest): RequestWithBody {

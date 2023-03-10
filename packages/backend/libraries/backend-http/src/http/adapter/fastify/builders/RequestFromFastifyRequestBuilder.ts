@@ -1,12 +1,13 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { Injectable } from '@nestjs/common';
 import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
-import { Request } from '@one-game-js/backend-http';
 import { FastifyRequest } from 'fastify';
 
-@Injectable()
-export class RequestBuilder implements Builder<Request, [FastifyRequest]> {
+import { Request } from '../../../application/models/Request';
+
+export class RequestFromFastifyRequestBuilder
+  implements Builder<Request, [FastifyRequest]>
+{
   public build(request: FastifyRequest): Request {
     return {
       headers: this.#parseRequests(request.headers),

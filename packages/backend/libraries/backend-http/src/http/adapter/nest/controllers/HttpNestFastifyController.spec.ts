@@ -1,17 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder, Handler } from '@one-game-js/backend-common';
-import {
-  Request,
-  RequestWithBody,
-  Response,
-  ResponseWithBody,
-} from '@one-game-js/backend-http';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import { HttpNestController } from './HttpNestController';
+import { Request } from '../../../application/models/Request';
+import { RequestWithBody } from '../../../application/models/RequestWithBody';
+import { Response } from '../../../application/models/Response';
+import { ResponseWithBody } from '../../../application/models/ResponseWithBody';
+import { HttpNestFastifyController } from './HttpNestFastifyController';
 
-describe(HttpNestController.name, () => {
+describe(HttpNestFastifyController.name, () => {
   let requestBuilderMock: jest.Mocked<
     Builder<Request | RequestWithBody, [FastifyRequest]>
   >;
@@ -22,7 +20,7 @@ describe(HttpNestController.name, () => {
     Builder<FastifyReply, [Response | ResponseWithBody<unknown>, FastifyReply]>
   >;
 
-  let httpController: HttpNestController<Request | RequestWithBody>;
+  let httpController: HttpNestFastifyController<Request | RequestWithBody>;
 
   beforeAll(() => {
     requestBuilderMock = {
@@ -35,7 +33,7 @@ describe(HttpNestController.name, () => {
       build: jest.fn(),
     };
 
-    httpController = new HttpNestController(
+    httpController = new HttpNestFastifyController(
       requestBuilderMock,
       requestControllerMock,
       resultBuilderMock,
