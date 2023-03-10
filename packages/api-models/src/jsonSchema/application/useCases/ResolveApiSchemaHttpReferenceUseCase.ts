@@ -1,13 +1,9 @@
 import http from 'node:http';
 import stream from 'node:stream';
 
-import { Handler } from '@one-game-js/backend-common';
-
 import { ResolveApiSchemaHttpReferenceQuery } from '../queries/ResolveApiSchemaHttpReferenceQuery';
 
-export class ResolveApiSchemaHttpReferenceUseCase
-  implements Handler<[ResolveApiSchemaHttpReferenceQuery], Buffer>
-{
+export class ResolveApiSchemaHttpReferenceUseCase {
   readonly #uriToApiSchemaBufferMap: Map<string, Buffer>;
 
   constructor(uriToJsonSchemaBufferMap: Map<string, Buffer>) {
