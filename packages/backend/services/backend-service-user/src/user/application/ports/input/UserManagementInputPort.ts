@@ -14,6 +14,7 @@ import {
 } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { User } from '../../../domain/models/User';
 import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
+import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { UserCreateQueryV1ToUserCreateQueryConverter } from '../../converters/UserCreateQueryV1ToUserCreateQueryConverter';
 import { UserToUserV1Converter } from '../../converters/UserToUserV1Converter';
 import {
@@ -60,7 +61,7 @@ export class UserManagementInputPort {
   public async create(
     userCreateQueryV1: apiModels.UserCreateQueryV1,
   ): Promise<apiModels.UserV1> {
-    const context: HashContext & UuidContext = await this.#buildContext(
+    const context: HashContext & UuidContext = await this.#buildCreateContext(
       userCreateQueryV1,
     );
 
@@ -77,7 +78,18 @@ export class UserManagementInputPort {
     return this.#userToUserV1Converter.convert(user);
   }
 
-  async #buildContext(
+  public async findOne(id: string): Promise<apiModels.UserV1 | undefined> {
+    const userFindQuery: UserFindQuery = {
+      id,
+    };
+
+    const userOrUndefined: User | undefined =
+      await this.#userPersistenceOutputPort.findOne(userFindQuery);
+
+    return this.#buildUserV1OrUndefined(userOrUndefined);
+  }
+
+  async #buildCreateContext(
     userCreateQueryV1: apiModels.UserCreateQueryV1,
   ): Promise<HashContext & UuidContext> {
     const passwordHash: string = await this.#bcryptHashProviderOutputPort.hash(
@@ -90,5 +102,19 @@ export class UserManagementInputPort {
       hash: passwordHash,
       uuid,
     };
+  }
+
+  #buildUserV1OrUndefined(
+    userOrUndefined: User | undefined,
+  ): apiModels.UserV1 | undefined {
+    let userV1OrUndefined: apiModels.UserV1 | undefined;
+
+    if (userOrUndefined === undefined) {
+      userV1OrUndefined = undefined;
+    } else {
+      userV1OrUndefined = this.#userToUserV1Converter.convert(userOrUndefined);
+    }
+
+    return userV1OrUndefined;
   }
 }
