@@ -1,13 +1,18 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UserCreateQueryFixtures } from '../../../domain/fixtures/UserCreateQueryFixtures';
+import { UserFindQueryFixtures } from '../../../domain/fixtures/UserFindQueryFixtures';
+import { UserFixtures } from '../../../domain/fixtures/UserFixtures';
 import { User } from '../../../domain/models/User';
 import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
+import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
+import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
 import { UserPersistenceTypeOrmAdapter } from './UserPersistenceTypeOrmAdapter';
 
 describe(UserPersistenceTypeOrmAdapter, () => {
   let createUserTypeOrmServiceMock: jest.Mocked<CreateUserTypeOrmService>;
+  let findUserTypeOrmServiceMock: jest.Mocked<FindUserTypeOrmService>;
 
   let userPersistenceTypeOrmAdapter: UserPersistenceTypeOrmAdapter;
 
@@ -18,8 +23,15 @@ describe(UserPersistenceTypeOrmAdapter, () => {
       jest.Mocked<CreateUserTypeOrmService>
     > as jest.Mocked<CreateUserTypeOrmService>;
 
+    findUserTypeOrmServiceMock = {
+      findOne: jest.fn(),
+    } as Partial<
+      jest.Mocked<FindUserTypeOrmService>
+    > as jest.Mocked<FindUserTypeOrmService>;
+
     userPersistenceTypeOrmAdapter = new UserPersistenceTypeOrmAdapter(
       createUserTypeOrmServiceMock,
+      findUserTypeOrmServiceMock,
     );
   });
 
@@ -47,6 +59,45 @@ describe(UserPersistenceTypeOrmAdapter, () => {
         expect(createUserTypeOrmServiceMock.insertOne).toHaveBeenCalledTimes(1);
         expect(createUserTypeOrmServiceMock.insertOne).toHaveBeenCalledWith(
           userCreateQueryFixture,
+        );
+      });
+
+      it('should return a User', () => {
+        expect(result).toBe(userFixture);
+      });
+    });
+  });
+
+  describe('.findOne', () => {
+    let userFindQueryFixture: UserFindQuery;
+
+    beforeAll(() => {
+      userFindQueryFixture = UserFindQueryFixtures.withId;
+    });
+
+    describe('when called', () => {
+      let userFixture: User;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userFixture = UserFixtures.any;
+
+        findUserTypeOrmServiceMock.findOne.mockResolvedValueOnce(userFixture);
+
+        result = await userPersistenceTypeOrmAdapter.findOne(
+          userFindQueryFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call findUserTypeOrmService.findOne()', () => {
+        expect(findUserTypeOrmServiceMock.findOne).toHaveBeenCalledTimes(1);
+        expect(findUserTypeOrmServiceMock.findOne).toHaveBeenCalledWith(
+          userFindQueryFixture,
         );
       });
 
