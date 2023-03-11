@@ -1,4 +1,4 @@
-import { ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@one-game-js/backend-common';
 import {
   FindManyOptions,
   FindOneOptions,
@@ -17,7 +17,9 @@ export class FindTypeOrmService<
   TQuery,
 > {
   readonly #repository: Repository<TModelDb>;
-  readonly #modelDbToModelConverter: ConverterAsync<TModelDb, TModel>;
+  readonly #modelDbToModelConverter:
+    | Converter<TModelDb, TModel>
+    | ConverterAsync<TModelDb, TModel>;
   readonly #queryToQueryTypeOrmConverter: QueryToFindQueryTypeOrmConverter<
     TModelDb,
     TQuery
@@ -25,7 +27,9 @@ export class FindTypeOrmService<
 
   constructor(
     repository: Repository<TModelDb>,
-    modelDbToModelConverter: ConverterAsync<TModelDb, TModel>,
+    modelDbToModelConverter:
+      | Converter<TModelDb, TModel>
+      | ConverterAsync<TModelDb, TModel>,
     queryToQueryTypeOrmConverter: QueryToFindQueryTypeOrmConverter<
       TModelDb,
       TQuery

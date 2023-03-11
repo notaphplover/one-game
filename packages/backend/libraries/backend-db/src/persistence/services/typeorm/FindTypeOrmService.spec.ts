@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@one-game-js/backend-common';
 import {
   FindManyOptions,
   QueryBuilder,
@@ -26,8 +26,8 @@ describe(FindTypeOrmService.name, () => {
   let queryToQueryTypeOrmConverterMock: jest.Mocked<
     QueryToFindQueryTypeOrmConverter<ModelTest, QueryTest>
   >;
-  let modelDbToModelConverter: jest.Mocked<
-    ConverterAsync<ModelTest, ModelTest>
+  let modelDbToModelConverterMock: jest.Mocked<
+    Converter<ModelTest, ModelTest> | ConverterAsync<ModelTest, ModelTest>
   >;
 
   let findTypeOrmService: FindTypeOrmService<ModelTest, ModelTest, QueryTest>;
@@ -60,13 +60,15 @@ describe(FindTypeOrmService.name, () => {
       QueryToFindQueryTypeOrmConverter<ModelTest, QueryTest>
     >;
 
-    modelDbToModelConverter = {
+    modelDbToModelConverterMock = {
       convert: jest.fn(),
-    };
+    } as jest.Mocked<
+      Converter<ModelTest, ModelTest> | ConverterAsync<ModelTest, ModelTest>
+    >;
 
     findTypeOrmService = new FindTypeOrmService(
       repositoryMock,
-      modelDbToModelConverter,
+      modelDbToModelConverterMock,
       queryToQueryTypeOrmConverterMock,
     );
   });
@@ -89,7 +91,11 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
-        modelDbToModelConverter.convert.mockResolvedValueOnce(modelTestFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelTestFixture);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
@@ -115,8 +121,8 @@ describe(FindTypeOrmService.name, () => {
       });
 
       it('should call modelDbToModelConverter.convert()', () => {
-        expect(modelDbToModelConverter.convert).toHaveBeenCalledTimes(1);
-        expect(modelDbToModelConverter.convert).toHaveBeenCalledWith(
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledTimes(1);
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledWith(
           modelTestFixture,
         );
       });
@@ -142,7 +148,11 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
-        modelDbToModelConverter.convert.mockResolvedValueOnce(modelTestFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelTestFixture);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
@@ -177,7 +187,11 @@ describe(FindTypeOrmService.name, () => {
           fooValue: 'bar',
         };
 
-        modelDbToModelConverter.convert.mockResolvedValueOnce(modelTestFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelTestFixture);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (
@@ -248,7 +262,7 @@ describe(FindTypeOrmService.name, () => {
       });
 
       it('should not call modelDbToModelConverter.convert()', () => {
-        expect(modelDbToModelConverter.convert).not.toHaveBeenCalled();
+        expect(modelDbToModelConverterMock.convert).not.toHaveBeenCalled();
       });
 
       it('should return undefined', () => {
@@ -271,7 +285,11 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
-        modelDbToModelConverter.convert.mockResolvedValueOnce(modelTestFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelTestFixture);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
@@ -304,8 +322,8 @@ describe(FindTypeOrmService.name, () => {
       });
 
       it('should call modelDbToModelConverter.convert()', () => {
-        expect(modelDbToModelConverter.convert).toHaveBeenCalledTimes(1);
-        expect(modelDbToModelConverter.convert).toHaveBeenCalledWith(
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledTimes(1);
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledWith(
           modelTestFixture,
         );
       });
@@ -359,7 +377,7 @@ describe(FindTypeOrmService.name, () => {
       });
 
       it('should not call modelDbToModelConverter.convert()', () => {
-        expect(modelDbToModelConverter.convert).not.toHaveBeenCalled();
+        expect(modelDbToModelConverterMock.convert).not.toHaveBeenCalled();
       });
 
       it('should return undefined', () => {
@@ -389,7 +407,11 @@ describe(FindTypeOrmService.name, () => {
           >
         ).mockResolvedValueOnce(queryBuilderMock);
         queryBuilderMock.getOne.mockResolvedValueOnce(modelTestFixture);
-        modelDbToModelConverter.convert.mockResolvedValueOnce(modelTestFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelTestFixture);
 
         result = await findTypeOrmService.findOne(queryTestFixture);
       });
@@ -414,8 +436,8 @@ describe(FindTypeOrmService.name, () => {
       });
 
       it('should call modelDbToModelConverter.convert()', () => {
-        expect(modelDbToModelConverter.convert).toHaveBeenCalledTimes(1);
-        expect(modelDbToModelConverter.convert).toHaveBeenCalledWith(
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledTimes(1);
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledWith(
           modelTestFixture,
         );
       });

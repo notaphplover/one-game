@@ -11,6 +11,7 @@ import { UserCreateQueryFixtures } from '../../../domain/fixtures/UserCreateQuer
 import { UserFixtures } from '../../../domain/fixtures/UserFixtures';
 import { User } from '../../../domain/models/User';
 import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
+import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
 import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
@@ -36,7 +37,7 @@ describe(UserManagementInputPort.name, () => {
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
     userCreateQueryV1ToUserCreateQueryConverterMock = { convert: jest.fn() };
-    userPersistenceOutputPortMock = { create: jest.fn() };
+    userPersistenceOutputPortMock = { create: jest.fn(), findOne: jest.fn() };
     userToUserV1ConverterMock = { convert: jest.fn() };
     uuidProviderOutputPortMock = { generateV4: jest.fn() };
 
@@ -120,6 +121,89 @@ describe(UserManagementInputPort.name, () => {
         expect(userPersistenceOutputPortMock.create).toHaveBeenCalledTimes(1);
         expect(userPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           userCreateQueryFixture,
+        );
+      });
+
+      it('should call userToUserV1Converter.convert()', () => {
+        expect(userToUserV1ConverterMock.convert).toHaveBeenCalledTimes(1);
+        expect(userToUserV1ConverterMock.convert).toHaveBeenCalledWith(
+          userFixture,
+        );
+      });
+
+      it('should return an UserV1', () => {
+        expect(result).toBe(userV1Fixture);
+      });
+    });
+  });
+
+  describe('.findOne', () => {
+    let idFixture: string;
+
+    beforeAll(() => {
+      idFixture = '83073aec-b81b-4107-97f9-baa46de5dd40';
+    });
+
+    describe('when called, and userPersistenceOutputPort.findOne() returns undefined', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
+
+        result = await userManagementInputPort.findOne(idFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userPersistenceOutputPort.findOne()', () => {
+        const expectedUserFindQuery: UserFindQuery = {
+          id: idFixture,
+        };
+
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedUserFindQuery,
+        );
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when called, and userPersistenceOutputPort.findOne() returns a User', () => {
+      let userFixture: User;
+      let userV1Fixture: apiModels.UserV1;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userFixture = UserFixtures.any;
+        userV1Fixture = UserV1Fixtures.any;
+
+        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          userFixture,
+        );
+
+        userToUserV1ConverterMock.convert.mockReturnValueOnce(userV1Fixture);
+
+        result = await userManagementInputPort.findOne(idFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userPersistenceOutputPort.findOne()', () => {
+        const expectedUserFindQuery: UserFindQuery = {
+          id: idFixture,
+        };
+
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedUserFindQuery,
         );
       });
 

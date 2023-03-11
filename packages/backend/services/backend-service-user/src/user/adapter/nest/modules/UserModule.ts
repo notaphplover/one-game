@@ -11,8 +11,10 @@ import { userPersistenceOutputPortSymbol } from '../../../application/ports/outp
 import { UserPersistenceTypeOrmAdapter } from '../../typeorm/adapters/UserPersistenceTypeOrmAdapter';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
 import { UserDbToUserConverter } from '../../typeorm/converters/UserDbToUserConverter';
+import { UserFindQueryToUserFindQueryTypeOrmConverter } from '../../typeorm/converters/UserFindQueryToUserFindQueryTypeOrmConverter';
 import { UserDb } from '../../typeorm/models/UserDb';
 import { CreateUserTypeOrmService } from '../../typeorm/services/CreateUserTypeOrmService';
+import { FindUserTypeOrmService } from '../../typeorm/services/FindUserTypeOrmService';
 
 @Module({
   exports: [UserManagementInputPort],
@@ -24,8 +26,10 @@ import { CreateUserTypeOrmService } from '../../typeorm/services/CreateUserTypeO
   ],
   providers: [
     CreateUserTypeOrmService,
+    FindUserTypeOrmService,
     UserCreateQueryToUserCreateQueryTypeOrmConverter,
     UserCreateQueryV1ToUserCreateQueryConverter,
+    UserFindQueryToUserFindQueryTypeOrmConverter,
     UserDbToUserConverter,
     UserManagementInputPort,
     UserToUserV1Converter,
