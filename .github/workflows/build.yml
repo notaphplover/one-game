@@ -55,7 +55,7 @@ jobs:
         run: echo "packages=$(pnpm exec backend-get-affected-projects test:js origin/${{github.base_ref}})" >> $GITHUB_OUTPUT
 
       - name: Compile source files
-        run: pnpm run build:all
+        run: pnpm run build
 
       - name: Lint affected source files
         run: pnpm run lint:all --filter=[origin/${{github.base_ref}}]
@@ -129,7 +129,7 @@ jobs:
             ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
 
       - name: Build on cache miss
-        run: pnpm run build:all --filter ${{ matrix.package }}
+        run: pnpm run build --filter ${{ matrix.package }}
         if: ${{ !steps.ts-build-cache.outputs.cache-hit }}
 
       - name: Launch Unit Tests
