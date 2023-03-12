@@ -10,13 +10,22 @@ import { Request } from './http/application/models/Request';
 import { RequestWithBody } from './http/application/models/RequestWithBody';
 import { Response } from './http/application/models/Response';
 import { ResponseWithBody } from './http/application/models/ResponseWithBody';
+import { Middleware } from './http/application/modules/Middleware';
+import { MiddlewarePipeline } from './http/application/modules/MiddlewarePipeline';
 
-export type { Request, RequestWithBody, Response, ResponseWithBody };
+export type {
+  Middleware,
+  Request,
+  RequestWithBody,
+  Response,
+  ResponseWithBody,
+};
 
 export {
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
+  MiddlewarePipeline,
   RequestFromFastifyRequestBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
   SingleEntityGetResponseBuilder,
