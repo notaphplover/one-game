@@ -5,6 +5,7 @@ import { Request } from '../../../application/models/Request';
 import { RequestWithBody } from '../../../application/models/RequestWithBody';
 import { Response } from '../../../application/models/Response';
 import { ResponseWithBody } from '../../../application/models/ResponseWithBody';
+import { MiddlewarePipeline } from '../../../application/modules/MiddlewarePipeline';
 
 export class HttpNestFastifyController<
   TRequest extends Request | RequestWithBody = Request | RequestWithBody,
@@ -19,6 +20,7 @@ export class HttpNestFastifyController<
     FastifyReply,
     [Response | ResponseWithBody<unknown>, FastifyReply]
   >;
+  readonly #middlewarePipeline: MiddlewarePipeline | undefined;
 
   constructor(
     requestBuilder: Builder<TRequest, [FastifyRequest]>,
@@ -30,10 +32,12 @@ export class HttpNestFastifyController<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
+    middlewarePipeline?: MiddlewarePipeline,
   ) {
     this.#requestBuilder = requestBuilder;
     this.#requestController = requestController;
     this.#resultBuilder = resultBuilder;
+    this.#middlewarePipeline = middlewarePipeline;
   }
 
   public async handle(
@@ -41,8 +45,10 @@ export class HttpNestFastifyController<
     reply: FastifyReply,
   ): Promise<void> {
     const appRequest: TRequest = this.#requestBuilder.build(request);
+
     const appResponse: Response | ResponseWithBody<unknown> =
-      await this.#requestController.handle(appRequest);
+      (await this.#middlewarePipeline?.apply(appRequest)) ??
+      (await this.#requestController.handle(appRequest));
 
     await this.#resultBuilder.build(appResponse, reply);
   }
