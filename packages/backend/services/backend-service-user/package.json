@@ -15,6 +15,7 @@
     "@one-game-js/backend-common": "workspace:*",
     "@one-game-js/backend-db": "workspace:*",
     "@one-game-js/backend-env": "workspace:*",
+    "@one-game-js/backend-jwt": "workspace:*",
     "@one-game-js/backend-http": "workspace:*",
     "bcrypt": "5.1.0",
     "envalid": "7.3.1",
