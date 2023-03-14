@@ -58,6 +58,14 @@ export class ErrorV1ResponseFromErrorBuilder
         statusCode = httpStatusCodes.CONFLICT;
         errorMessage = this.#stringifyError(error);
         break;
+      case AppErrorKind.invalidCredentials:
+        statusCode = httpStatusCodes.FORBIDDEN;
+        errorMessage = this.#stringifyError(error);
+        break;
+      case AppErrorKind.missingCredentials:
+        statusCode = httpStatusCodes.UNAUTHORIZED;
+        errorMessage = this.#stringifyError(error);
+        break;
       case AppErrorKind.unknown:
         statusCode = httpStatusCodes.INTERNAL_SERVER_ERROR;
         errorMessage = this.#stringifyError(error);
