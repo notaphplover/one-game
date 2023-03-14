@@ -74,6 +74,8 @@ describe(ErrorV1ResponseFromErrorBuilder, () => {
     describe.each<[AppErrorKind, number]>([
       [AppErrorKind.contractViolation, 400],
       [AppErrorKind.entityConflict, 409],
+      [AppErrorKind.invalidCredentials, 403],
+      [AppErrorKind.missingCredentials, 401],
       [AppErrorKind.unknown, 500],
       [AppErrorKind.unprocessableOperation, 422],
     ])(
