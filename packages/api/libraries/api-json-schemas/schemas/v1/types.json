@@ -3,6 +3,8 @@
   "title": "TypesV1",
   "$id": "https://onegame.schemas/api/v1/types.json",
   "anyOf": [
+    { "$ref": "https://onegame.schemas/api/v1/auth/auth.json" },
+    { "$ref": "https://onegame.schemas/api/v1/auth/auth-create-query.json" },
     { "$ref": "https://onegame.schemas/api/v1/cards/blank-card.json" },
     { "$ref": "https://onegame.schemas/api/v1/cards/card-array.json" },
     { "$ref": "https://onegame.schemas/api/v1/cards/card.json" },
@@ -13,25 +15,40 @@
     { "$ref": "https://onegame.schemas/api/v1/cards/wild-card.json" },
     { "$ref": "https://onegame.schemas/api/v1/cards/wild-draw-4-card.json" },
     { "$ref": "https://onegame.schemas/api/v1/errors/error.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/active-game-slot-cards.json" },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/active-game-slot-cards.json"
+    },
     { "$ref": "https://onegame.schemas/api/v1/games/active-game-slot.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/active-game.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game-card-spec.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game-create-query.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game-direction.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/game-id-draw-cards-query.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/game-id-pass-turn-query.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/game-id-play-cards-query.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/game-id-slot-id-update-query.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/game-id-update-query.json" },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/game-id-draw-cards-query.json"
+    },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/game-id-pass-turn-query.json"
+    },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/game-id-play-cards-query.json"
+    },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/game-id-slot-id-update-query.json"
+    },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/game-id-update-query.json"
+    },
     { "$ref": "https://onegame.schemas/api/v1/games/game-slot.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game-spec.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/non-started-game-slot.json" },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/non-started-game-slot.json"
+    },
     { "$ref": "https://onegame.schemas/api/v1/games/non-started-game.json" },
     { "$ref": "https://onegame.schemas/api/v1/users/user-create-query.json" },
-    { "$ref": "https://onegame.schemas/api/v1/users/user-id-token-create-query.json" },
-    { "$ref": "https://onegame.schemas/api/v1/users/user-id-update-query.json" },
+    {
+      "$ref": "https://onegame.schemas/api/v1/users/user-id-update-query.json"
+    },
     { "$ref": "https://onegame.schemas/api/v1/users/user.json" }
   ]
 }
