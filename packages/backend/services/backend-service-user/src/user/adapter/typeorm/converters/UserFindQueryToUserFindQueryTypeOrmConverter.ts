@@ -23,6 +23,10 @@ export class UserFindQueryToUserFindQueryTypeOrmConverter
       userFindQueryTypeOrmWhere.id = userFindQuery.id;
     }
 
+    if (userFindQuery.email !== undefined) {
+      userFindQueryTypeOrmWhere.email = userFindQuery.email;
+    }
+
     return userFindQueryTypeOrm;
   }
 }
