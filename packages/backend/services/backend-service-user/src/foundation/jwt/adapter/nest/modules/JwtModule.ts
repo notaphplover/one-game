@@ -7,9 +7,11 @@ import { Environment } from '../../../../env/application/models/Environment';
 import { EnvironmentService } from '../../../../env/application/services/EnvironmentService';
 
 @Module({
+  exports: [JwtService],
   imports: [EnvModule],
   providers: [
     {
+      inject: [EnvironmentService],
       provide: JwtService,
       useFactory: (
         environmentService: EnvironmentService,

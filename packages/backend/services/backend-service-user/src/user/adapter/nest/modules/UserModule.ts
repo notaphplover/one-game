@@ -17,7 +17,7 @@ import { CreateUserTypeOrmService } from '../../typeorm/services/CreateUserTypeO
 import { FindUserTypeOrmService } from '../../typeorm/services/FindUserTypeOrmService';
 
 @Module({
-  exports: [UserManagementInputPort],
+  exports: [UserManagementInputPort, userPersistenceOutputPortSymbol],
   imports: [
     CommonModule,
     HashModule,
