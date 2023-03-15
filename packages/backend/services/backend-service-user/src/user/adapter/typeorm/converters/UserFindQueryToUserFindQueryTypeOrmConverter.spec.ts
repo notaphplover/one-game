@@ -40,6 +40,34 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
     });
   });
 
+  describe('having a UserFindQuery with an email', () => {
+    let userFindQueryFixture: UserFindQuery;
+
+    beforeAll(() => {
+      userFindQueryFixture = UserFindQueryFixtures.withEmail;
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        result = await userFindQueryToUserFindQueryTypeOrmConverter.convert(
+          userFindQueryFixture,
+        );
+      });
+
+      it('should return a FindManyOptions<UserDb>', () => {
+        const expected: FindManyOptions<UserDb> = {
+          where: {
+            email: userFindQueryFixture.email as string,
+          },
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
   describe('having a UserFindQuery with an id', () => {
     let userFindQueryFixture: UserFindQuery;
 
