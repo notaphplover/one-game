@@ -7,6 +7,8 @@
 
 export type Types = TypesV1;
 export type TypesV1 =
+  | AuthV1
+  | AuthCreateQueryV1
   | BlankCardV1
   | CardArrayV1
   | CardV1
@@ -34,7 +36,6 @@ export type TypesV1 =
   | NonStartedGameSlotV1
   | NonStartedGameV1
   | UserCreateQueryV1
-  | UserIdTokenCreateQueryV1
   | UserIdUpdateQueryV1
   | UserV1;
 export type BlankCardV1 = BaseCardV1 & {
@@ -117,6 +118,13 @@ export type GameIdUpdateQueryV1 =
 export type GameSlotV1 = ActiveGameSlotV1 | NonStartedGameSlotV1;
 export type GameV1 = ActiveGameV1 | NonStartedGameV1;
 
+export interface AuthV1 {
+  jwt: string;
+}
+export interface AuthCreateQueryV1 {
+  email: string;
+  password: string;
+}
 export interface BaseCardV1 {
   kind: CardKindV1;
   [k: string]: unknown | undefined;
@@ -179,10 +187,6 @@ export interface NonStartedGameV1 {
 export interface UserCreateQueryV1 {
   email: string;
   name: string;
-  password: string;
-}
-export interface UserIdTokenCreateQueryV1 {
-  email: string;
   password: string;
 }
 export interface UserIdUpdateQueryV1 {

@@ -9,7 +9,6 @@ export enum ApiSchemaId {
   TypesV1 = 'https://onegame.schemas/api/v1/types.json',
   UserV1 = 'https://onegame.schemas/api/v1/users/user.json',
   UserIdUpdateQueryV1 = 'https://onegame.schemas/api/v1/users/user-id-update-query.json',
-  UserIdTokenCreateQueryV1 = 'https://onegame.schemas/api/v1/users/user-id-token-create-query.json',
   UserCreateQueryV1 = 'https://onegame.schemas/api/v1/users/user-create-query.json',
   NonStartedGameV1 = 'https://onegame.schemas/api/v1/games/non-started-game.json',
   NonStartedGameSlotV1 = 'https://onegame.schemas/api/v1/games/non-started-game-slot.json',
@@ -42,4 +41,6 @@ export enum ApiSchemaId {
   CardArrayV1 = 'https://onegame.schemas/api/v1/cards/card-array.json',
   BlankCardV1 = 'https://onegame.schemas/api/v1/cards/blank-card.json',
   BaseCardV1 = 'https://onegame.schemas/api/v1/cards/base-card.json',
+  AuthV1 = 'https://onegame.schemas/api/v1/auth/auth.json',
+  AuthCreateQueryV1 = 'https://onegame.schemas/api/v1/auth/auth-create-query.json',
 }
