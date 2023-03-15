@@ -27,6 +27,7 @@ describe(UserDbToUserConverter.name, () => {
         email: userDbFixture.email,
         id: userDbFixture.id,
         name: userDbFixture.name,
+        passwordHash: userDbFixture.passwordHash,
       };
 
       expect(result).toStrictEqual(expected);

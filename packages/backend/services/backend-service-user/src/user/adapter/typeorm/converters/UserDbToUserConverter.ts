@@ -11,6 +11,7 @@ export class UserDbToUserConverter implements Converter<UserDb, User> {
       email: user.email,
       id: user.id,
       name: user.name,
+      passwordHash: user.passwordHash,
     };
   }
 }
