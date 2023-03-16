@@ -78,21 +78,21 @@ describe(AuthMiddleware.name, () => {
         },
         {
           kind: AppErrorKind.missingCredentials,
-          message: 'No "Authorization" header was found',
+          message: 'No authorization header was found',
         },
       ],
       [
         'no bearer',
         {
           headers: {
-            Authorization: 'Non bearer token',
+            authorization: 'Non bearer token',
           },
           query: {},
           urlParameters: {},
         },
         {
           kind: AppErrorKind.missingCredentials,
-          message: 'No Bearer "Authorization" header was found',
+          message: 'No Bearer authorization header was found',
         },
       ],
     ])(
@@ -144,7 +144,7 @@ describe(AuthMiddleware.name, () => {
         beforeAll(async () => {
           requestFixture = {
             headers: {
-              Authorization: `Bearer ${jwtFixture}`,
+              authorization: `Bearer ${jwtFixture}`,
             },
             query: {},
             urlParameters: {},
@@ -209,7 +209,7 @@ describe(AuthMiddleware.name, () => {
         beforeAll(async () => {
           requestFixture = {
             headers: {
-              Authorization: `Bearer ${jwtFixture}`,
+              authorization: `Bearer ${jwtFixture}`,
             },
             query: {},
             urlParameters: {},

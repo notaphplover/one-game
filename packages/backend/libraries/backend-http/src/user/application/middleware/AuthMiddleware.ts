@@ -12,7 +12,8 @@ import { Middleware } from '../../../http/application/modules/Middleware';
 import { RequestUserContextHolder } from '../models/RequestUserContextHolder';
 import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 
-const AUTH_HEADER_NAME: string = 'Authorization';
+// Auth headers are not case sensitive. Consider https://github.com/fastify/help/issues/71
+const AUTH_HEADER_NAME: string = 'authorization';
 const AUTH_HEADER_BEARER_PREFIX: string = 'Bearer ';
 
 export abstract class AuthMiddleware<
@@ -64,7 +65,7 @@ export abstract class AuthMiddleware<
     if (typeof request.headers[AUTH_HEADER_NAME] !== 'string') {
       throw new AppError(
         AppErrorKind.missingCredentials,
-        `No "${AUTH_HEADER_NAME}" header was found`,
+        `No authorization header was found`,
       );
     }
 
@@ -73,7 +74,7 @@ export abstract class AuthMiddleware<
     if (!authHeaderValue.startsWith(AUTH_HEADER_BEARER_PREFIX)) {
       throw new AppError(
         AppErrorKind.missingCredentials,
-        `No Bearer "${AUTH_HEADER_NAME}" header was found`,
+        `No Bearer authorization header was found`,
       );
     }
 
