@@ -4,6 +4,7 @@ import {
   FastifyReplyFromResponseBuilder,
   RequestFromFastifyRequestBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
+  SingleEntityGetResponseBuilder,
   SingleEntityPostResponseBuilder,
 } from '@one-game-js/backend-http';
 
@@ -13,6 +14,7 @@ import {
     FastifyReplyFromResponseBuilder,
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
+    SingleEntityGetResponseBuilder,
     SingleEntityPostResponseBuilder,
   ],
   providers: [
@@ -20,6 +22,7 @@ import {
     FastifyReplyFromResponseBuilder,
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
+    SingleEntityGetResponseBuilder,
     SingleEntityPostResponseBuilder,
   ],
 })
