@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15.2-alpine
+    environment:
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${DOCKER_PG_DB_NAME}
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
