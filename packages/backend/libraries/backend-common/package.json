@@ -14,7 +14,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.4",
     "rimraf": "4.4.0",
-    "typescript": "4.9.5"
+    "typescript": "5.0.2"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
