@@ -56,8 +56,8 @@
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "build:clean": "rimraf lib",
-    "docker:services:start": "docker compose up -d",
-    "docker:services:stop": "docker compose down",
+    "docker:services:start": "docker compose --env-file=docker.env up -d",
+    "docker:services:stop": "docker compose --env-file=docker.env down",
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "migrations:generate": "node ./scripts/generateMigration.mjs",
