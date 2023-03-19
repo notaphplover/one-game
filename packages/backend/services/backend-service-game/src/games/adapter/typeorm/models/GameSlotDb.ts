@@ -40,5 +40,5 @@ export class GameSlotDb {
     nullable: true,
     type: 'varchar',
   })
-  public readonly userId!: string;
+  public readonly userId!: string | null;
 }

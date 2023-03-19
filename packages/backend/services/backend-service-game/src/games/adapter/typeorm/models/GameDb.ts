@@ -17,7 +17,7 @@ export class GameDb {
     nullable: true,
     type: 'bit',
   })
-  public readonly currentCard!: string;
+  public readonly currentCard!: string | null;
 
   @Column({
     length: 16,
@@ -25,14 +25,14 @@ export class GameDb {
     nullable: true,
     type: 'bit',
   })
-  public readonly currentColor!: string;
+  public readonly currentColor!: string | null;
 
   @Column({
     name: 'current_playing_slot',
     nullable: true,
     type: 'smallint',
   })
-  public readonly currentPlayingSlotIndex!: number;
+  public readonly currentPlayingSlotIndex!: number | null;
 
   @PrimaryColumn({
     length: 36,
