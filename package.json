@@ -12,7 +12,7 @@
     "@one-game-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
     "lint-staged": "13.2.0",
-    "turbo": "1.8.4"
+    "turbo": "1.8.5"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
