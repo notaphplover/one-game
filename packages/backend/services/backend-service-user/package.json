@@ -6,9 +6,9 @@
   "description": "Backend user service for one-game-js",
   "dependencies": {
     "@fastify/helmet": "10.1.0",
-    "@nestjs/common": "9.3.11",
-    "@nestjs/core": "9.3.11",
-    "@nestjs/platform-fastify": "9.3.11",
+    "@nestjs/common": "9.3.12",
+    "@nestjs/core": "9.3.12",
+    "@nestjs/platform-fastify": "9.3.12",
     "@nestjs/typeorm": "9.0.1",
     "@one-game-js/api-models": "workspace:*",
     "@one-game-js/backend-api-validators": "workspace:*",
