@@ -1,5 +1,5 @@
-import { Card } from '../../../cards/domain/models/Card';
-import { CardKind } from '../../../cards/domain/models/CardKind';
+import { Card } from '../models/Card';
+import { CardKind } from '../models/CardKind';
 
 export class CardFixtures {
   public static get any(): Card {

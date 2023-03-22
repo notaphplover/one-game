@@ -3,8 +3,8 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { Builder } from '@one-game-js/backend-common';
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
+import { CardFixtures } from '../../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../../cards/domain/models/Card';
-import { CardFixtures } from '../../../domain/fixtures/CardFixtures';
 import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotDbFixtures } from '../fixtures/GameSlotDbFixtures';
