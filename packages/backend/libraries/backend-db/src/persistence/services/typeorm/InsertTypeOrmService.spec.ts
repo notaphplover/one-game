@@ -266,4 +266,172 @@ describe(InsertTypeOrmService.name, () => {
       });
     });
   });
+
+  describe('.insertMany()', () => {
+    describe('when called, and insertQueryToInsertQueryTypeOrmConverter.convert() returns a QueryDeepPartialEntity[]', () => {
+      let modelFixture: ModelTest;
+      let queryFixture: QueryTest;
+      let insertResultFixture: InsertResult;
+      let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>[];
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        modelFixture = {
+          foo: 'sample-string',
+        };
+
+        queryFixture = {
+          bar: 'sample',
+        };
+
+        insertResultFixture = {
+          identifiers: [{ id: 'sample-id' }],
+        } as Partial<InsertResult> as InsertResult;
+
+        typeOrmQueryFixture = [{}];
+
+        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
+        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelFixture);
+        (
+          setQueryToSetQueryTypeOrmConverterMock as jest.Mocked<
+            ConverterAsync<
+              QueryTest,
+              | QueryDeepPartialEntity<ModelTest>
+              | QueryDeepPartialEntity<ModelTest>[]
+            >
+          >
+        ).convert.mockResolvedValueOnce(typeOrmQueryFixture);
+
+        result = await insertTypeOrmService.insertMany(queryFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call queryToTypeOrmQueryConverterMock.convert()', () => {
+        expect(
+          setQueryToSetQueryTypeOrmConverterMock.convert,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          setQueryToSetQueryTypeOrmConverterMock.convert,
+        ).toHaveBeenCalledWith(queryFixture);
+      });
+
+      it('should call repositoryMock.insert()', () => {
+        expect(repositoryMock.insert).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.insert).toHaveBeenCalledWith(typeOrmQueryFixture);
+      });
+
+      it('should call repositoryMock.find()', () => {
+        const expected: FindManyOptions<ModelTest> = {
+          where: insertResultFixture.identifiers,
+        };
+
+        expect(repositoryMock.find).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.find).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call modelDbToModelConverter.convert()', () => {
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledTimes(1);
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledWith(
+          modelFixture,
+        );
+      });
+
+      it('should return an ModelTest', () => {
+        expect(result).toStrictEqual([modelFixture]);
+      });
+    });
+
+    describe('when called, and insertQueryToInsertQueryTypeOrmConverter.convert() returns a QueryDeepPartialEntity', () => {
+      let modelFixture: ModelTest;
+      let queryFixture: QueryTest;
+      let insertResultFixture: InsertResult;
+      let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        modelFixture = {
+          foo: 'sample-string',
+        };
+
+        queryFixture = {
+          bar: 'sample',
+        };
+
+        insertResultFixture = {
+          identifiers: [{ id: 'sample-id' }],
+        } as Partial<InsertResult> as InsertResult;
+
+        typeOrmQueryFixture = {};
+
+        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
+        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
+        (
+          modelDbToModelConverterMock as jest.Mocked<
+            ConverterAsync<ModelTest, ModelTest>
+          >
+        ).convert.mockResolvedValueOnce(modelFixture);
+        (
+          setQueryToSetQueryTypeOrmConverterMock as jest.Mocked<
+            ConverterAsync<
+              QueryTest,
+              | QueryDeepPartialEntity<ModelTest>
+              | QueryDeepPartialEntity<ModelTest>[]
+            >
+          >
+        ).convert.mockResolvedValueOnce(typeOrmQueryFixture);
+
+        result = await insertTypeOrmService.insertMany(queryFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call queryToTypeOrmQueryConverterMock.convert()', () => {
+        expect(
+          setQueryToSetQueryTypeOrmConverterMock.convert,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          setQueryToSetQueryTypeOrmConverterMock.convert,
+        ).toHaveBeenCalledWith(queryFixture);
+      });
+
+      it('should call repositoryMock.insert()', () => {
+        expect(repositoryMock.insert).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.insert).toHaveBeenCalledWith([
+          typeOrmQueryFixture,
+        ]);
+      });
+
+      it('should call repositoryMock.find()', () => {
+        const expected: FindManyOptions<ModelTest> = {
+          where: insertResultFixture.identifiers,
+        };
+
+        expect(repositoryMock.find).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.find).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call modelDbToModelConverter.convert()', () => {
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledTimes(1);
+        expect(modelDbToModelConverterMock.convert).toHaveBeenCalledWith(
+          modelFixture,
+        );
+      });
+
+      it('should return an ModelTest', () => {
+        expect(result).toStrictEqual([modelFixture]);
+      });
+    });
+  });
 });

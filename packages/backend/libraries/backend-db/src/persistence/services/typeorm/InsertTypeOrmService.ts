@@ -71,6 +71,49 @@ export class InsertTypeOrmService<
     return model;
   }
 
+  public async insertMany(query: TQuery): Promise<TModel[]> {
+    const insertQueryTypeOrm:
+      | QueryDeepPartialEntity<TModelDb>
+      | QueryDeepPartialEntity<TModelDb>[] =
+      await this.#setQueryToSetTypeOrmQueryConverter.convert(query);
+
+    const multipleInsertQueryTypeOrm: QueryDeepPartialEntity<TModelDb>[] =
+      this.#convertToMultipleInsertQueryTypeOrm(insertQueryTypeOrm);
+
+    const insertResult: InsertResult = await this.#repository.insert(
+      multipleInsertQueryTypeOrm,
+    );
+
+    const ids: ObjectLiteral[] = insertResult.identifiers;
+
+    const modelDbs: TModelDb[] = await this.#findEntitiesByIds(ids);
+
+    const models: TModel[] = await Promise.all(
+      modelDbs.map(
+        async (modelDb: TModelDb): Promise<TModel> =>
+          this.#modelDbToModelConverter.convert(modelDb),
+      ),
+    );
+
+    return models;
+  }
+
+  #convertToMultipleInsertQueryTypeOrm(
+    typeOrmQuery:
+      | QueryDeepPartialEntity<TModelDb>
+      | QueryDeepPartialEntity<TModelDb>[],
+  ): QueryDeepPartialEntity<TModelDb>[] {
+    let multipleInsertQueryTypeOrm: QueryDeepPartialEntity<TModelDb>[];
+
+    if (Array.isArray(typeOrmQuery)) {
+      multipleInsertQueryTypeOrm = typeOrmQuery;
+    } else {
+      multipleInsertQueryTypeOrm = [typeOrmQuery];
+    }
+
+    return multipleInsertQueryTypeOrm;
+  }
+
   #convertToSingleInsertQueryTypeOrm(
     typeOrmQuery:
       | QueryDeepPartialEntity<TModelDb>
