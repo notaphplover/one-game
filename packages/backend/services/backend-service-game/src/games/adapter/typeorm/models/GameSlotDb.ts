@@ -18,7 +18,7 @@ export class GameSlotDb {
     nullable: true,
     type: 'json',
   })
-  public readonly cards!: string;
+  public readonly cards!: string | null;
 
   @ManyToOne(() => GameDb)
   @JoinColumn({ name: 'game_id' })
