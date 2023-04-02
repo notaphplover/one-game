@@ -3,7 +3,9 @@ import path from 'path';
 import { argv } from 'process';
 
 import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
+import * as prettierConfig from '@one-game-js/backend-prettier-config';
 import { JsonRootSchema202012 } from '@one-game-js/json-schema-utils';
+import prettier from 'prettier';
 import ts from 'typescript';
 
 const API_SCHEMA_ID_ENUM_NAME: string = 'ApiSchemaId';
@@ -114,7 +116,10 @@ void (async () => {
 
     await fs.writeFile(
       path.join(destinationFolder, API_SCHEMA_ID_ENUM_SOURCE_FILE_NAME),
-      apiJsonSchemaIdEnumTsSource,
+      prettier.format(apiJsonSchemaIdEnumTsSource, {
+        ...prettierConfig,
+        parser: 'typescript',
+      }),
     );
   } else {
     throw new Error('Invalid args!');
