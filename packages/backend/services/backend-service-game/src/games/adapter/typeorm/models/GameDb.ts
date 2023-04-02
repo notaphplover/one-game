@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
+
+import { GameSlotDb } from './GameSlotDb';
 
 @Entity({
   name: 'Game',
@@ -17,7 +19,7 @@ export class GameDb {
     nullable: true,
     type: 'bit',
   })
-  public readonly currentCard!: string;
+  public readonly currentCard!: number | null;
 
   @Column({
     length: 16,
@@ -25,14 +27,14 @@ export class GameDb {
     nullable: true,
     type: 'bit',
   })
-  public readonly currentColor!: string;
+  public readonly currentColor!: number | null;
 
   @Column({
     name: 'current_playing_slot',
     nullable: true,
     type: 'smallint',
   })
-  public readonly currentPlayingSlotIndex!: number;
+  public readonly currentPlayingSlotIndex!: number | null;
 
   @PrimaryColumn({
     length: 36,
@@ -40,4 +42,17 @@ export class GameDb {
     type: 'varchar',
   })
   public readonly id!: string;
+
+  @OneToMany(() => GameSlotDb, (gameSlotDb: GameSlotDb) => gameSlotDb.gameId, {
+    eager: true,
+  })
+  @JoinTable()
+  public readonly gameSlotsDb!: GameSlotDb[];
+
+  @Column({
+    name: 'specs',
+    nullable: true,
+    type: 'json',
+  })
+  public readonly specs!: string;
 }
