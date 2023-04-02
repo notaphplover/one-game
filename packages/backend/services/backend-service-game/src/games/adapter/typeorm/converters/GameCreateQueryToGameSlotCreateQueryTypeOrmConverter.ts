@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { Converter } from '@one-game-js/backend-common';
 import { DeepPartial } from 'typeorm';
 
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
 import { GameSlotDb } from '../models/GameSlotDb';
 
+@Injectable()
 export class GameCreateQueryToGameSlotCreateQueryTypeOrmConverter
   implements Converter<GameCreateQuery, DeepPartial<GameSlotDb>[]>
 {
