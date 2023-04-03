@@ -38,20 +38,6 @@ export type TypesV1 =
   | UserCreateQueryV1
   | UserIdUpdateQueryV1
   | UserV1;
-export type BlankCardV1 = BaseCardV1 & {
-  kind?: 'blank';
-  [k: string]: unknown | undefined;
-} & {
-  kind: unknown;
-};
-export type CardKindV1 =
-  | 'blank'
-  | 'draw'
-  | 'normal'
-  | 'reverse'
-  | 'skip'
-  | 'wild'
-  | 'wildDraw4';
 export type CardV1 =
   | BlankCardV1
   | DrawCardV1
@@ -60,54 +46,8 @@ export type CardV1 =
   | SkipCardV1
   | WildCardV1
   | WildDraw4CardV1;
-export type DrawCardV1 = ColoredCardV1 & {
-  kind?: 'draw';
-  [k: string]: unknown | undefined;
-} & {
-  color: unknown;
-  kind: unknown;
-};
-export type ColoredCardV1 = BaseCardV1 & {
-  color: CardColorV1;
-  [k: string]: unknown | undefined;
-};
 export type CardColorV1 = 'blue' | 'green' | 'red' | 'yellow';
-export type NormalCardV1 = ColoredCardV1 & {
-  kind?: 'normal';
-  number?: CardNumberV1;
-  [k: string]: unknown | undefined;
-} & {
-  color: unknown;
-  kind: unknown;
-  number: unknown;
-};
 export type CardNumberV1 = number;
-export type ReverseCardV1 = ColoredCardV1 & {
-  kind?: 'reverse';
-  [k: string]: unknown | undefined;
-} & {
-  color: unknown;
-  kind: unknown;
-};
-export type SkipCardV1 = ColoredCardV1 & {
-  kind?: 'skip';
-  [k: string]: unknown | undefined;
-} & {
-  color: unknown;
-  kind: unknown;
-};
-export type WildCardV1 = BaseCardV1 & {
-  kind?: 'wild';
-  [k: string]: unknown | undefined;
-} & {
-  kind: unknown;
-};
-export type WildDraw4CardV1 = BaseCardV1 & {
-  kind?: 'wildDraw4';
-  [k: string]: unknown | undefined;
-} & {
-  kind: unknown;
-};
 export type CardArrayV1 = CardV1[];
 export type ActiveGameSlotCardsV1 = CardV1[];
 export type GameDirectionV1 = 'antiClockwise' | 'clockwise';
@@ -125,8 +65,36 @@ export interface AuthCreateQueryV1 {
   email: string;
   password: string;
 }
-export interface BaseCardV1 {
-  kind: CardKindV1;
+export interface BlankCardV1 {
+  kind: 'blank';
+  [k: string]: unknown | undefined;
+}
+export interface DrawCardV1 {
+  color: CardColorV1;
+  kind: 'draw';
+  [k: string]: unknown | undefined;
+}
+export interface NormalCardV1 {
+  color: CardColorV1;
+  kind: 'normal';
+  number: CardNumberV1;
+}
+export interface ReverseCardV1 {
+  color: CardColorV1;
+  kind: 'reverse';
+  [k: string]: unknown | undefined;
+}
+export interface SkipCardV1 {
+  color: CardColorV1;
+  kind: 'skip';
+  [k: string]: unknown | undefined;
+}
+export interface WildCardV1 {
+  kind: 'wild';
+  [k: string]: unknown | undefined;
+}
+export interface WildDraw4CardV1 {
+  kind: 'wildDraw4';
   [k: string]: unknown | undefined;
 }
 export interface ErrorV1 {

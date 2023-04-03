@@ -2,24 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://onegame.schemas/api/v1/cards/wild-card.json",
   "title": "WildCardV1",
-  "allOf": [
-    { "$ref": "https://onegame.schemas/api/v1/cards/base-card.json" },
-    {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "const": "wild",
-          "type": "string"
-        }
-      }
-    },
-    {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "kind": {}
-      },
-      "required": ["kind"]
+  "properties": {
+    "kind": {
+      "const": "wild",
+      "type": "string"
     }
-  ]
+  },
+  "required": ["kind"]
 }
