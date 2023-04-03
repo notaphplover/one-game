@@ -2,24 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://onegame.schemas/api/v1/cards/blank-card.json",
   "title": "BlankCardV1",
-  "allOf": [
-    { "$ref": "https://onegame.schemas/api/v1/cards/base-card.json" },
-    {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "const": "blank",
-          "type": "string"
-        }
-      }
-    },
-    {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "kind": {}
-      },
-      "required": ["kind"]
+  "type": "object",
+  "properties": {
+    "kind": {
+      "const": "blank",
+      "type": "string"
     }
-  ]
+  },
+  "required": ["kind"]
 }

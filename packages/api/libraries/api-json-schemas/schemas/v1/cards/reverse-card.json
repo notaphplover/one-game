@@ -2,25 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://onegame.schemas/api/v1/cards/reverse-card.json",
   "title": "ReverseCardV1",
-  "allOf": [
-    { "$ref": "https://onegame.schemas/api/v1/cards/colored-card.json" },
-    {
-      "type": "object",
-      "properties": {
-        "kind": {
-          "const": "reverse",
-          "type": "string"
-        }
-      }
+  "properties": {
+    "color": {
+      "$ref": "https://onegame.schemas/api/v1/cards/card-color.json"
     },
-    {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "color": {},
-        "kind": {}
-      },
-      "required": ["color", "kind"]
+    "kind": {
+      "const": "reverse",
+      "type": "string"
     }
-  ]
+  },
+  "required": ["color", "kind"]
 }
