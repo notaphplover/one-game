@@ -1,5 +1,6 @@
 import { Column, Entity, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
 
+import { GameDirectionDb } from './GameDirectionDb';
 import { GameSlotDb } from './GameSlotDb';
 
 @Entity({
@@ -28,6 +29,14 @@ export class GameDb {
     type: 'bit',
   })
   public readonly currentColor!: number | null;
+
+  @Column({
+    length: 32,
+    name: 'current_direction',
+    nullable: true,
+    type: 'varchar',
+  })
+  public readonly currentDirection!: GameDirectionDb | null;
 
   @Column({
     name: 'current_playing_slot',
