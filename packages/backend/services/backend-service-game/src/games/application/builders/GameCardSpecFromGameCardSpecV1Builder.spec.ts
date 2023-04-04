@@ -3,10 +3,10 @@ import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { models as apiModels } from '@one-game-js/api-models';
 import { Builder } from '@one-game-js/backend-common';
 
-import { GameCardSpec } from '../../../games/domain/models/GameCardSpec';
-import { CardFixtures } from '../../domain/fixtures/CardFixtures';
-import { Card } from '../../domain/models/Card';
-import { GameCardSpecV1Fixtures } from '../fixtures/GameCardSpecV1Fixtures';
+import { GameCardSpecV1Fixtures } from '../../../cards/application/fixtures/GameCardSpecV1Fixtures';
+import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
+import { Card } from '../../../cards/domain/models/Card';
+import { GameCardSpec } from '../../domain/models/GameCardSpec';
 import { GameCardSpecFromGameCardSpecV1Builder } from './GameCardSpecFromGameCardSpecV1Builder';
 
 describe(GameCardSpecFromGameCardSpecV1Builder.name, () => {

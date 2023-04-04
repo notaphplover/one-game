@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/api-models';
 import { Builder } from '@one-game-js/backend-common';
 
-import { GameCardSpecFromGameCardSpecV1Builder } from '../../../cards/application/converters/GameCardSpecFromGameCardSpecV1Builder';
 import { GameCardSpec } from '../../domain/models/GameCardSpec';
+import { GameCardSpecFromGameCardSpecV1Builder } from './GameCardSpecFromGameCardSpecV1Builder';
 
 @Injectable()
 export class GameCardSpecsFromGameSpecV1Builder
