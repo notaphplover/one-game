@@ -1,5 +1,6 @@
 import { Writable } from '../../../../common/application/models/Writable';
 import { GameDb } from '../models/GameDb';
+import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDbFixtures } from './GameSlotDbFixtures';
 
 export class GameDbFixtures {
@@ -23,6 +24,7 @@ export class GameDbFixtures {
     fixture.active = true;
     fixture.currentCard = 39;
     fixture.currentColor = 32;
+    fixture.currentDirection = GameDirectionDb.clockwise;
     fixture.currentPlayingSlotIndex = 0;
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';

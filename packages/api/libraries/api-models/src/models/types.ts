@@ -67,12 +67,10 @@ export interface AuthCreateQueryV1 {
 }
 export interface BlankCardV1 {
   kind: 'blank';
-  [k: string]: unknown | undefined;
 }
 export interface DrawCardV1 {
   color: CardColorV1;
   kind: 'draw';
-  [k: string]: unknown | undefined;
 }
 export interface NormalCardV1 {
   color: CardColorV1;
@@ -82,20 +80,16 @@ export interface NormalCardV1 {
 export interface ReverseCardV1 {
   color: CardColorV1;
   kind: 'reverse';
-  [k: string]: unknown | undefined;
 }
 export interface SkipCardV1 {
   color: CardColorV1;
   kind: 'skip';
-  [k: string]: unknown | undefined;
 }
 export interface WildCardV1 {
   kind: 'wild';
-  [k: string]: unknown | undefined;
 }
 export interface WildDraw4CardV1 {
   kind: 'wildDraw4';
-  [k: string]: unknown | undefined;
 }
 export interface ErrorV1 {
   code?: string;

@@ -30,6 +30,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       active: false,
       currentCard: null,
       currentColor: null,
+      currentDirection: null,
       currentPlayingSlotIndex: null,
       id: gameCreateQuery.id,
       specs: JSON.stringify(this.#buildCardSpecsDb(gameCreateQuery.spec)),

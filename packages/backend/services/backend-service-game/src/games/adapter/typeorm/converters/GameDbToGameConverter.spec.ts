@@ -11,17 +11,22 @@ import { ActiveGameSlotFixtures } from '../../../domain/fixtures/ActiveGameSlotF
 import { NonStartedGameSlotFixtures } from '../../../domain/fixtures/NonStartedGameSlotFixtures';
 import { ActiveGame } from '../../../domain/models/ActiveGame';
 import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
+import { GameDirection } from '../../../domain/models/GameDirection';
 import { NonStartedGame } from '../../../domain/models/NonStartedGame';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameDbFixtures } from '../fixtures/GameDbFixtures';
 import { GameCardSpecDb } from '../models/GameCardSpecDb';
 import { GameDb } from '../models/GameDb';
+import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameDbToGameConverter } from './GameDbToGameConverter';
 
 describe(GameDbToGameConverter.name, () => {
   let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
   let cardColorBuilderMock: jest.Mocked<Builder<CardColor, [CardColorDb]>>;
+  let gameDirectionDbToGameDirectionConverterMock: jest.Mocked<
+    Converter<GameDirectionDb, GameDirection>
+  >;
   let gameSlotDbToGameSlotConverterMock: jest.Mocked<
     Converter<GameSlotDb, ActiveGameSlot | NonStartedGameSlot>
   >;
@@ -37,6 +42,10 @@ describe(GameDbToGameConverter.name, () => {
       build: jest.fn(),
     };
 
+    gameDirectionDbToGameDirectionConverterMock = {
+      convert: jest.fn(),
+    };
+
     gameSlotDbToGameSlotConverterMock = {
       convert: jest.fn(),
     };
@@ -44,6 +53,7 @@ describe(GameDbToGameConverter.name, () => {
     gameDbToGameConverter = new GameDbToGameConverter(
       cardBuilderMock,
       cardColorBuilderMock,
+      gameDirectionDbToGameDirectionConverterMock,
       gameSlotDbToGameSlotConverterMock,
     );
   });
@@ -134,6 +144,7 @@ describe(GameDbToGameConverter.name, () => {
     describe('when called', () => {
       let cardColorFixture: CardColor;
       let cardFixture: Card;
+      let gameDirectionFixture: GameDirection;
       let gameSlotFixture: ActiveGameSlot;
 
       let result: unknown;
@@ -141,10 +152,14 @@ describe(GameDbToGameConverter.name, () => {
       beforeAll(() => {
         cardColorFixture = CardColor.blue;
         cardFixture = CardFixtures.any;
+        gameDirectionFixture = GameDirection.clockwise;
         gameSlotFixture = ActiveGameSlotFixtures.any;
 
         cardBuilderMock.build.mockReturnValue(cardFixture);
         cardColorBuilderMock.build.mockReturnValue(cardColorFixture);
+        gameDirectionDbToGameDirectionConverterMock.convert.mockReturnValueOnce(
+          gameDirectionFixture,
+        );
         gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
           gameSlotFixture,
         );
@@ -188,6 +203,7 @@ describe(GameDbToGameConverter.name, () => {
           active: true,
           currentCard: cardFixture,
           currentColor: cardColorFixture,
+          currentDirection: gameDirectionFixture,
           currentPlayingSlotIndex:
             gameDbFixture.currentPlayingSlotIndex as number,
           id: gameDbFixture.id,
