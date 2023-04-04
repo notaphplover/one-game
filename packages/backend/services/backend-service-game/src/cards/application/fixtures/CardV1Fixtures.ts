@@ -1,6 +1,12 @@
 import { models as apiModels } from '@one-game-js/api-models';
 
 export class CardV1Fixtures {
+  public static get any(): apiModels.BlankCardV1 {
+    return {
+      kind: 'blank',
+    };
+  }
+
   public static get blankCard(): apiModels.BlankCardV1 {
     return {
       kind: 'blank',
