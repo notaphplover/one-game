@@ -1,4 +1,4 @@
-import { Writable } from '../../../../common/application/models/Writable';
+import { Writable } from '../../../../foundation/common/application/models/Writable';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDbFixtures } from './GameSlotDbFixtures';
