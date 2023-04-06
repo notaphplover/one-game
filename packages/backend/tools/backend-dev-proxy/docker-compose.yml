@@ -4,6 +4,7 @@ services:
     image: nginx:1.23.4-alpine
     environment:
       - USER_SERVICE_BASE_URL=${USER_SERVICE_BASE_URL}
+      - GAME_SERVICE_BASE_URL=${GAME_SERVICE_BASE_URL}
     network_mode: 'host'
     ports:
       - '8000:8000'
