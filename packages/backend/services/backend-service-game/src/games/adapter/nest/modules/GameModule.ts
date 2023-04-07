@@ -15,11 +15,14 @@ import { GameManagementInputPort } from '../../../application/ports/input/GameMa
 import { gamePersistenceOutputPortSymbol } from '../../../application/ports/output/GamePersistenceOutputPort';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
+import { GameCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
 import { GameDirectionDbToGameDirectionConverter } from '../../typeorm/converters/GameDirectionDbToGameDirectionConverter';
 import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converters/GameDirectionToGameDirectionDbConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
+import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
+import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
 
 @Module({
@@ -28,14 +31,16 @@ import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeO
     CommonModule,
     CardModule,
     DbModule,
-    TypeOrmModule.forFeature([GameDb]),
+    TypeOrmModule.forFeature([GameDb, GameSlotDb]),
   ],
   providers: [
     CreateGameTypeOrmService,
+    CreateGameSlotTypeOrmService,
     GameCardSpecFromGameCardSpecV1Builder,
     GameCardSpecsFromGameSpecV1Builder,
     GameCardSpecV1FromGameCardSpecBuilder,
     GameCreateQueryFromGameCreateQueryV1Builder,
+    GameCreateQueryToGameSlotCreateQueryTypeOrmConverter,
     GameDirectionV1FromGameDirectionBuilder,
     GameSpecV1FromGameCardSpecsBuilder,
     GameV1FromGameBuilder,
