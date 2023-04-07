@@ -34,7 +34,9 @@ describe(GameCreateQueryToGameSlotCreateQueryTypeOrmConverter.name, () => {
       it('should return a DeepPartial<GameSlotDb>[]', () => {
         const expected: QueryDeepPartialEntity<GameSlotDb>[] = [
           {
-            gameId: gameCreateQueryFixture.id,
+            game: {
+              id: gameCreateQueryFixture.id,
+            },
             id: gameCreateQueryFixture.gameSlotIds[0] as string,
             userId: null,
           },
