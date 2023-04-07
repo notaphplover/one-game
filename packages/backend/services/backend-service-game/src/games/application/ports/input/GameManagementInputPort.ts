@@ -6,13 +6,15 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
-import { GamePersistenceTypeOrmAdapter } from '../../../adapter/typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { Game } from '../../../domain/models/Game';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
 import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
-import { GamePersistenceOutputPort } from '../output/GamePersistenceOutputPort';
+import {
+  GamePersistenceOutputPort,
+  gamePersistenceOutputPortSymbol,
+} from '../output/GamePersistenceOutputPort';
 
 @Injectable()
 export class GameManagementInputPort {
@@ -35,7 +37,7 @@ export class GameManagementInputPort {
     >,
     @Inject(GameV1FromGameBuilder)
     gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>,
-    @Inject(GamePersistenceTypeOrmAdapter)
+    @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,

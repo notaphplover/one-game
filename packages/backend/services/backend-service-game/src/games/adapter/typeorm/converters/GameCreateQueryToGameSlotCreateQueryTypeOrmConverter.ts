@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Converter } from '@one-game-js/backend-common';
-import { DeepPartial } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
 export class GameCreateQueryToGameSlotCreateQueryTypeOrmConverter
-  implements Converter<GameCreateQuery, DeepPartial<GameSlotDb>[]>
+  implements Converter<GameCreateQuery, QueryDeepPartialEntity<GameSlotDb>[]>
 {
-  public convert(gameCreateQuery: GameCreateQuery): DeepPartial<GameSlotDb>[] {
-    const gameSlotDbCreateQuery: DeepPartial<GameSlotDb>[] = [];
+  public convert(
+    gameCreateQuery: GameCreateQuery,
+  ): QueryDeepPartialEntity<GameSlotDb>[] {
+    const gameSlotDbCreateQuery: QueryDeepPartialEntity<GameSlotDb>[] = [];
 
     for (const gameSlotId of gameCreateQuery.gameSlotIds) {
       gameSlotDbCreateQuery.push({
