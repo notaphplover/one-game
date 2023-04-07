@@ -16,7 +16,9 @@ export class GameCreateQueryToGameSlotCreateQueryTypeOrmConverter
 
     for (const gameSlotId of gameCreateQuery.gameSlotIds) {
       gameSlotDbCreateQuery.push({
-        gameId: gameCreateQuery.id,
+        game: {
+          id: gameCreateQuery.id,
+        },
         id: gameSlotId,
         userId: null,
       });
