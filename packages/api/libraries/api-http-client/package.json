@@ -3,7 +3,7 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "Backend api models",
+  "description": "Backend API HTTP client",
   "devDependencies": {
     "@jest/globals": "29.5.0",
     "@one-game-js/api-json-schemas-provider": "workspace:*",
