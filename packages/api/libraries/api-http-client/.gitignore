@@ -10,4 +10,4 @@
 # Turborepo files
 .turbo/
 
-/src/httpClient
+/src/httpClient/generated
