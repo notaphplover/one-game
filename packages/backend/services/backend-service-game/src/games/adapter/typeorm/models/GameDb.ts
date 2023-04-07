@@ -1,5 +1,6 @@
-import { Column, Entity, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
+import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
 import { GameDirectionDb } from './GameDirectionDb';
 import { GameSlotDb } from './GameSlotDb';
 
@@ -9,6 +10,7 @@ import { GameSlotDb } from './GameSlotDb';
 export class GameDb {
   @Column({
     name: 'active',
+    transformer: new NumberToBooleanTransformer(),
     type: 'smallint',
     width: 1,
   })
@@ -52,10 +54,14 @@ export class GameDb {
   })
   public readonly id!: string;
 
-  @OneToMany(() => GameSlotDb, (gameSlotDb: GameSlotDb) => gameSlotDb.gameId, {
-    eager: true,
-  })
-  @JoinTable()
+  @OneToMany(
+    () => GameSlotDb,
+    (gameSlotDb: GameSlotDb): GameDb => gameSlotDb.game,
+    {
+      cascade: true,
+      eager: true,
+    },
+  )
   public readonly gameSlotsDb!: GameSlotDb[];
 
   @Column({

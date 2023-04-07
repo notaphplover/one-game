@@ -20,7 +20,7 @@ export class GameSlotDb {
   })
   public readonly cards!: string | null;
 
-  @ManyToOne(() => GameDb)
+  @ManyToOne(() => GameDb, (gameDb: GameDb): GameSlotDb[] => gameDb.gameSlotsDb)
   @JoinColumn({ name: 'game_id' })
   public readonly game!: GameDb;
 
