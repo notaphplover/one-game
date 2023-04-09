@@ -14,7 +14,11 @@ import { OpenApi3Dot1PathsObject } from '../models/OpenApi3Dot1PathsObject';
 import { OpenApi3Dot1ReferenceObject } from '../models/OpenApi3Dot1ReferenceObject';
 import { OpenApi3Dot1RequestBodyObject } from '../models/OpenApi3Dot1RequestBodyObject';
 import { OpenApi3Dot1ResponseObject } from '../models/OpenApi3Dot1ResponseObject';
-import { OpenApi3Dot1ResponsesObject } from '../models/OpenApi3Dot1ResponsesObject';
+import {
+  HttpStatusCode,
+  HttpStatusCodeWildCard,
+  OpenApi3Dot1ResponsesObject,
+} from '../models/OpenApi3Dot1ResponsesObject';
 import { OpenApi3Dot1SchemaObject } from '../models/OpenApi3Dot1SchemaObject';
 
 export function traverseOpenApiObjectJsonSchemas(
@@ -191,7 +195,10 @@ export function traverseOpenApi3Dot1ResponsesObjectJsonSchemas(
   callback: (params: TraverseJsonSchemaCallbackParams) => void,
 ): void {
   if (openApi3Dot1ResponsesBodyObject !== undefined) {
-    for (const key of Object.keys(openApi3Dot1ResponsesBodyObject)) {
+    for (const key of Object.keys(openApi3Dot1ResponsesBodyObject) as (
+      | HttpStatusCode
+      | HttpStatusCodeWildCard
+    )[]) {
       traverseOpenApi3Dot1ResponseObjectJsonSchemas(
         openApi3Dot1ResponsesBodyObject[key] as OpenApi3Dot1ResponseObject,
         callback,

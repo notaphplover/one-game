@@ -17,7 +17,7 @@ export interface OpenApi3Dot1OperationObject {
   description?: string;
   externalDocs?: OpenApi3Dot1ExternalDocumentationObject;
   operationId?: string;
-  parameters: (OpenApi3Dot1ParameterObject | OpenApi3Dot1ReferenceObject)[];
+  parameters?: (OpenApi3Dot1ParameterObject | OpenApi3Dot1ReferenceObject)[];
   requestBody?: OpenApi3Dot1RequestBodyObject | OpenApi3Dot1ReferenceObject;
   responses?: OpenApi3Dot1ResponsesObject;
   security?: OpenApi3Dot1SecurityRequirementObject[];
