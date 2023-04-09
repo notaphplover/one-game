@@ -8,6 +8,7 @@ const API_MODELS_MODULE_MODELS_NAMESPACE: string = 'models';
 
 export class HttpClientSourceFileBuilder {
   public static apiModelsNamespaceIdentifier: string = 'apiModels';
+  public static axiosHttpClientClassIdentifier: string = 'AxiosHttpClient';
 
   readonly #endpointClientClassBuilder: HttpClientClassBuilder;
 
@@ -70,11 +71,51 @@ export class HttpClientSourceFileBuilder {
     );
   }
 
+  #buildAxiosHttpClientImportDeclaration(): ts.ImportDeclaration {
+    return ts.factory.createImportDeclaration(
+      undefined,
+      ts.factory.createImportClause(
+        false,
+        undefined,
+        ts.factory.createNamedImports([
+          ts.factory.createImportSpecifier(
+            false,
+            undefined,
+            ts.factory.createIdentifier('AxiosHttpClient'),
+          ),
+        ]),
+      ),
+      ts.factory.createStringLiteral('../axios/AxiosHttpClient'),
+      undefined,
+    );
+  }
+
+  #buildResponseModelImportDeclaration(): ts.ImportDeclaration {
+    return ts.factory.createImportDeclaration(
+      undefined,
+      ts.factory.createImportClause(
+        false,
+        undefined,
+        ts.factory.createNamedImports([
+          ts.factory.createImportSpecifier(
+            false,
+            undefined,
+            ts.factory.createIdentifier('Response'),
+          ),
+        ]),
+      ),
+      ts.factory.createStringLiteral('../models/Response'),
+      undefined,
+    );
+  }
+
   #buildStatements(
     options: HttpClientOptions,
   ): [ts.Statement, ...ts.Statement[]] {
     return [
       this.#buildApiModelsImportDeclaration(),
+      this.#buildAxiosHttpClientImportDeclaration(),
+      this.#buildResponseModelImportDeclaration(),
       this.#endpointClientClassBuilder.build(options),
     ];
   }

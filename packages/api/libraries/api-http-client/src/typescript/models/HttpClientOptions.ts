@@ -1,5 +1,5 @@
-import { HttpClientMethodOptions } from './HttpClientMethodOptions';
+import { OpenApi3Dot1Object } from '@one-game-js/openapi-utils';
 
 export interface HttpClientOptions {
-  methods: HttpClientMethodOptions[];
+  root: OpenApi3Dot1Object;
 }
