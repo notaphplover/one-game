@@ -26,7 +26,11 @@ import { OpenApi3Dot1PathsObject } from './openapi/models/OpenApi3Dot1PathsObjec
 import { OpenApi3Dot1ReferenceObject } from './openapi/models/OpenApi3Dot1ReferenceObject';
 import { OpenApi3Dot1RequestBodyObject } from './openapi/models/OpenApi3Dot1RequestBodyObject';
 import { OpenApi3Dot1ResponseObject } from './openapi/models/OpenApi3Dot1ResponseObject';
-import { OpenApi3Dot1ResponsesObject } from './openapi/models/OpenApi3Dot1ResponsesObject';
+import {
+  HttpStatusCode,
+  HttpStatusCodeWildCard,
+  OpenApi3Dot1ResponsesObject,
+} from './openapi/models/OpenApi3Dot1ResponsesObject';
 import { OpenApi3Dot1SchemaObject } from './openapi/models/OpenApi3Dot1SchemaObject';
 import { OpenApi3Dot1SchemaObjectBaseVocabulary } from './openapi/models/OpenApi3Dot1SchemaObjectBaseVocabulary';
 import { OpenApi3Dot1SecurityRequirementObject } from './openapi/models/OpenApi3Dot1SecurityRequirementObject';
@@ -50,6 +54,8 @@ export {
 };
 
 export type {
+  HttpStatusCode,
+  HttpStatusCodeWildCard,
   OpenApi3Dot1Object,
   OpenApi3Dot1CallbackObject,
   OpenApi3Dot1ComponentsObject,

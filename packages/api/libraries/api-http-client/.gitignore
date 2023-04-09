@@ -9,5 +9,3 @@
 
 # Turborepo files
 .turbo/
-
-/src/httpClient/generated

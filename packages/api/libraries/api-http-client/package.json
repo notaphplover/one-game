@@ -4,10 +4,14 @@
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "description": "Backend API HTTP client",
+  "dependencies": {
+    "axios": "1.3.5"
+  },
   "devDependencies": {
     "@jest/globals": "29.5.0",
     "@one-game-js/api-json-schemas-provider": "workspace:*",
     "@one-game-js/api-models": "workspace:*",
+    "@one-game-js/api-openapi-schema": "workspace:*",
     "@one-game-js/json-schema-utils": "workspace:*",
     "@one-game-js/openapi-utils": "workspace:*",
     "@types/node": "18.15.11",
@@ -25,7 +29,8 @@
     "rimraf": "4.4.1",
     "ts-jest": "29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "yaml": "2.2.1"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
@@ -39,9 +44,10 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "build": "pnpm run build:ts",
+    "build": "pnpm run build:ts && pnpm run build:ts",
     "build:clean": "rimraf lib",
     "build:ts": "tsc --build tsconfig.json",
+    "client:generate:ts": "node ./lib/scripts/generateHttpClientFiles ./src/httpClient/generated",
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "prebuild": "pnpm run build:clean",

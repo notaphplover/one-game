@@ -16,6 +16,7 @@ paths:
   /v1/auth:
     post:
       summary: Create an authorization token
+      operationId: createAuth
       requestBody:
         content:
           application/json:
@@ -38,6 +39,7 @@ paths:
   /v1/games:
     post:
       summary: Create a game
+      operationId: createGame
       requestBody:
         content:
           application/json:
@@ -74,6 +76,7 @@ paths:
   /v1/games/{gameId}:
     get:
       summary: Get a game
+      operationId: getGame
       parameters:
         - in: path
           name: gameId
@@ -110,6 +113,7 @@ paths:
         - bearerAuth: []
     patch:
       summary: Update a game
+      operationId: updateGame
       parameters:
         - in: path
           name: gameId
@@ -153,6 +157,7 @@ paths:
   /v1/games/{gameId}/slots/{gameSlotIndex}:
     get:
       summary: Get a game slot
+      operationId: getGameSlot
       parameters:
         - in: path
           name: gameId
@@ -195,6 +200,7 @@ paths:
         - bearerAuth: []
     patch:
       summary: Update a game slot
+      operationId: updateGameSlot
       requestBody:
         content:
           application/json:
@@ -244,6 +250,7 @@ paths:
   /v1/games/{gameId}/slots/{gameSlotIndex}/cards:
     get:
       summary: Get a game slot cards
+      operationId: getGameSlotCards
       parameters:
         - in: path
           name: gameId
@@ -289,6 +296,7 @@ paths:
   /v1/users:
     post:
       summary: Create user
+      operationId: createUser
       requestBody:
         content:
           application/json:
@@ -318,6 +326,7 @@ paths:
   /v1/users/{userId}:
     get:
       summary: Get a user by ID
+      operationId: getUser
       parameters:
         - in: path
           name: userId
@@ -348,6 +357,7 @@ paths:
         - bearerAuth: []
     patch:
       summary: Update a user by its id
+      operationId: updateUser
       parameters:
         - in: path
           name: userId
