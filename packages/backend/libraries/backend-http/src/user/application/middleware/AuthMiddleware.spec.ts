@@ -4,11 +4,14 @@ import { models as apiModels } from '@one-game-js/api-models';
 import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 import { JwtService } from '@one-game-js/backend-jwt';
 
+import { AuthKind } from '../../../auth/application/models/AuthKind';
+import { AuthRequestContextHolder } from '../../../auth/application/models/AuthRequestContextHolder';
+import { BackendServiceAuth } from '../../../auth/application/models/BackendServiceAuth';
+import { UserAuth } from '../../../auth/application/models/UserAuth';
 import { Request } from '../../../http/application/models/Request';
+import { requestContextProperty } from '../../../http/application/models/requestContextProperty';
 import { Response } from '../../../http/application/models/Response';
 import { ResponseWithBody } from '../../../http/application/models/ResponseWithBody';
-import { requestContextProperty } from '../../../index';
-import { RequestUserContextHolder } from '../models/RequestUserContextHolder';
 import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 import { AuthMiddleware } from './AuthMiddleware';
 
@@ -18,11 +21,12 @@ class AuthMiddlewareMock extends AuthMiddleware<Record<string, unknown>> {
   >;
 
   constructor(
+    backendServicesSecret: string,
     jwtService: JwtService<Record<string, unknown>>,
     userManagementInputPort: UserManagementInputPort,
     getUserIdMock: jest.Mock<(jwtPayload: Record<string, unknown>) => string>,
   ) {
-    super(jwtService, userManagementInputPort);
+    super(backendServicesSecret, jwtService, userManagementInputPort);
 
     this.#getUserIdMock = getUserIdMock;
   }
@@ -33,6 +37,7 @@ class AuthMiddlewareMock extends AuthMiddleware<Record<string, unknown>> {
 }
 
 describe(AuthMiddleware.name, () => {
+  let backendServicesSecretFixture: string;
   let jwtServiceMock: jest.Mocked<JwtService<Record<string, unknown>>>;
   let userManagementInputPortMock: jest.Mocked<UserManagementInputPort>;
   let getUserIdMock: jest.Mock<(jwtPayload: Record<string, unknown>) => string>;
@@ -40,6 +45,7 @@ describe(AuthMiddleware.name, () => {
   let authMiddlewareMock: AuthMiddlewareMock;
 
   beforeAll(() => {
+    backendServicesSecretFixture = 'backend-services-secret-fixture';
     jwtServiceMock = {
       parse: jest.fn(),
     } as Partial<
@@ -53,6 +59,7 @@ describe(AuthMiddleware.name, () => {
     getUserIdMock = jest.fn();
 
     authMiddlewareMock = new AuthMiddlewareMock(
+      backendServicesSecretFixture,
       jwtServiceMock,
       userManagementInputPortMock,
       getUserIdMock,
@@ -127,7 +134,41 @@ describe(AuthMiddleware.name, () => {
       },
     );
 
-    describe('having a bearer authorization header', () => {
+    describe('having a bearer authorization header equals to backend services secret', () => {
+      describe('when called', () => {
+        let requestFixture: Request;
+
+        beforeAll(async () => {
+          requestFixture = {
+            headers: {
+              authorization: `Bearer ${backendServicesSecretFixture}`,
+            },
+            query: {},
+            urlParameters: {},
+          };
+
+          await authMiddlewareMock.handle(requestFixture, haltMock);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should place auth in the request', () => {
+          const expectedAuth: BackendServiceAuth = {
+            kind: AuthKind.backendService,
+          };
+
+          expect(
+            (requestFixture as Request & AuthRequestContextHolder)[
+              requestContextProperty
+            ].auth,
+          ).toStrictEqual(expectedAuth);
+        });
+      });
+    });
+
+    describe('having a bearer authorization header different than backend services secret', () => {
       let jwtFixture: string;
 
       beforeAll(() => {
@@ -189,12 +230,17 @@ describe(AuthMiddleware.name, () => {
           );
         });
 
-        it('should place userV1 in the request', () => {
+        it('should place auth in the request', () => {
+          const expectedAuth: UserAuth = {
+            kind: AuthKind.user,
+            user: userV1Fixture,
+          };
+
           expect(
-            (requestFixture as Request & RequestUserContextHolder)[
+            (requestFixture as Request & AuthRequestContextHolder)[
               requestContextProperty
-            ].user,
-          ).toBe(userV1Fixture);
+            ].auth,
+          ).toStrictEqual(expectedAuth);
         });
       });
 
