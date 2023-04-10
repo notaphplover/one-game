@@ -1,6 +1,7 @@
 import { JwtAlgorithm } from '@one-game-js/backend-jwt';
 
 export interface Environment {
+  apiBackendServiceSecret: string;
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;
   jwtExpirationMs: number;
