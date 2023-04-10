@@ -1,6 +1,8 @@
 import { JwtAlgorithm } from '@one-game-js/backend-jwt';
 
 export interface EnvironmentRaw extends Record<string, unknown> {
+  ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: string;
+  ONE_JS_GAME_API_BASE_URL: string;
   ONE_JS_GAME_SERVICE_PORT: number;
   ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS: Record<string, unknown>;
   ONE_JS_GAME_SERVICE_JWT_ALGORITHM: JwtAlgorithm;
