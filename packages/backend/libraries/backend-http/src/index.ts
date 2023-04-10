@@ -1,3 +1,9 @@
+import { Auth } from './auth/application/models/Auth';
+import { AuthKind } from './auth/application/models/AuthKind';
+import { AuthRequestContext } from './auth/application/models/AuthRequestContext';
+import { AuthRequestContextHolder } from './auth/application/models/AuthRequestContextHolder';
+import { BackendServiceAuth } from './auth/application/models/BackendServiceAuth';
+import { UserAuth } from './auth/application/models/UserAuth';
 import { FastifyReplyFromResponseBuilder } from './http/adapter/fastify/builders/FastifyReplyFromResponseBuilder';
 import { RequestFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestFromFastifyRequestBuilder';
 import { RequestWithBodyFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestWithBodyFromFastifyRequestBuilder';
@@ -15,23 +21,25 @@ import { ResponseWithBody } from './http/application/models/ResponseWithBody';
 import { Middleware } from './http/application/modules/Middleware';
 import { MiddlewarePipeline } from './http/application/modules/MiddlewarePipeline';
 import { AuthMiddleware } from './user/application/middleware/AuthMiddleware';
-import { RequestUserContextHolder } from './user/application/models/RequestUserContextHolder';
-import { UserV1RequestContext } from './user/application/models/UserV1RequestContext';
 import { UserManagementInputPort } from './user/application/ports/input/UserManagementInputPort';
 
 export type {
+  Auth,
+  AuthRequestContext,
+  AuthRequestContextHolder,
+  BackendServiceAuth,
   Middleware,
   Request,
   RequestContextHolder,
-  RequestUserContextHolder,
   RequestWithBody,
   Response,
   ResponseWithBody,
+  UserAuth,
   UserManagementInputPort,
-  UserV1RequestContext,
 };
 
 export {
+  AuthKind,
   AuthMiddleware,
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
