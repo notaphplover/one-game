@@ -10,6 +10,7 @@
     "@nestjs/core": "9.4.0",
     "@nestjs/platform-fastify": "9.4.0",
     "@nestjs/typeorm": "9.0.1",
+    "@one-game-js/api-http-client": "workspace:*",
     "@one-game-js/api-models": "workspace:*",
     "@one-game-js/backend-api-validators": "workspace:*",
     "@one-game-js/backend-common": "workspace:*",
