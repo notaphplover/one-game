@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 
 ### Added
+- Added `Auth`.
+- Added `AuthKind`.
+- Added `AuthRequestContext`.
+- Added `AuthRequestContextHolder`.
+- Added `BackendServiceAuth`.
 - Added `AuthMiddleware`.
 - Added `ErrorV1ResponseFromErrorBuilder`.
 - Added `FastifyReplyFromResponseBuilder`.
@@ -39,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `SingleEntityGetResponseBuilder`.
 - Added `SingleEntityHttpRequestController`.
 - Added `SingleEntityPostResponseBuilder`.
+- Added `UserAuth`.
 - Added `UserManagementInputPort`.
 - Added `UserV1RequestContext`.
 

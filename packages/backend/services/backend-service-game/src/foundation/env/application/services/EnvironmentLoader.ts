@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EnvLoader } from '@one-game-js/backend-env';
 import { JwtAlgorithm } from '@one-game-js/backend-jwt';
-import { cleanEnv, json, port, str, num } from 'envalid';
+import { cleanEnv, json, port, str, num, url } from 'envalid';
 
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
@@ -20,6 +20,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
 
   protected _parseEnv(env: Record<string, string>): Environment {
     const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
+      ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: str(),
+      ONE_JS_GAME_API_BASE_URL: url(),
       ONE_JS_GAME_SERVICE_JWT_ALGORITHM: str<JwtAlgorithm>({
         choices: Object.values(JwtAlgorithm),
       }),
@@ -33,6 +35,9 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
     });
 
     return {
+      apiBackendServiceSecret:
+        rawEnvironment.ONE_JS_GAME_API_BACKEND_SERVICE_SECRET,
+      apiBaseUrl: rawEnvironment.ONE_JS_GAME_API_BASE_URL,
       jwtAlgorithm: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_ALGORITHM,
       jwtAudience: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_AUDIENCE,
       jwtExpirationMs: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_EXPIRATION_MS,

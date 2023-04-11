@@ -2,6 +2,8 @@ import { models as apiModels } from '@one-game-js/api-models';
 import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 import { JwtService } from '@one-game-js/backend-jwt';
 
+import { AuthKind } from '../../../auth/application/models/AuthKind';
+import { AuthRequestContextHolder } from '../../../auth/application/models/AuthRequestContextHolder';
 import { Request } from '../../../http/application/models/Request';
 import { RequestContextHolder } from '../../../http/application/models/RequestContextHolder';
 import { requestContextProperty } from '../../../http/application/models/requestContextProperty';
@@ -9,7 +11,6 @@ import { RequestWithBody } from '../../../http/application/models/RequestWithBod
 import { Response } from '../../../http/application/models/Response';
 import { ResponseWithBody } from '../../../http/application/models/ResponseWithBody';
 import { Middleware } from '../../../http/application/modules/Middleware';
-import { RequestUserContextHolder } from '../models/RequestUserContextHolder';
 import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 
 // Auth headers are not case sensitive. Consider https://github.com/fastify/help/issues/71
@@ -20,13 +21,16 @@ export abstract class AuthMiddleware<
   TPayload extends Record<string | symbol, unknown>,
 > implements Middleware<Request | RequestWithBody>
 {
+  readonly #backendServicesSecret: string;
   readonly #jwtService: JwtService<TPayload>;
   readonly #userManagementInputPort: UserManagementInputPort;
 
   constructor(
+    backendServicesSecret: string,
     jwtService: JwtService<TPayload>,
     userManagementInputPort: UserManagementInputPort,
   ) {
+    this.#backendServicesSecret = backendServicesSecret;
     this.#jwtService = jwtService;
     this.#userManagementInputPort = userManagementInputPort;
   }
@@ -35,33 +39,16 @@ export abstract class AuthMiddleware<
     request: Request | RequestWithBody,
     _halt: (response: Response | ResponseWithBody<unknown>) => void,
   ): Promise<void> {
-    const jwtStringified: string = this.#extractJwtStringified(request);
-    const jwtPayload: TPayload = await this.#jwtService.parse(jwtStringified);
-    const userId: string = this._getUserId(jwtPayload);
+    const authBearerToken: string = this.#extractAuthBearerToken(request);
 
-    const userV1OrUndefined: apiModels.UserV1 | undefined =
-      await this.#userManagementInputPort.findOne(userId);
-
-    if (userV1OrUndefined === undefined) {
-      throw new AppError(
-        AppErrorKind.invalidCredentials,
-        'No user was found matching current credentials',
-      );
+    if (authBearerToken === this.#backendServicesSecret) {
+      this.#provideBackendServiceAuth(request);
+    } else {
+      await this.#provideUserAuth(authBearerToken, request);
     }
-
-    if (
-      (request as Request & RequestContextHolder)[requestContextProperty] ===
-      undefined
-    ) {
-      (request as Request & RequestContextHolder)[requestContextProperty] = {};
-    }
-
-    (request as Request & RequestUserContextHolder)[
-      requestContextProperty
-    ].user = userV1OrUndefined;
   }
 
-  #extractJwtStringified(request: Request | RequestWithBody): string {
+  #extractAuthBearerToken(request: Request | RequestWithBody): string {
     if (typeof request.headers[AUTH_HEADER_NAME] !== 'string') {
       throw new AppError(
         AppErrorKind.missingCredentials,
@@ -79,6 +66,55 @@ export abstract class AuthMiddleware<
     }
 
     return authHeaderValue.slice(AUTH_HEADER_BEARER_PREFIX.length);
+  }
+
+  #provideContext(
+    request: Request | RequestWithBody,
+  ): asserts request is Request & RequestContextHolder {
+    if (
+      (request as Request & RequestContextHolder)[requestContextProperty] ===
+      undefined
+    ) {
+      (request as Request & RequestContextHolder)[requestContextProperty] = {};
+    }
+  }
+
+  #provideBackendServiceAuth(request: Request | RequestWithBody): void {
+    this.#provideContext(request);
+
+    (request as Request & AuthRequestContextHolder)[
+      requestContextProperty
+    ].auth = {
+      kind: AuthKind.backendService,
+    };
+  }
+
+  async #provideUserAuth(
+    authBearerToken: string,
+    request: Request | RequestWithBody,
+  ): Promise<void> {
+    const jwtPayload: TPayload = await this.#jwtService.parse(authBearerToken);
+
+    const userId: string = this._getUserId(jwtPayload);
+
+    const userV1OrUndefined: apiModels.UserV1 | undefined =
+      await this.#userManagementInputPort.findOne(userId);
+
+    if (userV1OrUndefined === undefined) {
+      throw new AppError(
+        AppErrorKind.invalidCredentials,
+        'No user was found matching current credentials',
+      );
+    }
+
+    this.#provideContext(request);
+
+    (request as Request & AuthRequestContextHolder)[
+      requestContextProperty
+    ].auth = {
+      kind: AuthKind.user,
+      user: userV1OrUndefined,
+    };
   }
 
   protected abstract _getUserId(jwtPayload: TPayload): string;
