@@ -27,6 +27,8 @@ export enum ApiSchemaId {
   ActiveGameSlotV1 = 'https://onegame.schemas/api/v1/games/active-game-slot.json',
   ActiveGameSlotCardsV1 = 'https://onegame.schemas/api/v1/games/active-game-slot-cards.json',
   ErrorV1 = 'https://onegame.schemas/api/v1/errors/error.json',
+  AuthV1 = 'https://onegame.schemas/api/v1/auth/auth.json',
+  AuthCreateQueryV1 = 'https://onegame.schemas/api/v1/auth/auth-create-query.json',
   WildDraw4CardV1 = 'https://onegame.schemas/api/v1/cards/wild-draw-4-card.json',
   WildCardV1 = 'https://onegame.schemas/api/v1/cards/wild-card.json',
   SkipCardV1 = 'https://onegame.schemas/api/v1/cards/skip-card.json',
@@ -38,6 +40,4 @@ export enum ApiSchemaId {
   CardColorV1 = 'https://onegame.schemas/api/v1/cards/card-color.json',
   CardArrayV1 = 'https://onegame.schemas/api/v1/cards/card-array.json',
   BlankCardV1 = 'https://onegame.schemas/api/v1/cards/blank-card.json',
-  AuthV1 = 'https://onegame.schemas/api/v1/auth/auth.json',
-  AuthCreateQueryV1 = 'https://onegame.schemas/api/v1/auth/auth-create-query.json',
 }

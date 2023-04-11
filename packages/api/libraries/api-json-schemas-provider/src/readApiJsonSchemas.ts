@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'path';
 
 import { JsonRootSchema202012 } from '@one-game-js/json-schema-utils';
-import glob from 'glob';
+import { glob } from 'glob';
 
 const JSON_SCHEMAS_BLOB_SUFFIX: string = '**/*.json';
 
