@@ -41,7 +41,15 @@ function generateApiJsonSchemaIdEnumNode(
   const enumDeclaration: ts.EnumDeclaration = ts.factory.createEnumDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     API_SCHEMA_ID_ENUM_NAME,
-    jsonSchemas.map(jsonSchemaToApiSchemaIdEnumMember),
+    jsonSchemas
+      .map(jsonSchemaToTitleAndApiSchemaIdEnumMemberPair)
+      .sort(
+        (
+          [title1]: [string, ts.EnumMember],
+          [title2]: [string, ts.EnumMember],
+        ) => title1.localeCompare(title2),
+      )
+      .map(([_, enumMember]: [string, ts.EnumMember]) => enumMember),
   );
 
   ts.addSyntheticLeadingComment(
@@ -92,15 +100,18 @@ function generateApiJsonSchemaIdEnumTsSourceContent(
   return apiJsonSchemaIdEnumTsSource;
 }
 
-function jsonSchemaToApiSchemaIdEnumMember(
+function jsonSchemaToTitleAndApiSchemaIdEnumMemberPair(
   jsonSchema: JsonRootSchema202012,
-): ts.EnumMember {
+): [string, ts.EnumMember] {
   const [id, title]: [string, string] = extractTitleAndId(jsonSchema);
 
-  return ts.factory.createEnumMember(
+  return [
     title,
-    ts.factory.createStringLiteral(id, true),
-  );
+    ts.factory.createEnumMember(
+      title,
+      ts.factory.createStringLiteral(id, true),
+    ),
+  ];
 }
 
 void (async () => {
