@@ -30,9 +30,7 @@ import { EnvironmentService } from '../../../../env/application/services/Environ
       inject: [EnvironmentService],
       provide: HttpClient,
       useFactory: (environmentService: EnvironmentService): HttpClient =>
-        new HttpClient(
-          environmentService.getEnvironment().apiBackendServiceSecret,
-        ),
+        new HttpClient(environmentService.getEnvironment().apiBaseUrl),
     },
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
