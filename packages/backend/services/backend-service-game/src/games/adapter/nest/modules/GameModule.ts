@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthModule } from '../../../../auth/adapter/nest/modules/AuthModule';
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
 import { CommonModule } from '../../../../foundation/common/adapter/nest/modules/CommonModule';
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
@@ -29,7 +28,6 @@ import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeO
 @Module({
   exports: [GameManagementInputPort, gamePersistenceOutputPortSymbol],
   imports: [
-    AuthModule,
     CommonModule,
     CardModule,
     DbModule,
