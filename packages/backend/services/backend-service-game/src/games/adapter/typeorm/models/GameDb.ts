@@ -54,6 +54,13 @@ export class GameDb {
   })
   public readonly id!: string;
 
+  @Column({
+    name: 'game_slots_amount',
+    nullable: false,
+    type: 'smallint',
+  })
+  public readonly gameSlotsAmount!: number;
+
   @OneToMany(
     () => GameSlotDb,
     (gameSlotDb: GameSlotDb): GameDb => gameSlotDb.game,

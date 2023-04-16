@@ -114,6 +114,7 @@ describe(GameDbToGameConverter.name, () => {
       it('should return a NonStartedGame', () => {
         const expected: Partial<NonStartedGame> = {
           active: false,
+          gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [gameSlotFixture],
           spec: [
@@ -206,6 +207,7 @@ describe(GameDbToGameConverter.name, () => {
           currentDirection: gameDirectionFixture,
           currentPlayingSlotIndex:
             gameDbFixture.currentPlayingSlotIndex as number,
+          gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [gameSlotFixture],
           spec: [

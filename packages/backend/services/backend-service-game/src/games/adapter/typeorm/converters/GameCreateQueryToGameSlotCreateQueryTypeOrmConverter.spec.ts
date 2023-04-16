@@ -19,7 +19,7 @@ describe(GameCreateQueryToGameSlotCreateQueryTypeOrmConverter.name, () => {
     let gameCreateQueryFixture: GameCreateQuery;
 
     beforeAll(() => {
-      gameCreateQueryFixture = GameCreateQueryFixtures.withGameSlotsIdOne;
+      gameCreateQueryFixture = GameCreateQueryFixtures.any;
     });
 
     describe('when called', () => {
@@ -32,15 +32,7 @@ describe(GameCreateQueryToGameSlotCreateQueryTypeOrmConverter.name, () => {
       });
 
       it('should return a DeepPartial<GameSlotDb>[]', () => {
-        const expected: QueryDeepPartialEntity<GameSlotDb>[] = [
-          {
-            game: {
-              id: gameCreateQueryFixture.id,
-            },
-            id: gameCreateQueryFixture.gameSlotIds[0] as string,
-            userId: null,
-          },
-        ];
+        const expected: QueryDeepPartialEntity<GameSlotDb>[] = [];
 
         expect(result).toStrictEqual(expected);
       });

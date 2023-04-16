@@ -129,7 +129,7 @@ describe(GameV1FromGameBuilder.name, () => {
             currentColor: cardColorV1Fixture,
             currentDirection: gameDirectionV1Fixture,
             currentPlayingSlotIndex: gameFixture.currentPlayingSlotIndex,
-            gameSlotsAmount: gameFixture.slots.length,
+            gameSlotsAmount: gameFixture.gameSlotsAmount,
             gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,
           };

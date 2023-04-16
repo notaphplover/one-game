@@ -13,6 +13,7 @@ export class ActiveGameFixtures {
       currentColor: CardColor.blue,
       currentDirection: GameDirection.antiClockwise,
       currentPlayingSlotIndex: 0,
+      gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       slots: [ActiveGameSlotFixtures.any],
       spec: [GameCardSpecFixtures.any],

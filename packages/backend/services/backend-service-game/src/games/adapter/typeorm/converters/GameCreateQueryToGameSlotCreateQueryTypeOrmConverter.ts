@@ -10,20 +10,8 @@ export class GameCreateQueryToGameSlotCreateQueryTypeOrmConverter
   implements Converter<GameCreateQuery, QueryDeepPartialEntity<GameSlotDb>[]>
 {
   public convert(
-    gameCreateQuery: GameCreateQuery,
+    _gameCreateQuery: GameCreateQuery,
   ): QueryDeepPartialEntity<GameSlotDb>[] {
-    const gameSlotDbCreateQuery: QueryDeepPartialEntity<GameSlotDb>[] = [];
-
-    for (const gameSlotId of gameCreateQuery.gameSlotIds) {
-      gameSlotDbCreateQuery.push({
-        game: {
-          id: gameCreateQuery.id,
-        },
-        id: gameSlotId,
-        userId: null,
-      });
-    }
-
-    return gameSlotDbCreateQuery;
+    return [];
   }
 }

@@ -103,6 +103,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
         gameDb.currentDirection,
       ),
       currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
+      gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
       spec: this.#convertSpecs(gameDb.specs),
@@ -115,6 +116,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
   ): NonStartedGame {
     return {
       active: false,
+      gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
       spec: this.#convertSpecs(gameDb.specs),

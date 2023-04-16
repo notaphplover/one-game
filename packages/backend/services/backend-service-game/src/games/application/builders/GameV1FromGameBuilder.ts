@@ -70,13 +70,13 @@ export class GameV1FromGameBuilder
           game.currentDirection,
         ),
         currentPlayingSlotIndex: game.currentPlayingSlotIndex,
-        gameSlotsAmount: game.slots.length,
+        gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
         id: game.id,
       };
     } else {
       gameV1 = {
-        gameSlotsAmount: game.slots.length,
+        gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
         id: game.id,
       };

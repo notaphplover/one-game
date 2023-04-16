@@ -75,6 +75,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
           currentColor: null,
           currentDirection: null,
           currentPlayingSlotIndex: null,
+          gameSlotsAmount: gameCreateQueryFixture.gameSlotsAmount,
           id: gameCreateQueryFixture.id,
           specs: JSON.stringify(expectedGameCardSpecsDb),
         };
