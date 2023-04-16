@@ -26,9 +26,9 @@ export type TypesV1 =
   | GameCreateQueryV1
   | GameDirectionV1
   | GameIdDrawCardsQueryV1
+  | GameIdSlotCreateQueryV1
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1
-  | GameIdSlotIdUpdateQueryV1
   | GameIdUpdateQueryV1
   | GameSlotV1
   | GameSpecV1
@@ -126,6 +126,9 @@ export interface GameIdDrawCardsQueryV1 {
   kind: 'drawCards';
   slotIndex: number;
 }
+export interface GameIdSlotCreateQueryV1 {
+  userId: string;
+}
 export interface GameIdPassTurnQueryV1 {
   kind: 'passTurn';
   slotIndex: number;
@@ -134,9 +137,6 @@ export interface GameIdPlayCardsQueryV1 {
   cardIndexes: number[];
   kind: 'playCards';
   slotIndex: number;
-}
-export interface GameIdSlotIdUpdateQueryV1 {
-  userId: null | string;
 }
 export interface NonStartedGameSlotV1 {
   userId: null | string;
