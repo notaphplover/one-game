@@ -49,7 +49,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
 
         it('should return a GameSlot', () => {
           const expected: NonStartedGameSlot = {
-            userId: nonActiveGameSlotDbFixture.userId as string,
+            userId: nonActiveGameSlotDbFixture.userId,
           };
 
           expect(result).toStrictEqual(expected);
@@ -93,7 +93,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
         it('should return a GameSlot', () => {
           const expected: ActiveGameSlot = {
             cards: [cardFixture],
-            userId: activeGameSlotDbFixture.userId as string,
+            userId: activeGameSlotDbFixture.userId,
           };
 
           expect(result).toStrictEqual(expected);
