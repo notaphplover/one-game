@@ -6,16 +6,24 @@ import { CardColorV1FromCardColorBuilder } from '../../../cards/application/buil
 import { CardV1FromCardBuilder } from '../../../cards/application/builders/CardV1FromCardBuilder';
 import { Card } from '../../../cards/domain/models/Card';
 import { CardColor } from '../../../cards/domain/models/CardColor';
+import { ActiveGameSlot } from '../../domain/models/ActiveGameSlot';
 import { Game } from '../../domain/models/Game';
 import { GameCardSpec } from '../../domain/models/GameCardSpec';
 import { GameDirection } from '../../domain/models/GameDirection';
+import { NonStartedGameSlot } from '../../domain/models/NonStartedGameSlot';
+import { ActiveGameSlotV1FromActiveGameSlotBuilder } from './ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { GameDirectionV1FromGameDirectionBuilder } from './GameDirectionV1FromGameDirectionBuilder';
 import { GameSpecV1FromGameCardSpecsBuilder } from './GameSpecV1FromGameCardSpecsBuilder';
+import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from './NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 
 @Injectable()
 export class GameV1FromGameBuilder
   implements Builder<apiModels.GameV1, [Game]>
 {
+  readonly #activeGameSlotV1FromActiveGameSlotBuilder: Builder<
+    apiModels.ActiveGameSlotV1,
+    [ActiveGameSlot]
+  >;
   readonly #cardColorV1FromCardColorBuilder: Builder<
     apiModels.CardColorV1,
     [CardColor]
@@ -30,7 +38,17 @@ export class GameV1FromGameBuilder
     [GameCardSpec[]]
   >;
 
+  readonly #nonStartedGameSlotV1FromNonStartedGameSlotBuilder: Builder<
+    apiModels.NonStartedGameSlotV1,
+    [NonStartedGameSlot]
+  >;
+
   constructor(
+    @Inject(ActiveGameSlotV1FromActiveGameSlotBuilder)
+    activeGameSlotV1FromActiveGameSlotBuilder: Builder<
+      apiModels.ActiveGameSlotV1,
+      [ActiveGameSlot]
+    >,
     @Inject(CardColorV1FromCardColorBuilder)
     cardColorV1FromCardColorBuilder: Builder<
       apiModels.CardColorV1,
@@ -48,20 +66,29 @@ export class GameV1FromGameBuilder
       apiModels.GameSpecV1,
       [GameCardSpec[]]
     >,
+    @Inject(NonStartedGameSlotV1FromNonStartedGameSlotBuilder)
+    nonStartedGameSlotV1FromNonStartedGameSlotBuilder: Builder<
+      apiModels.NonStartedGameSlotV1,
+      [NonStartedGameSlot]
+    >,
   ) {
+    this.#activeGameSlotV1FromActiveGameSlotBuilder =
+      activeGameSlotV1FromActiveGameSlotBuilder;
     this.#cardColorV1FromCardColorBuilder = cardColorV1FromCardColorBuilder;
     this.#cardV1FromCardBuilder = cardV1FromCardBuilder;
     this.#gameDirectionV1FromGameDirectionBuilder =
       gameDirectionV1FromGameDirectionBuilder;
     this.#gameSpecV1FromGameCardSpecsBuilder =
       gameSpecV1FromGameCardSpecsBuilder;
+    this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder =
+      nonStartedGameSlotV1FromNonStartedGameSlotBuilder;
   }
 
   public build(game: Game): apiModels.GameV1 {
     let gameV1: apiModels.GameV1;
 
     if (game.active) {
-      gameV1 = {
+      const activeGameV1: apiModels.ActiveGameV1 = {
         currentCard: this.#cardV1FromCardBuilder.build(game.currentCard),
         currentColor: this.#cardColorV1FromCardColorBuilder.build(
           game.currentColor,
@@ -73,13 +100,25 @@ export class GameV1FromGameBuilder
         gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
         id: game.id,
+        slots: game.slots.map((gameSlot: ActiveGameSlot) =>
+          this.#activeGameSlotV1FromActiveGameSlotBuilder.build(gameSlot),
+        ),
       };
+
+      gameV1 = activeGameV1;
     } else {
-      gameV1 = {
+      const nonStartedGameV1: apiModels.NonStartedGameV1 = {
         gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
         id: game.id,
+        slots: game.slots.map((gameSlot: NonStartedGameSlot) =>
+          this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build(
+            gameSlot,
+          ),
+        ),
       };
+
+      gameV1 = nonStartedGameV1;
     }
 
     return gameV1;

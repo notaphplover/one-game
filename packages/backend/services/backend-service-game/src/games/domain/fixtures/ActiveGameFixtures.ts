@@ -19,4 +19,11 @@ export class ActiveGameFixtures {
       spec: [GameCardSpecFixtures.any],
     };
   }
+
+  public static get withSlotsOne(): ActiveGame {
+    return {
+      ...ActiveGameFixtures.any,
+      slots: [ActiveGameSlotFixtures.any],
+    };
+  }
 }

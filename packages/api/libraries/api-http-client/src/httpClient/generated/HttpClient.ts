@@ -120,30 +120,6 @@ export class HttpClient {
       body,
     );
   }
-  public async getGameSlot(
-    headers: {
-      [key: string]: string;
-    },
-    url: {
-      [key: string]: string;
-      gameId: string;
-      gameSlotIndex: string;
-    },
-  ): Promise<
-    | Response<Record<string, string>, apiModels.GameSlotV1, 200>
-    | Response<Record<string, string>, apiModels.ErrorV1, 401>
-    | Response<Record<string, string>, apiModels.ErrorV1, 403>
-    | Response<Record<string, string>, apiModels.ErrorV1, 404>
-  > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/games/{gameId}/slots/{gameSlotIndex}',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
-  }
   public async getGameSlotCards(
     headers: {
       [key: string]: string;

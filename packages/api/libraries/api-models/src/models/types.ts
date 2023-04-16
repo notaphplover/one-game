@@ -110,6 +110,7 @@ export interface ActiveGameV1 {
   gameSpec: GameSpecV1;
   gameSlotsAmount: number;
   id: string;
+  slots: ActiveGameSlotV1[];
 }
 export interface GameSpecV1 {
   cardSpecs: GameCardSpecV1[];
@@ -145,6 +146,7 @@ export interface NonStartedGameV1 {
   gameSlotsAmount: number;
   gameSpec: GameSpecV1;
   id: string;
+  slots: NonStartedGameSlotV1[];
 }
 export interface UserCreateQueryV1 {
   email: string;
