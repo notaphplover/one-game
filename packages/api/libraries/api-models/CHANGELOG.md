@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `GameIdDrawCardsQueryV1`.
 - Added `GameIdPassTurnQueryV1`.
 - Added `GameIdPlayCardsQueryV1`.
-- Added `GameIdSlotIdUpdateQueryV1`.
+- Added `GameIdSlotCreateQueryV1`.
 - Added `GameIdUpdateQueryV1`.
 - Added `GameSlotV1`.
 - Added `GameSpecV1`.

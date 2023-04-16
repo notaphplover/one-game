@@ -25,6 +25,12 @@
     },
     "id": {
       "type": "string"
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "$ref": "https://onegame.schemas/api/v1/games/active-game-slot.json"
+      }
     }
   },
   "required": [
@@ -34,6 +40,7 @@
     "currentPlayingSlotIndex",
     "gameSpec",
     "gameSlotsAmount",
-    "id"
+    "id",
+    "slots"
   ]
 }

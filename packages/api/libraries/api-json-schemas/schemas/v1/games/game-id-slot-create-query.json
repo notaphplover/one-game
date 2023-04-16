@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://onegame.schemas/api/v1/games/game-id-slot-id-update-query.json",
-  "title": "GameIdSlotIdUpdateQueryV1",
+  "$id": "https://onegame.schemas/api/v1/games/game-id-slot-create-query.json",
+  "title": "GameIdSlotCreateQueryV1",
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "userId": {
-      "type": ["null", "string"]
+      "type": ["string"]
     }
   },
   "required": [

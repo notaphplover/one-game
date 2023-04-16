@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
 import { CommonModule } from '../../../../foundation/common/adapter/nest/modules/CommonModule';
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
+import { ActiveGameSlotV1FromActiveGameSlotBuilder } from '../../../application/builders/ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { GameCardSpecFromGameCardSpecV1Builder } from '../../../application/builders/GameCardSpecFromGameCardSpecV1Builder';
 import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builders/GameCardSpecsFromGameSpecV1Builder';
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
@@ -11,6 +12,7 @@ import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../applicatio
 import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
 import { GameSpecV1FromGameCardSpecsBuilder } from '../../../application/builders/GameSpecV1FromGameCardSpecsBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
+import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
 import { gamePersistenceOutputPortSymbol } from '../../../application/ports/output/GamePersistenceOutputPort';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
@@ -32,6 +34,7 @@ import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeO
     TypeOrmModule.forFeature([GameDb, GameSlotDb]),
   ],
   providers: [
+    ActiveGameSlotV1FromActiveGameSlotBuilder,
     CreateGameTypeOrmService,
     GameCardSpecFromGameCardSpecV1Builder,
     GameCardSpecsFromGameSpecV1Builder,
@@ -52,6 +55,7 @@ import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeO
       provide: gamePersistenceOutputPortSymbol,
       useClass: GamePersistenceTypeOrmAdapter,
     },
+    NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
   ],
 })
 export class GameModule {}

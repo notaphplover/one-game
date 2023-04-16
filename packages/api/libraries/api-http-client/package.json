@@ -44,7 +44,7 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "build": "pnpm run build:ts && pnpm run build:ts",
+    "build": "pnpm run build:ts && pnpm run client:generate:ts && pnpm run build:ts",
     "build:clean": "rimraf lib",
     "build:ts": "tsc --build tsconfig.json",
     "client:generate:ts": "node ./lib/scripts/generateHttpClientFiles ./src/httpClient/generated",

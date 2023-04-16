@@ -154,74 +154,25 @@ paths:
       security:
         - bearerAuth: []
 
-  /v1/games/{gameId}/slots/{gameSlotIndex}:
-    get:
-      summary: Get a game slot
-      operationId: getGameSlot
-      parameters:
-        - in: path
-          name: gameId
-          schema:
-            type: string
-          required: true
-          description: Id of the game containing the game slot to get
-        - in: path
-          name: gameSlotIndex
-          schema:
-            type: integer
-          required: true
-          description: Index of the game slot to get
-      responses:
-        '200':
-          description: Game slot found
-          content:
-            application/json:
-              schema:
-                $ref: 'https://onegame.schemas/api/v1/games/game-slot.json'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
-        '404':
-          description: Game or game slot not found
-          content:
-            application/json:
-              schema:
-                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
-      security:
-        - bearerAuth: []
-    patch:
-      summary: Update a game slot
-      operationId: updateGameSlot
+  /v1/games/{gameId}/slots:
+    post:
+      summary: Create a game slot
+      operationId: createGameSlot
       requestBody:
         content:
           application/json:
             schema:
-              $ref: 'https://onegame.schemas/api/v1/games/game-id-slot-id-update-query.json'
+              $ref: 'https://onegame.schemas/api/v1/games/game-id-slot-create-query.json'
       parameters:
         - in: path
           name: gameId
           schema:
             type: string
           required: true
-          description: Id of the game containing the game slot to update
-        - in: path
-          name: gameSlotIndex
-          schema:
-            type: integer
-          required: true
-          description: Index of the game slot to update
+          description: Id of the game containing the game slot to create
       responses:
         '200':
-          description: Game slot updated
+          description: Game slot created
           content:
             application/json:
               schema:
@@ -234,12 +185,6 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
         '403':
           description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
-        '404':
-          description: Game or game slot not found
           content:
             application/json:
               schema:

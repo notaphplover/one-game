@@ -2,6 +2,7 @@ import { models as apiModels } from '@one-game-js/api-models';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures/CardV1Fixtures';
 import { GameSpecV1Fixtures } from '../../../cards/application/fixtures/GameSpecV1Fixtures';
+import { ActiveGameSlotV1Fixtures } from './ActiveGameSlotV1Fixtures';
 
 export class ActiveGameV1Fixtures {
   public static get any(): apiModels.ActiveGameV1 {
@@ -13,6 +14,7 @@ export class ActiveGameV1Fixtures {
       gameSlotsAmount: 1,
       gameSpec: GameSpecV1Fixtures.any,
       id: '6fbcdb6c-b03c-4754-94c1-9f664f036cde',
+      slots: [ActiveGameSlotV1Fixtures.any],
     };
   }
 }

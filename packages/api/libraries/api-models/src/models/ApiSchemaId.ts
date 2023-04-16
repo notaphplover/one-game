@@ -23,7 +23,7 @@ export enum ApiSchemaId {
   GameIdDrawCardsQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-draw-cards-query.json',
   GameIdPassTurnQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-pass-turn-query.json',
   GameIdPlayCardsQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-play-cards-query.json',
-  GameIdSlotIdUpdateQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-slot-id-update-query.json',
+  GameIdSlotCreateQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-slot-create-query.json',
   GameIdUpdateQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-update-query.json',
   GameSlotV1 = 'https://onegame.schemas/api/v1/games/game-slot.json',
   GameSpecV1 = 'https://onegame.schemas/api/v1/games/game-spec.json',

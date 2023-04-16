@@ -1,0 +1,24 @@
+import { NonStartedGame } from '../models/NonStartedGame';
+import { GameCardSpecFixtures } from './GameCardSpecFixtures';
+import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';
+
+export class NonStartedGameFixtures {
+  public static get any(): NonStartedGame {
+    const fixture: NonStartedGame = {
+      active: false,
+      gameSlotsAmount: 1,
+      id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      slots: [NonStartedGameSlotFixtures.any],
+      spec: [GameCardSpecFixtures.any],
+    };
+
+    return fixture;
+  }
+
+  public static get withSlotsOne(): NonStartedGame {
+    return {
+      ...NonStartedGameFixtures.any,
+      slots: [NonStartedGameSlotFixtures.any],
+    };
+  }
+}
