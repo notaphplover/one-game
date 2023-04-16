@@ -60,7 +60,7 @@ export class GameSlotDbToGameSlotConverter
 
   #convertToNonStartedGameSlot(gameSlotDb: GameSlotDb): NonStartedGameSlot {
     return {
-      userId: gameSlotDb.userId ?? undefined,
+      userId: gameSlotDb.userId,
     };
   }
 

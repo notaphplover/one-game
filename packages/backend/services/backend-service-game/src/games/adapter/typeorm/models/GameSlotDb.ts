@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryColumn,
   RelationId,
+  Unique,
 } from 'typeorm';
 
 import { GameDb } from './GameDb';
@@ -12,6 +13,7 @@ import { GameDb } from './GameDb';
 @Entity({
   name: 'GameSlot',
 })
+@Unique('game_slot_game_id_position_key', ['game', 'position'])
 export class GameSlotDb {
   @Column({
     name: 'cards',
@@ -35,10 +37,16 @@ export class GameSlotDb {
   public readonly id!: string;
 
   @Column({
+    name: 'position',
+    nullable: true,
+    type: 'smallint',
+  })
+  public readonly position!: number;
+
+  @Column({
     length: 36,
     name: 'user_id',
-    nullable: true,
     type: 'varchar',
   })
-  public readonly userId!: string | null;
+  public readonly userId!: string;
 }
