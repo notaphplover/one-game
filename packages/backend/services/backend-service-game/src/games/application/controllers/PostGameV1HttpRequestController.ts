@@ -3,6 +3,7 @@ import { models as apiModels } from '@one-game-js/api-models';
 import { Builder, Handler } from '@one-game-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
+  MiddlewarePipeline,
   RequestWithBody,
   Response,
   ResponseWithBody,
@@ -10,6 +11,7 @@ import {
   SingleEntityPostResponseBuilder,
 } from '@one-game-js/backend-http';
 
+import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
 import { PostGameV1RequestParamHandler } from '../handlers/PostGameV1RequestParamHandler';
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
@@ -39,11 +41,14 @@ export class PostGameV1HttpRequestController extends SingleEntityHttpRequestCont
     >,
     @Inject(GameManagementInputPort)
     gameManagementInputPort: GameManagementInputPort,
+    @Inject(AuthMiddleware)
+    authMiddleware: AuthMiddleware,
   ) {
     super(
       requestParamHandler,
       responseBuilder,
       errorV1ResponseFromErrorBuilder,
+      new MiddlewarePipeline([authMiddleware]),
     );
 
     this.#gameManagementInputPort = gameManagementInputPort;

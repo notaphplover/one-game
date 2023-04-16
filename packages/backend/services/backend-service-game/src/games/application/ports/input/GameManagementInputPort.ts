@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/api-models';
 import { Builder } from '@one-game-js/backend-common';
 
+import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
@@ -10,7 +11,6 @@ import { Game } from '../../../domain/models/Game';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
-import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
@@ -20,7 +20,7 @@ import {
 export class GameManagementInputPort {
   readonly #gameCreateQueryFromGameCreateQueryV1Builder: Builder<
     GameCreateQuery,
-    [apiModels.GameCreateQueryV1, GameCreateQueryContext]
+    [apiModels.GameCreateQueryV1, UuidContext]
   >;
 
   readonly #gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>;
@@ -33,7 +33,7 @@ export class GameManagementInputPort {
     @Inject(GameCreateQueryFromGameCreateQueryV1Builder)
     gameCreateQueryFromGameCreateQueryV1Builder: Builder<
       GameCreateQuery,
-      [apiModels.GameCreateQueryV1, GameCreateQueryContext]
+      [apiModels.GameCreateQueryV1, UuidContext]
     >,
     @Inject(GameV1FromGameBuilder)
     gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>,
@@ -55,7 +55,7 @@ export class GameManagementInputPort {
     const gameCreateQuery: GameCreateQuery =
       this.#gameCreateQueryFromGameCreateQueryV1Builder.build(
         gameCreateQueryV1,
-        this.#createGameCreationQueryContext(gameCreateQueryV1),
+        this.#createGameCreationQueryContext(),
       );
 
     const game: Game = await this.#gamePersistenceOutputPort.create(
@@ -65,13 +65,8 @@ export class GameManagementInputPort {
     return this.#gameV1FromGameBuilder.build(game);
   }
 
-  #createGameCreationQueryContext(
-    gameCreateQueryV1: apiModels.GameCreateQueryV1,
-  ): GameCreateQueryContext {
+  #createGameCreationQueryContext(): UuidContext {
     return {
-      gameSlotUuids: this.#createUuidArrayOfElements(
-        gameCreateQueryV1.gameSlotsAmount,
-      ),
       uuid: this.#uuidProviderOutputPort.generateV4(),
     };
   }

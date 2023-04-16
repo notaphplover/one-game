@@ -1,19 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
+import { Builder } from '@one-game-js/backend-common';
 
+import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { GameCardSpec } from '../../domain/models/GameCardSpec';
 import { GameCreateQuery } from '../../domain/query/GameCreateQuery';
-import { GameCreateQueryContext } from '../models/GameCreateQueryContext';
 import { GameCardSpecsFromGameSpecV1Builder } from './GameCardSpecsFromGameSpecV1Builder';
 
 @Injectable()
 export class GameCreateQueryFromGameCreateQueryV1Builder
   implements
-    Builder<
-      GameCreateQuery,
-      [apiModels.GameCreateQueryV1, GameCreateQueryContext]
-    >
+    Builder<GameCreateQuery, [apiModels.GameCreateQueryV1, UuidContext]>
 {
   readonly #gameCardSpecsFromGameSpecV1Builder: Builder<
     GameCardSpec[],
@@ -33,28 +30,14 @@ export class GameCreateQueryFromGameCreateQueryV1Builder
 
   public build(
     gameCreateQueryV1: apiModels.GameCreateQueryV1,
-    context: GameCreateQueryContext,
+    context: UuidContext,
   ): GameCreateQuery {
     return {
-      gameSlotIds: this.#buildGameSlotIds(gameCreateQueryV1, context),
+      gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
       id: context.uuid,
       spec: this.#gameCardSpecsFromGameSpecV1Builder.build(
         gameCreateQueryV1.gameSpec,
       ),
     };
-  }
-
-  #buildGameSlotIds(
-    gameCreateQueryV1: apiModels.GameCreateQueryV1,
-    context: GameCreateQueryContext,
-  ): string[] {
-    if (gameCreateQueryV1.gameSlotsAmount !== context.gameSlotUuids.length) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Expecting a GameCreateQueryContext with as many game slot ids as game slots amount',
-      );
-    }
-
-    return context.gameSlotUuids;
   }
 }

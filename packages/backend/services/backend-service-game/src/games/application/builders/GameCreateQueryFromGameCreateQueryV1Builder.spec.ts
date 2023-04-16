@@ -4,10 +4,10 @@ import { models as apiModels } from '@one-game-js/api-models';
 import { Builder } from '@one-game-js/backend-common';
 
 import { GameCreateQueryV1Fixtures } from '../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
+import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { GameCardSpecFixtures } from '../../domain/fixtures/GameCardSpecFixtures';
 import { GameCardSpec } from '../../domain/models/GameCardSpec';
 import { GameCreateQuery } from '../../domain/query/GameCreateQuery';
-import { GameCreateQueryContext } from '../models/GameCreateQueryContext';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from './GameCreateQueryFromGameCreateQueryV1Builder';
 
 describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
@@ -37,16 +37,13 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
 
     describe('when called', () => {
       let gameCardSpecFixture: GameCardSpec;
-      let gameCreateQueryContext: GameCreateQueryContext;
+      let uuidContext: UuidContext;
 
       let result: unknown;
 
       beforeAll(() => {
         gameCardSpecFixture = GameCardSpecFixtures.any;
-        gameCreateQueryContext = {
-          gameSlotUuids: new Array<string>(
-            gameCreateQueryV1Fixture.gameSlotsAmount,
-          ).fill('game-slot-uuid'),
+        uuidContext = {
           uuid: '83073aec-b81b-4107-97f9-baa46de5dd41',
         };
 
@@ -56,7 +53,7 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
 
         result = gameCreateQueryFromGameCreateQueryV1Builder.build(
           gameCreateQueryV1Fixture,
-          gameCreateQueryContext,
+          uuidContext,
         );
       });
 
@@ -71,8 +68,8 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
 
       it('should return apiModels.GameSpecV1', () => {
         const expected: GameCreateQuery = {
-          gameSlotIds: gameCreateQueryContext.gameSlotUuids,
-          id: gameCreateQueryContext.uuid,
+          gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
+          id: uuidContext.uuid,
           spec: [gameCardSpecFixture],
         };
 

@@ -4,22 +4,19 @@ import { models as apiModels } from '@one-game-js/api-models';
 import { Builder } from '@one-game-js/backend-common';
 
 import { GameCreateQueryV1Fixtures } from '../../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
+import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { ActiveGameFixtures } from '../../../domain/fixtures/ActiveGameFixtures';
 import { GameCreateQueryFixtures } from '../../../domain/fixtures/GameCreateQueryFixtures';
 import { Game } from '../../../domain/models/Game';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
-import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import { GamePersistenceOutputPort } from '../output/GamePersistenceOutputPort';
 import { GameManagementInputPort } from './GameManagementInputPort';
 
 describe(GameManagementInputPort.name, () => {
   let gameCreateQueryFromGameCreateQueryV1BuilderMock: jest.Mocked<
-    Builder<
-      GameCreateQuery,
-      [apiModels.GameCreateQueryV1, GameCreateQueryContext]
-    >
+    Builder<GameCreateQuery, [apiModels.GameCreateQueryV1, UuidContext]>
   >;
   let gameV1FromGameBuilderMock: jest.Mocked<Builder<apiModels.GameV1, [Game]>>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
@@ -87,15 +84,12 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should call uuidProviderOutputPort.generateV4()', () => {
-        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(
-          gameCreateQueryV1Fixture.gameSlotsAmount + 1,
-        );
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(1);
         expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
       });
 
       it('should call gameCreateQueryFromGameCreateQueryV1Builder.build()', () => {
-        const expectedGameCreateQueryContext: GameCreateQueryContext = {
-          gameSlotUuids: expect.any(Array) as unknown as string[],
+        const expectedUuidContext: UuidContext = {
           uuid: uuidFixture,
         };
 
@@ -104,10 +98,7 @@ describe(GameManagementInputPort.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameCreateQueryFromGameCreateQueryV1BuilderMock.build,
-        ).toHaveBeenCalledWith(
-          gameCreateQueryV1Fixture,
-          expectedGameCreateQueryContext,
-        );
+        ).toHaveBeenCalledWith(gameCreateQueryV1Fixture, expectedUuidContext);
       });
 
       it('should call gamePersistenceOutputPort.create()', () => {

@@ -61,6 +61,7 @@
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "migrations:generate": "node ./scripts/generateMigration.mjs",
+    "migrations:revert": "typeorm migration:revert -d lib/app/adapter/nest/scripts/provideTypeOrmDatasource.js",
     "migrations:run": "typeorm migration:run -d lib/app/adapter/nest/scripts/provideTypeOrmDatasource.js",
     "postserve": "pnpm run docker:services:stop",
     "postserve:ts": "pnpm run docker:services:stop",
