@@ -78,7 +78,7 @@ describe(GameDbToGameConverter.name, () => {
 
       beforeAll(() => {
         cardFixture = CardFixtures.any;
-        gameSlotFixture = NonStartedGameSlotFixtures.any;
+        gameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValue(cardFixture);
         gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
@@ -130,6 +130,80 @@ describe(GameDbToGameConverter.name, () => {
     });
   });
 
+  describe('having a non started GameDb with two slots', () => {
+    let gameCardSpecDbFixture: GameCardSpecDb;
+    let gameDbFixture: GameDb;
+
+    beforeAll(() => {
+      gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsTwo;
+
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+        GameCardSpecDb,
+      ];
+    });
+
+    describe('when called', () => {
+      let cardFixture: Card;
+      let firstGameSlotFixture: NonStartedGameSlot;
+      let secondGameSlotFixture: NonStartedGameSlot;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.any;
+        firstGameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
+        secondGameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
+
+        cardBuilderMock.build.mockReturnValue(cardFixture);
+        gameSlotDbToGameSlotConverterMock.convert
+          .mockReturnValueOnce(secondGameSlotFixture)
+          .mockReturnValueOnce(firstGameSlotFixture);
+
+        result = gameDbToGameConverter.convert(gameDbFixture);
+      });
+
+      afterAll(() => {
+        cardBuilderMock.build.mockReset();
+        gameSlotDbToGameSlotConverterMock.convert.mockReset();
+
+        jest.clearAllMocks();
+      });
+
+      it('should call cardBuilder.build()', () => {
+        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
+        expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
+          gameDbFixture.gameSlotsDb.length,
+        );
+
+        for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
+          expect(
+            gameSlotDbToGameSlotConverterMock.convert,
+          ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
+        }
+      });
+
+      it('should return a NonStartedGame with sorted game slots', () => {
+        const expected: Partial<NonStartedGame> = {
+          active: false,
+          gameSlotsAmount: gameDbFixture.gameSlotsAmount,
+          id: gameDbFixture.id,
+          slots: [firstGameSlotFixture, secondGameSlotFixture],
+          spec: [
+            {
+              amount: gameCardSpecDbFixture.amount,
+              card: cardFixture,
+            },
+          ],
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
   describe('having a started GameDb', () => {
     let gameCardSpecDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
@@ -154,7 +228,7 @@ describe(GameDbToGameConverter.name, () => {
         cardColorFixture = CardColor.blue;
         cardFixture = CardFixtures.any;
         gameDirectionFixture = GameDirection.clockwise;
-        gameSlotFixture = ActiveGameSlotFixtures.any;
+        gameSlotFixture = ActiveGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValue(cardFixture);
         cardColorBuilderMock.build.mockReturnValue(cardColorFixture);

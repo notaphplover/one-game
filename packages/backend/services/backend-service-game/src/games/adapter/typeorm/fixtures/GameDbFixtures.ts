@@ -4,16 +4,35 @@ import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDbFixtures } from './GameSlotDbFixtures';
 
 export class GameDbFixtures {
-  public static get withActiveFalseAndGameSlotsOne(): GameDb {
+  public static get withActiveFalse(): GameDb {
     const fixture: Writable<GameDb> = new GameDb();
 
     fixture.active = false;
     fixture.currentCard = null;
     fixture.currentColor = null;
     fixture.currentPlayingSlotIndex = null;
-    fixture.gameSlotsDb = [GameSlotDbFixtures.nonActive];
+    fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.specs = '[{ "amount": 1, "card": 39 }]';
+
+    return fixture;
+  }
+
+  public static get withActiveFalseAndGameSlotsOne(): GameDb {
+    const fixture: Writable<GameDb> = GameDbFixtures.withActiveFalse;
+
+    fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
+
+    return fixture;
+  }
+
+  public static get withActiveFalseAndGameSlotsTwo(): GameDb {
+    const fixture: Writable<GameDb> = GameDbFixtures.withActiveFalse;
+
+    fixture.gameSlotsDb = [
+      GameSlotDbFixtures.nonActiveWithPositionZero,
+      GameSlotDbFixtures.nonActiveWithPositionOne,
+    ];
 
     return fixture;
   }
