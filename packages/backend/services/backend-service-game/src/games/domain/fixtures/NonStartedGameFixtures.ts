@@ -8,7 +8,7 @@ export class NonStartedGameFixtures {
       active: false,
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      slots: [NonStartedGameSlotFixtures.any],
+      slots: [NonStartedGameSlotFixtures.withPositionZero],
       spec: [GameCardSpecFixtures.any],
     };
 
@@ -18,7 +18,7 @@ export class NonStartedGameFixtures {
   public static get withSlotsOne(): NonStartedGame {
     return {
       ...NonStartedGameFixtures.any,
-      slots: [NonStartedGameSlotFixtures.any],
+      slots: [NonStartedGameSlotFixtures.withPositionZero],
     };
   }
 }

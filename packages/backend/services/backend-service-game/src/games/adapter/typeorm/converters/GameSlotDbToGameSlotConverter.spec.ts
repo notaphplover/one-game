@@ -49,6 +49,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
 
         it('should return a GameSlot', () => {
           const expected: NonStartedGameSlot = {
+            position: nonActiveGameSlotDbFixture.position,
             userId: nonActiveGameSlotDbFixture.userId,
           };
 
@@ -93,6 +94,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
         it('should return a GameSlot', () => {
           const expected: ActiveGameSlot = {
             cards: [cardFixture],
+            position: activeGameSlotDbFixture.position,
             userId: activeGameSlotDbFixture.userId,
           };
 

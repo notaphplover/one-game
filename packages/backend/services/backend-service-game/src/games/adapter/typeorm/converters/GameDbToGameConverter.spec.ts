@@ -78,7 +78,7 @@ describe(GameDbToGameConverter.name, () => {
 
       beforeAll(() => {
         cardFixture = CardFixtures.any;
-        gameSlotFixture = NonStartedGameSlotFixtures.any;
+        gameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValue(cardFixture);
         gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
@@ -154,7 +154,7 @@ describe(GameDbToGameConverter.name, () => {
         cardColorFixture = CardColor.blue;
         cardFixture = CardFixtures.any;
         gameDirectionFixture = GameDirection.clockwise;
-        gameSlotFixture = ActiveGameSlotFixtures.any;
+        gameSlotFixture = ActiveGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValue(cardFixture);
         cardColorBuilderMock.build.mockReturnValue(cardColorFixture);
