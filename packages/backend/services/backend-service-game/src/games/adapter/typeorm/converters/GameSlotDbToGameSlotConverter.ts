@@ -54,12 +54,14 @@ export class GameSlotDbToGameSlotConverter
 
     return {
       cards: this.#buildCards(gameSlotDb.cards as string),
+      position: gameSlotDb.position,
       userId: gameSlotDb.userId,
     };
   }
 
   #convertToNonStartedGameSlot(gameSlotDb: GameSlotDb): NonStartedGameSlot {
     return {
+      position: gameSlotDb.position,
       userId: gameSlotDb.userId,
     };
   }

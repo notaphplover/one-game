@@ -15,7 +15,7 @@ export class ActiveGameFixtures {
       currentPlayingSlotIndex: 0,
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      slots: [ActiveGameSlotFixtures.any],
+      slots: [ActiveGameSlotFixtures.withPositionZero],
       spec: [GameCardSpecFixtures.any],
     };
   }
@@ -23,7 +23,7 @@ export class ActiveGameFixtures {
   public static get withSlotsOne(): ActiveGame {
     return {
       ...ActiveGameFixtures.any,
-      slots: [ActiveGameSlotFixtures.any],
+      slots: [ActiveGameSlotFixtures.withPositionZero],
     };
   }
 }

@@ -1,3 +1,3 @@
-export interface NonStartedGameSlot {
-  readonly userId: string;
-}
+import { BaseGameSlot } from './BaseGameSlot';
+
+export type NonStartedGameSlot = BaseGameSlot;
