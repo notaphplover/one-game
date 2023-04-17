@@ -8,10 +8,17 @@ export class NonStartedGameSlotFixtures {
     };
   }
 
-  public static get withPositionZero(): NonStartedGameSlot {
+  public static get withPositionOne(): NonStartedGameSlot {
     return {
       ...NonStartedGameSlotFixtures.any,
       position: 0,
+    };
+  }
+
+  public static get withPositionZero(): NonStartedGameSlot {
+    return {
+      ...NonStartedGameSlotFixtures.any,
+      position: 1,
     };
   }
 }
