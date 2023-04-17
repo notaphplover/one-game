@@ -10,7 +10,24 @@ export class GameSlotDbFixtures {
     fixture.game = null as unknown as GameDb;
     fixture.gameId = 'e6b54159-a4ef-41fc-994a-20709526bdaa';
     fixture.id = '738e3afd-b015-4385-ad87-378475db4847';
+    fixture.position = 0;
     fixture.userId = '83073aec-b81b-4107-97f9-baa46de5dd40';
+
+    return fixture;
+  }
+
+  public static get nonActiveWithPositionZero(): GameSlotDb {
+    const fixture: Writable<GameSlotDb> = GameSlotDbFixtures.nonActive;
+
+    fixture.position = 0;
+
+    return fixture;
+  }
+
+  public static get nonActiveWithPositionOne(): GameSlotDb {
+    const fixture: Writable<GameSlotDb> = GameSlotDbFixtures.nonActive;
+
+    fixture.position = 0;
 
     return fixture;
   }
@@ -22,6 +39,7 @@ export class GameSlotDbFixtures {
     fixture.game = null as unknown as GameDb;
     fixture.gameId = 'e6b54159-a4ef-41fc-994a-20709526bdaa';
     fixture.id = '738e3afd-b015-4385-ad87-378475db4847';
+    fixture.position = 0;
     fixture.userId = '83073aec-b81b-4107-97f9-baa46de5dd40';
 
     return fixture;

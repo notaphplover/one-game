@@ -64,9 +64,16 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
 
   public convert(gameDb: GameDb): Game {
     const gameSlots: (ActiveGameSlot | NonStartedGameSlot)[] =
-      gameDb.gameSlotsDb.map((gameSlotDb: GameSlotDb) =>
-        this.#gameSlotDbToGameSlotConverter.convert(gameSlotDb),
-      );
+      gameDb.gameSlotsDb
+        .map((gameSlotDb: GameSlotDb) =>
+          this.#gameSlotDbToGameSlotConverter.convert(gameSlotDb),
+        )
+        .sort(
+          (
+            gameSlot1: ActiveGameSlot | NonStartedGameSlot,
+            gameSlot2: ActiveGameSlot | NonStartedGameSlot,
+          ) => gameSlot1.position - gameSlot2.position,
+        );
 
     let game: Game;
 
