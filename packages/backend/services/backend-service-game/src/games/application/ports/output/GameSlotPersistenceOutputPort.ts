@@ -8,6 +8,6 @@ export interface GameSlotPersistenceOutputPort {
   ): Promise<ActiveGameSlot | NonStartedGameSlot>;
 }
 
-export const gamePersistenceOutputPortSymbol: symbol = Symbol.for(
+export const gameSlotPersistenceOutputPortSymbol: symbol = Symbol.for(
   'GameSlotPersistenceOutputPort',
 );
