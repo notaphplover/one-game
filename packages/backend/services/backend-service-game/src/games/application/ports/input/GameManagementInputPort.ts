@@ -70,14 +70,4 @@ export class GameManagementInputPort {
       uuid: this.#uuidProviderOutputPort.generateV4(),
     };
   }
-
-  #createUuidArrayOfElements(elements: number): string[] {
-    const uuidArray: string[] = new Array<string>(elements);
-
-    for (let i: number = 0; i < elements; ++i) {
-      uuidArray[i] = this.#uuidProviderOutputPort.generateV4();
-    }
-
-    return uuidArray;
-  }
 }
