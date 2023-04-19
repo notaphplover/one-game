@@ -1,4 +1,4 @@
-import { ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@one-game-js/backend-common';
 import {
   FindManyOptions,
   ObjectLiteral,
@@ -10,6 +10,7 @@ export type QueryToFindQueryTypeOrmConverter<
   TModelDb extends ObjectLiteral,
   TQuery,
 > =
+  | Converter<TQuery, FindManyOptions<TModelDb>>
   | ConverterAsync<TQuery, FindManyOptions<TModelDb>>
   | ConverterAsync<
       TQuery,
