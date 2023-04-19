@@ -10,23 +10,37 @@ import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builder
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../application/builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
+import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../../application/builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
+import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/GameSlotV1FromGameSlotBuilder';
 import { GameSpecV1FromGameCardSpecsBuilder } from '../../../application/builders/GameSpecV1FromGameCardSpecsBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
+import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
 import { gamePersistenceOutputPortSymbol } from '../../../application/ports/output/GamePersistenceOutputPort';
+import { gameSlotPersistenceOutputPortSymbol } from '../../../application/ports/output/GameSlotPersistenceOutputPort';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
+import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
 import { GameDirectionDbToGameDirectionConverter } from '../../typeorm/converters/GameDirectionDbToGameDirectionConverter';
 import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converters/GameDirectionToGameDirectionDbConverter';
+import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
+import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
+import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
+import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
 
 @Module({
-  exports: [GameManagementInputPort, gamePersistenceOutputPortSymbol],
+  exports: [
+    GameManagementInputPort,
+    gamePersistenceOutputPortSymbol,
+    GameSlotManagementInputPort,
+    gameSlotPersistenceOutputPortSymbol,
+  ],
   imports: [
     CommonModule,
     CardModule,
@@ -35,26 +49,37 @@ import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeO
   ],
   providers: [
     ActiveGameSlotV1FromActiveGameSlotBuilder,
+    CreateGameSlotTypeOrmService,
     CreateGameTypeOrmService,
+    FindGameTypeOrmService,
     GameCardSpecFromGameCardSpecV1Builder,
     GameCardSpecsFromGameSpecV1Builder,
     GameCardSpecV1FromGameCardSpecBuilder,
     GameCreateQueryFromGameCreateQueryV1Builder,
-    GameDirectionV1FromGameDirectionBuilder,
-    GameSpecV1FromGameCardSpecsBuilder,
-    GameV1FromGameBuilder,
-    GameCreateQueryToGameCreateQueryTypeOrmConverter,
     GameCreateQueryFromGameCreateQueryV1Builder,
+    GameCreateQueryToGameCreateQueryTypeOrmConverter,
     GameDbToGameConverter,
     GameDirectionDbToGameDirectionConverter,
     GameDirectionToGameDirectionDbConverter,
+    GameDirectionV1FromGameDirectionBuilder,
+    GameFindQueryToGameFindQueryTypeOrmConverter,
     GameManagementInputPort,
-    GameSlotDbToGameSlotConverter,
+    GameSlotManagementInputPort,
+    GameSpecV1FromGameCardSpecsBuilder,
     GameV1FromGameBuilder,
     {
       provide: gamePersistenceOutputPortSymbol,
       useClass: GamePersistenceTypeOrmAdapter,
     },
+    GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
+    GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter,
+    GameSlotDbToGameSlotConverter,
+    {
+      provide: gameSlotPersistenceOutputPortSymbol,
+      useClass: GameSlotPersistenceTypeOrmAdapter,
+    },
+    GameSlotV1FromGameSlotBuilder,
+    GameV1FromGameBuilder,
     NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
   ],
 })

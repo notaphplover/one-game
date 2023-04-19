@@ -33,6 +33,7 @@ describe(GameManagementInputPort.name, () => {
     };
     gamePersistenceOutputPortMock = {
       create: jest.fn(),
+      findOne: jest.fn(),
     };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
