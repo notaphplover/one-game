@@ -25,12 +25,14 @@ import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
 import { GameDirectionDbToGameDirectionConverter } from '../../typeorm/converters/GameDirectionDbToGameDirectionConverter';
 import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converters/GameDirectionToGameDirectionDbConverter';
+import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
 import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
+import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
 
 @Module({
   exports: [
@@ -47,21 +49,24 @@ import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeO
   ],
   providers: [
     ActiveGameSlotV1FromActiveGameSlotBuilder,
-    CreateGameTypeOrmService,
     CreateGameSlotTypeOrmService,
+    CreateGameTypeOrmService,
+    FindGameTypeOrmService,
     GameCardSpecFromGameCardSpecV1Builder,
     GameCardSpecsFromGameSpecV1Builder,
     GameCardSpecV1FromGameCardSpecBuilder,
     GameCreateQueryFromGameCreateQueryV1Builder,
-    GameDirectionV1FromGameDirectionBuilder,
-    GameSpecV1FromGameCardSpecsBuilder,
-    GameV1FromGameBuilder,
-    GameCreateQueryToGameCreateQueryTypeOrmConverter,
     GameCreateQueryFromGameCreateQueryV1Builder,
+    GameCreateQueryToGameCreateQueryTypeOrmConverter,
     GameDbToGameConverter,
     GameDirectionDbToGameDirectionConverter,
     GameDirectionToGameDirectionDbConverter,
+    GameDirectionV1FromGameDirectionBuilder,
+    GameFindQueryToGameFindQueryTypeOrmConverter,
     GameManagementInputPort,
+    GameSlotManagementInputPort,
+    GameSpecV1FromGameCardSpecsBuilder,
+    GameV1FromGameBuilder,
     {
       provide: gamePersistenceOutputPortSymbol,
       useClass: GamePersistenceTypeOrmAdapter,
