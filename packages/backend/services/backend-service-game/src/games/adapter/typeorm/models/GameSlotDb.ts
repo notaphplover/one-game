@@ -14,6 +14,7 @@ import { GameDb } from './GameDb';
   name: 'GameSlot',
 })
 @Unique('game_slot_game_id_position_key', ['game', 'position'])
+@Unique('game_slot_game_id_user_id_key', ['game', 'userId'])
 export class GameSlotDb {
   @Column({
     name: 'cards',
