@@ -1,24 +1,45 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels, SchemaId } from '@one-game-js/api-models';
-import { ApiJsonSchemasValidationProvider } from '@one-game-js/backend-api-validators';
+import { models as apiModels } from '@one-game-js/api-models';
 import { Handler } from '@one-game-js/backend-common';
-import { RequestWithBody } from '@one-game-js/backend-http';
+import {
+  RequestWithBody,
+  requestContextProperty,
+} from '@one-game-js/backend-http';
 
-import { RequestBodyParamHandler } from '../../../foundation/http/application/RequestBodyParamHandler';
+import { Game } from '../../domain/models/Game';
+import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
+import { PostGameIdSlotV1RequestBodyHandler } from './PostGameIdSlotV1RequestBodyHandler';
 
 @Injectable()
 export class PostGameIdSlotV1RequestParamHandler
-  extends RequestBodyParamHandler<apiModels.GameIdSlotCreateQueryV1>
-  implements Handler<[RequestWithBody], [apiModels.GameIdSlotCreateQueryV1]>
+  implements
+    Handler<
+      [RequestWithBody & GameRequestContextHolder],
+      [apiModels.GameIdSlotCreateQueryV1, Game]
+    >
 {
+  readonly #postGameIdSlotV1RequestBodyHandler: Handler<
+    [RequestWithBody],
+    [apiModels.GameIdSlotCreateQueryV1]
+  >;
+
   constructor(
-    @Inject(ApiJsonSchemasValidationProvider)
-    apiJsonSchemasValidationProvider: ApiJsonSchemasValidationProvider,
+    @Inject(PostGameIdSlotV1RequestBodyHandler)
+    postGameIdSlotV1RequestBodyHandler: Handler<
+      [RequestWithBody],
+      [apiModels.GameIdSlotCreateQueryV1]
+    >,
   ) {
-    super(
-      apiJsonSchemasValidationProvider.provide(
-        SchemaId.GameIdSlotCreateQueryV1,
-      ),
-    );
+    this.#postGameIdSlotV1RequestBodyHandler =
+      postGameIdSlotV1RequestBodyHandler;
+  }
+
+  public async handle(
+    request: RequestWithBody & GameRequestContextHolder,
+  ): Promise<[apiModels.GameIdSlotCreateQueryV1, Game]> {
+    const [gameIdSlotCreateQueryV1]: [apiModels.GameIdSlotCreateQueryV1] =
+      await this.#postGameIdSlotV1RequestBodyHandler.handle(request);
+
+    return [gameIdSlotCreateQueryV1, request[requestContextProperty].game];
   }
 }
