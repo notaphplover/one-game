@@ -54,6 +54,10 @@ export class ErrorV1ResponseFromErrorBuilder
         statusCode = httpStatusCodes.BAD_REQUEST;
         errorMessage = this.#stringifyError(error);
         break;
+      case AppErrorKind.entityNotFound:
+        statusCode = httpStatusCodes.NOT_FOUND;
+        errorMessage = this.#stringifyError(error);
+        break;
       case AppErrorKind.entityConflict:
         statusCode = httpStatusCodes.CONFLICT;
         errorMessage = this.#stringifyError(error);
