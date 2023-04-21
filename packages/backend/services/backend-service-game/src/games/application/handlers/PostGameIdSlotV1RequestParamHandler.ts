@@ -7,14 +7,18 @@ import { RequestWithBody } from '@one-game-js/backend-http';
 import { RequestBodyParamHandler } from '../../../foundation/http/application/RequestBodyParamHandler';
 
 @Injectable()
-export class PostGameV1RequestParamHandler
-  extends RequestBodyParamHandler<apiModels.GameCreateQueryV1>
-  implements Handler<[RequestWithBody], [apiModels.GameCreateQueryV1]>
+export class PostGameIdSlotV1RequestParamHandler
+  extends RequestBodyParamHandler<apiModels.GameIdSlotCreateQueryV1>
+  implements Handler<[RequestWithBody], [apiModels.GameIdSlotCreateQueryV1]>
 {
   constructor(
     @Inject(ApiJsonSchemasValidationProvider)
     apiJsonSchemasValidationProvider: ApiJsonSchemasValidationProvider,
   ) {
-    super(apiJsonSchemasValidationProvider.provide(SchemaId.GameCreateQueryV1));
+    super(
+      apiJsonSchemasValidationProvider.provide(
+        SchemaId.GameIdSlotCreateQueryV1,
+      ),
+    );
   }
 }
