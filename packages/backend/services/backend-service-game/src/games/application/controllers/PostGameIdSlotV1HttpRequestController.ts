@@ -18,7 +18,7 @@ import { GameMiddleware } from '../middlewares/GameMiddleware';
 import { GameSlotManagementInputPort } from '../ports/input/GameSlotManagementInputPort';
 
 @Injectable()
-export class PostGameV1HttpRequestController extends SingleEntityHttpRequestController<
+export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpRequestController<
   RequestWithBody,
   [apiModels.GameIdSlotCreateQueryV1, Game],
   apiModels.GameSlotV1
