@@ -13,7 +13,9 @@ export class GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter
     gameSlotCreateQuery: GameSlotCreateQuery,
   ): DeepPartial<GameSlotDb> {
     return {
-      gameId: gameSlotCreateQuery.gameId,
+      game: {
+        id: gameSlotCreateQuery.gameId,
+      },
       id: gameSlotCreateQuery.id,
       position: gameSlotCreateQuery.position,
       userId: gameSlotCreateQuery.userId,

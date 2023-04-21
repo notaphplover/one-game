@@ -2,7 +2,6 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { DeepPartial } from 'typeorm';
 
-import { GameCreateQueryFixtures } from '../../../domain/fixtures/GameCreateQueryFixtures';
 import { GameSlotCreateQueryFixtures } from '../../../domain/fixtures/GameSlotCreateQueryFixtures';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
 import { GameSlotDb } from '../models/GameSlotDb';
@@ -35,7 +34,9 @@ describe(GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter.name, () => {
 
       it('should return a DeepPartial<GameSlotDb>', () => {
         const expected: DeepPartial<GameSlotDb> = {
-          gameId: gameSlotCreateQueryFixture.gameId,
+          game: {
+            id: gameSlotCreateQueryFixture.gameId,
+          },
           id: gameSlotCreateQueryFixture.id,
           position: gameSlotCreateQueryFixture.position,
           userId: gameSlotCreateQueryFixture.userId,
