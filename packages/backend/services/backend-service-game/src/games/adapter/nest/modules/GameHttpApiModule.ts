@@ -7,6 +7,7 @@ import { PostGameV1HttpRequestController } from '../../../application/controller
 import { PostGameIdSlotV1RequestBodyHandler } from '../../../application/handlers/PostGameIdSlotV1RequestBodyHandler';
 import { PostGameIdSlotV1RequestParamHandler } from '../../../application/handlers/PostGameIdSlotV1RequestParamHandler';
 import { PostGameV1RequestParamHandler } from '../../../application/handlers/PostGameV1RequestParamHandler';
+import { GameMiddleware } from '../../../application/middlewares/GameMiddleware';
 import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1HttpRequestNestController';
 import { GameModule } from './GameModule';
 
@@ -14,6 +15,8 @@ import { GameModule } from './GameModule';
   controllers: [PostGameV1HttpRequestNestController],
   imports: [AuthModule, JsonSchemaModule, HttpModule, GameModule],
   providers: [
+    GameMiddleware,
+    PostGameV1HttpRequestController,
     PostGameV1HttpRequestController,
     PostGameV1HttpRequestNestController,
     PostGameV1RequestParamHandler,
