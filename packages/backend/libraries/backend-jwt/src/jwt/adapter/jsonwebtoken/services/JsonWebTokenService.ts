@@ -1,3 +1,4 @@
+import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 import jwt from 'jsonwebtoken';
 
 import { JwtServiceOptions } from '../../../application/models/JwtServiceOptions';
@@ -33,14 +34,32 @@ export class JsonWebTokenService<TToken extends Record<string, unknown>> {
   }
 
   public async create(payload: TToken): Promise<string> {
-    return this.promisifyJwtSign(payload);
+    try {
+      return await this.#promisifyJwtSign(payload);
+    } catch (error: unknown) {
+      this.#handleJsonWebTokenError(error);
+    }
   }
 
   public async parse(jwtToken: string): Promise<TToken> {
-    return this.promisifyJwtVerify(jwtToken);
+    try {
+      return await this.#promisifyJwtVerify(jwtToken);
+    } catch (error: unknown) {
+      this.#handleJsonWebTokenError(error);
+    }
   }
 
-  private async promisifyJwtSign(payload: TToken): Promise<string> {
+  #handleJsonWebTokenError(error: unknown): never {
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new AppError(AppErrorKind.missingCredentials, error.message, {
+        cause: error,
+      });
+    } else {
+      throw error;
+    }
+  }
+
+  async #promisifyJwtSign(payload: TToken): Promise<string> {
     return new Promise(
       (
         resolve: (value: string) => void,
@@ -62,7 +81,7 @@ export class JsonWebTokenService<TToken extends Record<string, unknown>> {
     );
   }
 
-  private async promisifyJwtVerify(jwtToken: string): Promise<TToken> {
+  async #promisifyJwtVerify(jwtToken: string): Promise<TToken> {
     return new Promise(
       (
         resolve: (value: TToken) => void,
