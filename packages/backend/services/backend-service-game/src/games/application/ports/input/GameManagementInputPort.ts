@@ -9,6 +9,7 @@ import {
 } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { Game } from '../../../domain/models/Game';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
+import { GameFindQuery } from '../../../domain/query/GameFindQuery';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
 import {
@@ -63,6 +64,21 @@ export class GameManagementInputPort {
     );
 
     return this.#gameV1FromGameBuilder.build(game);
+  }
+
+  public async findOne(id: string): Promise<apiModels.GameV1 | undefined> {
+    const gameFindQuery: GameFindQuery = {
+      id,
+    };
+
+    const game: Game | undefined =
+      await this.#gamePersistenceOutputPort.findOne(gameFindQuery);
+
+    if (game === undefined) {
+      return undefined;
+    } else {
+      return this.#gameV1FromGameBuilder.build(game);
+    }
   }
 
   #createGameCreationQueryContext(): UuidContext {
