@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/api-models';
-import { Builder } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import {
@@ -11,6 +11,7 @@ import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
 import { Game } from '../../../domain/models/Game';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
+import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 import { GameSlotV1FromGameSlotBuilder } from '../../builders/GameSlotV1FromGameSlotBuilder';
 import { GameSlotCreateQueryContext } from '../../models/GameSlotCreateQueryContext';
@@ -21,6 +22,7 @@ import {
 
 @Injectable()
 export class GameSlotManagementInputPort {
+  readonly #gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec;
   readonly #gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
     GameSlotCreateQuery,
     [apiModels.GameIdSlotCreateQueryV1, GameSlotCreateQueryContext]
@@ -33,6 +35,8 @@ export class GameSlotManagementInputPort {
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
+    @Inject(GameCanHoldMoreGameSlotsSpec)
+    gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec,
     @Inject(GameSlotCreateQueryFromGameSlotCreateQueryV1Builder)
     gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
       GameSlotCreateQuery,
@@ -48,6 +52,7 @@ export class GameSlotManagementInputPort {
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
+    this.#gameCanHoldMoreGameSlotsSpec = gameCanHoldMoreGameSlotsSpec;
     this.#gameSlotCreateQueryFromGameSlotCreateQueryV1Builder =
       gameSlotCreateQueryFromGameSlotCreateQueryV1Builder;
     this.#gameSlotV1FromGameSlotBuilder = gameSlotV1FromGameSlotBuilder;
@@ -59,6 +64,13 @@ export class GameSlotManagementInputPort {
     gameSlotCreateQueryV1: apiModels.GameIdSlotCreateQueryV1,
     game: Game,
   ): Promise<apiModels.GameSlotV1> {
+    if (!this.#gameCanHoldMoreGameSlotsSpec.isSatisfiedBy(game)) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Unable to process request: game "${game.id}" cannot hold more game slots`,
+      );
+    }
+
     const gameSlotCreateQuery: GameSlotCreateQuery =
       this.#gameSlotCreateQueryFromGameSlotCreateQueryV1Builder.build(
         gameSlotCreateQueryV1,

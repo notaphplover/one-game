@@ -1,7 +1,7 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@one-game-js/api-models';
-import { Builder } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { GameSlotCreateQueryFixtures } from '../../../domain/fixtures/GameSlotCreateQueryFixtures';
@@ -11,12 +11,14 @@ import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
 import { Game } from '../../../domain/models/Game';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
+import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { NonStartedGameSlotV1Fixtures } from '../../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameSlotCreateQueryContext } from '../../models/GameSlotCreateQueryContext';
 import { GameSlotPersistenceOutputPort } from '../output/GameSlotPersistenceOutputPort';
 import { GameSlotManagementInputPort } from './GameSlotManagementInputPort';
 
 describe(GameSlotManagementInputPort.name, () => {
+  let gameCanHoldMoreGameSlotsSpecMock: jest.Mocked<GameCanHoldMoreGameSlotsSpec>;
   let gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
       GameSlotCreateQuery,
@@ -32,6 +34,9 @@ describe(GameSlotManagementInputPort.name, () => {
   let gameSlotManagementInputPort: GameSlotManagementInputPort;
 
   beforeAll(() => {
+    gameCanHoldMoreGameSlotsSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    };
     gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -46,6 +51,7 @@ describe(GameSlotManagementInputPort.name, () => {
     };
 
     gameSlotManagementInputPort = new GameSlotManagementInputPort(
+      gameCanHoldMoreGameSlotsSpecMock,
       gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock,
       gameSlotV1FromGameSlotBuilderMock,
       gameSlotPersistenceOutputPortMock,
@@ -54,15 +60,15 @@ describe(GameSlotManagementInputPort.name, () => {
   });
 
   describe('.create', () => {
-    let gameSlotCreateQueryV1Fixture: apiModels.GameIdSlotCreateQueryV1;
     let gameFixture: Game;
+    let gameSlotCreateQueryV1Fixture: apiModels.GameIdSlotCreateQueryV1;
 
     beforeAll(() => {
-      gameSlotCreateQueryV1Fixture = GameSlotCreateQueryFixtures.any;
       gameFixture = NonStartedGameFixtures.any;
+      gameSlotCreateQueryV1Fixture = GameSlotCreateQueryFixtures.any;
     });
 
-    describe('when called', () => {
+    describe('when called, and gameCanHoldMoreGameSlotsSpec.isSatisfiedBy() returns true', () => {
       let gameSlotCreateQueryFixture: GameSlotCreateQuery;
       let gameSlotFixture: ActiveGameSlot | NonStartedGameSlot;
       let gameSlotV1Fixture: apiModels.GameSlotV1;
@@ -76,6 +82,9 @@ describe(GameSlotManagementInputPort.name, () => {
         gameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
         uuidFixture = 'uuid-fixture';
 
+        gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          true,
+        );
         gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           gameSlotCreateQueryFixture,
         );
@@ -91,6 +100,19 @@ describe(GameSlotManagementInputPort.name, () => {
           gameSlotCreateQueryV1Fixture,
           gameFixture,
         );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameCanHoldMoreGameSlotsSpec.isSatisfiedBy()', () => {
+        expect(
+          gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(gameFixture);
       });
 
       it('should call uuidProviderOutputPort.generateV4()', () => {
@@ -132,6 +154,52 @@ describe(GameSlotManagementInputPort.name, () => {
 
       it('should return a GameSlotV1', () => {
         expect(result).toBe(gameSlotV1Fixture);
+      });
+    });
+
+    describe('when called, and gameCanHoldMoreGameSlotsSpec.isSatisfiedBy() returns false', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          false,
+        );
+
+        try {
+          await gameSlotManagementInputPort.create(
+            gameSlotCreateQueryV1Fixture,
+            gameFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameCanHoldMoreGameSlotsSpec.isSatisfiedBy()', () => {
+        expect(
+          gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(gameFixture);
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message: expect.stringContaining(
+            'cannot hold more game slots',
+          ) as unknown as string,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
       });
     });
   });

@@ -15,10 +15,19 @@ export class NonStartedGameFixtures {
     return fixture;
   }
 
-  public static get withSlotsOne(): NonStartedGame {
+  public static get withGameSlotsAmountOneAndSlotsOne(): NonStartedGame {
     return {
       ...NonStartedGameFixtures.any,
+      gameSlotsAmount: 1,
       slots: [NonStartedGameSlotFixtures.withPositionZero],
+    };
+  }
+
+  public static get withGameSlotsAmountOneAndSlotsZero(): NonStartedGame {
+    return {
+      ...NonStartedGameFixtures.any,
+      gameSlotsAmount: 1,
+      slots: [],
     };
   }
 }
