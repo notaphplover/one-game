@@ -163,6 +163,23 @@ export class HttpClient {
       body,
     );
   }
+  public async getUserMe(headers: {
+    [key: string]: string;
+  }): Promise<
+    | Response<Record<string, string>, apiModels.UserV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 404>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v1/users/me',
+      headers,
+      undefined,
+      undefined,
+      undefined,
+    );
+  }
   public async getUser(
     headers: {
       [key: string]: string;
