@@ -181,7 +181,7 @@ describe(GameV1FromGameBuilder.name, () => {
       let gameFixture: NonStartedGame;
 
       beforeAll(() => {
-        gameFixture = NonStartedGameFixtures.withSlotsOne;
+        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
         [gameSlotFixture] = gameFixture.slots as [NonStartedGameSlot];
       });
 
