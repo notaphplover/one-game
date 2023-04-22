@@ -189,6 +189,18 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '422':
+          description: Unprocessable request
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
 
@@ -267,6 +279,38 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security: []
+
+  /v1/users/me:
+    get:
+      summary: Get current user
+      operationId: getUserMe
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/users/user.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '422':
+          description: Unprocessable request
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - bearerAuth: []
 
   /v1/users/{userId}:
     get:
