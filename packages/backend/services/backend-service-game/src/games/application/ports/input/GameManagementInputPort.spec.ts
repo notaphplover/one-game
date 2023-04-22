@@ -8,9 +8,12 @@ import { UuidContext } from '../../../../foundation/common/application/models/Uu
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { ActiveGameFixtures } from '../../../domain/fixtures/ActiveGameFixtures';
 import { GameCreateQueryFixtures } from '../../../domain/fixtures/GameCreateQueryFixtures';
+import { NonStartedGameFixtures } from '../../../domain/fixtures/NonStartedGameFixtures';
 import { Game } from '../../../domain/models/Game';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
+import { GameFindQuery } from '../../../domain/query/GameFindQuery';
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
+import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
 import { GamePersistenceOutputPort } from '../output/GamePersistenceOutputPort';
 import { GameManagementInputPort } from './GameManagementInputPort';
 
@@ -117,6 +120,60 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should return a GameV1', () => {
+        expect(result).toBe(gameV1Fixture);
+      });
+    });
+  });
+
+  describe('.findOne', () => {
+    let gameIdFixture: string;
+
+    beforeAll(() => {
+      gameIdFixture = 'game-id-fixture';
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns a Game', () => {
+      let gameFixture: Game;
+      let gameV1Fixture: apiModels.GameV1;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameFixture = NonStartedGameFixtures.any;
+        gameV1Fixture = NonStartedGameV1Fixtures.any;
+
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameFixture,
+        );
+
+        gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
+
+        result = await gameManagementInputPort.findOne(gameIdFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameV1FromGameBuilder.build()', () => {
+        expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledWith(
+          gameFixture,
+        );
+      });
+
+      it('should return a gameV1', () => {
         expect(result).toBe(gameV1Fixture);
       });
     });
