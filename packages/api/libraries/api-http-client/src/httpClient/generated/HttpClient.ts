@@ -110,6 +110,8 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.GameSlotV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
+    | Response<Record<string, string>, apiModels.ErrorV1, 409>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
     return this.#axiosHttpClient.callEndpoint(
       'POST',
