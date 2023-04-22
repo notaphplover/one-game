@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '../../../../auth/adapters/nest/modules/AuthModule';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
+import { GetUserV1MeHttpRequestController } from '../../../application/controllers/GetUserV1MeHttpRequestController';
 import { GetUserV1UserIdHttpRequestController } from '../../../application/controllers/GetUserV1UserIdHttpRequestController';
 import { PostUserV1HttpRequestController } from '../../../application/controllers/PostUserV1HttpRequestController';
 import { GetUserV1MeRequestParamHandler } from '../../../application/handlers/GetUserV1MeRequestParamHandler';
@@ -19,6 +20,7 @@ import { UserModule } from './UserModule';
   ],
   imports: [AuthModule, JsonSchemaModule, HttpModule, UserModule],
   providers: [
+    GetUserV1MeHttpRequestController,
     GetUserV1MeRequestParamHandler,
     GetUserV1UserIdHttpRequestController,
     GetUserV1UserIdHttpRequestNestController,
