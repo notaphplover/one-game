@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 
+import { CardV1FromCardBuilder } from '../../../../cards/application/builders/CardV1FromCardBuilder';
+import { Card } from '../../../../cards/domain/models/Card';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import {
   UuidProviderOutputPort,
@@ -22,6 +24,7 @@ import {
 
 @Injectable()
 export class GameSlotManagementInputPort {
+  readonly #cardV1FromCardBuilder: Builder<apiModels.CardV1, [Card]>;
   readonly #gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec;
   readonly #gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
     GameSlotCreateQuery,
@@ -35,6 +38,8 @@ export class GameSlotManagementInputPort {
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
+    @Inject(CardV1FromCardBuilder)
+    cardV1FromCardBuilder: Builder<apiModels.CardV1, [Card]>,
     @Inject(GameCanHoldMoreGameSlotsSpec)
     gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec,
     @Inject(GameSlotCreateQueryFromGameSlotCreateQueryV1Builder)
@@ -52,6 +57,7 @@ export class GameSlotManagementInputPort {
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
+    this.#cardV1FromCardBuilder = cardV1FromCardBuilder;
     this.#gameCanHoldMoreGameSlotsSpec = gameCanHoldMoreGameSlotsSpec;
     this.#gameSlotCreateQueryFromGameSlotCreateQueryV1Builder =
       gameSlotCreateQueryFromGameSlotCreateQueryV1Builder;
@@ -81,6 +87,28 @@ export class GameSlotManagementInputPort {
       await this.#gameSlotPersistenceOutputPort.create(gameSlotCreateQuery);
 
     return this.#gameSlotV1FromGameSlotBuilder.build(gameSlot);
+  }
+
+  public getSlotCards(
+    game: Game,
+    slotIndex: number,
+  ): apiModels.ActiveGameSlotCardsV1 | undefined {
+    if (!game.active) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        'Unable to fetch cards from a non active game slot',
+      );
+    }
+
+    const gameSlot: ActiveGameSlot | undefined = game.slots[slotIndex];
+
+    if (gameSlot === undefined) {
+      return undefined;
+    }
+
+    return gameSlot.cards.map((card: Card) =>
+      this.#cardV1FromCardBuilder.build(card),
+    );
   }
 
   #createGameSlotCreationQueryContext(game: Game): GameSlotCreateQueryContext {

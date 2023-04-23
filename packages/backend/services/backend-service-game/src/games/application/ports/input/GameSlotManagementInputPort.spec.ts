@@ -3,12 +3,17 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { models as apiModels } from '@one-game-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 
+import { CardV1Fixtures } from '../../../../cards/application/fixtures/CardV1Fixtures';
+import { Card } from '../../../../cards/domain/models/Card';
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
+import { ActiveGameFixtures } from '../../../domain/fixtures/ActiveGameFixtures';
 import { GameSlotCreateQueryFixtures } from '../../../domain/fixtures/GameSlotCreateQueryFixtures';
 import { NonStartedGameFixtures } from '../../../domain/fixtures/NonStartedGameFixtures';
 import { NonStartedGameSlotFixtures } from '../../../domain/fixtures/NonStartedGameSlotFixtures';
+import { ActiveGame } from '../../../domain/models/ActiveGame';
 import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
 import { Game } from '../../../domain/models/Game';
+import { NonStartedGame } from '../../../domain/models/NonStartedGame';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
 import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
@@ -18,6 +23,7 @@ import { GameSlotPersistenceOutputPort } from '../output/GameSlotPersistenceOutp
 import { GameSlotManagementInputPort } from './GameSlotManagementInputPort';
 
 describe(GameSlotManagementInputPort.name, () => {
+  let cardV1FromCardBuilderMock: jest.Mocked<Builder<apiModels.CardV1, [Card]>>;
   let gameCanHoldMoreGameSlotsSpecMock: jest.Mocked<GameCanHoldMoreGameSlotsSpec>;
   let gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
@@ -34,6 +40,9 @@ describe(GameSlotManagementInputPort.name, () => {
   let gameSlotManagementInputPort: GameSlotManagementInputPort;
 
   beforeAll(() => {
+    cardV1FromCardBuilderMock = {
+      build: jest.fn(),
+    };
     gameCanHoldMoreGameSlotsSpecMock = {
       isSatisfiedBy: jest.fn(),
     };
@@ -51,6 +60,7 @@ describe(GameSlotManagementInputPort.name, () => {
     };
 
     gameSlotManagementInputPort = new GameSlotManagementInputPort(
+      cardV1FromCardBuilderMock,
       gameCanHoldMoreGameSlotsSpecMock,
       gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock,
       gameSlotV1FromGameSlotBuilderMock,
@@ -200,6 +210,136 @@ describe(GameSlotManagementInputPort.name, () => {
         expect(result).toStrictEqual(
           expect.objectContaining(expectedErrorProperties),
         );
+      });
+    });
+  });
+
+  describe('.getSlotCards', () => {
+    describe('having a NonStartGame', () => {
+      let gameFixture: NonStartedGame;
+
+      beforeAll(() => {
+        gameFixture = NonStartedGameFixtures.any;
+      });
+
+      describe('when called', () => {
+        let gameSlotIndexFixture: number;
+        let result: unknown;
+
+        beforeAll(() => {
+          gameSlotIndexFixture = 0;
+
+          try {
+            gameSlotManagementInputPort.getSlotCards(
+              gameFixture,
+              gameSlotIndexFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should throw an AppError', () => {
+          const errorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message: 'Unable to fetch cards from a non active game slot',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(errorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having an ActiveGame and a not existing index', () => {
+      let gameFixture: ActiveGame;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.any;
+      });
+
+      describe('when called', () => {
+        let gameSlotIndexFixture: number;
+        let result: unknown;
+
+        beforeAll(() => {
+          gameSlotIndexFixture = -1;
+
+          result = gameSlotManagementInputPort.getSlotCards(
+            gameFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return undefined', () => {
+          expect(result).toBeUndefined();
+        });
+      });
+    });
+
+    describe('having an ActiveGame and an existing index', () => {
+      let gameSlotFixture: ActiveGameSlot;
+      let gameFixture: ActiveGame;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        [gameSlotFixture] = gameFixture.slots as [ActiveGameSlot];
+      });
+
+      describe('when called', () => {
+        let cardV1Fixture: apiModels.CardV1;
+        let gameSlotIndexFixture: number;
+        let result: unknown;
+
+        beforeAll(() => {
+          cardV1Fixture = CardV1Fixtures.any;
+          gameSlotIndexFixture = 0;
+
+          cardV1FromCardBuilderMock.build.mockReturnValue(cardV1Fixture);
+
+          result = gameSlotManagementInputPort.getSlotCards(
+            gameFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          cardV1FromCardBuilderMock.build.mockReset();
+        });
+
+        it('should call cardV1FromCardBuilder.build()', () => {
+          expect(cardV1FromCardBuilderMock.build).toHaveBeenCalledTimes(
+            gameSlotFixture.cards.length,
+          );
+
+          gameSlotFixture.cards.forEach((card: Card, index: number) => {
+            expect(cardV1FromCardBuilderMock.build).toHaveBeenNthCalledWith(
+              index + 1,
+              card,
+            );
+          });
+        });
+
+        it('should return a card array', () => {
+          const expectedCards: apiModels.ActiveGameSlotCardsV1 =
+            new Array<apiModels.CardV1>(gameSlotFixture.cards.length).fill(
+              cardV1Fixture,
+            );
+
+          expect(result).toStrictEqual(expectedCards);
+        });
       });
     });
   });
