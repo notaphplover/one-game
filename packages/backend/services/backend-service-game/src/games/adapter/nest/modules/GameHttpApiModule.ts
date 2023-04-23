@@ -6,6 +6,7 @@ import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest
 import { GetGameV1GameIdHttpRequestController } from '../../../application/controllers/GetGameV1GameIdHttpRequestController';
 import { PostGameIdSlotV1HttpRequestController } from '../../../application/controllers/PostGameIdSlotV1HttpRequestController';
 import { PostGameV1HttpRequestController } from '../../../application/controllers/PostGameV1HttpRequestController';
+import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from '../../../application/handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 import { GetGameV1GameIdRequestParamHandler } from '../../../application/handlers/GetGameV1GameIdRequestParamHandler';
 import { PostGameIdSlotV1RequestBodyHandler } from '../../../application/handlers/PostGameIdSlotV1RequestBodyHandler';
 import { PostGameIdSlotV1RequestParamHandler } from '../../../application/handlers/PostGameIdSlotV1RequestParamHandler';
@@ -26,6 +27,7 @@ import { GameModule } from './GameModule';
   imports: [AuthModule, JsonSchemaModule, HttpModule, GameModule],
   providers: [
     GameMiddleware,
+    GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
     GetGameV1GameIdHttpRequestNestController,
     GetGameV1GameIdHttpRequestController,
     GetGameV1GameIdRequestParamHandler,
