@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '../../../../auth/adapter/nest/modules/AuthModule';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
+import { GetGameGameIdSlotSlotIdCardsV1RequestController } from '../../../application/controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
 import { GetGameV1GameIdHttpRequestController } from '../../../application/controllers/GetGameV1GameIdHttpRequestController';
 import { PostGameIdSlotV1HttpRequestController } from '../../../application/controllers/PostGameIdSlotV1HttpRequestController';
 import { PostGameV1HttpRequestController } from '../../../application/controllers/PostGameV1HttpRequestController';
@@ -12,6 +13,7 @@ import { PostGameIdSlotV1RequestBodyHandler } from '../../../application/handler
 import { PostGameIdSlotV1RequestParamHandler } from '../../../application/handlers/PostGameIdSlotV1RequestParamHandler';
 import { PostGameV1RequestParamHandler } from '../../../application/handlers/PostGameV1RequestParamHandler';
 import { GameMiddleware } from '../../../application/middlewares/GameMiddleware';
+import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
 import { GetGameV1GameIdHttpRequestNestController } from '../controllers/GetGameV1GameIdHttpRequestNestController';
 import { PostGameIdSlotV1HttpRequestNestController } from '../controllers/PostGameIdSlotV1HttpRequestNestController';
 import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1HttpRequestNestController';
@@ -21,12 +23,15 @@ import { GameModule } from './GameModule';
   controllers: [
     // Mind the order
     GetGameV1GameIdHttpRequestNestController,
+    GetGameGameIdSlotSlotIdCardsV1RequestNestController,
     PostGameV1HttpRequestNestController,
     PostGameIdSlotV1HttpRequestNestController,
   ],
   imports: [AuthModule, JsonSchemaModule, HttpModule, GameModule],
   providers: [
     GameMiddleware,
+    GetGameGameIdSlotSlotIdCardsV1RequestController,
+    GetGameGameIdSlotSlotIdCardsV1RequestNestController,
     GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
     GetGameV1GameIdHttpRequestNestController,
     GetGameV1GameIdHttpRequestController,
