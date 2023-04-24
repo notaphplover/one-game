@@ -1,6 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { models as apiModels } from '@one-game-js/api-models';
-import { Builder, Handler } from '@one-game-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@one-game-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
   MiddlewarePipeline,
@@ -20,14 +25,14 @@ import { GameSlotManagementInputPort } from '../ports/input/GameSlotManagementIn
 @Injectable()
 export class GetGameGameIdSlotSlotIdCardsV1RequestController extends SingleEntityHttpRequestController<
   Request,
-  [number, Game],
+  [number, Game, apiModels.UserV1],
   apiModels.ActiveGameSlotCardsV1
 > {
   readonly #gameSlotManagementInputPort: GameSlotManagementInputPort;
 
   constructor(
     @Inject(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler)
-    requestParamHandler: Handler<[Request], [number, Game]>,
+    requestParamHandler: Handler<[Request], [number, Game, apiModels.UserV1]>,
     @Inject(SingleEntityGetResponseBuilder)
     responseBuilder: Builder<
       Response | ResponseWithBody<unknown>,
@@ -58,7 +63,18 @@ export class GetGameGameIdSlotSlotIdCardsV1RequestController extends SingleEntit
   protected async _handleUseCase(
     gameSlotIndex: number,
     game: Game,
+    user: apiModels.UserV1,
   ): Promise<apiModels.ActiveGameSlotCardsV1 | undefined> {
+    if (
+      !this.#gameSlotManagementInputPort.isSlotOwner(
+        game,
+        gameSlotIndex,
+        user.id,
+      )
+    ) {
+      throw new AppError(AppErrorKind.invalidCredentials, 'Access denied');
+    }
+
     return this.#gameSlotManagementInputPort.getSlotCards(game, gameSlotIndex);
   }
 }
