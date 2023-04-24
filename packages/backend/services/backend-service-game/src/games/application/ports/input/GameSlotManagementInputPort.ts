@@ -9,8 +9,10 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
+import { ActiveGame } from '../../../domain/models/ActiveGame';
 import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
 import { Game } from '../../../domain/models/Game';
+import { NonStartedGame } from '../../../domain/models/NonStartedGame';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
 import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
@@ -92,7 +94,7 @@ export class GameSlotManagementInputPort {
   public getSlotCards(
     game: Game,
     slotIndex: number,
-  ): apiModels.ActiveGameSlotCardsV1 | undefined {
+  ): apiModels.ActiveGameSlotCardsV1 {
     if (!game.active) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
@@ -100,15 +102,15 @@ export class GameSlotManagementInputPort {
       );
     }
 
-    const gameSlot: ActiveGameSlot | undefined = game.slots[slotIndex];
-
-    if (gameSlot === undefined) {
-      return undefined;
-    }
+    const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(game, slotIndex);
 
     return gameSlot.cards.map((card: Card) =>
       this.#cardV1FromCardBuilder.build(card),
     );
+  }
+
+  public isSlotOwner(game: Game, slotIndex: number, userId: string): boolean {
+    return this.#getGameSlotOrThrow(game, slotIndex).userId === userId;
   }
 
   #createGameSlotCreationQueryContext(game: Game): GameSlotCreateQueryContext {
@@ -116,5 +118,31 @@ export class GameSlotManagementInputPort {
       game,
       uuid: this.#uuidProviderOutputPort.generateV4(),
     };
+  }
+
+  #getGameSlotOrThrow(game: ActiveGame, slotIndex: number): ActiveGameSlot;
+  #getGameSlotOrThrow(
+    game: NonStartedGame,
+    slotIndex: number,
+  ): NonStartedGameSlot;
+  #getGameSlotOrThrow(
+    game: Game,
+    slotIndex: number,
+  ): ActiveGameSlot | NonStartedGameSlot;
+  #getGameSlotOrThrow(
+    game: Game,
+    slotIndex: number,
+  ): ActiveGameSlot | NonStartedGameSlot {
+    const gameSlot: ActiveGameSlot | NonStartedGameSlot | undefined =
+      game.slots[slotIndex];
+
+    if (gameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.entityNotFound,
+        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
+      );
+    }
+
+    return gameSlot;
   }
 }

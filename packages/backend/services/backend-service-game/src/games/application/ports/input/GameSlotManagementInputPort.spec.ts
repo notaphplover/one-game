@@ -6,6 +6,7 @@ import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
 import { CardV1Fixtures } from '../../../../cards/application/fixtures/CardV1Fixtures';
 import { Card } from '../../../../cards/domain/models/Card';
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
+import { UserV1Fixtures } from '../../../../user/application/fixtures/models/UserV1Fixtures';
 import { ActiveGameFixtures } from '../../../domain/fixtures/ActiveGameFixtures';
 import { GameSlotCreateQueryFixtures } from '../../../domain/fixtures/GameSlotCreateQueryFixtures';
 import { NonStartedGameFixtures } from '../../../domain/fixtures/NonStartedGameFixtures';
@@ -271,18 +272,32 @@ describe(GameSlotManagementInputPort.name, () => {
         beforeAll(() => {
           gameSlotIndexFixture = -1;
 
-          result = gameSlotManagementInputPort.getSlotCards(
-            gameFixture,
-            gameSlotIndexFixture,
-          );
+          try {
+            gameSlotManagementInputPort.getSlotCards(
+              gameFixture,
+              gameSlotIndexFixture,
+            );
+          } catch (error) {
+            result = error;
+          }
         });
 
         afterAll(() => {
           jest.clearAllMocks();
         });
 
-        it('should return undefined', () => {
-          expect(result).toBeUndefined();
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.entityNotFound,
+            message: expect.stringContaining(
+              'not found for game',
+            ) as unknown as string,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
         });
       });
     });
@@ -339,6 +354,120 @@ describe(GameSlotManagementInputPort.name, () => {
             );
 
           expect(result).toStrictEqual(expectedCards);
+        });
+      });
+    });
+  });
+
+  describe('.isSlotOwner()', () => {
+    describe('having a game with a single slot, a non existing slot index and a user', () => {
+      let gameFixture: Game;
+      let slotIndex: number;
+      let userFixture: apiModels.UserV1;
+
+      beforeAll(() => {
+        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        slotIndex = -1;
+        userFixture = UserV1Fixtures.any;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameSlotManagementInputPort.isSlotOwner(
+              gameFixture,
+              slotIndex,
+              userFixture.id,
+            );
+          } catch (error) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.entityNotFound,
+            message: expect.stringContaining(
+              'not found for game',
+            ) as unknown as string,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a game with a single slot, an existing slot index and a non owner user id', () => {
+      let gameFixture: Game;
+      let slotIndex: number;
+      let userIdFixture: string;
+
+      beforeAll(() => {
+        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        slotIndex = 0;
+        userIdFixture = Symbol() as unknown as string; // On purpose to avoid undesired collision
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSlotManagementInputPort.isSlotOwner(
+            gameFixture,
+            slotIndex,
+            userIdFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return false', () => {
+          expect(result).toBe(false);
+        });
+      });
+    });
+
+    describe('having a game with a single slot, an existing slot index and the owner user id', () => {
+      let gameFixture: Game;
+      let slotIndex: number;
+      let userIdFixture: string;
+
+      beforeAll(() => {
+        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        slotIndex = 0;
+        userIdFixture = (
+          gameFixture.slots[0] as ActiveGameSlot | NonStartedGameSlot
+        ).userId;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSlotManagementInputPort.isSlotOwner(
+            gameFixture,
+            slotIndex,
+            userIdFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return true', () => {
+          expect(result).toBe(true);
         });
       });
     });
