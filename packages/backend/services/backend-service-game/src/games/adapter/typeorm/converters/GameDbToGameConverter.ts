@@ -113,7 +113,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
-      spec: this.#convertSpecs(gameDb.specs),
+      spec: this.#convertSpecs(gameDb.spec),
     };
   }
 
@@ -126,7 +126,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
-      spec: this.#convertSpecs(gameDb.specs),
+      spec: this.#convertSpecs(gameDb.spec),
     };
   }
 

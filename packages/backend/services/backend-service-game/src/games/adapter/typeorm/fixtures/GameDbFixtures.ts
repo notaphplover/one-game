@@ -11,9 +11,10 @@ export class GameDbFixtures {
     fixture.currentCard = null;
     fixture.currentColor = null;
     fixture.currentPlayingSlotIndex = null;
+    fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
-    fixture.specs = '[{ "amount": 1, "card": 39 }]';
+    fixture.spec = '[{ "amount": 1, "card": 39 }]';
 
     return fixture;
   }
@@ -45,9 +46,10 @@ export class GameDbFixtures {
     fixture.currentColor = 32;
     fixture.currentDirection = GameDirectionDb.clockwise;
     fixture.currentPlayingSlotIndex = 0;
+    fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
-    fixture.specs = '[{ "amount": 1, "card": 39 }]';
+    fixture.spec = '[{ "amount": 1, "card": 39 }]';
 
     return fixture;
   }

@@ -65,7 +65,7 @@ describe(GameDbToGameConverter.name, () => {
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsOne;
 
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
       ];
     });
@@ -137,7 +137,7 @@ describe(GameDbToGameConverter.name, () => {
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsTwo;
 
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
       ];
     });
@@ -211,7 +211,7 @@ describe(GameDbToGameConverter.name, () => {
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActivetrueAndGameSlotsOne;
 
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
       ];
     });

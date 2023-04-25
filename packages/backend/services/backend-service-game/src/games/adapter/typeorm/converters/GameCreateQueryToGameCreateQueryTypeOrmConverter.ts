@@ -26,15 +26,20 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
   public convert(
     gameCreateQuery: GameCreateQuery,
   ): QueryDeepPartialEntity<GameDb> {
+    const gameCardsStringified: string = JSON.stringify(
+      this.#buildCardSpecsDb(gameCreateQuery.spec),
+    );
+
     return {
       active: false,
       currentCard: null,
       currentColor: null,
       currentDirection: null,
       currentPlayingSlotIndex: null,
+      deck: gameCardsStringified,
       gameSlotsAmount: gameCreateQuery.gameSlotsAmount,
       id: gameCreateQuery.id,
-      specs: JSON.stringify(this.#buildCardSpecsDb(gameCreateQuery.spec)),
+      spec: gameCardsStringified,
     };
   }
 
