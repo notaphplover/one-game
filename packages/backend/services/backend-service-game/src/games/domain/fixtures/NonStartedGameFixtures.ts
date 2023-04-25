@@ -6,6 +6,7 @@ export class NonStartedGameFixtures {
   public static get any(): NonStartedGame {
     const fixture: NonStartedGame = {
       active: false,
+      deck: [],
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       slots: [NonStartedGameSlotFixtures.withPositionZero],
