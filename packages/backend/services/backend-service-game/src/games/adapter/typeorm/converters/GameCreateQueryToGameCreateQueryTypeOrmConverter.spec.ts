@@ -75,9 +75,10 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
           currentColor: null,
           currentDirection: null,
           currentPlayingSlotIndex: null,
+          deck: JSON.stringify(expectedGameCardSpecsDb),
           gameSlotsAmount: gameCreateQueryFixture.gameSlotsAmount,
           id: gameCreateQueryFixture.id,
-          specs: JSON.stringify(expectedGameCardSpecsDb),
+          spec: JSON.stringify(expectedGameCardSpecsDb),
         };
 
         expect(result).toStrictEqual(expected);

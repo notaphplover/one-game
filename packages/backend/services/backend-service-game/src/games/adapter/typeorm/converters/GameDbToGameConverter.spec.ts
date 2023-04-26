@@ -60,12 +60,17 @@ describe(GameDbToGameConverter.name, () => {
 
   describe('having a non started GameDb', () => {
     let gameCardSpecDbFixture: GameCardSpecDb;
+    let gameDeckCardDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsOne;
 
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
+        GameCardSpecDb,
+      ];
+
+      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck) as [
         GameCardSpecDb,
       ];
     });
@@ -96,7 +101,7 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(cardBuilderMock.build).toHaveBeenCalledTimes(2);
       });
 
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
@@ -114,6 +119,12 @@ describe(GameDbToGameConverter.name, () => {
       it('should return a NonStartedGame', () => {
         const expected: Partial<NonStartedGame> = {
           active: false,
+          deck: [
+            {
+              amount: gameDeckCardDbFixture.amount,
+              card: cardFixture,
+            },
+          ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [gameSlotFixture],
@@ -132,12 +143,16 @@ describe(GameDbToGameConverter.name, () => {
 
   describe('having a non started GameDb with two slots', () => {
     let gameCardSpecDbFixture: GameCardSpecDb;
+    let gameDeckCardDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsTwo;
 
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.spec) as [
+        GameCardSpecDb,
+      ];
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
       ];
     });
@@ -170,7 +185,7 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(cardBuilderMock.build).toHaveBeenCalledTimes(2);
       });
 
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
@@ -188,6 +203,12 @@ describe(GameDbToGameConverter.name, () => {
       it('should return a NonStartedGame with sorted game slots', () => {
         const expected: Partial<NonStartedGame> = {
           active: false,
+          deck: [
+            {
+              amount: gameDeckCardDbFixture.amount,
+              card: cardFixture,
+            },
+          ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [firstGameSlotFixture, secondGameSlotFixture],
@@ -206,12 +227,17 @@ describe(GameDbToGameConverter.name, () => {
 
   describe('having a started GameDb', () => {
     let gameCardSpecDbFixture: GameCardSpecDb;
+    let gameDeckCardDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActivetrueAndGameSlotsOne;
 
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.specs) as [
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
+        GameCardSpecDb,
+      ];
+
+      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck) as [
         GameCardSpecDb,
       ];
     });
@@ -281,6 +307,12 @@ describe(GameDbToGameConverter.name, () => {
           currentDirection: gameDirectionFixture,
           currentPlayingSlotIndex:
             gameDbFixture.currentPlayingSlotIndex as number,
+          deck: [
+            {
+              amount: gameDeckCardDbFixture.amount,
+              card: cardFixture,
+            },
+          ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [gameSlotFixture],

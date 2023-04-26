@@ -110,10 +110,11 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
         gameDb.currentDirection,
       ),
       currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
+      deck: this.#convertCardSpecs(gameDb.deck),
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
-      spec: this.#convertSpecs(gameDb.specs),
+      spec: this.#convertCardSpecs(gameDb.spec),
     };
   }
 
@@ -123,14 +124,15 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
   ): NonStartedGame {
     return {
       active: false,
+      deck: this.#convertCardSpecs(gameDb.deck),
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
-      spec: this.#convertSpecs(gameDb.specs),
+      spec: this.#convertCardSpecs(gameDb.spec),
     };
   }
 
-  #convertSpecs(specs: string): GameCardSpec[] {
+  #convertCardSpecs(specs: string): GameCardSpec[] {
     const gameCardDbSpecs: unknown = JSON.parse(specs);
 
     if (!this.#isGameCardSpecDbArray(gameCardDbSpecs)) {

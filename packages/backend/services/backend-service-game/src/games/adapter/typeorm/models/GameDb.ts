@@ -47,6 +47,12 @@ export class GameDb {
   })
   public readonly currentPlayingSlotIndex!: number | null;
 
+  @Column({
+    name: 'deck',
+    type: 'json',
+  })
+  public readonly deck!: string;
+
   @PrimaryColumn({
     length: 36,
     name: 'id',
@@ -72,9 +78,8 @@ export class GameDb {
   public readonly gameSlotsDb!: GameSlotDb[];
 
   @Column({
-    name: 'specs',
-    nullable: true,
+    name: 'spec',
     type: 'json',
   })
-  public readonly specs!: string;
+  public readonly spec!: string;
 }
