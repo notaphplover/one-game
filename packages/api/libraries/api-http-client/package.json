@@ -14,7 +14,7 @@
     "@one-game-js/api-openapi-schema": "workspace:*",
     "@one-game-js/json-schema-utils": "workspace:*",
     "@one-game-js/openapi-utils": "workspace:*",
-    "@types/node": "18.16.0",
+    "@types/node": "18.16.1",
     "@typescript-eslint/eslint-plugin": "5.59.1",
     "@typescript-eslint/parser": "5.59.1",
     "eslint": "8.39.0",
