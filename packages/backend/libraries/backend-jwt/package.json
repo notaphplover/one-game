@@ -6,7 +6,7 @@
   "description": "Backend jwt library for one-game-js services",
   "dependencies": {
     "@one-game-js/backend-common": "workspace:*",
-    "@types/jsonwebtoken": "9.0.1",
+    "@types/jsonwebtoken": "9.0.2",
     "jsonwebtoken": "9.0.0"
   },
   "devDependencies": {
