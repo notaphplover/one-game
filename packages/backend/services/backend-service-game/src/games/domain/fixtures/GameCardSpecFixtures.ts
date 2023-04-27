@@ -8,4 +8,18 @@ export class GameCardSpecFixtures {
       card: CardFixtures.any,
     };
   }
+
+  public static get withAmount0(): GameCardSpec {
+    return {
+      ...GameCardSpecFixtures.any,
+      amount: 0,
+    };
+  }
+
+  public static get withAmount120(): GameCardSpec {
+    return {
+      ...GameCardSpecFixtures.any,
+      amount: 120,
+    };
+  }
 }

@@ -19,6 +19,7 @@ import { GameManagementInputPort } from '../../../application/ports/input/GameMa
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
 import { gamePersistenceOutputPortSymbol } from '../../../application/ports/output/GamePersistenceOutputPort';
 import { gameSlotPersistenceOutputPortSymbol } from '../../../application/ports/output/GameSlotPersistenceOutputPort';
+import { GameService } from '../../../domain/services/GameService';
 import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
@@ -66,6 +67,7 @@ import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmSe
     GameDirectionV1FromGameDirectionBuilder,
     GameFindQueryToGameFindQueryTypeOrmConverter,
     GameManagementInputPort,
+    GameService,
     GameSlotManagementInputPort,
     GameSpecV1FromGameCardSpecsBuilder,
     GameV1FromGameBuilder,
