@@ -16,6 +16,30 @@ export class NonStartedGameFixtures {
     return fixture;
   }
 
+  public static get withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount0(): NonStartedGame {
+    return {
+      ...NonStartedGameFixtures.any,
+      deck: [GameCardSpecFixtures.withAmount0],
+      gameSlotsAmount: 2,
+      slots: [
+        NonStartedGameSlotFixtures.withPositionZero,
+        NonStartedGameSlotFixtures.withPositionOne,
+      ],
+    };
+  }
+
+  public static get withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120(): NonStartedGame {
+    return {
+      ...NonStartedGameFixtures.any,
+      deck: [GameCardSpecFixtures.withAmount120],
+      gameSlotsAmount: 2,
+      slots: [
+        NonStartedGameSlotFixtures.withPositionZero,
+        NonStartedGameSlotFixtures.withPositionOne,
+      ],
+    };
+  }
+
   public static get withGameSlotsAmountOneAndSlotsOne(): NonStartedGame {
     return {
       ...NonStartedGameFixtures.any,
