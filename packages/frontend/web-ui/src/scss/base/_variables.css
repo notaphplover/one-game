@@ -1,0 +1,21 @@
+
+// Tipografia
+$principal_font: 'Montserrat', sans-serif;
+
+// Colores
+$green: #4CB8B3;
+$pink: #f53756;
+$yellow: #FEF46D;
+$purple: #752F97;
+$black: #000;
+$white: #FFF;
+$grey: #e1e1e1;
+
+$pink-btn-first-bg: #FE44FE;
+$pink-btn-first-hover: #D938D9;
+
+// Tamaño de dispositivos para Media Queries
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 992px;
+$desktopXL: 1200px;
