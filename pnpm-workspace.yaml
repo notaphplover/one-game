@@ -4,4 +4,5 @@ packages:
   - "packages/backend/libraries/*"
   - "packages/backend/services/*"
   - "packages/backend/tools/*"
+  - "packages/frontend/*"
   - "packages/tools/*"
