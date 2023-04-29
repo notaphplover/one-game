@@ -32,6 +32,7 @@ import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/conv
 import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
+import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
@@ -74,6 +75,7 @@ import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmSe
     GameSlotManagementInputPort,
     GameSpecV1FromGameCardSpecsBuilder,
     GameUpdateQueryToGameFindQueryTypeOrmConverter,
+    GameUpdateQueryToGameSetQueryTypeOrmConverter,
     GameV1FromGameBuilder,
     {
       provide: gamePersistenceOutputPortSymbol,
