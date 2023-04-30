@@ -23,6 +23,7 @@ import { GameService } from '../../../domain/services/GameService';
 import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
+import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../../typeorm/converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
 import { GameDirectionDbToGameDirectionConverter } from '../../typeorm/converters/GameDirectionDbToGameDirectionConverter';
@@ -30,11 +31,14 @@ import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converter
 import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
 import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
+import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
+import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
 import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
+import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeOrmService';
 
 @Module({
   exports: [
@@ -55,6 +59,7 @@ import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmSe
     CreateGameTypeOrmService,
     FindGameTypeOrmService,
     GameCanHoldMoreGameSlotsSpec,
+    GameCardSpecArrayToGameCardSpecArrayDbConverter,
     GameCardSpecFromGameCardSpecV1Builder,
     GameCardSpecsFromGameSpecV1Builder,
     GameCardSpecV1FromGameCardSpecBuilder,
@@ -70,6 +75,8 @@ import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmSe
     GameService,
     GameSlotManagementInputPort,
     GameSpecV1FromGameCardSpecsBuilder,
+    GameUpdateQueryToGameFindQueryTypeOrmConverter,
+    GameUpdateQueryToGameSetQueryTypeOrmConverter,
     GameV1FromGameBuilder,
     {
       provide: gamePersistenceOutputPortSymbol,
@@ -85,6 +92,7 @@ import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmSe
     GameSlotV1FromGameSlotBuilder,
     GameV1FromGameBuilder,
     NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
+    UpdateGameTypeOrmService,
   ],
 })
 export class GameModule {}
