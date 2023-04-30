@@ -4,23 +4,28 @@ import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 
 import { Writable } from '../../../../foundation/common/application/models/Writable';
 import { GameSlotFindQuery } from '../../../domain/query/GameSlotFindQuery';
-import { GameDb } from '../models/GameDb';
+import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
 export class GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter
-  implements Converter<GameSlotFindQuery, FindManyOptions<GameDb>>
+  implements Converter<GameSlotFindQuery, FindManyOptions<GameSlotDb>>
 {
   public convert(
     gameSlotFindQuery: GameSlotFindQuery,
-  ): FindManyOptions<GameDb> {
-    const gameFindQueryTypeOrmWhere: Writable<FindOptionsWhere<GameDb>> = {};
+  ): FindManyOptions<GameSlotDb> {
+    const gameFindQueryTypeOrmWhere: Writable<FindOptionsWhere<GameSlotDb>> =
+      {};
 
-    const gameFindQueryTypeOrm: FindManyOptions<GameDb> = {
+    const gameFindQueryTypeOrm: FindManyOptions<GameSlotDb> = {
       where: gameFindQueryTypeOrmWhere,
     };
 
-    if (gameSlotFindQuery.id !== undefined) {
-      gameFindQueryTypeOrmWhere.id = gameSlotFindQuery.id;
+    if (gameSlotFindQuery.gameId !== undefined) {
+      gameFindQueryTypeOrmWhere.gameId = gameSlotFindQuery.gameId;
+    }
+
+    if (gameSlotFindQuery.position !== undefined) {
+      gameFindQueryTypeOrmWhere.position = gameSlotFindQuery.position;
     }
 
     return gameFindQueryTypeOrm;

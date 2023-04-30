@@ -8,7 +8,14 @@ export class GameSlotFindQueryFixtures {
   public static get withId(): GameSlotFindQuery {
     return {
       ...GameSlotFindQueryFixtures.any,
-      id: '0aeea653-4749-4c93-878e-7c6df7f6fe4a',
+      gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+    };
+  }
+
+  public static get withPosition(): GameSlotFindQuery {
+    return {
+      ...GameSlotFindQueryFixtures.any,
+      position: 0,
     };
   }
 }
