@@ -3,6 +3,7 @@ import { CardColor } from '../../../cards/domain/models/CardColor';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
 import { GameFindQuery } from './GameFindQuery';
+import { GameSlotUpdateQuery } from './GameSlotUpdateQuery';
 
 export interface GameUpdateQuery {
   gameFindQuery: GameFindQuery;
@@ -13,4 +14,5 @@ export interface GameUpdateQuery {
   currentDirection?: GameDirection;
   currentPlayingSlotIndex?: number;
   deck?: GameCardSpec[];
+  gameSlotUpdateQueries?: GameSlotUpdateQuery[];
 }

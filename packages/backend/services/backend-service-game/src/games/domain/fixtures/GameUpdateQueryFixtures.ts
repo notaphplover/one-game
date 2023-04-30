@@ -4,6 +4,7 @@ import { GameDirection } from '../models/GameDirection';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { GameFindQueryFixtures } from './GameFindQueryFixtures';
+import { GameSlotUpdateQueryFixtures } from './GameSlotUpdateQueryFixtures';
 
 export class GameUpdateQueryFixtures {
   public static get any(): GameUpdateQuery {
@@ -66,5 +67,22 @@ export class GameUpdateQueryFixtures {
     };
 
     return fixture;
+  }
+
+  public static get withNoGameSlotUpdateQueries(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+    };
+
+    delete fixture.gameSlotUpdateQueries;
+
+    return fixture;
+  }
+
+  public static get withGameSlotUpdateQueriesOne(): GameUpdateQuery {
+    return {
+      ...GameUpdateQueryFixtures.any,
+      gameSlotUpdateQueries: [GameSlotUpdateQueryFixtures.any],
+    };
   }
 }
