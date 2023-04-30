@@ -1,6 +1,6 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "@one-game-js/backend-typescript-config/tsconfig.base.json",
+  "extends": "@cornie-js/backend-typescript-config/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./lib",
     "rootDir": "./src"

@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels } from '@one-game-js/api-models';
-import { Builder, Handler } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
   MiddlewarePipeline,
@@ -9,7 +8,8 @@ import {
   ResponseWithBody,
   SingleEntityGetResponseBuilder,
   SingleEntityHttpRequestController,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
 import { GetUserV1UserIdRequestParamHandler } from '../handlers/GetUserV1UserIdRequestParamHandler';

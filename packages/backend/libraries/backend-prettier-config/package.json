@@ -1,6 +1,6 @@
 {
   "author": "Multiple authors",
-  "name": "@one-game-js/backend-prettier-config",
+  "name": "@cornie-js/backend-prettier-config",
   "description": "common prettier config for backend packages",
   "main": "index.js",
   "license": "See license in \"LICENSE\" file",

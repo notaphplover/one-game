@@ -1,4 +1,4 @@
-import { Builder } from '@one-game-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { FastifyReply } from 'fastify';
 
 import { Response } from '../../../application/models/Response';

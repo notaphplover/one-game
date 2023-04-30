@@ -1,6 +1,6 @@
+import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import { Request } from '@cornie-js/backend-http';
 import { Injectable } from '@nestjs/common';
-import { AppError, AppErrorKind, Handler } from '@one-game-js/backend-common';
-import { Request } from '@one-game-js/backend-http';
 
 export const GET_GAME_V1_GAME_ID_REQUEST_PARAM: string = 'gameId';
 

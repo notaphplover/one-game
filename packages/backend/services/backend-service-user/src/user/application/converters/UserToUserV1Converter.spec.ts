@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 
 import { UserFixtures } from '../../domain/fixtures/UserFixtures';
 import { User } from '../../domain/models/User';

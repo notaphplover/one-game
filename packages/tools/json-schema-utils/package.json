@@ -26,7 +26,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/json-schema-utils",
+  "name": "@cornie-js/json-schema-utils",
   "publishConfig": {
     "access": "public"
   },

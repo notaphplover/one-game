@@ -10,7 +10,7 @@
   "exports": "./lib/index.js",
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
-  "name": "@one-game-js/backend-jest-config",
+  "name": "@cornie-js/backend-jest-config",
   "private": true,
   "repository": {
     "type": "git",

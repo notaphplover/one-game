@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   Request,
   RequestContextHolder,
   requestContextProperty,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
 
 import { NonStartedGameFixtures } from '../../domain/fixtures/NonStartedGameFixtures';
 import { Game } from '../../domain/models/Game';

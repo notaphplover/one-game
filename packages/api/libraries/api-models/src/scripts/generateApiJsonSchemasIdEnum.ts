@@ -2,9 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { argv } from 'process';
 
-import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
-import * as prettierConfig from '@one-game-js/backend-prettier-config';
-import { JsonRootSchema202012 } from '@one-game-js/json-schema-utils';
+import { readApiJsonSchemas } from '@cornie-js/api-json-schemas-provider';
+import * as prettierConfig from '@cornie-js/backend-prettier-config';
+import { JsonRootSchema202012 } from '@cornie-js/json-schema-utils';
 import prettier from 'prettier';
 import ts from 'typescript';
 

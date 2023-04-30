@@ -3,7 +3,7 @@ import ts from 'typescript';
 import { HttpClientOptions } from '../models/HttpClientOptions';
 import { HttpClientClassBuilder } from './HttpClientClassBuilder';
 
-const API_MODELS_MODULE: string = '@one-game-js/api-models';
+const API_MODELS_MODULE: string = '@cornie-js/api-models';
 const API_MODELS_MODULE_MODELS_NAMESPACE: string = 'models';
 
 export class HttpClientSourceFileBuilder {

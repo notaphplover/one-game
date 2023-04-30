@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   AuthKind,
   AuthRequestContextHolder,
@@ -8,7 +8,7 @@ import {
   Request,
   UserAuth,
   requestContextProperty,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../fixtures/UserV1Fixtures';
 import { GetUserV1MeRequestParamHandler } from './GetUserV1MeRequestParamHandler';

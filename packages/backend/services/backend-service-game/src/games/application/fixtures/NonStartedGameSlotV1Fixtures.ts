@@ -1,4 +1,4 @@
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 
 export class NonStartedGameSlotV1Fixtures {
   public static get any(): apiModels.NonStartedGameSlotV1 {

@@ -1,5 +1,5 @@
+import { JwtService } from '@cornie-js/backend-jwt';
 import { Module } from '@nestjs/common';
-import { JwtService } from '@one-game-js/backend-jwt';
 
 import { UserJwtPayload } from '../../../../../user/application/models/UserJwtPayload';
 import { EnvModule } from '../../../../env/adapter/nest/modules/EnvModule';

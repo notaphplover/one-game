@@ -5,7 +5,7 @@
   },
   "description": "Backend env library for one-game-js services",
   "dependencies": {
-    "@one-game-js/backend-common": "workspace:*",
+    "@cornie-js/backend-common": "workspace:*",
     "dotenv": "16.0.3"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/backend-env",
+  "name": "@cornie-js/backend-env",
   "publishConfig": {
     "access": "public"
   },

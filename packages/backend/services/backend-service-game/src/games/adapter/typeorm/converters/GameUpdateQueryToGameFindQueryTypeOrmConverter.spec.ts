@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Converter } from '@one-game-js/backend-common';
+import { Converter } from '@cornie-js/backend-common';
 import { FindManyOptions } from 'typeorm';
 
 import { GameUpdateQueryFixtures } from '../../../domain/fixtures/GameUpdateQueryFixtures';

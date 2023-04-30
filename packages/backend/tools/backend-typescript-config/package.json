@@ -1,6 +1,6 @@
 {
   "author": "Multiple authors",
-  "name": "@one-game-js/backend-typescript-config",
+  "name": "@cornie-js/backend-typescript-config",
   "description": "common typescript config for backend packages",
   "license": "See license in \"LICENSE\" file",
   "bugs": {

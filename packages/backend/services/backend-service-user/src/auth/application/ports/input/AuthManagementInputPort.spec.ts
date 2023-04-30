@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
-import { JwtService } from '@one-game-js/backend-jwt';
+import { models as apiModels } from '@cornie-js/api-models';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { JwtService } from '@cornie-js/backend-jwt';
 
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserJwtPayload } from '../../../../user/application/models/UserJwtPayload';

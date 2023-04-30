@@ -9,11 +9,11 @@
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
-    "@one-game-js/api-json-schemas-provider": "workspace:*",
-    "@one-game-js/api-models": "workspace:*",
-    "@one-game-js/api-openapi-schema": "workspace:*",
-    "@one-game-js/json-schema-utils": "workspace:*",
-    "@one-game-js/openapi-utils": "workspace:*",
+    "@cornie-js/api-json-schemas-provider": "workspace:*",
+    "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/api-openapi-schema": "workspace:*",
+    "@cornie-js/json-schema-utils": "workspace:*",
+    "@cornie-js/openapi-utils": "workspace:*",
     "@types/node": "18.16.3",
     "@typescript-eslint/eslint-plugin": "5.59.1",
     "@typescript-eslint/parser": "5.59.1",
@@ -35,7 +35,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/api-http-client",
+  "name": "@cornie-js/api-http-client",
   "publishConfig": {
     "access": "public"
   },

@@ -1,4 +1,4 @@
-import { JwtAlgorithm } from '@one-game-js/backend-jwt';
+import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 
 export interface Environment {
   apiBackendServiceSecret: string;

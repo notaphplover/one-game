@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder } from '@one-game-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { CardFixtures } from '../../../../cards/domain/fixtures/CardFixtures';

@@ -1,4 +1,4 @@
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures/CardV1Fixtures';
 import { GameSpecV1Fixtures } from '../../../cards/application/fixtures/GameSpecV1Fixtures';

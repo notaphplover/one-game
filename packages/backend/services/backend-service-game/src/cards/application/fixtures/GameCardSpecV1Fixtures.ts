@@ -1,4 +1,4 @@
-import { GameCardSpecV1 } from '@one-game-js/api-models/lib/models/types';
+import { GameCardSpecV1 } from '@cornie-js/api-models/lib/models/types';
 
 import { CardV1Fixtures } from './CardV1Fixtures';
 

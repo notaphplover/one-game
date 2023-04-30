@@ -1,5 +1,5 @@
-import { models as apiModels } from '@one-game-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import httpStatusCodes from 'http-status-codes';
 
 import { ResponseWithBody } from '../models/ResponseWithBody';

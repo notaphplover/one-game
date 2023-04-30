@@ -1,8 +1,8 @@
-import { JsonValue } from '@one-game-js/json-schema-utils';
+import { JsonValue } from '@cornie-js/json-schema-utils';
 import {
   OpenApi3Dot1Object,
   OpenApi3Dot1ReferenceObject,
-} from '@one-game-js/openapi-utils';
+} from '@cornie-js/openapi-utils';
 
 import { JsonPointerResolver } from './JsonPointerResolver';
 
