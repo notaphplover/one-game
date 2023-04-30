@@ -55,6 +55,7 @@ describe(GameSlotManagementInputPort.name, () => {
     };
     gameSlotPersistenceOutputPortMock = {
       create: jest.fn(),
+      update: jest.fn(),
     };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
