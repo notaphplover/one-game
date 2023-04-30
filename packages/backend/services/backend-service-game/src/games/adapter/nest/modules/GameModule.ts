@@ -33,6 +33,7 @@ import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
 import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
+import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
 import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
@@ -78,6 +79,7 @@ import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeO
     GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter,
     GameSlotManagementInputPort,
     GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
+    GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
     GameSpecV1FromGameCardSpecsBuilder,
     GameUpdateQueryToGameFindQueryTypeOrmConverter,
     GameUpdateQueryToGameSetQueryTypeOrmConverter,
