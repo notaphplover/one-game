@@ -41,6 +41,7 @@ import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
 import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
+import { UpdateGameSlotTypeOrmService } from '../../typeorm/services/UpdateGameSlotTypeOrmService';
 import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeOrmService';
 
 @Module({
@@ -99,6 +100,7 @@ import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeO
     GameV1FromGameBuilder,
     NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
     UpdateGameTypeOrmService,
+    UpdateGameSlotTypeOrmService,
   ],
 })
 export class GameModule {}
