@@ -1,4 +1,4 @@
-import { ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@one-game-js/backend-common';
 import {
   FindManyOptions,
   ObjectLiteral,
@@ -18,10 +18,9 @@ export class UpdateTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
     TModelDb,
     TQuery
   >;
-  readonly #updateQueryToSetQueryTypeOrmConverter: ConverterAsync<
-    TQuery,
-    QueryDeepPartialEntity<TModelDb>
-  >;
+  readonly #updateQueryToSetQueryTypeOrmConverter:
+    | Converter<TQuery, QueryDeepPartialEntity<TModelDb>>
+    | ConverterAsync<TQuery, QueryDeepPartialEntity<TModelDb>>;
 
   constructor(
     repository: Repository<TModelDb>,
@@ -29,10 +28,9 @@ export class UpdateTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
       TModelDb,
       TQuery
     >,
-    updateQueryToSetQueryTypeOrmConverter: ConverterAsync<
-      TQuery,
-      QueryDeepPartialEntity<TModelDb>
-    >,
+    updateQueryToSetQueryTypeOrmConverter:
+      | Converter<TQuery, QueryDeepPartialEntity<TModelDb>>
+      | ConverterAsync<TQuery, QueryDeepPartialEntity<TModelDb>>,
   ) {
     this.#repository = repository;
     this.#updateQueryToFindQueryTypeOrmConverter =
