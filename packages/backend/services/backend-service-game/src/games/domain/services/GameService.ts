@@ -2,15 +2,29 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
 import { Card } from '../../../cards/domain/models/Card';
+import { CardColor } from '../../../cards/domain/models/CardColor';
+import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
 import { Writable } from '../../../foundation/common/application/models/Writable';
 import { Game } from '../models/Game';
 import { GameCardSpec } from '../models/GameCardSpec';
+import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
 
 @Injectable()
 export class GameService {
+  public getInitialCardColor(card: Card): CardColor {
+    const cardAsMaybeColoredCard: Partial<ColoredCard> =
+      card as Partial<ColoredCard>;
+
+    if (cardAsMaybeColoredCard.color !== undefined) {
+      return cardAsMaybeColoredCard.color;
+    }
+
+    return this.#getRandomColor();
+  }
+
   public getInitialCardsDraw(game: Game): GameInitialDraws {
     const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
       this.#drawCards(
@@ -30,6 +44,14 @@ export class GameService {
       ),
       remainingDeck: gameDeckCardsSpec,
     };
+  }
+
+  public getInitialDirection(): GameDirection {
+    return GameDirection.antiClockwise;
+  }
+
+  public getInitialPlayingSlotIndex(): number {
+    return 0;
   }
 
   #drawCards(game: Game, amount: number): [Card[], GameCardSpec[]] {
@@ -129,6 +151,15 @@ export class GameService {
     randomIndexes.sort((i1: number, i2: number) => i1 - i2);
 
     return randomIndexes;
+  }
+
+  #getRandomColor(): CardColor {
+    const cardColorArray: CardColor[] = Object.values(CardColor);
+
+    const colorCount: number = cardColorArray.length;
+    const randomIndex: number = Math.floor(Math.random() * colorCount);
+
+    return cardColorArray[randomIndex] as CardColor;
   }
 
   #shuffle<T>(array: T[]): void {
