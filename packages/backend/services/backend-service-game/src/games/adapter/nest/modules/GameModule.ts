@@ -31,6 +31,9 @@ import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converter
 import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
 import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
+import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
+import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
+import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
 import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
@@ -38,6 +41,7 @@ import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
 import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
+import { UpdateGameSlotTypeOrmService } from '../../typeorm/services/UpdateGameSlotTypeOrmService';
 import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeOrmService';
 
 @Module({
@@ -73,7 +77,10 @@ import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeO
     GameFindQueryToGameFindQueryTypeOrmConverter,
     GameManagementInputPort,
     GameService,
+    GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter,
     GameSlotManagementInputPort,
+    GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
+    GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
     GameSpecV1FromGameCardSpecsBuilder,
     GameUpdateQueryToGameFindQueryTypeOrmConverter,
     GameUpdateQueryToGameSetQueryTypeOrmConverter,
@@ -93,6 +100,7 @@ import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeO
     GameV1FromGameBuilder,
     NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
     UpdateGameTypeOrmService,
+    UpdateGameSlotTypeOrmService,
   ],
 })
 export class GameModule {}
