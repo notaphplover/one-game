@@ -1,12 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   Middleware,
   Request,
   RequestContextHolder,
   RequestWithBody,
   requestContextProperty,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { Game } from '../../domain/models/Game';
 import { GameRequestContext } from '../models/GameRequestContext';

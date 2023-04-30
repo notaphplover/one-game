@@ -1,6 +1,6 @@
+import { EnvLoader } from '@cornie-js/backend-env';
+import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 import { Injectable } from '@nestjs/common';
-import { EnvLoader } from '@one-game-js/backend-env';
-import { JwtAlgorithm } from '@one-game-js/backend-jwt';
 import { cleanEnv, json, port, str, num } from 'envalid';
 
 import { Environment } from '../models/Environment';

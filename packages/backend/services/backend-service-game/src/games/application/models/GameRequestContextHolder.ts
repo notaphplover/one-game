@@ -1,4 +1,4 @@
-import { RequestContextHolder } from '@one-game-js/backend-http';
+import { RequestContextHolder } from '@cornie-js/backend-http';
 
 import { GameRequestContext } from './GameRequestContext';
 

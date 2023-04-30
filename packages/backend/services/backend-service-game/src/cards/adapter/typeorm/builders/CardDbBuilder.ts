@@ -1,5 +1,5 @@
+import { Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { Builder } from '@one-game-js/backend-common';
 
 import { BaseCard } from '../../../domain/models/BaseCard';
 import { BlankCard } from '../../../domain/models/BlankCard';

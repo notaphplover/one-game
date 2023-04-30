@@ -2,7 +2,7 @@ import {
   traverseJsonSchema,
   TraverseJsonSchemaCallbackParams,
   TraverseJsonSchemaParams,
-} from '@one-game-js/json-schema-utils';
+} from '@cornie-js/json-schema-utils';
 
 import { OpenApi3Dot1CallbackObject } from '../models/OpenApi3Dot1CallbackObject';
 import { OpenApi3Dot1ComponentsObject } from '../models/OpenApi3Dot1ComponentsObject';

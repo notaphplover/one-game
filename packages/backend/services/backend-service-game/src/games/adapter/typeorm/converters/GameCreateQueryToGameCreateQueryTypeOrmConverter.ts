@@ -1,5 +1,5 @@
+import { Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
-import { Converter } from '@one-game-js/backend-common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { GameCardSpec } from '../../../domain/models/GameCardSpec';

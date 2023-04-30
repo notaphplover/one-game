@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Converter } from '@one-game-js/backend-common';
+import { Converter } from '@cornie-js/backend-common';
 import { DeepPartial } from 'typeorm';
 
 import { GameCreateQueryFixtures } from '../../../domain/fixtures/GameCreateQueryFixtures';

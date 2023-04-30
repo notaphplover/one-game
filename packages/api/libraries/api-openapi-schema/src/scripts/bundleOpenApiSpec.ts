@@ -4,20 +4,20 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { argv } from 'node:process';
 
-import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
+import { readApiJsonSchemas } from '@cornie-js/api-json-schemas-provider';
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
   JsonSchema202012,
   traverseJsonSchema,
   TraverseJsonSchemaCallbackParams,
-} from '@one-game-js/json-schema-utils';
+} from '@cornie-js/json-schema-utils';
 import {
   OpenApi3Dot1ComponentsObject,
   OpenApi3Dot1Object,
   OpenApi3Dot1SchemaObject,
   traverseOpenApiObjectJsonSchemas,
-} from '@one-game-js/openapi-utils';
+} from '@cornie-js/openapi-utils';
 import cloneDeep from 'clone-deep';
 import yaml from 'yaml';
 

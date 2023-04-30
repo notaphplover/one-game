@@ -1,7 +1,7 @@
+import { Converter, ConverterAsync } from '@cornie-js/backend-common';
+import { FindTypeOrmService } from '@cornie-js/backend-db';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Converter, ConverterAsync } from '@one-game-js/backend-common';
-import { FindTypeOrmService } from '@one-game-js/backend-db';
 import { FindManyOptions, Repository } from 'typeorm';
 
 import { User } from '../../../domain/models/User';

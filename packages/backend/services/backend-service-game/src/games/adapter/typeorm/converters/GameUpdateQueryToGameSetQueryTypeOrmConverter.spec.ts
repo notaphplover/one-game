@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Converter } from '@one-game-js/backend-common';
+import { Builder, Converter } from '@cornie-js/backend-common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';

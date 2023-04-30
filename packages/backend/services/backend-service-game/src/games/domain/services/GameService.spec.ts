@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { Card } from '../../../cards/domain/models/Card';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';

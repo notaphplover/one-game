@@ -5,7 +5,7 @@
   },
   "description": "OpenAPI utils",
   "dependencies": {
-    "@one-game-js/json-schema-utils": "workspace:*"
+    "@cornie-js/json-schema-utils": "workspace:*"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/openapi-utils",
+  "name": "@cornie-js/openapi-utils",
   "publishConfig": {
     "access": "public"
   },

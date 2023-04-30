@@ -1,5 +1,5 @@
+import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { Converter } from '@one-game-js/backend-common';
 
 import { User } from '../../../domain/models/User';
 import { UserDb } from '../models/UserDb';

@@ -1,4 +1,4 @@
-import { JsonValue } from '@one-game-js/json-schema-utils';
+import { JsonValue } from '@cornie-js/json-schema-utils';
 
 const JSON_STRINGIFY_SPACES: number = 2;
 

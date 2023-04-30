@@ -4,8 +4,8 @@ import fs from 'node:fs/promises';
 import path from 'path';
 import { argv } from 'process';
 
-import * as prettierConfig from '@one-game-js/backend-prettier-config';
-import { OpenApi3Dot1Object } from '@one-game-js/openapi-utils';
+import * as prettierConfig from '@cornie-js/backend-prettier-config';
+import { OpenApi3Dot1Object } from '@cornie-js/openapi-utils';
 import prettier from 'prettier';
 import yaml from 'yaml';
 
@@ -42,7 +42,7 @@ void (async () => {
 
     const openApiSpecContentBuffer: Buffer = await fs.readFile(
       require.resolve(
-        '@one-game-js/api-openapi-schema/schemas/generated/one-game.yaml',
+        '@cornie-js/api-openapi-schema/schemas/generated/one-game.yaml',
       ),
     );
 

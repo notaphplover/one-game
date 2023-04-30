@@ -1,5 +1,5 @@
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 
 import { Card } from '../../../cards/domain/models/Card';
 import { Writable } from '../../../foundation/common/application/models/Writable';

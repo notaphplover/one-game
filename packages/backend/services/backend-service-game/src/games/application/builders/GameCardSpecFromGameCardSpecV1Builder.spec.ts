@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
-import { Builder } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 
 import { GameCardSpecV1Fixtures } from '../../../cards/application/fixtures/GameCardSpecV1Fixtures';
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
