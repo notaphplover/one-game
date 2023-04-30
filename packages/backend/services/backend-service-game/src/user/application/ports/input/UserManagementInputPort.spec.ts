@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { HttpClient, Response } from '@cornie-js/api-http-client';
+import { models as apiModels } from '@cornie-js/api-models';
 import { HttpStatus } from '@nestjs/common';
-import { HttpClient, Response } from '@one-game-js/api-http-client';
-import { models as apiModels } from '@one-game-js/api-models';
 
 import { Environment } from '../../../../foundation/env/application/models/Environment';
 import { EnvironmentService } from '../../../../foundation/env/application/services/EnvironmentService';

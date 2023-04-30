@@ -1,4 +1,4 @@
-import { JsonSchema202012 } from '@one-game-js/json-schema-utils';
+import { JsonSchema202012 } from '@cornie-js/json-schema-utils';
 import {
   HttpStatusCode,
   HttpStatusCodeWildCard,
@@ -12,7 +12,7 @@ import {
   OpenApi3Dot1RequestBodyObject,
   OpenApi3Dot1ResponseObject,
   OpenApi3Dot1ResponsesObject,
-} from '@one-game-js/openapi-utils';
+} from '@cornie-js/openapi-utils';
 import ts from 'typescript';
 
 import { HttpClientMethodsOptions } from '../models/HttpClientMethodsOptions';

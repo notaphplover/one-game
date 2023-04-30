@@ -1,6 +1,6 @@
+import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { models as apiModels } from '@one-game-js/api-models';
-import { Builder } from '@one-game-js/backend-common';
 
 import { CardColor } from '../../domain/models/CardColor';
 

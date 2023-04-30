@@ -1,4 +1,4 @@
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import jwt from 'jsonwebtoken';
 
 import { JwtServiceOptions } from '../../../application/models/JwtServiceOptions';

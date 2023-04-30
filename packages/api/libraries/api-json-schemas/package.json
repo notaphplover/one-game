@@ -6,7 +6,7 @@
   "description": "api schemas",
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
-  "name": "@one-game-js/api-json-schemas",
+  "name": "@cornie-js/api-json-schemas",
   "publishConfig": {
     "access": "public"
   },

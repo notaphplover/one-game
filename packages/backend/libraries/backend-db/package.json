@@ -5,7 +5,7 @@
   },
   "description": "Backend db library for one-game-js services",
   "dependencies": {
-    "@one-game-js/backend-common": "workspace:*"
+    "@cornie-js/backend-common": "workspace:*"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/backend-db",
+  "name": "@cornie-js/backend-db",
   "publishConfig": {
     "access": "public"
   },

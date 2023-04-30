@@ -1,7 +1,7 @@
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
-} from '@one-game-js/json-schema-utils';
+} from '@cornie-js/json-schema-utils';
 import Ajv, { ErrorObject, ValidateFunction } from 'ajv/dist/2020';
 
 import { Validator } from '../../../../common/application/modules/Validator';

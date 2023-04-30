@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels, SchemaId } from '@one-game-js/api-models';
+import { models as apiModels, SchemaId } from '@cornie-js/api-models';
 import {
   ApiJsonSchemasValidationProvider,
   Validator,
-} from '@one-game-js/backend-api-validators';
-import { AppError, AppErrorKind, Handler } from '@one-game-js/backend-common';
-import { RequestWithBody } from '@one-game-js/backend-http';
+} from '@cornie-js/backend-api-validators';
+import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import { RequestWithBody } from '@cornie-js/backend-http';
+import { Inject, Injectable } from '@nestjs/common';
 
 interface ValidationErrorObject {
   error: string | undefined;

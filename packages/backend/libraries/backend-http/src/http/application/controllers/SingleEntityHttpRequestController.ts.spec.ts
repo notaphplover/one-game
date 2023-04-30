@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Handler } from '@one-game-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 
 import { Request } from '../models/Request';
 import { RequestWithBody } from '../models/RequestWithBody';

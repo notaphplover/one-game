@@ -5,11 +5,11 @@
   },
   "description": "One game",
   "devDependencies": {
-    "@one-game-js/backend-jest-config": "workspace:*",
-    "@one-game-js/backend-prettier-config": "workspace:*",
-    "@one-game-js/backend-scripts": "workspace:*",
-    "@one-game-js/backend-typescript-config": "workspace:*",
-    "@one-game-js/eslint-config-backend": "workspace:*",
+    "@cornie-js/backend-jest-config": "workspace:*",
+    "@cornie-js/backend-prettier-config": "workspace:*",
+    "@cornie-js/backend-scripts": "workspace:*",
+    "@cornie-js/backend-typescript-config": "workspace:*",
+    "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
     "lint-staged": "13.2.2",
     "turbo": "1.9.3"

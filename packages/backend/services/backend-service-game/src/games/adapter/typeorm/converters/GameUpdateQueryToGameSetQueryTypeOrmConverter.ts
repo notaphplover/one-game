@@ -1,5 +1,5 @@
+import { Builder, Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
-import { Builder, Converter } from '@one-game-js/backend-common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardColorDbBuilder } from '../../../../cards/adapter/typeorm/builders/CardColorDbBuilder';

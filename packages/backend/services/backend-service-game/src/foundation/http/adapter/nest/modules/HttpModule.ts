@@ -1,5 +1,4 @@
-import { Module } from '@nestjs/common';
-import { HttpClient } from '@one-game-js/api-http-client';
+import { HttpClient } from '@cornie-js/api-http-client';
 import {
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
@@ -7,7 +6,8 @@ import {
   RequestWithBodyFromFastifyRequestBuilder,
   SingleEntityGetResponseBuilder,
   SingleEntityPostResponseBuilder,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
+import { Module } from '@nestjs/common';
 
 import { EnvModule } from '../../../../env/adapter/nest/modules/EnvModule';
 import { EnvironmentService } from '../../../../env/application/services/EnvironmentService';

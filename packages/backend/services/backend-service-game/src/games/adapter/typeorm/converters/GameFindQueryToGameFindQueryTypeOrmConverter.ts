@@ -1,5 +1,5 @@
+import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { Converter } from '@one-game-js/backend-common';
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 
 import { Writable } from '../../../../foundation/common/application/models/Writable';

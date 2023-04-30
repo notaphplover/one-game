@@ -1,5 +1,5 @@
 
-> cornie-game@0.0.0 build /home/mariote/Documents/UDEMY/React-Hook-Mern/cornie_game/One-Game/one-game/packages/frontend/cornie-game
+> @cornie-js/web-ui@0.0.0 build /home/roberto/Documents/Repos/one-game/packages/frontend/web-ui
 > vite build
 
 vite v4.1.0 building for production...

@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
-import { Request } from '@one-game-js/backend-http';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { Request } from '@cornie-js/backend-http';
 
 import {
   GetGameV1GameIdRequestParamHandler,

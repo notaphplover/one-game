@@ -4,7 +4,7 @@
  * DO NOT MODIFY IT BY HAND. Instead, modify the source OpenAPI schema file and run
  * the generation script to regenerate this file.
  */
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 import { AxiosHttpClient } from '../axios/AxiosHttpClient';
 import { Response } from '../models/Response';
 export class HttpClient {

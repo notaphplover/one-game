@@ -1,4 +1,4 @@
-import { Converter, ConverterAsync } from '@one-game-js/backend-common';
+import { Converter, ConverterAsync } from '@cornie-js/backend-common';
 import {
   FindManyOptions,
   ObjectLiteral,

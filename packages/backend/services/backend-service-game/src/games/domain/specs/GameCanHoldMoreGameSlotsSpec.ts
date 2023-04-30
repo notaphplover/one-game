@@ -1,5 +1,5 @@
+import { Spec } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { Spec } from '@one-game-js/backend-common';
 
 import { Game } from '../models/Game';
 

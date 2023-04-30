@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   AuthKind,
   AuthRequestContextHolder,
   Request,
   requestContextProperty,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../user/application/fixtures/models/UserV1Fixtures';
 import { NonStartedGameFixtures } from '../../domain/fixtures/NonStartedGameFixtures';

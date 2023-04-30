@@ -1,5 +1,5 @@
+import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
-import { Converter } from '@one-game-js/backend-common';
 import { DeepPartial } from 'typeorm';
 
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';

@@ -1,5 +1,5 @@
+import { ApiJsonSchemasValidationProvider } from '@cornie-js/backend-api-validators';
 import { Module } from '@nestjs/common';
-import { ApiJsonSchemasValidationProvider } from '@one-game-js/backend-api-validators';
 
 @Module({
   exports: [ApiJsonSchemasValidationProvider],

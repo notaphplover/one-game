@@ -5,11 +5,11 @@ import path from 'node:path';
 import { argv } from 'node:process';
 
 import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
-import { readApiJsonSchemas } from '@one-game-js/api-json-schemas-provider';
+import { readApiJsonSchemas } from '@cornie-js/api-json-schemas-provider';
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
-} from '@one-game-js/json-schema-utils';
+} from '@cornie-js/json-schema-utils';
 import { compile } from 'json-schema-to-typescript';
 import { Options } from 'prettier';
 
@@ -22,7 +22,7 @@ const ROOT_TYPE_SCHEMA_ID: string = 'https://onegame.schemas/api/types.json';
 
 const backendPrettierOptions: Options =
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  require('@one-game-js/backend-prettier-config') as Options;
+  require('@cornie-js/backend-prettier-config') as Options;
 
 const apiV1TypesJsonSchemasPromise: Promise<JsonRootSchema202012[]> =
   readApiJsonSchemas();

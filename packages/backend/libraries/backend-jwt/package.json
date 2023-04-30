@@ -5,7 +5,7 @@
   },
   "description": "Backend jwt library for one-game-js services",
   "dependencies": {
-    "@one-game-js/backend-common": "workspace:*",
+    "@cornie-js/backend-common": "workspace:*",
     "@types/jsonwebtoken": "9.0.2",
     "jsonwebtoken": "9.0.0"
   },
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/backend-jwt",
+  "name": "@cornie-js/backend-jwt",
   "publishConfig": {
     "access": "public"
   },
