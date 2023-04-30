@@ -23,6 +23,7 @@ describe(GameMiddleware.name, () => {
     gamePersistenceOutputPortMock = {
       create: jest.fn(),
       findOne: jest.fn(),
+      update: jest.fn(),
     };
 
     gameMiddleware = new GameMiddleware(gamePersistenceOutputPortMock);
