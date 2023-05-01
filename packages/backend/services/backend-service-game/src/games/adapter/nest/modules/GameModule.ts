@@ -22,6 +22,7 @@ import { gamePersistenceOutputPortSymbol } from '../../../application/ports/outp
 import { gameSlotPersistenceOutputPortSymbol } from '../../../application/ports/output/GameSlotPersistenceOutputPort';
 import { GameService } from '../../../domain/services/GameService';
 import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
+import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
 import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../../typeorm/converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
@@ -64,6 +65,7 @@ import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeO
     CreateGameTypeOrmService,
     FindGameTypeOrmService,
     GameCanHoldMoreGameSlotsSpec,
+    GameCanHoldOnlyOneMoreGameSlotSpec,
     GameCardSpecArrayToGameCardSpecArrayDbConverter,
     GameCardSpecFromGameCardSpecV1Builder,
     GameCardSpecsFromGameSpecV1Builder,
