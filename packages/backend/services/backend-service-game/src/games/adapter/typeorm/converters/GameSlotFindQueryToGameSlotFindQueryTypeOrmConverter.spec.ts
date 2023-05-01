@@ -35,7 +35,9 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
         it('should return a FindManyOptions<GameSlotDb>', () => {
           const expected: FindManyOptions<GameSlotDb> = {
             where: {
-              gameId: gameSlotFindQueryFixture.gameId as string,
+              game: {
+                id: gameSlotFindQueryFixture.gameId as string,
+              },
             },
           };
 

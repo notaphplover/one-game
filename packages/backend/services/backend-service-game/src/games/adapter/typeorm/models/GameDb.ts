@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
+import { BinaryToNumberTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/BinaryToNumberTransformer';
 import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
 import { GameDirectionDb } from './GameDirectionDb';
 import { GameSlotDb } from './GameSlotDb';
@@ -20,6 +21,8 @@ export class GameDb {
     length: 16,
     name: 'current_card',
     nullable: true,
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    transformer: new BinaryToNumberTransformer(16),
     type: 'bit',
   })
   public readonly currentCard!: number | null;
@@ -28,6 +31,8 @@ export class GameDb {
     length: 16,
     name: 'current_color',
     nullable: true,
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    transformer: new BinaryToNumberTransformer(16),
     type: 'bit',
   })
   public readonly currentColor!: number | null;
