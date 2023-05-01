@@ -16,7 +16,7 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
   });
 
   describe('.convert', () => {
-    describe('having a GameSLotFindQuery with id', () => {
+    describe('having a GameSlotFindQuery with gameId', () => {
       let gameSlotFindQueryFixture: GameSlotFindQuery;
 
       beforeAll(() => {
@@ -35,7 +35,35 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
         it('should return a FindManyOptions<GameSlotDb>', () => {
           const expected: FindManyOptions<GameSlotDb> = {
             where: {
-              id: gameSlotFindQueryFixture.id as string,
+              gameId: gameSlotFindQueryFixture.gameId as string,
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a GameSlotFindQuery with position', () => {
+      let gameSlotFindQueryFixture: GameSlotFindQuery;
+
+      beforeAll(() => {
+        gameSlotFindQueryFixture = GameSlotFindQueryFixtures.withPosition;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
+            gameSlotFindQueryFixture,
+          );
+        });
+
+        it('should return a FindManyOptions<GameSlotDb>', () => {
+          const expected: FindManyOptions<GameSlotDb> = {
+            where: {
+              position: gameSlotFindQueryFixture.position as number,
             },
           };
 

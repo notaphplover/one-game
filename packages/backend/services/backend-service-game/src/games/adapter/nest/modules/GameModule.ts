@@ -15,6 +15,7 @@ import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/Gam
 import { GameSpecV1FromGameCardSpecsBuilder } from '../../../application/builders/GameSpecV1FromGameCardSpecsBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
+import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
 import { gamePersistenceOutputPortSymbol } from '../../../application/ports/output/GamePersistenceOutputPort';
@@ -98,6 +99,7 @@ import { UpdateGameTypeOrmService } from '../../typeorm/services/UpdateGameTypeO
     },
     GameSlotV1FromGameSlotBuilder,
     GameV1FromGameBuilder,
+    NonStartedGameFilledEventHandler,
     NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
     UpdateGameTypeOrmService,
     UpdateGameSlotTypeOrmService,

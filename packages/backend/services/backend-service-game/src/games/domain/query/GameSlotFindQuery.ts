@@ -1,3 +1,4 @@
 export interface GameSlotFindQuery {
-  id?: string;
+  gameId?: string;
+  position?: number;
 }
