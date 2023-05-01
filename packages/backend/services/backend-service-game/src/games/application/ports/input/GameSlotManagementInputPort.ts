@@ -1,5 +1,11 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+  Spec,
+} from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardV1FromCardBuilder } from '../../../../cards/application/builders/CardV1FromCardBuilder';
@@ -9,6 +15,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
+import { NonStartedGameFilledEvent } from '../../../domain/events/NonStartedGameFilledEvent';
 import { ActiveGame } from '../../../domain/models/ActiveGame';
 import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
 import { Game } from '../../../domain/models/Game';
@@ -16,8 +23,10 @@ import { NonStartedGame } from '../../../domain/models/NonStartedGame';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
 import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
+import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 import { GameSlotV1FromGameSlotBuilder } from '../../builders/GameSlotV1FromGameSlotBuilder';
+import { NonStartedGameFilledEventHandler } from '../../handlers/NonStartedGameFilledEventHandler';
 import { GameSlotCreateQueryContext } from '../../models/GameSlotCreateQueryContext';
 import {
   GameSlotPersistenceOutputPort,
@@ -27,7 +36,8 @@ import {
 @Injectable()
 export class GameSlotManagementInputPort {
   readonly #cardV1FromCardBuilder: Builder<apiModels.CardV1, [Card]>;
-  readonly #gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec;
+  readonly #gameCanHoldMoreGameSlotsSpec: Spec<[Game]>;
+  readonly #gameCanHoldOnlyOneMoreGameSlotSpec: Spec<[Game]>;
   readonly #gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
     GameSlotCreateQuery,
     [apiModels.GameIdSlotCreateQueryV1, GameSlotCreateQueryContext]
@@ -37,6 +47,10 @@ export class GameSlotManagementInputPort {
     [ActiveGameSlot | NonStartedGameSlot]
   >;
   readonly #gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort;
+  readonly #nonStartedGameFilledEventHandler: Handler<
+    [NonStartedGameFilledEvent],
+    void
+  >;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
@@ -44,6 +58,8 @@ export class GameSlotManagementInputPort {
     cardV1FromCardBuilder: Builder<apiModels.CardV1, [Card]>,
     @Inject(GameCanHoldMoreGameSlotsSpec)
     gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec,
+    @Inject(GameCanHoldOnlyOneMoreGameSlotSpec)
+    gameCanHoldOnlyOneMoreGameSlotSpec: Spec<[Game]>,
     @Inject(GameSlotCreateQueryFromGameSlotCreateQueryV1Builder)
     gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
       GameSlotCreateQuery,
@@ -56,15 +72,23 @@ export class GameSlotManagementInputPort {
     >,
     @Inject(gameSlotPersistenceOutputPortSymbol)
     gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort,
+    @Inject(NonStartedGameFilledEventHandler)
+    nonStartedGameFilledEventHandler: Handler<
+      [NonStartedGameFilledEvent],
+      void
+    >,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#cardV1FromCardBuilder = cardV1FromCardBuilder;
     this.#gameCanHoldMoreGameSlotsSpec = gameCanHoldMoreGameSlotsSpec;
+    this.#gameCanHoldOnlyOneMoreGameSlotSpec =
+      gameCanHoldOnlyOneMoreGameSlotSpec;
     this.#gameSlotCreateQueryFromGameSlotCreateQueryV1Builder =
       gameSlotCreateQueryFromGameSlotCreateQueryV1Builder;
     this.#gameSlotV1FromGameSlotBuilder = gameSlotV1FromGameSlotBuilder;
     this.#gameSlotPersistenceOutputPort = gameSlotPersistenceOutputPort;
+    this.#nonStartedGameFilledEventHandler = nonStartedGameFilledEventHandler;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
@@ -87,6 +111,8 @@ export class GameSlotManagementInputPort {
 
     const gameSlot: ActiveGameSlot | NonStartedGameSlot =
       await this.#gameSlotPersistenceOutputPort.create(gameSlotCreateQuery);
+
+    await this.#handleNonStartedGameFilledEvent(game);
 
     return this.#gameSlotV1FromGameSlotBuilder.build(gameSlot);
   }
@@ -144,5 +170,27 @@ export class GameSlotManagementInputPort {
     }
 
     return gameSlot;
+  }
+
+  async #handleNonStartedGameFilledEvent(
+    gameBeforeSlotCreation: Game,
+  ): Promise<void> {
+    if (
+      this.#gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy(
+        gameBeforeSlotCreation,
+      )
+    ) {
+      /*
+       * We must be the ones who filled the game. Otherwise an Error due to the invalid insertion
+       * operation would have been thrown.
+       */
+      const nonStartedGameFilledEvent: NonStartedGameFilledEvent = {
+        gameId: gameBeforeSlotCreation.id,
+      };
+
+      await this.#nonStartedGameFilledEventHandler.handle(
+        nonStartedGameFilledEvent,
+      );
+    }
   }
 }
