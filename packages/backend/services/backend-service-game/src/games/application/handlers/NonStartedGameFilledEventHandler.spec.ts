@@ -36,6 +36,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       getInitialCardColor: jest.fn(),
       getInitialCardsDraw: jest.fn(),
       getInitialDirection: jest.fn(),
+      getInitialDrawCount: jest.fn(),
       getInitialPlayingSlotIndex: jest.fn(),
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
 
@@ -103,6 +104,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       let gameFixture: NonStartedGame;
       let initialColorFixture: CardColor;
       let initialDirectionFixture: GameDirection;
+      let initialDrawCountFixture: number;
       let initialPlayingSlotIndexFixture: number;
 
       let result: unknown;
@@ -117,6 +119,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
         gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
         initialColorFixture = CardColor.blue;
         initialDirectionFixture = GameDirection.antiClockwise;
+        initialDrawCountFixture = 0;
         initialPlayingSlotIndexFixture = 0;
 
         gameServiceMock.getInitialCardsDraw.mockReturnValueOnce(
@@ -127,6 +130,9 @@ describe(NonStartedGameFilledEventHandler.name, () => {
         );
         gameServiceMock.getInitialDirection.mockReturnValueOnce(
           initialDirectionFixture,
+        );
+        gameServiceMock.getInitialDrawCount.mockReturnValueOnce(
+          initialDrawCountFixture,
         );
         gameServiceMock.getInitialPlayingSlotIndex.mockReturnValueOnce(
           initialPlayingSlotIndexFixture,
@@ -192,6 +198,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
           currentDirection: initialDirectionFixture,
           currentPlayingSlotIndex: initialPlayingSlotIndexFixture,
           deck: gameInitialDrawsFixture.remainingDeck,
+          drawCount: initialDrawCountFixture,
           gameFindQuery: {
             id: gameFixture.id,
           },
