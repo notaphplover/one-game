@@ -69,6 +69,15 @@ export class GameUpdateQueryFixtures {
     return fixture;
   }
 
+  public static get withDrawCount(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      drawCount: 0,
+    };
+
+    return fixture;
+  }
+
   public static get withNoGameSlotUpdateQueries(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       ...GameUpdateQueryFixtures.any,

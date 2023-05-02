@@ -14,5 +14,6 @@ export interface GameUpdateQuery {
   currentDirection?: GameDirection;
   currentPlayingSlotIndex?: number;
   deck?: GameCardSpec[];
+  drawCount?: number;
   gameSlotUpdateQueries?: GameSlotUpdateQuery[];
 }
