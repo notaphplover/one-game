@@ -165,6 +165,7 @@ describe(GameV1FromGameBuilder.name, () => {
             currentColor: cardColorV1Fixture,
             currentDirection: gameDirectionV1Fixture,
             currentPlayingSlotIndex: gameFixture.currentPlayingSlotIndex,
+            drawCount: gameFixture.drawCount,
             gameSlotsAmount: gameFixture.gameSlotsAmount,
             gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,

@@ -97,6 +97,7 @@ export class GameV1FromGameBuilder
           game.currentDirection,
         ),
         currentPlayingSlotIndex: game.currentPlayingSlotIndex,
+        drawCount: game.drawCount,
         gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
         id: game.id,
