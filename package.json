@@ -5,6 +5,7 @@
   },
   "description": "One game",
   "devDependencies": {
+    "@cornie-js/backend-dev-user-db": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
     "@cornie-js/backend-scripts": "workspace:*",
