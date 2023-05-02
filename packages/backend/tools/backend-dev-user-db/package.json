@@ -1,8 +1,8 @@
 {
   "author": "Multiple authors",
   "bin": {
-    "dev-used-db-start": "./bin/start-services.mjs",
-    "dev-used-db-stop": "./bin/stop-services.mjs"
+    "dev-user-db-start": "./bin/start-services.mjs",
+    "dev-user-db-stop": "./bin/stop-services.mjs"
   },
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
