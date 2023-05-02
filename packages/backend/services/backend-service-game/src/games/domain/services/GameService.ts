@@ -50,6 +50,10 @@ export class GameService {
     return GameDirection.antiClockwise;
   }
 
+  public getInitialDrawCount(): number {
+    return 0;
+  }
+
   public getInitialPlayingSlotIndex(): number {
     return 0;
   }

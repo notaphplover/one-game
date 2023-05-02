@@ -132,6 +132,20 @@ describe(GameService.name, () => {
     });
   });
 
+  describe('.getInitialDrawCount', () => {
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = gameService.getInitialDrawCount();
+      });
+
+      it('should return a number', () => {
+        expect(result).toBe(0);
+      });
+    });
+  });
+
   describe('.getInitialPlayingSlotIndex', () => {
     describe('when called', () => {
       let result: unknown;
