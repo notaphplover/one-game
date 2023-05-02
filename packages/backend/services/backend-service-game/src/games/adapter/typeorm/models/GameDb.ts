@@ -58,6 +58,14 @@ export class GameDb {
   })
   public readonly deck!: string;
 
+  @Column({
+    name: 'draw_count',
+    nullable: true,
+    type: 'smallint',
+    width: 4,
+  })
+  public drawCount!: number | null;
+
   @PrimaryColumn({
     length: 36,
     name: 'id',
