@@ -97,6 +97,10 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
         );
     }
 
+    if (gameUpdateQuery.drawCount !== undefined) {
+      gameSetQueryTypeOrm.drawCount = gameUpdateQuery.drawCount;
+    }
+
     return gameSetQueryTypeOrm;
   }
 }

@@ -107,6 +107,7 @@ export interface ActiveGameV1 {
   currentColor: CardColorV1;
   currentDirection: GameDirectionV1;
   currentPlayingSlotIndex: number;
+  drawCount: number;
   gameSpec: GameSpecV1;
   gameSlotsAmount: number;
   id: string;

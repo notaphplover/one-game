@@ -231,7 +231,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActivetrueAndGameSlotsOne;
+      gameDbFixture = GameDbFixtures.withActiveTrueAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -313,6 +313,7 @@ describe(GameDbToGameConverter.name, () => {
               card: cardFixture,
             },
           ],
+          drawCount: gameDbFixture.drawCount as number,
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [gameSlotFixture],

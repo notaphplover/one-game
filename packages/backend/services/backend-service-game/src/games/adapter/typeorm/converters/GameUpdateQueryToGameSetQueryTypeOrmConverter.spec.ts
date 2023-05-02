@@ -253,5 +253,37 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         });
       });
     });
+
+    describe('having a GameUpdateQuery with drawCount', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.withDrawCount;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            drawCount: gameUpdateQueryFixture.drawCount as number,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
   });
 });

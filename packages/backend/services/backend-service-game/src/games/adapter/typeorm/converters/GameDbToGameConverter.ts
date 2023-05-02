@@ -97,7 +97,8 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       gameDb.currentCard === null ||
       gameDb.currentColor === null ||
       gameDb.currentDirection === null ||
-      gameDb.currentPlayingSlotIndex === null
+      gameDb.currentPlayingSlotIndex === null ||
+      gameDb.drawCount === null
     ) {
       throw new AppError(AppErrorKind.unknown, 'Unexpected card spec db entry');
     }
@@ -111,6 +112,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       ),
       currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
       deck: this.#convertCardSpecs(gameDb.deck),
+      drawCount: gameDb.drawCount,
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       slots: gameSlots,
