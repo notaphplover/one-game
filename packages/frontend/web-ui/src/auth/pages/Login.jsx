@@ -1,13 +1,30 @@
+import { useContext } from "react";
+
 import { useForm } from "../../cornie/hooks/useForm";
 import '../../scss/layout/FormCustomHook.css';
+import { httpClient } from "../../http/services/HttpService";
 
 export const Login = () => {
 
-    const {onInputChange, username: user, password: passw, email: mail, onResetForm} = useForm({
+    const {formState, onInputChange, onResetForm} = useForm({
         username: '',
         email: '',
         password: ''
     });
+
+    async function login() {
+        const requestBody = {
+            email: formState.email,
+            password: formState.password,
+        };
+
+        const response = await httpClient.createAuth({}, requestBody);
+
+        console.log(requestBody);
+        console.log(response);
+
+        // TODO: store credentials
+    }
 
     return (
         <>
@@ -21,7 +38,7 @@ export const Login = () => {
                         className="form-control"
                         placeholder="Username"
                         name="username"
-                        value={user}
+                        value={formState.username}
                         onChange={onInputChange}
                     /> 
                 </div>
@@ -34,7 +51,7 @@ export const Login = () => {
                         className="form-control"
                         placeholder="name@example.com"
                         name="email"
-                        value={mail}
+                        value={formState.email}
                         onChange={onInputChange}
                     />
                 </div>
@@ -47,13 +64,13 @@ export const Login = () => {
                         className="col-sm-10 form-control"
                         placeholder="********"
                         name="password"
-                        value={passw}
+                        value={formState.password}
                         onChange={onInputChange}
                     />
                 </div>        
             </div>
             <div className="row justify-content-evenly">
-                <button onClick={onResetForm} className="btn btn-first-cornie mt-2 col-4">Login</button>
+                <button onClick={login} className="btn btn-first-cornie mt-2 col-4">Login</button>
                 <button onClick={onResetForm} className="btn btn-second-cornie mt-2 col-4">Delete</button>
             </div>
         </>
