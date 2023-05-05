@@ -1,6 +1,6 @@
+import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels } from '@one-game-js/api-models';
-import { Builder } from '@one-game-js/backend-common';
 
 import { CardColorV1FromCardColorBuilder } from '../../../cards/application/builders/CardColorV1FromCardColorBuilder';
 import { CardV1FromCardBuilder } from '../../../cards/application/builders/CardV1FromCardBuilder';
@@ -97,6 +97,7 @@ export class GameV1FromGameBuilder
           game.currentDirection,
         ),
         currentPlayingSlotIndex: game.currentPlayingSlotIndex,
+        drawCount: game.drawCount,
         gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
         id: game.id,

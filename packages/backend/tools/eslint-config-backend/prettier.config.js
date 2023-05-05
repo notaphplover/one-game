@@ -1,3 +1,3 @@
 module.exports = {
-  ...require('@one-game-js/backend-prettier-config'),
+  ...require('@cornie-js/backend-prettier-config'),
 };

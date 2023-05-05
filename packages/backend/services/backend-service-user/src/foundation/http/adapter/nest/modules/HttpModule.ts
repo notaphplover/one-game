@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common';
 import {
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
@@ -6,7 +5,8 @@ import {
   RequestWithBodyFromFastifyRequestBuilder,
   SingleEntityGetResponseBuilder,
   SingleEntityPostResponseBuilder,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
+import { Module } from '@nestjs/common';
 
 @Module({
   exports: [

@@ -1,12 +1,19 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+  Spec,
+} from '@cornie-js/backend-common';
 
 import { CardV1Fixtures } from '../../../../cards/application/fixtures/CardV1Fixtures';
 import { Card } from '../../../../cards/domain/models/Card';
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { UserV1Fixtures } from '../../../../user/application/fixtures/models/UserV1Fixtures';
+import { NonStartedGameFilledEvent } from '../../../domain/events/NonStartedGameFilledEvent';
 import { ActiveGameFixtures } from '../../../domain/fixtures/ActiveGameFixtures';
 import { GameSlotCreateQueryFixtures } from '../../../domain/fixtures/GameSlotCreateQueryFixtures';
 import { NonStartedGameFixtures } from '../../../domain/fixtures/NonStartedGameFixtures';
@@ -17,7 +24,6 @@ import { Game } from '../../../domain/models/Game';
 import { NonStartedGame } from '../../../domain/models/NonStartedGame';
 import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
 import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
-import { GameCanHoldMoreGameSlotsSpec } from '../../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { NonStartedGameSlotV1Fixtures } from '../../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameSlotCreateQueryContext } from '../../models/GameSlotCreateQueryContext';
 import { GameSlotPersistenceOutputPort } from '../output/GameSlotPersistenceOutputPort';
@@ -25,7 +31,8 @@ import { GameSlotManagementInputPort } from './GameSlotManagementInputPort';
 
 describe(GameSlotManagementInputPort.name, () => {
   let cardV1FromCardBuilderMock: jest.Mocked<Builder<apiModels.CardV1, [Card]>>;
-  let gameCanHoldMoreGameSlotsSpecMock: jest.Mocked<GameCanHoldMoreGameSlotsSpec>;
+  let gameCanHoldMoreGameSlotsSpecMock: jest.Mocked<Spec<[Game]>>;
+  let gameCanHoldOnlyOneMoreGameSlotSpecMock: jest.Mocked<Spec<[Game]>>;
   let gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
       GameSlotCreateQuery,
@@ -36,6 +43,9 @@ describe(GameSlotManagementInputPort.name, () => {
     Builder<apiModels.GameSlotV1, [ActiveGameSlot | NonStartedGameSlot]>
   >;
   let gameSlotPersistenceOutputPortMock: jest.Mocked<GameSlotPersistenceOutputPort>;
+  let nonStartedGameFilledEventHandlerMock: jest.Mocked<
+    Handler<[NonStartedGameFilledEvent], void>
+  >;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
   let gameSlotManagementInputPort: GameSlotManagementInputPort;
@@ -47,6 +57,9 @@ describe(GameSlotManagementInputPort.name, () => {
     gameCanHoldMoreGameSlotsSpecMock = {
       isSatisfiedBy: jest.fn(),
     };
+    gameCanHoldOnlyOneMoreGameSlotSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    };
     gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -55,6 +68,10 @@ describe(GameSlotManagementInputPort.name, () => {
     };
     gameSlotPersistenceOutputPortMock = {
       create: jest.fn(),
+      update: jest.fn(),
+    };
+    nonStartedGameFilledEventHandlerMock = {
+      handle: jest.fn(),
     };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
@@ -63,9 +80,11 @@ describe(GameSlotManagementInputPort.name, () => {
     gameSlotManagementInputPort = new GameSlotManagementInputPort(
       cardV1FromCardBuilderMock,
       gameCanHoldMoreGameSlotsSpecMock,
+      gameCanHoldOnlyOneMoreGameSlotSpecMock,
       gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock,
       gameSlotV1FromGameSlotBuilderMock,
       gameSlotPersistenceOutputPortMock,
+      nonStartedGameFilledEventHandlerMock,
       uuidProviderOutputPortMock,
     );
   });
@@ -79,7 +98,7 @@ describe(GameSlotManagementInputPort.name, () => {
       gameSlotCreateQueryV1Fixture = GameSlotCreateQueryFixtures.any;
     });
 
-    describe('when called, and gameCanHoldMoreGameSlotsSpec.isSatisfiedBy() returns true', () => {
+    describe('when called, and gameCanHoldMoreGameSlotsSpec.isSatisfiedBy() returns true and gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy() returns false', () => {
       let gameSlotCreateQueryFixture: GameSlotCreateQuery;
       let gameSlotFixture: ActiveGameSlot | NonStartedGameSlot;
       let gameSlotV1Fixture: apiModels.GameSlotV1;
@@ -95,6 +114,9 @@ describe(GameSlotManagementInputPort.name, () => {
 
         gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy.mockReturnValueOnce(
           true,
+        );
+        gameCanHoldOnlyOneMoreGameSlotSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          false,
         );
         gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           gameSlotCreateQueryFixture,
@@ -152,6 +174,138 @@ describe(GameSlotManagementInputPort.name, () => {
         expect(gameSlotPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           gameSlotCreateQueryFixture,
         );
+      });
+
+      it('should call gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy()', () => {
+        expect(
+          gameCanHoldOnlyOneMoreGameSlotSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCanHoldOnlyOneMoreGameSlotSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(gameFixture);
+      });
+
+      it('should not call nonStartedGameFilledEventHandler.handle()', () => {
+        expect(
+          nonStartedGameFilledEventHandlerMock.handle,
+        ).not.toHaveBeenCalled();
+      });
+
+      it('should call gameSlotV1FromGameSlotBuilder.build()', () => {
+        expect(gameSlotV1FromGameSlotBuilderMock.build).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSlotV1FromGameSlotBuilderMock.build).toHaveBeenCalledWith(
+          gameSlotFixture,
+        );
+      });
+
+      it('should return a GameSlotV1', () => {
+        expect(result).toBe(gameSlotV1Fixture);
+      });
+    });
+
+    describe('when called, and gameCanHoldMoreGameSlotsSpec.isSatisfiedBy() returns true and gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy() returns true', () => {
+      let gameSlotCreateQueryFixture: GameSlotCreateQuery;
+      let gameSlotFixture: ActiveGameSlot | NonStartedGameSlot;
+      let gameSlotV1Fixture: apiModels.GameSlotV1;
+      let uuidFixture: string;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameSlotCreateQueryFixture = GameSlotCreateQueryFixtures.any;
+        gameSlotFixture = NonStartedGameSlotFixtures.any;
+        gameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
+        uuidFixture = 'uuid-fixture';
+
+        gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          true,
+        );
+        gameCanHoldOnlyOneMoreGameSlotSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          true,
+        );
+        gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock.build.mockReturnValueOnce(
+          gameSlotCreateQueryFixture,
+        );
+        gameSlotV1FromGameSlotBuilderMock.build.mockReturnValueOnce(
+          gameSlotV1Fixture,
+        );
+        gameSlotPersistenceOutputPortMock.create.mockResolvedValueOnce(
+          gameSlotFixture,
+        );
+        nonStartedGameFilledEventHandlerMock.handle.mockResolvedValueOnce(
+          undefined,
+        );
+        uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
+
+        result = await gameSlotManagementInputPort.create(
+          gameSlotCreateQueryV1Fixture,
+          gameFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameCanHoldMoreGameSlotsSpec.isSatisfiedBy()', () => {
+        expect(
+          gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(gameFixture);
+      });
+
+      it('should call uuidProviderOutputPort.generateV4()', () => {
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(1);
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
+      });
+
+      it('should call gameSlotCreateQueryFromGameSlotCreateQueryV1Builder.build()', () => {
+        const expectedContext: GameSlotCreateQueryContext = {
+          game: gameFixture,
+          uuid: uuidFixture,
+        };
+
+        expect(
+          gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameSlotCreateQueryFromGameSlotCreateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledWith(gameSlotCreateQueryFixture, expectedContext);
+      });
+
+      it('should call gameSlotPersistenceOutputPort.create()', () => {
+        expect(gameSlotPersistenceOutputPortMock.create).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSlotPersistenceOutputPortMock.create).toHaveBeenCalledWith(
+          gameSlotCreateQueryFixture,
+        );
+      });
+
+      it('should call gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy()', () => {
+        expect(
+          gameCanHoldOnlyOneMoreGameSlotSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCanHoldOnlyOneMoreGameSlotSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(gameFixture);
+      });
+
+      it('should call nonStartedGameFilledEventHandler.handle()', () => {
+        const expected: NonStartedGameFilledEvent = {
+          gameId: gameFixture.id,
+        };
+
+        expect(
+          nonStartedGameFilledEventHandlerMock.handle,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          nonStartedGameFilledEventHandlerMock.handle,
+        ).toHaveBeenCalledWith(expected);
       });
 
       it('should call gameSlotV1FromGameSlotBuilder.build()', () => {

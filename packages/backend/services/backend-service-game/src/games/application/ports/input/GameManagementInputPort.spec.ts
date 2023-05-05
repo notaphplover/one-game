@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
-import { Builder } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 
 import { GameCreateQueryV1Fixtures } from '../../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
@@ -37,6 +37,7 @@ describe(GameManagementInputPort.name, () => {
     gamePersistenceOutputPortMock = {
       create: jest.fn(),
       findOne: jest.fn(),
+      update: jest.fn(),
     };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),

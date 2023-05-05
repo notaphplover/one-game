@@ -1,12 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'path';
 
-import { JsonRootSchema202012 } from '@one-game-js/json-schema-utils';
+import { JsonRootSchema202012 } from '@cornie-js/json-schema-utils';
 import { glob } from 'glob';
 
 const JSON_SCHEMAS_BLOB_SUFFIX: string = '**/*.json';
 
-const API_SCHEMAS_PACKAGE: string = '@one-game-js/api-json-schemas';
+const API_SCHEMAS_PACKAGE: string = '@cornie-js/api-json-schemas';
 const API_SCHEMAS_PACKAGE_SCHEMAS_FOLDER: string = 'schemas';
 
 export async function readApiJsonSchemas(): Promise<JsonRootSchema202012[]> {

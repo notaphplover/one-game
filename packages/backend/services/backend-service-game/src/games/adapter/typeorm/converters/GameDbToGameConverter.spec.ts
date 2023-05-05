@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Converter } from '@one-game-js/backend-common';
+import { Builder, Converter } from '@cornie-js/backend-common';
 
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
@@ -231,7 +231,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActivetrueAndGameSlotsOne;
+      gameDbFixture = GameDbFixtures.withActiveTrueAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -313,6 +313,7 @@ describe(GameDbToGameConverter.name, () => {
               card: cardFixture,
             },
           ],
+          drawCount: gameDbFixture.drawCount as number,
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           slots: [gameSlotFixture],

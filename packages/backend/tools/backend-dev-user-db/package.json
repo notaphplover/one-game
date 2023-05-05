@@ -1,0 +1,19 @@
+{
+  "author": "Multiple authors",
+  "bin": {
+    "dev-user-db-start": "./bin/start-services.mjs",
+    "dev-user-db-stop": "./bin/stop-services.mjs"
+  },
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Dev db for user service",
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/backend-dev-user-db",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  }
+}

@@ -1,49 +1,49 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder } from '@one-game-js/backend-common';
+import { Converter } from '@cornie-js/backend-common';
 import { DeepPartial } from 'typeorm';
 
-import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
-import { Card } from '../../../../cards/domain/models/Card';
 import { GameCreateQueryFixtures } from '../../../domain/fixtures/GameCreateQueryFixtures';
 import { GameCardSpec } from '../../../domain/models/GameCardSpec';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
-import { GameCardSpecDb } from '../models/GameCardSpecDb';
 import { GameDb } from '../models/GameDb';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from './GameCreateQueryToGameCreateQueryTypeOrmConverter';
 
 describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
-  let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
+  let gameCardSpecArrayToGameCardSpecArrayDbConverterMock: jest.Mocked<
+    Converter<GameCardSpec[], string>
+  >;
 
   let gameCreateQueryToGameCreateQueryTypeOrmConverter: GameCreateQueryToGameCreateQueryTypeOrmConverter;
 
   beforeAll(() => {
-    cardDbBuilderMock = {
-      build: jest.fn(),
+    gameCardSpecArrayToGameCardSpecArrayDbConverterMock = {
+      convert: jest.fn(),
     };
 
     gameCreateQueryToGameCreateQueryTypeOrmConverter =
-      new GameCreateQueryToGameCreateQueryTypeOrmConverter(cardDbBuilderMock);
+      new GameCreateQueryToGameCreateQueryTypeOrmConverter(
+        gameCardSpecArrayToGameCardSpecArrayDbConverterMock,
+      );
   });
 
   describe('.convert', () => {
-    let gameCardSpecFixture: GameCardSpec;
     let gameCreateQueryFixture: GameCreateQuery;
 
     beforeAll(() => {
       gameCreateQueryFixture = GameCreateQueryFixtures.withSpecOne;
-
-      [gameCardSpecFixture] = gameCreateQueryFixture.spec as [GameCardSpec];
     });
 
     describe('when called', () => {
-      let cardDbFixture: CardDb;
+      let gameCardSpecArrayStringifiedFixture: string;
       let result: unknown;
 
       beforeAll(() => {
-        cardDbFixture = 39;
+        gameCardSpecArrayStringifiedFixture = '[39]';
 
-        cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
+        gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+          gameCardSpecArrayStringifiedFixture,
+        );
 
         result = gameCreateQueryToGameCreateQueryTypeOrmConverter.convert(
           gameCreateQueryFixture,
@@ -54,31 +54,26 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call cardDbBuilder.build()', () => {
-        expect(cardDbBuilderMock.build).toHaveBeenCalledTimes(1);
-        expect(cardDbBuilderMock.build).toHaveBeenCalledWith(
-          gameCardSpecFixture.card,
-        );
+      it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+        expect(
+          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+        ).toHaveBeenCalledWith(gameCreateQueryFixture.spec);
       });
 
       it('should return a DeepPartial<GameDb>', () => {
-        const expectedGameCardSpecsDb: GameCardSpecDb[] = [
-          {
-            amount: gameCardSpecFixture.amount,
-            card: cardDbFixture,
-          },
-        ];
-
         const expected: DeepPartial<GameDb> = {
           active: false,
           currentCard: null,
           currentColor: null,
           currentDirection: null,
           currentPlayingSlotIndex: null,
-          deck: JSON.stringify(expectedGameCardSpecsDb),
+          deck: gameCardSpecArrayStringifiedFixture,
           gameSlotsAmount: gameCreateQueryFixture.gameSlotsAmount,
           id: gameCreateQueryFixture.id,
-          spec: JSON.stringify(expectedGameCardSpecsDb),
+          spec: gameCardSpecArrayStringifiedFixture,
         };
 
         expect(result).toStrictEqual(expected);

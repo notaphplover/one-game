@@ -1,5 +1,4 @@
-import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
-import { Builder, Handler } from '@one-game-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   RequestWithBodyFromFastifyRequestBuilder,
   FastifyReplyFromResponseBuilder,
@@ -7,7 +6,8 @@ import {
   RequestWithBody,
   Response,
   ResponseWithBody,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
+import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { PostGameV1HttpRequestController } from '../../../application/controllers/PostGameV1HttpRequestController';

@@ -1,4 +1,4 @@
-import { Builder } from '@one-game-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 
 import { Response } from '../models/Response';
 import { ResponseWithBody } from '../models/ResponseWithBody';

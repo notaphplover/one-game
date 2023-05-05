@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { FastifyRequest } from 'fastify';
 
 import { RequestWithBody } from '../../../application/models/RequestWithBody';

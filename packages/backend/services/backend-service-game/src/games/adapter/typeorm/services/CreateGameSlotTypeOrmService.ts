@@ -1,7 +1,7 @@
+import { Converter } from '@cornie-js/backend-common';
+import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Converter } from '@one-game-js/backend-common';
-import { InsertTypeOrmPostgresService } from '@one-game-js/backend-db';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 

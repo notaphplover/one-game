@@ -1,4 +1,4 @@
-import { JwtAlgorithm } from '@one-game-js/backend-jwt';
+import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 
 export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: string;

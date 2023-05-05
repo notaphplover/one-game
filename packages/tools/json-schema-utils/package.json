@@ -7,9 +7,9 @@
   "devDependencies": {
     "@jest/globals": "29.5.0",
     "@types/glob": "8.1.0",
-    "@types/node": "18.16.3",
-    "@typescript-eslint/eslint-plugin": "5.59.1",
-    "@typescript-eslint/parser": "5.59.1",
+    "@types/node": "18.16.4",
+    "@typescript-eslint/eslint-plugin": "5.59.2",
+    "@typescript-eslint/parser": "5.59.2",
     "eslint": "8.39.0",
     "eslint-import-resolver-typescript": "3.5.5",
     "eslint-plugin-import": "2.26.0",
@@ -26,7 +26,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@one-game-js/json-schema-utils",
+  "name": "@cornie-js/json-schema-utils",
   "publishConfig": {
     "access": "public"
   },

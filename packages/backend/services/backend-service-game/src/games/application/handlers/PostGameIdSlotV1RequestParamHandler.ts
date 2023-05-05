@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels } from '@one-game-js/api-models';
-import { Handler } from '@one-game-js/backend-common';
+import { models as apiModels } from '@cornie-js/api-models';
+import { Handler } from '@cornie-js/backend-common';
 import {
   RequestWithBody,
   requestContextProperty,
-} from '@one-game-js/backend-http';
+} from '@cornie-js/backend-http';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { Game } from '../../domain/models/Game';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';

@@ -1,6 +1,6 @@
+import { models as apiModels } from '@cornie-js/api-models';
+import { Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
-import { models as apiModels } from '@one-game-js/api-models';
-import { Converter } from '@one-game-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import {

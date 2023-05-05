@@ -10,5 +10,6 @@ export interface ActiveGame extends BaseGame {
   readonly currentColor: CardColor;
   readonly currentDirection: GameDirection;
   readonly currentPlayingSlotIndex: number;
+  readonly drawCount: number;
   readonly slots: ActiveGameSlot[];
 }

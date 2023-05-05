@@ -1,4 +1,4 @@
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 
 export class CardV1Fixtures {
   public static get any(): apiModels.BlankCardV1 {

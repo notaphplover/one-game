@@ -1,4 +1,4 @@
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures/CardV1Fixtures';
 import { GameSpecV1Fixtures } from '../../../cards/application/fixtures/GameSpecV1Fixtures';
@@ -11,6 +11,7 @@ export class ActiveGameV1Fixtures {
       currentColor: 'blue',
       currentDirection: 'antiClockwise',
       currentPlayingSlotIndex: 0,
+      drawCount: 0,
       gameSlotsAmount: 1,
       gameSpec: GameSpecV1Fixtures.any,
       id: '6fbcdb6c-b03c-4754-94c1-9f664f036cde',

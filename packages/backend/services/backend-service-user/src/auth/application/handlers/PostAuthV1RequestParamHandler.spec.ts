@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { models as apiModels } from '@one-game-js/api-models';
+import { models as apiModels } from '@cornie-js/api-models';
 import {
   ApiJsonSchemasValidationProvider,
   Validator,
-} from '@one-game-js/backend-api-validators';
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
-import { RequestWithBody } from '@one-game-js/backend-http';
+} from '@cornie-js/backend-api-validators';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { RequestWithBody } from '@cornie-js/backend-http';
 
 import { PostAuthV1RequestParamHandler } from './PostAuthV1RequestParamHandler';
 

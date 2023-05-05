@@ -1,4 +1,4 @@
-import { JsonValue } from '@one-game-js/json-schema-utils';
+import { JsonValue } from '@cornie-js/json-schema-utils';
 
 import { OpenApi3Dot1EncodingObject } from './OpenApi3Dot1EncodingObject';
 import { OpenApi3Dot1ExampleObject } from './OpenApi3Dot1ExampleObject';

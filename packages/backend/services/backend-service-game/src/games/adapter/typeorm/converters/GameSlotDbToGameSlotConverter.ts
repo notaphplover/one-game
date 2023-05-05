@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
 import {
   AppError,
   AppErrorKind,
   Builder,
   Converter,
-} from '@one-game-js/backend-common';
+} from '@cornie-js/backend-common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { CardBuilder } from '../../../../cards/adapter/typeorm/builders/CardBuilder';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';

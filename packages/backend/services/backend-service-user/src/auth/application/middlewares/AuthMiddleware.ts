@@ -1,6 +1,6 @@
+import * as backendHttp from '@cornie-js/backend-http';
+import { JwtService } from '@cornie-js/backend-jwt';
 import { Inject, Injectable } from '@nestjs/common';
-import * as backendHttp from '@one-game-js/backend-http';
-import { JwtService } from '@one-game-js/backend-jwt';
 
 import { EnvironmentService } from '../../../foundation/env/application/services/EnvironmentService';
 import { UserJwtPayload } from '../../../user/application/models/UserJwtPayload';

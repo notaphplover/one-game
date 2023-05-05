@@ -1,11 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { GamePersistenceOutputPort } from '../../../application/ports/output/GamePersistenceOutputPort';
+import {
+  GameSlotPersistenceOutputPort,
+  gameSlotPersistenceOutputPortSymbol,
+} from '../../../application/ports/output/GameSlotPersistenceOutputPort';
 import { Game } from '../../../domain/models/Game';
 import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
 import { GameFindQuery } from '../../../domain/query/GameFindQuery';
+import { GameSlotUpdateQuery } from '../../../domain/query/GameSlotUpdateQuery';
+import { GameUpdateQuery } from '../../../domain/query/GameUpdateQuery';
 import { CreateGameTypeOrmService } from '../services/CreateGameTypeOrmService';
 import { FindGameTypeOrmService } from '../services/FindGameTypeOrmService';
+import { UpdateGameTypeOrmService } from '../services/UpdateGameTypeOrmService';
 
 @Injectable()
 export class GamePersistenceTypeOrmAdapter
@@ -13,15 +20,23 @@ export class GamePersistenceTypeOrmAdapter
 {
   readonly #createGameTypeOrmService: CreateGameTypeOrmService;
   readonly #findGameTypeOrmService: FindGameTypeOrmService;
+  readonly #gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort;
+  readonly #updateGameTypeOrmService: UpdateGameTypeOrmService;
 
   constructor(
     @Inject(CreateGameTypeOrmService)
     createGameTypeOrmService: CreateGameTypeOrmService,
     @Inject(FindGameTypeOrmService)
     findGameTypeOrmService: FindGameTypeOrmService,
+    @Inject(gameSlotPersistenceOutputPortSymbol)
+    gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort,
+    @Inject(UpdateGameTypeOrmService)
+    updateGameTypeOrmService: UpdateGameTypeOrmService,
   ) {
     this.#createGameTypeOrmService = createGameTypeOrmService;
     this.#findGameTypeOrmService = findGameTypeOrmService;
+    this.#gameSlotPersistenceOutputPort = gameSlotPersistenceOutputPort;
+    this.#updateGameTypeOrmService = updateGameTypeOrmService;
   }
 
   public async create(gameCreateQuery: GameCreateQuery): Promise<Game> {
@@ -32,5 +47,18 @@ export class GamePersistenceTypeOrmAdapter
     gameFindQuery: GameFindQuery,
   ): Promise<Game | undefined> {
     return this.#findGameTypeOrmService.findOne(gameFindQuery);
+  }
+
+  public async update(gameUpdateQuery: GameUpdateQuery): Promise<void> {
+    if (gameUpdateQuery.gameSlotUpdateQueries !== undefined) {
+      await Promise.all(
+        gameUpdateQuery.gameSlotUpdateQueries.map(
+          async (gameSlotUpdateQuery: GameSlotUpdateQuery) =>
+            this.#gameSlotPersistenceOutputPort.update(gameSlotUpdateQuery),
+        ),
+      );
+    }
+
+    await this.#updateGameTypeOrmService.update(gameUpdateQuery);
   }
 }

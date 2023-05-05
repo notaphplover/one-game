@@ -1,7 +1,7 @@
+import { HttpClient, Response } from '@cornie-js/api-http-client';
+import { models as apiModels } from '@cornie-js/api-models';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { HttpClient, Response } from '@one-game-js/api-http-client';
-import { models as apiModels } from '@one-game-js/api-models';
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
 
 import { EnvironmentService } from '../../../../foundation/env/application/services/EnvironmentService';
 

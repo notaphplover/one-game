@@ -38,7 +38,7 @@ export class GameDbFixtures {
     return fixture;
   }
 
-  public static get withActivetrueAndGameSlotsOne(): GameDb {
+  public static get withActiveTrueAndGameSlotsOne(): GameDb {
     const fixture: Writable<GameDb> = new GameDb();
 
     fixture.active = true;
@@ -47,6 +47,7 @@ export class GameDbFixtures {
     fixture.currentDirection = GameDirectionDb.clockwise;
     fixture.currentPlayingSlotIndex = 0;
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
+    fixture.drawCount = 0;
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';

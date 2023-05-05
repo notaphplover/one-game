@@ -1,11 +1,14 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@one-game-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
+import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/models/Card';
+import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { Game } from '../models/Game';
 import { GameCardSpec } from '../models/GameCardSpec';
+import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
 import { GameService } from './GameService';
 
@@ -14,6 +17,28 @@ describe(GameService.name, () => {
 
   beforeAll(() => {
     gameService = new GameService();
+  });
+
+  describe('.getInitialCardColor', () => {
+    describe('having a colored card', () => {
+      let coloredCardFixture: Card & ColoredCard;
+
+      beforeAll(() => {
+        coloredCardFixture = CardFixtures.reverseCard;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.getInitialCardColor(coloredCardFixture);
+        });
+
+        it('should return a CardColor', () => {
+          expect(result).toBe(coloredCardFixture.color);
+        });
+      });
+    });
   });
 
   describe('.getInitialCardsDraw', () => {
@@ -61,13 +86,10 @@ describe(GameService.name, () => {
 
     describe('having a Game with not enough cards', () => {
       let gameFixture: Game;
-      let deckCardSpec: GameCardSpec;
 
       beforeAll(() => {
         gameFixture =
           NonStartedGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount0;
-
-        [deckCardSpec] = gameFixture.deck as [GameCardSpec];
       });
 
       describe('when called', () => {
@@ -92,6 +114,48 @@ describe(GameService.name, () => {
             expect.objectContaining(expectedErrorProperties),
           );
         });
+      });
+    });
+  });
+
+  describe('.getInitialDirection', () => {
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = gameService.getInitialDirection();
+      });
+
+      it('should return a GameDirection', () => {
+        expect(result).toBe(GameDirection.antiClockwise);
+      });
+    });
+  });
+
+  describe('.getInitialDrawCount', () => {
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = gameService.getInitialDrawCount();
+      });
+
+      it('should return a number', () => {
+        expect(result).toBe(0);
+      });
+    });
+  });
+
+  describe('.getInitialPlayingSlotIndex', () => {
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = gameService.getInitialPlayingSlotIndex();
+      });
+
+      it('should return a number', () => {
+        expect(result).toBe(0);
       });
     });
   });
