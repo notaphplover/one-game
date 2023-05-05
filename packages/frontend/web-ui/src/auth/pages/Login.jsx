@@ -1,5 +1,5 @@
-import { useForm } from "../hooks/useForm";
-import '../scss/layout/FormCustomHook.css';
+import { useForm } from "../../cornie/hooks/useForm";
+import '../../scss/layout/FormCustomHook.css';
 
 export const Login = () => {
 
