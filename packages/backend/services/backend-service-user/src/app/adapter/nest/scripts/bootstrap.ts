@@ -6,7 +6,9 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 
+import { Environment } from '../../../../foundation/env/application/models/Environment';
 import { EnvironmentService } from '../../../../foundation/env/application/services/EnvironmentService';
+import { enableCors } from '../actions/enableCors';
 import { registerSignalHandlers } from '../actions/registerSignalHandlers';
 import { AppModule } from '../modules/AppModule';
 
@@ -22,6 +24,7 @@ async function bootstrap() {
       AppModule,
       new FastifyAdapter(),
       {
+        cors: true,
         logger,
       },
     );
@@ -29,9 +32,13 @@ async function bootstrap() {
   const environmentService: EnvironmentService =
     nestApplication.get(EnvironmentService);
 
+  const environment: Environment = environmentService.getEnvironment();
+
+  enableCors(fastifyAdapter, environment.corsOrigins);
+
   registerSignalHandlers(nestApplication, logger);
 
-  const port: number = environmentService.getEnvironment().port;
+  const port: number = environment.port;
 
   await nestApplication.listen(port);
 

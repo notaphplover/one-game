@@ -2,6 +2,7 @@ import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 
 export interface Environment {
   apiBackendServiceSecret: string;
+  corsOrigins: string[];
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;
   jwtExpirationMs: number;
