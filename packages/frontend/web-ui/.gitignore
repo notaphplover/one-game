@@ -2,3 +2,5 @@
 
 # Turborepo files
 .turbo/
+
+.env
