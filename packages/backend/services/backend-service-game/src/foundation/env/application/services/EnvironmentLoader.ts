@@ -22,6 +22,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
     const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
       ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: str(),
       ONE_JS_GAME_API_BASE_URL: url(),
+      ONE_JS_GAME_SERVICE_CORS_ORIGINS: json(),
       ONE_JS_GAME_SERVICE_JWT_ALGORITHM: str<JwtAlgorithm>({
         choices: Object.values(JwtAlgorithm),
       }),
@@ -38,6 +39,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       apiBackendServiceSecret:
         rawEnvironment.ONE_JS_GAME_API_BACKEND_SERVICE_SECRET,
       apiBaseUrl: rawEnvironment.ONE_JS_GAME_API_BASE_URL,
+      corsOrigins: rawEnvironment.ONE_JS_GAME_SERVICE_CORS_ORIGINS,
       jwtAlgorithm: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_ALGORITHM,
       jwtAudience: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_AUDIENCE,
       jwtExpirationMs: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_EXPIRATION_MS,
