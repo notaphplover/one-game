@@ -6,6 +6,7 @@
   "description": "Dev Proxy tool for one-game-js services",
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/backend-dev-proxy",
   "private": true,
   "repository": {
     "type": "git",

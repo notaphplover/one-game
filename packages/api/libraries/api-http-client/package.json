@@ -34,7 +34,14 @@
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
-  "main": "lib/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
+    }
+  },
   "name": "@cornie-js/api-http-client",
   "publishConfig": {
     "access": "public"
@@ -45,9 +52,11 @@
   },
   "scripts": {
     "build": "pnpm run build:ts && pnpm run client:generate:ts && pnpm run build:ts",
+    "build:cjs": "tsc --build tsconfig.cjs.json && pnpm exec backend-ts-package-cjs ./lib/cjs",
+    "build:esm": "tsc --build tsconfig.esm.json && pnpm exec backend-ts-package-esm ./lib/esm",
     "build:clean": "rimraf lib",
-    "build:ts": "tsc --build tsconfig.json",
-    "client:generate:ts": "node ./lib/scripts/generateHttpClientFiles ./src/httpClient/generated",
+    "build:ts": "pnpm run build:cjs && pnpm run build:esm",
+    "client:generate:ts": "node ./lib/cjs/scripts/generateHttpClientFiles ./src/httpClient/generated",
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "prebuild": "pnpm run build:clean",

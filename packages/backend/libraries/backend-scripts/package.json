@@ -7,13 +7,15 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "author": "Multiple authors",
-  "license": "MIT",
+  "license": "See license in \"LICENSE\" file",
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
   "type": "module",
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "bin": {
-    "backend-get-affected-projects": "./bin/getAffectedProjects.js"
+    "backend-get-affected-projects": "./bin/getAffectedProjects.js",
+    "backend-ts-package-cjs": "./bin/writeCommonJsPackageJson.js",
+    "backend-ts-package-esm": "./bin/writeEsmPackageJson.js"
   }
 }
