@@ -1,6 +1,7 @@
+import { AppModule } from '@cornie-js/backend-app-user';
 import { Module } from '@nestjs/common';
 
-import { AuthModule } from '../../../../auth/adapters/nest/modules/AuthModule';
+import { AuthHttpApiModule } from '../../../../auth/adapters/nest/modules/AuthHttpApiModule';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
 import { GetUserV1MeHttpRequestController } from '../../../application/controllers/GetUserV1MeHttpRequestController';
@@ -12,7 +13,6 @@ import { PostUserV1RequestParamHandler } from '../../../application/handlers/Pos
 import { GetUserV1MeHttpRequestNestController } from '../controllers/GetUserV1MeHttpRequestNestController';
 import { GetUserV1UserIdHttpRequestNestController } from '../controllers/GetUserV1UserIdHttpRequestNestController';
 import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1HttpRequestNestController';
-import { UserModule } from './UserModule';
 
 @Module({
   controllers: [
@@ -21,7 +21,7 @@ import { UserModule } from './UserModule';
     GetUserV1UserIdHttpRequestNestController,
     PostUserV1HttpRequestNestController,
   ],
-  imports: [AuthModule, JsonSchemaModule, HttpModule, UserModule],
+  imports: [AppModule, AuthHttpApiModule, JsonSchemaModule, HttpModule],
   providers: [
     GetUserV1MeHttpRequestController,
     GetUserV1MeHttpRequestNestController,

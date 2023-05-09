@@ -1,10 +1,10 @@
+import { JwtService } from '@cornie-js/backend-app-jwt';
+import { UserManagementInputPort } from '@cornie-js/backend-app-user';
+import { EnvironmentService } from '@cornie-js/backend-app-user-env';
 import * as backendHttp from '@cornie-js/backend-http';
-import { JwtService } from '@cornie-js/backend-jwt';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { EnvironmentService } from '../../../foundation/env/application/services/EnvironmentService';
 import { UserJwtPayload } from '../../../user/application/models/UserJwtPayload';
-import { UserManagementInputPort } from '../../../user/application/ports/input/UserManagementInputPort';
 
 @Injectable()
 export class AuthMiddleware extends backendHttp.AuthMiddleware<UserJwtPayload> {
