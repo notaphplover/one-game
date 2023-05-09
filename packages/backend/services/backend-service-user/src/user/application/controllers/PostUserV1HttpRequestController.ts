@@ -1,4 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { UserManagementInputPort } from '@cornie-js/backend-app-user';
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
@@ -11,7 +12,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { PostUserV1RequestParamHandler } from '../handlers/PostUserV1RequestParamHandler';
-import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 
 @Injectable()
 export class PostUserV1HttpRequestController extends SingleEntityHttpRequestController<
