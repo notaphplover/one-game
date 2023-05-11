@@ -1,14 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import {
+  UserCreateQueryFixtures,
+  UserFindQueryFixtures,
+  UserFixtures,
+} from '@cornie-js/backend-app-user-fixtures';
+import {
   User,
   UserCreateQuery,
   UserFindQuery,
 } from '@cornie-js/backend-app-user-models';
 
-import { UserCreateQueryFixtures } from '../../../domain/fixtures/UserCreateQueryFixtures';
-import { UserFindQueryFixtures } from '../../../domain/fixtures/UserFindQueryFixtures';
-import { UserFixtures } from '../../../domain/fixtures/UserFixtures';
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
 import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
 import { UserPersistenceTypeOrmAdapter } from './UserPersistenceTypeOrmAdapter';

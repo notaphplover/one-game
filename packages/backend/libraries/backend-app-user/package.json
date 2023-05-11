@@ -22,6 +22,7 @@
     "typeorm": "0.3.16"
   },
   "devDependencies": {
+    "@cornie-js/backend-app-user-fixtures": "workspace:*",
     "@jest/globals": "29.5.0",
     "@types/bcrypt": "5.0.0",
     "@types/node": "18.16.7",

@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { JwtService } from '@cornie-js/backend-app-jwt';
+import { UserFixtures } from '@cornie-js/backend-app-user-fixtures';
 import {
   UserJwtPayload,
   UserPersistenceOutputPort,
@@ -11,7 +12,6 @@ import {
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { UserFixtures } from '../../../../user/domain/fixtures/UserFixtures';
 import { AuthManagementInputPort } from './AuthManagementInputPort';
 
 describe(AuthManagementInputPort.name, () => {
