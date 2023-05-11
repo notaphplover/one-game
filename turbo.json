@@ -20,6 +20,10 @@
       "inputs": ["src/**/*.ts"],
       "outputs": ["lib/**", "src/models/types.ts"]
     },
+    "@cornie-js/web-ui#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.{cjs,js,jsx}", "vite.config.js"]
+    },
     "format": {
       "inputs": ["src/**/*.ts"],
       "outputs": ["src/**/*.ts"]
