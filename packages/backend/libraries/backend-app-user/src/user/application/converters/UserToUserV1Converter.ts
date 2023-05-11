@@ -1,7 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { User } from '@cornie-js/backend-app-user-models';
 import { Converter } from '@cornie-js/backend-common';
-
-import { User } from '../../domain/models/User';
 
 export class UserToUserV1Converter
   implements Converter<User, apiModels.UserV1>

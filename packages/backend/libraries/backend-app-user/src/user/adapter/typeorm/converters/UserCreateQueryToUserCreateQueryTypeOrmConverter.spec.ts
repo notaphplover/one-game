@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { UserCreateQuery } from '@cornie-js/backend-app-user-models';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { UserCreateQueryFixtures } from '../../../domain/fixtures/UserCreateQueryFixtures';
-import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
 import { UserDb } from '../models/UserDb';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from './UserCreateQueryToUserCreateQueryTypeOrmConverter';
 

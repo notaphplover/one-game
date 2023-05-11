@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { User } from '../../../domain/models/User';
+import { User } from '@cornie-js/backend-app-user-models';
+
 import { UserDbFixtures } from '../fixtures/UserDbFixtures';
 import { UserDb } from '../models/UserDb';
 import { UserDbToUserConverter } from './UserDbToUserConverter';

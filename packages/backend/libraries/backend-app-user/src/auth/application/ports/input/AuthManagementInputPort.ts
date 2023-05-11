@@ -1,5 +1,11 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { JwtService } from '@cornie-js/backend-app-jwt';
+import {
+  UserJwtPayload,
+  User,
+  UserPersistenceOutputPort,
+  userPersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-user-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -7,12 +13,6 @@ import {
   BcryptHashProviderOutputPort,
   bcryptHashProviderOutputPortSymbol,
 } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { UserJwtPayload } from '../../../../user/application/models/UserJwtPayload';
-import {
-  UserPersistenceOutputPort,
-  userPersistenceOutputPortSymbol,
-} from '../../../../user/application/ports/output/UserPersistenceOutputPort';
-import { User } from '../../../../user/domain/models/User';
 
 @Injectable()
 export class AuthManagementInputPort {

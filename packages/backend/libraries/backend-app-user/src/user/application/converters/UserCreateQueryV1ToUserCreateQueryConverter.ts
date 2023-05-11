@@ -1,10 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { UserCreateQuery } from '@cornie-js/backend-app-user-models';
 import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { HashContext } from '../../../foundation/hash/application/models/HashContext';
-import { UserCreateQuery } from '../../domain/models/UserCreateQuery';
 
 @Injectable()
 export class UserCreateQueryV1ToUserCreateQueryConverter

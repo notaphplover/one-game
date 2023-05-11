@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { UserFindQuery } from '@cornie-js/backend-app-user-models';
 import { FindManyOptions } from 'typeorm';
 
 import { UserFindQueryFixtures } from '../../../domain/fixtures/UserFindQueryFixtures';
-import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { UserDb } from '../models/UserDb';
 import { UserFindQueryToUserFindQueryTypeOrmConverter } from './UserFindQueryToUserFindQueryTypeOrmConverter';
 

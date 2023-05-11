@@ -11,6 +11,7 @@
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-app-jwt": "workspace:*",
     "@cornie-js/backend-app-user-env": "workspace:*",
+    "@cornie-js/backend-app-user-models": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-db": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",

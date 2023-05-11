@@ -1,4 +1,4 @@
-import { UserFindQuery } from '../models/UserFindQuery';
+import { UserFindQuery } from '@cornie-js/backend-app-user-models';
 
 export class UserFindQueryFixtures {
   public static get withEmail(): UserFindQuery {

@@ -1,9 +1,11 @@
+import {
+  UserPersistenceOutputPort,
+  User,
+  UserCreateQuery,
+  UserFindQuery,
+} from '@cornie-js/backend-app-user-models';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { UserPersistenceOutputPort } from '../../../application/ports/output/UserPersistenceOutputPort';
-import { User } from '../../../domain/models/User';
-import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
-import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
 import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
 

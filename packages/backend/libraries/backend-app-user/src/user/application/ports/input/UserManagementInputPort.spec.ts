@@ -1,6 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import {
+  User,
+  UserCreateQuery,
+  UserFindQuery,
+  UserPersistenceOutputPort,
+} from '@cornie-js/backend-app-user-models';
 import { Converter } from '@cornie-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
@@ -9,12 +15,8 @@ import { HashContext } from '../../../../foundation/hash/application/models/Hash
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserCreateQueryFixtures } from '../../../domain/fixtures/UserCreateQueryFixtures';
 import { UserFixtures } from '../../../domain/fixtures/UserFixtures';
-import { User } from '../../../domain/models/User';
-import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
-import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
-import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
