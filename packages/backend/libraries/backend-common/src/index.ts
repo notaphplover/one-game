@@ -1,3 +1,4 @@
+import { Writable } from './common/application/models/Writable';
 import { Handler } from './common/application/modules/Handler';
 import { Entity } from './common/domain/models/Entity';
 import { Builder } from './common/domain/modules/Builder';
@@ -18,4 +19,5 @@ export type {
   ConverterAsync,
   Entity,
   Spec,
+  Writable,
 };
