@@ -30,6 +30,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "format": "turbo run format",
     "lint": "turbo run lint",
     "prepare": "husky install",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",

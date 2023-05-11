@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { User } from '@cornie-js/backend-app-user-models';
 
 import { UserFixtures } from '../../domain/fixtures/UserFixtures';
-import { User } from '../../domain/models/User';
 import { UserToUserV1Converter } from './UserToUserV1Converter';
 
 describe(UserToUserV1Converter.name, () => {

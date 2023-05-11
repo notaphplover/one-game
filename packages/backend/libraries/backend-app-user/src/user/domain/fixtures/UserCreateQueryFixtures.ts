@@ -1,4 +1,4 @@
-import { UserCreateQuery } from '../models/UserCreateQuery';
+import { UserCreateQuery } from '@cornie-js/backend-app-user-models';
 
 export class UserCreateQueryFixtures {
   public static get any(): UserCreateQuery {

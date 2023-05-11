@@ -1,3 +1,4 @@
+import { userPersistenceOutputPortSymbol } from '@cornie-js/backend-app-user-models';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -8,7 +9,6 @@ import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/Has
 import { UserCreateQueryV1ToUserCreateQueryConverter } from '../../../application/converters/UserCreateQueryV1ToUserCreateQueryConverter';
 import { UserToUserV1Converter } from '../../../application/converters/UserToUserV1Converter';
 import { UserManagementInputPort } from '../../../application/ports/input/UserManagementInputPort';
-import { userPersistenceOutputPortSymbol } from '../../../application/ports/output/UserPersistenceOutputPort';
 import { UserPersistenceTypeOrmAdapter } from '../../typeorm/adapters/UserPersistenceTypeOrmAdapter';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
 import { UserDbToUserConverter } from '../../typeorm/converters/UserDbToUserConverter';

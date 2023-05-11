@@ -1,4 +1,11 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import {
+  User,
+  UserCreateQuery,
+  UserFindQuery,
+  UserPersistenceOutputPort,
+  userPersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-user-models';
 import { Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -12,15 +19,8 @@ import {
   bcryptHashProviderOutputPortSymbol,
   BcryptHashProviderOutputPort,
 } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { User } from '../../../domain/models/User';
-import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
-import { UserFindQuery } from '../../../domain/models/UserFindQuery';
 import { UserCreateQueryV1ToUserCreateQueryConverter } from '../../converters/UserCreateQueryV1ToUserCreateQueryConverter';
 import { UserToUserV1Converter } from '../../converters/UserToUserV1Converter';
-import {
-  UserPersistenceOutputPort,
-  userPersistenceOutputPortSymbol,
-} from '../output/UserPersistenceOutputPort';
 
 @Injectable()
 export class UserManagementInputPort {
