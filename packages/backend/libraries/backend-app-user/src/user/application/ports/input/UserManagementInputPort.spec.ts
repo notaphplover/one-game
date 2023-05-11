@@ -2,6 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
+  UserCreateQueryFixtures,
+  UserFixtures,
+} from '@cornie-js/backend-app-user-fixtures';
+import {
   User,
   UserCreateQuery,
   UserFindQuery,
@@ -13,8 +17,6 @@ import { UuidContext } from '../../../../foundation/common/application/models/Uu
 import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { UserCreateQueryFixtures } from '../../../domain/fixtures/UserCreateQueryFixtures';
-import { UserFixtures } from '../../../domain/fixtures/UserFixtures';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
 import { UserManagementInputPort } from './UserManagementInputPort';
