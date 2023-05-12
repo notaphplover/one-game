@@ -1,6 +1,7 @@
 packages:
   - "packages/api/libraries/*"
   - "packages/api/tools/*"
+  - "packages/backend/apps/*/*"
   - "packages/backend/libraries/*"
   - "packages/backend/services/*"
   - "packages/backend/tools/*"
