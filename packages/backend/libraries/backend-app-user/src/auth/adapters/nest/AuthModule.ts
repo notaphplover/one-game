@@ -1,7 +1,7 @@
 import { JwtModule, JwtModuleOptions } from '@cornie-js/backend-app-jwt';
+import { DbModuleOptions } from '@cornie-js/backend-app-user-db';
 import { DynamicModule, Module } from '@nestjs/common';
 
-import { DbModuleOptions } from '../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { HashModule } from '../../../foundation/hash/adapter/nest/modules/HashModule';
 import { UserModule } from '../../../user/adapter/nest/modules/UserModule';
 import { AuthManagementInputPort } from '../../application/ports/input/AuthManagementInputPort';

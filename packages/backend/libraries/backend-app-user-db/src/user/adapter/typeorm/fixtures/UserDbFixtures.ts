@@ -1,4 +1,5 @@
-import { Writable } from '../../../../foundation/common/application/models/Writable';
+import { Writable } from '@cornie-js/backend-common';
+
 import { UserDb } from '../models/UserDb';
 
 export class UserDbFixtures {

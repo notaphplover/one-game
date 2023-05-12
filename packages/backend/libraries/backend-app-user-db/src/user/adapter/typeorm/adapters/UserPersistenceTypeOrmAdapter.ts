@@ -1,8 +1,8 @@
 import {
-  UserPersistenceOutputPort,
   User,
   UserCreateQuery,
   UserFindQuery,
+  UserPersistenceOutputPort,
 } from '@cornie-js/backend-app-user-models';
 import { Inject, Injectable } from '@nestjs/common';
 
