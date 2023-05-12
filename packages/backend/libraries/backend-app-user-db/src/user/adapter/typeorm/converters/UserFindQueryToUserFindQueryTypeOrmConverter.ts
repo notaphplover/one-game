@@ -1,9 +1,8 @@
 import { UserFindQuery } from '@cornie-js/backend-app-user-models';
-import { ConverterAsync } from '@cornie-js/backend-common';
+import { ConverterAsync, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 
-import { Writable } from '../../../../foundation/common/application/models/Writable';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()

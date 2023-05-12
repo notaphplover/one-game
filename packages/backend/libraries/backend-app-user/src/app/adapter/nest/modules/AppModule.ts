@@ -2,6 +2,7 @@ import {
   JwtModuleOptions,
   JwtServiceOptions,
 } from '@cornie-js/backend-app-jwt';
+import { DbModuleOptions } from '@cornie-js/backend-app-user-db';
 import {
   Environment,
   EnvModule,
@@ -11,7 +12,6 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { AuthModule } from '../../../../auth/adapters/nest/AuthModule';
-import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { UserModule } from '../../../../user/adapter/nest/modules/UserModule';
 
 function buildDbModuleOptions(): DbModuleOptions {
