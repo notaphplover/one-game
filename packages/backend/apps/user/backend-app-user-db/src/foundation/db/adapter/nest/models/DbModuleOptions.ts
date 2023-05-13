@@ -1,4 +1,10 @@
-import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import {
+  DynamicModule,
+  ForwardReference,
+  InjectionToken,
+  OptionalFactoryDependency,
+  Type,
+} from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export interface DbModuleOptions {
@@ -10,7 +16,7 @@ export interface DbModuleOptions {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | ForwardReference<any>
   )[];
-  inject?: unknown[];
+  inject?: (InjectionToken | OptionalFactoryDependency)[];
   useFactory: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...args: any[]
