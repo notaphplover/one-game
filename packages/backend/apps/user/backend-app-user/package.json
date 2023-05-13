@@ -1,5 +1,10 @@
 {
   "author": "Multiple authors",
+  "bin": {
+    "app-user-generate-migration": "./scripts/generateMigration.mjs",
+    "app-user-revert-migration": "./scripts/revertMigration.mjs",
+    "app-user-run-migration": "./scripts/revertMigration.mjs"
+  },
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },

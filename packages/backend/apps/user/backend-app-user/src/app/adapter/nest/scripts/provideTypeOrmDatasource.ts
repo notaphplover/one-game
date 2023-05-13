@@ -4,7 +4,7 @@ import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-export async function provideTypeOrmDataSource(): Promise<DataSource> {
+async function provideTypeOrmDataSource(): Promise<DataSource> {
   const applicationContext: INestApplicationContext =
     await NestFactory.createApplicationContext(EnvModule);
 
@@ -17,3 +17,5 @@ export async function provideTypeOrmDataSource(): Promise<DataSource> {
 
   return provideTypeOrmDataSourceFromOptions(dataSourceOptions);
 }
+
+export const dataSource: Promise<DataSource> = provideTypeOrmDataSource();
