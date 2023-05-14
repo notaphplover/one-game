@@ -1,4 +1,4 @@
-import { UserCreateQuery } from '@cornie-js/backend-app-user-models';
+import { UserCreateQuery } from '@cornie-js/backend-app-user-models/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';

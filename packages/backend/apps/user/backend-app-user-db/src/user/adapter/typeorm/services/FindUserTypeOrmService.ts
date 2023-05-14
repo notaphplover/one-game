@@ -1,4 +1,4 @@
-import { User, UserFindQuery } from '@cornie-js/backend-app-user-models';
+import { User, UserFindQuery } from '@cornie-js/backend-app-user-models/domain';
 import { Converter, ConverterAsync } from '@cornie-js/backend-common';
 import { FindTypeOrmService } from '@cornie-js/backend-db';
 import { Inject, Injectable } from '@nestjs/common';

@@ -1,4 +1,7 @@
-import { User, UserCreateQuery } from '@cornie-js/backend-app-user-models';
+import {
+  User,
+  UserCreateQuery,
+} from '@cornie-js/backend-app-user-models/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
 import { Inject, Injectable } from '@nestjs/common';

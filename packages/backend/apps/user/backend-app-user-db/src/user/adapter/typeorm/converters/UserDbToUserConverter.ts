@@ -1,4 +1,4 @@
-import { User } from '@cornie-js/backend-app-user-models';
+import { User } from '@cornie-js/backend-app-user-models/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 

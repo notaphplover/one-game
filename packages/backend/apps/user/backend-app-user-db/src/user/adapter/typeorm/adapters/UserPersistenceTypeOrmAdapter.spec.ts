@@ -9,7 +9,7 @@ import {
   User,
   UserCreateQuery,
   UserFindQuery,
-} from '@cornie-js/backend-app-user-models';
+} from '@cornie-js/backend-app-user-models/domain';
 
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
 import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
