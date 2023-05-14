@@ -3,7 +3,8 @@
   "bin": {
     "app-user-generate-migration": "./scripts/generateMigration.mjs",
     "app-user-revert-migration": "./scripts/revertMigration.mjs",
-    "app-user-run-migration": "./scripts/revertMigration.mjs"
+    "app-user-run-migration": "./scripts/runMigrations.mjs",
+    "app-user-seed-database": "./scripts/seedDatabase.mjs"
   },
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
@@ -18,6 +19,7 @@
     "@cornie-js/backend-app-user-db": "workspace:*",
     "@cornie-js/backend-app-user-env": "workspace:*",
     "@cornie-js/backend-app-user-models": "workspace:*",
+    "@cornie-js/backend-app-user-seeder": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-db": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
