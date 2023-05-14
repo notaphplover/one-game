@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { UserCreateQuery } from '@cornie-js/backend-app-user-models';
+import { UserCreateQuery } from '@cornie-js/backend-app-user-models/domain';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { HashContext } from '../../../foundation/hash/application/models/HashContext';

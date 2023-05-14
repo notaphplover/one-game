@@ -1,11 +1,13 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import {
+  UserPersistenceOutputPort,
+  userPersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-user-models/application';
+import {
   User,
   UserCreateQuery,
   UserFindQuery,
-  UserPersistenceOutputPort,
-  userPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-user-models';
+} from '@cornie-js/backend-app-user-models/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 

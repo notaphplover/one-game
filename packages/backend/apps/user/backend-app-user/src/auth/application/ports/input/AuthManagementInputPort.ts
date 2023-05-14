@@ -2,10 +2,10 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { JwtService } from '@cornie-js/backend-app-jwt';
 import {
   UserJwtPayload,
-  User,
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-user-models';
+} from '@cornie-js/backend-app-user-models/application';
+import { User } from '@cornie-js/backend-app-user-models/domain';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 

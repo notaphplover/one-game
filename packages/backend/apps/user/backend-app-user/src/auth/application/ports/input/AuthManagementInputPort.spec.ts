@@ -6,9 +6,8 @@ import { UserFixtures } from '@cornie-js/backend-app-user-fixtures';
 import {
   UserJwtPayload,
   UserPersistenceOutputPort,
-  User,
-  UserFindQuery,
-} from '@cornie-js/backend-app-user-models';
+} from '@cornie-js/backend-app-user-models/application';
+import { User, UserFindQuery } from '@cornie-js/backend-app-user-models/domain';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';

@@ -1,4 +1,4 @@
-import { userPersistenceOutputPortSymbol } from '@cornie-js/backend-app-user-models';
+import { userPersistenceOutputPortSymbol } from '@cornie-js/backend-app-user-models/application';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 

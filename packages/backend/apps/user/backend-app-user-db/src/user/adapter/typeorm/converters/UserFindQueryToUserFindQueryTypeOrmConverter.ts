@@ -1,4 +1,4 @@
-import { UserFindQuery } from '@cornie-js/backend-app-user-models';
+import { UserFindQuery } from '@cornie-js/backend-app-user-models/domain';
 import { ConverterAsync, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';

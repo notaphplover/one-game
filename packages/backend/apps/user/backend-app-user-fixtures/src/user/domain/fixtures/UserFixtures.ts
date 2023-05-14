@@ -1,4 +1,4 @@
-import { User } from '@cornie-js/backend-app-user-models';
+import { User } from '@cornie-js/backend-app-user-models/domain';
 
 export class UserFixtures {
   public static get any(): User {

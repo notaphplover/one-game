@@ -5,12 +5,12 @@ import {
   UserCreateQueryFixtures,
   UserFixtures,
 } from '@cornie-js/backend-app-user-fixtures';
+import { UserPersistenceOutputPort } from '@cornie-js/backend-app-user-models/application';
 import {
   User,
   UserCreateQuery,
   UserFindQuery,
-  UserPersistenceOutputPort,
-} from '@cornie-js/backend-app-user-models';
+} from '@cornie-js/backend-app-user-models/domain';
 import { Converter } from '@cornie-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
