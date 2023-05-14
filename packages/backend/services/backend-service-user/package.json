@@ -63,6 +63,7 @@
     "prebuild": "pnpm run build:clean",
     "preserve": "dev-user-db-start",
     "preserve:ts": "dev-user-db-start",
+    "seed": "app-user-seed-database",
     "serve": "trap '' INT TERM; node lib/app/adapter/nest/scripts/bootstrap.js",
     "serve:ts": "trap '' INT TERM; ts-node src/app/adapter/nest/scripts/bootstrap.ts",
     "test": "jest --config=jest.config.mjs --runInBand",

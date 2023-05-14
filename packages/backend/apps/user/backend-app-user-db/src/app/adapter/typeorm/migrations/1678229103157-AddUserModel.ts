@@ -10,15 +10,9 @@ export class AddUserModel1678229103157 implements MigrationInterface {
     await queryRunner.query(
       `CREATE UNIQUE INDEX "IDX_4a257d2c9837248d70640b3e36" ON "User" ("email") `,
     );
-    await queryRunner.query(
-      `CREATE UNIQUE INDEX "IDX_efeb6027107de99418197e12fc" ON "User" ("password_hash") `,
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `DROP INDEX "public"."IDX_efeb6027107de99418197e12fc"`,
-    );
     await queryRunner.query(
       `DROP INDEX "public"."IDX_4a257d2c9837248d70640b3e36"`,
     );

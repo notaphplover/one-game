@@ -20,15 +20,17 @@ export abstract class BaseSeeder<TEntity extends ObjectLiteral>
       seeds.push(...this._getDummySeeds());
     }
 
-    await this._seed(this._getDummySeeds());
+    await this.#seed(seeds);
   }
 
-  protected async _seed(
-    seeds: QueryDeepPartialEntity<TEntity>[],
-  ): Promise<void> {
-    await this.#repository.insert(seeds);
+  async #seed(seeds: QueryDeepPartialEntity<TEntity>[]): Promise<void> {
+    await this.#repository.upsert(seeds, {
+      conflictPaths: this._getEntityDiscriminatorProperties(),
+      skipUpdateIfNoValuesChanged: true,
+    });
   }
 
   protected abstract _getAppSeeds(): QueryDeepPartialEntity<TEntity>[];
   protected abstract _getDummySeeds(): QueryDeepPartialEntity<TEntity>[];
+  protected abstract _getEntityDiscriminatorProperties(): string[];
 }

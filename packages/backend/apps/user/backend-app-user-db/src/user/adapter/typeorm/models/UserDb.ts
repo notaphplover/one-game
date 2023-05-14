@@ -31,6 +31,5 @@ export class UserDb {
     name: 'password_hash',
     type: 'varchar',
   })
-  @Index({ unique: true })
   public readonly passwordHash!: string;
 }

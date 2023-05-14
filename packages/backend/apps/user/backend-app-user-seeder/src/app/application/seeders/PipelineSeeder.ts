@@ -15,7 +15,7 @@ export class PipelineSeeder implements Seeder {
     this.#seeders = seeders;
   }
 
-  public async seed(options?: SeedOptions | undefined): Promise<void> {
+  public async seed(options?: SeedOptions): Promise<void> {
     for (const seeder of this.#seeders) {
       await seeder.seed(options);
     }
