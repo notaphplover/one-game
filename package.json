@@ -32,6 +32,7 @@
     "build": "turbo run build",
     "format": "turbo run format",
     "lint": "turbo run lint",
+    "migrations:run": "turbo run migrations:run",
     "prepare": "husky install",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
     "test:integration:js": "turbo test:integration:js",

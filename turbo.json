@@ -32,6 +32,10 @@
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.ts"]
     },
+    "migrations:run": {
+      "dependsOn": ["build"],
+      "inputs": ["dist/**", "lib/**"]
+    },
     "serve": {
       "cache": false,
       "dependsOn": ["build"],
