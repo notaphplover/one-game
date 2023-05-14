@@ -2,28 +2,16 @@ import {
   JwtModuleOptions,
   JwtServiceOptions,
 } from '@cornie-js/backend-app-jwt';
-import { DbModuleOptions } from '@cornie-js/backend-app-user-db';
 import {
   Environment,
   EnvModule,
   EnvironmentService,
 } from '@cornie-js/backend-app-user-env';
 import { DynamicModule, Module } from '@nestjs/common';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { AuthModule } from '../../../../auth/adapters/nest/AuthModule';
+import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { UserModule } from '../../../../user/adapter/nest/modules/UserModule';
-
-function buildDbModuleOptions(): DbModuleOptions {
-  return {
-    imports: [EnvModule],
-    inject: [EnvironmentService],
-    useFactory: (
-      environmentService: EnvironmentService,
-    ): TypeOrmModuleOptions =>
-      environmentService.getEnvironment().typeOrmDatasourceOptions,
-  };
-}
 
 function buildJwtModuleOptions(): JwtModuleOptions {
   return {
