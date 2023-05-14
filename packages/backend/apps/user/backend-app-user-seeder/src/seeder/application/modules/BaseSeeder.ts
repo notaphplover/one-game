@@ -20,7 +20,7 @@ export abstract class BaseSeeder<TEntity extends ObjectLiteral>
       seeds.push(...this._getDummySeeds());
     }
 
-    await this.#seed(this._getDummySeeds());
+    await this.#seed(seeds);
   }
 
   async #seed(seeds: QueryDeepPartialEntity<TEntity>[]): Promise<void> {
