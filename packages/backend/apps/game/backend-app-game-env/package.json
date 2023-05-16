@@ -3,7 +3,7 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "Backend user app env",
+  "description": "Backend game app env",
   "dependencies": {
     "@nestjs/common": "9.4.1",
     "@cornie-js/backend-env": "workspace:*",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@cornie-js/backend-app-user-env",
+  "name": "@cornie-js/backend-app-game-env",
   "publishConfig": {
     "access": "public"
   },
