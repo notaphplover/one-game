@@ -2,7 +2,11 @@ import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from './ports/output/GamePersistenceOutputPort';
+import {
+  GameSlotPersistenceOutputPort,
+  gameSlotPersistenceOutputPortSymbol,
+} from './ports/output/GameSlotPersistenceOutputPort';
 
-export { gamePersistenceOutputPortSymbol };
+export { gamePersistenceOutputPortSymbol, gameSlotPersistenceOutputPortSymbol };
 
-export type { GamePersistenceOutputPort };
+export type { GamePersistenceOutputPort, GameSlotPersistenceOutputPort };
