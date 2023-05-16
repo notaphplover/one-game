@@ -5,8 +5,8 @@
   },
   "description": "Backend user app env",
   "dependencies": {
-    "@nestjs/common": "9.4.0",
-    "@nestjs/core": "9.4.0",
+    "@nestjs/common": "9.4.1",
+    "@nestjs/core": "9.4.1",
     "@cornie-js/backend-env": "workspace:*",
     "@cornie-js/backend-jwt": "workspace:*",
     "envalid": "7.3.1",
@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
-    "@types/node": "18.16.9",
+    "@types/node": "18.16.10",
     "@typescript-eslint/eslint-plugin": "5.59.6",
     "@typescript-eslint/parser": "5.59.6",
     "eslint": "8.40.0",
