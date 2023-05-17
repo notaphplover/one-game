@@ -5,8 +5,7 @@
   },
   "description": "Backend app jwt",
   "dependencies": {
-    "@nestjs/common": "9.4.1",
-    "@cornie-js/backend-jwt": "workspace:*"
+    "@nestjs/common": "9.4.1"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
@@ -28,7 +27,7 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "main": "lib/index.js",
-  "name": "@cornie-js/backend-app-jwt",
+  "name": "@cornie-js/backend-app-uuid",
   "publishConfig": {
     "access": "public"
   },
