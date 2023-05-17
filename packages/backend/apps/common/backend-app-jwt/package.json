@@ -6,10 +6,7 @@
   "description": "Backend app jwt",
   "dependencies": {
     "@nestjs/common": "9.4.1",
-    "@nestjs/core": "9.4.1",
-    "@cornie-js/backend-jwt": "workspace:*",
-    "reflect-metadata": "0.1.13",
-    "rxjs": "7.8.1"
+    "@cornie-js/backend-jwt": "workspace:*"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
