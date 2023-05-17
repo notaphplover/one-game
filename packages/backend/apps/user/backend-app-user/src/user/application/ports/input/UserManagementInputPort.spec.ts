@@ -11,10 +11,10 @@ import {
   UserCreateQuery,
   UserFindQuery,
 } from '@cornie-js/backend-app-user-models/domain';
+import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { Converter } from '@cornie-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
-import { UuidProviderOutputPort } from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
