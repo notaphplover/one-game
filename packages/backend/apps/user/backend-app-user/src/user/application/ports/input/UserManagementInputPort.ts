@@ -8,14 +8,14 @@ import {
   UserCreateQuery,
   UserFindQuery,
 } from '@cornie-js/backend-app-user-models/domain';
+import {
+  UuidProviderOutputPort,
+  uuidProviderOutputPortSymbol,
+} from '@cornie-js/backend-app-uuid';
 import { Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
-import {
-  UuidProviderOutputPort,
-  uuidProviderOutputPortSymbol,
-} from '../../../../foundation/common/application/ports/output/UuidProviderOutputPort';
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
 import {
   bcryptHashProviderOutputPortSymbol,
