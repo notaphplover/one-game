@@ -1,0 +1,96 @@
+import { Card } from '@cornie-js/backend-app-game-models/cards/domain';
+import {
+  GamePersistenceOutputPort,
+  gamePersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-game-models/games/application';
+import {
+  Game,
+  GameInitialDraws,
+  GameSlotUpdateQuery,
+  GameUpdateQuery,
+} from '@cornie-js/backend-app-game-models/games/domain';
+import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import { Inject, Injectable } from '@nestjs/common';
+
+import { NonStartedGameFilledEvent } from '../../domain/events/NonStartedGameFilledEvent';
+import { GameService } from '../../domain/services/GameService';
+
+@Injectable()
+export class NonStartedGameFilledEventHandler
+  implements Handler<[NonStartedGameFilledEvent], void>
+{
+  readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
+  readonly #gameService: GameService;
+
+  constructor(
+    @Inject(gamePersistenceOutputPortSymbol)
+    gamePersistenceOutputPort: GamePersistenceOutputPort,
+    @Inject(GameService)
+    gameService: GameService,
+  ) {
+    this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
+    this.#gameService = gameService;
+  }
+
+  public async handle(
+    nonStartedGameFilledEvent: NonStartedGameFilledEvent,
+  ): Promise<void> {
+    const game: Game = await this.#getGameOrFail(
+      nonStartedGameFilledEvent.gameId,
+    );
+
+    const gameUpdateQuery: GameUpdateQuery = this.#buildGameUpdateQuery(game);
+
+    await this.#gamePersistenceOutputPort.update(gameUpdateQuery);
+  }
+
+  #buildGameUpdateQuery(game: Game): GameUpdateQuery {
+    const gameInitialDraws: GameInitialDraws =
+      this.#gameService.getInitialCardsDraw(game);
+
+    const gameSlotUpdateQueries: GameSlotUpdateQuery[] =
+      gameInitialDraws.playersCards.map(
+        (cards: Card[], index: number): GameSlotUpdateQuery => ({
+          cards: cards,
+          gameSlotFindQuery: {
+            gameId: game.id,
+            position: index,
+          },
+        }),
+      );
+
+    const gameUpdateQuery: GameUpdateQuery = {
+      active: true,
+      currentCard: gameInitialDraws.currentCard,
+      currentColor: this.#gameService.getInitialCardColor(
+        gameInitialDraws.currentCard,
+      ),
+      currentDirection: this.#gameService.getInitialDirection(),
+      currentPlayingSlotIndex: this.#gameService.getInitialPlayingSlotIndex(),
+      deck: gameInitialDraws.remainingDeck,
+      drawCount: this.#gameService.getInitialDrawCount(),
+      gameFindQuery: {
+        id: game.id,
+      },
+      gameSlotUpdateQueries,
+    };
+
+    return gameUpdateQuery;
+  }
+
+  async #getGameOrFail(gameId: string): Promise<Game> {
+    const game: Game | undefined =
+      await this.#gamePersistenceOutputPort.findOne({
+        id: gameId,
+      });
+
+    if (game === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `expecting game "${gameId}", none found`,
+      );
+    }
+
+    return game;
+  }
+}
