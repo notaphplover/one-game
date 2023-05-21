@@ -1,7 +1,7 @@
 import { EnvLoader } from '@cornie-js/backend-env';
 import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 import { Injectable } from '@nestjs/common';
-import { cleanEnv, json, port, str, num, url } from 'envalid';
+import { cleanEnv, json, port, str, num, url, bool } from 'envalid';
 
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
@@ -32,6 +32,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       ONE_JS_GAME_SERVICE_JWT_PRIVATE_KEY: str(),
       ONE_JS_GAME_SERVICE_JWT_PUBLIC_KEY: str(),
       ONE_JS_GAME_SERVICE_PORT: port(),
+      ONE_JS_GAME_SERVICE_SEED_DUMMY: bool(),
       ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS: json(),
     });
 
@@ -47,6 +48,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       jwtPrivateKey: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_PRIVATE_KEY,
       jwtPublicKey: rawEnvironment.ONE_JS_GAME_SERVICE_JWT_PUBLIC_KEY,
       port: rawEnvironment.ONE_JS_GAME_SERVICE_PORT,
+      seedDummyData: rawEnvironment.ONE_JS_GAME_SERVICE_SEED_DUMMY,
       typeOrmDatasourceOptions:
         rawEnvironment.ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS,
     };
