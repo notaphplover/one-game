@@ -1,13 +1,18 @@
+import { AppModule } from '@cornie-js/backend-app-game';
+import { EnvModule } from '@cornie-js/backend-app-game-env';
+import { JwtModule } from '@cornie-js/backend-app-jwt';
 import { Module } from '@nestjs/common';
 
-import { EnvModule } from '../../../../foundation/env/adapter/nest/modules/EnvModule';
-import { JwtModule } from '../../../../foundation/jwt/adapter/nest/modules/JwtModule';
-import { UserModule } from '../../../../user/adapter/nest/modules/UserModule';
+import { buildJwtModuleOptions } from '../../../../foundation/jwt/adapter/nest/calculations/buildJwtModuleOptions';
 import { AuthMiddleware } from '../../../application/middlewares/AuthMiddleware';
 
 @Module({
   exports: [AuthMiddleware],
-  imports: [EnvModule, JwtModule, UserModule],
+  imports: [
+    AppModule,
+    EnvModule,
+    JwtModule.forRootAsync(buildJwtModuleOptions()),
+  ],
   providers: [AuthMiddleware],
 })
 export class AuthModule {}

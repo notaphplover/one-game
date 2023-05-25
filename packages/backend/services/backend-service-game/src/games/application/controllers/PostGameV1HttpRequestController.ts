@@ -1,4 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { GameManagementInputPort } from '@cornie-js/backend-app-game';
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
@@ -13,7 +14,6 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
 import { PostGameV1RequestParamHandler } from '../handlers/PostGameV1RequestParamHandler';
-import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
 @Injectable()
 export class PostGameV1HttpRequestController extends SingleEntityHttpRequestController<

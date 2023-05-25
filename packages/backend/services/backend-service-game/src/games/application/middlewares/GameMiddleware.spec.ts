@@ -1,5 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { NonStartedGameFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
+import { GamePersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
+import {
+  Game,
+  GameFindQuery,
+} from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   Request,
@@ -7,11 +13,7 @@ import {
   requestContextProperty,
 } from '@cornie-js/backend-http';
 
-import { NonStartedGameFixtures } from '../../domain/fixtures/NonStartedGameFixtures';
-import { Game } from '../../domain/models/Game';
-import { GameFindQuery } from '../../domain/query/GameFindQuery';
 import { GameRequestContext } from '../models/GameRequestContext';
-import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameMiddleware } from './GameMiddleware';
 
 describe(GameMiddleware.name, () => {

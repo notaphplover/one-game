@@ -1,4 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { Game } from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
   Auth,
@@ -9,7 +10,6 @@ import {
 } from '@cornie-js/backend-http';
 import { Injectable } from '@nestjs/common';
 
-import { Game } from '../../domain/models/Game';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 
 export const GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM: string = 'slotIndex';

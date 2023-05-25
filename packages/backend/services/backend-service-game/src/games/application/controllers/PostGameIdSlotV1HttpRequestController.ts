@@ -1,4 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { GameSlotManagementInputPort } from '@cornie-js/backend-app-game';
+import { Game } from '@cornie-js/backend-app-game-models/games/domain';
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
@@ -12,10 +14,8 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { Game } from '../../domain/models/Game';
 import { PostGameIdSlotV1RequestParamHandler } from '../handlers/PostGameIdSlotV1RequestParamHandler';
 import { GameMiddleware } from '../middlewares/GameMiddleware';
-import { GameSlotManagementInputPort } from '../ports/input/GameSlotManagementInputPort';
 
 @Injectable()
 export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpRequestController<
