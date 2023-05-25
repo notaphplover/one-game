@@ -20,6 +20,26 @@
       "inputs": ["src/**/*.ts"],
       "outputs": ["lib/**", "src/models/types.ts"]
     },
+    "@cornie-js/backend-app-game#build": {
+      "dependsOn": ["^build", "@cornie-js/backend-app-game-fixtures#build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**"]
+    },
+    "@cornie-js/backend-app-game-db#build": {
+      "dependsOn": ["^build", "@cornie-js/backend-app-game-fixtures#build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**"]
+    },
+    "@cornie-js/backend-app-user#build": {
+      "dependsOn": ["^build", "@cornie-js/backend-app-user-fixtures#build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**"]
+    },
+    "@cornie-js/backend-app-user-db#build": {
+      "dependsOn": ["^build", "@cornie-js/backend-app-user-fixtures#build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["lib/**"]
+    },
     "@cornie-js/web-ui#build": {
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.{cjs,js,jsx}", "vite.config.js"]

@@ -5,6 +5,7 @@
   },
   "description": "Backend game app fixtures",
   "dependencies": {
+    "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-app-game-models": "workspace:*"
   },
   "devDependencies": {
@@ -20,8 +21,11 @@
     "typescript": "5.0.4"
   },
   "exports": {
+    "./cards/application": "./lib/cards/application/index.js",
     "./cards/domain": "./lib/cards/domain/index.js",
-    "./games/domain": "./lib/games/domain/index.js"
+    "./games/application": "./lib/games/application/index.js",
+    "./games/domain": "./lib/games/domain/index.js",
+    "./user/application": "./lib/users/application/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
