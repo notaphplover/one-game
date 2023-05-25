@@ -2,6 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
+  ActiveGameSlotV1Fixtures,
+  NonStartedGameSlotV1Fixtures,
+} from '@cornie-js/backend-app-game-fixtures/games/application';
+import {
   ActiveGameSlotFixtures,
   NonStartedGameSlotFixtures,
 } from '@cornie-js/backend-app-game-fixtures/games/domain';
@@ -11,8 +15,6 @@ import {
 } from '@cornie-js/backend-app-game-models/games/domain';
 import { Builder } from '@cornie-js/backend-common';
 
-import { ActiveGameSlotV1Fixtures } from '../fixtures/ActiveGameSlotV1Fixtures';
-import { NonStartedGameSlotV1Fixtures } from '../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameSlotV1FromGameSlotBuilder } from './GameSlotV1FromGameSlotBuilder';
 
 describe(GameSlotV1FromGameSlotBuilder.name, () => {
