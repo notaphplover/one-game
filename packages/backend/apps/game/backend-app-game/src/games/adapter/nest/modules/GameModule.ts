@@ -1,9 +1,5 @@
-import { DbModule, DbModuleOptions } from '@cornie-js/backend-app-game-db';
+import { DbModuleOptions, GameDbModule } from '@cornie-js/backend-app-game-db';
 import { GameDb, GameSlotDb } from '@cornie-js/backend-app-game-db/entities';
-import {
-  gamePersistenceOutputPortSymbol,
-  gameSlotPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
 import { UuidModule } from '@cornie-js/backend-app-uuid';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -30,18 +26,19 @@ import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../../domain/specs/GameCa
 @Module({})
 export class GameModule {
   public static forRootAsync(dbOptions: DbModuleOptions): DynamicModule {
+    const gamedbModule: DynamicModule = GameDbModule.forRootAsync(dbOptions);
+
     return {
       exports: [
+        gamedbModule,
         GameManagementInputPort,
-        gamePersistenceOutputPortSymbol,
         GameSlotManagementInputPort,
-        gameSlotPersistenceOutputPortSymbol,
       ],
       global: false,
       imports: [
         UuidModule,
         CardModule,
-        DbModule.forRootAsync(dbOptions),
+        gamedbModule,
         TypeOrmModule.forFeature([GameDb, GameSlotDb]),
       ],
       module: GameModule,

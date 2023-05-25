@@ -1,3 +1,4 @@
+import { EnvModule } from '@cornie-js/backend-app-game-env';
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { HttpApiModule } from '../../../../foundation/api/adapter/nest/modules/HttpApiModule';
@@ -10,7 +11,7 @@ export class UserModule {
     return {
       exports: [UserManagementInputPort],
       global: false,
-      imports: [HttpApiModule.forRootAsync(options)],
+      imports: [EnvModule, HttpApiModule.forRootAsync(options)],
       module: UserModule,
       providers: [UserManagementInputPort],
     };
