@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { GameCreateQueryV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
 import { GameCardSpecFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import {
   GameCardSpec,
@@ -8,7 +9,6 @@ import {
 } from '@cornie-js/backend-app-game-models/games/domain';
 import { Builder } from '@cornie-js/backend-common';
 
-import { GameCreateQueryV1Fixtures } from '../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from './GameCreateQueryFromGameCreateQueryV1Builder';
 

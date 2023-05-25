@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { GameCreateQueryV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
+import {
+  ActiveGameV1Fixtures,
+  NonStartedGameV1Fixtures,
+} from '@cornie-js/backend-app-game-fixtures/games/application';
 import {
   ActiveGameFixtures,
   GameCreateQueryFixtures,
@@ -15,10 +20,7 @@ import {
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { Builder } from '@cornie-js/backend-common';
 
-import { GameCreateQueryV1Fixtures } from '../../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
-import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
-import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
 import { GameManagementInputPort } from './GameManagementInputPort';
 
 describe(GameManagementInputPort.name, () => {

@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { GameSlotCreateV1Fixtures } from '@cornie-js/backend-app-game-fixtures/games/application';
 import { GameSlotCreateQuery } from '@cornie-js/backend-app-game-models/games/domain';
 
 import { GameSlotCreateQueryContextFixtures } from '../fixtures/GameSlotCreateQueryContextFixtures';
-import { GameSlotCreateV1Fixtures } from '../fixtures/GameSlotCreateV1Fixtures';
 import { GameSlotCreateQueryContext } from '../models/GameSlotCreateQueryContext';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from './GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 

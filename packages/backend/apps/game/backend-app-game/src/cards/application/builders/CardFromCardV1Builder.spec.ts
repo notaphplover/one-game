@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { CardV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
 import {
   Card,
   CardColor,
@@ -8,7 +9,6 @@ import {
 } from '@cornie-js/backend-app-game-models/cards/domain';
 import { Builder } from '@cornie-js/backend-common';
 
-import { CardV1Fixtures } from '../fixtures/CardV1Fixtures';
 import { CardFromCardV1Builder } from './CardFromCardV1Builder';
 
 describe(CardFromCardV1Builder.name, () => {

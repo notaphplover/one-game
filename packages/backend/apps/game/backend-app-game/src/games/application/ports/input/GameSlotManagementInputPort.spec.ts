@@ -1,6 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { CardV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
+import { NonStartedGameSlotV1Fixtures } from '@cornie-js/backend-app-game-fixtures/games/application';
 import {
   ActiveGameFixtures,
   GameSlotCreateQueryFixtures,
@@ -26,10 +28,8 @@ import {
   Spec,
 } from '@cornie-js/backend-common';
 
-import { CardV1Fixtures } from '../../../../cards/application/fixtures/CardV1Fixtures';
 import { UserV1Fixtures } from '../../../../user/application/fixtures/models/UserV1Fixtures';
 import { NonStartedGameFilledEvent } from '../../../domain/events/NonStartedGameFilledEvent';
-import { NonStartedGameSlotV1Fixtures } from '../../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameSlotCreateQueryContext } from '../../models/GameSlotCreateQueryContext';
 import { GameSlotManagementInputPort } from './GameSlotManagementInputPort';
 
