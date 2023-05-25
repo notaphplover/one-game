@@ -1,3 +1,4 @@
+import { AppModule } from '@cornie-js/backend-app-game';
 import { Module } from '@nestjs/common';
 
 import { AuthModule } from '../../../../auth/adapter/nest/modules/AuthModule';
@@ -17,7 +18,6 @@ import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controll
 import { GetGameV1GameIdHttpRequestNestController } from '../controllers/GetGameV1GameIdHttpRequestNestController';
 import { PostGameIdSlotV1HttpRequestNestController } from '../controllers/PostGameIdSlotV1HttpRequestNestController';
 import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1HttpRequestNestController';
-import { GameModule } from './GameModule';
 
 @Module({
   controllers: [
@@ -27,7 +27,7 @@ import { GameModule } from './GameModule';
     PostGameV1HttpRequestNestController,
     PostGameIdSlotV1HttpRequestNestController,
   ],
-  imports: [AuthModule, JsonSchemaModule, HttpModule, GameModule],
+  imports: [AuthModule, JsonSchemaModule, HttpModule, AppModule],
   providers: [
     GameMiddleware,
     GetGameGameIdSlotSlotIdCardsV1RequestController,

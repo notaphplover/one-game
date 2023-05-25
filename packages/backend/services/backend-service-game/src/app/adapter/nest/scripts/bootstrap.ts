@@ -1,3 +1,7 @@
+import {
+  Environment,
+  EnvironmentService,
+} from '@cornie-js/backend-app-game-env';
 import helmet from '@fastify/helmet';
 import { ConsoleLogger, INestApplication, LoggerService } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -6,8 +10,6 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 
-import { Environment } from '../../../../foundation/env/application/models/Environment';
-import { EnvironmentService } from '../../../../foundation/env/application/services/EnvironmentService';
 import { enableCors } from '../actions/enableCors';
 import { registerSignalHandlers } from '../actions/registerSignalHandlers';
 import { AppModule } from '../modules/AppModule';

@@ -1,4 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { Game } from '@cornie-js/backend-app-game-models/games/domain';
 import { Handler } from '@cornie-js/backend-common';
 import {
   RequestWithBody,
@@ -6,7 +7,6 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Game } from '../../domain/models/Game';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 import { PostGameIdSlotV1RequestBodyHandler } from './PostGameIdSlotV1RequestBodyHandler';
 

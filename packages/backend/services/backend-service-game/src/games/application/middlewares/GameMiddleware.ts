@@ -1,3 +1,8 @@
+import {
+  GamePersistenceOutputPort,
+  gamePersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-game-models/games/application';
+import { Game } from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   Middleware,
@@ -8,12 +13,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Game } from '../../domain/models/Game';
 import { GameRequestContext } from '../models/GameRequestContext';
-import {
-  GamePersistenceOutputPort,
-  gamePersistenceOutputPortSymbol,
-} from '../ports/output/GamePersistenceOutputPort';
 
 @Injectable()
 export class GameMiddleware implements Middleware {

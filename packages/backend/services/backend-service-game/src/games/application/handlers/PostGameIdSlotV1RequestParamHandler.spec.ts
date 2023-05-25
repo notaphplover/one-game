@@ -1,15 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { GameSlotCreateV1Fixtures } from '@cornie-js/backend-app-game-fixtures/games/application';
+import { NonStartedGameFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
+import { Game } from '@cornie-js/backend-app-game-models/games/domain';
 import { Handler } from '@cornie-js/backend-common';
 import {
   RequestWithBody,
   requestContextProperty,
 } from '@cornie-js/backend-http';
 
-import { NonStartedGameFixtures } from '../../domain/fixtures/NonStartedGameFixtures';
-import { Game } from '../../domain/models/Game';
-import { GameSlotCreateV1Fixtures } from '../fixtures/GameSlotCreateV1Fixtures';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 import { PostGameIdSlotV1RequestParamHandler } from './PostGameIdSlotV1RequestParamHandler';
 
