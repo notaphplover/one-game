@@ -11,8 +11,8 @@
   },
   "description": "Backend user app",
   "dependencies": {
-    "@nestjs/common": "9.4.1",
-    "@nestjs/core": "9.4.1",
+    "@nestjs/common": "9.4.2",
+    "@nestjs/core": "9.4.2",
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-app-jwt": "workspace:*",
     "@cornie-js/backend-app-uuid": "workspace:*",

@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-app-game-db": "workspace:*",
     "@cornie-js/backend-app-game-seeds": "workspace:*",
-    "@nestjs/common": "9.4.1",
+    "@nestjs/common": "9.4.2",
     "@nestjs/typeorm": "9.0.1",
     "typeorm": "0.3.16"
   },

@@ -5,8 +5,8 @@
   },
   "description": "Backend user app models",
   "dependencies": {
-    "@nestjs/common": "9.4.1",
-    "@nestjs/core": "9.4.1",
+    "@nestjs/common": "9.4.2",
+    "@nestjs/core": "9.4.2",
     "@nestjs/typeorm": "9.0.1",
     "@cornie-js/backend-app-game-models": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
