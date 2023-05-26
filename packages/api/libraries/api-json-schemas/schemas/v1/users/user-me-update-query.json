@@ -1,13 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://onegame.schemas/api/v1/users/user-id-update-query.json",
-  "title": "UserIdUpdateQueryV1",
+  "$id": "https://onegame.schemas/api/v1/users/user-me-update-query.json",
+  "title": "UserMeUpdateQueryV1",
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "code": {
-      "type": "string"
-    },
     "name": {
       "type": "string"
     }

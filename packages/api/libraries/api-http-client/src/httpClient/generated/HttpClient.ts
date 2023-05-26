@@ -182,6 +182,25 @@ export class HttpClient {
       undefined,
     );
   }
+  public async updateUserMe(
+    headers: {
+      [key: string]: string;
+    },
+    body: apiModels.UserMeUpdateQueryV1,
+  ): Promise<
+    | Response<Record<string, string>, apiModels.UserV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'PATCH',
+      '/v1/users/me',
+      headers,
+      undefined,
+      undefined,
+      body,
+    );
+  }
   public async getUser(
     headers: {
       [key: string]: string;
@@ -202,29 +221,6 @@ export class HttpClient {
       undefined,
       url,
       undefined,
-    );
-  }
-  public async updateUser(
-    headers: {
-      [key: string]: string;
-    },
-    url: {
-      [key: string]: string;
-      userId: string;
-    },
-    body: apiModels.UserIdUpdateQueryV1,
-  ): Promise<
-    | Response<Record<string, string>, apiModels.UserV1, 200>
-    | Response<Record<string, string>, apiModels.ErrorV1, 401>
-    | Response<Record<string, string>, apiModels.ErrorV1, 403>
-  > {
-    return this.#axiosHttpClient.callEndpoint(
-      'PATCH',
-      '/v1/users/{userId}',
-      headers,
-      undefined,
-      url,
-      body,
     );
   }
 }

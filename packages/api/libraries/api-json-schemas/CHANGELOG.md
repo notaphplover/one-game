@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `SkipCardV1`.
 - Added `UserCreateQueryV1`.
 - Added `UserIdTokenCreateQueryV1`.
-- Added `UserIdUpdateQueryV1`.
+- Added `UserMeUpdateQueryV1`.
 - Added `UserV1`.
 - Added `WildCardV1`.
 - Added `WildDraw4CardV1`.
