@@ -36,7 +36,7 @@ export enum ApiSchemaId {
   Types = 'https://onegame.schemas/api/types.json',
   TypesV1 = 'https://onegame.schemas/api/v1/types.json',
   UserCreateQueryV1 = 'https://onegame.schemas/api/v1/users/user-create-query.json',
-  UserIdUpdateQueryV1 = 'https://onegame.schemas/api/v1/users/user-id-update-query.json',
+  UserMeUpdateQueryV1 = 'https://onegame.schemas/api/v1/users/user-me-update-query.json',
   UserV1 = 'https://onegame.schemas/api/v1/users/user.json',
   WildCardV1 = 'https://onegame.schemas/api/v1/cards/wild-card.json',
   WildDraw4CardV1 = 'https://onegame.schemas/api/v1/cards/wild-draw-4-card.json',

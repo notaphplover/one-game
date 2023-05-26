@@ -36,7 +36,7 @@ export type TypesV1 =
   | NonStartedGameSlotV1
   | NonStartedGameV1
   | UserCreateQueryV1
-  | UserIdUpdateQueryV1
+  | UserMeUpdateQueryV1
   | UserV1;
 export type CardV1 =
   | BlankCardV1
@@ -154,8 +154,7 @@ export interface UserCreateQueryV1 {
   name: string;
   password: string;
 }
-export interface UserIdUpdateQueryV1 {
-  code?: string;
+export interface UserMeUpdateQueryV1 {
   name?: string;
 }
 export interface UserV1 {
