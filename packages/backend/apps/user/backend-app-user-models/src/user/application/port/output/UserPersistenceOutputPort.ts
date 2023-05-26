@@ -1,6 +1,6 @@
 import { User } from '../../../domain/models/User';
 import { UserCreateQuery } from '../../../domain/models/UserCreateQuery';
-import { UserFindQuery } from '../../../domain/models/UserFindQuery';
+import { UserFindQuery } from '../../../query/UserFindQuery';
 
 export interface UserPersistenceOutputPort {
   create(userCreateQuery: UserCreateQuery): Promise<User>;
