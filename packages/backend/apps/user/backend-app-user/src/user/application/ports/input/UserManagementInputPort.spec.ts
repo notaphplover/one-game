@@ -4,12 +4,14 @@ import { models as apiModels } from '@cornie-js/api-models';
 import {
   UserCreateQueryFixtures,
   UserFixtures,
+  UserUpdateQueryFixtures,
 } from '@cornie-js/backend-app-user-fixtures';
 import { UserPersistenceOutputPort } from '@cornie-js/backend-app-user-models/application';
 import {
   User,
   UserCreateQuery,
   UserFindQuery,
+  UserUpdateQuery,
 } from '@cornie-js/backend-app-user-models/domain';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { Builder } from '@cornie-js/backend-common';
@@ -18,18 +20,22 @@ import { UuidContext } from '../../../../foundation/common/application/models/Uu
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
+import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
   let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
-  let userCreateQueryConverterFromUserCreateQueryV1BuilderMock: jest.Mocked<
+  let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
       UserCreateQuery,
       [apiModels.UserCreateQueryV1, HashContext & UuidContext]
     >
   >;
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
+  let userUpdateQueryFromUserMeUpdateQueryV1BuilderMock: jest.Mocked<
+    Builder<UserUpdateQuery, [apiModels.UserMeUpdateQueryV1, UuidContext]>
+  >;
   let userV1FromUserBuilderMock: jest.Mocked<Builder<apiModels.UserV1, [User]>>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
@@ -39,7 +45,7 @@ describe(UserManagementInputPort.name, () => {
     bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
-    userCreateQueryConverterFromUserCreateQueryV1BuilderMock = {
+    userCreateQueryFromUserCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
     userPersistenceOutputPortMock = {
@@ -47,13 +53,17 @@ describe(UserManagementInputPort.name, () => {
       findOne: jest.fn(),
       update: jest.fn(),
     };
+    userUpdateQueryFromUserMeUpdateQueryV1BuilderMock = {
+      build: jest.fn(),
+    };
     userV1FromUserBuilderMock = { build: jest.fn() };
     uuidProviderOutputPortMock = { generateV4: jest.fn() };
 
     userManagementInputPort = new UserManagementInputPort(
       bcryptHashProviderOutputPortMock,
-      userCreateQueryConverterFromUserCreateQueryV1BuilderMock,
+      userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
+      userUpdateQueryFromUserMeUpdateQueryV1BuilderMock,
       userV1FromUserBuilderMock,
       uuidProviderOutputPortMock,
     );
@@ -87,7 +97,7 @@ describe(UserManagementInputPort.name, () => {
         bcryptHashProviderOutputPortMock.hash.mockResolvedValueOnce(
           hashFixture,
         );
-        userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
+        userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           userCreateQueryFixture,
         );
         userPersistenceOutputPortMock.create.mockResolvedValueOnce(userFixture);
@@ -119,10 +129,10 @@ describe(UserManagementInputPort.name, () => {
         };
 
         expect(
-          userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build,
+          userCreateQueryFromUserCreateQueryV1BuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build,
+          userCreateQueryFromUserCreateQueryV1BuilderMock.build,
         ).toHaveBeenCalledWith(userCreateQueryV1Fixture, expectedContext);
       });
 
@@ -225,6 +235,54 @@ describe(UserManagementInputPort.name, () => {
 
       it('should return an UserV1', () => {
         expect(result).toBe(userV1Fixture);
+      });
+    });
+  });
+
+  describe('.updateMe', () => {
+    let userIdFixture: string;
+    let userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1;
+
+    beforeAll(() => {
+      userIdFixture = '83073aec-b81b-4107-97f9-baa46de5dd40';
+      userMeUpdateQueryV1 = UserMeUpdateQueryV1Fixtures.any;
+    });
+
+    describe('when called', () => {
+      let userUpdateQueryFixture: UserUpdateQuery;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userUpdateQueryFixture = UserUpdateQueryFixtures.any;
+
+        userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build.mockReturnValueOnce(
+          userUpdateQueryFixture,
+        );
+
+        result = await userManagementInputPort.updateMe(
+          userIdFixture,
+          userMeUpdateQueryV1,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userUpdateQueryFromUserMeUpdateQueryV1Builder.build()', () => {
+        const expectedUuidContext: UuidContext = { uuid: userIdFixture };
+
+        expect(
+          userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledWith(userMeUpdateQueryV1, expectedUuidContext);
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
       });
     });
   });
