@@ -41,7 +41,11 @@ describe(UserManagementInputPort.name, () => {
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
     userCreateQueryV1ToUserCreateQueryConverterMock = { convert: jest.fn() };
-    userPersistenceOutputPortMock = { create: jest.fn(), findOne: jest.fn() };
+    userPersistenceOutputPortMock = {
+      create: jest.fn(),
+      findOne: jest.fn(),
+      update: jest.fn(),
+    };
     userToUserV1ConverterMock = { convert: jest.fn() };
     uuidProviderOutputPortMock = { generateV4: jest.fn() };
 
