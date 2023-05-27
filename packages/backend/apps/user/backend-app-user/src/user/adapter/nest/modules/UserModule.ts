@@ -4,6 +4,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/converters/UserCreateQueryFromUserCreateQueryV1Builder';
+import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
 import { UserManagementInputPort } from '../../../application/ports/input/UserManagementInputPort';
 
@@ -21,6 +22,7 @@ export class UserModule {
       providers: [
         UserCreateQueryFromUserCreateQueryV1Builder,
         UserManagementInputPort,
+        UserUpdateQueryFromUserMeUpdateQueryV1Builder,
         UserV1FromUserBuilder,
       ],
     };
