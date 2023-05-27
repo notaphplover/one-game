@@ -21,13 +21,13 @@ import {
   bcryptHashProviderOutputPortSymbol,
   BcryptHashProviderOutputPort,
 } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { UserCreateQueryConverterFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryConverterFromUserCreateQueryV1Builder';
+import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
 
 @Injectable()
 export class UserManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
-  readonly #userCreateQueryConverterFromUserCreateQueryV1Builder: Builder<
+  readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, HashContext & UuidContext]
   >;
@@ -38,8 +38,8 @@ export class UserManagementInputPort {
   constructor(
     @Inject(bcryptHashProviderOutputPortSymbol)
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
-    @Inject(UserCreateQueryConverterFromUserCreateQueryV1Builder)
-    userCreateQueryConverterFromUserCreateQueryV1Builder: Builder<
+    @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
+    userCreateQueryFromUserCreateQueryV1Builder: Builder<
       UserCreateQuery,
       [apiModels.UserCreateQueryV1, HashContext & UuidContext]
     >,
@@ -51,8 +51,8 @@ export class UserManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
-    this.#userCreateQueryConverterFromUserCreateQueryV1Builder =
-      userCreateQueryConverterFromUserCreateQueryV1Builder;
+    this.#userCreateQueryFromUserCreateQueryV1Builder =
+      userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
     this.#userV1FromUserBuilder = userV1FromUserBuilder;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
@@ -66,7 +66,7 @@ export class UserManagementInputPort {
     );
 
     const userCreateQuery: UserCreateQuery =
-      this.#userCreateQueryConverterFromUserCreateQueryV1Builder.build(
+      this.#userCreateQueryFromUserCreateQueryV1Builder.build(
         userCreateQueryV1,
         context,
       );

@@ -23,7 +23,7 @@ import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
   let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
-  let userCreateQueryConverterFromUserCreateQueryV1BuilderMock: jest.Mocked<
+  let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
       UserCreateQuery,
       [apiModels.UserCreateQueryV1, HashContext & UuidContext]
@@ -39,7 +39,7 @@ describe(UserManagementInputPort.name, () => {
     bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
-    userCreateQueryConverterFromUserCreateQueryV1BuilderMock = {
+    userCreateQueryFromUserCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
     userPersistenceOutputPortMock = {
@@ -52,7 +52,7 @@ describe(UserManagementInputPort.name, () => {
 
     userManagementInputPort = new UserManagementInputPort(
       bcryptHashProviderOutputPortMock,
-      userCreateQueryConverterFromUserCreateQueryV1BuilderMock,
+      userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
       userV1FromUserBuilderMock,
       uuidProviderOutputPortMock,
@@ -87,7 +87,7 @@ describe(UserManagementInputPort.name, () => {
         bcryptHashProviderOutputPortMock.hash.mockResolvedValueOnce(
           hashFixture,
         );
-        userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
+        userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           userCreateQueryFixture,
         );
         userPersistenceOutputPortMock.create.mockResolvedValueOnce(userFixture);
@@ -119,10 +119,10 @@ describe(UserManagementInputPort.name, () => {
         };
 
         expect(
-          userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build,
+          userCreateQueryFromUserCreateQueryV1BuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build,
+          userCreateQueryFromUserCreateQueryV1BuilderMock.build,
         ).toHaveBeenCalledWith(userCreateQueryV1Fixture, expectedContext);
       });
 

@@ -7,7 +7,7 @@ import { UuidContext } from '../../../foundation/common/application/models/UuidC
 import { HashContext } from '../../../foundation/hash/application/models/HashContext';
 
 @Injectable()
-export class UserCreateQueryConverterFromUserCreateQueryV1Builder
+export class UserCreateQueryFromUserCreateQueryV1Builder
   implements
     Builder<
       UserCreateQuery,
