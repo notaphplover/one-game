@@ -7,6 +7,7 @@ import {
   User,
   UserCreateQuery,
   UserFindQuery,
+  UserUpdateQuery,
 } from '@cornie-js/backend-app-user-models/domain';
 import {
   UuidProviderOutputPort,
@@ -22,6 +23,7 @@ import {
   BcryptHashProviderOutputPort,
 } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
+import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
 
 @Injectable()
@@ -32,6 +34,10 @@ export class UserManagementInputPort {
     [apiModels.UserCreateQueryV1, HashContext & UuidContext]
   >;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
+  readonly #userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
+    UserUpdateQuery,
+    [apiModels.UserMeUpdateQueryV1, UuidContext]
+  >;
   readonly #userV1FromUserBuilder: Builder<apiModels.UserV1, [User]>;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
@@ -45,6 +51,11 @@ export class UserManagementInputPort {
     >,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
+    @Inject(UserUpdateQueryFromUserMeUpdateQueryV1Builder)
+    userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
+      UserUpdateQuery,
+      [apiModels.UserMeUpdateQueryV1, UuidContext]
+    >,
     @Inject(UserV1FromUserBuilder)
     userV1FromUserBuilder: Builder<apiModels.UserV1, [User]>,
     @Inject(uuidProviderOutputPortSymbol)
@@ -54,6 +65,8 @@ export class UserManagementInputPort {
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
+    this.#userUpdateQueryFromUserMeUpdateQueryV1Builder =
+      userUpdateQueryFromUserMeUpdateQueryV1Builder;
     this.#userV1FromUserBuilder = userV1FromUserBuilder;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
@@ -87,6 +100,21 @@ export class UserManagementInputPort {
       await this.#userPersistenceOutputPort.findOne(userFindQuery);
 
     return this.#buildUserV1OrUndefined(userOrUndefined);
+  }
+
+  public async updateMe(
+    id: string,
+    userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
+  ): Promise<void> {
+    const userUpdateQuery: UserUpdateQuery =
+      this.#userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
+        userMeUpdateQueryV1,
+        {
+          uuid: id,
+        },
+      );
+
+    await this.#userPersistenceOutputPort.update(userUpdateQuery);
   }
 
   async #buildCreateContext(
