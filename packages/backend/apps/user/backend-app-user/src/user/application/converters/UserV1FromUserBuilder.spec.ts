@@ -4,13 +4,13 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { UserFixtures } from '@cornie-js/backend-app-user-fixtures';
 import { User } from '@cornie-js/backend-app-user-models/domain';
 
-import { UserToUserV1Converter } from './UserToUserV1Converter';
+import { UserV1FromUserBuilder } from './UserV1FromUserBuilder';
 
-describe(UserToUserV1Converter.name, () => {
-  let userToUserV1Converter: UserToUserV1Converter;
+describe(UserV1FromUserBuilder.name, () => {
+  let userV1FromUserBuilder: UserV1FromUserBuilder;
 
   beforeAll(() => {
-    userToUserV1Converter = new UserToUserV1Converter();
+    userV1FromUserBuilder = new UserV1FromUserBuilder();
   });
 
   describe('.convert', () => {
@@ -24,7 +24,7 @@ describe(UserToUserV1Converter.name, () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = userToUserV1Converter.convert(userFixture);
+        result = userV1FromUserBuilder.build(userFixture);
       });
 
       it('should return a UserV1', () => {

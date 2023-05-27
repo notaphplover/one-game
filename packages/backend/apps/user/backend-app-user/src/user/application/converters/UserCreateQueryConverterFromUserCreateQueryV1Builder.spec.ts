@@ -6,14 +6,14 @@ import { UserCreateQuery } from '@cornie-js/backend-app-user-models/domain';
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { HashContext } from '../../../foundation/hash/application/models/HashContext';
 import { UserCreateQueryV1Fixtures } from '../fixtures/UserCreateQueryV1Fixtures';
-import { UserCreateQueryV1ToUserCreateQueryConverter } from './UserCreateQueryV1ToUserCreateQueryConverter';
+import { UserCreateQueryConverterFromUserCreateQueryV1Builder } from './UserCreateQueryConverterFromUserCreateQueryV1Builder';
 
-describe(UserCreateQueryV1ToUserCreateQueryConverter.name, () => {
-  let userCreateQueryV1ToUserCreateQueryConverter: UserCreateQueryV1ToUserCreateQueryConverter;
+describe(UserCreateQueryConverterFromUserCreateQueryV1Builder.name, () => {
+  let userCreateQueryConverterFromUserCreateQueryV1Builder: UserCreateQueryConverterFromUserCreateQueryV1Builder;
 
   beforeAll(() => {
-    userCreateQueryV1ToUserCreateQueryConverter =
-      new UserCreateQueryV1ToUserCreateQueryConverter();
+    userCreateQueryConverterFromUserCreateQueryV1Builder =
+      new UserCreateQueryConverterFromUserCreateQueryV1Builder();
   });
 
   describe('.convert', () => {
@@ -32,7 +32,7 @@ describe(UserCreateQueryV1ToUserCreateQueryConverter.name, () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = userCreateQueryV1ToUserCreateQueryConverter.convert(
+        result = userCreateQueryConverterFromUserCreateQueryV1Builder.build(
           userCreateQueryV1Fixture,
           contextFixture,
         );

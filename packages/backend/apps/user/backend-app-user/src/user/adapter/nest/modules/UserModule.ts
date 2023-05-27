@@ -3,8 +3,8 @@ import { UuidModule } from '@cornie-js/backend-app-uuid';
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
-import { UserCreateQueryV1ToUserCreateQueryConverter } from '../../../application/converters/UserCreateQueryV1ToUserCreateQueryConverter';
-import { UserToUserV1Converter } from '../../../application/converters/UserToUserV1Converter';
+import { UserCreateQueryConverterFromUserCreateQueryV1Builder } from '../../../application/converters/UserCreateQueryConverterFromUserCreateQueryV1Builder';
+import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
 import { UserManagementInputPort } from '../../../application/ports/input/UserManagementInputPort';
 
 @Module({})
@@ -19,9 +19,9 @@ export class UserModule {
       imports: [UuidModule, HashModule, userDbModule],
       module: UserModule,
       providers: [
-        UserCreateQueryV1ToUserCreateQueryConverter,
+        UserCreateQueryConverterFromUserCreateQueryV1Builder,
         UserManagementInputPort,
-        UserToUserV1Converter,
+        UserV1FromUserBuilder,
       ],
     };
   }
