@@ -4,20 +4,24 @@ import {
   UserCreateQueryFixtures,
   UserFindQueryFixtures,
   UserFixtures,
+  UserUpdateQueryFixtures,
 } from '@cornie-js/backend-app-user-fixtures';
 import {
   User,
   UserCreateQuery,
   UserFindQuery,
+  UserUpdateQuery,
 } from '@cornie-js/backend-app-user-models/domain';
 
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
 import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
+import { UpdateUserTypeOrmService } from '../services/UpdateUserTypeOrmService';
 import { UserPersistenceTypeOrmAdapter } from './UserPersistenceTypeOrmAdapter';
 
 describe(UserPersistenceTypeOrmAdapter, () => {
   let createUserTypeOrmServiceMock: jest.Mocked<CreateUserTypeOrmService>;
   let findUserTypeOrmServiceMock: jest.Mocked<FindUserTypeOrmService>;
+  let updateUserTypeOrmServiceMock: jest.Mocked<UpdateUserTypeOrmService>;
 
   let userPersistenceTypeOrmAdapter: UserPersistenceTypeOrmAdapter;
 
@@ -34,9 +38,16 @@ describe(UserPersistenceTypeOrmAdapter, () => {
       jest.Mocked<FindUserTypeOrmService>
     > as jest.Mocked<FindUserTypeOrmService>;
 
+    updateUserTypeOrmServiceMock = {
+      update: jest.fn(),
+    } as Partial<
+      jest.Mocked<UpdateUserTypeOrmService>
+    > as jest.Mocked<UpdateUserTypeOrmService>;
+
     userPersistenceTypeOrmAdapter = new UserPersistenceTypeOrmAdapter(
       createUserTypeOrmServiceMock,
       findUserTypeOrmServiceMock,
+      updateUserTypeOrmServiceMock,
     );
   });
 
@@ -108,6 +119,35 @@ describe(UserPersistenceTypeOrmAdapter, () => {
 
       it('should return a User', () => {
         expect(result).toBe(userFixture);
+      });
+    });
+  });
+
+  describe('.update', () => {
+    describe('when called', () => {
+      let userUpdateQueryFixture: UserUpdateQuery;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userUpdateQueryFixture = UserUpdateQueryFixtures.any;
+
+        updateUserTypeOrmServiceMock.update.mockResolvedValueOnce(undefined);
+
+        result = await userPersistenceTypeOrmAdapter.update(
+          userUpdateQueryFixture,
+        );
+      });
+
+      it('should call UpdateUserTypeOrmService.update()', () => {
+        expect(updateUserTypeOrmServiceMock.update).toHaveBeenCalledTimes(1);
+        expect(updateUserTypeOrmServiceMock.update).toHaveBeenCalledWith(
+          userUpdateQueryFixture,
+        );
+      });
+
+      it('should return a User', () => {
+        expect(result).toBeUndefined();
       });
     });
   });

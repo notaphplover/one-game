@@ -25,10 +25,11 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
     describe('when called', () => {
       let result: unknown;
 
-      beforeAll(async () => {
-        result = await userFindQueryToUserFindQueryTypeOrmConverter.convert(
-          userFindQueryFixture,
-        );
+      beforeAll(() => {
+        result =
+          userFindQueryToUserFindQueryTypeOrmConverter.convert(
+            userFindQueryFixture,
+          );
       });
 
       it('should return a FindManyOptions<UserDb>', () => {
@@ -50,10 +51,11 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
     describe('when called', () => {
       let result: unknown;
 
-      beforeAll(async () => {
-        result = await userFindQueryToUserFindQueryTypeOrmConverter.convert(
-          userFindQueryFixture,
-        );
+      beforeAll(() => {
+        result =
+          userFindQueryToUserFindQueryTypeOrmConverter.convert(
+            userFindQueryFixture,
+          );
       });
 
       it('should return a FindManyOptions<UserDb>', () => {
@@ -78,10 +80,11 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
     describe('when called', () => {
       let result: unknown;
 
-      beforeAll(async () => {
-        result = await userFindQueryToUserFindQueryTypeOrmConverter.convert(
-          userFindQueryFixture,
-        );
+      beforeAll(() => {
+        result =
+          userFindQueryToUserFindQueryTypeOrmConverter.convert(
+            userFindQueryFixture,
+          );
       });
 
       it('should return a FindManyOptions<UserDb>', () => {
