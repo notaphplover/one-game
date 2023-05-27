@@ -12,7 +12,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
@@ -21,42 +21,40 @@ import {
   bcryptHashProviderOutputPortSymbol,
   BcryptHashProviderOutputPort,
 } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { UserCreateQueryV1ToUserCreateQueryConverter } from '../../converters/UserCreateQueryV1ToUserCreateQueryConverter';
-import { UserToUserV1Converter } from '../../converters/UserToUserV1Converter';
+import { UserCreateQueryConverterFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryConverterFromUserCreateQueryV1Builder';
+import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
 
 @Injectable()
 export class UserManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
-  readonly #userCreateQueryV1ToUserCreateQueryConverter: Converter<
-    apiModels.UserCreateQueryV1,
+  readonly #userCreateQueryConverterFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
-    HashContext & UuidContext
+    [apiModels.UserCreateQueryV1, HashContext & UuidContext]
   >;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
-  readonly #userToUserV1Converter: Converter<User, apiModels.UserV1>;
+  readonly #userV1FromUserBuilder: Builder<apiModels.UserV1, [User]>;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
     @Inject(bcryptHashProviderOutputPortSymbol)
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
-    @Inject(UserCreateQueryV1ToUserCreateQueryConverter)
-    userCreateQueryV1ToUserCreateQueryConverter: Converter<
-      apiModels.UserCreateQueryV1,
+    @Inject(UserCreateQueryConverterFromUserCreateQueryV1Builder)
+    userCreateQueryConverterFromUserCreateQueryV1Builder: Builder<
       UserCreateQuery,
-      HashContext & UuidContext
+      [apiModels.UserCreateQueryV1, HashContext & UuidContext]
     >,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
-    @Inject(UserToUserV1Converter)
-    userToUserV1Converter: Converter<User, apiModels.UserV1>,
+    @Inject(UserV1FromUserBuilder)
+    userV1FromUserBuilder: Builder<apiModels.UserV1, [User]>,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
-    this.#userCreateQueryV1ToUserCreateQueryConverter =
-      userCreateQueryV1ToUserCreateQueryConverter;
+    this.#userCreateQueryConverterFromUserCreateQueryV1Builder =
+      userCreateQueryConverterFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
-    this.#userToUserV1Converter = userToUserV1Converter;
+    this.#userV1FromUserBuilder = userV1FromUserBuilder;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
@@ -68,7 +66,7 @@ export class UserManagementInputPort {
     );
 
     const userCreateQuery: UserCreateQuery =
-      this.#userCreateQueryV1ToUserCreateQueryConverter.convert(
+      this.#userCreateQueryConverterFromUserCreateQueryV1Builder.build(
         userCreateQueryV1,
         context,
       );
@@ -77,7 +75,7 @@ export class UserManagementInputPort {
       userCreateQuery,
     );
 
-    return this.#userToUserV1Converter.convert(user);
+    return this.#userV1FromUserBuilder.build(user);
   }
 
   public async findOne(id: string): Promise<apiModels.UserV1 | undefined> {
@@ -114,7 +112,7 @@ export class UserManagementInputPort {
     if (userOrUndefined === undefined) {
       userV1OrUndefined = undefined;
     } else {
-      userV1OrUndefined = this.#userToUserV1Converter.convert(userOrUndefined);
+      userV1OrUndefined = this.#userV1FromUserBuilder.build(userOrUndefined);
     }
 
     return userV1OrUndefined;

@@ -12,7 +12,7 @@ import {
   UserFindQuery,
 } from '@cornie-js/backend-app-user-models/domain';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
@@ -23,15 +23,14 @@ import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
   let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
-  let userCreateQueryV1ToUserCreateQueryConverterMock: jest.Mocked<
-    Converter<
-      apiModels.UserCreateQueryV1,
+  let userCreateQueryConverterFromUserCreateQueryV1BuilderMock: jest.Mocked<
+    Builder<
       UserCreateQuery,
-      HashContext & UuidContext
+      [apiModels.UserCreateQueryV1, HashContext & UuidContext]
     >
   >;
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
-  let userToUserV1ConverterMock: jest.Mocked<Converter<User, apiModels.UserV1>>;
+  let userV1FromUserBuilderMock: jest.Mocked<Builder<apiModels.UserV1, [User]>>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
   let userManagementInputPort: UserManagementInputPort;
@@ -40,20 +39,22 @@ describe(UserManagementInputPort.name, () => {
     bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
-    userCreateQueryV1ToUserCreateQueryConverterMock = { convert: jest.fn() };
+    userCreateQueryConverterFromUserCreateQueryV1BuilderMock = {
+      build: jest.fn(),
+    };
     userPersistenceOutputPortMock = {
       create: jest.fn(),
       findOne: jest.fn(),
       update: jest.fn(),
     };
-    userToUserV1ConverterMock = { convert: jest.fn() };
+    userV1FromUserBuilderMock = { build: jest.fn() };
     uuidProviderOutputPortMock = { generateV4: jest.fn() };
 
     userManagementInputPort = new UserManagementInputPort(
       bcryptHashProviderOutputPortMock,
-      userCreateQueryV1ToUserCreateQueryConverterMock,
+      userCreateQueryConverterFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
-      userToUserV1ConverterMock,
+      userV1FromUserBuilderMock,
       uuidProviderOutputPortMock,
     );
   });
@@ -86,11 +87,11 @@ describe(UserManagementInputPort.name, () => {
         bcryptHashProviderOutputPortMock.hash.mockResolvedValueOnce(
           hashFixture,
         );
-        userCreateQueryV1ToUserCreateQueryConverterMock.convert.mockReturnValueOnce(
+        userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           userCreateQueryFixture,
         );
         userPersistenceOutputPortMock.create.mockResolvedValueOnce(userFixture);
-        userToUserV1ConverterMock.convert.mockReturnValueOnce(userV1Fixture);
+        userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
 
         result = await userManagementInputPort.create(userCreateQueryV1Fixture);
       });
@@ -111,17 +112,17 @@ describe(UserManagementInputPort.name, () => {
         );
       });
 
-      it('should call userCreateQueryV1ToUserCreateQueryConverter.convert()', () => {
+      it('should call userCreateQueryConverterFromUserCreateQueryV1Builder.build()', () => {
         const expectedContext: HashContext & UuidContext = {
           hash: hashFixture,
           uuid: uuidFixture,
         };
 
         expect(
-          userCreateQueryV1ToUserCreateQueryConverterMock.convert,
+          userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          userCreateQueryV1ToUserCreateQueryConverterMock.convert,
+          userCreateQueryConverterFromUserCreateQueryV1BuilderMock.build,
         ).toHaveBeenCalledWith(userCreateQueryV1Fixture, expectedContext);
       });
 
@@ -132,9 +133,9 @@ describe(UserManagementInputPort.name, () => {
         );
       });
 
-      it('should call userToUserV1Converter.convert()', () => {
-        expect(userToUserV1ConverterMock.convert).toHaveBeenCalledTimes(1);
-        expect(userToUserV1ConverterMock.convert).toHaveBeenCalledWith(
+      it('should call userV1FromUserBuilder.build()', () => {
+        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledWith(
           userFixture,
         );
       });
@@ -195,7 +196,7 @@ describe(UserManagementInputPort.name, () => {
           userFixture,
         );
 
-        userToUserV1ConverterMock.convert.mockReturnValueOnce(userV1Fixture);
+        userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
 
         result = await userManagementInputPort.findOne(idFixture);
       });
@@ -215,9 +216,9 @@ describe(UserManagementInputPort.name, () => {
         );
       });
 
-      it('should call userToUserV1Converter.convert()', () => {
-        expect(userToUserV1ConverterMock.convert).toHaveBeenCalledTimes(1);
-        expect(userToUserV1ConverterMock.convert).toHaveBeenCalledWith(
+      it('should call userV1FromUserBuilder.build()', () => {
+        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledWith(
           userFixture,
         );
       });
