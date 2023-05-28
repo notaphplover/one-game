@@ -1,0 +1,17 @@
+import { SchemaId, models as apiModels } from '@cornie-js/api-models';
+import { ApiJsonSchemasValidationProvider } from '@cornie-js/backend-api-validators';
+import { Inject, Injectable } from '@nestjs/common';
+
+import { RequestBodyParamHandler } from '../../../foundation/http/adapter/application/RequestBodyParamHandler';
+
+@Injectable()
+export class PatchUserMeV1RequestBodyParamHandler extends RequestBodyParamHandler<apiModels.UserMeUpdateQueryV1> {
+  constructor(
+    @Inject(ApiJsonSchemasValidationProvider)
+    apiJsonSchemasValidationProvider: ApiJsonSchemasValidationProvider,
+  ) {
+    super(
+      apiJsonSchemasValidationProvider.provide(SchemaId.UserMeUpdateQueryV1),
+    );
+  }
+}
