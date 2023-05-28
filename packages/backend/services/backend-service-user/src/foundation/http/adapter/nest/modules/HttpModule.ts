@@ -4,6 +4,7 @@ import {
   RequestFromFastifyRequestBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
   SingleEntityGetResponseBuilder,
+  SingleEntityPatchResponseBuilder,
   SingleEntityPostResponseBuilder,
 } from '@cornie-js/backend-http';
 import { Module } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { Module } from '@nestjs/common';
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
     SingleEntityGetResponseBuilder,
+    SingleEntityPatchResponseBuilder,
     SingleEntityPostResponseBuilder,
   ],
   providers: [
@@ -23,6 +25,7 @@ import { Module } from '@nestjs/common';
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
     SingleEntityGetResponseBuilder,
+    SingleEntityPatchResponseBuilder,
     SingleEntityPostResponseBuilder,
   ],
 })
