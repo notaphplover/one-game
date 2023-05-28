@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `ResponseWithBody`
 - Added `SingleEntityGetResponseBuilder`.
 - Added `SingleEntityHttpRequestController`.
+- Added `SingleEntityPatchResponseBuilder`.
 - Added `SingleEntityPostResponseBuilder`.
 - Added `UserAuth`.
 - Added `UserManagementInputPort`.
