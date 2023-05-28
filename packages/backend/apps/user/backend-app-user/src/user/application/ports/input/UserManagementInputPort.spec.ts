@@ -2,10 +2,15 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
+  UserCreateQueryV1Fixtures,
+  UserMeUpdateQueryV1Fixtures,
+  UserV1Fixtures,
+} from '@cornie-js/backend-app-user-fixtures/user/application';
+import {
   UserCreateQueryFixtures,
   UserFixtures,
   UserUpdateQueryFixtures,
-} from '@cornie-js/backend-app-user-fixtures';
+} from '@cornie-js/backend-app-user-fixtures/user/domain';
 import { UserPersistenceOutputPort } from '@cornie-js/backend-app-user-models/application';
 import {
   User,
@@ -19,9 +24,6 @@ import { Builder } from '@cornie-js/backend-common';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
 import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
-import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
-import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
-import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {

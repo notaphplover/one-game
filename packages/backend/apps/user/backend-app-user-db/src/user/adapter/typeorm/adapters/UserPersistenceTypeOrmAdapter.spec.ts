@@ -5,7 +5,7 @@ import {
   UserFindQueryFixtures,
   UserFixtures,
   UserUpdateQueryFixtures,
-} from '@cornie-js/backend-app-user-fixtures';
+} from '@cornie-js/backend-app-user-fixtures/user/domain';
 import {
   User,
   UserCreateQuery,

@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { JwtService } from '@cornie-js/backend-app-jwt';
-import { UserFixtures } from '@cornie-js/backend-app-user-fixtures';
+import { UserFixtures } from '@cornie-js/backend-app-user-fixtures/user/domain';
 import {
   UserJwtPayload,
   UserPersistenceOutputPort,

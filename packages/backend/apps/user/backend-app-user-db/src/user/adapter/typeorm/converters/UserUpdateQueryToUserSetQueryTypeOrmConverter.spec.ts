@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { UserUpdateQueryFixtures } from '@cornie-js/backend-app-user-fixtures';
+import { UserUpdateQueryFixtures } from '@cornie-js/backend-app-user-fixtures/user/domain';
 import { UserUpdateQuery } from '@cornie-js/backend-app-user-models/domain';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
