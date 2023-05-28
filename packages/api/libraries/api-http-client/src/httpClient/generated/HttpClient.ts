@@ -188,7 +188,7 @@ export class HttpClient {
     },
     body: apiModels.UserMeUpdateQueryV1,
   ): Promise<
-    | Response<Record<string, string>, apiModels.UserV1, 200>
+    | Response<Record<string, string>, apiModels.UserV1, 204>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
