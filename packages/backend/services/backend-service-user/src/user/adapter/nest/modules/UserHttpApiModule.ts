@@ -6,6 +6,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
 import { GetUserV1MeHttpRequestController } from '../../../application/controllers/GetUserV1MeHttpRequestController';
 import { GetUserV1UserIdHttpRequestController } from '../../../application/controllers/GetUserV1UserIdHttpRequestController';
+import { PatchUserV1MeHttpRequestController } from '../../../application/controllers/PatchUserV1MeHttpRequestController';
 import { PostUserV1HttpRequestController } from '../../../application/controllers/PostUserV1HttpRequestController';
 import { GetUserV1MeRequestParamHandler } from '../../../application/handlers/GetUserV1MeRequestParamHandler';
 import { GetUserV1UserIdRequestParamHandler } from '../../../application/handlers/GetUserV1UserIdRequestParamHandler';
@@ -31,6 +32,7 @@ import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1Ht
     GetUserV1UserIdHttpRequestController,
     GetUserV1UserIdHttpRequestNestController,
     GetUserV1UserIdRequestParamHandler,
+    PatchUserV1MeHttpRequestController,
     PatchUserV1MeRequestBodyParamHandler,
     PatchUserV1MeRequestParamHandler,
     PostUserV1HttpRequestController,
