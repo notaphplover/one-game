@@ -13,21 +13,21 @@ import {
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../fixtures/UserV1Fixtures';
-import { PatchUserMeV1RequestParamHandler } from './PatchUserMeV1RequestParamHandler';
+import { PatchUserV1MeRequestParamHandler } from './PatchUserV1MeRequestParamHandler';
 
-describe(PatchUserMeV1RequestParamHandler.name, () => {
+describe(PatchUserV1MeRequestParamHandler.name, () => {
   let patchUserMeV1RequestBodyParamHandlerMock: jest.Mocked<
     Handler<[RequestWithBody], [apiModels.UserMeUpdateQueryV1]>
   >;
 
-  let patchUserMeV1RequestParamHandler: PatchUserMeV1RequestParamHandler;
+  let patchUserV1MeRequestParamHandler: PatchUserV1MeRequestParamHandler;
 
   beforeAll(() => {
     patchUserMeV1RequestBodyParamHandlerMock = {
       handle: jest.fn(),
     };
 
-    patchUserMeV1RequestParamHandler = new PatchUserMeV1RequestParamHandler(
+    patchUserV1MeRequestParamHandler = new PatchUserV1MeRequestParamHandler(
       patchUserMeV1RequestBodyParamHandlerMock,
     );
   });
@@ -58,7 +58,7 @@ describe(PatchUserMeV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await patchUserMeV1RequestParamHandler.handle(requestFixture);
+            await patchUserV1MeRequestParamHandler.handle(requestFixture);
           } catch (error: unknown) {
             result = error;
           }
@@ -115,7 +115,7 @@ describe(PatchUserMeV1RequestParamHandler.name, () => {
             [userMeUpdateQueryV1Fixture],
           );
 
-          result = await patchUserMeV1RequestParamHandler.handle(
+          result = await patchUserV1MeRequestParamHandler.handle(
             requestFixture,
           );
         });

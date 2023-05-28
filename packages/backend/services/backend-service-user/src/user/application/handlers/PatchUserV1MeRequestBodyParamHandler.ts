@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RequestBodyParamHandler } from '../../../foundation/http/adapter/application/RequestBodyParamHandler';
 
 @Injectable()
-export class PatchUserMeV1RequestBodyParamHandler extends RequestBodyParamHandler<apiModels.UserMeUpdateQueryV1> {
+export class PatchUserV1MeRequestBodyParamHandler extends RequestBodyParamHandler<apiModels.UserMeUpdateQueryV1> {
   constructor(
     @Inject(ApiJsonSchemasValidationProvider)
     apiJsonSchemasValidationProvider: ApiJsonSchemasValidationProvider,

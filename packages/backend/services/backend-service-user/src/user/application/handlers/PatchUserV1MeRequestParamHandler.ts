@@ -9,30 +9,30 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PatchUserMeV1RequestBodyParamHandler } from './PatchUserMeV1RequestBodyParamHandler';
+import { PatchUserV1MeRequestBodyParamHandler } from './PatchUserV1MeRequestBodyParamHandler';
 
 @Injectable()
-export class PatchUserMeV1RequestParamHandler
+export class PatchUserV1MeRequestParamHandler
   implements
     Handler<
       [RequestWithBody & AuthRequestContextHolder],
       [apiModels.UserV1, apiModels.UserMeUpdateQueryV1]
     >
 {
-  readonly #patchUserMeV1RequestBodyParamHandler: Handler<
+  readonly #patchUserV1MeRequestBodyParamHandler: Handler<
     [RequestWithBody],
     [apiModels.UserMeUpdateQueryV1]
   >;
 
   constructor(
-    @Inject(PatchUserMeV1RequestBodyParamHandler)
-    patchUserMeV1RequestBodyParamHandler: Handler<
+    @Inject(PatchUserV1MeRequestBodyParamHandler)
+    patchUserV1MeRequestBodyParamHandler: Handler<
       [RequestWithBody],
       [apiModels.UserMeUpdateQueryV1]
     >,
   ) {
-    this.#patchUserMeV1RequestBodyParamHandler =
-      patchUserMeV1RequestBodyParamHandler;
+    this.#patchUserV1MeRequestBodyParamHandler =
+      patchUserV1MeRequestBodyParamHandler;
   }
 
   public async handle(
@@ -48,7 +48,7 @@ export class PatchUserMeV1RequestParamHandler
     }
 
     const [userMeUpdateQueryV1]: [apiModels.UserMeUpdateQueryV1] =
-      await this.#patchUserMeV1RequestBodyParamHandler.handle(request);
+      await this.#patchUserV1MeRequestBodyParamHandler.handle(request);
 
     return [auth.user, userMeUpdateQueryV1];
   }

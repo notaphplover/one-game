@@ -9,8 +9,8 @@ import { GetUserV1UserIdHttpRequestController } from '../../../application/contr
 import { PostUserV1HttpRequestController } from '../../../application/controllers/PostUserV1HttpRequestController';
 import { GetUserV1MeRequestParamHandler } from '../../../application/handlers/GetUserV1MeRequestParamHandler';
 import { GetUserV1UserIdRequestParamHandler } from '../../../application/handlers/GetUserV1UserIdRequestParamHandler';
-import { PatchUserMeV1RequestBodyParamHandler } from '../../../application/handlers/PatchUserMeV1RequestBodyParamHandler';
-import { PatchUserMeV1RequestParamHandler } from '../../../application/handlers/PatchUserMeV1RequestParamHandler';
+import { PatchUserV1MeRequestBodyParamHandler } from '../../../application/handlers/PatchUserV1MeRequestBodyParamHandler';
+import { PatchUserV1MeRequestParamHandler } from '../../../application/handlers/PatchUserV1MeRequestParamHandler';
 import { PostUserV1RequestParamHandler } from '../../../application/handlers/PostUserV1RequestParamHandler';
 import { GetUserV1MeHttpRequestNestController } from '../controllers/GetUserV1MeHttpRequestNestController';
 import { GetUserV1UserIdHttpRequestNestController } from '../controllers/GetUserV1UserIdHttpRequestNestController';
@@ -31,8 +31,8 @@ import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1Ht
     GetUserV1UserIdHttpRequestController,
     GetUserV1UserIdHttpRequestNestController,
     GetUserV1UserIdRequestParamHandler,
-    PatchUserMeV1RequestBodyParamHandler,
-    PatchUserMeV1RequestParamHandler,
+    PatchUserV1MeRequestBodyParamHandler,
+    PatchUserV1MeRequestParamHandler,
     PostUserV1HttpRequestController,
     PostUserV1HttpRequestNestController,
     PostUserV1RequestParamHandler,
