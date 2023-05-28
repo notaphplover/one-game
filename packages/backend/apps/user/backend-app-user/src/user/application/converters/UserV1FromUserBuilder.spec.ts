@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { UserFixtures } from '@cornie-js/backend-app-user-fixtures';
+import { UserFixtures } from '@cornie-js/backend-app-user-fixtures/user/domain';
 import { User } from '@cornie-js/backend-app-user-models/domain';
 
 import { UserV1FromUserBuilder } from './UserV1FromUserBuilder';

@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { UserMeUpdateQueryV1Fixtures } from '@cornie-js/backend-app-user-fixtures/user/application';
 import { UserUpdateQuery } from '@cornie-js/backend-app-user-models/domain';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
-import { UserMeUpdateQueryV1Fixtures } from '../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from './UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 
 describe(UserUpdateQueryFromUserMeUpdateQueryV1Builder, () => {

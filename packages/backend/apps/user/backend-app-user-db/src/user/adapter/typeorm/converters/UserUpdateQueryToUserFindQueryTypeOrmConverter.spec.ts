@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { UserUpdateQueryFixtures } from '@cornie-js/backend-app-user-fixtures';
+import { UserUpdateQueryFixtures } from '@cornie-js/backend-app-user-fixtures/user/domain';
 import {
   UserFindQuery,
   UserUpdateQuery,

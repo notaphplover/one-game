@@ -10,6 +10,7 @@ import { RequestWithBodyFromFastifyRequestBuilder } from './http/adapter/fastify
 import { HttpNestFastifyController } from './http/adapter/nest/controllers/HttpNestFastifyController';
 import { ErrorV1ResponseFromErrorBuilder } from './http/application/builders/ErrorV1ResponseFromErrorBuilder';
 import { SingleEntityGetResponseBuilder } from './http/application/builders/SingleEntityGetResponseBuilder';
+import { SingleEntityPatchResponseBuilder } from './http/application/builders/SingleEntityPatchResponseBuilder';
 import { SingleEntityPostResponseBuilder } from './http/application/builders/SingleEntityPostResponseBuilder';
 import { SingleEntityHttpRequestController } from './http/application/controllers/SingleEntityHttpRequestController';
 import { Request } from './http/application/models/Request';
@@ -50,5 +51,6 @@ export {
   requestContextProperty,
   SingleEntityGetResponseBuilder,
   SingleEntityHttpRequestController,
+  SingleEntityPatchResponseBuilder,
   SingleEntityPostResponseBuilder,
 };
