@@ -15,6 +15,7 @@ import { PatchUserV1MeRequestParamHandler } from '../../../application/handlers/
 import { PostUserV1RequestParamHandler } from '../../../application/handlers/PostUserV1RequestParamHandler';
 import { GetUserV1MeHttpRequestNestController } from '../controllers/GetUserV1MeHttpRequestNestController';
 import { GetUserV1UserIdHttpRequestNestController } from '../controllers/GetUserV1UserIdHttpRequestNestController';
+import { PatchUserV1MeHttpRequestNestController } from '../controllers/PatchUserV1MeHttpRequestNestController';
 import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1HttpRequestNestController';
 
 @Module({
@@ -22,21 +23,19 @@ import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1Ht
     // mind the order
     GetUserV1MeHttpRequestNestController,
     GetUserV1UserIdHttpRequestNestController,
+    PatchUserV1MeHttpRequestNestController,
     PostUserV1HttpRequestNestController,
   ],
   imports: [AppModule, AuthHttpApiModule, JsonSchemaModule, HttpModule],
   providers: [
     GetUserV1MeHttpRequestController,
-    GetUserV1MeHttpRequestNestController,
     GetUserV1MeRequestParamHandler,
     GetUserV1UserIdHttpRequestController,
-    GetUserV1UserIdHttpRequestNestController,
     GetUserV1UserIdRequestParamHandler,
     PatchUserV1MeHttpRequestController,
     PatchUserV1MeRequestBodyParamHandler,
     PatchUserV1MeRequestParamHandler,
     PostUserV1HttpRequestController,
-    PostUserV1HttpRequestNestController,
     PostUserV1RequestParamHandler,
   ],
 })

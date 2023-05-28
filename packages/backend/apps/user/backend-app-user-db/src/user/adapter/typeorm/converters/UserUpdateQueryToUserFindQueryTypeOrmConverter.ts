@@ -3,10 +3,11 @@ import {
   UserUpdateQuery,
 } from '@cornie-js/backend-app-user-models/domain';
 import { Converter } from '@cornie-js/backend-common';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { FindManyOptions } from 'typeorm';
 
 import { UserDb } from '../models/UserDb';
+import { UserFindQueryToUserFindQueryTypeOrmConverter } from './UserFindQueryToUserFindQueryTypeOrmConverter';
 
 @Injectable()
 export class UserUpdateQueryToUserFindQueryTypeOrmConverter
@@ -18,6 +19,7 @@ export class UserUpdateQueryToUserFindQueryTypeOrmConverter
   >;
 
   constructor(
+    @Inject(UserFindQueryToUserFindQueryTypeOrmConverter)
     userFindQueryToUserFindQueryTypeOrmConverter: Converter<
       UserFindQuery,
       FindManyOptions<UserDb>
