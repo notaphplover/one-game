@@ -124,7 +124,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return a NonStartedGame', () => {
         const expected: Partial<NonStartedGame> = {
-          active: false,
           deck: [
             {
               amount: gameDeckCardDbFixture.amount,
@@ -133,13 +132,18 @@ describe(GameDbToGameConverter.name, () => {
           ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
-          slots: [gameSlotFixture],
-          spec: [
-            {
-              amount: gameCardSpecDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
+          spec: {
+            cards: [
+              {
+                amount: gameCardSpecDbFixture.amount,
+                card: cardFixture,
+              },
+            ],
+          },
+          state: {
+            active: false,
+            slots: [gameSlotFixture],
+          },
         };
 
         expect(result).toStrictEqual(expected);
@@ -208,7 +212,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return a NonStartedGame with sorted game slots', () => {
         const expected: Partial<NonStartedGame> = {
-          active: false,
           deck: [
             {
               amount: gameDeckCardDbFixture.amount,
@@ -217,13 +220,18 @@ describe(GameDbToGameConverter.name, () => {
           ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
-          slots: [firstGameSlotFixture, secondGameSlotFixture],
-          spec: [
-            {
-              amount: gameCardSpecDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
+          spec: {
+            cards: [
+              {
+                amount: gameCardSpecDbFixture.amount,
+                card: cardFixture,
+              },
+            ],
+          },
+          state: {
+            active: false,
+            slots: [firstGameSlotFixture, secondGameSlotFixture],
+          },
         };
 
         expect(result).toStrictEqual(expected);
@@ -307,28 +315,32 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return an ActiveGame', () => {
         const expected: Partial<ActiveGame> = {
-          active: true,
-          currentCard: cardFixture,
-          currentColor: cardColorFixture,
-          currentDirection: gameDirectionFixture,
-          currentPlayingSlotIndex:
-            gameDbFixture.currentPlayingSlotIndex as number,
           deck: [
             {
               amount: gameDeckCardDbFixture.amount,
               card: cardFixture,
             },
           ],
-          drawCount: gameDbFixture.drawCount as number,
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
-          slots: [gameSlotFixture],
-          spec: [
-            {
-              amount: gameCardSpecDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
+          spec: {
+            cards: [
+              {
+                amount: gameCardSpecDbFixture.amount,
+                card: cardFixture,
+              },
+            ],
+          },
+          state: {
+            active: true,
+            currentCard: cardFixture,
+            currentColor: cardColorFixture,
+            currentDirection: gameDirectionFixture,
+            currentPlayingSlotIndex:
+              gameDbFixture.currentPlayingSlotIndex as number,
+            drawCount: gameDbFixture.drawCount as number,
+            slots: [gameSlotFixture],
+          },
         };
 
         expect(result).toStrictEqual(expected);

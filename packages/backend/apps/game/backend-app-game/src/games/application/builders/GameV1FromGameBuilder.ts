@@ -4,6 +4,7 @@ import {
   CardColor,
 } from '@cornie-js/backend-app-game-models/cards/domain';
 import {
+  ActiveGame,
   ActiveGameSlot,
   Game,
   GameCardSpec,
@@ -91,21 +92,23 @@ export class GameV1FromGameBuilder
   public build(game: Game): apiModels.GameV1 {
     let gameV1: apiModels.GameV1;
 
-    if (game.active) {
+    if (this.#isActiveGame(game)) {
       const activeGameV1: apiModels.ActiveGameV1 = {
-        currentCard: this.#cardV1FromCardBuilder.build(game.currentCard),
+        currentCard: this.#cardV1FromCardBuilder.build(game.state.currentCard),
         currentColor: this.#cardColorV1FromCardColorBuilder.build(
-          game.currentColor,
+          game.state.currentColor,
         ),
         currentDirection: this.#gameDirectionV1FromGameDirectionBuilder.build(
-          game.currentDirection,
+          game.state.currentDirection,
         ),
-        currentPlayingSlotIndex: game.currentPlayingSlotIndex,
-        drawCount: game.drawCount,
+        currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        drawCount: game.state.drawCount,
         gameSlotsAmount: game.gameSlotsAmount,
-        gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
+        gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(
+          game.spec.cards,
+        ),
         id: game.id,
-        slots: game.slots.map((gameSlot: ActiveGameSlot) =>
+        slots: game.state.slots.map((gameSlot: ActiveGameSlot) =>
           this.#activeGameSlotV1FromActiveGameSlotBuilder.build(gameSlot),
         ),
       };
@@ -114,9 +117,11 @@ export class GameV1FromGameBuilder
     } else {
       const nonStartedGameV1: apiModels.NonStartedGameV1 = {
         gameSlotsAmount: game.gameSlotsAmount,
-        gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(game.spec),
+        gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(
+          game.spec.cards,
+        ),
         id: game.id,
-        slots: game.slots.map((gameSlot: NonStartedGameSlot) =>
+        slots: game.state.slots.map((gameSlot: NonStartedGameSlot) =>
           this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build(
             gameSlot,
           ),
@@ -127,5 +132,9 @@ export class GameV1FromGameBuilder
     }
 
     return gameV1;
+  }
+
+  #isActiveGame(game: Game): game is ActiveGame {
+    return game.state.active;
   }
 }

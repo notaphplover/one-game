@@ -466,7 +466,7 @@ describe(GameSlotManagementInputPort.name, () => {
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withSlotsOne;
-        [gameSlotFixture] = gameFixture.slots as [ActiveGameSlot];
+        [gameSlotFixture] = gameFixture.state.slots as [ActiveGameSlot];
       });
 
       describe('when called', () => {
@@ -605,7 +605,7 @@ describe(GameSlotManagementInputPort.name, () => {
         gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
         slotIndex = 0;
         userIdFixture = (
-          gameFixture.slots[0] as ActiveGameSlot | NonStartedGameSlot
+          gameFixture.state.slots[0] as ActiveGameSlot | NonStartedGameSlot
         ).userId;
       });
 

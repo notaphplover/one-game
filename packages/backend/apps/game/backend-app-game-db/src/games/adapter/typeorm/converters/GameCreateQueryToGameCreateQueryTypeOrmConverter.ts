@@ -34,7 +34,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
   ): QueryDeepPartialEntity<GameDb> {
     const gameCardsStringified: string =
       this.#gameCardSpecArrayToGameCardSpecArrayDbConverter.convert(
-        gameCreateQuery.spec,
+        gameCreateQuery.spec.cards,
       );
 
     return {

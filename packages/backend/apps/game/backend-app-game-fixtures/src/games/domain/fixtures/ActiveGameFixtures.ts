@@ -11,24 +11,33 @@ import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
-      active: true,
-      currentCard: CardFixtures.any,
-      currentColor: CardColor.blue,
-      currentDirection: GameDirection.antiClockwise,
-      currentPlayingSlotIndex: 0,
       deck: [],
-      drawCount: 0,
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      slots: [ActiveGameSlotFixtures.withPositionZero],
-      spec: [GameCardSpecFixtures.any],
+      spec: {
+        cards: [GameCardSpecFixtures.any],
+      },
+      state: {
+        active: true,
+        currentCard: CardFixtures.any,
+        currentColor: CardColor.blue,
+        currentDirection: GameDirection.antiClockwise,
+        currentPlayingSlotIndex: 0,
+        drawCount: 0,
+        slots: [ActiveGameSlotFixtures.withPositionZero],
+      },
     };
   }
 
   public static get withSlotsOne(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
     return {
-      ...ActiveGameFixtures.any,
-      slots: [ActiveGameSlotFixtures.withPositionZero],
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        slots: [ActiveGameSlotFixtures.withPositionZero],
+      },
     };
   }
 }

@@ -86,7 +86,7 @@ describe(GameV1FromGameBuilder.name, () => {
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withSlotsOne;
-        [gameSlotFixture] = gameFixture.slots as [ActiveGameSlot];
+        [gameSlotFixture] = gameFixture.state.slots as [ActiveGameSlot];
       });
 
       describe('when called', () => {
@@ -141,13 +141,13 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledTimes(1);
           expect(
             cardColorV1FromCardColorBuilderMock.build,
-          ).toHaveBeenCalledWith(gameFixture.currentColor);
+          ).toHaveBeenCalledWith(gameFixture.state.currentColor);
         });
 
         it('should call cardV1FromCardBuilder.build()', () => {
           expect(cardV1FromCardBuilderMock.build).toHaveBeenCalledTimes(1);
           expect(cardV1FromCardBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.currentCard,
+            gameFixture.state.currentCard,
           );
         });
 
@@ -157,7 +157,7 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledTimes(1);
           expect(
             gameDirectionV1FromGameDirectionBuilderMock.build,
-          ).toHaveBeenCalledWith(gameFixture.currentDirection);
+          ).toHaveBeenCalledWith(gameFixture.state.currentDirection);
         });
 
         it('should call gameSpecV1FromGameCardSpecsBuilder.build()', () => {
@@ -166,7 +166,7 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledTimes(1);
           expect(
             gameSpecV1FromGameCardSpecsBuilderMock.build,
-          ).toHaveBeenCalledWith(gameFixture.spec);
+          ).toHaveBeenCalledWith(gameFixture.spec.cards);
         });
 
         it('should return a GameV1', () => {
@@ -174,8 +174,8 @@ describe(GameV1FromGameBuilder.name, () => {
             currentCard: cardV1Fixture,
             currentColor: cardColorV1Fixture,
             currentDirection: gameDirectionV1Fixture,
-            currentPlayingSlotIndex: gameFixture.currentPlayingSlotIndex,
-            drawCount: gameFixture.drawCount,
+            currentPlayingSlotIndex: gameFixture.state.currentPlayingSlotIndex,
+            drawCount: gameFixture.state.drawCount,
             gameSlotsAmount: gameFixture.gameSlotsAmount,
             gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,
@@ -193,7 +193,7 @@ describe(GameV1FromGameBuilder.name, () => {
 
       beforeAll(() => {
         gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
-        [gameSlotFixture] = gameFixture.slots as [NonStartedGameSlot];
+        [gameSlotFixture] = gameFixture.state.slots as [NonStartedGameSlot];
       });
 
       describe('when called', () => {
@@ -227,7 +227,7 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledTimes(1);
           expect(
             gameSpecV1FromGameCardSpecsBuilderMock.build,
-          ).toHaveBeenCalledWith(gameFixture.spec);
+          ).toHaveBeenCalledWith(gameFixture.spec.cards);
         });
 
         it('should call nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build()', () => {

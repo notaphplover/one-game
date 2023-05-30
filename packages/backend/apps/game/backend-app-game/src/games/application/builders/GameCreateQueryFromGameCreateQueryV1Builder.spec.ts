@@ -72,7 +72,9 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
         const expected: GameCreateQuery = {
           gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
           id: uuidContext.uuid,
-          spec: [gameCardSpecFixture],
+          spec: {
+            cards: [gameCardSpecFixture],
+          },
         };
 
         expect(result).toStrictEqual(expected);

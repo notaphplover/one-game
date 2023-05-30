@@ -1,7 +1,4 @@
 import { BaseGame } from './BaseGame';
-import { NonStartedGameSlot } from './NonStartedGameSlot';
+import { NonStartedGameState } from './NonStartedGameState';
 
-export interface NonStartedGame extends BaseGame {
-  readonly active: false;
-  readonly slots: NonStartedGameSlot[];
-}
+export type NonStartedGame = BaseGame<NonStartedGameState>;

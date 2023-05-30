@@ -18,7 +18,7 @@ export class GameSlotCreateQueryFromGameSlotCreateQueryV1Builder
     return {
       gameId: context.game.id,
       id: context.uuid,
-      position: context.game.slots.length,
+      position: context.game.state.slots.length,
       userId: gameSlotCreateQuery.userId,
     };
   }
