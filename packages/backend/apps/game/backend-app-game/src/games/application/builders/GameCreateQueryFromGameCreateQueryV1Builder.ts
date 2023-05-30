@@ -37,9 +37,11 @@ export class GameCreateQueryFromGameCreateQueryV1Builder
     return {
       gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
       id: context.uuid,
-      spec: this.#gameCardSpecsFromGameSpecV1Builder.build(
-        gameCreateQueryV1.gameSpec,
-      ),
+      spec: {
+        cards: this.#gameCardSpecsFromGameSpecV1Builder.build(
+          gameCreateQueryV1.gameSpec,
+        ),
+      },
     };
   }
 }

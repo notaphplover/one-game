@@ -108,19 +108,23 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     }
 
     return {
-      active: true,
-      currentCard: this.#cardBuilder.build(gameDb.currentCard),
-      currentColor: this.#cardColorBuilder.build(gameDb.currentColor),
-      currentDirection: this.#gameDirectionDbToGameDirectionConverter.convert(
-        gameDb.currentDirection,
-      ),
-      currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
       deck: this.#convertCardSpecs(gameDb.deck),
-      drawCount: gameDb.drawCount,
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
-      slots: gameSlots,
-      spec: this.#convertCardSpecs(gameDb.spec),
+      spec: {
+        cards: this.#convertCardSpecs(gameDb.spec),
+      },
+      state: {
+        active: true,
+        currentCard: this.#cardBuilder.build(gameDb.currentCard),
+        currentColor: this.#cardColorBuilder.build(gameDb.currentColor),
+        currentDirection: this.#gameDirectionDbToGameDirectionConverter.convert(
+          gameDb.currentDirection,
+        ),
+        currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
+        drawCount: gameDb.drawCount,
+        slots: gameSlots,
+      },
     };
   }
 
@@ -129,12 +133,16 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     gameSlots: NonStartedGameSlot[],
   ): NonStartedGame {
     return {
-      active: false,
       deck: this.#convertCardSpecs(gameDb.deck),
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
-      slots: gameSlots,
-      spec: this.#convertCardSpecs(gameDb.spec),
+      spec: {
+        cards: this.#convertCardSpecs(gameDb.spec),
+      },
+      state: {
+        active: false,
+        slots: gameSlots,
+      },
     };
   }
 

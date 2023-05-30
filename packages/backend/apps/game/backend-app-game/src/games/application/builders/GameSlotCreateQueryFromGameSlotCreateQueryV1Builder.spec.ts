@@ -38,7 +38,7 @@ describe(GameSlotCreateQueryFromGameSlotCreateQueryV1Builder.name, () => {
         const expected: GameSlotCreateQuery = {
           gameId: gameSlotCreateQueryContextFixture.game.id,
           id: gameSlotCreateQueryContextFixture.uuid,
-          position: gameSlotCreateQueryContextFixture.game.slots.length,
+          position: gameSlotCreateQueryContextFixture.game.state.slots.length,
           userId: gameSlotCreateQueryV1Fixture.userId,
         };
 

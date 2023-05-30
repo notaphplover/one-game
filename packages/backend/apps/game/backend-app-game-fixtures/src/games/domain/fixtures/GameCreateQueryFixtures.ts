@@ -7,7 +7,9 @@ export class GameCreateQueryFixtures {
     const fixture: GameCreateQuery = {
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      spec: [],
+      spec: {
+        cards: [],
+      },
     };
 
     return fixture;
@@ -16,12 +18,14 @@ export class GameCreateQueryFixtures {
   public static get withSpecOne(): GameCreateQuery {
     const fixture: GameCreateQuery = {
       ...GameCreateQueryFixtures.any,
-      spec: [
-        {
-          amount: 1,
-          card: CardFixtures.any,
-        },
-      ],
+      spec: {
+        cards: [
+          {
+            amount: 1,
+            card: CardFixtures.any,
+          },
+        ],
+      },
     };
 
     return fixture;

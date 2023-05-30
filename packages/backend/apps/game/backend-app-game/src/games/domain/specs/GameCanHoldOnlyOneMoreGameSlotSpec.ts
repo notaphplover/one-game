@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class GameCanHoldOnlyOneMoreGameSlotSpec implements Spec<[Game]> {
   public isSatisfiedBy(game: Game): boolean {
-    return !game.active && game.slots.length === game.gameSlotsAmount - 1;
+    return (
+      !game.state.active && game.state.slots.length === game.gameSlotsAmount - 1
+    );
   }
 }

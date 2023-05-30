@@ -62,7 +62,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
-        ).toHaveBeenCalledWith(gameCreateQueryFixture.spec);
+        ).toHaveBeenCalledWith(gameCreateQueryFixture.spec.cards);
       });
 
       it('should return a DeepPartial<GameDb>', () => {

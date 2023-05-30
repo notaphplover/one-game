@@ -123,7 +123,7 @@ export class GameSlotManagementInputPort {
     game: Game,
     slotIndex: number,
   ): apiModels.ActiveGameSlotCardsV1 {
-    if (!game.active) {
+    if (!this.#isActiveGame(game)) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
         'Unable to fetch cards from a non active game slot',
@@ -162,7 +162,7 @@ export class GameSlotManagementInputPort {
     slotIndex: number,
   ): ActiveGameSlot | NonStartedGameSlot {
     const gameSlot: ActiveGameSlot | NonStartedGameSlot | undefined =
-      game.slots[slotIndex];
+      game.state.slots[slotIndex];
 
     if (gameSlot === undefined) {
       throw new AppError(
@@ -194,5 +194,9 @@ export class GameSlotManagementInputPort {
         nonStartedGameFilledEvent,
       );
     }
+  }
+
+  #isActiveGame(game: Game): game is ActiveGame {
+    return game.state.active;
   }
 }
