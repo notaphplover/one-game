@@ -7,10 +7,10 @@ import {
   ColoredCard,
 } from '@cornie-js/backend-app-game-models/cards/domain';
 import {
-  Game,
   GameCardSpec,
   GameDirection,
   GameInitialDraws,
+  NonStartedGame,
 } from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
@@ -47,14 +47,14 @@ describe(GameService.name, () => {
 
   describe('.getInitialCardsDraw', () => {
     describe('having a Game with enough cards', () => {
-      let gameFixture: Game;
+      let gameFixture: NonStartedGame;
       let deckCardSpec: GameCardSpec;
 
       beforeAll(() => {
         gameFixture =
           NonStartedGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
 
-        [deckCardSpec] = gameFixture.deck as [GameCardSpec];
+        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
       describe('when called', () => {
@@ -89,7 +89,7 @@ describe(GameService.name, () => {
     });
 
     describe('having a Game with not enough cards', () => {
-      let gameFixture: Game;
+      let gameFixture: NonStartedGame;
 
       beforeAll(() => {
         gameFixture =

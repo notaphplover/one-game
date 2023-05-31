@@ -1,7 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Game } from '@cornie-js/backend-app-game-models/games/domain';
-import { Handler } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
+  Auth,
+  AuthKind,
+  AuthRequestContextHolder,
   RequestWithBody,
   requestContextProperty,
 } from '@cornie-js/backend-http';
@@ -15,7 +18,7 @@ export class PostGameIdSlotV1RequestParamHandler
   implements
     Handler<
       [RequestWithBody & GameRequestContextHolder],
-      [apiModels.GameIdSlotCreateQueryV1, Game]
+      [apiModels.GameIdSlotCreateQueryV1, Game, apiModels.UserV1]
     >
 {
   readonly #postGameIdSlotV1RequestBodyHandler: Handler<
@@ -35,11 +38,26 @@ export class PostGameIdSlotV1RequestParamHandler
   }
 
   public async handle(
-    request: RequestWithBody & GameRequestContextHolder,
-  ): Promise<[apiModels.GameIdSlotCreateQueryV1, Game]> {
+    request: RequestWithBody &
+      AuthRequestContextHolder &
+      GameRequestContextHolder,
+  ): Promise<[apiModels.GameIdSlotCreateQueryV1, Game, apiModels.UserV1]> {
+    const auth: Auth = request[requestContextProperty].auth;
+
+    if (auth.kind !== AuthKind.user) {
+      throw new AppError(
+        AppErrorKind.invalidCredentials,
+        'Expecting user based credentials',
+      );
+    }
+
     const [gameIdSlotCreateQueryV1]: [apiModels.GameIdSlotCreateQueryV1] =
       await this.#postGameIdSlotV1RequestBodyHandler.handle(request);
 
-    return [gameIdSlotCreateQueryV1, request[requestContextProperty].game];
+    return [
+      gameIdSlotCreateQueryV1,
+      request[requestContextProperty].game,
+      auth.user,
+    ];
   }
 }

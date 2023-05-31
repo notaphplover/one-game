@@ -108,7 +108,6 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     }
 
     return {
-      deck: this.#convertCardSpecs(gameDb.deck),
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       spec: {
@@ -122,6 +121,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
           gameDb.currentDirection,
         ),
         currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
+        deck: this.#convertCardSpecs(gameDb.deck),
         drawCount: gameDb.drawCount,
         slots: gameSlots,
       },
@@ -133,7 +133,6 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     gameSlots: NonStartedGameSlot[],
   ): NonStartedGame {
     return {
-      deck: this.#convertCardSpecs(gameDb.deck),
       gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       spec: {

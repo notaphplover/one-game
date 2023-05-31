@@ -6,7 +6,6 @@ import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';
 export class NonStartedGameFixtures {
   public static get any(): NonStartedGame {
     const fixture: NonStartedGame = {
-      deck: [],
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       spec: {
@@ -26,8 +25,10 @@ export class NonStartedGameFixtures {
 
     return {
       ...anyNonStartedGameFixture,
-      deck: [GameCardSpecFixtures.withAmount0],
       gameSlotsAmount: 2,
+      spec: {
+        cards: [GameCardSpecFixtures.withAmount0],
+      },
       state: {
         ...anyNonStartedGameFixture.state,
         slots: [
@@ -43,8 +44,10 @@ export class NonStartedGameFixtures {
 
     return {
       ...anyNonStartedGameFixture,
-      deck: [GameCardSpecFixtures.withAmount120],
       gameSlotsAmount: 2,
+      spec: {
+        cards: [GameCardSpecFixtures.withAmount120],
+      },
       state: {
         ...anyNonStartedGameFixture.state,
         slots: [

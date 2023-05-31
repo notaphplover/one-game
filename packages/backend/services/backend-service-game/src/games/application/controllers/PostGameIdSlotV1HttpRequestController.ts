@@ -1,7 +1,12 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { GameSlotManagementInputPort } from '@cornie-js/backend-app-game';
 import { Game } from '@cornie-js/backend-app-game-models/games/domain';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
   MiddlewarePipeline,
@@ -20,7 +25,7 @@ import { GameMiddleware } from '../middlewares/GameMiddleware';
 @Injectable()
 export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpRequestController<
   RequestWithBody,
-  [apiModels.GameIdSlotCreateQueryV1, Game],
+  [apiModels.GameIdSlotCreateQueryV1, Game, apiModels.UserV1],
   apiModels.GameSlotV1
 > {
   readonly #gameSlotManagementInputPort: GameSlotManagementInputPort;
@@ -29,7 +34,7 @@ export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpReque
     @Inject(PostGameIdSlotV1RequestParamHandler)
     requestParamHandler: Handler<
       [RequestWithBody],
-      [apiModels.GameIdSlotCreateQueryV1, Game]
+      [apiModels.GameIdSlotCreateQueryV1, Game, apiModels.UserV1]
     >,
     @Inject(SingleEntityPostResponseBuilder)
     responseBuilder: Builder<
@@ -61,7 +66,15 @@ export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpReque
   protected async _handleUseCase(
     gameIdSlotCreateQueryV1: apiModels.GameIdSlotCreateQueryV1,
     game: Game,
+    user: apiModels.UserV1,
   ): Promise<apiModels.GameSlotV1> {
+    if (gameIdSlotCreateQueryV1.userId !== user.id) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        'Unable to create a game slot impersonating another user.',
+      );
+    }
+
     return this.#gameSlotManagementInputPort.create(
       gameIdSlotCreateQueryV1,
       game,
