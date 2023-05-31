@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
 import {
+  ActiveGameFixtures,
   GameCardSpecFixtures,
   NonStartedGameFixtures,
 } from '@cornie-js/backend-app-game-fixtures/games/domain';
@@ -11,6 +12,7 @@ import {
 } from '@cornie-js/backend-app-game-models/cards/domain';
 import { GamePersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
 import {
+  ActiveGame,
   GameDirection,
   GameFindQuery,
   GameInitialDraws,
@@ -104,7 +106,55 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns a game', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns an active game', () => {
+      let gameFixture: ActiveGame;
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameFixture = ActiveGameFixtures.any;
+
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameFixture,
+        );
+
+        try {
+          await nonStartedGameFilledEventHandler.handle(
+            nonStartedGameFilledEventFixture,
+          );
+        } catch (error) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expected: GameFindQuery = {
+          id: nonStartedGameFilledEventFixture.gameId,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unknown,
+          message: 'Unexpected attempt to fill an already active game',
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns a non started game', () => {
       let playerCardsFixture: Card[];
       let gameInitialDrawsFixture: GameInitialDraws;
       let gameFixture: NonStartedGame;

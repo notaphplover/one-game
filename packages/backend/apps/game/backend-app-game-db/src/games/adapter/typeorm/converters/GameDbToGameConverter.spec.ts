@@ -66,17 +66,12 @@ describe(GameDbToGameConverter.name, () => {
 
   describe('having a non started GameDb', () => {
     let gameCardSpecDbFixture: GameCardSpecDb;
-    let gameDeckCardDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
-        GameCardSpecDb,
-      ];
-
-      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck) as [
         GameCardSpecDb,
       ];
     });
@@ -91,7 +86,7 @@ describe(GameDbToGameConverter.name, () => {
         cardFixture = CardFixtures.any;
         gameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
 
-        cardBuilderMock.build.mockReturnValue(cardFixture);
+        cardBuilderMock.build.mockReturnValueOnce(cardFixture);
         gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
           gameSlotFixture,
         );
@@ -100,14 +95,13 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       afterAll(() => {
-        cardBuilderMock.build.mockReset();
         gameSlotDbToGameSlotConverterMock.convert.mockReset();
 
         jest.clearAllMocks();
       });
 
       it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(2);
+        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
       });
 
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
@@ -124,12 +118,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return a NonStartedGame', () => {
         const expected: Partial<NonStartedGame> = {
-          deck: [
-            {
-              amount: gameDeckCardDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           spec: {
@@ -153,15 +141,11 @@ describe(GameDbToGameConverter.name, () => {
 
   describe('having a non started GameDb with two slots', () => {
     let gameCardSpecDbFixture: GameCardSpecDb;
-    let gameDeckCardDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsTwo;
 
-      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.spec) as [
-        GameCardSpecDb,
-      ];
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
       ];
@@ -179,7 +163,7 @@ describe(GameDbToGameConverter.name, () => {
         firstGameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
         secondGameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
 
-        cardBuilderMock.build.mockReturnValue(cardFixture);
+        cardBuilderMock.build.mockReturnValueOnce(cardFixture);
         gameSlotDbToGameSlotConverterMock.convert
           .mockReturnValueOnce(secondGameSlotFixture)
           .mockReturnValueOnce(firstGameSlotFixture);
@@ -188,14 +172,13 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       afterAll(() => {
-        cardBuilderMock.build.mockReset();
         gameSlotDbToGameSlotConverterMock.convert.mockReset();
 
         jest.clearAllMocks();
       });
 
       it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(2);
+        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
       });
 
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
@@ -212,12 +195,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return a NonStartedGame with sorted game slots', () => {
         const expected: Partial<NonStartedGame> = {
-          deck: [
-            {
-              amount: gameDeckCardDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           spec: {
@@ -315,12 +292,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return an ActiveGame', () => {
         const expected: Partial<ActiveGame> = {
-          deck: [
-            {
-              amount: gameDeckCardDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
           gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           spec: {
@@ -338,6 +309,12 @@ describe(GameDbToGameConverter.name, () => {
             currentDirection: gameDirectionFixture,
             currentPlayingSlotIndex:
               gameDbFixture.currentPlayingSlotIndex as number,
+            deck: [
+              {
+                amount: gameDeckCardDbFixture.amount,
+                card: cardFixture,
+              },
+            ],
             drawCount: gameDbFixture.drawCount as number,
             slots: [gameSlotFixture],
           },

@@ -4,10 +4,10 @@ import {
   ColoredCard,
 } from '@cornie-js/backend-app-game-models/cards/domain';
 import {
-  Game,
   GameCardSpec,
   GameDirection,
   GameInitialDraws,
+  NonStartedGame,
 } from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
@@ -27,10 +27,10 @@ export class GameService {
     return this.#getRandomColor();
   }
 
-  public getInitialCardsDraw(game: Game): GameInitialDraws {
+  public getInitialCardsDraw(game: NonStartedGame): GameInitialDraws {
     const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
       this.#drawCards(
-        game,
+        game.spec.cards,
         INITIAL_CARDS_PER_PLAYER * game.gameSlotsAmount + 1,
       );
 
@@ -60,8 +60,8 @@ export class GameService {
     return 0;
   }
 
-  #drawCards(game: Game, amount: number): [Card[], GameCardSpec[]] {
-    const gameCards: number = game.deck.reduce(
+  #drawCards(cards: GameCardSpec[], amount: number): [Card[], GameCardSpec[]] {
+    const gameCards: number = cards.reduce(
       (count: number, cardSpec: GameCardSpec) => count + cardSpec.amount,
       0,
     );
@@ -72,7 +72,7 @@ export class GameService {
     );
 
     const cardsAndGameDeck: [Card[], GameCardSpec[]] = this.#getCardsFromDeck(
-      game,
+      cards,
       drawIndexes,
     );
 
@@ -89,12 +89,12 @@ export class GameService {
   }
 
   #getCardsFromDeck(
-    game: Game,
+    deckCards: GameCardSpec[],
     drawIndexes: number[],
   ): [Card[], GameCardSpec[]] {
     const cards: Card[] = [];
     const gameDeckCardSpecsAfterDraw: Writable<GameCardSpec>[] = [
-      ...game.deck.map((cardSpec: GameCardSpec) => ({ ...cardSpec })),
+      ...deckCards.map((cardSpec: GameCardSpec) => ({ ...cardSpec })),
     ];
 
     let cardsTraversed: number = 0;

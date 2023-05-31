@@ -4,10 +4,12 @@ import {
   gamePersistenceOutputPortSymbol,
 } from '@cornie-js/backend-app-game-models/games/application';
 import {
+  ActiveGame,
   Game,
   GameInitialDraws,
   GameSlotUpdateQuery,
   GameUpdateQuery,
+  NonStartedGame,
 } from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
@@ -35,7 +37,7 @@ export class NonStartedGameFilledEventHandler
   public async handle(
     nonStartedGameFilledEvent: NonStartedGameFilledEvent,
   ): Promise<void> {
-    const game: Game = await this.#getGameOrFail(
+    const game: NonStartedGame = await this.#getNonStartedGameOrFail(
       nonStartedGameFilledEvent.gameId,
     );
 
@@ -44,7 +46,7 @@ export class NonStartedGameFilledEventHandler
     await this.#gamePersistenceOutputPort.update(gameUpdateQuery);
   }
 
-  #buildGameUpdateQuery(game: Game): GameUpdateQuery {
+  #buildGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
     const gameInitialDraws: GameInitialDraws =
       this.#gameService.getInitialCardsDraw(game);
 
@@ -78,7 +80,7 @@ export class NonStartedGameFilledEventHandler
     return gameUpdateQuery;
   }
 
-  async #getGameOrFail(gameId: string): Promise<Game> {
+  async #getNonStartedGameOrFail(gameId: string): Promise<NonStartedGame> {
     const game: Game | undefined =
       await this.#gamePersistenceOutputPort.findOne({
         id: gameId,
@@ -91,6 +93,17 @@ export class NonStartedGameFilledEventHandler
       );
     }
 
+    if (this.#isGameActive(game)) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected attempt to fill an already active game',
+      );
+    }
+
     return game;
+  }
+
+  #isGameActive(game: Game): game is ActiveGame {
+    return game.state.active;
   }
 }

@@ -11,7 +11,6 @@ import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
-      deck: [],
       gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       spec: {
@@ -23,6 +22,7 @@ export class ActiveGameFixtures {
         currentColor: CardColor.blue,
         currentDirection: GameDirection.antiClockwise,
         currentPlayingSlotIndex: 0,
+        deck: [],
         drawCount: 0,
         slots: [ActiveGameSlotFixtures.withPositionZero],
       },
