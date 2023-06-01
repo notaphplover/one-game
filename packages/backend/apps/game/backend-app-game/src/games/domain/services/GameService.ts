@@ -1,6 +1,7 @@
 import {
   Card,
   CardColor,
+  CardKind,
   ColoredCard,
 } from '@cornie-js/backend-app-game-models/cards/domain';
 import {
@@ -13,6 +14,12 @@ import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
+
+const UNO_ORIGINAL_ACTION_CARDS_PER_COLOR: number = 2;
+const UNO_ORIGINAL_NUMBERS_AMOUNT: number = 10;
+const UNO_ORIGINAL_NUMBERED_NON_ZERO_CARDS_PER_COLOR: number = 2;
+const UNO_ORIGINAL_NUMBERED_ZERO_CARDS_PER_COLOR: number = 1;
+const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 
 @Injectable()
 export class GameService {
@@ -46,6 +53,73 @@ export class GameService {
       ),
       remainingDeck: gameDeckCardsSpec,
     };
+  }
+
+  public getInitialCardsSpec(): GameCardSpec[] {
+    const [zeroNumber, ...nonZeroNumbers]: [number, ...number[]] = new Array(
+      UNO_ORIGINAL_NUMBERS_AMOUNT,
+    ).map((_: unknown, index: number) => index) as [number, ...number[]];
+
+    const actionCardKinds: (
+      | CardKind.draw
+      | CardKind.reverse
+      | CardKind.skip
+    )[] = [CardKind.draw, CardKind.reverse, CardKind.skip];
+
+    const wildCardKinds: (CardKind.wild | CardKind.wildDraw4)[] = [
+      CardKind.wild,
+      CardKind.wildDraw4,
+    ];
+
+    return [
+      ...Object.values(CardColor).map(
+        (color: CardColor): GameCardSpec => ({
+          amount: UNO_ORIGINAL_NUMBERED_ZERO_CARDS_PER_COLOR,
+          card: {
+            color,
+            kind: CardKind.normal,
+            number: zeroNumber,
+          },
+        }),
+      ),
+      ...Object.values(CardColor)
+        .map((color: CardColor): GameCardSpec[] =>
+          nonZeroNumbers.map(
+            (number: number): GameCardSpec => ({
+              amount: UNO_ORIGINAL_NUMBERED_NON_ZERO_CARDS_PER_COLOR,
+              card: {
+                color,
+                kind: CardKind.normal,
+                number,
+              },
+            }),
+          ),
+        )
+        .flat(),
+      ...Object.values(CardColor)
+        .map((color: CardColor): GameCardSpec[] =>
+          actionCardKinds.map(
+            (
+              kind: CardKind.draw | CardKind.reverse | CardKind.skip,
+            ): GameCardSpec => ({
+              amount: UNO_ORIGINAL_ACTION_CARDS_PER_COLOR,
+              card: {
+                color,
+                kind: kind,
+              },
+            }),
+          ),
+        )
+        .flat(),
+      ...wildCardKinds.map(
+        (kind: CardKind.wild | CardKind.wildDraw4): GameCardSpec => ({
+          amount: UNO_ORIGINAL_WILD_CARDS_PER_COLOR,
+          card: {
+            kind: kind,
+          },
+        }),
+      ),
+    ];
   }
 
   public getInitialDirection(): GameDirection {

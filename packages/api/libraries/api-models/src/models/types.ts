@@ -122,7 +122,6 @@ export interface GameCardSpecV1 {
 }
 export interface GameCreateQueryV1 {
   gameSlotsAmount: number;
-  gameSpec: GameSpecV1;
 }
 export interface GameIdDrawCardsQueryV1 {
   kind: 'drawCards';
