@@ -1,0 +1,7 @@
+**/*.ts
+!lib/**/*.d.ts
+lib/**/*.spec.d.ts
+
+.eslintrc.js
+pnpm-lock.yaml
+tsconfig.json
