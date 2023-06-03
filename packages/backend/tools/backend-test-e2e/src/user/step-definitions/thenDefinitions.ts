@@ -1,5 +1,4 @@
-import { HttpClient, Response } from '@cornie-js/api-http-client';
-import { models as apiModels } from '@cornie-js/api-models';
+import { HttpClient } from '@cornie-js/api-http-client';
 import { Then } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
 
@@ -18,14 +17,7 @@ async function thenCreateUserResponseShouldContainValidUser(
   const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
     getRequestParametersOrFail(this, 'createUser', alias);
 
-  type ResponseType =
-    | Response<Record<string, string>, apiModels.UserV1, HttpStatus.OK>
-    | Response<
-        Record<string, string>,
-        apiModels.ErrorV1,
-        HttpStatus.BAD_REQUEST
-      >
-    | Response<Record<string, string>, apiModels.ErrorV1, HttpStatus.CONFLICT>;
+  type ResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
 
   const response: ResponseType = await getResponseParametersOrFail(
     this,

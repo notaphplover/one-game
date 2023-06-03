@@ -5,11 +5,11 @@ import { OneGameApiWorld } from '../../models/OneGameApiWorld';
 import { getRequestParametersOrFail } from '../calculations/getRequestOrFail';
 import { setPendingResponse } from './setPendingResponse';
 
-export async function sendRequest<TEndpoint extends keyof HttpClient>(
+export function sendRequest<TEndpoint extends keyof HttpClient>(
   this: OneGameApiWorld,
   endpoint: TEndpoint,
   requestAlias: string | undefined,
-): Promise<void> {
+): void {
   const alias: string = requestAlias ?? defaultAlias;
 
   const request: Parameters<HttpClient[TEndpoint]> = getRequestParametersOrFail(
