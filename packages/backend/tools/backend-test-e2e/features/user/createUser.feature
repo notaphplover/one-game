@@ -2,7 +2,7 @@ Feature: Create user
 
   Anyone can create a new user.
 
-  Rule: A user is created successfully
+  Rule: A non existent user is created successfully
 
     Scenario: Non authenticated user creates a user
       Given a create user request
