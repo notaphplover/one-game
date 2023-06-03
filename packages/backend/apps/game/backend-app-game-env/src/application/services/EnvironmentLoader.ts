@@ -6,7 +6,8 @@ import { cleanEnv, json, port, str, num, url, bool } from 'envalid';
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
 
-const DOT_ENV_PATH: string = '.env';
+const DOT_ENV_PATH: string =
+  process.env['ONE_JS_GAME_SERVICE_DOT_ENV_PATH'] ?? '.env';
 
 @Injectable()
 export class EnvironmentLoader extends EnvLoader<Environment> {
