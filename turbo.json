@@ -44,6 +44,9 @@
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.{cjs,js,jsx}", "vite.config.js"]
     },
+    "close:e2e": {
+      "cache": false
+    },
     "format": {
       "inputs": ["src/**/*.ts"],
       "outputs": ["src/**/*.ts"]
@@ -60,6 +63,10 @@
       "cache": false,
       "dependsOn": ["build"],
       "persistent": true
+    },
+    "start:e2e": {
+      "cache": false,
+      "dependsOn": ["build"]
     },
     "test": {
       "inputs": ["src/**/*.ts"],
