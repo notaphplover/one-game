@@ -50,11 +50,10 @@ jobs:
       - name: Start services with e2e config
         run: pnpm run start:e2e
 
-      - name: Set E2E test env
-        run: echo "ONE_JS_TEST_E2E_DOT_ENV_PATH=e2e.env" >> $GITHUB_ENV
-
       - name: Run e2e tests
         run: pnpm run test:e2e:js
+        env:
+          ONE_JS_TEST_E2E_DOT_ENV_PATH: e2e.env
 
       - name: Remove services with e2e config
         run: pnpm run close:e2e
