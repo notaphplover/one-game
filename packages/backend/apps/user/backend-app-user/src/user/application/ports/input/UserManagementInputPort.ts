@@ -13,7 +13,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { Builder } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
@@ -105,7 +105,7 @@ export class UserManagementInputPort {
   public async updateMe(
     id: string,
     userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
-  ): Promise<void> {
+  ): Promise<apiModels.UserV1> {
     const userUpdateQuery: UserUpdateQuery =
       this.#userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
         userMeUpdateQueryV1,
@@ -115,6 +115,13 @@ export class UserManagementInputPort {
       );
 
     await this.#userPersistenceOutputPort.update(userUpdateQuery);
+
+    const userOrUndefined: User | undefined =
+      await this.#userPersistenceOutputPort.findOne({
+        id,
+      });
+
+    return this.#buildUserV1OrThrowUnknownError(id, userOrUndefined);
   }
 
   async #buildCreateContext(
@@ -130,6 +137,20 @@ export class UserManagementInputPort {
       hash: passwordHash,
       uuid,
     };
+  }
+
+  #buildUserV1OrThrowUnknownError(
+    id: string,
+    userOrUndefined: User | undefined,
+  ): apiModels.UserV1 {
+    const userV1: apiModels.UserV1 | undefined =
+      this.#buildUserV1OrUndefined(userOrUndefined);
+
+    if (userV1 === undefined) {
+      throw new AppError(AppErrorKind.unknown, `Unable to fetch user "${id}"`);
+    }
+
+    return userV1;
   }
 
   #buildUserV1OrUndefined(
