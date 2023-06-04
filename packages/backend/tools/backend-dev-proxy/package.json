@@ -13,9 +13,9 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "close:e2e": "docker compose down",
+    "close:e2e": "docker compose --env-file e2e.env down",
     "postserve": "docker compose down",
     "serve": "docker compose up",
-    "start:e2e": "docker compose up -d"
+    "start:e2e": "docker compose --env-file e2e.env up -d"
   }
 }
