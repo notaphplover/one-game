@@ -6,6 +6,10 @@ export function initializeWorld(
   world: Partial<OneGameApiWorld>,
   baseUrl: string,
 ): void {
+  world.entities = {
+    auth: new Map(),
+    users: new Map(),
+  };
   world.httpClient = new HttpClient(baseUrl);
   world.requestParameters = {};
   world.pendingResponses = {};

@@ -1,5 +1,4 @@
-import { HttpClient, Response } from '@cornie-js/api-http-client';
-import { models as apiModels } from '@cornie-js/api-models';
+import { HttpClient } from '@cornie-js/api-http-client';
 import { Then } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
 
@@ -18,14 +17,7 @@ async function thenCreateUserResponseShouldContainValidUser(
   const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
     getRequestParametersOrFail(this, 'createUser', alias);
 
-  type ResponseType =
-    | Response<Record<string, string>, apiModels.UserV1, HttpStatus.OK>
-    | Response<
-        Record<string, string>,
-        apiModels.ErrorV1,
-        HttpStatus.BAD_REQUEST
-      >
-    | Response<Record<string, string>, apiModels.ErrorV1, HttpStatus.CONFLICT>;
+  type ResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
 
   const response: ResponseType = await getResponseParametersOrFail(
     this,
@@ -43,6 +35,33 @@ async function thenCreateUserResponseShouldContainValidUser(
   });
 }
 
+async function thenUpdateUserResponseShouldContainValidUser(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): Promise<void> {
+  const alias: string = requestAlias ?? defaultAlias;
+
+  const [, userMeUpdateQueryV1]: Parameters<HttpClient['updateUserMe']> =
+    getRequestParametersOrFail(this, 'updateUserMe', alias);
+
+  type ResponseType = Awaited<ReturnType<HttpClient['updateUserMe']>>;
+
+  const response: ResponseType = await getResponseParametersOrFail(
+    this,
+    'updateUserMe',
+    alias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    body: {
+      id: () => undefined,
+      name: userMeUpdateQueryV1.name as string,
+    },
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
 Then<OneGameApiWorld>(
   'the create user response should contain a valid user',
   async function (): Promise<void> {
@@ -54,5 +73,12 @@ Then<OneGameApiWorld>(
   'the create user response as {string} should contain a valid user',
   async function (requestAlias: string): Promise<void> {
     await thenCreateUserResponseShouldContainValidUser.bind(this)(requestAlias);
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the update own user response for {string} should return an updated user',
+  async function (this: OneGameApiWorld, userAlias: string): Promise<void> {
+    await thenUpdateUserResponseShouldContainValidUser.bind(this)(userAlias);
   },
 );

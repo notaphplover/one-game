@@ -55,12 +55,10 @@ export class PatchUserV1MeHttpRequestController extends SingleEntityHttpRequestC
   protected async _handleUseCase(
     userV1: apiModels.UserV1,
     userMeUpdateQueryV1: UserMeUpdateQueryV1,
-  ): Promise<undefined> {
-    await this.#userManagementInputPort.updateMe(
+  ): Promise<apiModels.UserV1> {
+    return this.#userManagementInputPort.updateMe(
       userV1.id,
       userMeUpdateQueryV1,
     );
-
-    return undefined;
   }
 }

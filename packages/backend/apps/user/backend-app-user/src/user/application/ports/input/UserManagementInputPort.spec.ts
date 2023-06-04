@@ -19,7 +19,7 @@ import {
   UserUpdateQuery,
 } from '@cornie-js/backend-app-user-models/domain';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { Builder } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
@@ -250,17 +250,28 @@ describe(UserManagementInputPort.name, () => {
       userMeUpdateQueryV1 = UserMeUpdateQueryV1Fixtures.any;
     });
 
-    describe('when called', () => {
+    describe('when called, and userPersistenceOutputPort.findOne() returns a user', () => {
+      let userFixture: User;
       let userUpdateQueryFixture: UserUpdateQuery;
+      let userV1Fixture: apiModels.UserV1;
 
       let result: unknown;
 
       beforeAll(async () => {
+        userFixture = UserFixtures.any;
         userUpdateQueryFixture = UserUpdateQueryFixtures.any;
+        userV1Fixture = UserV1Fixtures.any;
 
         userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build.mockReturnValueOnce(
           userUpdateQueryFixture,
         );
+
+        userPersistenceOutputPortMock.update.mockResolvedValueOnce(undefined);
+        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          userFixture,
+        );
+
+        userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
 
         result = await userManagementInputPort.updateMe(
           userIdFixture,
@@ -283,8 +294,93 @@ describe(UserManagementInputPort.name, () => {
         ).toHaveBeenCalledWith(userMeUpdateQueryV1, expectedUuidContext);
       });
 
-      it('should return undefined', () => {
-        expect(result).toBeUndefined();
+      it('should call userPersistenceOutputPort.update()', () => {
+        expect(userPersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.update).toHaveBeenCalledWith(
+          userUpdateQueryFixture,
+        );
+      });
+
+      it('should call userPersistenceOutputPort.findOne()', () => {
+        const expected: UserFindQuery = { id: userIdFixture };
+
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should return a userV1', () => {
+        expect(result).toBe(userV1Fixture);
+      });
+    });
+
+    describe('when called, and userPersistenceOutputPort.findOne() returns undefined', () => {
+      let userUpdateQueryFixture: UserUpdateQuery;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userUpdateQueryFixture = UserUpdateQueryFixtures.any;
+
+        userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build.mockReturnValueOnce(
+          userUpdateQueryFixture,
+        );
+
+        userPersistenceOutputPortMock.update.mockResolvedValueOnce(undefined);
+        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
+
+        try {
+          await userManagementInputPort.updateMe(
+            userIdFixture,
+            userMeUpdateQueryV1,
+          );
+        } catch (error) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userUpdateQueryFromUserMeUpdateQueryV1Builder.build()', () => {
+        const expectedUuidContext: UuidContext = { uuid: userIdFixture };
+
+        expect(
+          userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledWith(userMeUpdateQueryV1, expectedUuidContext);
+      });
+
+      it('should call userPersistenceOutputPort.update()', () => {
+        expect(userPersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.update).toHaveBeenCalledWith(
+          userUpdateQueryFixture,
+        );
+      });
+
+      it('should call userPersistenceOutputPort.findOne()', () => {
+        const expected: UserFindQuery = { id: userIdFixture };
+
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should throw an error', () => {
+        const errorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unknown,
+          message: expect.stringContaining(
+            'Unable to fetch user "',
+          ) as unknown as string,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(expect.objectContaining(errorProperties));
       });
     });
   });
