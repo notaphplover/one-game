@@ -72,6 +72,13 @@
       "inputs": ["src/**/*.ts"],
       "outputs": []
     },
+    "test:e2e": {
+      "cache": false
+    },
+    "test:e2e:js": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
     "test:integration:js": {
       "dependsOn": ["build"],
       "inputs": ["dist/**", "lib/**"],
