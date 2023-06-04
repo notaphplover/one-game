@@ -4,13 +4,15 @@ import { Given } from '@cucumber/cucumber';
 import { faker } from '@faker-js/faker';
 import { HttpStatus } from '@nestjs/common';
 
+import { AuthV1Parameter } from '../../auth/models/AuthV1Parameter';
+import { getAuthOrFail } from '../../auth/utils/calculations/getAuthOrFail';
 import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { setRequestParameters } from '../../http/utils/actions/setRequestParameters';
 import { getRequestParametersOrFail } from '../../http/utils/calculations/getRequestOrFail';
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
-import { UserParameterV1 } from '../models/UserV1Parameter';
-import { setUser } from '../utilsl/actions/setUser';
+import { UserV1Parameter } from '../models/UserV1Parameter';
+import { setUser } from '../utils/actions/setUser';
 import { whenCreateUserRequestIsSend } from './whenDefinitions';
 
 export function givenCreateUserRequest(
@@ -54,12 +56,43 @@ export async function givenUser(
     );
   }
 
-  const userParameter: UserParameterV1 = {
+  const userParameter: UserV1Parameter = {
     user: response.body,
     userCreateQuery: userCreateQueryV1,
   };
 
   setUser.bind(this)(alias, userParameter);
+}
+
+export function givenUpdateUserRequestFromUser(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+  userAlias?: string,
+): void {
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const authV1Parameter: AuthV1Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+
+  const userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1 = {
+    name: faker.person.fullName(),
+  };
+
+  const updateUserMeRequestParameters: Parameters<HttpClient['updateUserMe']> =
+    [
+      {
+        authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      },
+      userMeUpdateQueryV1,
+    ];
+
+  setRequestParameters(
+    this,
+    'updateUserMe',
+    procesedRequestAlias,
+    updateUserMeRequestParameters,
+  );
 }
 
 Given<OneGameApiWorld>(
@@ -87,5 +120,12 @@ Given<OneGameApiWorld>(
   'a user {string}',
   async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
     await givenUser.bind(this)(requestAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'an update own user request from {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenUpdateUserRequestFromUser.bind(this)(userAlias, userAlias);
   },
 );

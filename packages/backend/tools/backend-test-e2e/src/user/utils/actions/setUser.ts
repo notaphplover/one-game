@@ -1,10 +1,10 @@
 import { OneGameApiWorld } from '../../../http/models/OneGameApiWorld';
-import { UserParameterV1 } from '../../models/UserV1Parameter';
+import { UserV1Parameter } from '../../models/UserV1Parameter';
 
 export function setUser(
   this: OneGameApiWorld,
   alias: string,
-  user: UserParameterV1,
+  user: UserV1Parameter,
 ): void {
   this.entities.users.set(alias, user);
 }

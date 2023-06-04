@@ -10,6 +10,13 @@ export function whenCreateUserRequestIsSend(
   sendRequest.bind(this)('createUser', requestAlias);
 }
 
+export function whenUpdateUserMeRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  sendRequest.bind(this)('updateUserMe', requestAlias);
+}
+
 When<OneGameApiWorld>(
   'the create user request is sent',
   function (this: OneGameApiWorld): void {
@@ -21,5 +28,12 @@ When<OneGameApiWorld>(
   'the create user request is sent as {string}',
   function (this: OneGameApiWorld, requestAlias: string): void {
     whenCreateUserRequestIsSend.bind(this)(requestAlias);
+  },
+);
+
+When<OneGameApiWorld>(
+  'the update own user request for {string} is sent',
+  function (this: OneGameApiWorld, requestAlias: string): void {
+    whenUpdateUserMeRequestIsSend.bind(this)(requestAlias);
   },
 );

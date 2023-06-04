@@ -1,6 +1,5 @@
 import { HttpClient } from '@cornie-js/api-http-client';
 
-import { UserParameterV1 } from '../../../user/models/UserV1Parameter';
 import { OneGameApiWorld } from '../../models/OneGameApiWorld';
 
 export function initializeWorld(
@@ -8,7 +7,8 @@ export function initializeWorld(
   baseUrl: string,
 ): void {
   world.entities = {
-    users: new Map<string, UserParameterV1>(),
+    auth: new Map(),
+    users: new Map(),
   };
   world.httpClient = new HttpClient(baseUrl);
   world.requestParameters = {};

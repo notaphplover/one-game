@@ -1,23 +1,63 @@
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Given } from '@cucumber/cucumber';
+import { HttpStatus } from '@nestjs/common';
 
 import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { setRequestParameters } from '../../http/utils/actions/setRequestParameters';
-import { UserParameterV1 } from '../../user/models/UserV1Parameter';
-import { getUserOrFail } from '../../user/utilsl/actions/getUserOrFail';
+import { getRequestParametersOrFail } from '../../http/utils/calculations/getRequestOrFail';
+import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
+import { UserV1Parameter } from '../../user/models/UserV1Parameter';
+import { getUserOrFail } from '../../user/utils/calculations/getUserOrFail';
+import { AuthV1Parameter } from '../models/AuthV1Parameter';
+import { setAuth } from '../utils/actions/setAuth';
+import { whenCreateAuthRequestIsSend } from './whenDefinitions';
 
-export function givenCreateAuthRequestFromUser(
+export async function givenAuthForUser(
+  this: OneGameApiWorld,
+  userAlias?: string,
+): Promise<void> {
+  const alias: string = userAlias ?? defaultAlias;
+
+  givenCreateAuthRequestForUser.bind(this)(alias, alias);
+  whenCreateAuthRequestIsSend.bind(this)(alias);
+
+  type ResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
+
+  const [, authCreateQueryV1]: Parameters<HttpClient['createAuth']> =
+    getRequestParametersOrFail(this, 'createAuth', alias);
+
+  const response: ResponseType = await getResponseParametersOrFail(
+    this,
+    'createAuth',
+    alias,
+  );
+
+  if (response.statusCode !== HttpStatus.OK) {
+    throw new Error(
+      `Expected user auth to be created, an unexpected ${response.statusCode} status code was received instead`,
+    );
+  }
+
+  const authParameter: AuthV1Parameter = {
+    auth: response.body,
+    authCreateQuery: authCreateQueryV1,
+  };
+
+  setAuth.bind(this)(alias, authParameter);
+}
+
+export function givenCreateAuthRequestForUser(
   this: OneGameApiWorld,
   userAlias?: string,
   requestAlias?: string,
 ): void {
-  const proccesedUserAlias: string = userAlias ?? defaultAlias;
-  const proccesedRequestAlias: string = requestAlias ?? defaultAlias;
+  const procesedUserAlias: string = userAlias ?? defaultAlias;
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
 
-  const userParameter: UserParameterV1 =
-    getUserOrFail.bind(this)(proccesedUserAlias);
+  const userParameter: UserV1Parameter =
+    getUserOrFail.bind(this)(procesedUserAlias);
 
   const authCreateQuery: apiModels.AuthCreateQueryV1 = {
     email: userParameter.userCreateQuery.email,
@@ -32,7 +72,7 @@ export function givenCreateAuthRequestFromUser(
   setRequestParameters(
     this,
     'createAuth',
-    proccesedRequestAlias,
+    procesedRequestAlias,
     requestParameters,
   );
 }
@@ -40,6 +80,13 @@ export function givenCreateAuthRequestFromUser(
 Given<OneGameApiWorld>(
   'a create auth request for {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
-    givenCreateAuthRequestFromUser.bind(this)(userAlias);
+    givenCreateAuthRequestForUser.bind(this)(userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a user auth for {string}',
+  async function (this: OneGameApiWorld, userAlias: string): Promise<void> {
+    await givenAuthForUser.bind(this)(userAlias);
   },
 );

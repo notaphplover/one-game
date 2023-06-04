@@ -1,11 +1,6 @@
 import * as assert from 'node:assert/strict';
 
-type Expectations<T> = Partial<{
-  [TKey in keyof T]:
-    | Expectations<T[TKey]>
-    | T[TKey]
-    | ((value: T[TKey], path: string, rootObject: object) => void);
-}>;
+import { Expectations } from '../../../application/models/Expectations';
 
 const ROOT_PATH: string = '/';
 
