@@ -3,7 +3,7 @@ Feature: Create auth
   Anyone can create a new auth.
 
   Background: Having a user
-  Given a user "Bob"
+    Given a user "Bob"
 
     Rule: User auth is created from valid credentials
 
