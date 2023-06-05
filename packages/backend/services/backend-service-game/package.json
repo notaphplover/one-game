@@ -75,7 +75,7 @@
     "premigrations:run": "dev-game-db-start",
     "preserve": "dev-game-db-start",
     "preserve:ts": "dev-game-db-start",
-    "prestart:e2e": "dev-game-db-start",
+    "prestart:e2e": "dev-game-db-start && pnpm run migrations:run",
     "seed": "app-game-seed-database",
     "serve": "trap '' INT TERM; node lib/app/adapter/nest/scripts/bootstrap.js",
     "serve:ts": "trap '' INT TERM; ts-node src/app/adapter/nest/scripts/bootstrap.ts",

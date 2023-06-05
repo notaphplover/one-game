@@ -64,7 +64,7 @@
     "postmigrations:run": "dev-user-db-stop",
     "postserve": "dev-user-db-stop",
     "postserve:ts": "dev-user-db-stop",
-    "prestart:e2e": "dev-user-db-start",
+    "prestart:e2e": "dev-user-db-start && pnpm run migrations:run",
     "prebuild": "pnpm run build:clean",
     "premigrations:generate": "dev-user-db-start",
     "premigrations:revert": "dev-user-db-start",
