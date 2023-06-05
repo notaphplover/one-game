@@ -38,7 +38,7 @@
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
     "start:e2e": "turbo run start:e2e",
     "test:e2e": "turbo run test:e2e",
-    "test:e2e:js": "node -e 'console.log(\"Env:\" + process.env.ONE_JS_TEST_E2E_DOT_ENV_PATH)' && turbo run test:e2e:js",
+    "test:e2e:js": "turbo run test:e2e:js",
     "test:integration:js": "turbo test:integration:js",
     "test:js": "turbo run test:js",
     "test:js:coverage": "turbo run test:js:coverage",

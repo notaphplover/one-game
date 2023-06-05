@@ -48,7 +48,7 @@
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "prebuild": "pnpm run build:clean",
     "test:e2e": "cucumber-js --config=config/cucumber.ts.config.mjs --profile=serial",
-    "test:e2e:js": "node -e 'console.log(\"Env:\" + process.env.ONE_JS_TEST_E2E_DOT_ENV_PATH)' && cucumber-js --config=config/cucumber.js.config.mjs --profile=serial"
+    "test:e2e:js": "cucumber-js --config=config/cucumber.js.config.mjs --profile=serial"
   },
   "version": "0.1.0"
 }
