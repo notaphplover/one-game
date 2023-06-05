@@ -5,7 +5,8 @@ import { cleanEnv, str, url } from 'envalid';
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
 
-const DOT_ENV_PATH: string = '.env';
+const DOT_ENV_PATH: string =
+  process.env['ONE_JS_TEST_E2E_DOT_ENV_PATH'] ?? '.env';
 
 @Injectable()
 export class EnvironmentLoader extends EnvLoader<Environment> {
