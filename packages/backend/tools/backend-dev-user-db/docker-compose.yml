@@ -5,7 +5,7 @@ services:
     environment:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=${DOCKER_PG_DB_NAME}
+      - POSTGRES_DB=user_service_db
     ports:
       - '5432:5432'
     volumes:
