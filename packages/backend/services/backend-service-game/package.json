@@ -23,7 +23,8 @@
     "@cornie-js/backend-jwt": "workspace:*",
     "fastify": "4.17.0",
     "reflect-metadata": "0.1.13",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "typeorm": "0.3.16"
   },
   "devDependencies": {
     "@cornie-js/backend-app-game-fixtures": "workspace:*",
