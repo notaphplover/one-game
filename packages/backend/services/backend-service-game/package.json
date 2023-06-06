@@ -23,7 +23,8 @@
     "@cornie-js/backend-jwt": "workspace:*",
     "fastify": "4.17.0",
     "reflect-metadata": "0.1.13",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "typeorm": "0.3.16"
   },
   "devDependencies": {
     "@cornie-js/backend-app-game-fixtures": "workspace:*",
@@ -75,7 +76,7 @@
     "premigrations:run": "dev-game-db-start",
     "preserve": "dev-game-db-start",
     "preserve:ts": "dev-game-db-start",
-    "prestart:e2e": "dev-game-db-start",
+    "prestart:e2e": "ONE_JS_GAME_SERVICE_DOT_ENV_PATH=e2e.env pnpm run migrations:run && dev-game-db-start",
     "seed": "app-game-seed-database",
     "serve": "trap '' INT TERM; node lib/app/adapter/nest/scripts/bootstrap.js",
     "serve:ts": "trap '' INT TERM; ts-node src/app/adapter/nest/scripts/bootstrap.ts",
