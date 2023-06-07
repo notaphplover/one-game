@@ -8,6 +8,7 @@ export function initializeWorld(
 ): void {
   world.entities = {
     auth: new Map(),
+    games: new Map(),
     users: new Map(),
   };
   world.httpClient = new HttpClient(baseUrl);

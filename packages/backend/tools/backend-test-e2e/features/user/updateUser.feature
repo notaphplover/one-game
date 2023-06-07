@@ -4,7 +4,7 @@ Feature: Update user
 
   Background: Having a user auth
     Given a user "Bob"
-    Given a user auth for "Bob"
+    And a user auth for "Bob"
 
     Rule: A user can update his own user resource.
 

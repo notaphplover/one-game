@@ -21,9 +21,22 @@ export function givenCreateUserRequest(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
+  const firstName: string = faker.person.firstName();
+  const lastName: string = faker.person.lastName();
+
+  const email: string = faker.internet.email({
+    firstName,
+    lastName,
+  });
+
+  const fullName: string = faker.person.fullName({
+    firstName,
+    lastName,
+  });
+
   const userCreateQueryV1: apiModels.UserCreateQueryV1 = {
-    email: faker.internet.email(),
-    name: faker.person.fullName(),
+    email,
+    name: fullName,
     password: faker.internet.password({ length: 20 }),
   };
 

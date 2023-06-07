@@ -2,10 +2,12 @@ import { HttpClient } from '@cornie-js/api-http-client';
 import { IWorld } from '@cucumber/cucumber';
 
 import { AuthV1Parameter } from '../../auth/models/AuthV1Parameter';
+import { GameV1Parameter } from '../../game/models/GameV1Parameter';
 import { UserV1Parameter } from '../../user/models/UserV1Parameter';
 
 export interface EntitiesMap {
   auth: Map<string, AuthV1Parameter>;
+  games: Map<string, GameV1Parameter>;
   users: Map<string, UserV1Parameter>;
 }
 
