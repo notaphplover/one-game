@@ -55,3 +55,5 @@ jobs:
 
       - name: Remove services with e2e config
         run: pnpm run close:e2e
+        env:
+          RUST_BACKTRACE: 1

@@ -29,7 +29,7 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "close:e2e": "trap '' INT TERM; turbo run close:e2e",
+    "close:e2e": "turbo run close:e2e",
     "build": "turbo run build",
     "format": "turbo run format",
     "lint": "turbo run lint",
