@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "bin": {
-    "start-node-process": "./bin/startNodeProcess.js",
-    "stop-node-process": "./bin/stopNodeProcess.js"
+    "start-node-process": "./bin/startNodeProcess.mjs",
+    "stop-node-process": "./bin/stopNodeProcess.mjs"
   },
   "license": "See license in \"LICENSE\" file",
   "name": "@cornie-js/process-manager",
