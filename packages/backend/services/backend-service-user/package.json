@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@cornie-js/backend-app-user-fixtures": "workspace:*",
+    "@cornie-js/process-manager": "workspace:*",
     "@jest/globals": "29.5.0",
     "@types/node": "18.16.16",
     "@typescript-eslint/eslint-plugin": "5.59.9",
@@ -33,7 +34,6 @@
     "eslint-plugin-jest": "27.2.1",
     "eslint-plugin-prettier": "4.2.1",
     "jest": "29.5.0",
-    "pm2": "5.3.0",
     "prettier": "2.8.8",
     "rimraf": "5.0.1",
     "ts-jest": "29.1.0",
@@ -53,7 +53,7 @@
   "scripts": {
     "build": "tsc --build tsconfig.json",
     "build:clean": "rimraf lib",
-    "close:e2e": "pm2 delete api-user-server",
+    "close:e2e": "stop-node-process tmp/service-user.pid",
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint --ext ts --ignore-path .gitignore ./src",
     "migrations:generate": "app-user-generate-migration",
@@ -75,7 +75,7 @@
     "seed": "app-user-seed-database",
     "serve": "trap '' INT TERM; node lib/app/adapter/nest/scripts/bootstrap.js",
     "serve:ts": "trap '' INT TERM; ts-node src/app/adapter/nest/scripts/bootstrap.ts",
-    "start:e2e": "ONE_JS_USER_SERVICE_DOT_ENV_PATH=e2e.env pm2 start --name api-user-server lib/app/adapter/nest/scripts/bootstrap.js",
+    "start:e2e": "ONE_JS_USER_SERVICE_DOT_ENV_PATH=e2e.env start-node-process lib/app/adapter/nest/scripts/bootstrap.js tmp/service-user.pid",
     "test": "jest --config=jest.config.mjs --runInBand",
     "test:integration:js": "pnpm run test:js --selectProjects Integration",
     "test:js": "jest --config=jest.js.config.mjs --runInBand",
