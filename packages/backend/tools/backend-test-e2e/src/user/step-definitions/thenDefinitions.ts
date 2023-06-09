@@ -8,10 +8,10 @@ import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { getRequestParametersOrFail } from '../../http/utils/calculations/getRequestOrFail';
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 
-async function thenCreateUserResponseShouldContainValidUser(
+function thenCreateUserResponseShouldContainValidUser(
   this: OneGameApiWorld,
   requestAlias?: string,
-): Promise<void> {
+): void {
   const alias: string = requestAlias ?? defaultAlias;
 
   const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
@@ -19,7 +19,7 @@ async function thenCreateUserResponseShouldContainValidUser(
 
   type ResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createUser',
     alias,
@@ -35,10 +35,10 @@ async function thenCreateUserResponseShouldContainValidUser(
   });
 }
 
-async function thenUpdateUserResponseShouldContainValidUser(
+function thenUpdateUserResponseShouldContainValidUser(
   this: OneGameApiWorld,
   requestAlias?: string,
-): Promise<void> {
+): void {
   const alias: string = requestAlias ?? defaultAlias;
 
   const [, userMeUpdateQueryV1]: Parameters<HttpClient['updateUserMe']> =
@@ -46,7 +46,7 @@ async function thenUpdateUserResponseShouldContainValidUser(
 
   type ResponseType = Awaited<ReturnType<HttpClient['updateUserMe']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'updateUserMe',
     alias,
@@ -64,21 +64,21 @@ async function thenUpdateUserResponseShouldContainValidUser(
 
 Then<OneGameApiWorld>(
   'the create user response should contain a valid user',
-  async function (): Promise<void> {
-    await thenCreateUserResponseShouldContainValidUser.bind(this)();
+  function (): void {
+    thenCreateUserResponseShouldContainValidUser.bind(this)();
   },
 );
 
 Then<OneGameApiWorld>(
   'the create user response as {string} should contain a valid user',
-  async function (requestAlias: string): Promise<void> {
-    await thenCreateUserResponseShouldContainValidUser.bind(this)(requestAlias);
+  function (requestAlias: string): void {
+    thenCreateUserResponseShouldContainValidUser.bind(this)(requestAlias);
   },
 );
 
 Then<OneGameApiWorld>(
   'the update own user response for {string} should return an updated user',
-  async function (this: OneGameApiWorld, userAlias: string): Promise<void> {
-    await thenUpdateUserResponseShouldContainValidUser.bind(this)(userAlias);
+  function (this: OneGameApiWorld, userAlias: string): void {
+    thenUpdateUserResponseShouldContainValidUser.bind(this)(userAlias);
   },
 );

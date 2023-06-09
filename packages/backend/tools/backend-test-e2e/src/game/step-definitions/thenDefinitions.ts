@@ -8,11 +8,13 @@ import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { getRequestParametersOrFail } from '../../http/utils/calculations/getRequestOrFail';
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
+import { GameV1Parameter } from '../models/GameV1Parameter';
+import { getGameOrFail } from '../utils/calculations/getGameOrFail';
 
-export async function thenCreateGameResponseShouldContainValidGame(
+export function thenCreateGameResponseShouldContainValidGame(
   this: OneGameApiWorld,
   requestAlias?: string,
-): Promise<void> {
+): void {
   const alias: string = requestAlias ?? defaultAlias;
 
   const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
@@ -20,7 +22,7 @@ export async function thenCreateGameResponseShouldContainValidGame(
 
   type ResponseType = Awaited<ReturnType<HttpClient['createGame']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createGame',
     alias,
@@ -38,10 +40,10 @@ export async function thenCreateGameResponseShouldContainValidGame(
   });
 }
 
-export async function thenCreateGameSlotResponseShouldContainValidGameSlot(
+export function thenCreateGameSlotResponseShouldContainValidGameSlot(
   this: OneGameApiWorld,
   requestAlias?: string,
-): Promise<void> {
+): void {
   const alias: string = requestAlias ?? defaultAlias;
 
   const [, , gameCreateSlotQueryV1]: Parameters<HttpClient['createGameSlot']> =
@@ -49,7 +51,7 @@ export async function thenCreateGameSlotResponseShouldContainValidGameSlot(
 
   type ResponseType = Awaited<ReturnType<HttpClient['createGameSlot']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createGameSlot',
     alias,
@@ -66,16 +68,59 @@ export async function thenCreateGameSlotResponseShouldContainValidGameSlot(
   });
 }
 
+export function thenGetGameResponseShouldContainStartedGame(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  requestAlias?: string,
+): void {
+  const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  const gameV1Parameter: GameV1Parameter =
+    getGameOrFail.bind(this)(processedGameAlias);
+
+  type ResponseType = Awaited<ReturnType<HttpClient['getGame']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'getGame',
+    processedRequestAlias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    body: {
+      currentCard: () => undefined,
+      currentColor: () => undefined,
+      currentDirection: () => undefined,
+      currentPlayingSlotIndex: () => undefined,
+      drawCount: () => undefined,
+      gameSlotsAmount: gameV1Parameter.gameCreateQuery.gameSlotsAmount,
+      gameSpec: () => undefined,
+      id: gameV1Parameter.game.id,
+      slots: () => undefined,
+    },
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
 Then<OneGameApiWorld>(
   'the create game response should contain a valid game',
-  async function (this: OneGameApiWorld): Promise<void> {
-    await thenCreateGameResponseShouldContainValidGame.bind(this)();
+  function (this: OneGameApiWorld): void {
+    thenCreateGameResponseShouldContainValidGame.bind(this)();
   },
 );
 
 Then<OneGameApiWorld>(
   'the create game slot response should contain a valid game slot',
-  async function (this: OneGameApiWorld): Promise<void> {
-    await thenCreateGameResponseShouldContainValidGame.bind(this)();
+  function (this: OneGameApiWorld): void {
+    thenCreateGameSlotResponseShouldContainValidGameSlot.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the get game response should contain a started game',
+  function (this: OneGameApiWorld): void {
+    thenGetGameResponseShouldContainStartedGame.bind(this)();
   },
 );

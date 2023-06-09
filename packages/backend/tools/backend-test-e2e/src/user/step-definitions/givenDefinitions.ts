@@ -40,7 +40,7 @@ export function givenCreateUserRequest(
     password: faker.internet.password({ length: 20 }),
   };
 
-  setRequestParameters(this, 'createUser', alias, [{}, userCreateQueryV1]);
+  setRequestParameters.bind(this)('createUser', alias, [{}, userCreateQueryV1]);
 }
 
 export async function givenUser(
@@ -50,14 +50,14 @@ export async function givenUser(
   const alias: string = requestAlias ?? defaultAlias;
 
   givenCreateUserRequest.bind(this)(alias);
-  whenCreateUserRequestIsSend.bind(this)(alias);
+  await whenCreateUserRequestIsSend.bind(this)(alias);
 
   const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
     getRequestParametersOrFail(this, 'createUser', alias);
 
   type ResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createUser',
     alias,
@@ -100,8 +100,7 @@ export function givenUpdateUserRequestFromUser(
       userMeUpdateQueryV1,
     ];
 
-  setRequestParameters(
-    this,
+  setRequestParameters.bind(this)(
     'updateUserMe',
     procesedRequestAlias,
     updateUserMeRequestParameters,

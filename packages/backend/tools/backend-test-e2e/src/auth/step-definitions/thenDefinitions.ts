@@ -7,15 +7,15 @@ import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 
-async function thenCreateAuthResponseShouldContainValidUserAuth(
+function thenCreateAuthResponseShouldContainValidUserAuth(
   this: OneGameApiWorld,
   requestAlias?: string,
-): Promise<void> {
+): void {
   const alias: string = requestAlias ?? defaultAlias;
 
   type ResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createAuth',
     alias,
@@ -32,16 +32,14 @@ async function thenCreateAuthResponseShouldContainValidUserAuth(
 
 Then<OneGameApiWorld>(
   'the create auth response should contain a valid user auth',
-  async function (): Promise<void> {
-    await thenCreateAuthResponseShouldContainValidUserAuth.bind(this)();
+  function (): void {
+    thenCreateAuthResponseShouldContainValidUserAuth.bind(this)();
   },
 );
 
 Then<OneGameApiWorld>(
   'the create auth response as {string} should contain a valid user auth',
-  async function (requestAlias: string): Promise<void> {
-    await thenCreateAuthResponseShouldContainValidUserAuth.bind(this)(
-      requestAlias,
-    );
+  function (requestAlias: string): void {
+    thenCreateAuthResponseShouldContainValidUserAuth.bind(this)(requestAlias);
   },
 );

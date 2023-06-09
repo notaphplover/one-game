@@ -17,6 +17,38 @@ import { setGame } from '../utils/actions/setGame';
 import { getGameOrFail } from '../utils/calculations/getGameOrFail';
 import { whenCreateGameRequestIsSend } from './whenDefinitions';
 
+export function givenGameFindQueryRequestForGame(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  requestAlias?: string,
+  userAlias?: string,
+): void {
+  const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const gameV1Parameter: GameV1Parameter =
+    getGameOrFail.bind(this)(processedGameAlias);
+
+  const authV1Parameter: AuthV1Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+
+  const getGameV1Request: Parameters<HttpClient['getGame']> = [
+    {
+      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+    },
+    {
+      gameId: gameV1Parameter.game.id,
+    },
+  ];
+
+  setRequestParameters.bind(this)(
+    'getGame',
+    processedRequestAlias,
+    getGameV1Request,
+  );
+}
+
 export function givenCreateGameRequestForPlayersWithUserCredentials(
   this: OneGameApiWorld,
   gameSlotsAmount: number,
@@ -39,8 +71,7 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
     gameCreateQueryV1,
   ];
 
-  setRequestParameters(
-    this,
+  setRequestParameters.bind(this)(
     'createGame',
     processedGameAlias,
     requestParameters,
@@ -50,9 +81,11 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
 export function givenCreateGameSlotRequestForPlayersWithUserCredentials(
   this: OneGameApiWorld,
   gameAlias?: string,
+  requestAlias?: string,
   userAlias?: string,
 ): void {
   const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
   const auth: AuthV1Parameter = getAuthOrFail.bind(this)(processedUserAlias);
@@ -77,15 +110,14 @@ export function givenCreateGameSlotRequestForPlayersWithUserCredentials(
     gameSlotCreateQueryV1,
   ];
 
-  setRequestParameters(
-    this,
+  setRequestParameters.bind(this)(
     'createGameSlot',
-    processedGameAlias,
+    processedRequestAlias,
     requestParameters,
   );
 }
 
-async function givenGameForPlayersWithUserCredentials(
+export async function givenGameForPlayersWithUserCredentials(
   this: OneGameApiWorld,
   gameSlotsAmount: number,
   gameAlias?: string,
@@ -100,14 +132,14 @@ async function givenGameForPlayersWithUserCredentials(
     processedUserAlias,
   );
 
-  whenCreateGameRequestIsSend.bind(this)(processedGameAlias);
+  await whenCreateGameRequestIsSend.bind(this)(processedGameAlias);
 
   const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
     getRequestParametersOrFail(this, 'createGame', processedGameAlias);
 
   type ResponseType = Awaited<ReturnType<HttpClient['createGame']>>;
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createGame',
     processedGameAlias,
@@ -126,6 +158,17 @@ async function givenGameForPlayersWithUserCredentials(
 
   setGame.bind(this)(processedGameAlias, gameParameter);
 }
+
+Given<OneGameApiWorld>(
+  'a get game request for game for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenGameFindQueryRequestForGame.bind(this)(
+      undefined,
+      undefined,
+      userAlias,
+    );
+  },
+);
 
 Given<OneGameApiWorld>(
   'a create game request for {int} player(s) with {string} credentials',
@@ -162,6 +205,22 @@ Given<OneGameApiWorld>(
   function (this: OneGameApiWorld, userAlias: string): void {
     givenCreateGameSlotRequestForPlayersWithUserCredentials.bind(this)(
       undefined,
+      undefined,
+      userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a game slot create query {string} for game for {string}',
+  function (
+    this: OneGameApiWorld,
+    requestAlias: string,
+    userAlias: string,
+  ): void {
+    givenCreateGameSlotRequestForPlayersWithUserCredentials.bind(this)(
+      undefined,
+      requestAlias,
       userAlias,
     );
   },
