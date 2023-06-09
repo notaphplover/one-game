@@ -21,7 +21,7 @@
     "@cornie-js/backend-env": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-jwt": "workspace:*",
-    "fastify": "4.17.0",
+    "fastify": "4.18.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1",
     "typeorm": "0.3.16"
