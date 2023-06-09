@@ -3,23 +3,23 @@ import { When } from '@cucumber/cucumber';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { sendRequest } from '../../http/utils/actions/sendRequest';
 
-export function whenCreateAuthRequestIsSend(
+export async function whenCreateAuthRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
-): void {
-  sendRequest.bind(this)('createAuth', requestAlias);
+): Promise<void> {
+  await sendRequest.bind(this)('createAuth', requestAlias);
 }
 
 When<OneGameApiWorld>(
   'the create auth request is sent',
-  function (this: OneGameApiWorld): void {
-    whenCreateAuthRequestIsSend.bind(this)();
+  async function (this: OneGameApiWorld): Promise<void> {
+    await whenCreateAuthRequestIsSend.bind(this)();
   },
 );
 
 When<OneGameApiWorld>(
   'the create auth request is sent as {string}',
-  function (this: OneGameApiWorld, requestAlias: string): void {
-    whenCreateAuthRequestIsSend.bind(this)(requestAlias);
+  async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
+    await whenCreateAuthRequestIsSend.bind(this)(requestAlias);
   },
 );

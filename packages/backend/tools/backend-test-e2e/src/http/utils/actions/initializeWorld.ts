@@ -3,15 +3,15 @@ import { HttpClient } from '@cornie-js/api-http-client';
 import { OneGameApiWorld } from '../../models/OneGameApiWorld';
 
 export function initializeWorld(
-  world: Partial<OneGameApiWorld>,
+  this: Partial<OneGameApiWorld>,
   baseUrl: string,
 ): void {
-  world.entities = {
+  this.entities = {
     auth: new Map(),
     games: new Map(),
     users: new Map(),
   };
-  world.httpClient = new HttpClient(baseUrl);
-  world.requestParameters = {};
-  world.pendingResponses = {};
+  this.httpClient = new HttpClient(baseUrl);
+  this.requestParameters = {};
+  this.responses = {};
 }

@@ -13,5 +13,7 @@ Before<Partial<OneGameApiWorld>>(async function () {
   const environmentService: EnvironmentService =
     resolvedApplicationContext.get(EnvironmentService);
 
-  initializeWorld(this, environmentService.getEnvironment().apiBackendBaseUrl);
+  initializeWorld.bind(this)(
+    environmentService.getEnvironment().apiBackendBaseUrl,
+  );
 });

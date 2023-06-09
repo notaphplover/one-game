@@ -16,12 +16,15 @@ export type RequestMap = {
 };
 
 export type ResponseMap = {
-  [TKey in keyof HttpClient]?: Record<string, ReturnType<HttpClient[TKey]>>;
+  [TKey in keyof HttpClient]?: Record<
+    string,
+    Awaited<ReturnType<HttpClient[TKey]>>
+  >;
 };
 
 export interface OneGameApiWorld extends IWorld {
   entities: EntitiesMap;
   httpClient: HttpClient;
   requestParameters: RequestMap;
-  pendingResponses: ResponseMap;
+  responses: ResponseMap;
 }

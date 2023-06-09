@@ -21,14 +21,14 @@ export async function givenAuthForUser(
   const alias: string = userAlias ?? defaultAlias;
 
   givenCreateAuthRequestForUser.bind(this)(alias, alias);
-  whenCreateAuthRequestIsSend.bind(this)(alias);
+  await whenCreateAuthRequestIsSend.bind(this)(alias);
 
   type ResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
 
   const [, authCreateQueryV1]: Parameters<HttpClient['createAuth']> =
     getRequestParametersOrFail(this, 'createAuth', alias);
 
-  const response: ResponseType = await getResponseParametersOrFail(
+  const response: ResponseType = getResponseParametersOrFail(
     this,
     'createAuth',
     alias,
@@ -69,8 +69,7 @@ export function givenCreateAuthRequestForUser(
     authCreateQuery,
   ];
 
-  setRequestParameters(
-    this,
+  setRequestParameters.bind(this)(
     'createAuth',
     procesedRequestAlias,
     requestParameters,
