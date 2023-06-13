@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { GameCreateQueryV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
-import { GameCardSpecFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import {
   GameCardSpec,
   GameCreateQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import { GameCreateQueryV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
+import { GameCardSpecFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { GameService } from '../../domain/services/GameService';

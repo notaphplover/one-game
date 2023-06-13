@@ -4,7 +4,7 @@ import {
   Card,
   CardColor,
   CardKind,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 
 import { CardDb } from '../models/CardDb';
 import { CardBuilder } from './CardBuilder';

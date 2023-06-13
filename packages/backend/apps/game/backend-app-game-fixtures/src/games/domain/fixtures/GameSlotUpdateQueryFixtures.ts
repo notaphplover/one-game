@@ -1,4 +1,4 @@
-import { GameSlotUpdateQuery } from '@cornie-js/backend-app-game-models/games/domain';
+import { GameSlotUpdateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { GameSlotFindQueryFixtures } from './GameSlotFindQueryFixtures';

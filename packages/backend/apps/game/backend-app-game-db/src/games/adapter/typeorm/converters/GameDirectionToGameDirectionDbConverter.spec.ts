@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { GameDirection } from '@cornie-js/backend-app-game-models/games/domain';
+import { GameDirection } from '@cornie-js/backend-app-game-domain/games/domain';
 
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameDirectionToGameDirectionDbConverter } from './GameDirectionToGameDirectionDbConverter';

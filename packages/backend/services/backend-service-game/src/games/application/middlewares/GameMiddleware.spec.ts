@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { NonStartedGameFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { GamePersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
 import {
   Game,
   GameFindQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import { NonStartedGameFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
+import { GamePersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   Request,

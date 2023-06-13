@@ -6,6 +6,7 @@
   "description": "Backend game app fixtures",
   "dependencies": {
     "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/backend-app-game-domain": "workspace:*",
     "@cornie-js/backend-app-game-models": "workspace:*"
   },
   "devDependencies": {

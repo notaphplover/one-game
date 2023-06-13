@@ -9,7 +9,7 @@ import {
   SkipCard,
   WildCard,
   WildDraw4Card,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 
 import { CardDb } from '../models/CardDb';

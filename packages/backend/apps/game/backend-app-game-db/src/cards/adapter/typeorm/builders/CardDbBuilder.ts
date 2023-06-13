@@ -11,7 +11,7 @@ import {
   SkipCard,
   WildCard,
   WildDraw4Card,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import { Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 

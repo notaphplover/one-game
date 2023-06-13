@@ -1,4 +1,4 @@
-import { GameSlotCreateQuery } from '@cornie-js/backend-app-game-models/games/domain';
+import { GameSlotCreateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';

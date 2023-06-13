@@ -1,4 +1,4 @@
-import { NonStartedGame } from '@cornie-js/backend-app-game-models/games/domain';
+import { NonStartedGame } from '@cornie-js/backend-app-game-domain/games/domain';
 
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';

@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { CardColor } from '@cornie-js/backend-app-game-models/cards/domain';
+import { CardColor } from '@cornie-js/backend-app-game-domain/cards/domain';
 
 import { CardColorFromCardColorV1Builder } from './CardColorFromCardColorV1Builder';
 

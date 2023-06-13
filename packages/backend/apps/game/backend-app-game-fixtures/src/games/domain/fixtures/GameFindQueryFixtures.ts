@@ -1,4 +1,4 @@
-import { GameFindQuery } from '@cornie-js/backend-app-game-models/games/domain';
+import { GameFindQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 
 export class GameFindQueryFixtures {
   public static get any(): GameFindQuery {

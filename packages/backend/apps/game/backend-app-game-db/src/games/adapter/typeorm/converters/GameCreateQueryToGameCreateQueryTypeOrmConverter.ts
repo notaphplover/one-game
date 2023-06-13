@@ -1,7 +1,7 @@
 import {
   GameCardSpec,
   GameCreateQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';

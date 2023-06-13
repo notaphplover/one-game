@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { NonStartedGameSlot } from '@cornie-js/backend-app-game-domain/games/domain';
 import { NonStartedGameSlotFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { NonStartedGameSlot } from '@cornie-js/backend-app-game-models/games/domain';
 
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from './NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 

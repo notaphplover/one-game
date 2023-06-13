@@ -1,4 +1,4 @@
-import { GameSlotUpdateQuery } from '@cornie-js/backend-app-game-models/games/domain';
+import { GameSlotUpdateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { UpdateTypeOrmService } from '@cornie-js/backend-db';
 import { Inject, Injectable } from '@nestjs/common';

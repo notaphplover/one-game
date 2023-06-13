@@ -1,7 +1,7 @@
 import {
   Card,
   CardColor,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   ActiveGame,
   ActiveGameSlot,
@@ -10,7 +10,7 @@ import {
   GameDirection,
   NonStartedGame,
   NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
 import {
   AppError,
   AppErrorKind,

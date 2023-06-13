@@ -1,4 +1,4 @@
-import { GameSlotFindQuery } from '@cornie-js/backend-app-game-models/games/domain';
+import { GameSlotFindQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';

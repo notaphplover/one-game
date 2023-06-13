@@ -1,9 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Card } from '@cornie-js/backend-app-game-models/cards/domain';
-import {
-  GameSlotPersistenceOutputPort,
-  gameSlotPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
+import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   ActiveGame,
   ActiveGameSlot,
@@ -11,7 +7,11 @@ import {
   GameSlotCreateQuery,
   NonStartedGame,
   NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import {
+  GameSlotPersistenceOutputPort,
+  gameSlotPersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-game-models/games/application';
 import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,

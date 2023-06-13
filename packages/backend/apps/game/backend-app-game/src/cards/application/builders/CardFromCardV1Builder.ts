@@ -3,7 +3,7 @@ import {
   Card,
   CardColor,
   CardKind,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import { Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 

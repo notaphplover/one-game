@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import {
+  Game,
+  GameCreateQuery,
+  GameFindQuery,
+} from '@cornie-js/backend-app-game-domain/games/domain';
 import { GameCreateQueryV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
 import {
   ActiveGameV1Fixtures,
@@ -12,11 +17,6 @@ import {
   NonStartedGameFixtures,
 } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { GamePersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
-import {
-  Game,
-  GameCreateQuery,
-  GameFindQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { Builder } from '@cornie-js/backend-common';
 

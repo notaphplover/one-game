@@ -1,5 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { ActiveGameSlot } from '@cornie-js/backend-app-game-models/games/domain';
+import { ActiveGameSlot } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 

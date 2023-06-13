@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { GameSlotManagementInputPort } from '@cornie-js/backend-app-game';
-import { Game } from '@cornie-js/backend-app-game-models/games/domain';
+import { Game } from '@cornie-js/backend-app-game-domain/games/domain';
 import {
   AppError,
   AppErrorKind,

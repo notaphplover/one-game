@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
+import { GameCardSpec } from '@cornie-js/backend-app-game-domain/games/domain';
 import { CardV1Fixtures } from '@cornie-js/backend-app-game-fixtures/cards/application';
 import { GameCardSpecFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { Card } from '@cornie-js/backend-app-game-models/cards/domain';
-import { GameCardSpec } from '@cornie-js/backend-app-game-models/games/domain';
 import { Builder } from '@cornie-js/backend-common';
 
 import { GameCardSpecV1FromGameCardSpecBuilder } from './GameCardSpecV1FromGameCardSpecBuilder';
