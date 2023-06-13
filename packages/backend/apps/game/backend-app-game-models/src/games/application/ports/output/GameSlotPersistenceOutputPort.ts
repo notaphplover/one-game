@@ -1,7 +1,9 @@
-import { ActiveGameSlot } from '../../../domain/models/ActiveGameSlot';
-import { NonStartedGameSlot } from '../../../domain/models/NonStartedGameSlot';
-import { GameSlotCreateQuery } from '../../../domain/query/GameSlotCreateQuery';
-import { GameSlotUpdateQuery } from '../../../domain/query/GameSlotUpdateQuery';
+import {
+  ActiveGameSlot,
+  GameSlotCreateQuery,
+  GameSlotUpdateQuery,
+  NonStartedGameSlot,
+} from '@cornie-js/backend-app-game-domain/games/domain';
 
 export interface GameSlotPersistenceOutputPort {
   create(

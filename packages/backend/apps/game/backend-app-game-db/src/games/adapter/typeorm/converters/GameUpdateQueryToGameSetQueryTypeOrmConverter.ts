@@ -1,12 +1,12 @@
 import {
   Card,
   CardColor,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   GameCardSpec,
   GameDirection,
   GameUpdateQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
 import { Builder, Converter, Writable } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';

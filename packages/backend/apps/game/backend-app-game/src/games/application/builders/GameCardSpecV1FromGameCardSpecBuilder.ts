@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Card } from '@cornie-js/backend-app-game-models/cards/domain';
-import { GameCardSpec } from '@cornie-js/backend-app-game-models/games/domain';
+import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
+import { GameCardSpec } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 

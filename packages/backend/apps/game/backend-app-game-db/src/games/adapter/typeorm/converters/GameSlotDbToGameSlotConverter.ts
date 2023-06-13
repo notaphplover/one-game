@@ -1,8 +1,8 @@
-import { Card } from '@cornie-js/backend-app-game-models/cards/domain';
+import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   ActiveGameSlot,
   NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
 import {
   AppError,
   AppErrorKind,

@@ -3,13 +3,13 @@ import {
   CardColor,
   CardKind,
   ColoredCard,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   GameCardSpec,
   GameDirection,
   GameInitialDraws,
   NonStartedGame,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
 import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 

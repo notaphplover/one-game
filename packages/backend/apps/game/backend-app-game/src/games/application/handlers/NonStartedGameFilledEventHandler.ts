@@ -1,8 +1,4 @@
-import { Card } from '@cornie-js/backend-app-game-models/cards/domain';
-import {
-  GamePersistenceOutputPort,
-  gamePersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
+import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   ActiveGame,
   Game,
@@ -10,7 +6,11 @@ import {
   GameSlotUpdateQuery,
   GameUpdateQuery,
   NonStartedGame,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import {
+  GamePersistenceOutputPort,
+  gamePersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-game-models/games/application';
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 

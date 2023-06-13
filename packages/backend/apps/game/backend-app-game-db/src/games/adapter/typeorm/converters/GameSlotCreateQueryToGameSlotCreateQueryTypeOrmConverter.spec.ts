@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { GameSlotCreateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { GameSlotCreateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { GameSlotCreateQuery } from '@cornie-js/backend-app-game-models/games/domain';
 import { DeepPartial } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';

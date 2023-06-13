@@ -14,8 +14,9 @@ import { GameSlotCreateQuery } from './query/GameSlotCreateQuery';
 import { GameSlotFindQuery } from './query/GameSlotFindQuery';
 import { GameSlotUpdateQuery } from './query/GameSlotUpdateQuery';
 import { GameUpdateQuery } from './query/GameUpdateQuery';
-
-export { GameDirection };
+import { GameService } from './services/GameService';
+import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
+import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 
 export type {
   ActiveGame,
@@ -33,4 +34,11 @@ export type {
   GameSlotFindQuery,
   GameSlotUpdateQuery,
   GameUpdateQuery,
+};
+
+export {
+  GameCanHoldMoreGameSlotsSpec,
+  GameCanHoldOnlyOneMoreGameSlotSpec,
+  GameDirection,
+  GameService,
 };

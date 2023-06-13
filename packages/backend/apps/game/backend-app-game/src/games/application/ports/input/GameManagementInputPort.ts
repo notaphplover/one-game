@@ -1,13 +1,13 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import {
-  GamePersistenceOutputPort,
-  gamePersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
-import {
   Game,
   GameCreateQuery,
   GameFindQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import {
+  GamePersistenceOutputPort,
+  gamePersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-game-models/games/application';
 import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,

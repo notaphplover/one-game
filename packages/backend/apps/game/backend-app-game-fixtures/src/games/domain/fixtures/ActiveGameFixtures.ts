@@ -1,8 +1,8 @@
-import { CardColor } from '@cornie-js/backend-app-game-models/cards/domain';
+import { CardColor } from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   ActiveGame,
   GameDirection,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';

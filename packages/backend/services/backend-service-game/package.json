@@ -14,6 +14,7 @@
     "@cornie-js/backend-api-validators": "workspace:*",
     "@cornie-js/backend-app-jwt": "workspace:*",
     "@cornie-js/backend-app-game": "workspace:*",
+    "@cornie-js/backend-app-game-domain": "workspace:*",
     "@cornie-js/backend-app-game-env": "workspace:*",
     "@cornie-js/backend-app-game-models": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",

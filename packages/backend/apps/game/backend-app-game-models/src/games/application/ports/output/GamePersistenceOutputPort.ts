@@ -1,7 +1,9 @@
-import { Game } from '../../../domain/models/Game';
-import { GameCreateQuery } from '../../../domain/query/GameCreateQuery';
-import { GameFindQuery } from '../../../domain/query/GameFindQuery';
-import { GameUpdateQuery } from '../../../domain/query/GameUpdateQuery';
+import {
+  Game,
+  GameCreateQuery,
+  GameFindQuery,
+  GameUpdateQuery,
+} from '@cornie-js/backend-app-game-domain/games/domain';
 
 export interface GamePersistenceOutputPort {
   create(gameCreateQuery: GameCreateQuery): Promise<Game>;

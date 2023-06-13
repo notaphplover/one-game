@@ -1,17 +1,17 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
-import { NonStartedGameFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import {
   Card,
   ColoredCard,
-} from '@cornie-js/backend-app-game-models/cards/domain';
+} from '@cornie-js/backend-app-game-domain/cards/domain';
 import {
   GameCardSpec,
   GameDirection,
   GameInitialDraws,
   NonStartedGame,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
+import { NonStartedGameFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { GameService } from './GameService';

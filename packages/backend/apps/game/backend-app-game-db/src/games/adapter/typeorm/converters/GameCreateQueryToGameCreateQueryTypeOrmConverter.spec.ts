@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { GameCreateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import {
   GameCardSpec,
   GameCreateQuery,
-} from '@cornie-js/backend-app-game-models/games/domain';
+} from '@cornie-js/backend-app-game-domain/games/domain';
+import { GameCreateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { DeepPartial } from 'typeorm';
 

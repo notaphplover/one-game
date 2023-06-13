@@ -1,4 +1,4 @@
-import { NonStartedGameSlot } from '@cornie-js/backend-app-game-models/games/domain';
+import { NonStartedGameSlot } from '@cornie-js/backend-app-game-domain/games/domain';
 
 export class NonStartedGameSlotFixtures {
   public static get any(): NonStartedGameSlot {
