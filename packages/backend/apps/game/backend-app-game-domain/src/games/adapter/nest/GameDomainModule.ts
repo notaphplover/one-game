@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { GameService } from '../../services/GameService';
-import { GameCanHoldMoreGameSlotsSpec } from '../../specs/GameCanHoldMoreGameSlotsSpec';
-import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../specs/GameCanHoldOnlyOneMoreGameSlotSpec';
+import { GameService } from '../../domain/services/GameService';
+import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMoreGameSlotsSpec';
+import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 
 @Module({
   providers: [

@@ -1,17 +1,14 @@
-import {
-  Card,
-  CardColor,
-  CardKind,
-  ColoredCard,
-} from '@cornie-js/backend-app-game-models/cards/domain';
-import {
-  GameCardSpec,
-  GameDirection,
-  GameInitialDraws,
-  NonStartedGame,
-} from '@cornie-js/backend-app-game-models/games/domain';
 import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
+
+import { Card } from '../../../cards/domain/models/Card';
+import { CardColor } from '../../../cards/domain/models/CardColor';
+import { CardKind } from '../../../cards/domain/models/CardKind';
+import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { GameCardSpec } from '../models/GameCardSpec';
+import { GameDirection } from '../models/GameDirection';
+import { GameInitialDraws } from '../models/GameInitialDraws';
+import { NonStartedGame } from '../models/NonStartedGame';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
 

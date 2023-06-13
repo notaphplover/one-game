@@ -1,11 +1,8 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import {
-  ActiveGameFixtures,
-  NonStartedGameFixtures,
-} from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { Game } from '@cornie-js/backend-app-game-models/games/domain';
-
+import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
+import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
+import { Game } from '../models/Game';
 import { GameCanHoldMoreGameSlotsSpec } from './GameCanHoldMoreGameSlotsSpec';
 
 describe(GameCanHoldMoreGameSlotsSpec.name, () => {
