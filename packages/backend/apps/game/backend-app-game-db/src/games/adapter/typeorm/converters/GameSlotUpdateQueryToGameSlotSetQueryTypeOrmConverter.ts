@@ -1,6 +1,6 @@
-import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
-import { GameSlotUpdateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Builder, Converter, Writable } from '@cornie-js/backend-common';
+import { Card } from '@cornie-js/backend-game-domain/cards';
+import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 

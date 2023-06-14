@@ -1,14 +1,14 @@
-import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
-import {
-  ActiveGameSlot,
-  NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-domain/games/domain';
 import {
   AppError,
   AppErrorKind,
   Builder,
   Converter,
 } from '@cornie-js/backend-common';
+import { Card } from '@cornie-js/backend-game-domain/cards';
+import {
+  ActiveGameSlot,
+  NonStartedGameSlot,
+} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardBuilder } from '../../../../cards/adapter/typeorm/builders/CardBuilder';

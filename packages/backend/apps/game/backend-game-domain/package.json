@@ -27,15 +27,15 @@
     "typescript": "5.1.3"
   },
   "exports": {
-    "./cards/domain": "./lib/cards/domain/index.js",
-    "./cards/domain/fixtures": "./lib/cards/domain/fixtures/index.js",
-    "./games": "./lib/games/index.js",
-    "./games/domain": "./lib/games/domain/index.js",
-    "./games/domain/fixtures": "./lib/games/domain/fixtures/index.js"
+    ".": "./lib/index.js",
+    "./cards": "./lib/cards/domain/index.js",
+    "./cards/fixtures": "./lib/cards/domain/fixtures/index.js",
+    "./games": "./lib/games/domain/index.js",
+    "./games/fixtures": "./lib/games/domain/fixtures/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
-  "name": "@cornie-js/backend-app-game-domain",
+  "name": "@cornie-js/backend-game-domain",
   "publishConfig": {
     "access": "public"
   },

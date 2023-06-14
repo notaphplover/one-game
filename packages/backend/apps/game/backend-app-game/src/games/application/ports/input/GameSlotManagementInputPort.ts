@@ -1,13 +1,4 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
-import {
-  ActiveGame,
-  ActiveGameSlot,
-  Game,
-  GameSlotCreateQuery,
-  NonStartedGame,
-  NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-domain/games/domain';
 import {
   GameSlotPersistenceOutputPort,
   gameSlotPersistenceOutputPortSymbol,
@@ -23,6 +14,15 @@ import {
   Handler,
   Spec,
 } from '@cornie-js/backend-common';
+import { Card } from '@cornie-js/backend-game-domain/cards';
+import {
+  ActiveGame,
+  ActiveGameSlot,
+  Game,
+  GameSlotCreateQuery,
+  NonStartedGame,
+  NonStartedGameSlot,
+} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardV1FromCardBuilder } from '../../../../cards/application/builders/CardV1FromCardBuilder';

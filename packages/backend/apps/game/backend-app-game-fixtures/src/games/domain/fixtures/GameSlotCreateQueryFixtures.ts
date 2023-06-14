@@ -1,4 +1,4 @@
-import { GameSlotCreateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
+import { GameSlotCreateQuery } from '@cornie-js/backend-game-domain/games';
 
 export class GameSlotCreateQueryFixtures {
   public static get any(): GameSlotCreateQuery {

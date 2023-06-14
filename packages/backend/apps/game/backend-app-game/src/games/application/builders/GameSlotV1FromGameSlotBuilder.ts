@@ -1,9 +1,9 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 import {
   ActiveGameSlot,
   NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import { Builder } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/games';
 import { Inject } from '@nestjs/common';
 
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from './ActiveGameSlotV1FromActiveGameSlotBuilder';

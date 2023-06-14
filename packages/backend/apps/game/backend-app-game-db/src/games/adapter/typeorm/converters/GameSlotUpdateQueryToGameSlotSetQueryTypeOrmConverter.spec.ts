@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Card } from '@cornie-js/backend-app-game-domain/cards/domain';
-import { GameSlotUpdateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { GameSlotUpdateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { Builder } from '@cornie-js/backend-common';
+import { Card } from '@cornie-js/backend-game-domain/cards';
+import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';

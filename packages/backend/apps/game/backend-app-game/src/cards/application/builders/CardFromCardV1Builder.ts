@@ -1,10 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 import {
   Card,
   CardColor,
   CardKind,
-} from '@cornie-js/backend-app-game-domain/cards/domain';
-import { Builder } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/cards';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardColorFromCardColorV1Builder } from './CardColorFromCardColorV1Builder';

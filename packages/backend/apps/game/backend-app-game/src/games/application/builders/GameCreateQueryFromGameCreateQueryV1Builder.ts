@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { GameCreateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Builder } from '@cornie-js/backend-common';
+import { GameCreateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';

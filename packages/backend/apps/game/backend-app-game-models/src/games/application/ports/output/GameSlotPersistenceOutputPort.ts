@@ -3,7 +3,7 @@ import {
   GameSlotCreateQuery,
   GameSlotUpdateQuery,
   NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-domain/games/domain';
+} from '@cornie-js/backend-game-domain/games';
 
 export interface GameSlotPersistenceOutputPort {
   create(

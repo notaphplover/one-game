@@ -1,4 +1,4 @@
-import { GameCreateQuery } from '@cornie-js/backend-app-game-domain/games/domain';
+import { GameCreateQuery } from '@cornie-js/backend-game-domain/games';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 

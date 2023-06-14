@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { GameDirection } from '@cornie-js/backend-app-game-domain/games/domain';
+import { GameDirection } from '@cornie-js/backend-game-domain/games';
 
 import { GameDirectionV1FromGameDirectionBuilder } from './GameDirectionV1FromGameDirectionBuilder';
 

@@ -1,17 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import {
-  Card,
-  CardColor,
-} from '@cornie-js/backend-app-game-domain/cards/domain';
-import {
-  ActiveGame,
-  GameDirection,
-  GameFindQuery,
-  GameInitialDraws,
-  GameUpdateQuery,
-  NonStartedGame,
-} from '@cornie-js/backend-app-game-domain/games/domain';
 import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
 import {
   ActiveGameFixtures,
@@ -20,6 +8,15 @@ import {
 } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { GamePersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
+import {
+  ActiveGame,
+  GameDirection,
+  GameFindQuery,
+  GameInitialDraws,
+  GameUpdateQuery,
+  NonStartedGame,
+} from '@cornie-js/backend-game-domain/games';
 
 import { NonStartedGameFilledEvent } from '../../domain/events/NonStartedGameFilledEvent';
 import { GameService } from '../../domain/services/GameService';

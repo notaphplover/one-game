@@ -1,4 +1,4 @@
-import { Game } from '@cornie-js/backend-app-game-domain/games/domain';
+import { Game } from '@cornie-js/backend-game-domain/games';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 

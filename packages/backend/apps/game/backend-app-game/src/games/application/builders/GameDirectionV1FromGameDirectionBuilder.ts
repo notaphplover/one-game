@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { GameDirection } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Builder } from '@cornie-js/backend-common';
+import { GameDirection } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 
 const GAME_DIRECTION_TO_GAME_DIRECTION_V1_MAP: {

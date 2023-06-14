@@ -3,7 +3,7 @@ import {
   GameCreateQuery,
   GameFindQuery,
   GameUpdateQuery,
-} from '@cornie-js/backend-app-game-domain/games/domain';
+} from '@cornie-js/backend-game-domain/games';
 
 export interface GamePersistenceOutputPort {
   create(gameCreateQuery: GameCreateQuery): Promise<Game>;

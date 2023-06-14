@@ -1,6 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
+import { Builder } from '@cornie-js/backend-common';
 import {
   BlankCard,
   CardColor,
@@ -10,9 +12,7 @@ import {
   SkipCard,
   WildCard,
   WildDraw4Card,
-} from '@cornie-js/backend-app-game-domain/cards/domain';
-import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
-import { Builder } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/cards';
 
 import { CardV1FromCardBuilder } from './CardV1FromCardBuilder';
 

@@ -1,8 +1,8 @@
 import { Card } from '../../../cards/domain/models/Card';
 import { CardColor } from '../../../cards/domain/models/CardColor';
-import { GameDirection } from '../models/GameDirection';
 import { ActiveGameSlot } from './ActiveGameSlot';
 import { GameCardSpec } from './GameCardSpec';
+import { GameDirection } from './GameDirection';
 
 export interface ActiveGameState {
   readonly active: true;
