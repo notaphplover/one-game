@@ -1,9 +1,6 @@
-import {
-  Game,
-  GameFindQuery,
-} from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter } from '@cornie-js/backend-common';
 import { FindTypeOrmService } from '@cornie-js/backend-db';
+import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';

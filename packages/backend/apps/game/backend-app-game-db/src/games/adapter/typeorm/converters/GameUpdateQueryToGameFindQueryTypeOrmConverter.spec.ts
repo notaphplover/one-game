@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { GameUpdateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
+import { Converter } from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameUpdateQuery,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import { GameUpdateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { Converter } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/games';
 import { FindManyOptions } from 'typeorm';
 
 import { GameDb } from '../models/GameDb';

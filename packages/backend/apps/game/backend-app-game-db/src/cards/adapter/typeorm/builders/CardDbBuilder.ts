@@ -1,3 +1,4 @@
+import { Builder } from '@cornie-js/backend-common';
 import {
   BaseCard,
   BlankCard,
@@ -11,8 +12,7 @@ import {
   SkipCard,
   WildCard,
   WildDraw4Card,
-} from '@cornie-js/backend-app-game-domain/cards/domain';
-import { Builder } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/cards';
 import { Injectable } from '@nestjs/common';
 
 import { CardDb } from '../models/CardDb';

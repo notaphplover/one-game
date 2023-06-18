@@ -1,5 +1,5 @@
-import { CardColor } from '@cornie-js/backend-app-game-domain/cards/domain';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { CardColor } from '@cornie-js/backend-game-domain/cards';
 import { Injectable } from '@nestjs/common';
 
 import { CardColorDb } from '../models/CardColorDb';

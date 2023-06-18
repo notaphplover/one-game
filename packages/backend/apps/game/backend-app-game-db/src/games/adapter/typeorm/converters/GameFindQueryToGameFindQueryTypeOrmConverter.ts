@@ -1,5 +1,5 @@
-import { GameFindQuery } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter, Writable } from '@cornie-js/backend-common';
+import { GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 

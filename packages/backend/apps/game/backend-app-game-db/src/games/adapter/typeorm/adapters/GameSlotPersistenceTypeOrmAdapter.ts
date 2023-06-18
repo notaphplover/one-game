@@ -1,10 +1,10 @@
+import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
 import {
   ActiveGameSlot,
   GameSlotCreateQuery,
   GameSlotUpdateQuery,
   NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
+} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateGameSlotTypeOrmService } from '../services/CreateGameSlotTypeOrmService';

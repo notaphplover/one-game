@@ -1,9 +1,9 @@
-import { Game } from '@cornie-js/backend-app-game-domain/games/domain';
 import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from '@cornie-js/backend-app-game-models/games/application';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { Game } from '@cornie-js/backend-game-domain/games';
 import {
   Middleware,
   Request,

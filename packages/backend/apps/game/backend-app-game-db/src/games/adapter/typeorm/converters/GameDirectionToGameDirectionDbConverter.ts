@@ -1,5 +1,5 @@
-import { GameDirection } from '@cornie-js/backend-app-game-domain/games/domain';
 import { Converter } from '@cornie-js/backend-common';
+import { GameDirection } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 
 import { GameDirectionDb } from '../models/GameDirectionDb';

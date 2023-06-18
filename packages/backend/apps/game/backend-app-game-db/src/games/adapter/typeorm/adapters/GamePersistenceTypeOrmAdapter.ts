@@ -1,15 +1,15 @@
 import {
+  GamePersistenceOutputPort,
+  GameSlotPersistenceOutputPort,
+  gameSlotPersistenceOutputPortSymbol,
+} from '@cornie-js/backend-app-game-models/games/application';
+import {
   Game,
   GameCreateQuery,
   GameFindQuery,
   GameSlotUpdateQuery,
   GameUpdateQuery,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import {
-  GamePersistenceOutputPort,
-  GameSlotPersistenceOutputPort,
-  gameSlotPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
+} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateGameTypeOrmService } from '../services/CreateGameTypeOrmService';

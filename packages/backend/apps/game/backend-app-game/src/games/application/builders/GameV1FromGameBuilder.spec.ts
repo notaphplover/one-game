@@ -2,18 +2,6 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
-  Card,
-  CardColor,
-} from '@cornie-js/backend-app-game-domain/cards/domain';
-import {
-  ActiveGame,
-  ActiveGameSlot,
-  GameCardSpec,
-  GameDirection,
-  NonStartedGame,
-  NonStartedGameSlot,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import {
   CardV1Fixtures,
   GameSpecV1Fixtures,
 } from '@cornie-js/backend-app-game-fixtures/cards/application';
@@ -26,6 +14,15 @@ import {
   NonStartedGameFixtures,
 } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { Builder } from '@cornie-js/backend-common';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
+import {
+  ActiveGame,
+  ActiveGameSlot,
+  GameCardSpec,
+  GameDirection,
+  NonStartedGame,
+  NonStartedGameSlot,
+} from '@cornie-js/backend-game-domain/games';
 
 import { GameV1FromGameBuilder } from './GameV1FromGameBuilder';
 

@@ -1,16 +1,16 @@
+import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 import {
   Card,
   CardColor,
   CardKind,
   ColoredCard,
-} from '@cornie-js/backend-app-game-domain/cards/domain';
+} from '@cornie-js/backend-game-domain/cards';
 import {
   GameCardSpec,
   GameDirection,
   GameInitialDraws,
   NonStartedGame,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;

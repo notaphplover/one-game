@@ -1,10 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import {
-  Game,
-  GameCreateQuery,
-  GameFindQuery,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from '@cornie-js/backend-app-game-models/games/application';
@@ -13,6 +8,11 @@ import {
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
 import { Builder } from '@cornie-js/backend-common';
+import {
+  Game,
+  GameCreateQuery,
+  GameFindQuery,
+} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';

@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { GameSlotUpdateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
+import { Converter } from '@cornie-js/backend-common';
 import {
   GameSlotFindQuery,
   GameSlotUpdateQuery,
-} from '@cornie-js/backend-app-game-domain/games/domain';
-import { GameSlotUpdateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { Converter } from '@cornie-js/backend-common';
+} from '@cornie-js/backend-game-domain/games';
 import { FindManyOptions } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';
