@@ -1,0 +1,57 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Backend game application package",
+  "dependencies": {
+    "@cornie-js/api-http-client": "workspace:*",
+    "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/backend-app-game-env": "workspace:*",
+    "@cornie-js/backend-app-uuid": "workspace",
+    "@cornie-js/backend-common": "workspace:*",
+    "@cornie-js/backend-game-domain": "workspace:*",
+    "@nestjs/common": "9.4.3"
+  },
+  "devDependencies": {
+    "@jest/globals": "29.5.0",
+    "@types/node": "18.16.18",
+    "@typescript-eslint/eslint-plugin": "5.59.11",
+    "@typescript-eslint/parser": "5.59.11",
+    "eslint": "8.42.0",
+    "eslint-import-resolver-typescript": "3.5.5",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "27.2.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "jest": "29.5.0",
+    "prettier": "2.8.8",
+    "rimraf": "5.0.1",
+    "ts-jest": "29.1.0",
+    "ts-node": "10.9.1",
+    "typeorm": "0.3.16",
+    "typescript": "5.1.3"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/backend-game-application",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "build:clean": "rimraf lib",
+    "format": "prettier --write ./src/**/*.ts",
+    "lint": "eslint --ext ts --ignore-path .gitignore ./src",
+    "prebuild": "pnpm run build:clean",
+    "test": "jest --config=jest.config.mjs --runInBand",
+    "test:js": "jest --config=jest.js.config.mjs --runInBand",
+    "test:js:coverage": "pnpm run test:js --coverage",
+    "test:uncommitted": "pnpm run test --changedSince=HEAD",
+    "test:unit:js": "pnpm run test:js --selectProjects Unit"
+  },
+  "version": "0.1.0"
+}
