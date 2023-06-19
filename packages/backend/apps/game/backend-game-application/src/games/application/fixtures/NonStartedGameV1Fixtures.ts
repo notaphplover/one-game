@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 
-import { GameSpecV1Fixtures } from '../../../cards/application/fixtures/GameSpecV1Fixtures';
+import { GameSpecV1Fixtures } from './GameSpecV1Fixtures';
 import { NonStartedGameSlotV1Fixtures } from './NonStartedGameSlotV1Fixtures';
 
 export class NonStartedGameV1Fixtures {

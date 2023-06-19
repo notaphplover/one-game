@@ -17,8 +17,8 @@ import {
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures/CardV1Fixtures';
-import { GameSpecV1Fixtures } from '../../../cards/application/fixtures/GameSpecV1Fixtures';
 import { ActiveGameSlotV1Fixtures } from '../fixtures/ActiveGameSlotV1Fixtures';
+import { GameSpecV1Fixtures } from '../fixtures/GameSpecV1Fixtures';
 import { NonStartedGameSlotV1Fixtures } from '../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameV1FromGameBuilder } from './GameV1FromGameBuilder';
 

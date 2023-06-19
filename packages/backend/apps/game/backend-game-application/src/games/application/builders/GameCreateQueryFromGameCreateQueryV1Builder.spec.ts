@@ -8,8 +8,8 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
-import { GameCreateQueryV1Fixtures } from '../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
+import { GameCreateQueryV1Fixtures } from '../fixtures/GameCreateQueryV1Fixtures';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from './GameCreateQueryFromGameCreateQueryV1Builder';
 
 describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
