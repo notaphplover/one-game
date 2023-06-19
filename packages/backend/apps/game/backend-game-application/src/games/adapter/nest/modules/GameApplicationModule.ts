@@ -19,7 +19,7 @@ import { GameManagementInputPort } from '../../../application/ports/input/GameMa
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
 
 @Module({})
-export class GameModule {
+export class GameApplicationModule {
   public static forRootAsync(
     imports?: Array<
       Type<unknown> | DynamicModule | Promise<DynamicModule> | ForwardReference
@@ -29,7 +29,7 @@ export class GameModule {
       exports: [GameManagementInputPort, GameSlotManagementInputPort],
       global: false,
       imports: [...(imports ?? []), GameDomainModule, UuidModule, CardModule],
-      module: GameModule,
+      module: GameApplicationModule,
       providers: [
         ActiveGameSlotV1FromActiveGameSlotBuilder,
         GameCardSpecFromGameCardSpecV1Builder,

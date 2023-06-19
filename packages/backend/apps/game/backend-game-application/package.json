@@ -7,10 +7,13 @@
   "dependencies": {
     "@cornie-js/api-http-client": "workspace:*",
     "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/backend-api-validators": "workspace:*",
     "@cornie-js/backend-app-game-env": "workspace:*",
-    "@cornie-js/backend-app-uuid": "workspace",
+    "@cornie-js/backend-app-jwt": "workspace:*",
+    "@cornie-js/backend-app-uuid": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
+    "@cornie-js/backend-http": "workspace:*",
     "@nestjs/common": "10.0.2"
   },
   "devDependencies": {
@@ -30,6 +33,12 @@
     "ts-node": "10.9.1",
     "typeorm": "0.3.16",
     "typescript": "5.1.3"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./cards/fixtures": "./lib/cards/application/fixtures/index.js",
+    "./games": "./lib/games/application/index.js",
+    "./games/fixtures": "./lib/games/application/fixtures/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",

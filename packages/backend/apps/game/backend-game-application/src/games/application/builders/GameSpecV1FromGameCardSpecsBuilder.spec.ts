@@ -5,7 +5,7 @@ import { Builder } from '@cornie-js/backend-common';
 import { GameCardSpec } from '@cornie-js/backend-game-domain/games';
 import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
-import { GameCardSpecV1Fixtures } from '../../../cards/application/fixtures/GameCardSpecV1Fixtures';
+import { GameCardSpecV1Fixtures } from '../fixtures/GameCardSpecV1Fixtures';
 import { GameSpecV1FromGameCardSpecsBuilder } from './GameSpecV1FromGameCardSpecsBuilder';
 
 describe(GameSpecV1FromGameCardSpecsBuilder.name, () => {

@@ -14,9 +14,9 @@ import {
   NonStartedGameFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
-import { GameCreateQueryV1Fixtures } from '../../../../cards/application/fixtures/GameCreateQueryV1Fixtures';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
+import { GameCreateQueryV1Fixtures } from '../../fixtures/GameCreateQueryV1Fixtures';
 import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
 import { GamePersistenceOutputPort } from '../../ports/output/GamePersistenceOutputPort';
 import { GameManagementInputPort } from './GameManagementInputPort';

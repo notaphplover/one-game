@@ -1,8 +1,8 @@
 import { models as apiModels } from '@cornie-js/api-models';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures/CardV1Fixtures';
-import { GameSpecV1Fixtures } from '../../../cards/application/fixtures/GameSpecV1Fixtures';
 import { ActiveGameSlotV1Fixtures } from './ActiveGameSlotV1Fixtures';
+import { GameSpecV1Fixtures } from './GameSpecV1Fixtures';
 
 export class ActiveGameV1Fixtures {
   public static get any(): apiModels.ActiveGameV1 {
