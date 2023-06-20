@@ -5,6 +5,11 @@ import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMore
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 
 @Module({
+  exports: [
+    GameService,
+    GameCanHoldMoreGameSlotsSpec,
+    GameCanHoldOnlyOneMoreGameSlotSpec,
+  ],
   providers: [
     GameService,
     GameCanHoldMoreGameSlotsSpec,
