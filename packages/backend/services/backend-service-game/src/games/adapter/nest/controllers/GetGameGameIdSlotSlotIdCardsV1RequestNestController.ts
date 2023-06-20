@@ -1,5 +1,10 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
+  GetGameGameIdSlotSlotIdCardsV1RequestController,
+  GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
+  GameMiddleware,
+} from '@cornie-js/backend-game-application/games';
+import {
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
   Response,
@@ -9,10 +14,6 @@ import {
 } from '@cornie-js/backend-http';
 import { Controller, Get, Inject, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import { GetGameGameIdSlotSlotIdCardsV1RequestController } from '../../../application/controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
-import { GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM } from '../../../application/handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
-import { GameMiddleware } from '../../../application/middlewares/GameMiddleware';
 
 @Controller(`v1/games/:${GameMiddleware.gameIdParam}/slots`)
 export class GetGameGameIdSlotSlotIdCardsV1RequestNestController extends HttpNestFastifyController<Request> {
@@ -30,7 +31,9 @@ export class GetGameGameIdSlotSlotIdCardsV1RequestNestController extends HttpNes
     super(requestBuilder, requestController, resultBuilder);
   }
 
-  @Get(`:${GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM}/cards`)
+  @Get(
+    `:${GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam}/cards`,
+  )
   public override async handle(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,
