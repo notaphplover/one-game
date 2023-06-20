@@ -13,10 +13,7 @@ import {
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
-import {
-  GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM,
-  GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
-} from './GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
+import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 
 describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
   let getGameGameIdSlotSlotIdCardsV1RequestParamHandler: GetGameGameIdSlotSlotIdCardsV1RequestParamHandler;
@@ -52,7 +49,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             game: gameFixture,
           },
           urlParameters: {
-            [GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM]:
+            [GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
               gameSlotPositionStringifiedFixture,
           },
         };
@@ -98,7 +95,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             game: gameFixture,
           },
           urlParameters: {
-            [GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM]:
+            [GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
               gameSlotPositionStringifiedFixture,
           },
         };
@@ -154,7 +151,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             game: gameFixture,
           },
           urlParameters: {
-            [GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM]:
+            [GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
               gameSlotPositionStringifiedFixture,
           },
         };

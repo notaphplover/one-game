@@ -12,8 +12,6 @@ import { Injectable } from '@nestjs/common';
 
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 
-export const GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM: string = 'slotIndex';
-
 @Injectable()
 export class GetGameGameIdSlotSlotIdCardsV1RequestParamHandler
   implements
@@ -22,11 +20,16 @@ export class GetGameGameIdSlotSlotIdCardsV1RequestParamHandler
       [number, Game, apiModels.UserV1]
     >
 {
+  public static getGameGameIdSlotSlotIdRequestParam: string = 'slotIndex';
+
   public async handle(
     request: Request & AuthRequestContextHolder & GameRequestContextHolder,
   ): Promise<[number, Game, apiModels.UserV1]> {
     const stringifiedSlotIndex: string | undefined =
-      request.urlParameters[GET_GAME_GAME_ID_SLOT_SLOT_ID_REQUEST_PARAM];
+      request.urlParameters[
+        GetGameGameIdSlotSlotIdCardsV1RequestParamHandler
+          .getGameGameIdSlotSlotIdRequestParam
+      ];
 
     if (stringifiedSlotIndex === undefined) {
       throw new AppError(
