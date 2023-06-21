@@ -2,7 +2,7 @@ import {
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
   gameSlotPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
+} from '@cornie-js/backend-game-application/games';
 import {
   Game,
   GameCreateQuery,

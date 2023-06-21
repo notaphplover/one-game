@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { CardFixtures } from '@cornie-js/backend-app-game-fixtures/cards/domain';
 import { Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
+import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
 import {
   ActiveGameSlot,
   NonStartedGameSlot,

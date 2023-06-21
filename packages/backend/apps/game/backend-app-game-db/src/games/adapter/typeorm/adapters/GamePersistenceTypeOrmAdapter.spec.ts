@@ -1,12 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import {
-  GameCreateQueryFixtures,
-  GameFindQueryFixtures,
-  GameUpdateQueryFixtures,
-  NonStartedGameFixtures,
-} from '@cornie-js/backend-app-game-fixtures/games/domain';
-import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
+import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-game-application/games';
 import {
   Game,
   GameCreateQuery,
@@ -14,6 +8,12 @@ import {
   GameSlotUpdateQuery,
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
+import {
+  GameCreateQueryFixtures,
+  GameFindQueryFixtures,
+  GameUpdateQueryFixtures,
+  NonStartedGameFixtures,
+} from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CreateGameTypeOrmService } from '../services/CreateGameTypeOrmService';
 import { FindGameTypeOrmService } from '../services/FindGameTypeOrmService';

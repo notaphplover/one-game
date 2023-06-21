@@ -1,7 +1,7 @@
 import {
   gamePersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
-} from '@cornie-js/backend-app-game-models/games/application';
+} from '@cornie-js/backend-game-application/games';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 

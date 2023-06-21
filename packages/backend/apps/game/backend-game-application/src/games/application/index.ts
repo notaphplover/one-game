@@ -5,9 +5,21 @@ import { PostGameV1HttpRequestController } from './controllers/PostGameV1HttpReq
 import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 import { GetGameV1GameIdRequestParamHandler } from './handlers/GetGameV1GameIdRequestParamHandler';
 import { GameMiddleware } from './middlewares/GameMiddleware';
+import {
+  GamePersistenceOutputPort,
+  gamePersistenceOutputPortSymbol,
+} from './ports/output/GamePersistenceOutputPort';
+import {
+  GameSlotPersistenceOutputPort,
+  gameSlotPersistenceOutputPortSymbol,
+} from './ports/output/GameSlotPersistenceOutputPort';
+
+export type { GamePersistenceOutputPort, GameSlotPersistenceOutputPort };
 
 export {
   GameMiddleware,
+  gamePersistenceOutputPortSymbol,
+  gameSlotPersistenceOutputPortSymbol,
   GetGameGameIdSlotSlotIdCardsV1RequestController,
   GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
   GetGameV1GameIdHttpRequestController,

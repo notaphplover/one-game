@@ -1,6 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { GameUpdateQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { Builder, Converter } from '@cornie-js/backend-common';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
@@ -8,6 +7,7 @@ import {
   GameDirection,
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
+import { GameUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';

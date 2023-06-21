@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { GameSlotFindQueryFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { GameSlotFindQuery } from '@cornie-js/backend-game-domain/games';
+import { GameSlotFindQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import { FindManyOptions } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';

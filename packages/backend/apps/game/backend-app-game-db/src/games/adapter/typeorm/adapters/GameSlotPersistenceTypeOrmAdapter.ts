@@ -1,4 +1,4 @@
-import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-app-game-models/games/application';
+import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-game-application/games';
 import {
   ActiveGameSlot,
   GameSlotCreateQuery,

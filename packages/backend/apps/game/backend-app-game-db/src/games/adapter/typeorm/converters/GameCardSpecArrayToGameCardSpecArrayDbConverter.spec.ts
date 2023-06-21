@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { GameCardSpecFixtures } from '@cornie-js/backend-app-game-fixtures/games/domain';
 import { Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import { GameCardSpec } from '@cornie-js/backend-game-domain/games';
+import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameCardSpecDb } from '../models/GameCardSpecDb';
