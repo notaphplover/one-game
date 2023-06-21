@@ -1,5 +1,5 @@
-import { runMigrations } from '@cornie-js/backend-app-game-db';
 import { EnvModule, EnvironmentService } from '@cornie-js/backend-app-game-env';
+import { runMigrations } from '@cornie-js/backend-game-adapter-typeorm';
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DataSourceOptions } from 'typeorm';
