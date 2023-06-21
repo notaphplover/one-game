@@ -2,15 +2,17 @@ import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { Injectable } from '@nestjs/common';
 
-export const GET_GAME_V1_GAME_ID_REQUEST_PARAM: string = 'gameId';
-
 @Injectable()
 export class GetGameV1GameIdRequestParamHandler
   implements Handler<[Request], [string]>
 {
+  public static getGameV1GameIdRequestParam: string = 'gameId';
+
   public async handle(request: Request): Promise<[string]> {
     const gameId: string | undefined =
-      request.urlParameters[GET_GAME_V1_GAME_ID_REQUEST_PARAM];
+      request.urlParameters[
+        GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam
+      ];
 
     if (gameId === undefined) {
       throw new AppError(

@@ -5,7 +5,7 @@
   },
   "description": "Backend game app seeder",
   "dependencies": {
-    "@cornie-js/backend-app-game-db": "workspace:*",
+    "@cornie-js/backend-game-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-app-game-seeds": "workspace:*",
     "@nestjs/common": "10.0.3",
     "@nestjs/typeorm": "10.0.0",

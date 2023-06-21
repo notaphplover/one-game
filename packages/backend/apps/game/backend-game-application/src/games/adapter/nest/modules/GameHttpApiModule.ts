@@ -31,6 +31,7 @@ export class GameHttpApiModule {
       ],
       global: false,
       imports: [
+        ...(gameImports ?? []),
         AuthModule,
         GameApplicationModule.forRootAsync(gameImports),
         JsonSchemaModule,

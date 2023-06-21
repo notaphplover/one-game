@@ -3,10 +3,7 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 
-import {
-  GetGameV1GameIdRequestParamHandler,
-  GET_GAME_V1_GAME_ID_REQUEST_PARAM,
-} from './GetGameV1GameIdRequestParamHandler';
+import { GetGameV1GameIdRequestParamHandler } from './GetGameV1GameIdRequestParamHandler';
 
 describe(GetGameV1GameIdRequestParamHandler.name, () => {
   let getGameV1GameIdRequestParamHandler: GetGameV1GameIdRequestParamHandler;
@@ -26,7 +23,10 @@ describe(GetGameV1GameIdRequestParamHandler.name, () => {
         requestFixture = {
           headers: {},
           query: {},
-          urlParameters: { [GET_GAME_V1_GAME_ID_REQUEST_PARAM]: gameIdFixture },
+          urlParameters: {
+            [GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam]:
+              gameIdFixture,
+          },
         };
       });
 

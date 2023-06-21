@@ -6,7 +6,7 @@ import { UserManagementInputPort } from '../../../application/ports/input/UserMa
 
 @Module({
   exports: [UserManagementInputPort],
-  imports: [EnvModule, HttpApiModule.forRootAsync()],
+  imports: [EnvModule, HttpApiModule],
   providers: [UserManagementInputPort],
 })
 export class UserModule {}
