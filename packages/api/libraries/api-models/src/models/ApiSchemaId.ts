@@ -25,6 +25,7 @@ export enum ApiSchemaId {
   GameIdPlayCardsQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-play-cards-query.json',
   GameIdSlotCreateQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-slot-create-query.json',
   GameIdUpdateQueryV1 = 'https://onegame.schemas/api/v1/games/game-id-update-query.json',
+  GameOptionsV1 = 'https://onegame.schemas/api/v1/games/game-options.json',
   GameSlotV1 = 'https://onegame.schemas/api/v1/games/game-slot.json',
   GameSpecV1 = 'https://onegame.schemas/api/v1/games/game-spec.json',
   GameV1 = 'https://onegame.schemas/api/v1/games/game.json',
