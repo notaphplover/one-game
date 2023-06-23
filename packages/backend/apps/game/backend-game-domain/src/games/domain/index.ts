@@ -6,10 +6,13 @@ import { Game } from './models/Game';
 import { GameCardSpec } from './models/GameCardSpec';
 import { GameDirection } from './models/GameDirection';
 import { GameInitialDraws } from './models/GameInitialDraws';
+import { GameOptions } from './models/GameOptions';
 import { NonStartedGame } from './models/NonStartedGame';
 import { NonStartedGameSlot } from './models/NonStartedGameSlot';
 import { GameCreateQuery } from './query/GameCreateQuery';
 import { GameFindQuery } from './query/GameFindQuery';
+import { GameOptionsCreateQuery } from './query/GameOptionsCreateQuery';
+import { GameOptionsFindQuery } from './query/GameOptionsFindQuery';
 import { GameSlotCreateQuery } from './query/GameSlotCreateQuery';
 import { GameSlotFindQuery } from './query/GameSlotFindQuery';
 import { GameSlotUpdateQuery } from './query/GameSlotUpdateQuery';
@@ -30,6 +33,9 @@ export type {
   NonStartedGameSlot,
   GameCreateQuery,
   GameFindQuery,
+  GameOptions,
+  GameOptionsCreateQuery,
+  GameOptionsFindQuery,
   GameSlotCreateQuery,
   GameSlotFindQuery,
   GameSlotUpdateQuery,

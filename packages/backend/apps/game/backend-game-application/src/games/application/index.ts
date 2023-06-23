@@ -6,6 +6,10 @@ import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './handlers/Ge
 import { GetGameV1GameIdRequestParamHandler } from './handlers/GetGameV1GameIdRequestParamHandler';
 import { GameMiddleware } from './middlewares/GameMiddleware';
 import {
+  GameOptionsPersistenceOutputPort,
+  gameOptionsPersistenceOutputPortSymbol,
+} from './ports/output/GameOptionsPersistenceOutputPort';
+import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from './ports/output/GamePersistenceOutputPort';
@@ -14,10 +18,15 @@ import {
   gameSlotPersistenceOutputPortSymbol,
 } from './ports/output/GameSlotPersistenceOutputPort';
 
-export type { GamePersistenceOutputPort, GameSlotPersistenceOutputPort };
+export type {
+  GameOptionsPersistenceOutputPort,
+  GamePersistenceOutputPort,
+  GameSlotPersistenceOutputPort,
+};
 
 export {
   GameMiddleware,
+  gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
   GetGameGameIdSlotSlotIdCardsV1RequestController,

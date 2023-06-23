@@ -11,9 +11,13 @@ export async function runMigrations(
 
   await datasource.initialize();
 
-  const migrationExecutor: MigrationExecutor = new MigrationExecutor(
-    datasource,
-  );
+  try {
+    const migrationExecutor: MigrationExecutor = new MigrationExecutor(
+      datasource,
+    );
 
-  await migrationExecutor.executePendingMigrations();
+    await migrationExecutor.executePendingMigrations();
+  } finally {
+    await datasource.destroy();
+  }
 }
