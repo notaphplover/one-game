@@ -6,7 +6,6 @@
   "description": "Backend user app models",
   "dependencies": {
     "@nestjs/common": "10.0.3",
-    "@nestjs/core": "10.0.3",
     "@nestjs/typeorm": "10.0.0",
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
@@ -14,7 +13,6 @@
     "@cornie-js/backend-db": "workspace:*",
     "pg": "8.11.0",
     "reflect-metadata": "0.1.13",
-    "rxjs": "7.8.1",
     "typeorm": "0.3.17"
   },
   "devDependencies": {
