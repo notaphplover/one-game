@@ -30,6 +30,7 @@ export type TypesV1 =
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1
   | GameIdUpdateQueryV1
+  | GameOptionsV1
   | GameSlotV1
   | GameSpecV1
   | GameV1
@@ -138,6 +139,15 @@ export interface GameIdPlayCardsQueryV1 {
   cardIndexes: number[];
   kind: 'playCards';
   slotIndex: number;
+}
+export interface GameOptionsV1 {
+  chainDraw2Draw2Cards: boolean;
+  chainDraw2Draw4Cards: boolean;
+  chainDraw4Draw2Cards: boolean;
+  chainDraw4Draw4Cards: boolean;
+  playCardIsMandatory: boolean;
+  playMultipleSameCards: boolean;
+  playWildDraw4IfNoOtherAlternative: boolean;
 }
 export interface NonStartedGameSlotV1 {
   userId: null | string;

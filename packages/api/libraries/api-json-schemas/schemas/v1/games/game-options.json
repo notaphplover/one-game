@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameOptionsV1",
+  "$id": "https://onegame.schemas/api/v1/games/game-options.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "chainDraw2Draw2Cards": {
+      "type": "boolean"
+    },
+    "chainDraw2Draw4Cards": {
+      "type": "boolean"
+    },
+    "chainDraw4Draw2Cards": {
+      "type": "boolean"
+    },
+    "chainDraw4Draw4Cards": {
+      "type": "boolean"
+    },
+    "playCardIsMandatory": {
+      "type": "boolean"
+    },
+    "playMultipleSameCards": {
+      "type": "boolean"
+    },
+    "playWildDraw4IfNoOtherAlternative": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "chainDraw2Draw2Cards",
+    "chainDraw2Draw4Cards",
+    "chainDraw4Draw2Cards",
+    "chainDraw4Draw4Cards",
+    "playCardIsMandatory",
+    "playMultipleSameCards",
+    "playWildDraw4IfNoOtherAlternative"
+  ]
+}
