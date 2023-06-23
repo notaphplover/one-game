@@ -4,11 +4,12 @@ import {
   ActiveGameSlot,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from './ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from './NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 
+@Injectable()
 export class GameSlotV1FromGameSlotBuilder
   implements
     Builder<apiModels.GameSlotV1, [ActiveGameSlot | NonStartedGameSlot]>
