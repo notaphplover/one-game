@@ -19,6 +19,7 @@ import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../appl
 import { GameCreatedEventHandler } from '../../../application/handlers/GameCreatedEventHandler';
 import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
+import { GameOptionsManagementInputPort } from '../../../application/ports/input/GameOptionsManagementInputPort';
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
 
 @Module({})
@@ -29,7 +30,11 @@ export class GameApplicationModule {
     >,
   ): DynamicModule {
     return {
-      exports: [GameManagementInputPort, GameSlotManagementInputPort],
+      exports: [
+        GameManagementInputPort,
+        GameOptionsManagementInputPort,
+        GameSlotManagementInputPort,
+      ],
       global: false,
       imports: [...(imports ?? []), GameDomainModule, UuidModule, CardModule],
       module: GameApplicationModule,
@@ -44,6 +49,7 @@ export class GameApplicationModule {
         GameDirectionV1FromGameDirectionBuilder,
         GameManagementInputPort,
         GameOptionsCreateQueryFromGameOptionsV1Builder,
+        GameOptionsManagementInputPort,
         GameOptionsV1FromGameOptionsBuilder,
         GameSlotManagementInputPort,
         GameSpecV1FromGameCardSpecsBuilder,
