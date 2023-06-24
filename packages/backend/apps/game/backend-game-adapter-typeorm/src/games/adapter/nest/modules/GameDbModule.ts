@@ -44,6 +44,7 @@ export class GameDbModule {
   public static forRootAsync(dbModuleOptions: DbModuleOptions): DynamicModule {
     return {
       exports: [
+        gameOptionsPersistenceOutputPortSymbol,
         gamePersistenceOutputPortSymbol,
         gameSlotPersistenceOutputPortSymbol,
       ],
