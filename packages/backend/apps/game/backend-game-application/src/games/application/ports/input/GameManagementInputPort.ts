@@ -11,9 +11,9 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
+import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
@@ -23,7 +23,7 @@ import {
 export class GameManagementInputPort {
   readonly #gameCreateQueryFromGameCreateQueryV1Builder: Builder<
     GameCreateQuery,
-    [apiModels.GameCreateQueryV1, UuidContext]
+    [apiModels.GameCreateQueryV1, GameCreateQueryContext]
   >;
 
   readonly #gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>;
@@ -36,7 +36,7 @@ export class GameManagementInputPort {
     @Inject(GameCreateQueryFromGameCreateQueryV1Builder)
     gameCreateQueryFromGameCreateQueryV1Builder: Builder<
       GameCreateQuery,
-      [apiModels.GameCreateQueryV1, UuidContext]
+      [apiModels.GameCreateQueryV1, GameCreateQueryContext]
     >,
     @Inject(GameV1FromGameBuilder)
     gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>,
@@ -83,8 +83,9 @@ export class GameManagementInputPort {
     }
   }
 
-  #createGameCreationQueryContext(): UuidContext {
+  #createGameCreationQueryContext(): GameCreateQueryContext {
     return {
+      gameOptionsId: this.#uuidProviderOutputPort.generateV4(),
       uuid: this.#uuidProviderOutputPort.generateV4(),
     };
   }

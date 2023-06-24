@@ -1,29 +1,48 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { Builder } from '@cornie-js/backend-common';
 import {
   GameCardSpec,
   GameCreateQuery,
+  GameOptionsCreateQuery,
   GameService,
 } from '@cornie-js/backend-game-domain/games';
-import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
+import {
+  GameCardSpecFixtures,
+  GameOptionsCreateQueryFixtures,
+} from '@cornie-js/backend-game-domain/games/fixtures';
 
-import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
+import { GameCreateQueryContextFixtures } from '../fixtures/GameCreateQueryContextFixtures';
 import { GameCreateQueryV1Fixtures } from '../fixtures/GameCreateQueryV1Fixtures';
+import { GameCreateQueryContext } from '../models/GameCreateQueryContext';
+import { GameOptionsCreateQueryContext } from '../models/GameOptionsCreateQueryContext';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from './GameCreateQueryFromGameCreateQueryV1Builder';
 
 describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
+  let gameOptionsCreateQueryFromGameOptionsV1BuilderMock: jest.Mocked<
+    Builder<
+      GameOptionsCreateQuery,
+      [apiModels.GameOptionsV1, GameOptionsCreateQueryContext]
+    >
+  >;
   let gameServiceMock: jest.Mocked<GameService>;
 
   let gameCreateQueryFromGameCreateQueryV1Builder: GameCreateQueryFromGameCreateQueryV1Builder;
 
   beforeAll(() => {
+    gameOptionsCreateQueryFromGameOptionsV1BuilderMock = {
+      build: jest.fn(),
+    };
     gameServiceMock = {
       getInitialCardsSpec: jest.fn(),
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
 
     gameCreateQueryFromGameCreateQueryV1Builder =
-      new GameCreateQueryFromGameCreateQueryV1Builder(gameServiceMock);
+      new GameCreateQueryFromGameCreateQueryV1Builder(
+        gameOptionsCreateQueryFromGameOptionsV1BuilderMock,
+        gameServiceMock,
+      );
   });
 
   describe('.build', () => {
@@ -35,23 +54,47 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
 
     describe('when called', () => {
       let gameCardSpecFixture: GameCardSpec;
-      let uuidContext: UuidContext;
+      let gameCreateQueryContextFixture: GameCreateQueryContext;
+      let gameOptionsCreateQueryFixture: GameOptionsCreateQuery;
 
       let result: unknown;
 
       beforeAll(() => {
         gameCardSpecFixture = GameCardSpecFixtures.any;
-        uuidContext = {
-          uuid: '83073aec-b81b-4107-97f9-baa46de5dd41',
-        };
+        gameCreateQueryContextFixture = GameCreateQueryContextFixtures.any;
+        gameOptionsCreateQueryFixture = GameOptionsCreateQueryFixtures.any;
 
+        gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build.mockReturnValueOnce(
+          gameOptionsCreateQueryFixture,
+        );
         gameServiceMock.getInitialCardsSpec.mockReturnValueOnce([
           gameCardSpecFixture,
         ]);
 
         result = gameCreateQueryFromGameCreateQueryV1Builder.build(
           gameCreateQueryV1Fixture,
-          uuidContext,
+          gameCreateQueryContextFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameOptionsCreateQueryFromGameOptionsV1Builder.build()', () => {
+        const expectedContext: GameOptionsCreateQueryContext = {
+          gameId: gameCreateQueryContextFixture.uuid,
+          uuid: gameCreateQueryContextFixture.gameOptionsId,
+        };
+
+        expect(
+          gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
+        ).toHaveBeenCalledWith(
+          gameCreateQueryV1Fixture.options,
+          expectedContext,
         );
       });
 
@@ -63,9 +106,10 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
       it('should return apiModels.GameSpecV1', () => {
         const expected: GameCreateQuery = {
           gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
-          id: uuidContext.uuid,
+          id: gameCreateQueryContextFixture.uuid,
           spec: {
             cards: [gameCardSpecFixture],
+            options: gameOptionsCreateQueryFixture,
           },
         };
 

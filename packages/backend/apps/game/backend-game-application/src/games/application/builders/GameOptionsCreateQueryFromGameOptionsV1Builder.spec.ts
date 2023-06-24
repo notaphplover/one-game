@@ -42,7 +42,7 @@ describe(GameOptionsCreateQueryFromGameOptionsV1Builder.name, () => {
           chainDraw2Draw4Cards: gameOptionsV1Fixture.chainDraw2Draw4Cards,
           chainDraw4Draw2Cards: gameOptionsV1Fixture.chainDraw4Draw2Cards,
           chainDraw4Draw4Cards: gameOptionsV1Fixture.chainDraw4Draw4Cards,
-          gameId: gameOptionsCreateQueryContextFixture.game.id,
+          gameId: gameOptionsCreateQueryContextFixture.gameId,
           id: gameOptionsCreateQueryContextFixture.uuid,
           playCardIsMandatory: gameOptionsV1Fixture.playCardIsMandatory,
           playMultipleSameCards: gameOptionsV1Fixture.playMultipleSameCards,

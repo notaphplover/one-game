@@ -18,6 +18,7 @@ import { UuidContext } from '../../../../foundation/common/application/models/Uu
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
 import { GameCreateQueryV1Fixtures } from '../../fixtures/GameCreateQueryV1Fixtures';
 import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
+import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import { GamePersistenceOutputPort } from '../../ports/output/GamePersistenceOutputPort';
 import { GameManagementInputPort } from './GameManagementInputPort';
 
@@ -93,12 +94,13 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should call uuidProviderOutputPort.generateV4()', () => {
-        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(1);
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(2);
         expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
       });
 
       it('should call gameCreateQueryFromGameCreateQueryV1Builder.build()', () => {
-        const expectedUuidContext: UuidContext = {
+        const expectedUuidContext: GameCreateQueryContext = {
+          gameOptionsId: uuidFixture,
           uuid: uuidFixture,
         };
 
