@@ -154,6 +154,45 @@ paths:
       security:
         - bearerAuth: []
 
+  /v1/games/{gameId}/options:
+    get:
+      summary: Get a game options
+      operationId: getGameGameIdOptions
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Game id
+      responses:
+        '200':
+          description: Game options found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/games/game-options.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - bearerAuth: []
+
   /v1/games/{gameId}/slots:
     post:
       summary: Create a game slot
