@@ -3,7 +3,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { Builder } from '@cornie-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   Game,
   GameCreateQuery,
@@ -13,6 +13,8 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
+import { GameCreatedEventHandler } from '../../handlers/GameCreatedEventHandler';
+import { GameCreatedEvent } from '../../models/GameCreatedEvent';
 import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import {
   GamePersistenceOutputPort,
@@ -26,13 +28,14 @@ export class GameManagementInputPort {
     [apiModels.GameCreateQueryV1, GameCreateQueryContext]
   >;
 
+  readonly #gameCreatedEventHandler: Handler<[GameCreatedEvent], void>;
   readonly #gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>;
-
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
-
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
+    @Inject(GameCreatedEventHandler)
+    gameCreatedEventHandler: Handler<[GameCreatedEvent], void>,
     @Inject(GameCreateQueryFromGameCreateQueryV1Builder)
     gameCreateQueryFromGameCreateQueryV1Builder: Builder<
       GameCreateQuery,
@@ -45,6 +48,7 @@ export class GameManagementInputPort {
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
+    this.#gameCreatedEventHandler = gameCreatedEventHandler;
     this.#gameCreateQueryFromGameCreateQueryV1Builder =
       gameCreateQueryFromGameCreateQueryV1Builder;
     this.#gameV1FromGameBuilder = gameV1FromGameBuilder;
@@ -64,6 +68,10 @@ export class GameManagementInputPort {
     const game: Game = await this.#gamePersistenceOutputPort.create(
       gameCreateQuery,
     );
+
+    await this.#gameCreatedEventHandler.handle({
+      gameCreateQuery,
+    });
 
     return this.#gameV1FromGameBuilder.build(game);
   }

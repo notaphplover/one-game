@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { Builder } from '@cornie-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   Game,
   GameCreateQuery,
@@ -18,11 +18,15 @@ import { UuidContext } from '../../../../foundation/common/application/models/Uu
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
 import { GameCreateQueryV1Fixtures } from '../../fixtures/GameCreateQueryV1Fixtures';
 import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
+import { GameCreatedEvent } from '../../models/GameCreatedEvent';
 import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import { GamePersistenceOutputPort } from '../../ports/output/GamePersistenceOutputPort';
 import { GameManagementInputPort } from './GameManagementInputPort';
 
 describe(GameManagementInputPort.name, () => {
+  let gameCreatedEventHandlerMock: jest.Mocked<
+    Handler<[GameCreatedEvent], void>
+  >;
   let gameCreateQueryFromGameCreateQueryV1BuilderMock: jest.Mocked<
     Builder<GameCreateQuery, [apiModels.GameCreateQueryV1, UuidContext]>
   >;
@@ -33,6 +37,9 @@ describe(GameManagementInputPort.name, () => {
   let gameManagementInputPort: GameManagementInputPort;
 
   beforeAll(() => {
+    gameCreatedEventHandlerMock = {
+      handle: jest.fn(),
+    };
     gameCreateQueryFromGameCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -49,6 +56,7 @@ describe(GameManagementInputPort.name, () => {
     };
 
     gameManagementInputPort = new GameManagementInputPort(
+      gameCreatedEventHandlerMock,
       gameCreateQueryFromGameCreateQueryV1BuilderMock,
       gameV1FromGameBuilderMock,
       gamePersistenceOutputPortMock,
@@ -81,8 +89,9 @@ describe(GameManagementInputPort.name, () => {
         gameCreateQueryFromGameCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           gameCreateQueryFixture,
         );
-        gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
         gamePersistenceOutputPortMock.create.mockResolvedValueOnce(gameFixture);
+        gameCreatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
+        gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
 
         result = await gameManagementInputPort.create(gameCreateQueryV1Fixture);
       });
@@ -116,6 +125,17 @@ describe(GameManagementInputPort.name, () => {
         expect(gamePersistenceOutputPortMock.create).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.create).toHaveBeenCalledWith(
           gameCreateQueryFixture,
+        );
+      });
+
+      it('should call gameCreatedEventHandler.handle()', () => {
+        const expected: GameCreatedEvent = {
+          gameCreateQuery: gameCreateQueryFixture,
+        };
+
+        expect(gameCreatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(gameCreatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expected,
         );
       });
 
