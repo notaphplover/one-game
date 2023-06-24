@@ -16,6 +16,7 @@ import { GameOptionsFindQuery } from './query/GameOptionsFindQuery';
 import { GameSlotCreateQuery } from './query/GameSlotCreateQuery';
 import { GameSlotFindQuery } from './query/GameSlotFindQuery';
 import { GameSlotUpdateQuery } from './query/GameSlotUpdateQuery';
+import { GameSpecCreateQuery } from './query/GameSpecCreateQuery';
 import { GameUpdateQuery } from './query/GameUpdateQuery';
 import { GameService } from './services/GameService';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
@@ -39,6 +40,7 @@ export type {
   GameSlotCreateQuery,
   GameSlotFindQuery,
   GameSlotUpdateQuery,
+  GameSpecCreateQuery,
   GameUpdateQuery,
 };
 
