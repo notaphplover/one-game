@@ -9,6 +9,7 @@ import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builder
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../application/builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
+import { GameOptionsCreateQueryFromGameOptionsV1Builder } from '../../../application/builders/GameOptionsCreateQueryFromGameOptionsV1Builder';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../../application/builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/GameSlotV1FromGameSlotBuilder';
 import { GameSpecV1FromGameCardSpecsBuilder } from '../../../application/builders/GameSpecV1FromGameCardSpecsBuilder';
@@ -39,9 +40,9 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
         GameManagementInputPort,
+        GameOptionsCreateQueryFromGameOptionsV1Builder,
         GameSlotManagementInputPort,
         GameSpecV1FromGameCardSpecsBuilder,
-        GameV1FromGameBuilder,
         GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
         GameSlotV1FromGameSlotBuilder,
         GameV1FromGameBuilder,

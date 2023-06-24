@@ -1,9 +1,11 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
 import { GameSlotCreateQuery } from '@cornie-js/backend-game-domain/games';
+import { Injectable } from '@nestjs/common';
 
 import { GameSlotCreateQueryContext } from '../models/GameSlotCreateQueryContext';
 
+@Injectable()
 export class GameSlotCreateQueryFromGameSlotCreateQueryV1Builder
   implements
     Builder<
