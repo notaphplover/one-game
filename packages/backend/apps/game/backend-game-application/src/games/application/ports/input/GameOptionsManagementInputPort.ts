@@ -1,9 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
-import {
-  GameOptions,
-  GameOptionsFindQuery,
-} from '@cornie-js/backend-game-domain/games';
+import { GameOptions } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { GameOptionsV1FromGameOptionsBuilder } from '../../builders/GameOptionsV1FromGameOptionsBuilder';
@@ -35,12 +32,10 @@ export class GameOptionsManagementInputPort {
   }
 
   public async findOne(
-    gameOptionsFindQuery: GameOptionsFindQuery,
+    gameId: string,
   ): Promise<apiModels.GameOptionsV1 | undefined> {
     const gameOptions: GameOptions | undefined =
-      await this.#gameOptionsPersistenceOutputPort.findOne(
-        gameOptionsFindQuery,
-      );
+      await this.#gameOptionsPersistenceOutputPort.findOne({ gameId });
 
     if (gameOptions === undefined) {
       return undefined;
