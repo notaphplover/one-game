@@ -20,6 +20,7 @@ import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converter
 import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
 import { GameOptionsCreateQueryToGameOptionsCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameOptionsCreateQueryToGameOptionsCreateQueryTypeOrmConverter';
 import { GameOptionsDbToGameOptionsTypeOrmConverter } from '../../typeorm/converters/GameOptionsDbToGameOptionsTypeOrmConverter';
+import { GameOptionsFindQueryToGameOptionsFindQueryTypeOrmConverter } from '../../typeorm/converters/GameOptionsFindQueryToGameOptionsFindQueryTypeOrmConverter';
 import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
@@ -43,6 +44,7 @@ export class GameDbModule {
   public static forRootAsync(dbModuleOptions: DbModuleOptions): DynamicModule {
     return {
       exports: [
+        gameOptionsPersistenceOutputPortSymbol,
         gamePersistenceOutputPortSymbol,
         gameSlotPersistenceOutputPortSymbol,
       ],
@@ -67,6 +69,7 @@ export class GameDbModule {
         GameFindQueryToGameFindQueryTypeOrmConverter,
         GameOptionsCreateQueryToGameOptionsCreateQueryTypeOrmConverter,
         GameOptionsDbToGameOptionsTypeOrmConverter,
+        GameOptionsFindQueryToGameOptionsFindQueryTypeOrmConverter,
         {
           provide: gameOptionsPersistenceOutputPortSymbol,
           useClass: GameOptionsPersistenceTypeOrmAdapter,

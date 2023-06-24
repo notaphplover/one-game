@@ -4,7 +4,7 @@ import {
   GameOptionsCreateQuery,
   GameOptionsFindQuery,
 } from '@cornie-js/backend-game-domain/games';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateGameOptionsTypeOrmService } from '../services/CreateGameOptionsTypeOrmService';
 import { FindGameOptionsTypeOrmService } from '../services/FindGameOptionsTypeOrmService';
@@ -17,7 +17,9 @@ export class GameOptionsPersistenceTypeOrmAdapter
   readonly #findGameOptionsTypeOrmService: FindGameOptionsTypeOrmService;
 
   constructor(
+    @Inject(CreateGameOptionsTypeOrmService)
     createGameOptionsTypeOrmService: CreateGameOptionsTypeOrmService,
+    @Inject(FindGameOptionsTypeOrmService)
     findGameOptionsTypeOrmService: FindGameOptionsTypeOrmService,
   ) {
     this.#createGameOptionsTypeOrmService = createGameOptionsTypeOrmService;

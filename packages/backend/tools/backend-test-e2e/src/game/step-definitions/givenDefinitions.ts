@@ -62,6 +62,15 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
 
   const gameCreateQueryV1: apiModels.GameCreateQueryV1 = {
     gameSlotsAmount,
+    options: {
+      chainDraw2Draw2Cards: false,
+      chainDraw2Draw4Cards: false,
+      chainDraw4Draw2Cards: false,
+      chainDraw4Draw4Cards: false,
+      playCardIsMandatory: false,
+      playMultipleSameCards: false,
+      playWildDraw4IfNoOtherAlternative: true,
+    },
   };
 
   const requestParameters: Parameters<HttpClient['createGame']> = [

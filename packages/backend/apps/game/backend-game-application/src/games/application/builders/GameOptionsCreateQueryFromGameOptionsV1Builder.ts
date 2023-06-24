@@ -22,7 +22,7 @@ export class GameOptionsCreateQueryFromGameOptionsV1Builder
       chainDraw2Draw4Cards: gameOptions.chainDraw2Draw4Cards,
       chainDraw4Draw2Cards: gameOptions.chainDraw4Draw2Cards,
       chainDraw4Draw4Cards: gameOptions.chainDraw4Draw4Cards,
-      gameId: context.game.id,
+      gameId: context.gameId,
       id: context.uuid,
       playCardIsMandatory: gameOptions.playCardIsMandatory,
       playMultipleSameCards: gameOptions.playMultipleSameCards,
