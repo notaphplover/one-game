@@ -97,6 +97,29 @@ export class HttpClient {
       body,
     );
   }
+  public async getGameGameIdOptions(
+    headers: {
+      [key: string]: string;
+    },
+    url: {
+      [key: string]: string;
+      gameId: string;
+    },
+  ): Promise<
+    | Response<Record<string, string>, apiModels.GameOptionsV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
+    | Response<Record<string, string>, apiModels.ErrorV1, 404>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v1/games/{gameId}/options',
+      headers,
+      undefined,
+      url,
+      undefined,
+    );
+  }
   public async createGameSlot(
     headers: {
       [key: string]: string;
