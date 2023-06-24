@@ -1,4 +1,5 @@
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from './controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
+import { GetGameV1GameIdGameOptionsHttpRequestController } from './controllers/GetGameV1GameIdGameOptionsHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from './controllers/GetGameV1GameIdHttpRequestController';
 import { PostGameIdSlotV1HttpRequestController } from './controllers/PostGameIdSlotV1HttpRequestController';
 import { PostGameV1HttpRequestController } from './controllers/PostGameV1HttpRequestController';
@@ -31,6 +32,7 @@ export {
   gameSlotPersistenceOutputPortSymbol,
   GetGameGameIdSlotSlotIdCardsV1RequestController,
   GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
+  GetGameV1GameIdGameOptionsHttpRequestController,
   GetGameV1GameIdHttpRequestController,
   GetGameV1GameIdRequestParamHandler,
   PostGameIdSlotV1HttpRequestController,
