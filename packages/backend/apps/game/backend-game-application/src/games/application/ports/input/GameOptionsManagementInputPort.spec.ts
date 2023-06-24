@@ -2,14 +2,8 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
-import {
-  GameOptions,
-  GameOptionsFindQuery,
-} from '@cornie-js/backend-game-domain/games';
-import {
-  GameOptionsFindQueryFixtures,
-  GameOptionsFixtures,
-} from '@cornie-js/backend-game-domain/games/fixtures';
+import { GameOptions } from '@cornie-js/backend-game-domain/games';
+import { GameOptionsFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { GameOptionsV1Fixtures } from '../../fixtures/GameOptionsV1Fixtures';
 import { GameOptionsPersistenceOutputPort } from '../../ports/output/GameOptionsPersistenceOutputPort';
@@ -41,10 +35,10 @@ describe(GameOptionsManagementInputPort.name, () => {
   });
 
   describe('.findOne', () => {
-    let gameOptionsFindQueryFixture: GameOptionsFindQuery;
+    let gameIdFixture: string;
 
     beforeAll(() => {
-      gameOptionsFindQueryFixture = GameOptionsFindQueryFixtures.any;
+      gameIdFixture = 'e6b54159-a4ef-41fc-994a-20709526bdaa';
     });
 
     describe('when called, and gameOptionsPersistenceOutputPort.findOne returns undefined', () => {
@@ -55,9 +49,7 @@ describe(GameOptionsManagementInputPort.name, () => {
           undefined,
         );
 
-        result = await gameOptionsManagementInputPort.findOne(
-          gameOptionsFindQueryFixture,
-        );
+        result = await gameOptionsManagementInputPort.findOne(gameIdFixture);
       });
 
       afterAll(() => {
@@ -70,7 +62,7 @@ describe(GameOptionsManagementInputPort.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(gameOptionsFindQueryFixture);
+        ).toHaveBeenCalledWith({ gameId: gameIdFixture });
       });
 
       it('should return undefined', () => {
@@ -96,9 +88,7 @@ describe(GameOptionsManagementInputPort.name, () => {
           gameOptionsV1Fixture,
         );
 
-        result = await gameOptionsManagementInputPort.findOne(
-          gameOptionsFindQueryFixture,
-        );
+        result = await gameOptionsManagementInputPort.findOne(gameIdFixture);
       });
 
       afterAll(() => {
@@ -111,7 +101,7 @@ describe(GameOptionsManagementInputPort.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(gameOptionsFindQueryFixture);
+        ).toHaveBeenCalledWith({ gameId: gameIdFixture });
       });
 
       it('should call gameOptionsV1FromGameOptionsBuilder.build', () => {
