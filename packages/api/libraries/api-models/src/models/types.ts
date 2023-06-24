@@ -123,6 +123,16 @@ export interface GameCardSpecV1 {
 }
 export interface GameCreateQueryV1 {
   gameSlotsAmount: number;
+  options: GameOptionsV1;
+}
+export interface GameOptionsV1 {
+  chainDraw2Draw2Cards: boolean;
+  chainDraw2Draw4Cards: boolean;
+  chainDraw4Draw2Cards: boolean;
+  chainDraw4Draw4Cards: boolean;
+  playCardIsMandatory: boolean;
+  playMultipleSameCards: boolean;
+  playWildDraw4IfNoOtherAlternative: boolean;
 }
 export interface GameIdDrawCardsQueryV1 {
   kind: 'drawCards';
@@ -139,15 +149,6 @@ export interface GameIdPlayCardsQueryV1 {
   cardIndexes: number[];
   kind: 'playCards';
   slotIndex: number;
-}
-export interface GameOptionsV1 {
-  chainDraw2Draw2Cards: boolean;
-  chainDraw2Draw4Cards: boolean;
-  chainDraw4Draw2Cards: boolean;
-  chainDraw4Draw4Cards: boolean;
-  playCardIsMandatory: boolean;
-  playMultipleSameCards: boolean;
-  playWildDraw4IfNoOtherAlternative: boolean;
 }
 export interface NonStartedGameSlotV1 {
   userId: null | string;
