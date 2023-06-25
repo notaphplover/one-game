@@ -69,6 +69,7 @@ export class NonStartedGameFilledEventHandler
       ),
       currentDirection: this.#gameService.getInitialDirection(),
       currentPlayingSlotIndex: this.#gameService.getInitialPlayingSlotIndex(),
+      currentTurnCardsPlayed: false,
       deck: gameInitialDraws.remainingDeck,
       drawCount: this.#gameService.getInitialDrawCount(),
       gameFindQuery: {

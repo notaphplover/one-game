@@ -250,6 +250,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
           currentColor: initialColorFixture,
           currentDirection: initialDirectionFixture,
           currentPlayingSlotIndex: initialPlayingSlotIndexFixture,
+          currentTurnCardsPlayed: false,
           deck: gameInitialDrawsFixture.remainingDeck,
           drawCount: initialDrawCountFixture,
           gameFindQuery: {

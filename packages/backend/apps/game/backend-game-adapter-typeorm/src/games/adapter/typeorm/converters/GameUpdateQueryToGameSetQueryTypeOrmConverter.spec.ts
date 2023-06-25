@@ -208,6 +208,40 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
       });
     });
 
+    describe('having a GameUpdateQuery with currentTurnCardsPlayed', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture =
+          GameUpdateQueryFixtures.withCurrentTurnCardsPlayed;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            currentTurnCardsPlayed:
+              gameUpdateQueryFixture.currentTurnCardsPlayed as boolean,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
     describe('having a GameUpdateQuery with deck', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 

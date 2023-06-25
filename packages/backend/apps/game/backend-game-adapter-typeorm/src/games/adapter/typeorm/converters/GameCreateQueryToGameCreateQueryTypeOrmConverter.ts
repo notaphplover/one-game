@@ -43,6 +43,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       currentColor: null,
       currentDirection: null,
       currentPlayingSlotIndex: null,
+      currentTurnCardsPlayed: null,
       deck: gameCardsStringified,
       gameSlotsAmount: gameCreateQuery.gameSlotsAmount,
       id: gameCreateQuery.id,
