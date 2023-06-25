@@ -99,6 +99,7 @@ export class GameV1FromGameBuilder
           game.state.currentDirection,
         ),
         currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        currentTurnCardsPlayed: game.state.currentTurnCardsPlayed,
         drawCount: game.state.drawCount,
         gameSlotsAmount: game.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(

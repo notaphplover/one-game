@@ -93,6 +93,7 @@ export function thenGetGameResponseShouldContainStartedGame(
       currentColor: () => undefined,
       currentDirection: () => undefined,
       currentPlayingSlotIndex: () => undefined,
+      currentTurnCardsPlayed: () => undefined,
       drawCount: () => undefined,
       gameSlotsAmount: gameV1Parameter.gameCreateQuery.gameSlotsAmount,
       gameSpec: () => undefined,
