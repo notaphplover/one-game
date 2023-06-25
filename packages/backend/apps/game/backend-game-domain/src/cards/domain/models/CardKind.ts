@@ -1,5 +1,4 @@
 export enum CardKind {
-  blank = 'blank',
   draw = 'draw',
   normal = 'normal',
   reverse = 'reverse',
