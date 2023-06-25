@@ -28,46 +28,14 @@ describe(CardFromCardV1Builder.name, () => {
     );
   });
 
-  describe('having a blank card v1', () => {
-    let cardV1Fixture: apiModels.BlankCardV1;
+  describe('.build', () => {
+    describe('having a draw card v1', () => {
+      let cardV1Fixture: apiModels.DrawCardV1;
 
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.blankCard;
-    });
-
-    describe('.build', () => {
-      describe('when called', () => {
-        let expected: Card;
-
-        let result: unknown;
-
-        beforeAll(() => {
-          expected = {
-            kind: CardKind.blank,
-          };
-
-          result = cardFromCardV1Builder.build(cardV1Fixture);
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should return a Card', () => {
-          expect(result).toStrictEqual(expected);
-        });
+      beforeAll(() => {
+        cardV1Fixture = CardV1Fixtures.drawCard;
       });
-    });
-  });
 
-  describe('having a draw card v1', () => {
-    let cardV1Fixture: apiModels.DrawCardV1;
-
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.drawCard;
-    });
-
-    describe('.build', () => {
       describe('when called', () => {
         let expected: Card;
 
@@ -95,16 +63,14 @@ describe(CardFromCardV1Builder.name, () => {
         });
       });
     });
-  });
 
-  describe('having a normal card v1', () => {
-    let cardV1Fixture: apiModels.NormalCardV1;
+    describe('having a normal card v1', () => {
+      let cardV1Fixture: apiModels.NormalCardV1;
 
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.normalCard;
-    });
+      beforeAll(() => {
+        cardV1Fixture = CardV1Fixtures.normalCard;
+      });
 
-    describe('.build', () => {
       describe('when called', () => {
         let expected: Card;
 
@@ -133,16 +99,14 @@ describe(CardFromCardV1Builder.name, () => {
         });
       });
     });
-  });
 
-  describe('having a reverse card v1', () => {
-    let cardV1Fixture: apiModels.ReverseCardV1;
+    describe('having a reverse card v1', () => {
+      let cardV1Fixture: apiModels.ReverseCardV1;
 
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.reverseCard;
-    });
+      beforeAll(() => {
+        cardV1Fixture = CardV1Fixtures.reverseCard;
+      });
 
-    describe('.build', () => {
       describe('when called', () => {
         let expected: Card;
 
@@ -170,16 +134,14 @@ describe(CardFromCardV1Builder.name, () => {
         });
       });
     });
-  });
 
-  describe('having a skip card v1', () => {
-    let cardV1Fixture: apiModels.SkipCardV1;
+    describe('having a skip card v1', () => {
+      let cardV1Fixture: apiModels.SkipCardV1;
 
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.skipCard;
-    });
+      beforeAll(() => {
+        cardV1Fixture = CardV1Fixtures.skipCard;
+      });
 
-    describe('.build', () => {
       describe('when called', () => {
         let expected: Card;
 
@@ -207,16 +169,14 @@ describe(CardFromCardV1Builder.name, () => {
         });
       });
     });
-  });
 
-  describe('having a wild card v1', () => {
-    let cardV1Fixture: apiModels.WildCardV1;
+    describe('having a wild card v1', () => {
+      let cardV1Fixture: apiModels.WildCardV1;
 
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.wildCard;
-    });
+      beforeAll(() => {
+        cardV1Fixture = CardV1Fixtures.wildCard;
+      });
 
-    describe('.build', () => {
       describe('when called', () => {
         let expected: Card;
 
@@ -239,16 +199,14 @@ describe(CardFromCardV1Builder.name, () => {
         });
       });
     });
-  });
 
-  describe('having a wild draw card v1', () => {
-    let cardV1Fixture: apiModels.WildDraw4CardV1;
+    describe('having a wild draw card v1', () => {
+      let cardV1Fixture: apiModels.WildDraw4CardV1;
 
-    beforeAll(() => {
-      cardV1Fixture = CardV1Fixtures.wildDraw4Card;
-    });
+      beforeAll(() => {
+        cardV1Fixture = CardV1Fixtures.wildDraw4Card;
+      });
 
-    describe('.build', () => {
       describe('when called', () => {
         let expected: Card;
 

@@ -32,11 +32,6 @@ export class CardFromCardV1Builder
     let card: Card;
 
     switch (cardV1.kind) {
-      case 'blank':
-        card = {
-          kind: CardKind.blank,
-        };
-        break;
       case 'draw':
         card = {
           color: this.#cardColorFromCardColorV1Builder.build(cardV1.color),

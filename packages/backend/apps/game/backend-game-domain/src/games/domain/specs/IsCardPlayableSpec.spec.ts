@@ -26,7 +26,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, false],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, true],
         ['normal card', CardFixtures.normalCard, false],
@@ -66,7 +65,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, false],
         ['draw card', CardFixtures.drawCard, false],
         ['normal card', CardFixtures.normalCard, false],
         ['reverse card', CardFixtures.reverseCard, false],
@@ -106,7 +104,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, true],
         ['normal blue card', CardFixtures.normalBlueCard, true],
@@ -150,7 +147,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, false],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal card', CardFixtures.normalCard, false],
@@ -191,7 +187,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, false],
         ['draw blue card', CardFixtures.drawBlueCard, false],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal card', CardFixtures.normalCard, false],
@@ -232,7 +227,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal blue card', CardFixtures.normalBlueCard, true],
@@ -275,7 +269,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal blue two card', CardFixtures.normalBlueTwoCard, true],
@@ -320,7 +313,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal blue card', CardFixtures.normalBlueCard, true],
@@ -363,7 +355,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal blue card', CardFixtures.normalBlueCard, true],
@@ -406,7 +397,6 @@ describe(IsCardPlayableSpec.name, () => {
       });
 
       describe.each<[string, Card, boolean]>([
-        ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
         ['draw red card', CardFixtures.drawRedCard, false],
         ['normal blue card', CardFixtures.normalBlueCard, true],

@@ -1,15 +1,9 @@
 import { models as apiModels } from '@cornie-js/api-models';
 
 export class CardV1Fixtures {
-  public static get any(): apiModels.BlankCardV1 {
+  public static get any(): apiModels.CardV1 {
     return {
-      kind: 'blank',
-    };
-  }
-
-  public static get blankCard(): apiModels.BlankCardV1 {
-    return {
-      kind: 'blank',
+      kind: 'wild',
     };
   }
 
