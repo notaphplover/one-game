@@ -14,4 +14,24 @@ export class GameOptionsFixtures {
       playWildDraw4IfNoOtherAlternative: true,
     };
   }
+
+  public static get withChainAnyDrawCardsDisabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      chainDraw2Draw2Cards: false,
+      chainDraw2Draw4Cards: false,
+      chainDraw4Draw2Cards: false,
+      chainDraw4Draw4Cards: false,
+    };
+  }
+
+  public static get withChainAnyDrawCardsEnabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      chainDraw2Draw2Cards: true,
+      chainDraw2Draw4Cards: true,
+      chainDraw4Draw2Cards: true,
+      chainDraw4Draw4Cards: true,
+    };
+  }
 }

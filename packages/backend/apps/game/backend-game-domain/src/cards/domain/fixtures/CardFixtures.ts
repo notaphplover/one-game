@@ -31,11 +31,73 @@ export class CardFixtures {
     };
   }
 
+  public static get drawBlueCard(): DrawCard {
+    return {
+      color: CardColor.blue,
+      kind: CardKind.draw,
+    };
+  }
+
+  public static get drawRedCard(): DrawCard {
+    return {
+      color: CardColor.red,
+      kind: CardKind.draw,
+    };
+  }
+
   public static get normalCard(): NormalCard {
     return {
       color: CardColor.blue,
       kind: CardKind.normal,
       number: 2,
+    };
+  }
+
+  public static get normalBlueCard(): NormalCard {
+    return {
+      color: CardColor.blue,
+      kind: CardKind.normal,
+      number: 2,
+    };
+  }
+
+  public static get normalBlueTwoCard(): NormalCard {
+    return {
+      color: CardColor.blue,
+      kind: CardKind.normal,
+      number: 2,
+    };
+  }
+
+  public static get normalBlueSevenCard(): NormalCard {
+    return {
+      color: CardColor.blue,
+      kind: CardKind.normal,
+      number: 7,
+    };
+  }
+
+  public static get normalRedCard(): NormalCard {
+    return {
+      color: CardColor.red,
+      kind: CardKind.normal,
+      number: 2,
+    };
+  }
+
+  public static get normalRedTwoCard(): NormalCard {
+    return {
+      color: CardColor.red,
+      kind: CardKind.normal,
+      number: 2,
+    };
+  }
+
+  public static get normalRedSevenCard(): NormalCard {
+    return {
+      color: CardColor.red,
+      kind: CardKind.normal,
+      number: 7,
     };
   }
 
@@ -46,9 +108,37 @@ export class CardFixtures {
     };
   }
 
+  public static get reverseBlueCard(): ReverseCard {
+    return {
+      color: CardColor.blue,
+      kind: CardKind.reverse,
+    };
+  }
+
+  public static get reverseRedCard(): ReverseCard {
+    return {
+      color: CardColor.red,
+      kind: CardKind.reverse,
+    };
+  }
+
   public static get skipCard(): SkipCard {
     return {
       color: CardColor.blue,
+      kind: CardKind.skip,
+    };
+  }
+
+  public static get skipBlueCard(): SkipCard {
+    return {
+      color: CardColor.blue,
+      kind: CardKind.skip,
+    };
+  }
+
+  public static get skipRedCard(): SkipCard {
+    return {
+      color: CardColor.red,
       kind: CardKind.skip,
     };
   }
