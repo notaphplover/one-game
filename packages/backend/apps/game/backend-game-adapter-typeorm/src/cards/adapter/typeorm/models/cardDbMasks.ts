@@ -14,7 +14,6 @@ export const COLORED_NON_NUMBERED_DRAW_VALUE_MASK: number = 0x0000;
 export const COLORED_NON_NUMBERED_REVERSE_VALUE_MASK: number = 0x0001;
 export const COLORED_NON_NUMBERED_SKIP_VALUE_MASK: number = 0x0002;
 
-export const NON_COLORED_BLANK_VALUE_MASK: number = 0x0000;
 export const NON_COLORED_WILD_VALUE_MASK: number = 0x0001;
 export const NON_COLORED_WILD_DRAW_4_VALUE_MASK: number = 0x0002;
 

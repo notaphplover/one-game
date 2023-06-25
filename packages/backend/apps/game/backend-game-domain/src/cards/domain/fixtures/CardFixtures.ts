@@ -1,4 +1,3 @@
-import { BlankCard } from '../models/BlankCard';
 import { Card } from '../models/Card';
 import { CardColor } from '../models/CardColor';
 import { CardKind } from '../models/CardKind';
@@ -16,12 +15,6 @@ export class CardFixtures {
     };
 
     return fixture;
-  }
-
-  public static get blankCard(): BlankCard {
-    return {
-      kind: CardKind.blank,
-    };
   }
 
   public static get drawCard(): DrawCard {

@@ -3,7 +3,6 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
 import {
-  BlankCard,
   CardColor,
   DrawCard,
   NormalCard,
@@ -31,38 +30,6 @@ describe(CardV1FromCardBuilder.name, () => {
     cardFromCardV1Builder = new CardV1FromCardBuilder(
       cardColorV1FromCardColorBuilder,
     );
-  });
-
-  describe('having a blank card', () => {
-    let cardFixture: BlankCard;
-
-    beforeAll(() => {
-      cardFixture = CardFixtures.blankCard;
-    });
-
-    describe('.build', () => {
-      describe('when called', () => {
-        let expected: apiModels.CardV1;
-
-        let result: unknown;
-
-        beforeAll(() => {
-          expected = {
-            kind: 'blank',
-          };
-
-          result = cardFromCardV1Builder.build(cardFixture);
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should return a Card', () => {
-          expect(result).toStrictEqual(expected);
-        });
-      });
-    });
   });
 
   describe('having a draw card', () => {

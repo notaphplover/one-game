@@ -52,13 +52,6 @@ describe(CardBuilder.name, () => {
         0x0071,
       ],
       [
-        'blank',
-        {
-          kind: CardKind.blank,
-        },
-        0x0100,
-      ],
-      [
         'wild',
         {
           kind: CardKind.wild,

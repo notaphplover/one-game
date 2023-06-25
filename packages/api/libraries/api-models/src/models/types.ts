@@ -9,7 +9,6 @@ export type Types = TypesV1;
 export type TypesV1 =
   | AuthV1
   | AuthCreateQueryV1
-  | BlankCardV1
   | CardArrayV1
   | CardV1
   | DrawCardV1
@@ -40,7 +39,6 @@ export type TypesV1 =
   | UserMeUpdateQueryV1
   | UserV1;
 export type CardV1 =
-  | BlankCardV1
   | DrawCardV1
   | NormalCardV1
   | ReverseCardV1
@@ -65,9 +63,6 @@ export interface AuthV1 {
 export interface AuthCreateQueryV1 {
   email: string;
   password: string;
-}
-export interface BlankCardV1 {
-  kind: 'blank';
 }
 export interface DrawCardV1 {
   color: CardColorV1;

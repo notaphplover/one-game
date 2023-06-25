@@ -10,7 +10,6 @@ export enum ApiSchemaId {
   ActiveGameV1 = 'https://onegame.schemas/api/v1/games/active-game.json',
   AuthCreateQueryV1 = 'https://onegame.schemas/api/v1/auth/auth-create-query.json',
   AuthV1 = 'https://onegame.schemas/api/v1/auth/auth.json',
-  BlankCardV1 = 'https://onegame.schemas/api/v1/cards/blank-card.json',
   CardArrayV1 = 'https://onegame.schemas/api/v1/cards/card-array.json',
   CardColorV1 = 'https://onegame.schemas/api/v1/cards/card-color.json',
   CardNumberV1 = 'https://onegame.schemas/api/v1/cards/card-number.json',

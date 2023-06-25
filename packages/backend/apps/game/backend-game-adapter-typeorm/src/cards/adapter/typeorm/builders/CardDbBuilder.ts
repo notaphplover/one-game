@@ -1,7 +1,6 @@
 import { Builder } from '@cornie-js/backend-common';
 import {
   BaseCard,
-  BlankCard,
   Card,
   CardColor,
   CardKind,
@@ -27,7 +26,6 @@ import {
   COLORED_NUMBERED_SUBTYPE_MASK,
   COLORED_RED_SUBTYPE_MASK,
   COLORED_YELLOW_SUBTYPE_MASK,
-  NON_COLORED_BLANK_VALUE_MASK,
   NON_COLORED_WILD_DRAW_4_VALUE_MASK,
   NON_COLORED_WILD_VALUE_MASK,
   UNCOLORED_CARD_TYPE_MASK,
@@ -91,15 +89,10 @@ export class CardDbBuilder implements Builder<CardDb, [Card]> {
     return cardDbBits;
   }
 
-  #buildNonColoredCardDbRemainingBits(
-    card: BlankCard | WildCard | WildDraw4Card,
-  ): number {
+  #buildNonColoredCardDbRemainingBits(card: WildCard | WildDraw4Card): number {
     let cardDbBits: number = UNCOLORED_CARD_TYPE_MASK;
 
     switch (card.kind) {
-      case CardKind.blank:
-        cardDbBits |= NON_COLORED_BLANK_VALUE_MASK;
-        break;
       case CardKind.wild:
         cardDbBits |= NON_COLORED_WILD_VALUE_MASK;
         break;

@@ -1,6 +1,5 @@
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import {
-  BlankCard,
   Card,
   CardColor,
   CardKind,
@@ -27,7 +26,6 @@ import {
   COLORED_NUMBERED_SUBTYPE_MASK,
   COLORED_RED_SUBTYPE_MASK,
   COLORED_YELLOW_SUBTYPE_MASK,
-  NON_COLORED_BLANK_VALUE_MASK,
   NON_COLORED_WILD_DRAW_4_VALUE_MASK,
   NON_COLORED_WILD_VALUE_MASK,
   UNCOLORED_CARD_TYPE_MASK,
@@ -179,17 +177,12 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
     };
   }
 
-  #buildUncoloredCardV1(cardDb: number): BlankCard | WildCard | WildDraw4Card {
-    let card: BlankCard | WildCard | WildDraw4Card;
+  #buildUncoloredCardV1(cardDb: number): WildCard | WildDraw4Card {
+    let card: WildCard | WildDraw4Card;
 
     const cardValue: number = cardDb & CARD_VALUE_MASK;
 
     switch (cardValue) {
-      case NON_COLORED_BLANK_VALUE_MASK:
-        card = {
-          kind: CardKind.blank,
-        };
-        break;
       case NON_COLORED_WILD_VALUE_MASK:
         card = {
           kind: CardKind.wild,

@@ -52,7 +52,6 @@ export class IsCardPlayableSpec
           game.state.currentCard.kind === card.kind ||
           cardFulfillsColorConstraint(card)
         );
-      case CardKind.blank:
       case CardKind.wild:
         return cardFulfillsColorConstraint(card);
     }
