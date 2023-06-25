@@ -11,9 +11,9 @@ export interface GameUpdateQuery {
   active?: boolean;
   currentCard?: Card;
   currentColor?: CardColor;
-  currentTurnCardsPlayed?: boolean | null;
   currentDirection?: GameDirection;
   currentPlayingSlotIndex?: number;
+  currentTurnCardsPlayed?: boolean | null;
   deck?: GameCardSpec[];
   drawCount?: number;
   gameSlotUpdateQueries?: GameSlotUpdateQuery[];

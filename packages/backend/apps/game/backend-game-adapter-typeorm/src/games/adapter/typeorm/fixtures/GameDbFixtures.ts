@@ -47,6 +47,7 @@ export class GameDbFixtures {
     fixture.currentColor = 32;
     fixture.currentDirection = GameDirectionDb.clockwise;
     fixture.currentPlayingSlotIndex = 0;
+    fixture.currentTurnCardsPlayed = false;
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.drawCount = 0;
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
