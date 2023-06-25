@@ -90,6 +90,11 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
         gameUpdateQuery.currentPlayingSlotIndex;
     }
 
+    if (gameUpdateQuery.currentTurnCardsPlayed !== undefined) {
+      gameSetQueryTypeOrm.currentTurnCardsPlayed =
+        gameUpdateQuery.currentTurnCardsPlayed;
+    }
+
     if (gameUpdateQuery.deck !== undefined) {
       gameSetQueryTypeOrm.deck =
         this.#gameCardSpecArrayToGameCardSpecArrayDbConverter.convert(

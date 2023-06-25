@@ -306,6 +306,8 @@ describe(GameDbToGameConverter.name, () => {
             currentDirection: gameDirectionFixture,
             currentPlayingSlotIndex:
               gameDbFixture.currentPlayingSlotIndex as number,
+            currentTurnCardsPlayed:
+              gameDbFixture.currentTurnCardsPlayed as boolean,
             deck: [
               {
                 amount: gameDeckCardDbFixture.amount,

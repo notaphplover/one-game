@@ -17,6 +17,9 @@
     "currentPlayingSlotIndex": {
       "type": "number"
     },
+    "currentTurnCardsPlayed": {
+      "type": "boolean"
+    },
     "drawCount": {
       "type": "number"
     },
@@ -41,6 +44,7 @@
     "currentColor",
     "currentDirection",
     "currentPlayingSlotIndex",
+    "currentTurnCardsPlayed",
     "drawCount",
     "gameSpec",
     "gameSlotsAmount",

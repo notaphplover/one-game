@@ -25,6 +25,7 @@ export class ActiveGameFixtures {
         currentColor: CardColor.blue,
         currentDirection: GameDirection.antiClockwise,
         currentPlayingSlotIndex: 0,
+        currentTurnCardsPlayed: false,
         deck: [],
         drawCount: 0,
         slots: [ActiveGameSlotFixtures.withPositionZero],

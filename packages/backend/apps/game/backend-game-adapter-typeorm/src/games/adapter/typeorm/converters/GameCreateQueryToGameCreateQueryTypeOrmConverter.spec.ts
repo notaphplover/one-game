@@ -72,6 +72,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
           currentColor: null,
           currentDirection: null,
           currentPlayingSlotIndex: null,
+          currentTurnCardsPlayed: null,
           deck: gameCardSpecArrayStringifiedFixture,
           gameSlotsAmount: gameCreateQueryFixture.gameSlotsAmount,
           id: gameCreateQueryFixture.id,

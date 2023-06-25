@@ -42,6 +42,15 @@ export class GameUpdateQueryFixtures {
     return fixture;
   }
 
+  public static get withCurrentTurnCardsPlayed(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      currentTurnCardsPlayed: true,
+    };
+
+    return fixture;
+  }
+
   public static get withCurrentDirection(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       ...GameUpdateQueryFixtures.any,

@@ -53,6 +53,15 @@ export class GameDb {
   public readonly currentPlayingSlotIndex!: number | null;
 
   @Column({
+    name: 'current_turn_cards_played',
+    nullable: true,
+    transformer: new NumberToBooleanTransformer(),
+    type: 'smallint',
+    width: 1,
+  })
+  public readonly currentTurnCardsPlayed!: boolean | null;
+
+  @Column({
     name: 'deck',
     type: 'json',
   })
