@@ -108,7 +108,7 @@ describe(IsCardPlayableSpec.name, () => {
       describe.each<[string, Card, boolean]>([
         ['blank card', CardFixtures.blankCard, true],
         ['draw blue card', CardFixtures.drawBlueCard, true],
-        ['draw red card', CardFixtures.drawRedCard, false],
+        ['draw red card', CardFixtures.drawRedCard, true],
         ['normal blue card', CardFixtures.normalBlueCard, true],
         ['normal red card', CardFixtures.normalRedCard, false],
         ['reverse blue card', CardFixtures.reverseBlueCard, true],

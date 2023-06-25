@@ -30,7 +30,8 @@ export class IsCardPlayableSpec
           ? (gameOptions.chainDraw2Draw2Cards && card.kind === CardKind.draw) ||
               (gameOptions.chainDraw2Draw4Cards &&
                 card.kind === CardKind.wildDraw4)
-          : cardFulfillsColorConstraint(card);
+          : game.state.currentCard.kind === card.kind ||
+              cardFulfillsColorConstraint(card);
       case CardKind.wildDraw4:
         return game.state.drawCount > 0
           ? (gameOptions.chainDraw4Draw2Cards &&
