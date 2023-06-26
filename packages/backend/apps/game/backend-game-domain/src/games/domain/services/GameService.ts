@@ -5,6 +5,7 @@ import { Card } from '../../../cards/domain/models/Card';
 import { CardColor } from '../../../cards/domain/models/CardColor';
 import { CardKind } from '../../../cards/domain/models/CardKind';
 import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { ActiveGame } from '../models/ActiveGame';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
@@ -129,6 +130,30 @@ export class GameService {
 
   public getInitialPlayingSlotIndex(): number {
     return 0;
+  }
+
+  public getNextTurnPlayerIndex(game: ActiveGame): number {
+    const players: number = game.gameSlotsAmount;
+
+    const direction: GameDirection = game.state.currentDirection;
+
+    let nextTurnPlayerIndex: number;
+
+    if (direction === GameDirection.antiClockwise) {
+      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex - 1;
+
+      if (nextTurnPlayerIndex < 0) {
+        nextTurnPlayerIndex = players - 1;
+      }
+    } else {
+      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex + 1;
+
+      if (nextTurnPlayerIndex === players) {
+        nextTurnPlayerIndex = 0;
+      }
+    }
+
+    return nextTurnPlayerIndex;
   }
 
   #drawCards(cards: GameCardSpec[], amount: number): [Card[], GameCardSpec[]] {
