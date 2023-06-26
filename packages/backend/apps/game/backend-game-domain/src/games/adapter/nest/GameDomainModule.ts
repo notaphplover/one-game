@@ -1,22 +1,24 @@
 import { Module } from '@nestjs/common';
 
 import { GameService } from '../../domain/services/GameService';
+import { CardCanBePlayedSpec } from '../../domain/specs/CardCanBePlayedSpec';
 import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
-import { IsCardPlayableSpec } from '../../domain/specs/IsCardPlayableSpec';
+import { PlayerCanPassTurnSpec } from '../../domain/specs/PlayerCanPassTurnSpec';
 
 @Module({
   exports: [
     GameService,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
-    IsCardPlayableSpec,
+    CardCanBePlayedSpec,
   ],
   providers: [
     GameService,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
-    IsCardPlayableSpec,
+    CardCanBePlayedSpec,
+    PlayerCanPassTurnSpec,
   ],
 })
 export class GameDomainModule {}

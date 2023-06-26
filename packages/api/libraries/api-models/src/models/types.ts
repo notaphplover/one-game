@@ -24,7 +24,6 @@ export type TypesV1 =
   | GameCardSpecV1
   | GameCreateQueryV1
   | GameDirectionV1
-  | GameIdDrawCardsQueryV1
   | GameIdSlotCreateQueryV1
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1
@@ -51,7 +50,6 @@ export type CardArrayV1 = CardV1[];
 export type ActiveGameSlotCardsV1 = CardV1[];
 export type GameDirectionV1 = 'antiClockwise' | 'clockwise';
 export type GameIdUpdateQueryV1 =
-  | GameIdDrawCardsQueryV1
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1;
 export type GameSlotV1 = ActiveGameSlotV1 | NonStartedGameSlotV1;
@@ -129,10 +127,6 @@ export interface GameOptionsV1 {
   playCardIsMandatory: boolean;
   playMultipleSameCards: boolean;
   playWildDraw4IfNoOtherAlternative: boolean;
-}
-export interface GameIdDrawCardsQueryV1 {
-  kind: 'drawCards';
-  slotIndex: number;
 }
 export interface GameIdSlotCreateQueryV1 {
   userId: string;

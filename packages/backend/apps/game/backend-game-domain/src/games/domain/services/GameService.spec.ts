@@ -5,7 +5,9 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/models/Card';
 import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
+import { ActiveGame } from '../models/ActiveGame';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
@@ -156,6 +158,50 @@ describe(GameService.name, () => {
 
       it('should return a number', () => {
         expect(result).toBe(0);
+      });
+    });
+  });
+
+  describe('.getNextTurnPlayerIndex', () => {
+    describe('having an active game with one player and current direction anticlockwise', () => {
+      let gameFixture: ActiveGame;
+
+      beforeAll(() => {
+        gameFixture =
+          ActiveGameFixtures.withSlotsOneAndCurrentDirectionAntiClockwise;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.getNextTurnPlayerIndex(gameFixture);
+        });
+
+        it('should return the only player index', () => {
+          expect(result).toBe(0);
+        });
+      });
+    });
+
+    describe('having an active game with one player and current direction clockwise', () => {
+      let gameFixture: ActiveGame;
+
+      beforeAll(() => {
+        gameFixture =
+          ActiveGameFixtures.withSlotsOneAndCurrentDirectionClockwise;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.getNextTurnPlayerIndex(gameFixture);
+        });
+
+        it('should return the only player index', () => {
+          expect(result).toBe(0);
+        });
       });
     });
   });

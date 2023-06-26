@@ -160,4 +160,52 @@ export class ActiveGameFixtures {
       },
     };
   }
+
+  public static get withSlotsOneAndCurrentDirectionAntiClockwise(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentDirection: GameDirection.antiClockwise,
+      },
+    };
+  }
+
+  public static get withSlotsOneAndCurrentDirectionClockwise(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentDirection: GameDirection.clockwise,
+      },
+    };
+  }
+
+  public static get withSlotsOneAndCurrentTurnCardsPlayedFalse(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentTurnCardsPlayed: false,
+      },
+    };
+  }
+
+  public static get withSlotsOneAndCurrentTurnCardsPlayedTrue(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentTurnCardsPlayed: true,
+      },
+    };
+  }
 }

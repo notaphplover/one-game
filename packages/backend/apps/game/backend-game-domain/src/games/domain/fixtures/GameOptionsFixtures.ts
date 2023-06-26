@@ -34,4 +34,18 @@ export class GameOptionsFixtures {
       chainDraw4Draw4Cards: true,
     };
   }
+
+  public static get withPlayCardIsMandatoryDisabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      playCardIsMandatory: false,
+    };
+  }
+
+  public static get withPlayCardIsMandatoryEnabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      playCardIsMandatory: true,
+    };
+  }
 }
