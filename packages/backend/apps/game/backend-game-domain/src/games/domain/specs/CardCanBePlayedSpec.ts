@@ -11,7 +11,7 @@ import { ActiveGame } from '../models/ActiveGame';
 import { GameOptions } from '../models/GameOptions';
 
 @Injectable()
-export class IsCardPlayableSpec
+export class CardCanBePlayedSpec
   implements Spec<[Card, ActiveGame, GameOptions]>
 {
   public isSatisfiedBy(

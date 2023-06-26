@@ -6,13 +6,13 @@ import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
 import { ActiveGame } from '../models/ActiveGame';
 import { GameOptions } from '../models/GameOptions';
-import { IsCardPlayableSpec } from './IsCardPlayableSpec';
+import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 
-describe(IsCardPlayableSpec.name, () => {
-  let isCardPlayableSpec: IsCardPlayableSpec;
+describe(CardCanBePlayedSpec.name, () => {
+  let isCardPlayableSpec: CardCanBePlayedSpec;
 
   beforeAll(() => {
-    isCardPlayableSpec = new IsCardPlayableSpec();
+    isCardPlayableSpec = new CardCanBePlayedSpec();
   });
 
   describe('.isSatisfiedBy', () => {
