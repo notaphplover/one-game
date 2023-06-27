@@ -10,6 +10,13 @@ export class ActiveGameSlotFixtures {
     };
   }
 
+  public static get withPositionOne(): ActiveGameSlot {
+    return {
+      ...ActiveGameSlotFixtures.any,
+      position: 1,
+    };
+  }
+
   public static get withPositionZero(): ActiveGameSlot {
     return {
       ...ActiveGameSlotFixtures.any,

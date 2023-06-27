@@ -149,6 +149,25 @@ export class ActiveGameFixtures {
     };
   }
 
+  public static get withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      gameSlotsAmount: 2,
+      spec: {
+        cards: [GameCardSpecFixtures.withAmount120],
+      },
+      state: {
+        ...anyActiveGameFixture.state,
+        slots: [
+          ActiveGameSlotFixtures.withPositionZero,
+          ActiveGameSlotFixtures.withPositionOne,
+        ],
+      },
+    };
+  }
+
   public static get withSlotsOne(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
 

@@ -1,11 +1,8 @@
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
-import { Card } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   Game,
-  GameInitialDraws,
   GameService,
-  GameSlotUpdateQuery,
   GameUpdateQuery,
   NonStartedGame,
 } from '@cornie-js/backend-game-domain/games';
@@ -41,44 +38,10 @@ export class NonStartedGameFilledEventHandler
       nonStartedGameFilledEvent.gameId,
     );
 
-    const gameUpdateQuery: GameUpdateQuery = this.#buildGameUpdateQuery(game);
+    const gameUpdateQuery: GameUpdateQuery =
+      this.#gameService.buildStartGameUpdateQuery(game);
 
     await this.#gamePersistenceOutputPort.update(gameUpdateQuery);
-  }
-
-  #buildGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
-    const gameInitialDraws: GameInitialDraws =
-      this.#gameService.getInitialCardsDraw(game);
-
-    const gameSlotUpdateQueries: GameSlotUpdateQuery[] =
-      gameInitialDraws.playersCards.map(
-        (cards: Card[], index: number): GameSlotUpdateQuery => ({
-          cards: cards,
-          gameSlotFindQuery: {
-            gameId: game.id,
-            position: index,
-          },
-        }),
-      );
-
-    const gameUpdateQuery: GameUpdateQuery = {
-      active: true,
-      currentCard: gameInitialDraws.currentCard,
-      currentColor: this.#gameService.getInitialCardColor(
-        gameInitialDraws.currentCard,
-      ),
-      currentDirection: this.#gameService.getInitialDirection(),
-      currentPlayingSlotIndex: this.#gameService.getInitialPlayingSlotIndex(),
-      currentTurnCardsPlayed: false,
-      deck: gameInitialDraws.remainingDeck,
-      drawCount: this.#gameService.getInitialDrawCount(),
-      gameFindQuery: {
-        id: game.id,
-      },
-      gameSlotUpdateQueries,
-    };
-
-    return gameUpdateQuery;
   }
 
   async #getNonStartedGameOrFail(gameId: string): Promise<NonStartedGame> {
