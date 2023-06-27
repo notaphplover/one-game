@@ -21,6 +21,7 @@ import { GameUpdateQuery } from './query/GameUpdateQuery';
 import { GameService } from './services/GameService';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
+import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
 
 export type {
   ActiveGame,
@@ -49,4 +50,5 @@ export {
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameDirection,
   GameService,
+  PlayerCanPassTurnSpec,
 };
