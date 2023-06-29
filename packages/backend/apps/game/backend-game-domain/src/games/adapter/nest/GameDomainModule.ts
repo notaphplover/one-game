@@ -12,6 +12,7 @@ import { PlayerCanPassTurnSpec } from '../../domain/specs/PlayerCanPassTurnSpec'
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
     CardCanBePlayedSpec,
+    PlayerCanPassTurnSpec,
   ],
   providers: [
     GameService,
