@@ -93,7 +93,6 @@ export class GameDb {
     () => GameSlotDb,
     (gameSlotDb: GameSlotDb): GameDb => gameSlotDb.game,
     {
-      cascade: true,
       eager: true,
     },
   )
