@@ -5,6 +5,9 @@
   },
   "description": "One game",
   "devDependencies": {
+    "@commitlint/cli": "17.6.6",
+    "@commitlint/config-conventional": "17.6.6",
+    "@commitlint/prompt-cli": "17.6.6",
     "@cornie-js/backend-dev-game-db": "workspace:*",
     "@cornie-js/backend-dev-user-db": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
@@ -29,8 +32,9 @@
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "close:e2e": "turbo run close:e2e",
     "build": "turbo run build",
+    "close:e2e": "turbo run close:e2e",
+    "commit": "commit",
     "format": "turbo run format",
     "lint": "turbo run lint",
     "migrations:run": "turbo run migrations:run",
