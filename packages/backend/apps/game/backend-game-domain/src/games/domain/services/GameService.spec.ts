@@ -196,6 +196,133 @@ describe(GameService.name, () => {
     });
   });
 
+  describe('.buildPlayCardsGameUpdateQuery', () => {
+    describe('having an unexisting slotIndex', () => {
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.any;
+        cardIndexesFixture = [0];
+        slotIndexFixture = -1;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameService.buildPlayCardsGameUpdateQuery(
+              gameFixture,
+              cardIndexesFixture,
+              slotIndexFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message: `Expecting a game slot at index "${slotIndexFixture}", none found instead.`,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and cardIndexes empty', () => {
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        cardIndexesFixture = [];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameService.buildPlayCardsGameUpdateQuery(
+              gameFixture,
+              cardIndexesFixture,
+              slotIndexFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message:
+              'An unexpected error happened while attempting to update game',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes', () => {
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.buildPlayCardsGameUpdateQuery(
+            gameFixture,
+            cardIndexesFixture,
+            slotIndexFixture,
+          );
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentCard: expect.any(Object) as unknown as Card,
+            gameFindQuery: {
+              id: gameFixture.id,
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: expect.any(Array) as unknown as Card[],
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: slotIndexFixture,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+  });
+
   describe('.buildStartGameUpdateQuery', () => {
     describe('having a Game with enough cards', () => {
       let gameFixture: NonStartedGame;
