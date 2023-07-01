@@ -6,6 +6,7 @@ import {
   GameService,
   GameUpdateQuery,
   PlayerCanPassTurnSpec,
+  PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -30,6 +31,8 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
     gameService: GameService,
+    @Inject(PlayerCanUpdateGameSpec)
+    playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(PlayerCanPassTurnSpec)
     playerCanPassTurnSpec: PlayerCanPassTurnSpec,
   ) {
@@ -37,6 +40,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
       gameOptionsPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameService,
+      playerCanUpdateGameSpec,
     );
     this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
   }

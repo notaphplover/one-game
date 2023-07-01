@@ -10,6 +10,7 @@ import {
   GameService,
   GameUpdateQuery,
   PlayerCanPassTurnSpec,
+  PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,
@@ -28,6 +29,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
   let gameOptionsPersistenceOutputPortMock: jest.Mocked<GameOptionsPersistenceOutputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
+  let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let playerCanPassTurnSpecMock: jest.Mocked<PlayerCanPassTurnSpec>;
 
   let gameIdPassTurnQueryV1Handler: GameIdPassTurnQueryV1Handler;
@@ -47,6 +49,9 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     gameServiceMock = {
       buildPassTurnGameUpdateQuery: jest.fn(),
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
+    playerCanUpdateGameSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    };
     playerCanPassTurnSpecMock = {
       isSatisfiedBy: jest.fn(),
     } as Partial<
@@ -57,6 +62,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       gameOptionsPersistenceOutputPortMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
+      playerCanUpdateGameSpecMock,
       playerCanPassTurnSpecMock,
     );
   });
@@ -201,87 +207,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     });
   });
 
-  describe('having a gameId, and gameIdPassTurnQueryV1 with unexisting slotIndex', () => {
-    let gameIdFixture: string;
-    let gameIdPassTurnQueryV1Fixture: apiModels.GameIdPassTurnQueryV1;
-    let userV1Fixture: apiModels.UserV1;
-
-    beforeAll(() => {
-      gameIdFixture = ActiveGameFixtures.any.id;
-      gameIdPassTurnQueryV1Fixture =
-        GameIdPassTurnQueryV1Fixtures.withUnexistingSlotIndex;
-      userV1Fixture = UserV1Fixtures.any;
-    });
-
-    afterAll(() => {
-      jest.clearAllMocks();
-    });
-
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game and gameOptionsPersistenceOutputPort.findOne() returns GameOptions', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          ActiveGameFixtures.any,
-        );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          GameOptionsFixtures.any,
-        );
-
-        try {
-          await gameIdPassTurnQueryV1Handler.handle(
-            gameIdFixture,
-            gameIdPassTurnQueryV1Fixture,
-            userV1Fixture,
-          );
-        } catch (error) {
-          result = error;
-        }
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expectedGameFindQuery: GameFindQuery = {
-          id: gameIdFixture,
-        };
-
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expectedGameFindQuery,
-        );
-      });
-
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
-        };
-
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
-      });
-
-      it('should throw an Error', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message: `Player is not eligible for this operation. Reason: game slot "${gameIdPassTurnQueryV1Fixture.slotIndex}" does not exist`,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
-  });
-
-  describe('having a gameId, and gameIdPassTurnQueryV1 with existing slotIndex and an user', () => {
+  describe('having a gameId, a gameIdPassTurnQueryV1 and a user', () => {
     let gameIdFixture: string;
     let gameIdPassTurnQueryV1Fixture: apiModels.GameIdPassTurnQueryV1;
     let userV1Fixture: apiModels.UserV1;
@@ -293,176 +219,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       userV1Fixture = UserV1Fixtures.any;
     });
 
-    afterAll(() => {
-      jest.clearAllMocks();
-    });
-
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game whose slot targeted by gameIdPassTurnQueryV1 does not match user and gameOptionsPersistenceOutputPort.findOne() returns GameOptions', () => {
-      let activeGameFixture: ActiveGame;
-
-      let result: unknown;
-
-      beforeAll(async () => {
-        const anyFixtures: ActiveGame = ActiveGameFixtures.any;
-
-        activeGameFixture = {
-          ...anyFixtures,
-          state: {
-            ...anyFixtures.state,
-            currentPlayingSlotIndex: 0,
-            slots: [
-              {
-                ...ActiveGameSlotFixtures.withPositionZero,
-                userId: 'different-user-id',
-              },
-              ActiveGameSlotFixtures.withPositionOne,
-            ],
-          },
-        };
-
-        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          activeGameFixture,
-        );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          GameOptionsFixtures.any,
-        );
-
-        try {
-          await gameIdPassTurnQueryV1Handler.handle(
-            gameIdFixture,
-            gameIdPassTurnQueryV1Fixture,
-            userV1Fixture,
-          );
-        } catch (error) {
-          result = error;
-        }
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expectedGameFindQuery: GameFindQuery = {
-          id: gameIdFixture,
-        };
-
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expectedGameFindQuery,
-        );
-      });
-
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
-        };
-
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
-      });
-
-      it('should throw an Error', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message: `Player is not eligible for this operation. Reason: user "${userV1Fixture.id}" does not own game slot "${gameIdPassTurnQueryV1Fixture.slotIndex}"`,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
-
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game with active slot different than gameIdPassTurnQueryV1, whose slot targeted by gameIdPassTurnQueryV1 matches user and gameOptionsPersistenceOutputPort.findOne() returns GameOptions', () => {
-      let activeGameFixture: ActiveGame;
-
-      let result: unknown;
-
-      beforeAll(async () => {
-        const anyFixtures: ActiveGame = ActiveGameFixtures.any;
-
-        activeGameFixture = {
-          ...anyFixtures,
-          state: {
-            ...anyFixtures.state,
-            currentPlayingSlotIndex: 1,
-            slots: [
-              {
-                ...ActiveGameSlotFixtures.withPositionZero,
-                userId: userV1Fixture.id,
-              },
-              ActiveGameSlotFixtures.withPositionOne,
-            ],
-          },
-        };
-
-        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          activeGameFixture,
-        );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          GameOptionsFixtures.any,
-        );
-
-        try {
-          await gameIdPassTurnQueryV1Handler.handle(
-            gameIdFixture,
-            gameIdPassTurnQueryV1Fixture,
-            userV1Fixture,
-          );
-        } catch (error) {
-          result = error;
-        }
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expectedGameFindQuery: GameFindQuery = {
-          id: gameIdFixture,
-        };
-
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expectedGameFindQuery,
-        );
-      });
-
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
-        };
-
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
-      });
-
-      it('should throw an Error', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message:
-            "Player is not eligible for this operation. Reason: it is not the player's turn",
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
-
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game with active slot equals to gameIdPassTurnQueryV1, whose slot targeted by gameIdPassTurnQueryV1 matches user and gameOptionsPersistenceOutputPort.findOne() returns GameOptions and playerCanPassTurnSpec.isSatisfiedBy returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameOptionsPersistenceOutputPort.findOne() returns GameOptions and and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
       let gameUpdateQueryFixture: GameUpdateQuery;
@@ -500,7 +257,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
           gameUpdateQueryFixture,
         );
 
-        playerCanPassTurnSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
 
         try {
           await gameIdPassTurnQueryV1Handler.handle(
@@ -508,7 +265,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
             gameIdPassTurnQueryV1Fixture,
             userV1Fixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -539,6 +296,122 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         expect(
           gameOptionsPersistenceOutputPortMock.findOne,
         ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+      });
+
+      it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          userV1Fixture.id,
+          gameIdPassTurnQueryV1Fixture.slotIndex,
+        );
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message:
+            'Invalid game update request. Expecting the owner of the playing slot to perform this action',
+        };
+
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameOptionsPersistenceOutputPort.findOne() returns GameOptions and and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPassTurnSpec.isSatisfiedBy returns false', () => {
+      let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        const anyFixtures: ActiveGame = ActiveGameFixtures.any;
+
+        activeGameFixture = {
+          ...anyFixtures,
+          state: {
+            ...anyFixtures.state,
+            currentPlayingSlotIndex: 0,
+            slots: [
+              {
+                ...ActiveGameSlotFixtures.withPositionZero,
+                userId: userV1Fixture.id,
+              },
+              ActiveGameSlotFixtures.withPositionOne,
+            ],
+          },
+        };
+        gameOptionsFixture = GameOptionsFixtures.any;
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          activeGameFixture,
+        );
+        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameOptionsFixture,
+        );
+
+        gameServiceMock.buildPassTurnGameUpdateQuery.mockReturnValueOnce(
+          gameUpdateQueryFixture,
+        );
+
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        playerCanPassTurnSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
+        try {
+          await gameIdPassTurnQueryV1Handler.handle(
+            gameIdFixture,
+            gameIdPassTurnQueryV1Fixture,
+            userV1Fixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
+        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
+          gameId: gameIdFixture,
+        };
+
+        expect(
+          gameOptionsPersistenceOutputPortMock.findOne,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameOptionsPersistenceOutputPortMock.findOne,
+        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+      });
+
+      it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          userV1Fixture.id,
+          gameIdPassTurnQueryV1Fixture.slotIndex,
+        );
       });
 
       it('playerCanPassTurnSpec.isSatisfiedBy()', () => {
@@ -559,14 +432,13 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
             'Player cannot end the turn. Reason: there is a pending action preventing the turn to be ended',
         };
 
-        expect(result).toBeInstanceOf(AppError);
         expect(result).toStrictEqual(
           expect.objectContaining(expectedErrorProperties),
         );
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game with active slot equals to gameIdPassTurnQueryV1, whose slot targeted by gameIdPassTurnQueryV1 matches user and gameOptionsPersistenceOutputPort.findOne() returns GameOptions and playerCanPassTurnSpec.isSatisfiedBy returns true', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameOptionsPersistenceOutputPort.findOne() returns GameOptions and and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPassTurnSpec.isSatisfiedBy returns true', () => {
       let activeGameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
       let gameUpdateQueryFixture: GameUpdateQuery;
@@ -603,6 +475,8 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         gameServiceMock.buildPassTurnGameUpdateQuery.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
+
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
         playerCanPassTurnSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
@@ -639,6 +513,17 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         expect(
           gameOptionsPersistenceOutputPortMock.findOne,
         ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+      });
+
+      it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          userV1Fixture.id,
+          gameIdPassTurnQueryV1Fixture.slotIndex,
+        );
       });
 
       it('playerCanPassTurnSpec.isSatisfiedBy()', () => {

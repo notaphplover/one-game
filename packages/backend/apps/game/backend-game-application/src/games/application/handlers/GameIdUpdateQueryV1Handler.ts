@@ -2,13 +2,13 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
   ActiveGame,
-  ActiveGameSlot,
   Game,
   GameFindQuery,
   GameOptions,
   GameOptionsFindQuery,
   GameService,
   GameUpdateQuery,
+  PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 
 import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
@@ -21,15 +21,18 @@ export abstract class GameIdUpdateQueryV1Handler<
   protected readonly _gamePersistenceOutputPort: GamePersistenceOutputPort;
   protected readonly _gameService: GameService;
   readonly #gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort;
+  readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
 
   constructor(
     gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort,
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     gameService: GameService,
+    playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
   ) {
     this.#gameOptionsPersistenceOutputPort = gameOptionsPersistenceOutputPort;
     this._gamePersistenceOutputPort = gamePersistenceOutputPort;
     this._gameService = gameService;
+    this.#playerCanUpdateGameSpec = playerCanUpdateGameSpec;
   }
 
   public async handle(
@@ -58,27 +61,17 @@ export abstract class GameIdUpdateQueryV1Handler<
     gameIdUpdateQueryV1: TQuery,
     userV1: apiModels.UserV1,
   ): void {
-    const userGameSlot: ActiveGameSlot | undefined =
-      game.state.slots[gameIdUpdateQueryV1.slotIndex];
-
-    if (userGameSlot === undefined) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        `Player is not eligible for this operation. Reason: game slot "${gameIdUpdateQueryV1.slotIndex}" does not exist`,
+    const playerCanUpdateSpec: boolean =
+      this.#playerCanUpdateGameSpec.isSatisfiedBy(
+        game,
+        userV1.id,
+        gameIdUpdateQueryV1.slotIndex,
       );
-    }
 
-    if (userV1.id !== userGameSlot.userId) {
+    if (!playerCanUpdateSpec) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
-        `Player is not eligible for this operation. Reason: user "${userV1.id}" does not own game slot "${gameIdUpdateQueryV1.slotIndex}"`,
-      );
-    }
-
-    if (gameIdUpdateQueryV1.slotIndex !== game.state.currentPlayingSlotIndex) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        "Player is not eligible for this operation. Reason: it is not the player's turn",
+        'Invalid game update request. Expecting the owner of the playing slot to perform this action',
       );
     }
   }
