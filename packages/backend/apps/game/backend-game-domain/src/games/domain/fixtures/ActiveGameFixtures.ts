@@ -180,6 +180,22 @@ export class ActiveGameFixtures {
     };
   }
 
+  public static get withSlotsTwoAndCurrentPlayingSlotZero(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentPlayingSlotIndex: 0,
+        slots: [
+          ActiveGameSlotFixtures.withPositionZero,
+          ActiveGameSlotFixtures.withPositionOne,
+        ],
+      },
+    };
+  }
+
   public static get withSlotsOneAndCurrentDirectionAntiClockwise(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
 
