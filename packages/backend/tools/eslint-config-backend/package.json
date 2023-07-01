@@ -5,7 +5,7 @@
   },
   "description": "Backend ESLint config for backend packages",
   "devDependencies": {
-    "eslint": "8.43.0"
+    "eslint": "8.44.0"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
