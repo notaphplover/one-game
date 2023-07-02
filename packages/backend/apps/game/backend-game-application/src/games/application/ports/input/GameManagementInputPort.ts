@@ -20,6 +20,7 @@ import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../builders/Game
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
 import { GameCreatedEventHandler } from '../../handlers/GameCreatedEventHandler';
 import { GameIdPassTurnQueryV1Handler } from '../../handlers/GameIdPassTurnQueryV1Handler';
+import { GameIdPlayCardsQueryV1Handler } from '../../handlers/GameIdPlayCardsQueryV1Handler';
 import { GameCreatedEvent } from '../../models/GameCreatedEvent';
 import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
 import {
@@ -39,6 +40,10 @@ export class GameManagementInputPort {
     [string, apiModels.GameIdPassTurnQueryV1, apiModels.UserV1],
     void
   >;
+  readonly #gameIdPlayCardsQueryV1Handler: Handler<
+    [string, apiModels.GameIdPlayCardsQueryV1, apiModels.UserV1],
+    void
+  >;
   readonly #gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>;
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
@@ -56,6 +61,11 @@ export class GameManagementInputPort {
       [string, apiModels.GameIdPassTurnQueryV1, apiModels.UserV1],
       void
     >,
+    @Inject(GameIdPlayCardsQueryV1Handler)
+    gameIdPlayCardsQueryV1Handler: Handler<
+      [string, apiModels.GameIdPlayCardsQueryV1, apiModels.UserV1],
+      void
+    >,
     @Inject(GameV1FromGameBuilder)
     gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>,
     @Inject(gamePersistenceOutputPortSymbol)
@@ -67,6 +77,7 @@ export class GameManagementInputPort {
     this.#gameCreateQueryFromGameCreateQueryV1Builder =
       gameCreateQueryFromGameCreateQueryV1Builder;
     this.#gameIdPassTurnQueryV1Handler = gameIdPassTurnQueryV1Handler;
+    this.#gameIdPlayCardsQueryV1Handler = gameIdPlayCardsQueryV1Handler;
     this.#gameV1FromGameBuilder = gameV1FromGameBuilder;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
@@ -121,9 +132,10 @@ export class GameManagementInputPort {
         );
         break;
       case 'playCards':
-        throw new AppError(
-          AppErrorKind.unknown,
-          'Operation currently not available',
+        await this.#gameIdPlayCardsQueryV1Handler.handle(
+          id,
+          gameIdUpdateQueryV1,
+          userV1,
         );
     }
 

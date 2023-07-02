@@ -1,8 +1,5 @@
 import { UuidModule } from '@cornie-js/backend-app-uuid';
-import {
-  CardDomainModule,
-  GameDomainModule,
-} from '@cornie-js/backend-game-domain';
+import { GameDomainModule } from '@cornie-js/backend-game-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
@@ -41,13 +38,7 @@ export class GameApplicationModule {
         GameSlotManagementInputPort,
       ],
       global: false,
-      imports: [
-        ...(imports ?? []),
-        CardDomainModule,
-        GameDomainModule,
-        UuidModule,
-        CardModule,
-      ],
+      imports: [...(imports ?? []), GameDomainModule, UuidModule, CardModule],
       module: GameApplicationModule,
       providers: [
         ActiveGameSlotV1FromActiveGameSlotBuilder,
