@@ -10,6 +10,20 @@ export class ActiveGameSlotFixtures {
     };
   }
 
+  public static get withCardsOne(): ActiveGameSlot {
+    return {
+      ...ActiveGameSlotFixtures.any,
+      cards: [CardFixtures.any],
+    };
+  }
+
+  public static get withCardsTwo(): ActiveGameSlot {
+    return {
+      ...ActiveGameSlotFixtures.any,
+      cards: [CardFixtures.any, CardFixtures.any],
+    };
+  }
+
   public static get withPositionOne(): ActiveGameSlot {
     return {
       ...ActiveGameSlotFixtures.any,

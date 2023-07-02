@@ -48,4 +48,18 @@ export class GameOptionsFixtures {
       playCardIsMandatory: true,
     };
   }
+
+  public static get withPlayMultipleSameCardsDisabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      playMultipleSameCards: false,
+    };
+  }
+
+  public static get withPlayMultipleSameCardsEnabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      playMultipleSameCards: true,
+    };
+  }
 }

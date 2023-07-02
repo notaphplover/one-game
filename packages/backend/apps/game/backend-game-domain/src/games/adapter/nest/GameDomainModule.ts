@@ -5,6 +5,7 @@ import { CardCanBePlayedSpec } from '../../domain/specs/CardCanBePlayedSpec';
 import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { PlayerCanPassTurnSpec } from '../../domain/specs/PlayerCanPassTurnSpec';
+import { PlayerCanPlayCardsSpec } from '../../domain/specs/PlayerCanPlayCardsSpec';
 import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameSpec';
 
 @Module({
@@ -14,6 +15,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameCanHoldOnlyOneMoreGameSlotSpec,
     CardCanBePlayedSpec,
     PlayerCanPassTurnSpec,
+    PlayerCanPlayCardsSpec,
     PlayerCanUpdateGameSpec,
   ],
   providers: [
@@ -22,6 +24,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameCanHoldOnlyOneMoreGameSlotSpec,
     CardCanBePlayedSpec,
     PlayerCanPassTurnSpec,
+    PlayerCanPlayCardsSpec,
     PlayerCanUpdateGameSpec,
   ],
 })
