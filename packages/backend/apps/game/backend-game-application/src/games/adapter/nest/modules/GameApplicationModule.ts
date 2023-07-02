@@ -1,5 +1,8 @@
 import { UuidModule } from '@cornie-js/backend-app-uuid';
-import { GameDomainModule } from '@cornie-js/backend-game-domain';
+import {
+  CardDomainModule,
+  GameDomainModule,
+} from '@cornie-js/backend-game-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
@@ -18,6 +21,7 @@ import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromG
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { GameCreatedEventHandler } from '../../../application/handlers/GameCreatedEventHandler';
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
+import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
 import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
 import { GameOptionsManagementInputPort } from '../../../application/ports/input/GameOptionsManagementInputPort';
@@ -37,7 +41,13 @@ export class GameApplicationModule {
         GameSlotManagementInputPort,
       ],
       global: false,
-      imports: [...(imports ?? []), GameDomainModule, UuidModule, CardModule],
+      imports: [
+        ...(imports ?? []),
+        CardDomainModule,
+        GameDomainModule,
+        UuidModule,
+        CardModule,
+      ],
       module: GameApplicationModule,
       providers: [
         ActiveGameSlotV1FromActiveGameSlotBuilder,
@@ -49,6 +59,7 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
         GameIdPassTurnQueryV1Handler,
+        GameIdPlayCardsQueryV1Handler,
         GameManagementInputPort,
         GameOptionsCreateQueryFromGameOptionsV1Builder,
         GameOptionsManagementInputPort,
