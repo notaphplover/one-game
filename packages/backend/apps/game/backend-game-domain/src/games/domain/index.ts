@@ -22,6 +22,8 @@ import { GameService } from './services/GameService';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
+import { PlayerCanPlayCardsSpec } from './specs/PlayerCanPlayCardsSpec';
+import { PlayerCanUpdateGameSpec } from './specs/PlayerCanUpdateGameSpec';
 
 export type {
   ActiveGame,
@@ -51,4 +53,6 @@ export {
   GameDirection,
   GameService,
   PlayerCanPassTurnSpec,
+  PlayerCanPlayCardsSpec,
+  PlayerCanUpdateGameSpec,
 };

@@ -2,10 +2,11 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   ActiveGame,
+  ActiveGameSlot,
   GameOptions,
   GameService,
   GameUpdateQuery,
-  PlayerCanPassTurnSpec,
+  PlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -21,8 +22,8 @@ import {
 import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
 
 @Injectable()
-export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPassTurnQueryV1> {
-  readonly #playerCanPassTurnSpec: PlayerCanPassTurnSpec;
+export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPlayCardsQueryV1> {
+  readonly #playerCanPlayCardsSpec: PlayerCanPlayCardsSpec;
 
   constructor(
     @Inject(gameOptionsPersistenceOutputPortSymbol)
@@ -33,8 +34,8 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     gameService: GameService,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
-    @Inject(PlayerCanPassTurnSpec)
-    playerCanPassTurnSpec: PlayerCanPassTurnSpec,
+    @Inject(PlayerCanPlayCardsSpec)
+    playerCanPlayCardsSpec: PlayerCanPlayCardsSpec,
   ) {
     super(
       gameOptionsPersistenceOutputPort,
@@ -42,29 +43,56 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
       gameService,
       playerCanUpdateGameSpec,
     );
-    this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
+
+    this.#playerCanPlayCardsSpec = playerCanPlayCardsSpec;
   }
 
-  protected override _buildUpdateQuery(game: ActiveGame): GameUpdateQuery {
-    return this._gameService.buildPassTurnGameUpdateQuery(game);
+  protected override _buildUpdateQuery(
+    game: ActiveGame,
+    _gameOptions: GameOptions,
+    gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
+  ): GameUpdateQuery {
+    return this._gameService.buildPlayCardsGameUpdateQuery(
+      game,
+      gameIdUpdateQueryV1.cardIndexes,
+      gameIdUpdateQueryV1.slotIndex,
+    );
   }
 
   protected override _checkUnprocessableOperation(
     game: ActiveGame,
     gameOptions: GameOptions,
-    gameIdPassTurnQueryV1: apiModels.GameIdPassTurnQueryV1,
+    gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
   ): void {
+    const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
+      game,
+      gameIdUpdateQueryV1.slotIndex,
+    );
+
     if (
-      !this.#playerCanPassTurnSpec.isSatisfiedBy(
-        game,
+      !this.#playerCanPlayCardsSpec.isSatisfiedBy(
+        gameSlot,
         gameOptions,
-        gameIdPassTurnQueryV1.slotIndex,
+        gameIdUpdateQueryV1.cardIndexes,
       )
     ) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
-        'Player cannot end the turn. Reason: there is a pending action preventing the turn to be ended',
+        'Operation not allowed. Reason: selected cards cannot be played in the current context',
       );
     }
+  }
+
+  #getGameSlotOrThrow(game: ActiveGame, slotIndex: number): ActiveGameSlot {
+    const gameSlot: ActiveGameSlot | undefined = game.state.slots[slotIndex];
+
+    if (gameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.entityNotFound,
+        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
+      );
+    }
+
+    return gameSlot;
   }
 }

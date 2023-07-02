@@ -19,6 +19,7 @@ import { UserV1Fixtures } from '../../../../users/application/fixtures/models/Us
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
 import { GameCreateQueryV1Fixtures } from '../../fixtures/GameCreateQueryV1Fixtures';
 import { GameIdPassTurnQueryV1Fixtures } from '../../fixtures/GameIdPassTurnQueryV1Fixtures';
+import { GameIdPlayCardsQueryV1Fixtures } from '../../fixtures/GameIdPlayCardsQueryV1Fixtures';
 import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
 import { GameCreatedEvent } from '../../models/GameCreatedEvent';
 import { GameCreateQueryContext } from '../../models/GameCreateQueryContext';
@@ -35,6 +36,9 @@ describe(GameManagementInputPort.name, () => {
   let gameIdPassTurnQueryV1HandlerMock: jest.Mocked<
     Handler<[string, apiModels.GameIdPassTurnQueryV1, apiModels.UserV1], void>
   >;
+  let gameIdPlayCardsQueryV1HandlerMock: jest.Mocked<
+    Handler<[string, apiModels.GameIdPlayCardsQueryV1, apiModels.UserV1], void>
+  >;
   let gameV1FromGameBuilderMock: jest.Mocked<Builder<apiModels.GameV1, [Game]>>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
@@ -49,6 +53,9 @@ describe(GameManagementInputPort.name, () => {
       build: jest.fn(),
     };
     gameIdPassTurnQueryV1HandlerMock = {
+      handle: jest.fn(),
+    };
+    gameIdPlayCardsQueryV1HandlerMock = {
       handle: jest.fn(),
     };
     gameV1FromGameBuilderMock = {
@@ -67,6 +74,7 @@ describe(GameManagementInputPort.name, () => {
       gameCreatedEventHandlerMock,
       gameCreateQueryFromGameCreateQueryV1BuilderMock,
       gameIdPassTurnQueryV1HandlerMock,
+      gameIdPlayCardsQueryV1HandlerMock,
       gameV1FromGameBuilderMock,
       gamePersistenceOutputPortMock,
       uuidProviderOutputPortMock,
@@ -268,6 +276,79 @@ describe(GameManagementInputPort.name, () => {
             ).toHaveBeenCalledWith(
               gameIdFixture,
               gameIdPassTurnQueryV1Fixture,
+              userV1Fixture,
+            );
+          });
+
+          it('should call gamePersistenceOutputPort.findOne()', () => {
+            const expectedGameFindQuery: GameFindQuery = {
+              id: gameIdFixture,
+            };
+
+            expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+              1,
+            );
+            expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+              expectedGameFindQuery,
+            );
+          });
+
+          it('should call gameV1FromGameBuilderMock.build()', () => {
+            expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledTimes(1);
+            expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledWith(
+              gameFixture,
+            );
+          });
+
+          it('should return a GameV1', () => {
+            expect(result).toBe(gameV1Fixture);
+          });
+        });
+      });
+
+      describe('having a GameIdPlayCardsQueryV1', () => {
+        let gameIdPlayCardsQueryV1Fixture: apiModels.GameIdPlayCardsQueryV1;
+
+        beforeAll(() => {
+          gameIdPlayCardsQueryV1Fixture = GameIdPlayCardsQueryV1Fixtures.any;
+        });
+
+        describe('when called, and gamePersistenceOutputPort.findOne() returns a Game', () => {
+          let gameFixture: Game;
+          let gameV1Fixture: apiModels.GameV1;
+
+          let result: unknown;
+
+          beforeAll(async () => {
+            gameFixture = ActiveGameFixtures.any;
+            gameV1Fixture = ActiveGameV1Fixtures.any;
+
+            gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+              gameFixture,
+            );
+
+            gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
+
+            result = await gameManagementInputPort.updateOne(
+              gameIdFixture,
+              gameIdPlayCardsQueryV1Fixture,
+              userV1Fixture,
+            );
+          });
+
+          afterAll(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should call gameIdPlayCardsQueryV1Handler.handle()', () => {
+            expect(
+              gameIdPlayCardsQueryV1HandlerMock.handle,
+            ).toHaveBeenCalledTimes(1);
+            expect(
+              gameIdPlayCardsQueryV1HandlerMock.handle,
+            ).toHaveBeenCalledWith(
+              gameIdFixture,
+              gameIdPlayCardsQueryV1Fixture,
               userV1Fixture,
             );
           });

@@ -9,8 +9,9 @@ import { ReverseCard } from './models/ReverseCard';
 import { SkipCard } from './models/SkipCard';
 import { WildCard } from './models/WildCard';
 import { WildDraw4Card } from './models/WildDraw4Card';
+import { AreCardsEqualsSpec } from './specs/AreCardsEqualsSpec';
 
-export { CardColor, CardKind };
+export { AreCardsEqualsSpec, CardColor, CardKind };
 
 export type {
   BaseCard,

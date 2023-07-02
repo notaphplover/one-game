@@ -7,10 +7,12 @@ import { CardKind } from '../../../cards/domain/models/CardKind';
 import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
 import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
+import { Game } from '../models/Game';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
 import { NonStartedGame } from '../models/NonStartedGame';
+import { NonStartedGameSlot } from '../models/NonStartedGameSlot';
 import { GameSlotUpdateQuery } from '../query/GameSlotUpdateQuery';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 
@@ -39,9 +41,10 @@ export class GameService {
     };
 
     if (isPlayerDrawingCards) {
-      const playerSlot: ActiveGameSlot = game.state.slots[
-        game.state.currentPlayingSlotIndex
-      ] as ActiveGameSlot;
+      const playerSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
+        game,
+        game.state.currentPlayingSlotIndex,
+      );
 
       const cardsToDraw: number = Math.max(
         MIN_CARDS_TO_DRAW,
@@ -64,6 +67,35 @@ export class GameService {
     }
 
     return gameUpdateQuery;
+  }
+
+  public buildPlayCardsGameUpdateQuery(
+    game: ActiveGame,
+    cardIndexes: number[],
+    slotIndex: number,
+  ): GameUpdateQuery {
+    const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(game, slotIndex);
+
+    const nextCurrentCard: Card | undefined =
+      this.#getPlayCardsGameUpdateQueryNextCurrentCard(gameSlot, cardIndexes);
+
+    return {
+      currentCard: nextCurrentCard,
+      gameFindQuery: {
+        id: game.id,
+      },
+      gameSlotUpdateQueries: [
+        {
+          cards: gameSlot.cards.filter((_: Card, index: number): boolean =>
+            cardIndexes.includes(index),
+          ),
+          gameSlotFindQuery: {
+            gameId: game.id,
+            position: slotIndex,
+          },
+        },
+      ],
+    };
   }
 
   public buildStartGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
@@ -233,6 +265,46 @@ export class GameService {
     }
 
     return [cards, gameDeckCardSpecsAfterDraw];
+  }
+
+  #getPlayCardsGameUpdateQueryNextCurrentCard(
+    gameSlot: ActiveGameSlot,
+    cardIndexes: number[],
+  ): Card {
+    const [nextCurrentCardIndex]: number[] = cardIndexes;
+
+    const nextCurrentCard: Card | undefined =
+      nextCurrentCardIndex === undefined
+        ? undefined
+        : gameSlot.cards[nextCurrentCardIndex];
+
+    if (nextCurrentCard === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'An unexpected error happened while attempting to update game',
+      );
+    }
+
+    return nextCurrentCard;
+  }
+
+  #getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
+  #getGameSlotOrThrow(game: NonStartedGame, index: number): NonStartedGameSlot;
+  #getGameSlotOrThrow(
+    game: Game,
+    index: number,
+  ): ActiveGameSlot | NonStartedGameSlot {
+    const gameSlot: ActiveGameSlot | NonStartedGameSlot | undefined =
+      game.state.slots[index];
+
+    if (gameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `Expecting a game slot at index "${index}", none found instead.`,
+      );
+    }
+
+    return gameSlot;
   }
 
   #getInitialCardColor(card: Card): CardColor {
