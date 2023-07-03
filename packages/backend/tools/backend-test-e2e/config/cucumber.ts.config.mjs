@@ -11,6 +11,7 @@ function getConfiguration(parallel) {
     require: [
       'src/*/step-definitions/*.ts',
       'src/app/adapter/cucumber/hooks/*.ts',
+      'src/foundation/adapter/cucumberJs/parameters/*.ts',
     ],
     requireModule: ['tsconfig-paths/register', 'ts-node/register'],
   };

@@ -105,6 +105,27 @@ export function thenGetGameResponseShouldContainStartedGame(
   });
 }
 
+export function thenUpdateGameResponseShouldBeSuccessful(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  type ResponseType = Awaited<ReturnType<HttpClient['updateGame']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'updateGame',
+    processedRequestAlias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    body: () => undefined,
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
 Then<OneGameApiWorld>(
   'the create game response should contain a valid game',
   function (this: OneGameApiWorld): void {
@@ -123,5 +144,12 @@ Then<OneGameApiWorld>(
   'the get game response should contain a started game',
   function (this: OneGameApiWorld): void {
     thenGetGameResponseShouldContainStartedGame.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the update game response should be successful',
+  function (this: OneGameApiWorld): void {
+    thenUpdateGameResponseShouldBeSuccessful.bind(this)();
   },
 );
