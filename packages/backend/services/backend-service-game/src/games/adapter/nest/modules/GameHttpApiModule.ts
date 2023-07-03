@@ -7,6 +7,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
 import { GetGameV1GameIdGameOptionsHttpRequestNestController } from '../controllers/GetGameV1GameIdGameOptionsHttpRequestNestController';
 import { GetGameV1GameIdHttpRequestNestController } from '../controllers/GetGameV1GameIdHttpRequestNestController';
+import { PatchGameV1GameIdHttpRequestNestController } from '../controllers/PatchGameV1GameIdHttpRequestNestController';
 import { PostGameIdSlotV1HttpRequestNestController } from '../controllers/PostGameIdSlotV1HttpRequestNestController';
 import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1HttpRequestNestController';
 
@@ -16,6 +17,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
     GetGameV1GameIdGameOptionsHttpRequestNestController,
     GetGameV1GameIdHttpRequestNestController,
     GetGameGameIdSlotSlotIdCardsV1RequestNestController,
+    PatchGameV1GameIdHttpRequestNestController,
     PostGameV1HttpRequestNestController,
     PostGameIdSlotV1HttpRequestNestController,
   ],

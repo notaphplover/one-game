@@ -1,10 +1,12 @@
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from './controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
 import { GetGameV1GameIdGameOptionsHttpRequestController } from './controllers/GetGameV1GameIdGameOptionsHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from './controllers/GetGameV1GameIdHttpRequestController';
+import { PatchGameV1GameIdHttpRequestController } from './controllers/PatchGameV1GameIdHttpRequestController';
 import { PostGameIdSlotV1HttpRequestController } from './controllers/PostGameIdSlotV1HttpRequestController';
 import { PostGameV1HttpRequestController } from './controllers/PostGameV1HttpRequestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 import { GetGameV1GameIdRequestParamHandler } from './handlers/GetGameV1GameIdRequestParamHandler';
+import { PatchGameGameIdV1RequestParamHandler } from './handlers/PatchGameGameIdV1RequestParamHandler';
 import { GameMiddleware } from './middlewares/GameMiddleware';
 import {
   GameOptionsPersistenceOutputPort,
@@ -35,6 +37,8 @@ export {
   GetGameV1GameIdGameOptionsHttpRequestController,
   GetGameV1GameIdHttpRequestController,
   GetGameV1GameIdRequestParamHandler,
+  PatchGameGameIdV1RequestParamHandler,
+  PatchGameV1GameIdHttpRequestController,
   PostGameIdSlotV1HttpRequestController,
   PostGameV1HttpRequestController,
 };
