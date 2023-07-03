@@ -11,10 +11,16 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { PatchGameGameIdV1RequestBodyParamHandler } from './PatchGameGameIdV1RequestBodyParamHandler';
 
-export const PATCH_GAME_V1_GAME_ID_REQUEST_PARAM: string = 'gameId';
-
 @Injectable()
-export class PatchGameGameIdV1RequestParamHandler {
+export class PatchGameGameIdV1RequestParamHandler
+  implements
+    Handler<
+      [RequestWithBody & AuthRequestContextHolder],
+      [string, apiModels.GameIdUpdateQueryV1, apiModels.UserV1]
+    >
+{
+  public static patchGameV1GameIdRequestParam: string = 'gameId';
+
   readonly #patchGameGameIdV1RequestBodyParamHandler: Handler<
     [RequestWithBody],
     [apiModels.GameIdUpdateQueryV1]
@@ -33,7 +39,19 @@ export class PatchGameGameIdV1RequestParamHandler {
 
   public async handle(
     request: RequestWithBody & AuthRequestContextHolder,
-  ): Promise<[apiModels.UserV1, apiModels.GameIdUpdateQueryV1]> {
+  ): Promise<[string, apiModels.GameIdUpdateQueryV1, apiModels.UserV1]> {
+    const gameId: string | undefined =
+      request.urlParameters[
+        PatchGameGameIdV1RequestParamHandler.patchGameV1GameIdRequestParam
+      ];
+
+    if (gameId === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected error: no game id was found in request params',
+      );
+    }
+
     const auth: Auth = request[requestContextProperty].auth;
 
     if (auth.kind !== AuthKind.user) {
@@ -46,6 +64,6 @@ export class PatchGameGameIdV1RequestParamHandler {
     const [gameIdUpdateQueryV1]: [apiModels.GameIdUpdateQueryV1] =
       await this.#patchGameGameIdV1RequestBodyParamHandler.handle(request);
 
-    return [auth.user, gameIdUpdateQueryV1];
+    return [gameId, gameIdUpdateQueryV1, auth.user];
   }
 }

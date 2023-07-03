@@ -12,6 +12,7 @@ import {
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
+import { ActiveGameV1Fixtures } from '../fixtures/ActiveGameV1Fixtures';
 import { GameIdPlayCardsQueryV1Fixtures } from '../fixtures/GameIdPlayCardsQueryV1Fixtures';
 import { PatchGameGameIdV1RequestParamHandler } from './PatchGameGameIdV1RequestParamHandler';
 
@@ -34,7 +35,50 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
   });
 
   describe('.handle', () => {
-    describe('having a request with backend service context', () => {
+    describe('having a request with no game id request param', () => {
+      let requestFixture: RequestWithBody;
+
+      beforeAll(() => {
+        requestFixture = {
+          body: {},
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          try {
+            await patchGameGameIdV1RequestParamHandler.handle(
+              requestFixture as RequestWithBody & AuthRequestContextHolder,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should throw an Error', () => {
+          const errorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message: 'Unexpected error: no game id was found in request params',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(errorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a request with game id and  backend service context', () => {
       let authFixture: BackendServiceAuth;
       let requestFixture: RequestWithBody & AuthRequestContextHolder;
 
@@ -50,7 +94,10 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
           [requestContextProperty]: {
             auth: authFixture,
           },
-          urlParameters: {},
+          urlParameters: {
+            [PatchGameGameIdV1RequestParamHandler.patchGameV1GameIdRequestParam]:
+              ActiveGameV1Fixtures.any.id,
+          },
         };
       });
 
@@ -83,11 +130,13 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
       });
     });
 
-    describe('having a request with user auth context', () => {
+    describe('having a request with game id and user auth context', () => {
+      let gameIdFixture: string;
       let authFixture: UserAuth;
       let requestFixture: RequestWithBody & AuthRequestContextHolder;
 
       beforeAll(() => {
+        gameIdFixture = ActiveGameV1Fixtures.any.id;
         authFixture = {
           kind: AuthKind.user,
           user: UserV1Fixtures.any,
@@ -100,7 +149,10 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
           [requestContextProperty]: {
             auth: authFixture,
           },
-          urlParameters: {},
+          urlParameters: {
+            [PatchGameGameIdV1RequestParamHandler.patchGameV1GameIdRequestParam]:
+              gameIdFixture,
+          },
         };
       });
 
@@ -136,8 +188,9 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
 
         it('should return request params', () => {
           expect(result).toStrictEqual([
-            (requestFixture[requestContextProperty].auth as UserAuth).user,
+            gameIdFixture,
             gameIdUpdateQueryV1Fixture,
+            (requestFixture[requestContextProperty].auth as UserAuth).user,
           ]);
         });
       });
