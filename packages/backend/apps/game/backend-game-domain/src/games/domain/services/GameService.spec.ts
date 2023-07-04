@@ -10,6 +10,7 @@ import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
+import { GameStatus } from '../models/GameStatus';
 import { NonStartedGame } from '../models/NonStartedGame';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { GameService } from './GameService';
@@ -351,7 +352,6 @@ describe(GameService.name, () => {
           ];
 
           const expectedGameUpdateQueryProperties: Partial<GameUpdateQuery> = {
-            active: true,
             currentCard: deckCardSpec.card,
             currentColor: expect.any(String) as unknown as CardColor,
             currentDirection: GameDirection.antiClockwise,
@@ -378,6 +378,7 @@ describe(GameService.name, () => {
                 },
               },
             ],
+            status: GameStatus.active,
           };
 
           expect(result).toStrictEqual(

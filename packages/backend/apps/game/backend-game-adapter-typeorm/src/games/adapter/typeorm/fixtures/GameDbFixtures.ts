@@ -2,13 +2,13 @@ import { Writable } from '@cornie-js/backend-common';
 
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
+import { GameStatusDb } from '../models/GameStatusDb';
 import { GameSlotDbFixtures } from './GameSlotDbFixtures';
 
 export class GameDbFixtures {
-  public static get withActiveFalse(): GameDb {
+  public static get withStatusNonStarted(): GameDb {
     const fixture: Writable<GameDb> = new GameDb();
 
-    fixture.active = false;
     fixture.currentCard = null;
     fixture.currentColor = null;
     fixture.currentPlayingSlotIndex = null;
@@ -16,20 +16,21 @@ export class GameDbFixtures {
     fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
+    fixture.status = GameStatusDb.nonStarted;
 
     return fixture;
   }
 
-  public static get withActiveFalseAndGameSlotsOne(): GameDb {
-    const fixture: Writable<GameDb> = GameDbFixtures.withActiveFalse;
+  public static get withStatusNonStartedAndGameSlotsOne(): GameDb {
+    const fixture: Writable<GameDb> = GameDbFixtures.withStatusNonStarted;
 
     fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
 
     return fixture;
   }
 
-  public static get withActiveFalseAndGameSlotsTwo(): GameDb {
-    const fixture: Writable<GameDb> = GameDbFixtures.withActiveFalse;
+  public static get withStatusNonStartedAndGameSlotsTwo(): GameDb {
+    const fixture: Writable<GameDb> = GameDbFixtures.withStatusNonStarted;
 
     fixture.gameSlotsDb = [
       GameSlotDbFixtures.nonActiveWithPositionZero,
@@ -39,10 +40,9 @@ export class GameDbFixtures {
     return fixture;
   }
 
-  public static get withActiveTrueAndGameSlotsOne(): GameDb {
+  public static get withStatusActiveAndGameSlotsOne(): GameDb {
     const fixture: Writable<GameDb> = new GameDb();
 
-    fixture.active = true;
     fixture.currentCard = 39;
     fixture.currentColor = 32;
     fixture.currentDirection = GameDirectionDb.clockwise;
@@ -53,6 +53,7 @@ export class GameDbFixtures {
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
+    fixture.status = GameStatusDb.active;
 
     return fixture;
   }

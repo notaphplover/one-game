@@ -18,6 +18,7 @@ import {
   GameCanHoldMoreGameSlotsSpec,
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameSlotCreateQuery,
+  GameStatus,
   NonStartedGame,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
@@ -197,6 +198,6 @@ export class GameSlotManagementInputPort {
   }
 
   #isActiveGame(game: Game): game is ActiveGame {
-    return game.state.active;
+    return game.state.status === GameStatus.active;
   }
 }

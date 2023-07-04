@@ -8,6 +8,7 @@ import { WildCard } from '../../../cards/domain/models/WildCard';
 import { WildDraw4Card } from '../../../cards/domain/models/WildDraw4Card';
 import { ActiveGame } from '../models/ActiveGame';
 import { GameDirection } from '../models/GameDirection';
+import { GameStatus } from '../models/GameStatus';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 
@@ -20,7 +21,6 @@ export class ActiveGameFixtures {
         cards: [GameCardSpecFixtures.any],
       },
       state: {
-        active: true,
         currentCard: CardFixtures.any,
         currentColor: CardColor.blue,
         currentDirection: GameDirection.antiClockwise,
@@ -29,6 +29,7 @@ export class ActiveGameFixtures {
         deck: [],
         drawCount: 0,
         slots: [ActiveGameSlotFixtures.withPositionZero],
+        status: GameStatus.active,
       },
     };
   }

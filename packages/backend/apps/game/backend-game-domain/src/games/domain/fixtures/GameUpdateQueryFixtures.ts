@@ -1,6 +1,7 @@
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { CardColor } from '../../../cards/domain/models/CardColor';
 import { GameDirection } from '../models/GameDirection';
+import { GameStatus } from '../models/GameStatus';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { GameFindQueryFixtures } from './GameFindQueryFixtures';
@@ -10,15 +11,6 @@ export class GameUpdateQueryFixtures {
   public static get any(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       gameFindQuery: GameFindQueryFixtures.any,
-    };
-
-    return fixture;
-  }
-
-  public static get withActive(): GameUpdateQuery {
-    const fixture: GameUpdateQuery = {
-      ...GameUpdateQueryFixtures.any,
-      active: true,
     };
 
     return fixture;
@@ -102,5 +94,14 @@ export class GameUpdateQueryFixtures {
       ...GameUpdateQueryFixtures.any,
       gameSlotUpdateQueries: [GameSlotUpdateQueryFixtures.any],
     };
+  }
+
+  public static get withStatusActive(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      status: GameStatus.active,
+    };
+
+    return fixture;
   }
 }

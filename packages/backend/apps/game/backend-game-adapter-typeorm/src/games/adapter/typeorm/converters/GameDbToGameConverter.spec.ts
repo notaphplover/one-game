@@ -7,6 +7,7 @@ import {
   ActiveGame,
   ActiveGameSlot,
   GameDirection,
+  GameStatus,
   NonStartedGame,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
@@ -66,7 +67,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsOne;
+      gameDbFixture = GameDbFixtures.withStatusNonStartedAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -126,8 +127,8 @@ describe(GameDbToGameConverter.name, () => {
             ],
           },
           state: {
-            active: false,
             slots: [gameSlotFixture],
+            status: GameStatus.nonStarted,
           },
         };
 
@@ -141,7 +142,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsTwo;
+      gameDbFixture = GameDbFixtures.withStatusNonStartedAndGameSlotsTwo;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -203,8 +204,8 @@ describe(GameDbToGameConverter.name, () => {
             ],
           },
           state: {
-            active: false,
             slots: [firstGameSlotFixture, secondGameSlotFixture],
+            status: GameStatus.nonStarted,
           },
         };
 
@@ -219,7 +220,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActiveTrueAndGameSlotsOne;
+      gameDbFixture = GameDbFixtures.withStatusActiveAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -300,7 +301,6 @@ describe(GameDbToGameConverter.name, () => {
             ],
           },
           state: {
-            active: true,
             currentCard: cardFixture,
             currentColor: cardColorFixture,
             currentDirection: gameDirectionFixture,
@@ -316,6 +316,7 @@ describe(GameDbToGameConverter.name, () => {
             ],
             drawCount: gameDbFixture.drawCount as number,
             slots: [gameSlotFixture],
+            status: GameStatus.active,
           },
         };
 
