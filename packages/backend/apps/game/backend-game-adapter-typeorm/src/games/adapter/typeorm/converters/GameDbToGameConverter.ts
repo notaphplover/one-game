@@ -111,10 +111,10 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     }
 
     return {
-      gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       spec: {
         cards: this.#convertCardSpecs(gameDb.spec),
+        gameSlotsAmount: gameDb.gameSlotsAmount,
       },
       state: {
         currentCard: this.#cardBuilder.build(gameDb.currentCard),
@@ -137,10 +137,10 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     gameSlots: NonStartedGameSlot[],
   ): NonStartedGame {
     return {
-      gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       spec: {
         cards: this.#convertCardSpecs(gameDb.spec),
+        gameSlotsAmount: gameDb.gameSlotsAmount,
       },
       state: {
         slots: gameSlots,

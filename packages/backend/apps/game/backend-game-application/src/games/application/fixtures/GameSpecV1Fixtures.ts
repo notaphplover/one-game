@@ -6,6 +6,7 @@ export class GameSpecV1Fixtures {
   public static get any(): apiModels.GameSpecV1 {
     return {
       cardSpecs: [GameCardSpecV1Fixtures.any],
+      gameSlotsAmount: 1,
     };
   }
 

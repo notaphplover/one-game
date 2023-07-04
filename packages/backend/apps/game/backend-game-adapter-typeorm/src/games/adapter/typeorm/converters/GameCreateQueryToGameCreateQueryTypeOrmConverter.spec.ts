@@ -74,7 +74,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
           currentPlayingSlotIndex: null,
           currentTurnCardsPlayed: null,
           deck: gameCardSpecArrayStringifiedFixture,
-          gameSlotsAmount: gameCreateQueryFixture.gameSlotsAmount,
+          gameSlotsAmount: gameCreateQueryFixture.spec.gameSlotsAmount,
           id: gameCreateQueryFixture.id,
           spec: gameCardSpecArrayStringifiedFixture,
           status: GameStatusDb.nonStarted,

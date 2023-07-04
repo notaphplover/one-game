@@ -20,6 +20,7 @@ export type TypesV1 =
   | ErrorV1
   | ActiveGameSlotCardsV1
   | ActiveGameSlotV1
+  | ActiveGameStateV1
   | ActiveGameV1
   | GameCardSpecV1
   | GameCreateQueryV1
@@ -33,6 +34,7 @@ export type TypesV1 =
   | GameSpecV1
   | GameV1
   | NonStartedGameSlotV1
+  | NonStartedGameStateV1
   | NonStartedGameV1
   | UserCreateQueryV1
   | UserMeUpdateQueryV1
@@ -96,20 +98,24 @@ export interface ActiveGameSlotV1 {
   cardsAmount: number;
   userId: string;
 }
-export interface ActiveGameV1 {
+export interface ActiveGameStateV1 {
   currentCard: CardV1;
   currentColor: CardColorV1;
   currentDirection: GameDirectionV1;
   currentPlayingSlotIndex: number;
   currentTurnCardsPlayed: boolean;
   drawCount: number;
-  gameSpec: GameSpecV1;
-  gameSlotsAmount: number;
-  id: string;
   slots: ActiveGameSlotV1[];
+  status: 'active';
+}
+export interface ActiveGameV1 {
+  id: string;
+  spec: GameSpecV1;
+  state: ActiveGameStateV1;
 }
 export interface GameSpecV1 {
   cardSpecs: GameCardSpecV1[];
+  gameSlotsAmount: number;
 }
 export interface GameCardSpecV1 {
   amount: number;
@@ -144,10 +150,13 @@ export interface NonStartedGameSlotV1 {
   userId: null | string;
 }
 export interface NonStartedGameV1 {
-  gameSlotsAmount: number;
-  gameSpec: GameSpecV1;
   id: string;
+  spec: GameSpecV1;
+  state: NonStartedGameStateV1;
+}
+export interface NonStartedGameStateV1 {
   slots: NonStartedGameSlotV1[];
+  status: 'nonStarted';
 }
 export interface UserCreateQueryV1 {
   email: string;

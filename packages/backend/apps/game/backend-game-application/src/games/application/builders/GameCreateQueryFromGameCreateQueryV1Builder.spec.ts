@@ -105,10 +105,10 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
 
       it('should return apiModels.GameSpecV1', () => {
         const expected: GameCreateQuery = {
-          gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
           id: gameCreateQueryContextFixture.uuid,
           spec: {
             cards: [gameCardSpecFixture],
+            gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
             options: gameOptionsCreateQueryFixture,
           },
         };

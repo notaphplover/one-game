@@ -5,50 +5,19 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "currentCard": {
-      "$ref": "https://onegame.schemas/api/v1/cards/card.json"
-    },
-    "currentColor": {
-      "$ref": "https://onegame.schemas/api/v1/cards/card-color.json"
-    },
-    "currentDirection": {
-      "$ref": "https://onegame.schemas/api/v1/games/game-direction.json"
-    },
-    "currentPlayingSlotIndex": {
-      "type": "number"
-    },
-    "currentTurnCardsPlayed": {
-      "type": "boolean"
-    },
-    "drawCount": {
-      "type": "number"
-    },
-    "gameSpec": {
-      "$ref": "https://onegame.schemas/api/v1/games/game-spec.json"
-    },
-    "gameSlotsAmount": {
-      "type": "integer"
-    },
     "id": {
       "type": "string"
     },
-    "slots": {
-      "type": "array",
-      "items": {
-        "$ref": "https://onegame.schemas/api/v1/games/active-game-slot.json"
-      }
+    "spec": {
+      "$ref": "https://onegame.schemas/api/v1/games/game-spec.json"
+    },
+    "state": {
+      "$ref": "https://onegame.schemas/api/v1/games/active-game-state.json"
     }
   },
   "required": [
-    "currentCard",
-    "currentColor",
-    "currentDirection",
-    "currentPlayingSlotIndex",
-    "currentTurnCardsPlayed",
-    "drawCount",
-    "gameSpec",
-    "gameSlotsAmount",
     "id",
-    "slots"
+    "spec",
+    "state"
   ]
 }

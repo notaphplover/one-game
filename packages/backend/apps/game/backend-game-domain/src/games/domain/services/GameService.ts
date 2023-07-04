@@ -323,7 +323,7 @@ export class GameService {
     const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
       this.#drawCards(
         game.spec.cards,
-        INITIAL_CARDS_PER_PLAYER * game.gameSlotsAmount + 1,
+        INITIAL_CARDS_PER_PLAYER * game.spec.gameSlotsAmount + 1,
       );
 
     this.#shuffle(cardsDrawn);
@@ -334,7 +334,7 @@ export class GameService {
       currentCard,
       playersCards: this.#splitAllInEqualParts(
         cardsDrawn,
-        game.gameSlotsAmount,
+        game.spec.gameSlotsAmount,
       ),
       remainingDeck: gameDeckCardsSpec,
     };
@@ -353,7 +353,7 @@ export class GameService {
   }
 
   #getNextTurnPlayerIndex(game: ActiveGame): number {
-    const players: number = game.gameSlotsAmount;
+    const players: number = game.spec.gameSlotsAmount;
 
     const direction: GameDirection = game.state.currentDirection;
 

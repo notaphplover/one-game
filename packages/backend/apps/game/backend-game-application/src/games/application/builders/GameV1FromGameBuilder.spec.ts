@@ -6,8 +6,8 @@ import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   ActiveGameSlot,
-  GameCardSpec,
   GameDirection,
+  GameSpec,
   NonStartedGame,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
@@ -33,8 +33,8 @@ describe(GameV1FromGameBuilder.name, () => {
   let gameDirectionV1FromGameDirectionBuilderMock: jest.Mocked<
     Builder<apiModels.GameDirectionV1, [GameDirection]>
   >;
-  let gameSpecV1FromGameCardSpecsBuilderMock: jest.Mocked<
-    Builder<apiModels.GameSpecV1, [GameCardSpec[]]>
+  let gameSpecV1FromGameSpecBuilderMock: jest.Mocked<
+    Builder<apiModels.GameSpecV1, [GameSpec]>
   >;
   let nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock: jest.Mocked<
     Builder<apiModels.NonStartedGameSlotV1, [NonStartedGameSlot]>
@@ -55,7 +55,7 @@ describe(GameV1FromGameBuilder.name, () => {
     gameDirectionV1FromGameDirectionBuilderMock = {
       build: jest.fn(),
     };
-    gameSpecV1FromGameCardSpecsBuilderMock = {
+    gameSpecV1FromGameSpecBuilderMock = {
       build: jest.fn(),
     };
     nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock = {
@@ -67,7 +67,7 @@ describe(GameV1FromGameBuilder.name, () => {
       cardColorV1FromCardColorBuilderMock,
       cardV1FromCardBuilderMock,
       gameDirectionV1FromGameDirectionBuilderMock,
-      gameSpecV1FromGameCardSpecsBuilderMock,
+      gameSpecV1FromGameSpecBuilderMock,
       nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock,
     );
   });
@@ -108,7 +108,7 @@ describe(GameV1FromGameBuilder.name, () => {
           gameDirectionV1FromGameDirectionBuilderMock.build.mockReturnValueOnce(
             gameDirectionV1Fixture,
           );
-          gameSpecV1FromGameCardSpecsBuilderMock.build.mockReturnValueOnce(
+          gameSpecV1FromGameSpecBuilderMock.build.mockReturnValueOnce(
             gameSpecV1Fixture,
           );
 
@@ -153,27 +153,30 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledWith(gameFixture.state.currentDirection);
         });
 
-        it('should call gameSpecV1FromGameCardSpecsBuilder.build()', () => {
-          expect(
-            gameSpecV1FromGameCardSpecsBuilderMock.build,
-          ).toHaveBeenCalledTimes(1);
-          expect(
-            gameSpecV1FromGameCardSpecsBuilderMock.build,
-          ).toHaveBeenCalledWith(gameFixture.spec.cards);
+        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
+          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
+            gameFixture.spec,
+          );
         });
 
         it('should return a GameV1', () => {
           const expected: apiModels.ActiveGameV1 = {
-            currentCard: cardV1Fixture,
-            currentColor: cardColorV1Fixture,
-            currentDirection: gameDirectionV1Fixture,
-            currentPlayingSlotIndex: gameFixture.state.currentPlayingSlotIndex,
-            currentTurnCardsPlayed: gameFixture.state.currentTurnCardsPlayed,
-            drawCount: gameFixture.state.drawCount,
-            gameSlotsAmount: gameFixture.gameSlotsAmount,
-            gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,
-            slots: [activeGameSlotV1Fixture],
+            spec: gameSpecV1Fixture,
+            state: {
+              currentCard: cardV1Fixture,
+              currentColor: cardColorV1Fixture,
+              currentDirection: gameDirectionV1Fixture,
+              currentPlayingSlotIndex:
+                gameFixture.state.currentPlayingSlotIndex,
+              currentTurnCardsPlayed: gameFixture.state.currentTurnCardsPlayed,
+              drawCount: gameFixture.state.drawCount,
+              slots: [activeGameSlotV1Fixture],
+              status: 'active',
+            },
           };
 
           expect(result).toStrictEqual(expected);
@@ -200,7 +203,7 @@ describe(GameV1FromGameBuilder.name, () => {
           nonStartedGameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
           gameSpecV1Fixture = GameSpecV1Fixtures.any;
 
-          gameSpecV1FromGameCardSpecsBuilderMock.build.mockReturnValueOnce(
+          gameSpecV1FromGameSpecBuilderMock.build.mockReturnValueOnce(
             gameSpecV1Fixture,
           );
 
@@ -215,13 +218,13 @@ describe(GameV1FromGameBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameSpecV1FromGameCardSpecsBuilder.build()', () => {
-          expect(
-            gameSpecV1FromGameCardSpecsBuilderMock.build,
-          ).toHaveBeenCalledTimes(1);
-          expect(
-            gameSpecV1FromGameCardSpecsBuilderMock.build,
-          ).toHaveBeenCalledWith(gameFixture.spec.cards);
+        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
+          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
+            gameFixture.spec,
+          );
         });
 
         it('should call nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build()', () => {
@@ -235,10 +238,12 @@ describe(GameV1FromGameBuilder.name, () => {
 
         it('should return a GameV1', () => {
           const expected: apiModels.NonStartedGameV1 = {
-            gameSlotsAmount: gameFixture.gameSlotsAmount,
-            gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,
-            slots: [nonStartedGameSlotV1Fixture],
+            spec: gameSpecV1Fixture,
+            state: {
+              slots: [nonStartedGameSlotV1Fixture],
+              status: 'nonStarted',
+            },
           };
 
           expect(result).toStrictEqual(expected);

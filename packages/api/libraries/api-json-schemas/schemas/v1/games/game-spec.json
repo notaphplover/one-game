@@ -10,9 +10,13 @@
       "items": {
         "$ref": "https://onegame.schemas/api/v1/games/game-card-spec.json"
       }
+    },
+    "gameSlotsAmount": {
+      "type": "integer"
     }
   },
   "required": [
-    "cardSpecs"
+    "cardSpecs",
+    "gameSlotsAmount"
   ]
 }
