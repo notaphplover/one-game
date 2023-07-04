@@ -9,7 +9,7 @@ export class GameCanHoldMoreGameSlotsSpec implements Spec<[Game]> {
   public isSatisfiedBy(game: Game): boolean {
     return (
       game.state.status === GameStatus.nonStarted &&
-      game.state.slots.length < game.gameSlotsAmount
+      game.state.slots.length < game.spec.gameSlotsAmount
     );
   }
 }

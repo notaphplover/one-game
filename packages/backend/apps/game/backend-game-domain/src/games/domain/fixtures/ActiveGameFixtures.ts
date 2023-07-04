@@ -15,10 +15,10 @@ import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
-      gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       spec: {
         cards: [GameCardSpecFixtures.any],
+        gameSlotsAmount: 1,
       },
       state: {
         currentCard: CardFixtures.any,
@@ -155,9 +155,9 @@ export class ActiveGameFixtures {
 
     return {
       ...anyActiveGameFixture,
-      gameSlotsAmount: 2,
       spec: {
         cards: [GameCardSpecFixtures.withAmount120],
+        gameSlotsAmount: 2,
       },
       state: {
         ...anyActiveGameFixture.state,

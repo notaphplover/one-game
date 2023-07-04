@@ -170,7 +170,7 @@ describe(GameV1FromGameBuilder.name, () => {
             currentPlayingSlotIndex: gameFixture.state.currentPlayingSlotIndex,
             currentTurnCardsPlayed: gameFixture.state.currentTurnCardsPlayed,
             drawCount: gameFixture.state.drawCount,
-            gameSlotsAmount: gameFixture.gameSlotsAmount,
+            gameSlotsAmount: gameFixture.spec.gameSlotsAmount,
             gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,
             slots: [activeGameSlotV1Fixture],
@@ -235,7 +235,7 @@ describe(GameV1FromGameBuilder.name, () => {
 
         it('should return a GameV1', () => {
           const expected: apiModels.NonStartedGameV1 = {
-            gameSlotsAmount: gameFixture.gameSlotsAmount,
+            gameSlotsAmount: gameFixture.spec.gameSlotsAmount,
             gameSpec: gameSpecV1Fixture,
             id: gameFixture.id,
             slots: [nonStartedGameSlotV1Fixture],

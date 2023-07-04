@@ -9,7 +9,7 @@ export class GameCanHoldOnlyOneMoreGameSlotSpec implements Spec<[Game]> {
   public isSatisfiedBy(game: Game): boolean {
     return (
       game.state.status === GameStatus.nonStarted &&
-      game.state.slots.length === game.gameSlotsAmount - 1
+      game.state.slots.length === game.spec.gameSlotsAmount - 1
     );
   }
 }

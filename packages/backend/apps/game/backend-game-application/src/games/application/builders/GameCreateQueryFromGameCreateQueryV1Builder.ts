@@ -55,10 +55,10 @@ export class GameCreateQueryFromGameCreateQueryV1Builder
       );
 
     return {
-      gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
       id: context.uuid,
       spec: {
         cards: this.#gameService.getInitialCardsSpec(),
+        gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
         options: gameOptionsCreateQuery,
       },
     };

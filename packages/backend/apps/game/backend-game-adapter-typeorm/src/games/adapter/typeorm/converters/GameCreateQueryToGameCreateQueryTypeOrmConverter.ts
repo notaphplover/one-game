@@ -45,7 +45,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       currentPlayingSlotIndex: null,
       currentTurnCardsPlayed: null,
       deck: gameCardsStringified,
-      gameSlotsAmount: gameCreateQuery.gameSlotsAmount,
+      gameSlotsAmount: gameCreateQuery.spec.gameSlotsAmount,
       id: gameCreateQuery.id,
       spec: gameCardsStringified,
       status: GameStatusDb.nonStarted,

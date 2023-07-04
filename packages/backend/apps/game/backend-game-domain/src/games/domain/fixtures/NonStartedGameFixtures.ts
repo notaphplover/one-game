@@ -6,10 +6,10 @@ import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';
 export class NonStartedGameFixtures {
   public static get any(): NonStartedGame {
     const fixture: NonStartedGame = {
-      gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       spec: {
         cards: [GameCardSpecFixtures.any],
+        gameSlotsAmount: 1,
       },
       state: {
         slots: [NonStartedGameSlotFixtures.withPositionZero],
@@ -25,9 +25,9 @@ export class NonStartedGameFixtures {
 
     return {
       ...anyNonStartedGameFixture,
-      gameSlotsAmount: 2,
       spec: {
         cards: [GameCardSpecFixtures.withAmount0],
+        gameSlotsAmount: 2,
       },
       state: {
         ...anyNonStartedGameFixture.state,
@@ -44,9 +44,9 @@ export class NonStartedGameFixtures {
 
     return {
       ...anyNonStartedGameFixture,
-      gameSlotsAmount: 2,
       spec: {
         cards: [GameCardSpecFixtures.withAmount120],
+        gameSlotsAmount: 2,
       },
       state: {
         ...anyNonStartedGameFixture.state,
@@ -63,7 +63,10 @@ export class NonStartedGameFixtures {
 
     return {
       ...anyNonStartedGameFixture,
-      gameSlotsAmount: 1,
+      spec: {
+        ...anyNonStartedGameFixture.spec,
+        gameSlotsAmount: 1,
+      },
       state: {
         ...anyNonStartedGameFixture.state,
         slots: [NonStartedGameSlotFixtures.withPositionZero],
@@ -76,7 +79,10 @@ export class NonStartedGameFixtures {
 
     return {
       ...anyNonStartedGameFixture,
-      gameSlotsAmount: 1,
+      spec: {
+        ...anyNonStartedGameFixture.spec,
+        gameSlotsAmount: 1,
+      },
       state: {
         ...anyNonStartedGameFixture.state,
         slots: [],

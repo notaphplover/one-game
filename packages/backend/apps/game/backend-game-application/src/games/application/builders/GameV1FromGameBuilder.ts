@@ -102,7 +102,7 @@ export class GameV1FromGameBuilder
         currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
         currentTurnCardsPlayed: game.state.currentTurnCardsPlayed,
         drawCount: game.state.drawCount,
-        gameSlotsAmount: game.gameSlotsAmount,
+        gameSlotsAmount: game.spec.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(
           game.spec.cards,
         ),
@@ -115,7 +115,7 @@ export class GameV1FromGameBuilder
       gameV1 = activeGameV1;
     } else {
       const nonStartedGameV1: apiModels.NonStartedGameV1 = {
-        gameSlotsAmount: game.gameSlotsAmount,
+        gameSlotsAmount: game.spec.gameSlotsAmount,
         gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(
           game.spec.cards,
         ),
