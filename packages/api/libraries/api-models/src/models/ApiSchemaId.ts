@@ -7,6 +7,7 @@
 export enum ApiSchemaId {
   ActiveGameSlotCardsV1 = 'https://onegame.schemas/api/v1/games/active-game-slot-cards.json',
   ActiveGameSlotV1 = 'https://onegame.schemas/api/v1/games/active-game-slot.json',
+  ActiveGameStateV1 = 'https://onegame.schemas/api/v1/games/active-game-state.json',
   ActiveGameV1 = 'https://onegame.schemas/api/v1/games/active-game.json',
   AuthCreateQueryV1 = 'https://onegame.schemas/api/v1/auth/auth-create-query.json',
   AuthV1 = 'https://onegame.schemas/api/v1/auth/auth.json',
@@ -28,6 +29,7 @@ export enum ApiSchemaId {
   GameSpecV1 = 'https://onegame.schemas/api/v1/games/game-spec.json',
   GameV1 = 'https://onegame.schemas/api/v1/games/game.json',
   NonStartedGameSlotV1 = 'https://onegame.schemas/api/v1/games/non-started-game-slot.json',
+  NonStartedGameStateV1 = 'https://onegame.schemas/api/v1/games/non-started-game-state.json',
   NonStartedGameV1 = 'https://onegame.schemas/api/v1/games/non-started-game.json',
   NormalCardV1 = 'https://onegame.schemas/api/v1/cards/normal-card.json',
   ReverseCardV1 = 'https://onegame.schemas/api/v1/cards/reverse-card.json',

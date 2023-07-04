@@ -11,15 +11,13 @@ import { GameDirection } from '../models/GameDirection';
 import { GameStatus } from '../models/GameStatus';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
+import { GameSpecFixtures } from './GameSpecFixtures';
 
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      spec: {
-        cards: [GameCardSpecFixtures.any],
-        gameSlotsAmount: 1,
-      },
+      spec: GameSpecFixtures.withGameSlotsAmountOne,
       state: {
         currentCard: CardFixtures.any,
         currentColor: CardColor.blue,

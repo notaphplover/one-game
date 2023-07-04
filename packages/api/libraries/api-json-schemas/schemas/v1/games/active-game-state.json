@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/active-game-state.json",
+  "title": "ActiveGameStateV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "currentCard": {
+      "$ref": "https://onegame.schemas/api/v1/cards/card.json"
+    },
+    "currentColor": {
+      "$ref": "https://onegame.schemas/api/v1/cards/card-color.json"
+    },
+    "currentDirection": {
+      "$ref": "https://onegame.schemas/api/v1/games/game-direction.json"
+    },
+    "currentPlayingSlotIndex": {
+      "type": "number"
+    },
+    "currentTurnCardsPlayed": {
+      "type": "boolean"
+    },
+    "drawCount": {
+      "type": "number"
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "$ref": "https://onegame.schemas/api/v1/games/active-game-slot.json"
+      }
+    },
+    "status": {
+      "const": "active",
+      "type": "string"
+    }
+  },
+  "required": [
+    "currentCard",
+    "currentColor",
+    "currentDirection",
+    "currentPlayingSlotIndex",
+    "currentTurnCardsPlayed",
+    "drawCount",
+    "slots",
+    "status"
+  ]
+}

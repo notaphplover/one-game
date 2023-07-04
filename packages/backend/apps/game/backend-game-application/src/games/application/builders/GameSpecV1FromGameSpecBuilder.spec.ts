@@ -2,34 +2,34 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
-import { GameCardSpec } from '@cornie-js/backend-game-domain/games';
-import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
+import { GameCardSpec, GameSpec } from '@cornie-js/backend-game-domain/games';
+import { GameSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { GameCardSpecV1Fixtures } from '../fixtures/GameCardSpecV1Fixtures';
-import { GameSpecV1FromGameCardSpecsBuilder } from './GameSpecV1FromGameCardSpecsBuilder';
+import { GameSpecV1FromGameSpecBuilder } from './GameSpecV1FromGameSpecBuilder';
 
-describe(GameSpecV1FromGameCardSpecsBuilder.name, () => {
-  let gameCardSpecV1FromGameCardSpecBuilderMock: jest.Mocked<
+describe(GameSpecV1FromGameSpecBuilder.name, () => {
+  let gameCardSpecV1FromGameSpecBuilderMock: jest.Mocked<
     Builder<apiModels.GameCardSpecV1, [GameCardSpec]>
   >;
 
-  let gameSpecV1FromGameCardSpecsBuilder: GameSpecV1FromGameCardSpecsBuilder;
+  let gameSpecV1FromGameCardSpecsBuilder: GameSpecV1FromGameSpecBuilder;
 
   beforeAll(() => {
-    gameCardSpecV1FromGameCardSpecBuilderMock = {
+    gameCardSpecV1FromGameSpecBuilderMock = {
       build: jest.fn(),
     };
 
-    gameSpecV1FromGameCardSpecsBuilder = new GameSpecV1FromGameCardSpecsBuilder(
-      gameCardSpecV1FromGameCardSpecBuilderMock,
+    gameSpecV1FromGameCardSpecsBuilder = new GameSpecV1FromGameSpecBuilder(
+      gameCardSpecV1FromGameSpecBuilderMock,
     );
   });
 
   describe('.build', () => {
-    let gameCardSpecFixture: GameCardSpec;
+    let gameSpecFixture: GameSpec;
 
     beforeAll(() => {
-      gameCardSpecFixture = GameCardSpecFixtures.any;
+      gameSpecFixture = GameSpecFixtures.withCardsOne;
     });
 
     describe('when called', () => {
@@ -40,13 +40,11 @@ describe(GameSpecV1FromGameCardSpecsBuilder.name, () => {
       beforeAll(() => {
         gameCardSpecV1Fixture = GameCardSpecV1Fixtures.any;
 
-        gameCardSpecV1FromGameCardSpecBuilderMock.build.mockReturnValueOnce(
+        gameCardSpecV1FromGameSpecBuilderMock.build.mockReturnValueOnce(
           gameCardSpecV1Fixture,
         );
 
-        result = gameSpecV1FromGameCardSpecsBuilder.build([
-          gameCardSpecFixture,
-        ]);
+        result = gameSpecV1FromGameCardSpecsBuilder.build(gameSpecFixture);
       });
 
       afterAll(() => {
@@ -55,16 +53,17 @@ describe(GameSpecV1FromGameCardSpecsBuilder.name, () => {
 
       it('should call gameCardSpecV1FromGameCardSpecBuilder.build()', () => {
         expect(
-          gameCardSpecV1FromGameCardSpecBuilderMock.build,
+          gameCardSpecV1FromGameSpecBuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameCardSpecV1FromGameCardSpecBuilderMock.build,
-        ).toHaveBeenCalledWith(gameCardSpecFixture);
+          gameCardSpecV1FromGameSpecBuilderMock.build,
+        ).toHaveBeenCalledWith(gameSpecFixture.cards[0]);
       });
 
       it('should return a GameSpecV1', () => {
         const expected: apiModels.GameSpecV1 = {
           cardSpecs: [gameCardSpecV1Fixture],
+          gameSlotsAmount: gameSpecFixture.gameSlotsAmount,
         };
 
         expect(result).toStrictEqual(expected);

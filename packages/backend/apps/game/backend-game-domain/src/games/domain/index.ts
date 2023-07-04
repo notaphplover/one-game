@@ -7,6 +7,7 @@ import { GameCardSpec } from './models/GameCardSpec';
 import { GameDirection } from './models/GameDirection';
 import { GameInitialDraws } from './models/GameInitialDraws';
 import { GameOptions } from './models/GameOptions';
+import { GameSpec } from './models/GameSpec';
 import { GameStatus } from './models/GameStatus';
 import { NonStartedGame } from './models/NonStartedGame';
 import { NonStartedGameSlot } from './models/NonStartedGameSlot';
@@ -33,19 +34,20 @@ export type {
   BaseGameSlot,
   Game,
   GameCardSpec,
-  GameInitialDraws,
-  NonStartedGame,
-  NonStartedGameSlot,
   GameCreateQuery,
   GameFindQuery,
+  GameInitialDraws,
   GameOptions,
   GameOptionsCreateQuery,
   GameOptionsFindQuery,
   GameSlotCreateQuery,
   GameSlotFindQuery,
   GameSlotUpdateQuery,
+  GameSpec,
   GameSpecCreateQuery,
   GameUpdateQuery,
+  NonStartedGame,
+  NonStartedGameSlot,
 };
 
 export {

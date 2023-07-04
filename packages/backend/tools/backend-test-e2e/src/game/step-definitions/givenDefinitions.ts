@@ -197,7 +197,7 @@ export function givenGamePassTurnQueryRequestForGame(
   const userV1Parameter: UserV1Parameter =
     getUserOrFail.bind(this)(processedUserAlias);
 
-  const slotIndex: number = gameV1Parameter.game.slots.findIndex(
+  const slotIndex: number = gameV1Parameter.game.state.slots.findIndex(
     (slot: apiModels.GameSlotV1) => slot.userId === userV1Parameter.user.id,
   );
 

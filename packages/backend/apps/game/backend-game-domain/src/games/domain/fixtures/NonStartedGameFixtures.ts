@@ -1,16 +1,14 @@
 import { GameStatus } from '../models/GameStatus';
 import { NonStartedGame } from '../models/NonStartedGame';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
+import { GameSpecFixtures } from './GameSpecFixtures';
 import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';
 
 export class NonStartedGameFixtures {
   public static get any(): NonStartedGame {
     const fixture: NonStartedGame = {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      spec: {
-        cards: [GameCardSpecFixtures.any],
-        gameSlotsAmount: 1,
-      },
+      spec: GameSpecFixtures.any,
       state: {
         slots: [NonStartedGameSlotFixtures.withPositionZero],
         status: GameStatus.nonStarted,

@@ -1,13 +1,13 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
-import { GameCardSpec } from '@cornie-js/backend-game-domain/games';
+import { GameCardSpec, GameSpec } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { GameCardSpecV1FromGameCardSpecBuilder } from './GameCardSpecV1FromGameCardSpecBuilder';
 
 @Injectable()
-export class GameSpecV1FromGameCardSpecsBuilder
-  implements Builder<apiModels.GameSpecV1, [GameCardSpec[]]>
+export class GameSpecV1FromGameSpecBuilder
+  implements Builder<apiModels.GameSpecV1, [GameSpec]>
 {
   readonly #gameCardSpecV1FromGameCardSpecBuilder: Builder<
     apiModels.GameCardSpecV1,
@@ -25,11 +25,12 @@ export class GameSpecV1FromGameCardSpecsBuilder
       gameCardSpecV1FromGameCardSpecBuilder;
   }
 
-  public build(gameCardSpecs: GameCardSpec[]): apiModels.GameSpecV1 {
+  public build(gameSpec: GameSpec): apiModels.GameSpecV1 {
     return {
-      cardSpecs: gameCardSpecs.map((gameCardSpec: GameCardSpec) =>
+      cardSpecs: gameSpec.cards.map((gameCardSpec: GameCardSpec) =>
         this.#gameCardSpecV1FromGameCardSpecBuilder.build(gameCardSpec),
       ),
+      gameSlotsAmount: gameSpec.gameSlotsAmount,
     };
   }
 }
