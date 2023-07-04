@@ -1,3 +1,4 @@
+import { GameStatus } from '../models/GameStatus';
 import { NonStartedGame } from '../models/NonStartedGame';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';
@@ -11,8 +12,8 @@ export class NonStartedGameFixtures {
         cards: [GameCardSpecFixtures.any],
       },
       state: {
-        active: false,
         slots: [NonStartedGameSlotFixtures.withPositionZero],
+        status: GameStatus.nonStarted,
       },
     };
 

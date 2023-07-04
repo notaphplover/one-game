@@ -7,6 +7,7 @@ import {
   GameOptions,
   GameOptionsFindQuery,
   GameService,
+  GameStatus,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
@@ -118,7 +119,7 @@ export abstract class GameIdUpdateQueryV1Handler<
   }
 
   #isActiveGame(game: Game): game is ActiveGame {
-    return game.state.active;
+    return game.state.status === GameStatus.active;
   }
 
   protected abstract _buildUpdateQuery(

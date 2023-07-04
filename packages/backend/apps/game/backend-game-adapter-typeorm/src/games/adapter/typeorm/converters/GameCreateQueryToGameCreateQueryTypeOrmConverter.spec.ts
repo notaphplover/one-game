@@ -9,6 +9,7 @@ import { GameCreateQueryFixtures } from '@cornie-js/backend-game-domain/games/fi
 import { DeepPartial } from 'typeorm';
 
 import { GameDb } from '../models/GameDb';
+import { GameStatusDb } from '../models/GameStatusDb';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from './GameCreateQueryToGameCreateQueryTypeOrmConverter';
 
 describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
@@ -67,7 +68,6 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
 
       it('should return a DeepPartial<GameDb>', () => {
         const expected: DeepPartial<GameDb> = {
-          active: false,
           currentCard: null,
           currentColor: null,
           currentDirection: null,
@@ -77,6 +77,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
           gameSlotsAmount: gameCreateQueryFixture.gameSlotsAmount,
           id: gameCreateQueryFixture.id,
           spec: gameCardSpecArrayStringifiedFixture,
+          status: GameStatusDb.nonStarted,
         };
 
         expect(result).toStrictEqual(expected);

@@ -11,6 +11,7 @@ import { Game } from '../models/Game';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
+import { GameStatus } from '../models/GameStatus';
 import { NonStartedGame } from '../models/NonStartedGame';
 import { NonStartedGameSlot } from '../models/NonStartedGameSlot';
 import { GameSlotUpdateQuery } from '../query/GameSlotUpdateQuery';
@@ -113,7 +114,6 @@ export class GameService {
       );
 
     const gameUpdateQuery: GameUpdateQuery = {
-      active: true,
       currentCard: gameInitialDraws.currentCard,
       currentColor: this.#getInitialCardColor(gameInitialDraws.currentCard),
       currentDirection: this.#getInitialDirection(),
@@ -125,6 +125,7 @@ export class GameService {
         id: game.id,
       },
       gameSlotUpdateQueries,
+      status: GameStatus.active,
     };
 
     return gameUpdateQuery;

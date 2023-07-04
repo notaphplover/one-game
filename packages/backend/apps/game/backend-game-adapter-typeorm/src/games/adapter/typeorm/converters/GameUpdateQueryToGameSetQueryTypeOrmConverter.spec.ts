@@ -5,6 +5,7 @@ import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   GameCardSpec,
   GameDirection,
+  GameStatus,
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { GameUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
@@ -14,6 +15,7 @@ import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorD
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
+import { GameStatusDb } from '../models/GameStatusDb';
 import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from './GameUpdateQueryToGameSetQueryTypeOrmConverter';
 
 describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
@@ -24,6 +26,9 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
   >;
   let gameDirectionToGameDirectionDbConverterMock: jest.Mocked<
     Converter<GameDirection, GameDirectionDb>
+  >;
+  let gameStatusToGameStatusDbConverterMock: jest.Mocked<
+    Converter<GameStatus, GameStatusDb>
   >;
 
   let gameUpdateQueryToGameSetQueryTypeOrmConverter: GameUpdateQueryToGameSetQueryTypeOrmConverter;
@@ -41,6 +46,9 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
     gameDirectionToGameDirectionDbConverterMock = {
       convert: jest.fn(),
     };
+    gameStatusToGameStatusDbConverterMock = {
+      convert: jest.fn(),
+    };
 
     gameUpdateQueryToGameSetQueryTypeOrmConverter =
       new GameUpdateQueryToGameSetQueryTypeOrmConverter(
@@ -48,42 +56,11 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         cardDbBuilderMock,
         gameCardSpecArrayToGameCardSpecArrayDbConverterMock,
         gameDirectionToGameDirectionDbConverterMock,
+        gameStatusToGameStatusDbConverterMock,
       );
   });
 
   describe('.convert', () => {
-    describe('having a GameUpdateQuery with active', () => {
-      let gameUpdateQueryFixture: GameUpdateQuery;
-
-      beforeAll(() => {
-        gameUpdateQueryFixture = GameUpdateQueryFixtures.withActive;
-      });
-
-      describe('when called', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
-            gameUpdateQueryFixture,
-          );
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should return a QueryDeepPartialEntity<GameDb>', () => {
-          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
-            active: gameUpdateQueryFixture.active as boolean,
-          };
-
-          expect(result).toStrictEqual(
-            expect.objectContaining(expectedProperties),
-          );
-        });
-      });
-    });
-
     describe('having a GameUpdateQuery with currentCard', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 
@@ -312,6 +289,46 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         it('should return a QueryDeepPartialEntity<GameDb>', () => {
           const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
             drawCount: gameUpdateQueryFixture.drawCount as number,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a GameUpdateQuery with status', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.withStatusActive;
+      });
+
+      describe('when called', () => {
+        let gameStatusDbFixture: GameStatusDb;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          gameStatusDbFixture = GameStatusDb.active;
+
+          gameStatusToGameStatusDbConverterMock.convert.mockReturnValueOnce(
+            gameStatusDbFixture,
+          );
+
+          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            status: gameStatusDbFixture,
           };
 
           expect(result).toStrictEqual(

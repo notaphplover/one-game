@@ -3,6 +3,7 @@ import {
   ActiveGame,
   Game,
   GameService,
+  GameStatus,
   GameUpdateQuery,
   NonStartedGame,
 } from '@cornie-js/backend-game-domain/games';
@@ -68,6 +69,6 @@ export class NonStartedGameFilledEventHandler
   }
 
   #isGameActive(game: Game): game is ActiveGame {
-    return game.state.active;
+    return game.state.status === GameStatus.active;
   }
 }

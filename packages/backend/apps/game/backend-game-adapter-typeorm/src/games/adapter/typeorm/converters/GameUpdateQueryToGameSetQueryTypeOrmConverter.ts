@@ -3,6 +3,7 @@ import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   GameCardSpec,
   GameDirection,
+  GameStatus,
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -14,8 +15,10 @@ import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorD
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
+import { GameStatusDb } from '../models/GameStatusDb';
 import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from './GameCardSpecArrayToGameCardSpecArrayDbConverter';
 import { GameDirectionToGameDirectionDbConverter } from './GameDirectionToGameDirectionDbConverter';
+import { GameStatusToGameStatusDbConverter } from './GameStatusToGameStatusDbConverter';
 
 @Injectable()
 export class GameUpdateQueryToGameSetQueryTypeOrmConverter
@@ -30,6 +33,10 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
   readonly #gameDirectionToGameDirectionDbConverter: Converter<
     GameDirection,
     GameDirectionDb
+  >;
+  readonly #gameStatusToGameStatusDbConverter: Converter<
+    GameStatus,
+    GameStatusDb
   >;
 
   constructor(
@@ -47,6 +54,8 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
       GameDirection,
       GameDirectionDb
     >,
+    @Inject(GameStatusToGameStatusDbConverter)
+    gameStatusToGameStatusDbConverter: Converter<GameStatus, GameStatusDb>,
   ) {
     this.#cardColorDbBuilder = cardColorDbBuilder;
     this.#cardDbBuilder = cardDbBuilder;
@@ -54,6 +63,7 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
       gameCardSpecArrayToGameCardSpecArrayDbConverter;
     this.#gameDirectionToGameDirectionDbConverter =
       gameDirectionToGameDirectionDbConverter;
+    this.#gameStatusToGameStatusDbConverter = gameStatusToGameStatusDbConverter;
   }
 
   public convert(
@@ -61,8 +71,9 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
   ): QueryDeepPartialEntity<GameDb> {
     const gameSetQueryTypeOrm: Writable<QueryDeepPartialEntity<GameDb>> = {};
 
-    if (gameUpdateQuery.active !== undefined) {
-      gameSetQueryTypeOrm.active = gameUpdateQuery.active;
+    if (gameUpdateQuery.status !== undefined) {
+      gameSetQueryTypeOrm.status =
+        this.#gameStatusToGameStatusDbConverter.convert(gameUpdateQuery.status);
     }
 
     if (gameUpdateQuery.currentCard !== undefined) {

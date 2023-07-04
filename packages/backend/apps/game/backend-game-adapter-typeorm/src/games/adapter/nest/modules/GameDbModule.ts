@@ -26,6 +26,7 @@ import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlot
 import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
 import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
 import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
+import { GameStatusToGameStatusDbConverter } from '../../typeorm/converters/GameStatusToGameStatusDbConverter';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
 import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
@@ -81,6 +82,7 @@ export class GameDbModule {
         GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter,
         GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
         GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
+        GameStatusToGameStatusDbConverter,
         GameUpdateQueryToGameFindQueryTypeOrmConverter,
         GameUpdateQueryToGameSetQueryTypeOrmConverter,
         GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter,

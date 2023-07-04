@@ -7,6 +7,7 @@ import { GameCardSpec } from './models/GameCardSpec';
 import { GameDirection } from './models/GameDirection';
 import { GameInitialDraws } from './models/GameInitialDraws';
 import { GameOptions } from './models/GameOptions';
+import { GameStatus } from './models/GameStatus';
 import { NonStartedGame } from './models/NonStartedGame';
 import { NonStartedGameSlot } from './models/NonStartedGameSlot';
 import { GameCreateQuery } from './query/GameCreateQuery';
@@ -52,6 +53,7 @@ export {
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameDirection,
   GameService,
+  GameStatus,
   PlayerCanPassTurnSpec,
   PlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,

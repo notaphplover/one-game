@@ -7,6 +7,7 @@ import {
   Game,
   GameCardSpec,
   GameDirection,
+  GameStatus,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -133,6 +134,6 @@ export class GameV1FromGameBuilder
   }
 
   #isActiveGame(game: Game): game is ActiveGame {
-    return game.state.active;
+    return game.state.status === GameStatus.active;
   }
 }

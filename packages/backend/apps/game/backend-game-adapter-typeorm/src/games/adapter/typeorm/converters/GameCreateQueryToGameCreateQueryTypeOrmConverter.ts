@@ -7,6 +7,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { GameDb } from '../models/GameDb';
+import { GameStatusDb } from '../models/GameStatusDb';
 import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from './GameCardSpecArrayToGameCardSpecArrayDbConverter';
 
 @Injectable()
@@ -38,7 +39,6 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       );
 
     return {
-      active: false,
       currentCard: null,
       currentColor: null,
       currentDirection: null,
@@ -48,6 +48,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       gameSlotsAmount: gameCreateQuery.gameSlotsAmount,
       id: gameCreateQuery.id,
       spec: gameCardsStringified,
+      status: GameStatusDb.nonStarted,
     };
   }
 }
