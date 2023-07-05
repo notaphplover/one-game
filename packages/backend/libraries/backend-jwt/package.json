@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
     "@types/jsonwebtoken": "9.0.2",
-    "jsonwebtoken": "9.0.0"
+    "jsonwebtoken": "9.0.1"
   },
   "devDependencies": {
     "@jest/globals": "29.6.0",
