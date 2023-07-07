@@ -127,7 +127,7 @@ void (async () => {
 
     await fs.writeFile(
       path.join(destinationFolder, API_SCHEMA_ID_ENUM_SOURCE_FILE_NAME),
-      prettier.format(apiJsonSchemaIdEnumTsSource, {
+      await prettier.format(apiJsonSchemaIdEnumTsSource, {
         ...prettierConfig,
         parser: 'typescript',
       }),

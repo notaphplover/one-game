@@ -58,7 +58,7 @@ void (async () => {
 
     await fs.writeFile(
       path.join(destinationFolder, HTTP_CLIENT_SOURCE_FILE_NAME),
-      prettier.format(sourceFile, {
+      await prettier.format(sourceFile, {
         ...prettierConfig,
         parser: 'typescript',
       }),
