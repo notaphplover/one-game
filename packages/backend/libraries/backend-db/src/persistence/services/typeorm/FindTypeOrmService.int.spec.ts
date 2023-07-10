@@ -2,7 +2,7 @@ import path from 'path';
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { ConverterAsync } from '@cornie-js/backend-common';
+import { Converter, ConverterAsync } from '@cornie-js/backend-common';
 import {
   Column,
   ColumnType,
@@ -12,10 +12,12 @@ import {
   FindManyOptions,
   Not,
   PrimaryColumn,
+  QueryBuilder,
   QueryRunner,
   Repository,
   Table,
   TableColumn,
+  WhereExpressionBuilder,
 } from 'typeorm';
 
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
@@ -243,6 +245,98 @@ describe(FindTypeOrmService.name, () => {
           expect(result).toBeUndefined();
         });
       });
+
+      describe('when called, and findQueryToFindQueryTypeOrmConverter.convert returns a query builder matching a ModelTest', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          const queryTest: QueryTest = {
+            fooValue: 'blah',
+          };
+
+          (
+            findQueryToFindQueryTypeOrmConverterMock as jest.Mocked<
+              Converter<
+                QueryTest,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder
+              >
+            >
+          ).convert.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            ): QueryBuilder<ModelTest> & WhereExpressionBuilder => {
+              queryBuilder.andWhere(
+                `${ModelTest.name}.id = :${ModelTest.name}id`,
+                { [`${ModelTest.name}id`]: modelTest.id },
+              );
+
+              return queryBuilder;
+            },
+          );
+
+          modelDbToModelConverter.convert.mockImplementationOnce(
+            async (modelTest: ModelTest) => modelTest,
+          );
+
+          result = await findTypeOrmService.findOne(queryTest);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a model', () => {
+          expect(result).toStrictEqual(modelTest);
+        });
+      });
+
+      describe('when called, and findQueryToFindQueryTypeOrmConverter.convert returns a query builder not matching a ModelTest', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          const queryTest: QueryTest = {
+            fooValue: 'blah',
+          };
+
+          (
+            findQueryToFindQueryTypeOrmConverterMock as jest.Mocked<
+              Converter<
+                QueryTest,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder
+              >
+            >
+          ).convert.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            ): QueryBuilder<ModelTest> & WhereExpressionBuilder => {
+              queryBuilder.andWhere(
+                `${ModelTest.name}.id != :${ModelTest.name}id`,
+                { [`${ModelTest.name}id`]: modelTest.id },
+              );
+
+              return queryBuilder;
+            },
+          );
+
+          modelDbToModelConverter.convert.mockImplementationOnce(
+            async (modelTest: ModelTest) => modelTest,
+          );
+
+          result = await findTypeOrmService.findOne(queryTest);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return undefined', () => {
+          expect(result).toBeUndefined();
+        });
+      });
     });
 
     describe('.find', () => {
@@ -301,6 +395,98 @@ describe(FindTypeOrmService.name, () => {
               (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
             >
           ).mockResolvedValueOnce(queryTypeOrmFixture);
+
+          result = await findTypeOrmService.find(queryTest);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return an empty array', () => {
+          expect(result).toStrictEqual([]);
+        });
+      });
+
+      describe('when called, and findQueryToFindQueryTypeOrmConverter.convert returns a query builder matching a ModelTest', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          const queryTest: QueryTest = {
+            fooValue: 'blah',
+          };
+
+          (
+            findQueryToFindQueryTypeOrmConverterMock as jest.Mocked<
+              Converter<
+                QueryTest,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder
+              >
+            >
+          ).convert.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            ): QueryBuilder<ModelTest> & WhereExpressionBuilder => {
+              queryBuilder.andWhere(
+                `${ModelTest.name}.id = :${ModelTest.name}id`,
+                { [`${ModelTest.name}id`]: modelTest.id },
+              );
+
+              return queryBuilder;
+            },
+          );
+
+          modelDbToModelConverter.convert.mockImplementationOnce(
+            async (modelTest: ModelTest) => modelTest,
+          );
+
+          result = await findTypeOrmService.find(queryTest);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return an array of models', () => {
+          expect(result).toStrictEqual([modelTest]);
+        });
+      });
+
+      describe('when called, and findQueryToFindQueryTypeOrmConverter.convert returns a query builder not matching a ModelTest', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          const queryTest: QueryTest = {
+            fooValue: 'blah',
+          };
+
+          (
+            findQueryToFindQueryTypeOrmConverterMock as jest.Mocked<
+              Converter<
+                QueryTest,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder,
+                QueryBuilder<ModelTest> & WhereExpressionBuilder
+              >
+            >
+          ).convert.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            ): QueryBuilder<ModelTest> & WhereExpressionBuilder => {
+              queryBuilder.andWhere(
+                `${ModelTest.name}.id != :${ModelTest.name}id`,
+                { [`${ModelTest.name}id`]: modelTest.id },
+              );
+
+              return queryBuilder;
+            },
+          );
+
+          modelDbToModelConverter.convert.mockImplementationOnce(
+            async (modelTest: ModelTest) => modelTest,
+          );
 
           result = await findTypeOrmService.find(queryTest);
         });
