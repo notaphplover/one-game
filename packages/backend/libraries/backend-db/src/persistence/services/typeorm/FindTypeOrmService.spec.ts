@@ -50,6 +50,9 @@ describe(FindTypeOrmService.name, () => {
       createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
       find: jest.fn(),
       findOne: jest.fn(),
+      metadata: {
+        name: 'ModelTest',
+      } as unknown,
     } as Partial<jest.Mocked<Repository<ModelTest>>> as jest.Mocked<
       Repository<ModelTest>
     >;

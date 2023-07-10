@@ -100,7 +100,7 @@ export class FindTypeOrmService<
     ) => Promise<TOutputDb>,
   ): Promise<TOutputDb> {
     const selectQueryBuilder: SelectQueryBuilder<TModelDb> =
-      this.#repository.createQueryBuilder();
+      this.#repository.createQueryBuilder(this.#repository.metadata.name);
 
     const findQueryTypeOrmOrQueryBuilder:
       | FindManyOptions<TModelDb>

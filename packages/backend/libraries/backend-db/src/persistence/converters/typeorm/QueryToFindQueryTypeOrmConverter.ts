@@ -12,6 +12,11 @@ export type QueryToFindQueryTypeOrmConverter<
 > =
   | Converter<TQuery, FindManyOptions<TModelDb>>
   | ConverterAsync<TQuery, FindManyOptions<TModelDb>>
+  | Converter<
+      TQuery,
+      QueryBuilder<TModelDb> & WhereExpressionBuilder,
+      QueryBuilder<TModelDb> & WhereExpressionBuilder
+    >
   | ConverterAsync<
       TQuery,
       QueryBuilder<TModelDb> & WhereExpressionBuilder,

@@ -29,6 +29,10 @@ export class GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter
       gameFindQueryTypeOrmWhere.position = gameSlotFindQuery.position;
     }
 
+    if (gameSlotFindQuery.userId !== undefined) {
+      gameFindQueryTypeOrmWhere.userId = gameSlotFindQuery.userId;
+    }
+
     return gameFindQueryTypeOrm;
   }
 }
