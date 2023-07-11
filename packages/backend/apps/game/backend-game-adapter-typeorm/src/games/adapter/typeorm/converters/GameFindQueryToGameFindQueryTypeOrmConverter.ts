@@ -1,23 +1,47 @@
-import { Converter, Writable } from '@cornie-js/backend-common';
+import { Converter } from '@cornie-js/backend-common';
 import { GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOptionsWhere } from 'typeorm';
+import { InstanceChecker, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
+import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameDb } from '../models/GameDb';
+import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
 export class GameFindQueryToGameFindQueryTypeOrmConverter
-  implements Converter<GameFindQuery, FindManyOptions<GameDb>>
+  extends BaseFindQueryToFindQueryTypeOrmConverter
+  implements
+    Converter<
+      GameFindQuery,
+      QueryBuilder<GameDb> & WhereExpressionBuilder,
+      QueryBuilder<GameDb> & WhereExpressionBuilder
+    >
 {
-  public convert(gameFindQuery: GameFindQuery): FindManyOptions<GameDb> {
-    const findOptions: Writable<FindOptionsWhere<GameDb>> = {};
+  public convert(
+    gameFindQuery: GameFindQuery,
+    queryBuilder: QueryBuilder<GameDb> & WhereExpressionBuilder,
+  ): QueryBuilder<GameDb> & WhereExpressionBuilder {
+    const gamePropertiesPrefix: string = this._getEntityPrefix(
+      queryBuilder,
+      GameDb,
+    );
 
-    if (gameFindQuery.id !== undefined) {
-      findOptions.id = gameFindQuery.id;
+    if (InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
+      queryBuilder = queryBuilder.leftJoinAndSelect(
+        `${gamePropertiesPrefix}gameSlotsDb`,
+        GameSlotDb.name,
+      );
     }
 
-    return {
-      where: findOptions,
-    };
+    if (gameFindQuery.id !== undefined) {
+      queryBuilder = queryBuilder.andWhere(
+        `${gamePropertiesPrefix}id = :${GameDb.name}id`,
+        {
+          [`${GameDb.name}id`]: gameFindQuery.id,
+        },
+      );
+    }
+
+    return queryBuilder;
   }
 }

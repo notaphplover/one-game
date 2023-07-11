@@ -1,38 +1,57 @@
-import { Converter, Writable } from '@cornie-js/backend-common';
+import { Converter } from '@cornie-js/backend-common';
 import { GameSlotFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOptionsWhere } from 'typeorm';
+import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
+import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
 export class GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter
-  implements Converter<GameSlotFindQuery, FindManyOptions<GameSlotDb>>
+  extends BaseFindQueryToFindQueryTypeOrmConverter
+  implements
+    Converter<
+      GameSlotFindQuery,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+    >
 {
   public convert(
     gameSlotFindQuery: GameSlotFindQuery,
-  ): FindManyOptions<GameSlotDb> {
-    const gameFindQueryTypeOrmWhere: Writable<FindOptionsWhere<GameSlotDb>> =
-      {};
-
-    const gameFindQueryTypeOrm: FindManyOptions<GameSlotDb> = {
-      where: gameFindQueryTypeOrmWhere,
-    };
+    queryBuilder: QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+  ): QueryBuilder<GameSlotDb> & WhereExpressionBuilder {
+    const gameSlotPropertiesPrefix: string = this._getEntityPrefix(
+      queryBuilder,
+      GameSlotDb,
+    );
 
     if (gameSlotFindQuery.gameId !== undefined) {
-      gameFindQueryTypeOrmWhere.game = {
-        id: gameSlotFindQuery.gameId,
-      };
+      queryBuilder = queryBuilder.andWhere(
+        `${gameSlotPropertiesPrefix}game = :${GameSlotDb.name}gameId`,
+        {
+          [`${GameSlotDb.name}gameId`]: gameSlotFindQuery.gameId,
+        },
+      );
     }
 
     if (gameSlotFindQuery.position !== undefined) {
-      gameFindQueryTypeOrmWhere.position = gameSlotFindQuery.position;
+      queryBuilder = queryBuilder.andWhere(
+        `${gameSlotPropertiesPrefix}position = :${GameSlotDb.name}position`,
+        {
+          [`${GameSlotDb.name}position`]: gameSlotFindQuery.position,
+        },
+      );
     }
 
     if (gameSlotFindQuery.userId !== undefined) {
-      gameFindQueryTypeOrmWhere.userId = gameSlotFindQuery.userId;
+      queryBuilder = queryBuilder.andWhere(
+        `${gameSlotPropertiesPrefix}userId = :${GameSlotDb.name}userId`,
+        {
+          [`${GameSlotDb.name}userId`]: gameSlotFindQuery.userId,
+        },
+      );
     }
 
-    return gameFindQueryTypeOrm;
+    return queryBuilder;
   }
 }

@@ -3,7 +3,7 @@ import { UpdateTypeOrmService } from '@cornie-js/backend-db';
 import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
@@ -21,7 +21,8 @@ export class UpdateGameSlotTypeOrmService extends UpdateTypeOrmService<
     @Inject(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter)
     gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter: Converter<
       GameSlotUpdateQuery,
-      FindManyOptions<GameSlotDb>
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
     >,
     @Inject(GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter)
     gameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter: Converter<

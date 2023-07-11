@@ -6,14 +6,18 @@ import {
   GameSlotUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { GameSlotUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
-import { FindManyOptions } from 'typeorm';
+import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
 
 describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
   let gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock: jest.Mocked<
-    Converter<GameSlotFindQuery, FindManyOptions<GameSlotDb>>
+    Converter<
+      GameSlotFindQuery,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+    >
   >;
 
   let gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter: GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter;
@@ -31,26 +35,25 @@ describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
 
   describe('.convert', () => {
     let gameSlotUpdateQueryFixture: GameSlotUpdateQuery;
+    let queryBuilderFixture: QueryBuilder<GameSlotDb> & WhereExpressionBuilder;
 
     beforeAll(() => {
       gameSlotUpdateQueryFixture = GameSlotUpdateQueryFixtures.any;
+      queryBuilderFixture = Symbol() as unknown as QueryBuilder<GameSlotDb> &
+        WhereExpressionBuilder;
     });
 
     describe('when called', () => {
-      let gameSlotFindQueryTypeOrmFixture: FindManyOptions<GameSlotDb>;
-
       let result: unknown;
 
       beforeAll(() => {
-        gameSlotFindQueryTypeOrmFixture =
-          Symbol() as unknown as FindManyOptions<GameSlotDb>;
-
         gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
-          gameSlotFindQueryTypeOrmFixture,
+          queryBuilderFixture,
         );
 
         result = gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.convert(
           gameSlotUpdateQueryFixture,
+          queryBuilderFixture,
         );
       });
 
@@ -64,11 +67,14 @@ describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert,
-        ).toHaveBeenCalledWith(gameSlotUpdateQueryFixture.gameSlotFindQuery);
+        ).toHaveBeenCalledWith(
+          gameSlotUpdateQueryFixture.gameSlotFindQuery,
+          queryBuilderFixture,
+        );
       });
 
-      it('should return a FindManyOptions<GameSLotDb>', () => {
-        expect(result).toBe(gameSlotFindQueryTypeOrmFixture);
+      it('should return a QueryBuilder', () => {
+        expect(result).toBe(queryBuilderFixture);
       });
     });
   });
