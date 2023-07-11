@@ -4,25 +4,32 @@ import {
   GameSlotUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
-import { FindManyOptions } from 'typeorm';
+import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
 
 @Injectable()
 export class GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter
-  implements Converter<GameSlotUpdateQuery, FindManyOptions<GameSlotDb>>
+  implements
+    Converter<
+      GameSlotUpdateQuery,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+    >
 {
   readonly #gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
     GameSlotFindQuery,
-    FindManyOptions<GameSlotDb>
+    QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+    QueryBuilder<GameSlotDb> & WhereExpressionBuilder
   >;
 
   constructor(
     @Inject(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter)
     gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
       GameSlotFindQuery,
-      FindManyOptions<GameSlotDb>
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
     >,
   ) {
     this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter =
@@ -31,9 +38,11 @@ export class GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter
 
   public convert(
     gameSlotUpdateQuery: GameSlotUpdateQuery,
-  ): FindManyOptions<GameSlotDb> {
+    queryBuilder: QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+  ): QueryBuilder<GameSlotDb> & WhereExpressionBuilder {
     return this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
       gameSlotUpdateQuery.gameSlotFindQuery,
+      queryBuilder,
     );
   }
 }

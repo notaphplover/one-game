@@ -41,6 +41,11 @@ export class UpdateTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
 
   public async update(query: TQuery): Promise<void> {
     const updateQueryBuilder: UpdateQueryBuilder<TModelDb> = this.#repository
+      /*
+       * https://github.com/typeorm/typeorm/issues/1798 prevents us from using instead:
+       *
+       * .createQueryBuilder(this.#repository.metadata.name)
+       */
       .createQueryBuilder()
       .update();
     const findQueryTypeOrmOrQueryBuilder:
