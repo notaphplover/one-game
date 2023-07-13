@@ -6,17 +6,16 @@ import {
   GameSlotUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { GameSlotUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
-import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameSlotDb } from '../models/GameSlotDb';
 import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
 
 describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
   let gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock: jest.Mocked<
     Converter<
       GameSlotFindQuery,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >
   >;
 
@@ -35,11 +34,12 @@ describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
 
   describe('.convert', () => {
     let gameSlotUpdateQueryFixture: GameSlotUpdateQuery;
-    let queryBuilderFixture: QueryBuilder<GameSlotDb> & WhereExpressionBuilder;
+    let queryBuilderFixture: QueryBuilder<ObjectLiteral> &
+      WhereExpressionBuilder;
 
     beforeAll(() => {
       gameSlotUpdateQueryFixture = GameSlotUpdateQueryFixtures.any;
-      queryBuilderFixture = Symbol() as unknown as QueryBuilder<GameSlotDb> &
+      queryBuilderFixture = Symbol() as unknown as QueryBuilder<ObjectLiteral> &
         WhereExpressionBuilder;
     });
 

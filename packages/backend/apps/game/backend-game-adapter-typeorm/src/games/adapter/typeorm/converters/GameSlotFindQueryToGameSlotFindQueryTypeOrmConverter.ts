@@ -1,7 +1,7 @@
 import { Converter } from '@cornie-js/backend-common';
 import { GameSlotFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
-import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
 import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameSlotDb } from '../models/GameSlotDb';
@@ -12,14 +12,14 @@ export class GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter
   implements
     Converter<
       GameSlotFindQuery,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >
 {
   public convert(
     gameSlotFindQuery: GameSlotFindQuery,
-    queryBuilder: QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-  ): QueryBuilder<GameSlotDb> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
     const gameSlotPropertiesPrefix: string = this._getEntityPrefix(
       queryBuilder,
       GameSlotDb,

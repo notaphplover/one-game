@@ -4,7 +4,12 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.ts"],
-      "outputs": ["dist/**", "lib/**"]
+      "outputs": [
+        "dist/**",
+        "!dist/**/.spec.js",
+        "lib/**",
+        "!lib/**/.spec.js"
+      ]
     },
     "@cornie-js/api-json-schemas#build": {
       "dependsOn": ["^build"],

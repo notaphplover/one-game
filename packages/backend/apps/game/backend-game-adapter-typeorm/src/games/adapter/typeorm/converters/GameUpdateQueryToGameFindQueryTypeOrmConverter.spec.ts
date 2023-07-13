@@ -6,17 +6,16 @@ import {
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { GameUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
-import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameDb } from '../models/GameDb';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from './GameUpdateQueryToGameFindQueryTypeOrmConverter';
 
 describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
   let gameFindQueryToGameFindQueryTypeOrmConverterMock: jest.Mocked<
     Converter<
       GameFindQuery,
-      QueryBuilder<GameDb> & WhereExpressionBuilder,
-      QueryBuilder<GameDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >
   >;
 
@@ -35,11 +34,12 @@ describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
 
   describe('.convert', () => {
     let gameUpdateQueryFixture: GameUpdateQuery;
-    let queryBuilderFixture: QueryBuilder<GameDb> & WhereExpressionBuilder;
+    let queryBuilderFixture: QueryBuilder<ObjectLiteral> &
+      WhereExpressionBuilder;
 
     beforeAll(() => {
       gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
-      queryBuilderFixture = Symbol() as unknown as QueryBuilder<GameDb> &
+      queryBuilderFixture = Symbol() as unknown as QueryBuilder<ObjectLiteral> &
         WhereExpressionBuilder;
     });
 
