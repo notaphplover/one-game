@@ -103,6 +103,16 @@ export class GameManagementInputPort {
     return this.#gameV1FromGameBuilder.build(game);
   }
 
+  public async find(gameFindQuery: GameFindQuery): Promise<apiModels.GameV1[]> {
+    const games: Game[] = await this.#gamePersistenceOutputPort.find(
+      gameFindQuery,
+    );
+
+    return games.map(
+      (game: Game): apiModels.GameV1 => this.#gameV1FromGameBuilder.build(game),
+    );
+  }
+
   public async findOne(
     gameFindQuery: GameFindQuery,
   ): Promise<apiModels.GameV1 | undefined> {
