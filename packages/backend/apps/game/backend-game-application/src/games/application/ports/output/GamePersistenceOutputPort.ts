@@ -7,6 +7,7 @@ import {
 
 export interface GamePersistenceOutputPort {
   create(gameCreateQuery: GameCreateQuery): Promise<Game>;
+  find(gameFindQuery: GameFindQuery): Promise<Game[]>;
   findOne(gameFindQuery: GameFindQuery): Promise<Game | undefined>;
   update(gameUpdateQuery: GameUpdateQuery): Promise<void>;
 }

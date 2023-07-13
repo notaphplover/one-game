@@ -45,6 +45,10 @@ export class GamePersistenceTypeOrmAdapter
     return this.#createGameTypeOrmService.insertOne(gameCreateQuery);
   }
 
+  public async find(gameFindQuery: GameFindQuery): Promise<Game[]> {
+    return this.#findGameTypeOrmService.find(gameFindQuery);
+  }
+
   public async findOne(
     gameFindQuery: GameFindQuery,
   ): Promise<Game | undefined> {

@@ -21,6 +21,7 @@ describe(GameMiddleware.name, () => {
   beforeAll(() => {
     gamePersistenceOutputPortMock = {
       create: jest.fn(),
+      find: jest.fn(),
       findOne: jest.fn(),
       update: jest.fn(),
     };
