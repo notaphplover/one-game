@@ -28,6 +28,7 @@ import { GameSlotFindQuery } from '@cornie-js/backend-game-domain/games';
 import { GameSlotFindQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import {
   InstanceChecker,
+  ObjectLiteral,
   QueryBuilder,
   SelectQueryBuilder,
   WhereExpressionBuilder,
@@ -46,15 +47,15 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
 
   describe('.convert', () => {
     let queryBuilderMock: jest.Mocked<
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >;
 
     beforeAll(() => {
       queryBuilderMock = {
         andWhere: jest.fn().mockReturnThis(),
       } as Partial<
-        jest.Mocked<QueryBuilder<GameSlotDb> & WhereExpressionBuilder>
-      > as jest.Mocked<QueryBuilder<GameSlotDb> & WhereExpressionBuilder>;
+        jest.Mocked<QueryBuilder<ObjectLiteral> & WhereExpressionBuilder>
+      > as jest.Mocked<QueryBuilder<ObjectLiteral> & WhereExpressionBuilder>;
     });
 
     describe('having a GameSlotFindQuery with gameId', () => {

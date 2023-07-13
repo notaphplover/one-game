@@ -4,9 +4,8 @@ import {
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
-import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameDb } from '../models/GameDb';
 import { GameFindQueryToGameFindQueryTypeOrmConverter } from './GameFindQueryToGameFindQueryTypeOrmConverter';
 
 @Injectable()
@@ -14,22 +13,22 @@ export class GameUpdateQueryToGameFindQueryTypeOrmConverter
   implements
     Converter<
       GameUpdateQuery,
-      QueryBuilder<GameDb> & WhereExpressionBuilder,
-      QueryBuilder<GameDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >
 {
   readonly #gameFindQueryToGameFindQueryTypeOrmConverter: Converter<
     GameFindQuery,
-    QueryBuilder<GameDb> & WhereExpressionBuilder,
-    QueryBuilder<GameDb> & WhereExpressionBuilder
+    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
   >;
 
   constructor(
     @Inject(GameFindQueryToGameFindQueryTypeOrmConverter)
     gameFindQueryToGameFindQueryTypeOrmConverter: Converter<
       GameFindQuery,
-      QueryBuilder<GameDb> & WhereExpressionBuilder,
-      QueryBuilder<GameDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >,
   ) {
     this.#gameFindQueryToGameFindQueryTypeOrmConverter =
@@ -38,8 +37,8 @@ export class GameUpdateQueryToGameFindQueryTypeOrmConverter
 
   public convert(
     gameUpdateQuery: GameUpdateQuery,
-    queryBuilder: QueryBuilder<GameDb> & WhereExpressionBuilder,
-  ): QueryBuilder<GameDb> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
     return this.#gameFindQueryToGameFindQueryTypeOrmConverter.convert(
       gameUpdateQuery.gameFindQuery,
       queryBuilder,

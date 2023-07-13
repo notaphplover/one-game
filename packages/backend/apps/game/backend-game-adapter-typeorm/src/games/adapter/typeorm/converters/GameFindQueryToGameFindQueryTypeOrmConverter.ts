@@ -1,7 +1,15 @@
 import { Converter } from '@cornie-js/backend-common';
-import { GameFindQuery } from '@cornie-js/backend-game-domain/games';
+import {
+  GameFindQuery,
+  GameSlotFindQuery,
+} from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
-import { InstanceChecker, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import {
+  InstanceChecker,
+  ObjectLiteral,
+  QueryBuilder,
+  WhereExpressionBuilder,
+} from 'typeorm';
 
 import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameDb } from '../models/GameDb';
@@ -13,14 +21,33 @@ export class GameFindQueryToGameFindQueryTypeOrmConverter
   implements
     Converter<
       GameFindQuery,
-      QueryBuilder<GameDb> & WhereExpressionBuilder,
-      QueryBuilder<GameDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >
 {
+  readonly #gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
+    GameSlotFindQuery,
+    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+  >;
+
+  constructor(
+    gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
+      GameSlotFindQuery,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+    >,
+  ) {
+    super();
+
+    this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter =
+      gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter;
+  }
+
   public convert(
     gameFindQuery: GameFindQuery,
-    queryBuilder: QueryBuilder<GameDb> & WhereExpressionBuilder,
-  ): QueryBuilder<GameDb> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
     const gamePropertiesPrefix: string = this._getEntityPrefix(
       queryBuilder,
       GameDb,
@@ -31,6 +58,14 @@ export class GameFindQueryToGameFindQueryTypeOrmConverter
         `${gamePropertiesPrefix}gameSlotsDb`,
         GameSlotDb.name,
       );
+
+      if (gameFindQuery.gameSlotFindQuery !== undefined) {
+        queryBuilder =
+          this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
+            gameFindQuery.gameSlotFindQuery,
+            queryBuilder,
+          );
+      }
     }
 
     if (gameFindQuery.id !== undefined) {
