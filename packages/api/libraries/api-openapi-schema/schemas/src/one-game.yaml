@@ -73,6 +73,51 @@ paths:
       security:
         - bearerAuth: []
 
+  /v1/games/mine:
+    get:
+      summary: Get games I joined
+      operationId: getGamesMine
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+          description: status of the games to be found
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+          description: pagination number
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            type: number
+          description: pagination size
+      responses:
+        '200':
+          description: Games found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/games/game-array.json'
+        '400':
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - bearerAuth: []
+
   /v1/games/{gameId}:
     get:
       summary: Get a game

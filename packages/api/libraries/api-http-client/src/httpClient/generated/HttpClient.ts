@@ -50,6 +50,30 @@ export class HttpClient {
       body,
     );
   }
+  public async getGamesMine(
+    headers: {
+      [key: string]: string;
+    },
+    query: {
+      [key: string]: string | string[];
+      status?: string | string[];
+      page?: string | string[];
+      pageSize?: string | string[];
+    },
+  ): Promise<
+    | Response<Record<string, string>, apiModels.GameArrayV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 400>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v1/games/mine',
+      headers,
+      query,
+      undefined,
+      undefined,
+    );
+  }
   public async getGame(
     headers: {
       [key: string]: string;
