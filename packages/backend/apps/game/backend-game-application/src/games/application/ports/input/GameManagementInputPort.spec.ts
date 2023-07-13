@@ -11,6 +11,7 @@ import {
 import {
   ActiveGameFixtures,
   GameCreateQueryFixtures,
+  GameFindQueryFixtures,
   NonStartedGameFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
@@ -170,10 +171,10 @@ describe(GameManagementInputPort.name, () => {
   });
 
   describe('.findOne', () => {
-    let gameIdFixture: string;
+    let gameFindQueryFixture: GameFindQuery;
 
     beforeAll(() => {
-      gameIdFixture = 'game-id-fixture';
+      gameFindQueryFixture = GameFindQueryFixtures.any;
     });
 
     describe('when called, and gamePersistenceOutputPort.findOne() returns a Game', () => {
@@ -192,7 +193,7 @@ describe(GameManagementInputPort.name, () => {
 
         gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
 
-        result = await gameManagementInputPort.findOne(gameIdFixture);
+        result = await gameManagementInputPort.findOne(gameFindQueryFixture);
       });
 
       afterAll(() => {
@@ -200,13 +201,9 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expectedGameFindQuery: GameFindQuery = {
-          id: gameIdFixture,
-        };
-
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expectedGameFindQuery,
+          gameFindQueryFixture,
         );
       });
 

@@ -1,5 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder, Handler } from '@cornie-js/backend-common';
+import { GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import {
   ErrorV1ResponseFromErrorBuilder,
   MiddlewarePipeline,
@@ -54,6 +55,10 @@ export class GetGameV1GameIdHttpRequestController extends SingleEntityHttpReques
   protected async _handleUseCase(
     gameId: string,
   ): Promise<apiModels.GameV1 | undefined> {
-    return this.#gameManagementInputPort.findOne(gameId);
+    const gameFindQuery: GameFindQuery = {
+      id: gameId,
+    };
+
+    return this.#gameManagementInputPort.findOne(gameFindQuery);
   }
 }

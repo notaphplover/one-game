@@ -103,11 +103,9 @@ export class GameManagementInputPort {
     return this.#gameV1FromGameBuilder.build(game);
   }
 
-  public async findOne(id: string): Promise<apiModels.GameV1 | undefined> {
-    const gameFindQuery: GameFindQuery = {
-      id,
-    };
-
+  public async findOne(
+    gameFindQuery: GameFindQuery,
+  ): Promise<apiModels.GameV1 | undefined> {
     const game: Game | undefined =
       await this.#gamePersistenceOutputPort.findOne(gameFindQuery);
 
@@ -150,7 +148,13 @@ export class GameManagementInputPort {
   }
 
   async #getGameOrThrow(id: string): Promise<apiModels.GameV1> {
-    const game: apiModels.GameV1 | undefined = await this.findOne(id);
+    const gameFindQuery: GameFindQuery = {
+      id,
+    };
+
+    const game: apiModels.GameV1 | undefined = await this.findOne(
+      gameFindQuery,
+    );
 
     if (game === undefined) {
       throw new AppError(
