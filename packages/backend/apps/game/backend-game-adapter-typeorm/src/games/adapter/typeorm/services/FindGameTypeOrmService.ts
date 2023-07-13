@@ -3,7 +3,12 @@ import { FindTypeOrmService } from '@cornie-js/backend-db';
 import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm';
+import {
+  ObjectLiteral,
+  QueryBuilder,
+  Repository,
+  WhereExpressionBuilder,
+} from 'typeorm';
 
 import { GameDbToGameConverter } from '../converters/GameDbToGameConverter';
 import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../converters/GameFindQueryToGameFindQueryTypeOrmConverter';
@@ -23,8 +28,8 @@ export class FindGameTypeOrmService extends FindTypeOrmService<
     @Inject(GameFindQueryToGameFindQueryTypeOrmConverter)
     gameFindQueryToGameFindQueryTypeOrmConverter: Converter<
       GameFindQuery,
-      QueryBuilder<GameDb> & WhereExpressionBuilder,
-      QueryBuilder<GameDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >,
   ) {
     super(

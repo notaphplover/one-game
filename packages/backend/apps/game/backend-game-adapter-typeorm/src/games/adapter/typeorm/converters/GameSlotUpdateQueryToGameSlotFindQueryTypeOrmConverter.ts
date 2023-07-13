@@ -4,9 +4,8 @@ import {
   GameSlotUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
-import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameSlotDb } from '../models/GameSlotDb';
 import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
 
 @Injectable()
@@ -14,22 +13,22 @@ export class GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter
   implements
     Converter<
       GameSlotUpdateQuery,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >
 {
   readonly #gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
     GameSlotFindQuery,
-    QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-    QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
   >;
 
   constructor(
     @Inject(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter)
     gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
       GameSlotFindQuery,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-      QueryBuilder<GameSlotDb> & WhereExpressionBuilder
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >,
   ) {
     this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter =
@@ -38,8 +37,8 @@ export class GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter
 
   public convert(
     gameSlotUpdateQuery: GameSlotUpdateQuery,
-    queryBuilder: QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
-  ): QueryBuilder<GameSlotDb> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
     return this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
       gameSlotUpdateQuery.gameSlotFindQuery,
       queryBuilder,
