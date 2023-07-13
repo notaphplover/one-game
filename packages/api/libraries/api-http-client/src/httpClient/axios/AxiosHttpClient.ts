@@ -15,7 +15,9 @@ export class AxiosHttpClient {
     method: string,
     url: string,
     headers: Record<string, string> | undefined,
-    queryParams: Record<string, string | string[]> | undefined,
+    queryParams:
+      | Record<string, number | number[] | string | string[]>
+      | undefined,
     urlParameters: Record<string, string> | undefined,
     body: unknown,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
