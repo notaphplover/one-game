@@ -391,7 +391,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
     avoidIfNoParameters: boolean = true,
   ): ts.ParameterDeclaration | undefined {
     const parameterDeclarationElements: ts.TypeElement[] = [
-      this.#buildStringToStringIndexSignatureTypeElement(),
+      this.#buildStringToTypeIndexSignatureTypeElement(type),
     ];
 
     const parametersOfKind: OpenApi3Dot1ParameterObject[] = parameters.filter(
@@ -603,6 +603,14 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
   }
 
   #buildStringToStringIndexSignatureTypeElement(): ts.TypeElement {
+    return this.#buildStringToTypeIndexSignatureTypeElement(
+      ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+    );
+  }
+
+  #buildStringToTypeIndexSignatureTypeElement(
+    typeNode: ts.TypeNode,
+  ): ts.TypeElement {
     return ts.factory.createIndexSignature(
       undefined,
       [
@@ -615,7 +623,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
           undefined,
         ),
       ],
-      ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+      typeNode,
     );
   }
 

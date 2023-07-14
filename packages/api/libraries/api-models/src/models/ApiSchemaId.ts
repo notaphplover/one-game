@@ -17,6 +17,7 @@ export enum ApiSchemaId {
   CardV1 = 'https://onegame.schemas/api/v1/cards/card.json',
   DrawCardV1 = 'https://onegame.schemas/api/v1/cards/draw-card.json',
   ErrorV1 = 'https://onegame.schemas/api/v1/errors/error.json',
+  GameArrayV1 = 'https://onegame.schemas/api/v1/games/game-array.json',
   GameCardSpecV1 = 'https://onegame.schemas/api/v1/games/game-card-spec.json',
   GameCreateQueryV1 = 'https://onegame.schemas/api/v1/games/game-create-query.json',
   GameDirectionV1 = 'https://onegame.schemas/api/v1/games/game-direction.json',
