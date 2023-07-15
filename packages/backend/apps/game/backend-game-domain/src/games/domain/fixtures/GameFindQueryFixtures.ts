@@ -1,3 +1,4 @@
+import { GameStatus } from '../models/GameStatus';
 import { GameFindQuery } from '../query/GameFindQuery';
 import { GameSlotFindQueryFixtures } from './GameSlotFindQueryFixtures';
 
@@ -17,6 +18,27 @@ export class GameFindQueryFixtures {
     return {
       ...GameFindQueryFixtures.any,
       gameSlotFindQuery: GameSlotFindQueryFixtures.any,
+    };
+  }
+
+  public static get withLimit(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      limit: 10,
+    };
+  }
+
+  public static get withOffset(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      offset: 10,
+    };
+  }
+
+  public static get withStatusActive(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      status: GameStatus.active,
     };
   }
 }
