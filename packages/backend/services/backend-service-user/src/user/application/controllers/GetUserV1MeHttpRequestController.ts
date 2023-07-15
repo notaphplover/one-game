@@ -7,7 +7,7 @@ import {
   Response,
   ResponseWithBody,
   SingleEntityGetResponseBuilder,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -15,10 +15,10 @@ import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddle
 import { GetUserV1MeRequestParamHandler } from '../handlers/GetUserV1MeRequestParamHandler';
 
 @Injectable()
-export class GetUserV1MeHttpRequestController extends SingleEntityHttpRequestController<
+export class GetUserV1MeHttpRequestController extends HttpRequestController<
   Request,
   [apiModels.UserV1],
-  apiModels.UserV1
+  apiModels.UserV1 | undefined
 > {
   constructor(
     @Inject(GetUserV1MeRequestParamHandler)

@@ -6,19 +6,19 @@ import { Response } from '../models/Response';
 import { ResponseWithBody } from '../models/ResponseWithBody';
 import { MiddlewarePipeline } from '../modules/MiddlewarePipeline';
 
-export abstract class SingleEntityHttpRequestController<
+export abstract class HttpRequestController<
   TRequest extends Request | RequestWithBody = Request | RequestWithBody,
   TUseCaseParams extends unknown[] = unknown[],
-  TModel = unknown,
+  TUseCaseResult = unknown,
 > implements Handler<[TRequest], Response | ResponseWithBody<unknown>>
 {
   readonly #requestParamHandler: Handler<[TRequest], TUseCaseParams>;
   readonly #responseBuilder: Builder<
-    Response | ResponseWithBody<TModel>,
-    [TModel | undefined]
+    Response | ResponseWithBody<TUseCaseResult>,
+    [TUseCaseResult]
   >;
   readonly #responseFromErrorBuilder: Builder<
-    Response | ResponseWithBody<TModel>,
+    Response | ResponseWithBody<TUseCaseResult>,
     [unknown]
   >;
   readonly #middlewarePipeline: MiddlewarePipeline | undefined;
@@ -26,11 +26,11 @@ export abstract class SingleEntityHttpRequestController<
   constructor(
     requestParamHandler: Handler<[TRequest], TUseCaseParams>,
     responseBuilder: Builder<
-      Response | ResponseWithBody<TModel>,
-      [TModel | undefined]
+      Response | ResponseWithBody<TUseCaseResult>,
+      [TUseCaseResult]
     >,
     responseFromErrorBuilder: Builder<
-      Response | ResponseWithBody<TModel>,
+      Response | ResponseWithBody<TUseCaseResult>,
       [unknown]
     >,
     middlewarePipeline?: MiddlewarePipeline,
@@ -60,17 +60,17 @@ export abstract class SingleEntityHttpRequestController<
   ): Promise<Response | ResponseWithBody<unknown>> {
     const useCaseParams: TUseCaseParams =
       await this.#requestParamHandler.handle(request);
-    const model: TModel | undefined = await this._handleUseCase(
+    const useCaseResult: TUseCaseResult | undefined = await this._handleUseCase(
       ...useCaseParams,
     );
 
     const response: Response | ResponseWithBody<unknown> =
-      this.#responseBuilder.build(model);
+      this.#responseBuilder.build(useCaseResult);
 
     return response;
   }
 
   protected abstract _handleUseCase(
     ...useCaseParams: TUseCaseParams
-  ): Promise<TModel | undefined>;
+  ): Promise<TUseCaseResult>;
 }

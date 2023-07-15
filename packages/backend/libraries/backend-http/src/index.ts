@@ -13,7 +13,7 @@ import { MultipleEntitiesGetResponseBuilder } from './http/application/builders/
 import { SingleEntityGetResponseBuilder } from './http/application/builders/SingleEntityGetResponseBuilder';
 import { SingleEntityPatchResponseBuilder } from './http/application/builders/SingleEntityPatchResponseBuilder';
 import { SingleEntityPostResponseBuilder } from './http/application/builders/SingleEntityPostResponseBuilder';
-import { SingleEntityHttpRequestController } from './http/application/controllers/SingleEntityHttpRequestController';
+import { HttpRequestController } from './http/application/controllers/HttpRequestController';
 import { Request } from './http/application/models/Request';
 import { RequestContextHolder } from './http/application/models/RequestContextHolder';
 import { requestContextProperty } from './http/application/models/requestContextProperty';
@@ -52,7 +52,7 @@ export {
   RequestWithBodyFromFastifyRequestBuilder,
   requestContextProperty,
   SingleEntityGetResponseBuilder,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
   SingleEntityPatchResponseBuilder,
   SingleEntityPostResponseBuilder,
 };

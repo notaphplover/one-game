@@ -12,7 +12,7 @@ import {
   RequestWithBody,
   Response,
   ResponseWithBody,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
   SingleEntityPostResponseBuilder,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
@@ -23,7 +23,7 @@ import { GameMiddleware } from '../middlewares/GameMiddleware';
 import { GameSlotManagementInputPort } from '../ports/input/GameSlotManagementInputPort';
 
 @Injectable()
-export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpRequestController<
+export class PostGameIdSlotV1HttpRequestController extends HttpRequestController<
   RequestWithBody,
   [apiModels.GameIdSlotCreateQueryV1, Game, apiModels.UserV1],
   apiModels.GameSlotV1
@@ -39,7 +39,7 @@ export class PostGameIdSlotV1HttpRequestController extends SingleEntityHttpReque
     @Inject(SingleEntityPostResponseBuilder)
     responseBuilder: Builder<
       Response | ResponseWithBody<unknown>,
-      [apiModels.GameSlotV1 | undefined]
+      [apiModels.GameSlotV1]
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<

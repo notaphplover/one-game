@@ -8,7 +8,7 @@ import {
   Response,
   ResponseWithBody,
   SingleEntityPatchResponseBuilder,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
   RequestWithBody,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
@@ -17,7 +17,7 @@ import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddle
 import { PatchUserV1MeRequestParamHandler } from '../handlers/PatchUserV1MeRequestParamHandler';
 
 @Injectable()
-export class PatchUserV1MeHttpRequestController extends SingleEntityHttpRequestController<
+export class PatchUserV1MeHttpRequestController extends HttpRequestController<
   RequestWithBody,
   [apiModels.UserV1, apiModels.UserMeUpdateQueryV1],
   apiModels.UserV1
@@ -31,7 +31,7 @@ export class PatchUserV1MeHttpRequestController extends SingleEntityHttpRequestC
       [apiModels.UserV1, apiModels.UserMeUpdateQueryV1]
     >,
     @Inject(SingleEntityPatchResponseBuilder)
-    responseBuilder: Builder<Response, [apiModels.UserV1 | undefined]>,
+    responseBuilder: Builder<Response, [apiModels.UserV1]>,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<
       Response | ResponseWithBody<unknown>,
