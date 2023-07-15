@@ -11,6 +11,7 @@ import { PostGameIdSlotV1HttpRequestController } from '../../../application/cont
 import { PostGameV1HttpRequestController } from '../../../application/controllers/PostGameV1HttpRequestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from '../../../application/handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 import { GetGameV1GameIdRequestParamHandler } from '../../../application/handlers/GetGameV1GameIdRequestParamHandler';
+import { GetGameV1MineRequestParamHandler } from '../../../application/handlers/GetGameV1MineRequestParamHandler';
 import { PatchGameGameIdV1RequestBodyParamHandler } from '../../../application/handlers/PatchGameGameIdV1RequestBodyParamHandler';
 import { PatchGameGameIdV1RequestParamHandler } from '../../../application/handlers/PatchGameGameIdV1RequestParamHandler';
 import { PostGameIdSlotV1RequestBodyHandler } from '../../../application/handlers/PostGameIdSlotV1RequestBodyHandler';
@@ -51,6 +52,7 @@ export class GameHttpApiModule {
         GetGameV1GameIdGameOptionsHttpRequestController,
         GetGameV1GameIdHttpRequestController,
         GetGameV1GameIdRequestParamHandler,
+        GetGameV1MineRequestParamHandler,
         PatchGameGameIdV1RequestParamHandler,
         PatchGameGameIdV1RequestBodyParamHandler,
         PatchGameV1GameIdHttpRequestController,
