@@ -1,38 +1,35 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder, Handler } from '@cornie-js/backend-common';
+import { GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import {
   ErrorV1ResponseFromErrorBuilder,
+  HttpRequestController,
   MiddlewarePipeline,
-  RequestWithBody,
+  MultipleEntitiesGetResponseBuilder,
+  Request,
   Response,
   ResponseWithBody,
-  HttpRequestController,
-  SingleEntityPostResponseBuilder,
 } from '@cornie-js/backend-http';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { PostGameV1RequestParamHandler } from '../handlers/PostGameV1RequestParamHandler';
+import { GetGameV1MineRequestParamHandler } from '../handlers/GetGameV1MineRequestParamHandler';
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
-@Injectable()
-export class PostGameV1HttpRequestController extends HttpRequestController<
-  RequestWithBody,
-  [apiModels.GameCreateQueryV1],
-  apiModels.GameV1
+export class GetGameV1MineHttpRequestController extends HttpRequestController<
+  Request,
+  [GameFindQuery],
+  apiModels.GameV1[]
 > {
   readonly #gameManagementInputPort: GameManagementInputPort;
 
   constructor(
-    @Inject(PostGameV1RequestParamHandler)
-    requestParamHandler: Handler<
-      [RequestWithBody],
-      [apiModels.GameCreateQueryV1]
-    >,
-    @Inject(SingleEntityPostResponseBuilder)
+    @Inject(GetGameV1MineRequestParamHandler)
+    requestParamHandler: Handler<[Request], [GameFindQuery]>,
+    @Inject(MultipleEntitiesGetResponseBuilder)
     responseBuilder: Builder<
       Response | ResponseWithBody<unknown>,
-      [apiModels.GameV1]
+      [apiModels.GameV1[]]
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<
@@ -55,8 +52,8 @@ export class PostGameV1HttpRequestController extends HttpRequestController<
   }
 
   protected async _handleUseCase(
-    gameCreateQueryV1: apiModels.GameCreateQueryV1,
-  ): Promise<apiModels.GameV1> {
-    return this.#gameManagementInputPort.create(gameCreateQueryV1);
+    gameFindQuery: GameFindQuery,
+  ): Promise<apiModels.GameV1[]> {
+    return this.#gameManagementInputPort.find(gameFindQuery);
   }
 }

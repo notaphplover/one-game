@@ -7,9 +7,9 @@ import { RequestWithBody } from '../models/RequestWithBody';
 import { Response } from '../models/Response';
 import { ResponseWithBody } from '../models/ResponseWithBody';
 import { MiddlewarePipeline } from '../modules/MiddlewarePipeline';
-import { SingleEntityHttpRequestController } from './SingleEntityHttpRequestController';
+import { HttpRequestController } from './HttpRequestController';
 
-class SingleEntityHttpRequestControllerMock extends SingleEntityHttpRequestController<
+class HttpRequestControllerMock extends HttpRequestController<
   Request | RequestWithBody,
   unknown[],
   unknown
@@ -41,7 +41,7 @@ class SingleEntityHttpRequestControllerMock extends SingleEntityHttpRequestContr
   }
 }
 
-class SingleEntityHttpRequestControllerWithMiddlewarePipelineMock extends SingleEntityHttpRequestController<
+class HttpRequestControllerWithMiddlewarePipelineMock extends HttpRequestController<
   Request | RequestWithBody,
   unknown[],
   unknown
@@ -79,7 +79,7 @@ class SingleEntityHttpRequestControllerWithMiddlewarePipelineMock extends Single
   }
 }
 
-describe(SingleEntityHttpRequestController.name, () => {
+describe(HttpRequestController.name, () => {
   describe('having no MiddlewarePipeline', () => {
     let requestParamHandlerMock: jest.Mocked<
       Handler<[Request | RequestWithBody], unknown[]>
@@ -96,7 +96,7 @@ describe(SingleEntityHttpRequestController.name, () => {
       (...useCaseParams: unknown[]) => Promise<unknown>
     >;
 
-    let singleEntityHttpRequestController: SingleEntityHttpRequestControllerMock;
+    let httpRequestController: HttpRequestControllerMock;
 
     beforeAll(() => {
       requestParamHandlerMock = {
@@ -110,13 +110,12 @@ describe(SingleEntityHttpRequestController.name, () => {
       };
       useCaseHandlerMock = jest.fn();
 
-      singleEntityHttpRequestController =
-        new SingleEntityHttpRequestControllerMock(
-          requestParamHandlerMock,
-          responseBuilderMock,
-          responseFromErrorBuilderMock,
-          useCaseHandlerMock,
-        );
+      httpRequestController = new HttpRequestControllerMock(
+        requestParamHandlerMock,
+        responseBuilderMock,
+        responseFromErrorBuilderMock,
+        useCaseHandlerMock,
+      );
     });
 
     describe('.handle', () => {
@@ -146,9 +145,7 @@ describe(SingleEntityHttpRequestController.name, () => {
           useCaseHandlerMock.mockResolvedValueOnce(modelFixture);
           responseBuilderMock.build.mockReturnValueOnce(responseFixture);
 
-          result = await singleEntityHttpRequestController.handle(
-            requestFixture,
-          );
+          result = await httpRequestController.handle(requestFixture);
         });
 
         afterAll(() => {
@@ -196,9 +193,7 @@ describe(SingleEntityHttpRequestController.name, () => {
             responseFixture,
           );
 
-          result = await singleEntityHttpRequestController.handle(
-            requestFixture,
-          );
+          result = await httpRequestController.handle(requestFixture);
         });
 
         afterAll(() => {
@@ -244,7 +239,7 @@ describe(SingleEntityHttpRequestController.name, () => {
       (...useCaseParams: unknown[]) => Promise<unknown>
     >;
 
-    let singleEntityHttpRequestController: SingleEntityHttpRequestControllerWithMiddlewarePipelineMock;
+    let httpRequestController: HttpRequestControllerWithMiddlewarePipelineMock;
 
     beforeAll(() => {
       requestParamHandlerMock = {
@@ -263,8 +258,8 @@ describe(SingleEntityHttpRequestController.name, () => {
       > as jest.Mocked<MiddlewarePipeline>;
       useCaseHandlerMock = jest.fn();
 
-      singleEntityHttpRequestController =
-        new SingleEntityHttpRequestControllerWithMiddlewarePipelineMock(
+      httpRequestController =
+        new HttpRequestControllerWithMiddlewarePipelineMock(
           requestParamHandlerMock,
           responseBuilderMock,
           responseFromErrorBuilderMock,
@@ -302,9 +297,7 @@ describe(SingleEntityHttpRequestController.name, () => {
           useCaseHandlerMock.mockResolvedValueOnce(modelFixture);
           responseBuilderMock.build.mockReturnValueOnce(responseFixture);
 
-          result = await singleEntityHttpRequestController.handle(
-            requestFixture,
-          );
+          result = await httpRequestController.handle(requestFixture);
         });
 
         afterAll(() => {
@@ -347,9 +340,7 @@ describe(SingleEntityHttpRequestController.name, () => {
 
           middlewarePipelineMock.apply.mockResolvedValueOnce(responseFixture);
 
-          result = await singleEntityHttpRequestController.handle(
-            requestFixture,
-          );
+          result = await httpRequestController.handle(requestFixture);
         });
 
         afterAll(() => {

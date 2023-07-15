@@ -1,5 +1,6 @@
 import {
   ErrorV1ResponseFromErrorBuilder,
+  MultipleEntitiesGetResponseBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
   SingleEntityGetResponseBuilder,
   SingleEntityPatchResponseBuilder,
@@ -10,6 +11,7 @@ import { Module } from '@nestjs/common';
 @Module({
   exports: [
     ErrorV1ResponseFromErrorBuilder,
+    MultipleEntitiesGetResponseBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
     SingleEntityGetResponseBuilder,
     SingleEntityPatchResponseBuilder,
@@ -17,6 +19,7 @@ import { Module } from '@nestjs/common';
   ],
   providers: [
     ErrorV1ResponseFromErrorBuilder,
+    MultipleEntitiesGetResponseBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
     SingleEntityGetResponseBuilder,
     SingleEntityPatchResponseBuilder,

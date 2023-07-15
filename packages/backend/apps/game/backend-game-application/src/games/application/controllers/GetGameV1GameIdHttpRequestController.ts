@@ -8,7 +8,7 @@ import {
   Response,
   ResponseWithBody,
   SingleEntityGetResponseBuilder,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -17,10 +17,10 @@ import { GetGameV1GameIdRequestParamHandler } from '../handlers/GetGameV1GameIdR
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
 @Injectable()
-export class GetGameV1GameIdHttpRequestController extends SingleEntityHttpRequestController<
+export class GetGameV1GameIdHttpRequestController extends HttpRequestController<
   Request,
   [string],
-  apiModels.GameV1
+  apiModels.GameV1 | undefined
 > {
   readonly #gameManagementInputPort: GameManagementInputPort;
 

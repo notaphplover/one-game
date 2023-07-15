@@ -6,7 +6,7 @@ import {
   RequestWithBody,
   Response,
   ResponseWithBody,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
   SingleEntityPostResponseBuilder,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PostAuthV1RequestParamHandler } from '../handlers/PostAuthV1RequestParamHandler';
 
 @Injectable()
-export class PostAuthV1HttpRequestController extends SingleEntityHttpRequestController<
+export class PostAuthV1HttpRequestController extends HttpRequestController<
   RequestWithBody,
   [apiModels.AuthCreateQueryV1],
   apiModels.AuthV1
@@ -30,7 +30,7 @@ export class PostAuthV1HttpRequestController extends SingleEntityHttpRequestCont
     @Inject(SingleEntityPostResponseBuilder)
     responseBuilder: Builder<
       Response | ResponseWithBody<unknown>,
-      [apiModels.AuthV1 | undefined]
+      [apiModels.AuthV1]
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<

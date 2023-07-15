@@ -6,7 +6,7 @@ import {
   RequestWithBody,
   Response,
   ResponseWithBody,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
   SingleEntityPatchResponseBuilder,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
@@ -16,7 +16,7 @@ import { PatchGameGameIdV1RequestParamHandler } from '../handlers/PatchGameGameI
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
 @Injectable()
-export class PatchGameV1GameIdHttpRequestController extends SingleEntityHttpRequestController<
+export class PatchGameV1GameIdHttpRequestController extends HttpRequestController<
   RequestWithBody,
   [string, apiModels.GameIdUpdateQueryV1, apiModels.UserV1],
   apiModels.GameV1
