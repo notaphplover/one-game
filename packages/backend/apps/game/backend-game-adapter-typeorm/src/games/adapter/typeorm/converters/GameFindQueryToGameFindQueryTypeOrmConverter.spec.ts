@@ -63,17 +63,27 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
   });
 
   describe('.convert', () => {
-    let queryBuilderFixture: jest.Mocked<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
-    >;
+    let queryFixture: string;
+    let queryBuilderFixture: jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
 
     beforeAll(() => {
+      queryFixture = '(query fixture)';
+
       queryBuilderFixture = {
         andWhere: jest.fn().mockReturnThis(),
+        distinct: jest.fn().mockReturnThis(),
+        from: jest.fn().mockReturnThis(),
+        getParameters: jest.fn().mockReturnThis(),
+        getQuery: jest.fn().mockReturnValue(queryFixture),
         leftJoinAndSelect: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        offset: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        setParameters: jest.fn().mockReturnThis(),
+        subQuery: jest.fn().mockReturnThis(),
       } as Partial<
-        jest.Mocked<QueryBuilder<ObjectLiteral> & WhereExpressionBuilder>
-      > as jest.Mocked<QueryBuilder<ObjectLiteral> & WhereExpressionBuilder>;
+        jest.Mocked<SelectQueryBuilder<ObjectLiteral>>
+      > as jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
     });
 
     describe('having a GameFindQuery with id', () => {
@@ -87,9 +97,9 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          (InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock)
-            .mockReturnValueOnce(true)
-            .mockReturnValueOnce(true);
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
 
           result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
             gameFindQueryFixture,
@@ -99,6 +109,10 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
 
         afterAll(() => {
           jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
         });
 
         it('should call queryBuilder.andWhere()', () => {
@@ -128,9 +142,9 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          (InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock)
-            .mockReturnValueOnce(true)
-            .mockReturnValueOnce(true);
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
 
           gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
             queryBuilderFixture,
@@ -144,6 +158,10 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
 
         afterAll(() => {
           jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
         });
 
         it('should call gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert()', () => {
@@ -155,6 +173,135 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
           ).toHaveBeenCalledWith(
             gameFindQueryFixture.gameSlotFindQuery,
             queryBuilderFixture,
+          );
+        });
+
+        it('should return a QueryBuilder', () => {
+          expect(result).toBe(queryBuilderFixture);
+        });
+      });
+    });
+
+    describe('having a GameFindQuery with limit', () => {
+      let gameFindQueryFixture: GameFindQuery;
+
+      beforeAll(() => {
+        gameFindQueryFixture = GameFindQueryFixtures.withLimit;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+            gameFindQueryFixture,
+            queryBuilderFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should call queryBuilder.limit()', () => {
+          expect(queryBuilderFixture.limit).toHaveBeenCalledTimes(1);
+          expect(queryBuilderFixture.limit).toHaveBeenCalledWith(
+            gameFindQueryFixture.limit,
+          );
+        });
+
+        it('should return a QueryBuilder', () => {
+          expect(result).toBe(queryBuilderFixture);
+        });
+      });
+    });
+
+    describe('having a GameFindQuery with offset', () => {
+      let gameFindQueryFixture: GameFindQuery;
+
+      beforeAll(() => {
+        gameFindQueryFixture = GameFindQueryFixtures.withOffset;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+            gameFindQueryFixture,
+            queryBuilderFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should call queryBuilder.offset()', () => {
+          expect(queryBuilderFixture.offset).toHaveBeenCalledTimes(1);
+          expect(queryBuilderFixture.offset).toHaveBeenCalledWith(
+            gameFindQueryFixture.offset,
+          );
+        });
+
+        it('should return a QueryBuilder', () => {
+          expect(result).toBe(queryBuilderFixture);
+        });
+      });
+    });
+
+    describe('having a GameFindQuery with status', () => {
+      let gameFindQueryFixture: GameFindQuery;
+
+      beforeAll(() => {
+        gameFindQueryFixture = GameFindQueryFixtures.withStatusActive;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+            gameFindQueryFixture,
+            queryBuilderFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should call queryBuilder.andWhere()', () => {
+          expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
+          expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+            `${GameDb.name}.status = :${GameDb.name}status`,
+            {
+              [`${GameDb.name}status`]: gameFindQueryFixture.status,
+            },
           );
         });
 
