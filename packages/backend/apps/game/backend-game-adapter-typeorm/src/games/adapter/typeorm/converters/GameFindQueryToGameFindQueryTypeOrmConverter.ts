@@ -3,7 +3,7 @@ import {
   GameFindQuery,
   GameSlotFindQuery,
 } from '@cornie-js/backend-game-domain/games';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   InstanceChecker,
   ObjectLiteral,
@@ -15,6 +15,7 @@ import {
 import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameDb } from '../models/GameDb';
 import { GameSlotDb } from '../models/GameSlotDb';
+import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
 
 @Injectable()
 export class GameFindQueryToGameFindQueryTypeOrmConverter
@@ -33,6 +34,7 @@ export class GameFindQueryToGameFindQueryTypeOrmConverter
   >;
 
   constructor(
+    @Inject(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter)
     gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
       GameSlotFindQuery,
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
@@ -120,7 +122,7 @@ export class GameFindQueryToGameFindQueryTypeOrmConverter
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let subQueryBuilder: SelectQueryBuilder<ObjectLiteral> = selectQueryBuilder
       .subQuery()
-      .select(`${GameSlotDb.name}.gameId`)
+      .select(`"${GameSlotDb.name}".game_Id`)
       .distinct(true)
       .from(GameSlotDb, GameSlotDb.name);
 
