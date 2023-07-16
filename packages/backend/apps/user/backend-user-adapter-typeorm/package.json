@@ -3,22 +3,20 @@
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
-  "description": "Backend user application package",
+  "description": "Backend user typeorm package",
   "dependencies": {
-    "@cornie-js/api-models": "workspace:*",
-    "@cornie-js/backend-api-validators": "workspace:*",
-    "@cornie-js/backend-app-jwt": "workspace:*",
-    "@cornie-js/backend-app-uuid": "workspace:*",
-    "@cornie-js/backend-app-user-env": "workspace:*",
+    "@nestjs/common": "10.0.5",
+    "@nestjs/typeorm": "10.0.0",
+    "@cornie-js/backend-user-application": "workspace:*",
     "@cornie-js/backend-user-domain": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
-    "@cornie-js/backend-http": "workspace:*",
-    "@nestjs/common": "10.0.5",
-    "bcrypt": "5.1.0"
+    "@cornie-js/backend-db": "workspace:*",
+    "pg": "8.11.1",
+    "reflect-metadata": "0.1.13",
+    "typeorm": "0.3.17"
   },
   "devDependencies": {
     "@jest/globals": "29.6.1",
-    "@types/bcrypt": "5.0.0",
     "@types/node": "18.16.19",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
@@ -35,11 +33,13 @@
     "typescript": "5.1.6"
   },
   "exports": {
-    "./users": "./lib/users/application/index.js"
+    ".": "./lib/index.js",
+    "./entities": "./lib/entities.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
-  "name": "@cornie-js/backend-user-application",
+  "main": "lib/index.js",
+  "name": "@cornie-js/backend-user-adapter-typeorm",
   "publishConfig": {
     "access": "public"
   },
