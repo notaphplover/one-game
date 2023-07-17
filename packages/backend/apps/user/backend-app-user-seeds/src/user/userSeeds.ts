@@ -1,4 +1,4 @@
-import { UserDb } from '@cornie-js/backend-app-user-db/entities';
+import { UserDb } from '@cornie-js/backend-user-adapter-typeorm/entities';
 import { DeepPartial } from 'typeorm';
 
 export const user1Password: string = 'password';

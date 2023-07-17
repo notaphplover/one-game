@@ -1,9 +1,0 @@
-{
-  "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "@cornie-js/backend-typescript-config/tsconfig.base.cjs.json",
-  "compilerOptions": {
-    "outDir": "./lib",
-    "rootDir": "./src"
-  },
-  "include": ["src"]
-}

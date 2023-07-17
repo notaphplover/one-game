@@ -5,7 +5,7 @@
   },
   "description": "Backend user app seeds",
   "dependencies": {
-    "@cornie-js/backend-app-user-db": "workspace:*"
+    "@cornie-js/backend-user-adapter-typeorm": "workspace:*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.62.0",

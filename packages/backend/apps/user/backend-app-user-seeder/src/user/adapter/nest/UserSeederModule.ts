@@ -1,5 +1,8 @@
-import { DbModuleOptions, DbModule } from '@cornie-js/backend-app-user-db';
-import { UserDb } from '@cornie-js/backend-app-user-db/entities';
+import {
+  DbModuleOptions,
+  DbModule,
+} from '@cornie-js/backend-user-adapter-typeorm';
+import { UserDb } from '@cornie-js/backend-user-adapter-typeorm/entities';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
