@@ -333,7 +333,6 @@ paths:
       security:
         - bearerAuth: []
 
-
   /v1/users:
     post:
       summary: Create user
@@ -365,6 +364,21 @@ paths:
       security: []
 
   /v1/users/me:
+    delete:
+      summary: Delete user me
+      operationId: deleteUserMe
+      responses:
+        '200':
+          description: User deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - bearerAuth: []
+
     get:
       summary: Get current user
       operationId: getUserMe
