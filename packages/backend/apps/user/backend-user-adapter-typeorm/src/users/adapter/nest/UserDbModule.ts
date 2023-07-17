@@ -12,6 +12,7 @@ import { UserUpdateQueryToUserFindQueryTypeOrmConverter } from '../typeorm/conve
 import { UserUpdateQueryToUserSetQueryTypeOrmConverter } from '../typeorm/converters/UserUpdateQueryToUserSetQueryTypeOrmConverter';
 import { UserDb } from '../typeorm/models/UserDb';
 import { CreateUserTypeOrmService } from '../typeorm/services/CreateUserTypeOrmService';
+import { DeleteUserTypeOrmService } from '../typeorm/services/DeleteUserTypeOrmService';
 import { FindUserTypeOrmService } from '../typeorm/services/FindUserTypeOrmService';
 import { UpdateUserTypeOrmService } from '../typeorm/services/UpdateUserTypeOrmService';
 
@@ -28,6 +29,7 @@ export class UserDbModule {
       module: UserDbModule,
       providers: [
         CreateUserTypeOrmService,
+        DeleteUserTypeOrmService,
         FindUserTypeOrmService,
         UpdateUserTypeOrmService,
         UserCreateQueryToUserCreateQueryTypeOrmConverter,
