@@ -14,12 +14,14 @@ import {
 } from '@cornie-js/backend-user-domain/users/fixtures';
 
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
+import { DeleteUserTypeOrmService } from '../services/DeleteUserTypeOrmService';
 import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
 import { UpdateUserTypeOrmService } from '../services/UpdateUserTypeOrmService';
 import { UserPersistenceTypeOrmAdapter } from './UserPersistenceTypeOrmAdapter';
 
 describe(UserPersistenceTypeOrmAdapter, () => {
   let createUserTypeOrmServiceMock: jest.Mocked<CreateUserTypeOrmService>;
+  let deleteUserTypeOrmServiceMock: jest.Mocked<DeleteUserTypeOrmService>;
   let findUserTypeOrmServiceMock: jest.Mocked<FindUserTypeOrmService>;
   let updateUserTypeOrmServiceMock: jest.Mocked<UpdateUserTypeOrmService>;
 
@@ -31,6 +33,12 @@ describe(UserPersistenceTypeOrmAdapter, () => {
     } as Partial<
       jest.Mocked<CreateUserTypeOrmService>
     > as jest.Mocked<CreateUserTypeOrmService>;
+
+    deleteUserTypeOrmServiceMock = {
+      delete: jest.fn(),
+    } as Partial<
+      jest.Mocked<DeleteUserTypeOrmService>
+    > as jest.Mocked<DeleteUserTypeOrmService>;
 
     findUserTypeOrmServiceMock = {
       findOne: jest.fn(),
@@ -46,6 +54,7 @@ describe(UserPersistenceTypeOrmAdapter, () => {
 
     userPersistenceTypeOrmAdapter = new UserPersistenceTypeOrmAdapter(
       createUserTypeOrmServiceMock,
+      deleteUserTypeOrmServiceMock,
       findUserTypeOrmServiceMock,
       updateUserTypeOrmServiceMock,
     );
@@ -80,6 +89,41 @@ describe(UserPersistenceTypeOrmAdapter, () => {
 
       it('should return a User', () => {
         expect(result).toBe(userFixture);
+      });
+    });
+  });
+
+  describe('.delete', () => {
+    let userFindQueryFixture: UserFindQuery;
+
+    beforeAll(() => {
+      userFindQueryFixture = UserFindQueryFixtures.withId;
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        deleteUserTypeOrmServiceMock.delete.mockResolvedValueOnce(undefined);
+
+        result = await userPersistenceTypeOrmAdapter.delete(
+          userFindQueryFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call deleteUserTypeOrmService.delete()', () => {
+        expect(deleteUserTypeOrmServiceMock.delete).toHaveBeenCalledTimes(1);
+        expect(deleteUserTypeOrmServiceMock.delete).toHaveBeenCalledWith(
+          userFindQueryFixture,
+        );
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
       });
     });
   });

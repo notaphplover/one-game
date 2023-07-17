@@ -8,6 +8,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateUserTypeOrmService } from '../services/CreateUserTypeOrmService';
+import { DeleteUserTypeOrmService } from '../services/DeleteUserTypeOrmService';
 import { FindUserTypeOrmService } from '../services/FindUserTypeOrmService';
 import { UpdateUserTypeOrmService } from '../services/UpdateUserTypeOrmService';
 
@@ -16,24 +17,32 @@ export class UserPersistenceTypeOrmAdapter
   implements UserPersistenceOutputPort
 {
   readonly #createUserTypeOrmService: CreateUserTypeOrmService;
+  readonly #deleteUserTypeOrmService: DeleteUserTypeOrmService;
   readonly #findUserTypeOrmService: FindUserTypeOrmService;
   readonly #updateUserTypeOrmService: UpdateUserTypeOrmService;
 
   constructor(
     @Inject(CreateUserTypeOrmService)
     createUserTypeOrmService: CreateUserTypeOrmService,
+    @Inject(DeleteUserTypeOrmService)
+    deleteUserTypeOrmService: DeleteUserTypeOrmService,
     @Inject(FindUserTypeOrmService)
     findUserTypeOrmService: FindUserTypeOrmService,
     @Inject(UpdateUserTypeOrmService)
     updateUserTypeOrmService: UpdateUserTypeOrmService,
   ) {
     this.#createUserTypeOrmService = createUserTypeOrmService;
+    this.#deleteUserTypeOrmService = deleteUserTypeOrmService;
     this.#findUserTypeOrmService = findUserTypeOrmService;
     this.#updateUserTypeOrmService = updateUserTypeOrmService;
   }
 
   public async create(userCreateQuery: UserCreateQuery): Promise<User> {
     return this.#createUserTypeOrmService.insertOne(userCreateQuery);
+  }
+
+  public async delete(userFindQuery: UserFindQuery): Promise<void> {
+    await this.#deleteUserTypeOrmService.delete(userFindQuery);
   }
 
   public async findOne(
