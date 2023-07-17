@@ -212,6 +212,21 @@ export class HttpClient {
       body,
     );
   }
+  public async deleteUserMe(headers: {
+    [key: string]: string;
+  }): Promise<
+    | Response<Record<string, string>, undefined, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'DELETE',
+      '/v1/users/me',
+      headers,
+      undefined,
+      undefined,
+      undefined,
+    );
+  }
   public async getUserMe(headers: {
     [key: string]: string;
   }): Promise<
