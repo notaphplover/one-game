@@ -5,7 +5,7 @@
   },
   "description": "Backend user typeorm package",
   "dependencies": {
-    "@nestjs/common": "10.0.5",
+    "@nestjs/common": "10.1.0",
     "@nestjs/typeorm": "10.0.0",
     "@cornie-js/backend-user-application": "workspace:*",
     "@cornie-js/backend-user-domain": "workspace:*",
