@@ -91,6 +91,14 @@ export class UserManagementInputPort {
     return this.#userV1FromUserBuilder.build(user);
   }
 
+  public async delete(id: string): Promise<void> {
+    const userFindQuery: UserFindQuery = {
+      id,
+    };
+
+    await this.#userPersistenceOutputPort.delete(userFindQuery);
+  }
+
   public async findOne(id: string): Promise<apiModels.UserV1 | undefined> {
     const userFindQuery: UserFindQuery = {
       id,
