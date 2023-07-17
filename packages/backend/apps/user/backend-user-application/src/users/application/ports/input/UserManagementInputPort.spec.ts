@@ -157,6 +157,43 @@ describe(UserManagementInputPort.name, () => {
     });
   });
 
+  describe('.delete', () => {
+    let idFixture: string;
+
+    beforeAll(() => {
+      idFixture = '83073aec-b81b-4107-97f9-baa46de5dd40';
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        userPersistenceOutputPortMock.delete.mockResolvedValueOnce(undefined);
+
+        result = await userManagementInputPort.delete(idFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userPersistenceOutputPort.delete()', () => {
+        const expectedUserFindQuery: UserFindQuery = {
+          id: idFixture,
+        };
+
+        expect(userPersistenceOutputPortMock.delete).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.delete).toHaveBeenCalledWith(
+          expectedUserFindQuery,
+        );
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
   describe('.findOne', () => {
     let idFixture: string;
 
