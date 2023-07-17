@@ -17,13 +17,15 @@ export class AuthHttpApiModule {
       exports: [PostAuthV1HttpRequestController],
       global: false,
       imports: [
-        ...(userImports ?? []),
-        AuthApplicationModule.forRootAsync(),
+        AuthApplicationModule.forRootAsync(userImports),
         JsonSchemaModule,
         HttpModule,
       ],
       module: AuthHttpApiModule,
-      providers: [PostAuthV1RequestParamHandler],
+      providers: [
+        PostAuthV1HttpRequestController,
+        PostAuthV1RequestParamHandler,
+      ],
     };
   }
 }

@@ -31,17 +31,21 @@ export class UserHttpApiModule {
       global: false,
       imports: [
         ...(userImports ?? []),
-        AuthApplicationModule.forRootAsync(),
+        AuthApplicationModule.forRootAsync(userImports),
         UserApplicationModule.forRootAsync(userImports),
         JsonSchemaModule,
         HttpModule,
       ],
       module: UserHttpApiModule,
       providers: [
+        GetUserV1MeHttpRequestController,
         GetUserV1MeRequestParamHandler,
+        GetUserV1UserIdHttpRequestController,
         GetUserV1UserIdRequestParamHandler,
+        PatchUserV1MeHttpRequestController,
         PatchUserV1MeRequestBodyParamHandler,
         PatchUserV1MeRequestParamHandler,
+        PostUserV1HttpRequestController,
         PostUserV1RequestParamHandler,
       ],
     };

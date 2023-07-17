@@ -35,6 +35,8 @@
     "typescript": "5.1.6"
   },
   "exports": {
+    ".": "./lib/index.js",
+    "./auth": "./lib/auth/application/index.js",
     "./users": "./lib/users/application/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
