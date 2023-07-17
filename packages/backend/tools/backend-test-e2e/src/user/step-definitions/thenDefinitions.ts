@@ -35,6 +35,26 @@ function thenCreateUserResponseShouldContainValidUser(
   });
 }
 
+function thenDeleteUserMeResponseShouldBeSuccessful(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  const alias: string = requestAlias ?? defaultAlias;
+
+  type ResponseType = Awaited<ReturnType<HttpClient['deleteUserMe']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'deleteUserMe',
+    alias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
 function thenUpdateUserResponseShouldContainValidUser(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -73,6 +93,13 @@ Then<OneGameApiWorld>(
   'the create user response as {string} should contain a valid user',
   function (requestAlias: string): void {
     thenCreateUserResponseShouldContainValidUser.bind(this)(requestAlias);
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the delete own user response for {string} should be successful',
+  function (requestAlias: string): void {
+    thenDeleteUserMeResponseShouldBeSuccessful.bind(this)(requestAlias);
   },
 );
 

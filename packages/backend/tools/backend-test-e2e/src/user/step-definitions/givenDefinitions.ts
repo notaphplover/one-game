@@ -77,6 +77,31 @@ export async function givenUser(
   setUser.bind(this)(alias, userParameter);
 }
 
+export function givenDeleteOwnUserRequestFromUser(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+  userAlias?: string,
+): void {
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const authV1Parameter: AuthV1Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+
+  const deleteUserMeRequestParameters: Parameters<HttpClient['deleteUserMe']> =
+    [
+      {
+        authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      },
+    ];
+
+  setRequestParameters.bind(this)(
+    'deleteUserMe',
+    procesedRequestAlias,
+    deleteUserMeRequestParameters,
+  );
+}
+
 export function givenUpdateUserRequestFromUser(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -118,6 +143,13 @@ Given<OneGameApiWorld>(
   'a create user request as {string}',
   function (this: OneGameApiWorld, requestAlias: string): void {
     givenCreateUserRequest.bind(this)(requestAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a delete own user request from {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenDeleteOwnUserRequestFromUser.bind(this)(userAlias, userAlias);
   },
 );
 
