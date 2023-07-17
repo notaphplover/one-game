@@ -7,6 +7,7 @@ import { GetUserV1MeHttpRequestController } from '../../../application/controlle
 import { GetUserV1UserIdHttpRequestController } from '../../../application/controllers/GetUserV1UserIdHttpRequestController';
 import { PatchUserV1MeHttpRequestController } from '../../../application/controllers/PatchUserV1MeHttpRequestController';
 import { PostUserV1HttpRequestController } from '../../../application/controllers/PostUserV1HttpRequestController';
+import { DeleteUserV1MeRequestParamHandler } from '../../../application/handlers/DeleteUserV1MeRequestParamHandler';
 import { GetUserV1MeRequestParamHandler } from '../../../application/handlers/GetUserV1MeRequestParamHandler';
 import { GetUserV1UserIdRequestParamHandler } from '../../../application/handlers/GetUserV1UserIdRequestParamHandler';
 import { PatchUserV1MeRequestBodyParamHandler } from '../../../application/handlers/PatchUserV1MeRequestBodyParamHandler';
@@ -38,6 +39,7 @@ export class UserHttpApiModule {
       ],
       module: UserHttpApiModule,
       providers: [
+        DeleteUserV1MeRequestParamHandler,
         GetUserV1MeHttpRequestController,
         GetUserV1MeRequestParamHandler,
         GetUserV1UserIdHttpRequestController,
