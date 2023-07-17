@@ -7,6 +7,7 @@ import {
 
 export interface UserPersistenceOutputPort {
   create(userCreateQuery: UserCreateQuery): Promise<User>;
+  delete(userFindQuery: UserFindQuery): Promise<void>;
   findOne(userFindQuery: UserFindQuery): Promise<User | undefined>;
   update(userUpdateQuery: UserUpdateQuery): Promise<void>;
 }

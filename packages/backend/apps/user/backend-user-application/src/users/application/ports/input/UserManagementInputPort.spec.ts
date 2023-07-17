@@ -50,6 +50,7 @@ describe(UserManagementInputPort.name, () => {
     };
     userPersistenceOutputPortMock = {
       create: jest.fn(),
+      delete: jest.fn(),
       findOne: jest.fn(),
       update: jest.fn(),
     };
