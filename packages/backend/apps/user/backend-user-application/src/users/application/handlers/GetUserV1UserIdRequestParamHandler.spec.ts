@@ -3,10 +3,7 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 
-import {
-  GetUserV1UserIdRequestParamHandler,
-  GET_USER_V1_USER_ID_REQUEST_PARAM,
-} from './GetUserV1UserIdRequestParamHandler';
+import { GetUserV1UserIdRequestParamHandler } from './GetUserV1UserIdRequestParamHandler';
 
 describe(GetUserV1UserIdRequestParamHandler.name, () => {
   let getUserV1UserIdRequestParamHandler: GetUserV1UserIdRequestParamHandler;
@@ -26,7 +23,10 @@ describe(GetUserV1UserIdRequestParamHandler.name, () => {
         requestFixture = {
           headers: {},
           query: {},
-          urlParameters: { [GET_USER_V1_USER_ID_REQUEST_PARAM]: userIdFixture },
+          urlParameters: {
+            [GetUserV1UserIdRequestParamHandler.userIdRequestParam]:
+              userIdFixture,
+          },
         };
       });
 

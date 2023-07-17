@@ -7,10 +7,9 @@ import {
   Response,
   ResponseWithBody,
 } from '@cornie-js/backend-http';
+import { PatchUserV1MeHttpRequestController } from '@cornie-js/backend-user-application/users';
 import { Controller, Inject, Patch, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import { PatchUserV1MeHttpRequestController } from '../../../application/controllers/PatchUserV1MeHttpRequestController';
 
 @Controller('v1/users/me')
 export class PatchUserV1MeHttpRequestNestController extends HttpNestFastifyController<RequestWithBody> {

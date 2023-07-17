@@ -7,11 +7,12 @@ import {
   Request,
   RequestFromFastifyRequestBuilder,
 } from '@cornie-js/backend-http';
+import {
+  GetUserV1UserIdHttpRequestController,
+  GetUserV1UserIdRequestParamHandler,
+} from '@cornie-js/backend-user-application/users';
 import { Controller, Get, Inject, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import { GetUserV1UserIdHttpRequestController } from '../../../application/controllers/GetUserV1UserIdHttpRequestController';
-import { GET_USER_V1_USER_ID_REQUEST_PARAM } from '../../../application/handlers/GetUserV1UserIdRequestParamHandler';
 
 @Controller('v1/users')
 export class GetUserV1UserIdHttpRequestNestController extends HttpNestFastifyController<Request> {
@@ -29,7 +30,7 @@ export class GetUserV1UserIdHttpRequestNestController extends HttpNestFastifyCon
     super(requestBuilder, requestController, resultBuilder);
   }
 
-  @Get(`:${GET_USER_V1_USER_ID_REQUEST_PARAM}`)
+  @Get(`:${GetUserV1UserIdRequestParamHandler.userIdRequestParam}`)
   public override async handle(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,

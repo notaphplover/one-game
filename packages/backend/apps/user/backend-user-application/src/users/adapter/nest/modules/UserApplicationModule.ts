@@ -21,6 +21,7 @@ export class UserApplicationModule {
       module: UserApplicationModule,
       providers: [
         UserCreateQueryFromUserCreateQueryV1Builder,
+        UserManagementInputPort,
         UserUpdateQueryFromUserMeUpdateQueryV1Builder,
         UserV1FromUserBuilder,
       ],
