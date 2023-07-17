@@ -3,6 +3,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 import { AuthApplicationModule } from '../../../../auth/adapter/nest/modules/AuthApplicationModule';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
+import { DeleteUserV1MeHttpRequestController } from '../../../application/controllers/DeleteUserV1MeHttpRequestController';
 import { GetUserV1MeHttpRequestController } from '../../../application/controllers/GetUserV1MeHttpRequestController';
 import { GetUserV1UserIdHttpRequestController } from '../../../application/controllers/GetUserV1UserIdHttpRequestController';
 import { PatchUserV1MeHttpRequestController } from '../../../application/controllers/PatchUserV1MeHttpRequestController';
@@ -24,6 +25,7 @@ export class UserHttpApiModule {
   ): DynamicModule {
     return {
       exports: [
+        DeleteUserV1MeHttpRequestController,
         GetUserV1MeHttpRequestController,
         GetUserV1UserIdHttpRequestController,
         PatchUserV1MeHttpRequestController,
@@ -39,6 +41,7 @@ export class UserHttpApiModule {
       ],
       module: UserHttpApiModule,
       providers: [
+        DeleteUserV1MeHttpRequestController,
         DeleteUserV1MeRequestParamHandler,
         GetUserV1MeHttpRequestController,
         GetUserV1MeRequestParamHandler,
