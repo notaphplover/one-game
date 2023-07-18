@@ -1,0 +1,21 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Mail dev server tool for one-game-js services",
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/backend-maildev",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {
+    "close:e2e": "docker compose down",
+    "postserve": "docker compose down",
+    "serve": "docker compose up",
+    "start:e2e": "docker compose up -d"
+  }
+}
