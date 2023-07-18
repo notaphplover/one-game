@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbModuleOptions } from '../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../foundation/db/adapter/nest/modules/DbModule';
 import { UserPersistenceTypeOrmAdapter } from '../typeorm/adapters/UserPersistenceTypeOrmAdapter';
+import { UserCodeDbToUserCodeConverter } from '../typeorm/converters/UserCodeDbToUserCodeConverter';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
 import { UserDbToUserConverter } from '../typeorm/converters/UserDbToUserConverter';
 import { UserFindQueryToUserFindQueryTypeOrmConverter } from '../typeorm/converters/UserFindQueryToUserFindQueryTypeOrmConverter';
 import { UserUpdateQueryToUserFindQueryTypeOrmConverter } from '../typeorm/converters/UserUpdateQueryToUserFindQueryTypeOrmConverter';
 import { UserUpdateQueryToUserSetQueryTypeOrmConverter } from '../typeorm/converters/UserUpdateQueryToUserSetQueryTypeOrmConverter';
+import { UserCodeDb } from '../typeorm/models/UserCodeDb';
 import { UserDb } from '../typeorm/models/UserDb';
 import { CreateUserTypeOrmService } from '../typeorm/services/CreateUserTypeOrmService';
 import { DeleteUserTypeOrmService } from '../typeorm/services/DeleteUserTypeOrmService';
@@ -24,7 +26,7 @@ export class UserDbModule {
       global: false,
       imports: [
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([UserDb]),
+        TypeOrmModule.forFeature([UserCodeDb, UserDb]),
       ],
       module: UserDbModule,
       providers: [
@@ -32,6 +34,7 @@ export class UserDbModule {
         DeleteUserTypeOrmService,
         FindUserTypeOrmService,
         UpdateUserTypeOrmService,
+        UserCodeDbToUserCodeConverter,
         UserCreateQueryToUserCreateQueryTypeOrmConverter,
         UserFindQueryToUserFindQueryTypeOrmConverter,
         UserDbToUserConverter,
