@@ -1,7 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { JwtService } from '@cornie-js/backend-app-jwt';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { User } from '@cornie-js/backend-user-domain/users';
+import {
+  User,
+  UserCanCreateAuthSpec,
+} from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
@@ -18,6 +21,7 @@ import {
 export class AuthManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
   readonly #jwtService: JwtService<UserJwtPayload>;
+  readonly #userCanCreateAuthSpec: UserCanCreateAuthSpec;
   readonly #userPersistenceOuptutPort: UserPersistenceOutputPort;
 
   constructor(
@@ -25,11 +29,14 @@ export class AuthManagementInputPort {
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
     @Inject(JwtService)
     jwtService: JwtService<UserJwtPayload>,
+    @Inject(UserCanCreateAuthSpec)
+    userCanCreateAuthSpec: UserCanCreateAuthSpec,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOuptutPort: UserPersistenceOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
     this.#jwtService = jwtService;
+    this.#userCanCreateAuthSpec = userCanCreateAuthSpec;
     this.#userPersistenceOuptutPort = userPersistenceOuptutPort;
   }
 
@@ -37,6 +44,13 @@ export class AuthManagementInputPort {
     authCreateQueryV1: apiModels.AuthCreateQueryV1,
   ): Promise<apiModels.AuthV1> {
     const user: User = await this.#getUser(authCreateQueryV1);
+
+    if (!this.#userCanCreateAuthSpec.isSatisfiedBy(user)) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        'Unable to generate user credentials due to the current user state',
+      );
+    }
 
     await this.#validateCredentials(authCreateQueryV1, user);
 
