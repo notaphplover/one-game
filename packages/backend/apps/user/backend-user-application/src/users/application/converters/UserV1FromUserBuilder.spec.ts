@@ -29,6 +29,7 @@ describe(UserV1FromUserBuilder.name, () => {
 
       it('should return a UserV1', () => {
         const expected: apiModels.UserV1 = {
+          active: userFixture.active,
           id: userFixture.id,
           name: userFixture.name,
         };

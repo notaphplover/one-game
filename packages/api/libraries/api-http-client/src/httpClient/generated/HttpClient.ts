@@ -20,6 +20,7 @@ export class HttpClient {
   ): Promise<
     | Response<Record<string, string>, apiModels.AuthV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
     return this.#axiosHttpClient.callEndpoint(
       'POST',

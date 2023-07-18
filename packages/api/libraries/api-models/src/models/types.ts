@@ -169,6 +169,7 @@ export interface UserMeUpdateQueryV1 {
   name?: string;
 }
 export interface UserV1 {
+  active: boolean;
   id: string;
   name: string;
 }

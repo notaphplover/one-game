@@ -7,6 +7,7 @@ export class UserV1FromUserBuilder
 {
   public build(user: User): apiModels.UserV1 {
     return {
+      active: user.active,
       id: user.id,
       name: user.name,
     };
