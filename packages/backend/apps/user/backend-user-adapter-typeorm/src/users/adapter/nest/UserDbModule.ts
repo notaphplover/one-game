@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbModuleOptions } from '../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../foundation/db/adapter/nest/modules/DbModule';
 import { UserPersistenceTypeOrmAdapter } from '../typeorm/adapters/UserPersistenceTypeOrmAdapter';
+import { UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter } from '../typeorm/converters/UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter';
 import { UserCodeDbToUserCodeConverter } from '../typeorm/converters/UserCodeDbToUserCodeConverter';
 import { UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter } from '../typeorm/converters/UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter';
 import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
@@ -35,6 +36,7 @@ export class UserDbModule {
         DeleteUserTypeOrmService,
         FindUserTypeOrmService,
         UpdateUserTypeOrmService,
+        UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter,
         UserCodeDbToUserCodeConverter,
         UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter,
         UserCreateQueryToUserCreateQueryTypeOrmConverter,
