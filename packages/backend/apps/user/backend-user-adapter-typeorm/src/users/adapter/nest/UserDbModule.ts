@@ -1,9 +1,13 @@
-import { userPersistenceOutputPortSymbol } from '@cornie-js/backend-user-application/users';
+import {
+  userCodePersistenceOutputPortSymbol,
+  userPersistenceOutputPortSymbol,
+} from '@cornie-js/backend-user-application/users';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DbModuleOptions } from '../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../foundation/db/adapter/nest/modules/DbModule';
+import { UserCodePersistenceTypeOrmAdapter } from '../typeorm/adapters/UserCodePersistenceTypeOrmAdapter';
 import { UserPersistenceTypeOrmAdapter } from '../typeorm/adapters/UserPersistenceTypeOrmAdapter';
 import { UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter } from '../typeorm/converters/UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter';
 import { UserCodeDbToUserCodeConverter } from '../typeorm/converters/UserCodeDbToUserCodeConverter';
@@ -48,6 +52,10 @@ export class UserDbModule {
         UserCreateQueryToUserCreateQueryTypeOrmConverter,
         UserFindQueryToUserFindQueryTypeOrmConverter,
         UserDbToUserConverter,
+        {
+          provide: userCodePersistenceOutputPortSymbol,
+          useClass: UserCodePersistenceTypeOrmAdapter,
+        },
         {
           provide: userPersistenceOutputPortSymbol,
           useClass: UserPersistenceTypeOrmAdapter,
