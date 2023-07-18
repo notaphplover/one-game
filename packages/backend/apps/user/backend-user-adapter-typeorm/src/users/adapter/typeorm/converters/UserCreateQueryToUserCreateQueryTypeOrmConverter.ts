@@ -13,6 +13,7 @@ export class UserCreateQueryToUserCreateQueryTypeOrmConverter
     userCreateQuery: UserCreateQuery,
   ): QueryDeepPartialEntity<UserDb> {
     return {
+      active: true,
       email: userCreateQuery.email,
       id: userCreateQuery.id,
       name: userCreateQuery.name,

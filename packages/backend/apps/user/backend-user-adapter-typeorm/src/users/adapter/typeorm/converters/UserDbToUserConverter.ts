@@ -8,6 +8,7 @@ import { UserDb } from '../models/UserDb';
 export class UserDbToUserConverter implements Converter<UserDb, User> {
   public convert(user: UserDb): User {
     return {
+      active: user.active,
       email: user.email,
       id: user.id,
       name: user.name,

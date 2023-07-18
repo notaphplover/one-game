@@ -25,6 +25,7 @@ describe(UserDbToUserConverter.name, () => {
 
     it('should return a user', () => {
       const expected: User = {
+        active: userDbFixture.active,
         email: userDbFixture.email,
         id: userDbFixture.id,
         name: userDbFixture.name,

@@ -5,7 +5,7 @@ export class AddUserModel1678229103157 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "User" ("email" character varying(255) NOT NULL, "id" character varying(36) NOT NULL, "name" character varying(255) NOT NULL, "password_hash" character varying(255) NOT NULL, CONSTRAINT "PK_9862f679340fb2388436a5ab3e4" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "User" ("active" smallint NOT NULL, "email" character varying(255) NOT NULL, "id" character varying(36) NOT NULL, "name" character varying(255) NOT NULL, "password_hash" character varying(255) NOT NULL, CONSTRAINT "PK_9862f679340fb2388436a5ab3e4" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE UNIQUE INDEX "IDX_4a257d2c9837248d70640b3e36" ON "User" ("email") `,

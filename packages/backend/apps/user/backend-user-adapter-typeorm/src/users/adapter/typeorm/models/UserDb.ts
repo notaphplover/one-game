@@ -1,9 +1,20 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
+import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
+
 @Entity({
   name: 'User',
 })
 export class UserDb {
+  @Column({
+    name: 'active',
+    nullable: false,
+    transformer: new NumberToBooleanTransformer(),
+    type: 'smallint',
+    width: 1,
+  })
+  public readonly active!: boolean;
+
   @Column({
     length: 255,
     name: 'email',
