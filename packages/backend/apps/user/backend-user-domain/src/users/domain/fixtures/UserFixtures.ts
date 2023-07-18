@@ -3,6 +3,7 @@ import { User } from '../models/User';
 export class UserFixtures {
   public static get any(): User {
     const fixture: User = {
+      active: true,
       email: 'mail@sample.com',
       id: '83073aec-b81b-4107-97f9-baa46de5dd40',
       name: 'Name',
@@ -11,5 +12,19 @@ export class UserFixtures {
     };
 
     return fixture;
+  }
+
+  public static get withActiveFalse(): User {
+    return {
+      ...UserFixtures.any,
+      active: false,
+    };
+  }
+
+  public static get withActiveTrue(): User {
+    return {
+      ...UserFixtures.any,
+      active: true,
+    };
   }
 }
