@@ -5,6 +5,10 @@ import { PatchUserV1MeHttpRequestController } from './controllers/PatchUserV1MeH
 import { PostUserV1HttpRequestController } from './controllers/PostUserV1HttpRequestController';
 import { GetUserV1UserIdRequestParamHandler } from './handlers/GetUserV1UserIdRequestParamHandler';
 import {
+  UserCodePersistenceOutputPort,
+  userCodePersistenceOutputPortSymbol,
+} from './ports/output/UserCodePersistenceOutputPort';
+import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
 } from './ports/output/UserPersistenceOutputPort';
@@ -16,7 +20,8 @@ export {
   GetUserV1UserIdRequestParamHandler,
   PatchUserV1MeHttpRequestController,
   PostUserV1HttpRequestController,
+  userCodePersistenceOutputPortSymbol,
   userPersistenceOutputPortSymbol,
 };
 
-export type { UserPersistenceOutputPort };
+export type { UserCodePersistenceOutputPort, UserPersistenceOutputPort };
