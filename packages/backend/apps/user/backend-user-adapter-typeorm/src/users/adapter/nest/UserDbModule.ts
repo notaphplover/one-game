@@ -17,6 +17,7 @@ import { UserCodeDb } from '../typeorm/models/UserCodeDb';
 import { UserDb } from '../typeorm/models/UserDb';
 import { CreateUserCodeTypeOrmService } from '../typeorm/services/CreateUserCodeTypeOrmService';
 import { CreateUserTypeOrmService } from '../typeorm/services/CreateUserTypeOrmService';
+import { DeleteUserCodeTypeOrmService } from '../typeorm/services/DeleteUserCodeTypeOrmService';
 import { DeleteUserTypeOrmService } from '../typeorm/services/DeleteUserTypeOrmService';
 import { FindUserCodeTypeOrmService } from '../typeorm/services/FindUserCodeTypeOrmService';
 import { FindUserTypeOrmService } from '../typeorm/services/FindUserTypeOrmService';
@@ -36,6 +37,7 @@ export class UserDbModule {
       providers: [
         CreateUserCodeTypeOrmService,
         CreateUserTypeOrmService,
+        DeleteUserCodeTypeOrmService,
         DeleteUserTypeOrmService,
         FindUserCodeTypeOrmService,
         FindUserTypeOrmService,
