@@ -1,5 +1,6 @@
 import { JwtModule } from '@cornie-js/backend-app-jwt';
 import { EnvModule } from '@cornie-js/backend-app-user-env';
+import { UserDomainModule } from '@cornie-js/backend-user-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
@@ -23,6 +24,7 @@ export class AuthApplicationModule {
         EnvModule,
         HashModule,
         JwtModule.forRootAsync(buildJwtModuleOptions()),
+        UserDomainModule,
         UserApplicationModule.forRootAsync(userImports),
       ],
       module: AuthApplicationModule,
