@@ -2,6 +2,7 @@ import { UuidModule } from '@cornie-js/backend-app-uuid';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
+import { StringModule } from '../../../../foundation/string/adapter/nest/StringModule';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
@@ -17,7 +18,7 @@ export class UserApplicationModule {
     return {
       exports: [UserManagementInputPort],
       global: false,
-      imports: [...(imports ?? []), HashModule, UuidModule],
+      imports: [...(imports ?? []), HashModule, StringModule, UuidModule],
       module: UserApplicationModule,
       providers: [
         UserCreateQueryFromUserCreateQueryV1Builder,
