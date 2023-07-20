@@ -6,6 +6,7 @@ import { UserCreateQuery } from './query/UserCreateQuery';
 import { UserFindQuery } from './query/UserFindQuery';
 import { UserUpdateQuery } from './query/UserUpdateQuery';
 import { UserCanCreateAuthSpec } from './specs/UserCanCreateAuthSpec';
+import { UserCanCreateCodeSpec } from './specs/UserCanCreateCodeSpec';
 
 export type {
   User,
@@ -17,4 +18,4 @@ export type {
   UserUpdateQuery,
 };
 
-export { UserCanCreateAuthSpec };
+export { UserCanCreateAuthSpec, UserCanCreateCodeSpec };

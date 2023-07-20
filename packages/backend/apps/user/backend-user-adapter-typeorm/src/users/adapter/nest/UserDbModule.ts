@@ -31,7 +31,10 @@ import { UpdateUserTypeOrmService } from '../typeorm/services/UpdateUserTypeOrmS
 export class UserDbModule {
   public static forRootAsync(dbModuleOptions: DbModuleOptions): DynamicModule {
     return {
-      exports: [userPersistenceOutputPortSymbol],
+      exports: [
+        userCodePersistenceOutputPortSymbol,
+        userPersistenceOutputPortSymbol,
+      ],
       global: false,
       imports: [
         DbModule.forRootAsync(dbModuleOptions),
