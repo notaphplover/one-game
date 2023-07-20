@@ -1,7 +1,7 @@
 import { EnvLoader } from '@cornie-js/backend-env';
 import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 import { Injectable } from '@nestjs/common';
-import { cleanEnv, json, port, str, num, bool } from 'envalid';
+import { cleanEnv, json, port, str, num, bool, url } from 'envalid';
 
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
@@ -22,6 +22,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
   protected _parseEnv(env: Record<string, string>): Environment {
     const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
       ONE_JS_USER_API_BACKEND_SERVICE_SECRET: str(),
+      ONE_JS_USER_API_BASE_URL: url(),
       ONE_JS_USER_SERVICE_CORS_ORIGINS: json(),
       ONE_JS_USER_SERVICE_JWT_ALGORITHM: str<JwtAlgorithm>({
         choices: Object.values(JwtAlgorithm),
@@ -39,6 +40,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
     return {
       apiBackendServiceSecret:
         rawEnvironment.ONE_JS_USER_API_BACKEND_SERVICE_SECRET,
+      apiBaseUrl: rawEnvironment.ONE_JS_USER_API_BASE_URL,
       corsOrigins: rawEnvironment.ONE_JS_USER_SERVICE_CORS_ORIGINS,
       jwtAlgorithm: rawEnvironment.ONE_JS_USER_SERVICE_JWT_ALGORITHM,
       jwtAudience: rawEnvironment.ONE_JS_USER_SERVICE_JWT_AUDIENCE,
