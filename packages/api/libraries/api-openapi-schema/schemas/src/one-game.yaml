@@ -369,6 +369,33 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security: []
 
+  /v1/users/email/{email}/code:
+    delete:
+      summary: Delete user code
+      operationId: deleteUserByEmailCode
+      responses:
+        '200':
+          description: User deleted
+        '422':
+          description: Unprocessable operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+    post:
+      post:
+      summary: Create user code
+      operationId: createUserByEmailCode
+      responses:
+        '201':
+          description: Game created
+        '422':
+          description: Unprocessable operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+
   /v1/users/me:
     delete:
       summary: Delete user me

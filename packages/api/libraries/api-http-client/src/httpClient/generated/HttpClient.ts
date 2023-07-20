@@ -213,6 +213,36 @@ export class HttpClient {
       body,
     );
   }
+  public async deleteUserByEmailCode(headers: {
+    [key: string]: string;
+  }): Promise<
+    | Response<Record<string, string>, undefined, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'DELETE',
+      '/v1/users/email/{email}/code',
+      headers,
+      undefined,
+      undefined,
+      undefined,
+    );
+  }
+  public async createUserByEmailCode(headers: {
+    [key: string]: string;
+  }): Promise<
+    | Response<Record<string, string>, undefined, 201>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'POST',
+      '/v1/users/email/{email}/code',
+      headers,
+      undefined,
+      undefined,
+      undefined,
+    );
+  }
   public async deleteUserMe(headers: {
     [key: string]: string;
   }): Promise<
