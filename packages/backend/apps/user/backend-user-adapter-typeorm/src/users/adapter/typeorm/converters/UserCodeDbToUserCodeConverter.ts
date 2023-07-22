@@ -11,6 +11,7 @@ export class UserCodeDbToUserCodeConverter
   public convert(userCodeDb: UserCodeDb): UserCode {
     return {
       code: userCodeDb.code,
+      userId: userCodeDb.userId,
     };
   }
 }

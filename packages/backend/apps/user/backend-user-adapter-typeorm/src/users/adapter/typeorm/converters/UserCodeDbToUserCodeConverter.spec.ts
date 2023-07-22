@@ -30,6 +30,7 @@ describe(UserCodeDbToUserCodeConverter.name, () => {
       it('should return a UserCode', () => {
         const expected: UserCode = {
           code: userCodeDbFixture.code,
+          userId: userCodeDbFixture.userId,
         };
 
         expect(result).toStrictEqual(expected);
