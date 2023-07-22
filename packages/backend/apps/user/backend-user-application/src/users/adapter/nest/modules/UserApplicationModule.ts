@@ -4,6 +4,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
 import { StringModule } from '../../../../foundation/string/adapter/nest/StringModule';
+import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
@@ -29,6 +30,7 @@ export class UserApplicationModule {
       ],
       module: UserApplicationModule,
       providers: [
+        UserActivationMailDeliveryOptionsFromUserBuilder,
         UserCodeManagementInputPort,
         UserCreateQueryFromUserCreateQueryV1Builder,
         UserManagementInputPort,
