@@ -7,8 +7,10 @@
 
 export type Types = TypesV1;
 export type TypesV1 =
-  | AuthV1
   | AuthCreateQueryV1
+  | AuthV1
+  | CodeAuthCreateQueryV1
+  | EmailPasswordAuthCreateQueryV1
   | CardArrayV1
   | CardV1
   | DrawCardV1
@@ -40,6 +42,9 @@ export type TypesV1 =
   | UserCreateQueryV1
   | UserMeUpdateQueryV1
   | UserV1;
+export type AuthCreateQueryV1 =
+  | CodeAuthCreateQueryV1
+  | EmailPasswordAuthCreateQueryV1;
 export type CardV1 =
   | DrawCardV1
   | NormalCardV1
@@ -59,12 +64,15 @@ export type GameIdUpdateQueryV1 =
   | GameIdPlayCardsQueryV1;
 export type GameSlotV1 = ActiveGameSlotV1 | NonStartedGameSlotV1;
 
-export interface AuthV1 {
-  jwt: string;
+export interface CodeAuthCreateQueryV1 {
+  code: string;
 }
-export interface AuthCreateQueryV1 {
+export interface EmailPasswordAuthCreateQueryV1 {
   email: string;
   password: string;
+}
+export interface AuthV1 {
+  jwt: string;
 }
 export interface DrawCardV1 {
   color: CardColorV1;
