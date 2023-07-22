@@ -7,6 +7,7 @@
   "dependencies": {
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-api-validators": "workspace:*",
+    "@cornie-js/backend-application-mail": "workspace:*",
     "@cornie-js/backend-app-jwt": "workspace:*",
     "@cornie-js/backend-app-uuid": "workspace:*",
     "@cornie-js/backend-app-user-env": "workspace:*",
