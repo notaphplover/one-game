@@ -2,7 +2,7 @@ import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 
 export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_USER_API_BACKEND_SERVICE_SECRET: string;
-  ONE_JS_USER_API_BASE_URL: string;
+  ONE_JS_USER_FRONTEND_BASE_URL: string;
   ONE_JS_USER_SERVICE_CORS_ORIGINS: string[];
   ONE_JS_USER_SERVICE_JWT_ALGORITHM: JwtAlgorithm;
   ONE_JS_USER_SERVICE_JWT_AUDIENCE: string;
@@ -10,6 +10,12 @@ export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_USER_SERVICE_JWT_ISSUER: string;
   ONE_JS_USER_SERVICE_JWT_PRIVATE_KEY: string;
   ONE_JS_USER_SERVICE_JWT_PUBLIC_KEY: string;
+  ONE_JS_USER_SERVICE_MAIL_DEFAULT_ADDRESS: string;
+  ONE_JS_USER_SERVICE_MAIL_HOST: string;
+  ONE_JS_USER_SERVICE_MAIL_PASSWORD: string;
+  ONE_JS_USER_SERVICE_MAIL_PORT: number;
+  ONE_JS_USER_SERVICE_MAIL_USE_TLS: boolean;
+  ONE_JS_USER_SERVICE_MAIL_USER: string;
   ONE_JS_USER_SERVICE_PORT: number;
   ONE_JS_USER_SERVICE_SEED_DUMMY: boolean;
   ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS: Record<string, unknown>;
