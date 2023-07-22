@@ -85,7 +85,7 @@ describe(HttpRequestController.name, () => {
       Handler<[Request | RequestWithBody], unknown[]>
     >;
     let responseBuilderMock: jest.Mocked<
-      Builder<Response | ResponseWithBody<unknown>, [unknown | undefined]>
+      Builder<Response | ResponseWithBody<unknown>, [unknown]>
     >;
 
     let responseFromErrorBuilderMock: jest.Mocked<
@@ -226,7 +226,7 @@ describe(HttpRequestController.name, () => {
       Handler<[Request | RequestWithBody], unknown[]>
     >;
     let responseBuilderMock: jest.Mocked<
-      Builder<Response | ResponseWithBody<unknown>, [unknown | undefined]>
+      Builder<Response | ResponseWithBody<unknown>, [unknown]>
     >;
 
     let responseFromErrorBuilderMock: jest.Mocked<
