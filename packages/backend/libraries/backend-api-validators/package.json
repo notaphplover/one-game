@@ -12,7 +12,7 @@
   "devDependencies": {
     "@jest/globals": "29.6.1",
     "@cornie-js/json-schema-utils": "workspace:*",
-    "@types/node": "18.16.20",
+    "@types/node": "18.17.0",
     "@typescript-eslint/eslint-plugin": "6.1.0",
     "@typescript-eslint/parser": "6.1.0",
     "eslint": "8.45.0",
