@@ -4,7 +4,7 @@ import { MailConfig } from './MailConfig';
 
 export interface Environment {
   apiBackendServiceSecret: string;
-  apiBaseUrl: string;
+  frontendBaseUrl: string;
   corsOrigins: string[];
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;

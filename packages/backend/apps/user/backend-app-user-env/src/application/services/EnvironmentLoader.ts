@@ -32,7 +32,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
   protected _parseEnv(env: Record<string, string>): Environment {
     const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
       ONE_JS_USER_API_BACKEND_SERVICE_SECRET: str(),
-      ONE_JS_USER_API_BASE_URL: url(),
+      ONE_JS_USER_FRONTEND_BASE_URL: url(),
       ONE_JS_USER_SERVICE_CORS_ORIGINS: json(),
       ONE_JS_USER_SERVICE_JWT_ALGORITHM: str<JwtAlgorithm>({
         choices: Object.values(JwtAlgorithm),
@@ -56,8 +56,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
     return {
       apiBackendServiceSecret:
         rawEnvironment.ONE_JS_USER_API_BACKEND_SERVICE_SECRET,
-      apiBaseUrl: rawEnvironment.ONE_JS_USER_API_BASE_URL,
       corsOrigins: rawEnvironment.ONE_JS_USER_SERVICE_CORS_ORIGINS,
+      frontendBaseUrl: rawEnvironment.ONE_JS_USER_FRONTEND_BASE_URL,
       jwtAlgorithm: rawEnvironment.ONE_JS_USER_SERVICE_JWT_ALGORITHM,
       jwtAudience: rawEnvironment.ONE_JS_USER_SERVICE_JWT_AUDIENCE,
       jwtExpirationMs: rawEnvironment.ONE_JS_USER_SERVICE_JWT_EXPIRATION_MS,
