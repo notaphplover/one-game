@@ -69,7 +69,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
         authUser: rawEnvironment.ONE_JS_USER_SERVICE_MAIL_USER,
         defaultAddress: rawEnvironment.ONE_JS_USER_SERVICE_MAIL_DEFAULT_ADDRESS,
         host: rawEnvironment.ONE_JS_USER_SERVICE_MAIL_HOST,
-        port: rawEnvironment.ONE_JS_USER_SERVICE_PORT,
+        port: rawEnvironment.ONE_JS_USER_SERVICE_MAIL_PORT,
         useTls: rawEnvironment.ONE_JS_USER_SERVICE_MAIL_USE_TLS,
       },
       port: rawEnvironment.ONE_JS_USER_SERVICE_PORT,
