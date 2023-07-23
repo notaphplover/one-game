@@ -3,7 +3,12 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import {
   User,
   UserCreateQuery,
@@ -21,6 +26,8 @@ import {
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
+import { UserCreatedEventHandler } from '../../handlers/UserCreatedEventHandler';
+import { UserCreatedEvent } from '../../models/UserCreatedEvent';
 import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
@@ -29,6 +36,7 @@ import {
 @Injectable()
 export class UserManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
+  readonly #userCreatedEventHandler: Handler<[UserCreatedEvent], void>;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, HashContext & UuidContext]
@@ -44,6 +52,8 @@ export class UserManagementInputPort {
   constructor(
     @Inject(bcryptHashProviderOutputPortSymbol)
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
+    @Inject(UserCreatedEventHandler)
+    userCreatedEventHandler: Handler<[UserCreatedEvent], void>,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
     userCreateQueryFromUserCreateQueryV1Builder: Builder<
       UserCreateQuery,
@@ -62,6 +72,7 @@ export class UserManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
+    this.#userCreatedEventHandler = userCreatedEventHandler;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
@@ -74,19 +85,23 @@ export class UserManagementInputPort {
   public async create(
     userCreateQueryV1: apiModels.UserCreateQueryV1,
   ): Promise<apiModels.UserV1> {
-    const context: HashContext & UuidContext = await this.#buildCreateContext(
-      userCreateQueryV1,
-    );
+    const userCreateQueryContext: HashContext & UuidContext =
+      await this.#buildCreateContext(userCreateQueryV1);
 
     const userCreateQuery: UserCreateQuery =
       this.#userCreateQueryFromUserCreateQueryV1Builder.build(
         userCreateQueryV1,
-        context,
+        userCreateQueryContext,
       );
 
     const user: User = await this.#userPersistenceOutputPort.create(
       userCreateQuery,
     );
+
+    await this.#userCreatedEventHandler.handle({
+      user,
+      userCreateQuery,
+    });
 
     return this.#userV1FromUserBuilder.build(user);
   }

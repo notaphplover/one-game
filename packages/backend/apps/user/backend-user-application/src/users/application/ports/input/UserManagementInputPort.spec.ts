@@ -2,7 +2,12 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import {
   User,
   UserCreateQuery,
@@ -21,11 +26,15 @@ import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/applic
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
+import { UserCreatedEvent } from '../../models/UserCreatedEvent';
 import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
   let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
+  let userCreatedEventHandlerMock: jest.Mocked<
+    Handler<[UserCreatedEvent], void>
+  >;
   let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
       UserCreateQuery,
@@ -45,6 +54,9 @@ describe(UserManagementInputPort.name, () => {
     bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
+    userCreatedEventHandlerMock = {
+      handle: jest.fn(),
+    };
     userCreateQueryFromUserCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -62,6 +74,7 @@ describe(UserManagementInputPort.name, () => {
 
     userManagementInputPort = new UserManagementInputPort(
       bcryptHashProviderOutputPortMock,
+      userCreatedEventHandlerMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
       userUpdateQueryFromUserMeUpdateQueryV1BuilderMock,
@@ -102,6 +115,7 @@ describe(UserManagementInputPort.name, () => {
           userCreateQueryFixture,
         );
         userPersistenceOutputPortMock.create.mockResolvedValueOnce(userFixture);
+        userCreatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
         userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
 
         result = await userManagementInputPort.create(userCreateQueryV1Fixture);
@@ -141,6 +155,18 @@ describe(UserManagementInputPort.name, () => {
         expect(userPersistenceOutputPortMock.create).toHaveBeenCalledTimes(1);
         expect(userPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           userCreateQueryFixture,
+        );
+      });
+
+      it('should call userCreatedEventHandler.handle()', () => {
+        const expectedUserCreatedEvent: UserCreatedEvent = {
+          user: userFixture,
+          userCreateQuery: userCreateQueryFixture,
+        };
+
+        expect(userCreatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(userCreatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expectedUserCreatedEvent,
         );
       });
 
