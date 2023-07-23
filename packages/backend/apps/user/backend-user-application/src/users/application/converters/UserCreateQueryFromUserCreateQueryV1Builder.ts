@@ -19,6 +19,7 @@ export class UserCreateQueryFromUserCreateQueryV1Builder
     context: HashContext & UuidContext,
   ): UserCreateQuery {
     return {
+      active: false,
       email: userCreateQueryV1.email,
       id: context.uuid,
       name: userCreateQueryV1.name,
