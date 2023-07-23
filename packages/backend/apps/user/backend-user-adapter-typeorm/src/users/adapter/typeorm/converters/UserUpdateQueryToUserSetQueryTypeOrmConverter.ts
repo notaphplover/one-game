@@ -14,6 +14,10 @@ export class UserUpdateQueryToUserSetQueryTypeOrmConverter
   ): QueryDeepPartialEntity<UserDb> {
     const userSetQueryTypeOrm: Writable<QueryDeepPartialEntity<UserDb>> = {};
 
+    if (userUpdateQuery.active !== undefined) {
+      userSetQueryTypeOrm.active = userUpdateQuery.active;
+    }
+
     if (userUpdateQuery.name !== undefined) {
       userSetQueryTypeOrm.name = userUpdateQuery.name;
     }
