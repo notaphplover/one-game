@@ -16,6 +16,43 @@ describe(UserUpdateQueryFromUserMeUpdateQueryV1Builder, () => {
   });
 
   describe('.build', () => {
+    describe('having a UserMeUpdateQueryV1 with active', () => {
+      let userMeUpdateQueryV1Fixture: apiModels.UserMeUpdateQueryV1;
+
+      beforeAll(() => {
+        userMeUpdateQueryV1Fixture = UserMeUpdateQueryV1Fixtures.withActive;
+      });
+
+      describe('when called', () => {
+        let uuidContextFixture: UuidContext;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          uuidContextFixture = {
+            uuid: '83073aec-b81b-4107-97f9-baa46de5dd40',
+          };
+
+          result = userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
+            userMeUpdateQueryV1Fixture,
+            uuidContextFixture,
+          );
+        });
+
+        it('should return a UserUpdateQuery', () => {
+          const expected: UserUpdateQuery & Record<string, unknown> = {
+            active: userMeUpdateQueryV1Fixture.active as true,
+
+            userFindQuery: {
+              id: uuidContextFixture.uuid,
+            },
+          };
+
+          expect(result).toStrictEqual(expect.objectContaining(expected));
+        });
+      });
+    });
+
     describe('having a UserMeUpdateQueryV1 with name', () => {
       let userMeUpdateQueryV1Fixture: apiModels.UserMeUpdateQueryV1;
 

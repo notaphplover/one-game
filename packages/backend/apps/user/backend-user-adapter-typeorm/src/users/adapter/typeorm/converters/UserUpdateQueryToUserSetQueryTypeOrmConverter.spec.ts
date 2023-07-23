@@ -16,6 +16,32 @@ describe(UserUpdateQueryToUserSetQueryTypeOrmConverter.name, () => {
   });
 
   describe('.convert', () => {
+    describe('having a UserUpdateQuery with active', () => {
+      let userUpdateQueryFixture: UserUpdateQuery;
+
+      beforeAll(() => {
+        userUpdateQueryFixture = UserUpdateQueryFixtures.withActive;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = userUpdateQueryToUserSetQueryTypeOrmConverter.convert(
+            userUpdateQueryFixture,
+          );
+        });
+
+        it('should return a QueryDeepPartialEntity<UserDb>', () => {
+          const expected: QueryDeepPartialEntity<UserDb> = {
+            active: userUpdateQueryFixture.active as boolean,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
     describe('having a UserUpdateQuery with name', () => {
       let userUpdateQueryFixture: UserUpdateQuery;
 

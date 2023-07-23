@@ -8,6 +8,13 @@ export class UserUpdateQueryFixtures {
     };
   }
 
+  public static get withActive(): UserUpdateQuery {
+    return {
+      ...UserUpdateQueryFixtures.any,
+      active: true,
+    };
+  }
+
   public static get withName(): UserUpdateQuery {
     return {
       ...UserUpdateQueryFixtures.any,
