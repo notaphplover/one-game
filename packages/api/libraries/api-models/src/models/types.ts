@@ -174,6 +174,7 @@ export interface UserCreateQueryV1 {
   password: string;
 }
 export interface UserMeUpdateQueryV1 {
+  active?: true;
   name?: string;
 }
 export interface UserV1 {

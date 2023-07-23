@@ -18,6 +18,10 @@ export class UserUpdateQueryFromUserMeUpdateQueryV1Builder
       },
     };
 
+    if (userMeUpdateQueryV1.active !== undefined) {
+      userUpdateQuery.active = userMeUpdateQueryV1.active;
+    }
+
     if (userMeUpdateQueryV1.name !== undefined) {
       userUpdateQuery.name = userMeUpdateQueryV1.name;
     }

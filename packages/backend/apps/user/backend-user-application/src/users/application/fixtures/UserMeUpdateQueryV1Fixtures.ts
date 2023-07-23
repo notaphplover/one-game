@@ -5,6 +5,13 @@ export class UserMeUpdateQueryV1Fixtures {
     return {};
   }
 
+  public static get withActive(): apiModels.UserMeUpdateQueryV1 {
+    return {
+      ...UserMeUpdateQueryV1Fixtures.any,
+      active: true,
+    };
+  }
+
   public static get withName(): apiModels.UserMeUpdateQueryV1 {
     return {
       ...UserMeUpdateQueryV1Fixtures.any,
