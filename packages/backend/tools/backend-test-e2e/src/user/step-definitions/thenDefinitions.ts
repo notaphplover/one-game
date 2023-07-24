@@ -27,6 +27,7 @@ function thenCreateUserResponseShouldContainValidUser(
 
   expectObjectContaining<ResponseType>(response, {
     body: {
+      active: false,
       id: () => undefined,
       name: userCreateQueryV1.name,
     },
