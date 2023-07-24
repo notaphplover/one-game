@@ -11,6 +11,7 @@ import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../applicatio
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
 import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';
+import { UserUpdatedEventHandler } from '../../../application/handlers/UserUpdatedEventHandler';
 import { UserCodeManagementInputPort } from '../../../application/ports/input/UserCodeManagementInputPort';
 import { UserManagementInputPort } from '../../../application/ports/input/UserManagementInputPort';
 
@@ -40,6 +41,7 @@ export class UserApplicationModule {
         UserCreatedEventHandler,
         UserCreateQueryFromUserCreateQueryV1Builder,
         UserManagementInputPort,
+        UserUpdatedEventHandler,
         UserUpdateQueryFromUserMeUpdateQueryV1Builder,
         UserV1FromUserBuilder,
       ],
