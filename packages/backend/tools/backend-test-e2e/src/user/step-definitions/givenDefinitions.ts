@@ -5,6 +5,8 @@ import { faker } from '@faker-js/faker';
 import { HttpStatus } from '@nestjs/common';
 
 import { AuthV1Parameter } from '../../auth/models/AuthV1Parameter';
+import { whenCreateCodeAuthRequestIsSendFromUserActivationMail } from '../../auth/step-definitions/whenDefinitions';
+import { setAuth } from '../../auth/utils/actions/setAuth';
 import { getAuthOrFail } from '../../auth/utils/calculations/getAuthOrFail';
 import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
@@ -13,13 +15,17 @@ import { getRequestParametersOrFail } from '../../http/utils/calculations/getReq
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 import { UserV1Parameter } from '../models/UserV1Parameter';
 import { setUser } from '../utils/actions/setUser';
-import { whenCreateUserRequestIsSend } from './whenDefinitions';
+import {
+  whenCreateUserRequestIsSend,
+  whenGetUserMeRequestIsSend,
+  whenUpdateUserMeRequestIsSend,
+} from './whenDefinitions';
 
 export function givenCreateUserRequest(
   this: OneGameApiWorld,
   requestAlias?: string,
 ): void {
-  const alias: string = requestAlias ?? defaultAlias;
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
 
   const firstName: string = faker.person.firstName();
   const lastName: string = faker.person.lastName();
@@ -40,41 +46,98 @@ export function givenCreateUserRequest(
     password: faker.internet.password({ length: 20 }),
   };
 
-  setRequestParameters.bind(this)('createUser', alias, [{}, userCreateQueryV1]);
+  setRequestParameters.bind(this)('createUser', processedRequestAlias, [
+    {},
+    userCreateQueryV1,
+  ]);
 }
 
 export async function givenUser(
   this: OneGameApiWorld,
   requestAlias?: string,
+  userAlias?: string,
 ): Promise<void> {
-  const alias: string = requestAlias ?? defaultAlias;
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
 
-  givenCreateUserRequest.bind(this)(alias);
-  await whenCreateUserRequestIsSend.bind(this)(alias);
+  givenCreateUserRequest.bind(this)(processedRequestAlias);
+  await whenCreateUserRequestIsSend.bind(this)(processedRequestAlias);
 
   const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
-    getRequestParametersOrFail(this, 'createUser', alias);
+    getRequestParametersOrFail(this, 'createUser', processedRequestAlias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
+  type CreateUserResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
 
-  const response: ResponseType = getResponseParametersOrFail(
-    this,
-    'createUser',
-    alias,
+  const createUserResponse: CreateUserResponseType =
+    getResponseParametersOrFail(this, 'createUser', processedRequestAlias);
+
+  if (createUserResponse.statusCode !== HttpStatus.OK) {
+    throw new Error(
+      `Expected user to be created, an unexpected ${createUserResponse.statusCode} status code was received instead`,
+    );
+  }
+
+  await whenCreateCodeAuthRequestIsSendFromUserActivationMail.bind(this)(
+    requestAlias,
   );
 
-  if (response.statusCode !== HttpStatus.OK) {
+  type CreateAuthResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
+
+  const createCodeAuthResponse: CreateAuthResponseType =
+    getResponseParametersOrFail(this, 'createAuth', processedRequestAlias);
+
+  if (createCodeAuthResponse.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected user to be created, an unexpected ${response.statusCode} status code was received instead`,
+      `Expected auth to be created, an unexpected ${createUserResponse.statusCode} status code was received instead`,
+    );
+  }
+
+  setAuth.bind(this)(processedUserAlias, {
+    auth: createCodeAuthResponse.body,
+    authCreateQuery: getRequestParametersOrFail(
+      this,
+      'createAuth',
+      processedRequestAlias,
+    )[1],
+  });
+
+  givenUpdateUserRequestFromUser.bind(this)(
+    processedRequestAlias,
+    processedUserAlias,
+    {
+      active: true,
+    },
+  );
+
+  await whenUpdateUserMeRequestIsSend.bind(this)(processedRequestAlias);
+
+  givenGetUserMeRequestFromUserCredentials.bind(this)(
+    processedRequestAlias,
+    processedUserAlias,
+  );
+
+  await whenGetUserMeRequestIsSend.bind(this)(processedRequestAlias);
+
+  type GetUserMeResponseType = Awaited<ReturnType<HttpClient['getUserMe']>>;
+
+  const getUserMeResponse: GetUserMeResponseType = getResponseParametersOrFail(
+    this,
+    'getUserMe',
+    processedRequestAlias,
+  );
+
+  if (getUserMeResponse.statusCode !== HttpStatus.OK) {
+    throw new Error(
+      `Expected user to be retrieved, an unexpected ${getUserMeResponse.statusCode} status code was received instead`,
     );
   }
 
   const userParameter: UserV1Parameter = {
-    user: response.body,
+    user: getUserMeResponse.body,
     userCreateQuery: userCreateQueryV1,
   };
 
-  setUser.bind(this)(alias, userParameter);
+  setUser.bind(this)(processedUserAlias, userParameter);
 }
 
 export function givenDeleteOwnUserRequestFromUser(
@@ -102,10 +165,10 @@ export function givenDeleteOwnUserRequestFromUser(
   );
 }
 
-export function givenUpdateUserRequestFromUser(
+export function givenGetUserMeRequestFromUserCredentials(
   this: OneGameApiWorld,
-  requestAlias?: string,
-  userAlias?: string,
+  requestAlias?: string | undefined,
+  userAlias?: string | undefined,
 ): void {
   const procesedRequestAlias: string = requestAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
@@ -113,16 +176,42 @@ export function givenUpdateUserRequestFromUser(
   const authV1Parameter: AuthV1Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
-  const userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1 = {
-    name: faker.person.fullName(),
-  };
+  const getUserMeRequestParameters: Parameters<HttpClient['getUserMe']> = [
+    {
+      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+    },
+  ];
+
+  setRequestParameters.bind(this)(
+    'getUserMe',
+    procesedRequestAlias,
+    getUserMeRequestParameters,
+  );
+}
+
+export function givenUpdateUserRequestFromUser(
+  this: OneGameApiWorld,
+  requestAlias?: string | undefined,
+  userAlias?: string | undefined,
+  userMeUpdateQueryV1?: apiModels.UserMeUpdateQueryV1 | undefined,
+): void {
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const authV1Parameter: AuthV1Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+
+  const processedUserMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1 =
+    userMeUpdateQueryV1 ?? {
+      name: faker.person.fullName(),
+    };
 
   const updateUserMeRequestParameters: Parameters<HttpClient['updateUserMe']> =
     [
       {
         authorization: `Bearer ${authV1Parameter.auth.jwt}`,
       },
-      userMeUpdateQueryV1,
+      processedUserMeUpdateQueryV1,
     ];
 
   setRequestParameters.bind(this)(
@@ -162,8 +251,8 @@ Given<OneGameApiWorld>(
 
 Given<OneGameApiWorld>(
   'a user {string}',
-  async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
-    await givenUser.bind(this)(requestAlias);
+  async function (this: OneGameApiWorld, userAlias: string): Promise<void> {
+    await givenUser.bind(this)(userAlias, userAlias);
   },
 );
 

@@ -40,6 +40,7 @@ describe(UserCreateQueryFromUserCreateQueryV1Builder.name, () => {
 
       it('should return UserCreateQuery', () => {
         const expected: UserCreateQuery = {
+          active: false,
           email: userCreateQueryV1Fixture.email,
           id: contextFixture.uuid,
           name: userCreateQueryV1Fixture.name,

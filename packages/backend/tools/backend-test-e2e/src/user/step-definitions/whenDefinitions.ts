@@ -17,6 +17,13 @@ export async function whenDeleteUserMeRequestIsSend(
   await sendRequest.bind(this)('deleteUserMe', requestAlias);
 }
 
+export async function whenGetUserMeRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): Promise<void> {
+  await sendRequest.bind(this)('getUserMe', requestAlias);
+}
+
 export async function whenUpdateUserMeRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
