@@ -27,7 +27,9 @@ import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/Us
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
 import { UserCreatedEventHandler } from '../../handlers/UserCreatedEventHandler';
+import { UserUpdatedEventHandler } from '../../handlers/UserUpdatedEventHandler';
 import { UserCreatedEvent } from '../../models/UserCreatedEvent';
+import { UserUpdatedEvent } from '../../models/UserUpdatedEvent';
 import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
@@ -42,6 +44,7 @@ export class UserManagementInputPort {
     [apiModels.UserCreateQueryV1, HashContext & UuidContext]
   >;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
+  readonly #userUpdatedEventHandler: Handler<[UserUpdatedEvent], void>;
   readonly #userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
     UserUpdateQuery,
     [apiModels.UserMeUpdateQueryV1, UuidContext]
@@ -61,6 +64,8 @@ export class UserManagementInputPort {
     >,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
+    @Inject(UserUpdatedEventHandler)
+    userUpdatedEventHandler: Handler<[UserUpdatedEvent], void>,
     @Inject(UserUpdateQueryFromUserMeUpdateQueryV1Builder)
     userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
       UserUpdateQuery,
@@ -76,6 +81,7 @@ export class UserManagementInputPort {
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
+    this.#userUpdatedEventHandler = userUpdatedEventHandler;
     this.#userUpdateQueryFromUserMeUpdateQueryV1Builder =
       userUpdateQueryFromUserMeUpdateQueryV1Builder;
     this.#userV1FromUserBuilder = userV1FromUserBuilder;
@@ -129,6 +135,8 @@ export class UserManagementInputPort {
     id: string,
     userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
   ): Promise<apiModels.UserV1> {
+    const userBeforeUpdate: User = await this.#getUserOrThrowUnknown(id);
+
     const userUpdateQuery: UserUpdateQuery =
       this.#userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
         userMeUpdateQueryV1,
@@ -138,6 +146,11 @@ export class UserManagementInputPort {
       );
 
     await this.#userPersistenceOutputPort.update(userUpdateQuery);
+
+    await this.#userUpdatedEventHandler.handle({
+      userBeforeUpdate: userBeforeUpdate,
+      userUpdateQuery,
+    });
 
     const userOrUndefined: User | undefined =
       await this.#userPersistenceOutputPort.findOne({
@@ -188,5 +201,18 @@ export class UserManagementInputPort {
     }
 
     return userV1OrUndefined;
+  }
+
+  async #getUserOrThrowUnknown(id: string): Promise<User> {
+    const userOrUndefined: User | undefined =
+      await this.#userPersistenceOutputPort.findOne({
+        id,
+      });
+
+    if (userOrUndefined === undefined) {
+      throw new AppError(AppErrorKind.unknown, `Unable to fetch user "${id}"`);
+    }
+
+    return userOrUndefined;
   }
 }

@@ -27,6 +27,7 @@ import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtu
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
 import { UserCreatedEvent } from '../../models/UserCreatedEvent';
+import { UserUpdatedEvent } from '../../models/UserUpdatedEvent';
 import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
@@ -42,6 +43,9 @@ describe(UserManagementInputPort.name, () => {
     >
   >;
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
+  let userUpdatedEventHandlerMock: jest.Mocked<
+    Handler<[UserUpdatedEvent], void>
+  >;
   let userUpdateQueryFromUserMeUpdateQueryV1BuilderMock: jest.Mocked<
     Builder<UserUpdateQuery, [apiModels.UserMeUpdateQueryV1, UuidContext]>
   >;
@@ -66,6 +70,9 @@ describe(UserManagementInputPort.name, () => {
       findOne: jest.fn(),
       update: jest.fn(),
     };
+    userUpdatedEventHandlerMock = {
+      handle: jest.fn(),
+    };
     userUpdateQueryFromUserMeUpdateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -77,6 +84,7 @@ describe(UserManagementInputPort.name, () => {
       userCreatedEventHandlerMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
+      userUpdatedEventHandlerMock,
       userUpdateQueryFromUserMeUpdateQueryV1BuilderMock,
       userV1FromUserBuilderMock,
       uuidProviderOutputPortMock,
@@ -329,9 +337,11 @@ describe(UserManagementInputPort.name, () => {
         );
 
         userPersistenceOutputPortMock.update.mockResolvedValueOnce(undefined);
-        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          userFixture,
-        );
+        userPersistenceOutputPortMock.findOne
+          .mockResolvedValueOnce(userFixture)
+          .mockResolvedValueOnce(userFixture);
+
+        userUpdatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
 
         userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
 
@@ -366,23 +376,42 @@ describe(UserManagementInputPort.name, () => {
       it('should call userPersistenceOutputPort.findOne()', () => {
         const expected: UserFindQuery = { id: userIdFixture };
 
-        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(2);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          1,
+          expected,
+        );
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          2,
           expected,
         );
       });
 
-      it('should return a userV1', () => {
+      it('should call userUpdatedEventHandler.handle()', () => {
+        const expected: UserUpdatedEvent = {
+          userBeforeUpdate: userFixture,
+          userUpdateQuery: userUpdateQueryFixture,
+        };
+
+        expect(userUpdatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(userUpdatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should return a UserV1', () => {
         expect(result).toBe(userV1Fixture);
       });
     });
 
-    describe('when called, and userPersistenceOutputPort.findOne() returns undefined', () => {
+    describe('when called, and userPersistenceOutputPort.findOne() returns User and then undefined', () => {
+      let userFixture: User;
       let userUpdateQueryFixture: UserUpdateQuery;
 
       let result: unknown;
 
       beforeAll(async () => {
+        userFixture = UserFixtures.any;
         userUpdateQueryFixture = UserUpdateQueryFixtures.any;
 
         userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build.mockReturnValueOnce(
@@ -390,7 +419,9 @@ describe(UserManagementInputPort.name, () => {
         );
 
         userPersistenceOutputPortMock.update.mockResolvedValueOnce(undefined);
-        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
+        userPersistenceOutputPortMock.findOne
+          .mockResolvedValueOnce(userFixture)
+          .mockResolvedValueOnce(undefined);
 
         try {
           await userManagementInputPort.updateMe(
@@ -427,8 +458,13 @@ describe(UserManagementInputPort.name, () => {
       it('should call userPersistenceOutputPort.findOne()', () => {
         const expected: UserFindQuery = { id: userIdFixture };
 
-        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(2);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          1,
+          expected,
+        );
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          2,
           expected,
         );
       });
