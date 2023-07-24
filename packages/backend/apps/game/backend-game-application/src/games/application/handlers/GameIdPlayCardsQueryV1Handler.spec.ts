@@ -4,12 +4,12 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   ActiveGame,
+  CurrentPlayerCanPlayCardsSpec,
   GameFindQuery,
   GameOptions,
   GameOptionsFindQuery,
   GameService,
   GameUpdateQuery,
-  PlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 import {
@@ -30,7 +30,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
-  let playerCanPlayCardsSpecMock: jest.Mocked<PlayerCanPlayCardsSpec>;
+  let currentPlayerCanPlayCardsSpecMock: jest.Mocked<CurrentPlayerCanPlayCardsSpec>;
 
   let gameIdPlayCardsQueryV1Handler: GameIdPlayCardsQueryV1Handler;
 
@@ -52,18 +52,18 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     playerCanUpdateGameSpecMock = {
       isSatisfiedBy: jest.fn(),
     };
-    playerCanPlayCardsSpecMock = {
+    currentPlayerCanPlayCardsSpecMock = {
       isSatisfiedBy: jest.fn(),
     } as Partial<
-      jest.Mocked<PlayerCanPlayCardsSpec>
-    > as jest.Mocked<PlayerCanPlayCardsSpec>;
+      jest.Mocked<CurrentPlayerCanPlayCardsSpec>
+    > as jest.Mocked<CurrentPlayerCanPlayCardsSpec>;
 
     gameIdPlayCardsQueryV1Handler = new GameIdPlayCardsQueryV1Handler(
       gameOptionsPersistenceOutputPortMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
       playerCanUpdateGameSpecMock,
-      playerCanPlayCardsSpecMock,
+      currentPlayerCanPlayCardsSpecMock,
     );
   });
 
@@ -362,7 +362,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
-        playerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+        currentPlayerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          false,
+        );
 
         try {
           await gameIdPlayCardsQueryV1Handler.handle(
@@ -415,13 +417,13 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       });
 
       it('should call playerCanPlayCardsSpec.isSatisfiedBy()', () => {
-        expect(playerCanPlayCardsSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(playerCanPlayCardsSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-          activeGameFixture.state.slots[
-            gameIdPlayCardsQueryV1Fixture.slotIndex
-          ],
+        expect(
+          currentPlayerCanPlayCardsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          currentPlayerCanPlayCardsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(
+          activeGameFixture,
           gameOptionsFixture,
           gameIdPlayCardsQueryV1Fixture.cardIndexes,
         );
@@ -480,7 +482,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
-        playerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+        currentPlayerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          true,
+        );
 
         result = await gameIdPlayCardsQueryV1Handler.handle(
           gameIdFixture,
@@ -529,13 +533,13 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       });
 
       it('should call playerCanPlayCardsSpec.isSatisfiedBy()', () => {
-        expect(playerCanPlayCardsSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(playerCanPlayCardsSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-          activeGameFixture.state.slots[
-            gameIdPlayCardsQueryV1Fixture.slotIndex
-          ],
+        expect(
+          currentPlayerCanPlayCardsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          currentPlayerCanPlayCardsSpecMock.isSatisfiedBy,
+        ).toHaveBeenCalledWith(
+          activeGameFixture,
           gameOptionsFixture,
           gameIdPlayCardsQueryV1Fixture.cardIndexes,
         );

@@ -2,11 +2,10 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   ActiveGame,
-  ActiveGameSlot,
+  CurrentPlayerCanPlayCardsSpec,
   GameOptions,
   GameService,
   GameUpdateQuery,
-  PlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -23,7 +22,7 @@ import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
 
 @Injectable()
 export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPlayCardsQueryV1> {
-  readonly #playerCanPlayCardsSpec: PlayerCanPlayCardsSpec;
+  readonly #currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec;
 
   constructor(
     @Inject(gameOptionsPersistenceOutputPortSymbol)
@@ -34,8 +33,8 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     gameService: GameService,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
-    @Inject(PlayerCanPlayCardsSpec)
-    playerCanPlayCardsSpec: PlayerCanPlayCardsSpec,
+    @Inject(CurrentPlayerCanPlayCardsSpec)
+    currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec,
   ) {
     super(
       gameOptionsPersistenceOutputPort,
@@ -44,7 +43,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       playerCanUpdateGameSpec,
     );
 
-    this.#playerCanPlayCardsSpec = playerCanPlayCardsSpec;
+    this.#currentPlayerCanPlayCardsSpec = currentPlayerCanPlayCardsSpec;
   }
 
   protected override _buildUpdateQuery(
@@ -64,14 +63,9 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     gameOptions: GameOptions,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
   ): void {
-    const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
-      game,
-      gameIdUpdateQueryV1.slotIndex,
-    );
-
     if (
-      !this.#playerCanPlayCardsSpec.isSatisfiedBy(
-        gameSlot,
+      !this.#currentPlayerCanPlayCardsSpec.isSatisfiedBy(
+        game,
         gameOptions,
         gameIdUpdateQueryV1.cardIndexes,
       )
@@ -81,18 +75,5 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
         'Operation not allowed. Reason: selected cards cannot be played in the current context',
       );
     }
-  }
-
-  #getGameSlotOrThrow(game: ActiveGame, slotIndex: number): ActiveGameSlot {
-    const gameSlot: ActiveGameSlot | undefined = game.state.slots[slotIndex];
-
-    if (gameSlot === undefined) {
-      throw new AppError(
-        AppErrorKind.entityNotFound,
-        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
-      );
-    }
-
-    return gameSlot;
   }
 }

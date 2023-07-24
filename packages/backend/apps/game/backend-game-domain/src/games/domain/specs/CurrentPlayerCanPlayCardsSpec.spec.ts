@@ -1,16 +1,20 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
+import { ActiveGameFixtures } from '../fixtures';
 import { ActiveGameSlotFixtures } from '../fixtures/ActiveGameSlotFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
+import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameOptions } from '../models/GameOptions';
-import { PlayerCanPlayCardsSpec } from './PlayerCanPlayCardsSpec';
+import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
+import { CurrentPlayerCanPlayCardsSpec } from './CurrentPlayerCanPlayCardsSpec';
 
-describe(PlayerCanPlayCardsSpec.name, () => {
+describe(CurrentPlayerCanPlayCardsSpec.name, () => {
   let areCardsEqualsSpecMock: jest.Mocked<AreCardsEqualsSpec>;
+  let cardCanBePlayedSpecMock: jest.Mocked<CardCanBePlayedSpec>;
 
-  let playerCanPlayCardsSpec: PlayerCanPlayCardsSpec;
+  let currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec;
 
   beforeAll(() => {
     areCardsEqualsSpecMock = {
@@ -19,17 +23,27 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       jest.Mocked<AreCardsEqualsSpec>
     > as jest.Mocked<AreCardsEqualsSpec>;
 
-    playerCanPlayCardsSpec = new PlayerCanPlayCardsSpec(areCardsEqualsSpecMock);
+    cardCanBePlayedSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    } as Partial<
+      jest.Mocked<CardCanBePlayedSpec>
+    > as jest.Mocked<CardCanBePlayedSpec>;
+
+    currentPlayerCanPlayCardsSpec = new CurrentPlayerCanPlayCardsSpec(
+      areCardsEqualsSpecMock,
+      cardCanBePlayedSpecMock,
+    );
   });
 
   describe.each<
-    [string, ActiveGameSlot, GameOptions, number[], boolean, boolean]
+    [string, ActiveGameSlot, GameOptions, number[], boolean, boolean, boolean]
   >([
     [
       'Repeated card indexes',
       ActiveGameSlotFixtures.withCardsOne,
       GameOptionsFixtures.withPlayMultipleSameCardsEnabled,
       [0, 0],
+      true,
       true,
       false,
     ],
@@ -39,6 +53,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       GameOptionsFixtures.withPlayMultipleSameCardsEnabled,
       [],
       true,
+      true,
       false,
     ],
     [
@@ -46,6 +61,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       ActiveGameSlotFixtures.withCardsOne,
       GameOptionsFixtures.withPlayMultipleSameCardsDisabled,
       [],
+      true,
       true,
       false,
     ],
@@ -55,6 +71,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       GameOptionsFixtures.withPlayMultipleSameCardsEnabled,
       [-1],
       true,
+      true,
       false,
     ],
     [
@@ -63,6 +80,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       GameOptionsFixtures.withPlayMultipleSameCardsEnabled,
       [0],
       false,
+      true,
       false,
     ],
     [
@@ -72,6 +90,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       [0],
       true,
       true,
+      true,
     ],
     [
       'Two existing card index',
@@ -79,6 +98,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       GameOptionsFixtures.withPlayMultipleSameCardsEnabled,
       [0, 1],
       false,
+      true,
       false,
     ],
     [
@@ -86,6 +106,7 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       ActiveGameSlotFixtures.withCardsTwo,
       GameOptionsFixtures.withPlayMultipleSameCardsEnabled,
       [0, 1],
+      true,
       true,
       true,
     ],
@@ -97,18 +118,35 @@ describe(PlayerCanPlayCardsSpec.name, () => {
       gameOptionsFixture: GameOptions,
       cardIndexesFixture: number[],
       areCardsEquals: boolean,
+      cardCanBePlayed: boolean,
       expectedResult: boolean,
     ) => {
-      describe(`when called, and areCardsEqualsSpec.isSatisfiedBy() returns ${areCardsEquals.toString()}`, () => {
+      describe(`when called, and areCardsEqualsSpec.isSatisfiedBy() returns ${areCardsEquals.toString()} and cardCanBePlayedSpec.isSatisfiedBy() returns ${cardCanBePlayed.toString()}`, () => {
+        let gameFixture: ActiveGame;
         let result: unknown;
 
         beforeAll(() => {
+          const activeGameWithOneSlotFixture: ActiveGame =
+            ActiveGameFixtures.withSlotsOne;
+
+          gameFixture = {
+            ...activeGameWithOneSlotFixture,
+            state: {
+              ...activeGameWithOneSlotFixture.state,
+              slots: [gameSlotFixture],
+            },
+          };
+
           areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValueOnce(
             areCardsEquals,
           );
 
-          result = playerCanPlayCardsSpec.isSatisfiedBy(
-            gameSlotFixture,
+          cardCanBePlayedSpecMock.isSatisfiedBy.mockReturnValueOnce(
+            cardCanBePlayed,
+          );
+
+          result = currentPlayerCanPlayCardsSpec.isSatisfiedBy(
+            gameFixture,
             gameOptionsFixture,
             cardIndexesFixture,
           );

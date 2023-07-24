@@ -1,26 +1,32 @@
-import { Spec } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Spec } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { Card } from '../../../cards/domain/models/Card';
 import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
+import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameOptions } from '../models/GameOptions';
+import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 
 @Injectable()
-export class PlayerCanPlayCardsSpec
-  implements Spec<[ActiveGameSlot, GameOptions, number[]]>
+export class CurrentPlayerCanPlayCardsSpec
+  implements Spec<[ActiveGame, GameOptions, number[]]>
 {
   readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
+  readonly #cardCanBePlayedSpec: CardCanBePlayedSpec;
 
   constructor(
     @Inject(AreCardsEqualsSpec)
     areCardsEqualsSpec: AreCardsEqualsSpec,
+    @Inject(CardCanBePlayedSpec)
+    cardCanBePlayedSpec: CardCanBePlayedSpec,
   ) {
     this.#areCardsEqualsSpec = areCardsEqualsSpec;
+    this.#cardCanBePlayedSpec = cardCanBePlayedSpec;
   }
 
   public isSatisfiedBy(
-    activeGameSlot: ActiveGameSlot,
+    activeGame: ActiveGame,
     gameOptions: GameOptions,
     cardIndexes: number[],
   ): boolean {
@@ -28,23 +34,24 @@ export class PlayerCanPlayCardsSpec
       return false;
     }
 
-    if (gameOptions.playMultipleSameCards) {
-      if (cardIndexes.length === 0) {
-        return false;
-      }
-    } else {
-      if (cardIndexes.length !== 1) {
-        return false;
-      }
-    }
+    const activeGameSlot: ActiveGameSlot =
+      this.#getActiveGameSlotOrThrow(activeGame);
 
     const cards: Card[] | undefined = this.#tryGetCards(
       activeGameSlot,
       cardIndexes,
     );
 
+    if (!this.#areValidCardsAmount(cards, gameOptions)) {
+      return false;
+    }
+
+    const [card]: [Card, ...Card[]] = cards;
+
     return (
-      cards !== undefined && this.#areCardsEqualsSpec.isSatisfiedBy(...cards)
+      cards !== undefined &&
+      this.#areCardsEqualsSpec.isSatisfiedBy(...cards) &&
+      this.#cardCanBePlayedSpec.isSatisfiedBy(card, activeGame, gameOptions)
     );
   }
 
@@ -57,6 +64,36 @@ export class PlayerCanPlayCardsSpec
          */
         numbers[index - 1] === value,
     );
+  }
+
+  #areValidCardsAmount(
+    cards: Card[] | undefined,
+    gameOptions: GameOptions,
+  ): cards is [Card, ...Card[]] {
+    if (cards === undefined) {
+      return false;
+    }
+
+    if (gameOptions.playMultipleSameCards) {
+      return cards.length !== 0;
+    } else {
+      return cards.length === 1;
+    }
+  }
+
+  #getActiveGameSlotOrThrow(game: ActiveGame): ActiveGameSlot {
+    const slotIndex: number = game.state.currentPlayingSlotIndex;
+    const activeGameSlot: ActiveGameSlot | undefined =
+      game.state.slots[slotIndex];
+
+    if (activeGameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
+      );
+    }
+
+    return activeGameSlot;
   }
 
   #tryGetCards(
