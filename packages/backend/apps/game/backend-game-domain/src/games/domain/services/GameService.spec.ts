@@ -71,6 +71,10 @@ describe(GameService.name, () => {
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
             },
             gameSlotUpdateQueries: [
               {
@@ -136,6 +140,10 @@ describe(GameService.name, () => {
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
             },
             gameSlotUpdateQueries: [
               {
@@ -188,6 +196,10 @@ describe(GameService.name, () => {
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
             },
           };
 
@@ -306,6 +318,10 @@ describe(GameService.name, () => {
             currentCard: expect.any(Object) as unknown as Card,
             gameFindQuery: {
               id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
             },
             gameSlotUpdateQueries: [
               {

@@ -266,6 +266,53 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
       });
     });
 
+    describe('having a GameFindQuery with state with currentPlayingSlotIndex', () => {
+      let gameFindQueryFixture: GameFindQuery;
+
+      beforeAll(() => {
+        gameFindQueryFixture =
+          GameFindQueryFixtures.withStateWithCurrentPlayingSlotIndex;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+            gameFindQueryFixture,
+            queryBuilderFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should call queryBuilder.andWhere()', () => {
+          expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
+          expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+            `${GameDb.name}.currentPlayingSlotIndex = :${GameDb.name}currentPlayingSlotIndex`,
+            {
+              [`${GameDb.name}currentPlayingSlotIndex`]:
+                gameFindQueryFixture.state?.currentPlayingSlotIndex,
+            },
+          );
+        });
+
+        it('should return a QueryBuilder', () => {
+          expect(result).toBe(queryBuilderFixture);
+        });
+      });
+    });
+
     describe('having a GameFindQuery with status', () => {
       let gameFindQueryFixture: GameFindQuery;
 
