@@ -4,19 +4,12 @@ import { BinaryToNumberTransformer } from '../../../../foundation/db/adapter/typ
 import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
 import { GameDirectionDb } from './GameDirectionDb';
 import { GameSlotDb } from './GameSlotDb';
+import { GameStatusDb } from './GameStatusDb';
 
 @Entity({
   name: 'Game',
 })
 export class GameDb {
-  @Column({
-    name: 'active',
-    transformer: new NumberToBooleanTransformer(),
-    type: 'smallint',
-    width: 1,
-  })
-  public readonly active!: boolean;
-
   @Column({
     length: 16,
     name: 'current_card',
@@ -93,7 +86,6 @@ export class GameDb {
     () => GameSlotDb,
     (gameSlotDb: GameSlotDb): GameDb => gameSlotDb.game,
     {
-      cascade: true,
       eager: true,
     },
   )
@@ -104,4 +96,11 @@ export class GameDb {
     type: 'json',
   })
   public readonly spec!: string;
+
+  @Column({
+    name: 'status',
+    type: 'smallint',
+    width: 2,
+  })
+  public readonly status!: GameStatusDb;
 }

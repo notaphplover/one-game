@@ -1,4 +1,4 @@
-import { DbModuleOptions } from '@cornie-js/backend-app-user-db';
+import { DbModuleOptions } from '@cornie-js/backend-user-adapter-typeorm';
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { Seeder } from '../../../seeder/application/modules/Seeder';

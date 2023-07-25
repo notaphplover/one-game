@@ -196,6 +196,7 @@ describe(AuthMiddleware.name, () => {
           userIdFixture = 'idFixture';
 
           userV1Fixture = {
+            active: true,
             id: 'id',
             name: 'name',
           };

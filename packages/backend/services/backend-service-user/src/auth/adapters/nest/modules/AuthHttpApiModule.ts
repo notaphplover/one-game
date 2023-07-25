@@ -1,57 +1,21 @@
-import {
-  JwtModule,
-  JwtModuleOptions,
-  JwtServiceOptions,
-} from '@cornie-js/backend-app-jwt';
-import { AppModule } from '@cornie-js/backend-app-user';
-import {
-  EnvModule,
-  Environment,
-  EnvironmentService,
-} from '@cornie-js/backend-app-user-env';
+import { MailModule } from '@cornie-js/backend-adapter-nodemailer';
+import { UserDbModule } from '@cornie-js/backend-user-adapter-typeorm';
+import { AuthHttpApiModule as AuthHttpApiApplicationModule } from '@cornie-js/backend-user-application';
 import { Module } from '@nestjs/common';
 
+import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
-import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
-import { PostAuthV1HttpRequestController } from '../../../application/controllers/PostAuthV1HttpRequestController';
-import { PostAuthV1RequestParamHandler } from '../../../application/handlers/PostAuthV1RequestParamHandler';
-import { AuthMiddleware } from '../../../application/middlewares/AuthMiddleware';
+import { buildMailClientOptions } from '../../../../foundation/mail/adapter/nest/calculations/buildMailClientOptions';
 import { PostAuthV1HttpRequestNestController } from '../controllers/PostAuthV1HttpRequestNestController';
-
-function buildJwtModuleOptions(): JwtModuleOptions {
-  return {
-    imports: [EnvModule],
-    inject: [EnvironmentService],
-    useFactory: (environmentService: EnvironmentService): JwtServiceOptions => {
-      const env: Environment = environmentService.getEnvironment();
-
-      return {
-        algorithm: env.jwtAlgorithm,
-        audience: env.jwtAudience,
-        expirationMs: env.jwtExpirationMs,
-        issuer: env.jwtIssuer,
-        privateKey: env.jwtPrivateKey,
-        publicKey: env.jwtPublicKey,
-      };
-    },
-  };
-}
 
 @Module({
   controllers: [PostAuthV1HttpRequestNestController],
-  exports: [AuthMiddleware],
   imports: [
-    AppModule,
-    EnvModule,
-    JsonSchemaModule,
-    JwtModule.forRootAsync(buildJwtModuleOptions()),
+    AuthHttpApiApplicationModule.forRootAsync([
+      MailModule.forRootAsync(buildMailClientOptions()),
+      UserDbModule.forRootAsync(buildDbModuleOptions()),
+    ]),
     HttpModule,
-  ],
-  providers: [
-    AuthMiddleware,
-    PostAuthV1RequestParamHandler,
-    PostAuthV1HttpRequestController,
-    PostAuthV1HttpRequestNestController,
   ],
 })
 export class AuthHttpApiModule {}

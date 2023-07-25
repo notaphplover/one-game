@@ -13,10 +13,12 @@ import { GameOptionsCreateQueryFromGameOptionsV1Builder } from '../../../applica
 import { GameOptionsV1FromGameOptionsBuilder } from '../../../application/builders/GameOptionsV1FromGameOptionsBuilder';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../../application/builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/GameSlotV1FromGameSlotBuilder';
-import { GameSpecV1FromGameCardSpecsBuilder } from '../../../application/builders/GameSpecV1FromGameCardSpecsBuilder';
+import { GameSpecV1FromGameSpecBuilder } from '../../../application/builders/GameSpecV1FromGameSpecBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { GameCreatedEventHandler } from '../../../application/handlers/GameCreatedEventHandler';
+import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
+import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
 import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
 import { GameOptionsManagementInputPort } from '../../../application/ports/input/GameOptionsManagementInputPort';
@@ -47,12 +49,14 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
+        GameIdPassTurnQueryV1Handler,
+        GameIdPlayCardsQueryV1Handler,
         GameManagementInputPort,
         GameOptionsCreateQueryFromGameOptionsV1Builder,
         GameOptionsManagementInputPort,
         GameOptionsV1FromGameOptionsBuilder,
         GameSlotManagementInputPort,
-        GameSpecV1FromGameCardSpecsBuilder,
+        GameSpecV1FromGameSpecBuilder,
         GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
         GameSlotV1FromGameSlotBuilder,
         GameV1FromGameBuilder,

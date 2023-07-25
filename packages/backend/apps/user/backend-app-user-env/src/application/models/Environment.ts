@@ -1,7 +1,10 @@
 import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 
+import { MailConfig } from './MailConfig';
+
 export interface Environment {
   apiBackendServiceSecret: string;
+  frontendBaseUrl: string;
   corsOrigins: string[];
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;
@@ -9,6 +12,7 @@ export interface Environment {
   jwtIssuer: string;
   jwtPrivateKey: string;
   jwtPublicKey: string;
+  mailConfig: MailConfig;
   port: number;
   seedDummyData: boolean;
   typeOrmDatasourceOptions: Record<string, unknown>;

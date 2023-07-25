@@ -2,16 +2,17 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
-import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/models/Card';
-import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { CardColor } from '../../../cards/domain/models/CardColor';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { ActiveGame } from '../models/ActiveGame';
+import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
-import { GameInitialDraws } from '../models/GameInitialDraws';
+import { GameStatus } from '../models/GameStatus';
 import { NonStartedGame } from '../models/NonStartedGame';
+import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { GameService } from './GameService';
 
 describe(GameService.name, () => {
@@ -21,29 +22,309 @@ describe(GameService.name, () => {
     gameService = new GameService();
   });
 
-  describe('.getInitialCardColor', () => {
-    describe('having a colored card', () => {
-      let coloredCardFixture: Card & ColoredCard;
+  describe('.buildPassTurnGameUpdateQuery', () => {
+    describe('having a Game with two players and enough cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 0', () => {
+      let gameFixture: ActiveGame;
+
+      let deckCardSpec: GameCardSpec;
 
       beforeAll(() => {
-        coloredCardFixture = CardFixtures.reverseCard;
+        const baseFixture: ActiveGame =
+          ActiveGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
+
+        gameFixture = {
+          ...baseFixture,
+          state: {
+            ...baseFixture.state,
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: false,
+            drawCount: 0,
+          },
+        };
+
+        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
       describe('when called', () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameService.getInitialCardColor(coloredCardFixture);
+          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
         });
 
-        it('should return a CardColor', () => {
-          expect(result).toBe(coloredCardFixture.color);
+        it('should return a GameUpdateQuery', () => {
+          const currentPlayingGameSlotCards: Card[] = (
+            gameFixture.state.slots[
+              gameFixture.state.currentPlayingSlotIndex
+            ] as ActiveGameSlot
+          ).cards;
+
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentPlayingSlotIndex: 0,
+            currentTurnCardsPlayed: false,
+            deck: [
+              {
+                amount: deckCardSpec.amount - 1,
+                card: deckCardSpec.card,
+              },
+            ],
+            drawCount: 0,
+            gameFindQuery: {
+              id: gameFixture.id,
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: [...currentPlayingGameSlotCards, deckCardSpec.card],
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: gameFixture.state.currentPlayingSlotIndex,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having a Game with two players and enough cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 2', () => {
+      let gameFixture: ActiveGame;
+
+      let deckCardSpec: GameCardSpec;
+
+      beforeAll(() => {
+        const baseFixture: ActiveGame =
+          ActiveGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
+
+        gameFixture = {
+          ...baseFixture,
+          state: {
+            ...baseFixture.state,
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: false,
+            drawCount: 2,
+          },
+        };
+
+        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const currentPlayingGameSlotCards: Card[] = (
+            gameFixture.state.slots[
+              gameFixture.state.currentPlayingSlotIndex
+            ] as ActiveGameSlot
+          ).cards;
+
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentPlayingSlotIndex: 0,
+            currentTurnCardsPlayed: false,
+            deck: [
+              {
+                amount: deckCardSpec.amount - 2,
+                card: deckCardSpec.card,
+              },
+            ],
+            drawCount: 0,
+            gameFindQuery: {
+              id: gameFixture.id,
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: [
+                  ...currentPlayingGameSlotCards,
+                  deckCardSpec.card,
+                  deckCardSpec.card,
+                ],
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: gameFixture.state.currentPlayingSlotIndex,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having a Game with two players and enough cards and currentTurnCardsPlayed true and currentPlayingSlotIndex 0', () => {
+      let gameFixture: ActiveGame;
+
+      beforeAll(() => {
+        const baseFixture: ActiveGame =
+          ActiveGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
+
+        gameFixture = {
+          ...baseFixture,
+          state: {
+            ...baseFixture.state,
+            currentPlayingSlotIndex: 0,
+            currentTurnCardsPlayed: true,
+          },
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: false,
+            drawCount: 0,
+            gameFindQuery: {
+              id: gameFixture.id,
+            },
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
         });
       });
     });
   });
 
-  describe('.getInitialCardsDraw', () => {
+  describe('.buildPlayCardsGameUpdateQuery', () => {
+    describe('having an unexisting slotIndex', () => {
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.any;
+        cardIndexesFixture = [0];
+        slotIndexFixture = -1;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameService.buildPlayCardsGameUpdateQuery(
+              gameFixture,
+              cardIndexesFixture,
+              slotIndexFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message: `Expecting a game slot at index "${slotIndexFixture}", none found instead.`,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and cardIndexes empty', () => {
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        cardIndexesFixture = [];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameService.buildPlayCardsGameUpdateQuery(
+              gameFixture,
+              cardIndexesFixture,
+              slotIndexFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message:
+              'An unexpected error happened while attempting to update game',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes', () => {
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.buildPlayCardsGameUpdateQuery(
+            gameFixture,
+            cardIndexesFixture,
+            slotIndexFixture,
+          );
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentCard: expect.any(Object) as unknown as Card,
+            gameFindQuery: {
+              id: gameFixture.id,
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: expect.any(Array) as unknown as Card[],
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: slotIndexFixture,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+  });
+
+  describe('.buildStartGameUpdateQuery', () => {
     describe('having a Game with enough cards', () => {
       let gameFixture: NonStartedGame;
       let deckCardSpec: GameCardSpec;
@@ -59,15 +340,10 @@ describe(GameService.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameService.getInitialCardsDraw(gameFixture);
+          result = gameService.buildStartGameUpdateQuery(gameFixture);
         });
 
-        it('should return an array of cards and game card spec with the remaining deck cards', () => {
-          const expectedCards: Card[][] = [
-            new Array<Card>(7).fill(deckCardSpec.card),
-            new Array<Card>(7).fill(deckCardSpec.card),
-          ];
-
+        it('should return a GameUpdateQuery', () => {
           const expectedDeckSpec: GameCardSpec[] = [
             {
               amount: deckCardSpec.amount - 15,
@@ -75,13 +351,39 @@ describe(GameService.name, () => {
             },
           ];
 
-          const expectedGameInitialDraws: GameInitialDraws = {
+          const expectedGameUpdateQueryProperties: Partial<GameUpdateQuery> = {
             currentCard: deckCardSpec.card,
-            playersCards: expectedCards,
-            remainingDeck: expectedDeckSpec,
+            currentColor: expect.any(String) as unknown as CardColor,
+            currentDirection: GameDirection.antiClockwise,
+            currentPlayingSlotIndex: 0,
+            currentTurnCardsPlayed: false,
+            deck: expectedDeckSpec,
+            drawCount: 0,
+            gameFindQuery: {
+              id: gameFixture.id,
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: new Array<Card>(7).fill(deckCardSpec.card),
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: 0,
+                },
+              },
+              {
+                cards: new Array<Card>(7).fill(deckCardSpec.card),
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: 1,
+                },
+              },
+            ],
+            status: GameStatus.active,
           };
 
-          expect(result).toStrictEqual(expectedGameInitialDraws);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedGameUpdateQueryProperties),
+          );
         });
       });
     });
@@ -99,7 +401,7 @@ describe(GameService.name, () => {
 
         beforeAll(() => {
           try {
-            gameService.getInitialCardsDraw(gameFixture);
+            gameService.buildStartGameUpdateQuery(gameFixture);
           } catch (error) {
             result = error;
           }
@@ -115,92 +417,6 @@ describe(GameService.name, () => {
           expect(result).toStrictEqual(
             expect.objectContaining(expectedErrorProperties),
           );
-        });
-      });
-    });
-  });
-
-  describe('.getInitialDirection', () => {
-    describe('when called', () => {
-      let result: unknown;
-
-      beforeAll(() => {
-        result = gameService.getInitialDirection();
-      });
-
-      it('should return a GameDirection', () => {
-        expect(result).toBe(GameDirection.antiClockwise);
-      });
-    });
-  });
-
-  describe('.getInitialDrawCount', () => {
-    describe('when called', () => {
-      let result: unknown;
-
-      beforeAll(() => {
-        result = gameService.getInitialDrawCount();
-      });
-
-      it('should return a number', () => {
-        expect(result).toBe(0);
-      });
-    });
-  });
-
-  describe('.getInitialPlayingSlotIndex', () => {
-    describe('when called', () => {
-      let result: unknown;
-
-      beforeAll(() => {
-        result = gameService.getInitialPlayingSlotIndex();
-      });
-
-      it('should return a number', () => {
-        expect(result).toBe(0);
-      });
-    });
-  });
-
-  describe('.getNextTurnPlayerIndex', () => {
-    describe('having an active game with one player and current direction anticlockwise', () => {
-      let gameFixture: ActiveGame;
-
-      beforeAll(() => {
-        gameFixture =
-          ActiveGameFixtures.withSlotsOneAndCurrentDirectionAntiClockwise;
-      });
-
-      describe('when called', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          result = gameService.getNextTurnPlayerIndex(gameFixture);
-        });
-
-        it('should return the only player index', () => {
-          expect(result).toBe(0);
-        });
-      });
-    });
-
-    describe('having an active game with one player and current direction clockwise', () => {
-      let gameFixture: ActiveGame;
-
-      beforeAll(() => {
-        gameFixture =
-          ActiveGameFixtures.withSlotsOneAndCurrentDirectionClockwise;
-      });
-
-      describe('when called', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          result = gameService.getNextTurnPlayerIndex(gameFixture);
-        });
-
-        it('should return the only player index', () => {
-          expect(result).toBe(0);
         });
       });
     });

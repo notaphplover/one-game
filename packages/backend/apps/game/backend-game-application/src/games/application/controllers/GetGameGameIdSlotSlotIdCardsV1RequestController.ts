@@ -13,7 +13,7 @@ import {
   Response,
   ResponseWithBody,
   SingleEntityGetResponseBuilder,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -23,10 +23,10 @@ import { GameMiddleware } from '../middlewares/GameMiddleware';
 import { GameSlotManagementInputPort } from '../ports/input/GameSlotManagementInputPort';
 
 @Injectable()
-export class GetGameGameIdSlotSlotIdCardsV1RequestController extends SingleEntityHttpRequestController<
+export class GetGameGameIdSlotSlotIdCardsV1RequestController extends HttpRequestController<
   Request,
   [number, Game, apiModels.UserV1],
-  apiModels.ActiveGameSlotCardsV1
+  apiModels.ActiveGameSlotCardsV1 | undefined
 > {
   readonly #gameSlotManagementInputPort: GameSlotManagementInputPort;
 

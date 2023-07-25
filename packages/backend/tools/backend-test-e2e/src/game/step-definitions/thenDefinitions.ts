@@ -30,10 +30,11 @@ export function thenCreateGameResponseShouldContainValidGame(
 
   expectObjectContaining<ResponseType>(response, {
     body: {
-      gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
-      gameSpec: () => undefined,
       id: () => undefined,
-      slots: [],
+      spec: {
+        cardSpecs: () => undefined,
+        gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
+      },
     },
     headers: {},
     statusCode: HttpStatus.OK,
@@ -89,17 +90,34 @@ export function thenGetGameResponseShouldContainStartedGame(
 
   expectObjectContaining<ResponseType>(response, {
     body: {
-      currentCard: () => undefined,
-      currentColor: () => undefined,
-      currentDirection: () => undefined,
-      currentPlayingSlotIndex: () => undefined,
-      currentTurnCardsPlayed: () => undefined,
-      drawCount: () => undefined,
-      gameSlotsAmount: gameV1Parameter.gameCreateQuery.gameSlotsAmount,
-      gameSpec: () => undefined,
       id: gameV1Parameter.game.id,
-      slots: () => undefined,
+      spec: {
+        cardSpecs: () => undefined,
+        gameSlotsAmount: gameV1Parameter.gameCreateQuery.gameSlotsAmount,
+      },
+      state: () => undefined,
     },
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
+export function thenUpdateGameResponseShouldBeSuccessful(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  type ResponseType = Awaited<ReturnType<HttpClient['updateGame']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'updateGame',
+    processedRequestAlias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    body: () => undefined,
     headers: {},
     statusCode: HttpStatus.OK,
   });
@@ -123,5 +141,12 @@ Then<OneGameApiWorld>(
   'the get game response should contain a started game',
   function (this: OneGameApiWorld): void {
     thenGetGameResponseShouldContainStartedGame.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the update game response should be successful',
+  function (this: OneGameApiWorld): void {
+    thenUpdateGameResponseShouldBeSuccessful.bind(this)();
   },
 );

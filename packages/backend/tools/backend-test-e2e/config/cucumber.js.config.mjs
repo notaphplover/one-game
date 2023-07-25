@@ -11,6 +11,7 @@ function getConfiguration(parallel) {
     require: [
       'lib/*/step-definitions/*.js',
       'lib/app/adapter/cucumber/hooks/*.js',
+      'lib/foundation/adapter/cucumberJs/parameters/*.js',
     ],
   };
 

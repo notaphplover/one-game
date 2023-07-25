@@ -8,19 +8,17 @@ import { WildCard } from '../../../cards/domain/models/WildCard';
 import { WildDraw4Card } from '../../../cards/domain/models/WildDraw4Card';
 import { ActiveGame } from '../models/ActiveGame';
 import { GameDirection } from '../models/GameDirection';
+import { GameStatus } from '../models/GameStatus';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
+import { GameSpecFixtures } from './GameSpecFixtures';
 
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
-      gameSlotsAmount: 1,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
-      spec: {
-        cards: [GameCardSpecFixtures.any],
-      },
+      spec: GameSpecFixtures.withGameSlotsAmountOne,
       state: {
-        active: true,
         currentCard: CardFixtures.any,
         currentColor: CardColor.blue,
         currentDirection: GameDirection.antiClockwise,
@@ -29,6 +27,7 @@ export class ActiveGameFixtures {
         deck: [],
         drawCount: 0,
         slots: [ActiveGameSlotFixtures.withPositionZero],
+        status: GameStatus.active,
       },
     };
   }
@@ -149,6 +148,25 @@ export class ActiveGameFixtures {
     };
   }
 
+  public static get withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      spec: {
+        cards: [GameCardSpecFixtures.withAmount120],
+        gameSlotsAmount: 2,
+      },
+      state: {
+        ...anyActiveGameFixture.state,
+        slots: [
+          ActiveGameSlotFixtures.withPositionZero,
+          ActiveGameSlotFixtures.withPositionOne,
+        ],
+      },
+    };
+  }
+
   public static get withSlotsOne(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
 
@@ -157,6 +175,22 @@ export class ActiveGameFixtures {
       state: {
         ...anyActiveGameFixture.state,
         slots: [ActiveGameSlotFixtures.withPositionZero],
+      },
+    };
+  }
+
+  public static get withSlotsTwoAndCurrentPlayingSlotZero(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentPlayingSlotIndex: 0,
+        slots: [
+          ActiveGameSlotFixtures.withPositionZero,
+          ActiveGameSlotFixtures.withPositionOne,
+        ],
       },
     };
   }

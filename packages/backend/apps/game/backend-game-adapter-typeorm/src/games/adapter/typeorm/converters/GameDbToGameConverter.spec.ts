@@ -7,6 +7,7 @@ import {
   ActiveGame,
   ActiveGameSlot,
   GameDirection,
+  GameStatus,
   NonStartedGame,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
@@ -66,7 +67,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsOne;
+      gameDbFixture = GameDbFixtures.withStatusNonStartedAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -115,7 +116,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return a NonStartedGame', () => {
         const expected: Partial<NonStartedGame> = {
-          gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           spec: {
             cards: [
@@ -124,10 +124,11 @@ describe(GameDbToGameConverter.name, () => {
                 card: cardFixture,
               },
             ],
+            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           },
           state: {
-            active: false,
             slots: [gameSlotFixture],
+            status: GameStatus.nonStarted,
           },
         };
 
@@ -141,7 +142,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActiveFalseAndGameSlotsTwo;
+      gameDbFixture = GameDbFixtures.withStatusNonStartedAndGameSlotsTwo;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -192,7 +193,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return a NonStartedGame with sorted game slots', () => {
         const expected: Partial<NonStartedGame> = {
-          gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           spec: {
             cards: [
@@ -201,10 +201,11 @@ describe(GameDbToGameConverter.name, () => {
                 card: cardFixture,
               },
             ],
+            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           },
           state: {
-            active: false,
             slots: [firstGameSlotFixture, secondGameSlotFixture],
+            status: GameStatus.nonStarted,
           },
         };
 
@@ -219,7 +220,7 @@ describe(GameDbToGameConverter.name, () => {
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
-      gameDbFixture = GameDbFixtures.withActiveTrueAndGameSlotsOne;
+      gameDbFixture = GameDbFixtures.withStatusActiveAndGameSlotsOne;
 
       [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
         GameCardSpecDb,
@@ -289,7 +290,6 @@ describe(GameDbToGameConverter.name, () => {
 
       it('should return an ActiveGame', () => {
         const expected: Partial<ActiveGame> = {
-          gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           id: gameDbFixture.id,
           spec: {
             cards: [
@@ -298,9 +298,9 @@ describe(GameDbToGameConverter.name, () => {
                 card: cardFixture,
               },
             ],
+            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
           },
           state: {
-            active: true,
             currentCard: cardFixture,
             currentColor: cardColorFixture,
             currentDirection: gameDirectionFixture,
@@ -316,6 +316,7 @@ describe(GameDbToGameConverter.name, () => {
             ],
             drawCount: gameDbFixture.drawCount as number,
             slots: [gameSlotFixture],
+            status: GameStatus.active,
           },
         };
 

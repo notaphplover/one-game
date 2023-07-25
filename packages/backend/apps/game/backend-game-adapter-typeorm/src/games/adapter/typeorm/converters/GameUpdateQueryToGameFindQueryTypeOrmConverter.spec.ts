@@ -6,14 +6,17 @@ import {
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { GameUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
-import { FindManyOptions } from 'typeorm';
+import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameDb } from '../models/GameDb';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from './GameUpdateQueryToGameFindQueryTypeOrmConverter';
 
 describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
   let gameFindQueryToGameFindQueryTypeOrmConverterMock: jest.Mocked<
-    Converter<GameFindQuery, FindManyOptions<GameDb>>
+    Converter<
+      GameFindQuery,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+    >
   >;
 
   let gameUpdateQueryToGameFindQueryTypeOrmConverter: GameUpdateQueryToGameFindQueryTypeOrmConverter;
@@ -31,25 +34,26 @@ describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
 
   describe('.convert', () => {
     let gameUpdateQueryFixture: GameUpdateQuery;
+    let queryBuilderFixture: QueryBuilder<ObjectLiteral> &
+      WhereExpressionBuilder;
 
     beforeAll(() => {
       gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+      queryBuilderFixture = Symbol() as unknown as QueryBuilder<ObjectLiteral> &
+        WhereExpressionBuilder;
     });
 
     describe('when called', () => {
-      let gameFindQueryTypeOrmFixture: FindManyOptions<GameDb>;
-
       let result: unknown;
 
       beforeAll(() => {
-        gameFindQueryTypeOrmFixture = {};
-
         gameFindQueryToGameFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
-          gameFindQueryTypeOrmFixture,
+          queryBuilderFixture,
         );
 
         result = gameUpdateQueryToGameFindQueryTypeOrmConverter.convert(
           gameUpdateQueryFixture,
+          queryBuilderFixture,
         );
       });
 
@@ -63,11 +67,14 @@ describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameFindQueryToGameFindQueryTypeOrmConverterMock.convert,
-        ).toHaveBeenCalledWith(gameUpdateQueryFixture.gameFindQuery);
+        ).toHaveBeenCalledWith(
+          gameUpdateQueryFixture.gameFindQuery,
+          queryBuilderFixture,
+        );
       });
 
-      it('should return FindManyOptions<GameDb>', () => {
-        expect(result).toBe(gameFindQueryTypeOrmFixture);
+      it('should return a QueryBuilder', () => {
+        expect(result).toBe(queryBuilderFixture);
       });
     });
   });

@@ -1,0 +1,42 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Backend app mail",
+  "dependencies": {
+    "@nestjs/common": "10.1.2"
+  },
+  "devDependencies": {
+    "@jest/globals": "29.6.1",
+    "@typescript-eslint/eslint-plugin": "6.2.0",
+    "@typescript-eslint/parser": "6.2.0",
+    "eslint": "8.45.0",
+    "eslint-import-resolver-typescript": "3.5.5",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "27.2.3",
+    "eslint-plugin-prettier": "5.0.0",
+    "prettier": "3.0.0",
+    "rimraf": "5.0.1",
+    "typescript": "5.1.6"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "main": "lib/index.js",
+  "name": "@cornie-js/backend-application-mail",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "build:clean": "rimraf lib",
+    "format": "prettier --write ./src/**/*.ts",
+    "lint": "eslint --ext ts --ignore-path .gitignore ./src",
+    "prebuild": "pnpm run build:clean"
+  },
+  "version": "0.1.0"
+}

@@ -11,6 +11,7 @@ import {
   Game,
   GameCardSpec,
   GameDirection,
+  GameStatus,
   NonStartedGame,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
@@ -24,6 +25,7 @@ import { GameCardSpecDb } from '../models/GameCardSpecDb';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDb } from '../models/GameSlotDb';
+import { GameStatusDb } from '../models/GameStatusDb';
 import { GameDirectionDbToGameDirectionConverter } from './GameDirectionDbToGameDirectionConverter';
 import { GameSlotDbToGameSlotConverter } from './GameSlotDbToGameSlotConverter';
 
@@ -78,13 +80,16 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
 
     let game: Game;
 
-    if (gameDb.active) {
-      game = this.#convertActiveGameDb(gameDb, gameSlots as ActiveGameSlot[]);
-    } else {
-      game = this.#convertNonStartedGameDb(
-        gameDb,
-        gameSlots as NonStartedGameSlot[],
-      );
+    switch (gameDb.status) {
+      case GameStatusDb.active:
+        game = this.#convertActiveGameDb(gameDb, gameSlots as ActiveGameSlot[]);
+        break;
+      case GameStatusDb.nonStarted:
+        game = this.#convertNonStartedGameDb(
+          gameDb,
+          gameSlots as NonStartedGameSlot[],
+        );
+        break;
     }
 
     return game;
@@ -106,13 +111,12 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     }
 
     return {
-      gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       spec: {
         cards: this.#convertCardSpecs(gameDb.spec),
+        gameSlotsAmount: gameDb.gameSlotsAmount,
       },
       state: {
-        active: true,
         currentCard: this.#cardBuilder.build(gameDb.currentCard),
         currentColor: this.#cardColorBuilder.build(gameDb.currentColor),
         currentDirection: this.#gameDirectionDbToGameDirectionConverter.convert(
@@ -123,6 +127,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
         deck: this.#convertCardSpecs(gameDb.deck),
         drawCount: gameDb.drawCount,
         slots: gameSlots,
+        status: GameStatus.active,
       },
     };
   }
@@ -132,14 +137,14 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     gameSlots: NonStartedGameSlot[],
   ): NonStartedGame {
     return {
-      gameSlotsAmount: gameDb.gameSlotsAmount,
       id: gameDb.id,
       spec: {
         cards: this.#convertCardSpecs(gameDb.spec),
+        gameSlotsAmount: gameDb.gameSlotsAmount,
       },
       state: {
-        active: false,
         slots: gameSlots,
+        status: GameStatus.nonStarted,
       },
     };
   }

@@ -6,12 +6,20 @@ import { CardColor } from '../../../cards/domain/models/CardColor';
 import { CardKind } from '../../../cards/domain/models/CardKind';
 import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
 import { ActiveGame } from '../models/ActiveGame';
+import { ActiveGameSlot } from '../models/ActiveGameSlot';
+import { Game } from '../models/Game';
 import { GameCardSpec } from '../models/GameCardSpec';
 import { GameDirection } from '../models/GameDirection';
 import { GameInitialDraws } from '../models/GameInitialDraws';
+import { GameStatus } from '../models/GameStatus';
 import { NonStartedGame } from '../models/NonStartedGame';
+import { NonStartedGameSlot } from '../models/NonStartedGameSlot';
+import { GameSlotUpdateQuery } from '../query/GameSlotUpdateQuery';
+import { GameUpdateQuery } from '../query/GameUpdateQuery';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
+
+const MIN_CARDS_TO_DRAW: number = 1;
 
 const UNO_ORIGINAL_ACTION_CARDS_PER_COLOR: number = 2;
 const UNO_ORIGINAL_NUMBERS_AMOUNT: number = 10;
@@ -21,36 +29,106 @@ const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 
 @Injectable()
 export class GameService {
-  public getInitialCardColor(card: Card): CardColor {
-    const cardAsMaybeColoredCard: Partial<ColoredCard> =
-      card as Partial<ColoredCard>;
+  public buildPassTurnGameUpdateQuery(game: ActiveGame): GameUpdateQuery {
+    const isPlayerDrawingCards: boolean = !game.state.currentTurnCardsPlayed;
 
-    if (cardAsMaybeColoredCard.color !== undefined) {
-      return cardAsMaybeColoredCard.color;
-    }
+    const gameUpdateQuery: GameUpdateQuery = {
+      currentPlayingSlotIndex: this.#getNextTurnPlayerIndex(game),
+      currentTurnCardsPlayed: false,
+      drawCount: 0,
+      gameFindQuery: {
+        id: game.id,
+      },
+    };
 
-    return this.#getRandomColor();
-  }
-
-  public getInitialCardsDraw(game: NonStartedGame): GameInitialDraws {
-    const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
-      this.#drawCards(
-        game.spec.cards,
-        INITIAL_CARDS_PER_PLAYER * game.gameSlotsAmount + 1,
+    if (isPlayerDrawingCards) {
+      const playerSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
+        game,
+        game.state.currentPlayingSlotIndex,
       );
 
-    this.#shuffle(cardsDrawn);
+      const cardsToDraw: number = Math.max(
+        MIN_CARDS_TO_DRAW,
+        game.state.drawCount,
+      );
 
-    const currentCard: Card = cardsDrawn.pop() as Card;
+      const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
+        this.#drawCards(game.spec.cards, cardsToDraw);
+
+      gameUpdateQuery.deck = gameDeckCardsSpec;
+      gameUpdateQuery.gameSlotUpdateQueries = [
+        {
+          cards: [...playerSlot.cards, ...cardsDrawn],
+          gameSlotFindQuery: {
+            gameId: game.id,
+            position: game.state.currentPlayingSlotIndex,
+          },
+        },
+      ];
+    }
+
+    return gameUpdateQuery;
+  }
+
+  public buildPlayCardsGameUpdateQuery(
+    game: ActiveGame,
+    cardIndexes: number[],
+    slotIndex: number,
+  ): GameUpdateQuery {
+    const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(game, slotIndex);
+
+    const nextCurrentCard: Card | undefined =
+      this.#getPlayCardsGameUpdateQueryNextCurrentCard(gameSlot, cardIndexes);
 
     return {
-      currentCard,
-      playersCards: this.#splitAllInEqualParts(
-        cardsDrawn,
-        game.gameSlotsAmount,
-      ),
-      remainingDeck: gameDeckCardsSpec,
+      currentCard: nextCurrentCard,
+      gameFindQuery: {
+        id: game.id,
+      },
+      gameSlotUpdateQueries: [
+        {
+          cards: gameSlot.cards.filter((_: Card, index: number): boolean =>
+            cardIndexes.includes(index),
+          ),
+          gameSlotFindQuery: {
+            gameId: game.id,
+            position: slotIndex,
+          },
+        },
+      ],
     };
+  }
+
+  public buildStartGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
+    const gameInitialDraws: GameInitialDraws = this.#getInitialCardsDraw(game);
+
+    const gameSlotUpdateQueries: GameSlotUpdateQuery[] =
+      gameInitialDraws.playersCards.map(
+        (cards: Card[], index: number): GameSlotUpdateQuery => ({
+          cards: cards,
+          gameSlotFindQuery: {
+            gameId: game.id,
+            position: index,
+          },
+        }),
+      );
+
+    const gameUpdateQuery: GameUpdateQuery = {
+      currentCard: gameInitialDraws.currentCard,
+      currentColor: this.#getInitialCardColor(gameInitialDraws.currentCard),
+      currentDirection: this.#getInitialDirection(),
+      currentPlayingSlotIndex: this.#getInitialPlayingSlotIndex(),
+      currentTurnCardsPlayed: false,
+      deck: gameInitialDraws.remainingDeck,
+      drawCount: this.#getInitialDrawCount(),
+      gameFindQuery: {
+        id: game.id,
+      },
+      gameSlotUpdateQueries,
+      status: GameStatus.active,
+    };
+
+    return gameUpdateQuery;
   }
 
   public getInitialCardsSpec(): GameCardSpec[] {
@@ -118,42 +196,6 @@ export class GameService {
         }),
       ),
     ];
-  }
-
-  public getInitialDirection(): GameDirection {
-    return GameDirection.antiClockwise;
-  }
-
-  public getInitialDrawCount(): number {
-    return 0;
-  }
-
-  public getInitialPlayingSlotIndex(): number {
-    return 0;
-  }
-
-  public getNextTurnPlayerIndex(game: ActiveGame): number {
-    const players: number = game.gameSlotsAmount;
-
-    const direction: GameDirection = game.state.currentDirection;
-
-    let nextTurnPlayerIndex: number;
-
-    if (direction === GameDirection.antiClockwise) {
-      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex - 1;
-
-      if (nextTurnPlayerIndex < 0) {
-        nextTurnPlayerIndex = players - 1;
-      }
-    } else {
-      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex + 1;
-
-      if (nextTurnPlayerIndex === players) {
-        nextTurnPlayerIndex = 0;
-      }
-    }
-
-    return nextTurnPlayerIndex;
   }
 
   #drawCards(cards: GameCardSpec[], amount: number): [Card[], GameCardSpec[]] {
@@ -224,6 +266,114 @@ export class GameService {
     }
 
     return [cards, gameDeckCardSpecsAfterDraw];
+  }
+
+  #getPlayCardsGameUpdateQueryNextCurrentCard(
+    gameSlot: ActiveGameSlot,
+    cardIndexes: number[],
+  ): Card {
+    const [nextCurrentCardIndex]: number[] = cardIndexes;
+
+    const nextCurrentCard: Card | undefined =
+      nextCurrentCardIndex === undefined
+        ? undefined
+        : gameSlot.cards[nextCurrentCardIndex];
+
+    if (nextCurrentCard === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'An unexpected error happened while attempting to update game',
+      );
+    }
+
+    return nextCurrentCard;
+  }
+
+  #getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
+  #getGameSlotOrThrow(game: NonStartedGame, index: number): NonStartedGameSlot;
+  #getGameSlotOrThrow(
+    game: Game,
+    index: number,
+  ): ActiveGameSlot | NonStartedGameSlot {
+    const gameSlot: ActiveGameSlot | NonStartedGameSlot | undefined =
+      game.state.slots[index];
+
+    if (gameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `Expecting a game slot at index "${index}", none found instead.`,
+      );
+    }
+
+    return gameSlot;
+  }
+
+  #getInitialCardColor(card: Card): CardColor {
+    const cardAsMaybeColoredCard: Partial<ColoredCard> =
+      card as Partial<ColoredCard>;
+
+    if (cardAsMaybeColoredCard.color !== undefined) {
+      return cardAsMaybeColoredCard.color;
+    }
+
+    return this.#getRandomColor();
+  }
+
+  #getInitialCardsDraw(game: NonStartedGame): GameInitialDraws {
+    const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
+      this.#drawCards(
+        game.spec.cards,
+        INITIAL_CARDS_PER_PLAYER * game.spec.gameSlotsAmount + 1,
+      );
+
+    this.#shuffle(cardsDrawn);
+
+    const currentCard: Card = cardsDrawn.pop() as Card;
+
+    return {
+      currentCard,
+      playersCards: this.#splitAllInEqualParts(
+        cardsDrawn,
+        game.spec.gameSlotsAmount,
+      ),
+      remainingDeck: gameDeckCardsSpec,
+    };
+  }
+
+  #getInitialDirection(): GameDirection {
+    return GameDirection.antiClockwise;
+  }
+
+  #getInitialDrawCount(): number {
+    return 0;
+  }
+
+  #getInitialPlayingSlotIndex(): number {
+    return 0;
+  }
+
+  #getNextTurnPlayerIndex(game: ActiveGame): number {
+    const players: number = game.spec.gameSlotsAmount;
+
+    const direction: GameDirection = game.state.currentDirection;
+
+    let nextTurnPlayerIndex: number;
+
+    if (direction === GameDirection.antiClockwise) {
+      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex - 1;
+
+      if (nextTurnPlayerIndex < 0) {
+        nextTurnPlayerIndex = players - 1;
+      }
+    } else {
+      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex + 1;
+
+      if (nextTurnPlayerIndex === players) {
+        nextTurnPlayerIndex = 0;
+      }
+    }
+
+    return nextTurnPlayerIndex;
   }
 
   #getSortedCardDrawIndexes(cardsAmount: number, drawAmount: number): number[] {

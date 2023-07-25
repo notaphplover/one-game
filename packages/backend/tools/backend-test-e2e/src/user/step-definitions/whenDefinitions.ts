@@ -10,6 +10,20 @@ export async function whenCreateUserRequestIsSend(
   await sendRequest.bind(this)('createUser', requestAlias);
 }
 
+export async function whenDeleteUserMeRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): Promise<void> {
+  await sendRequest.bind(this)('deleteUserMe', requestAlias);
+}
+
+export async function whenGetUserMeRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): Promise<void> {
+  await sendRequest.bind(this)('getUserMe', requestAlias);
+}
+
 export async function whenUpdateUserMeRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -28,6 +42,13 @@ When<OneGameApiWorld>(
   'the create user request is sent as {string}',
   async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
     await whenCreateUserRequestIsSend.bind(this)(requestAlias);
+  },
+);
+
+When<OneGameApiWorld>(
+  'the delete own user request for {string} is sent',
+  async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
+    await whenDeleteUserMeRequestIsSend.bind(this)(requestAlias);
   },
 );
 

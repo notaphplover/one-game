@@ -5,8 +5,9 @@ import {
   ActiveGame,
   ActiveGameSlot,
   Game,
-  GameCardSpec,
   GameDirection,
+  GameSpec,
+  GameStatus,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -15,7 +16,7 @@ import { CardColorV1FromCardColorBuilder } from '../../../cards/application/buil
 import { CardV1FromCardBuilder } from '../../../cards/application/builders/CardV1FromCardBuilder';
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from './ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { GameDirectionV1FromGameDirectionBuilder } from './GameDirectionV1FromGameDirectionBuilder';
-import { GameSpecV1FromGameCardSpecsBuilder } from './GameSpecV1FromGameCardSpecsBuilder';
+import { GameSpecV1FromGameSpecBuilder } from './GameSpecV1FromGameSpecBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from './NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 
 @Injectable()
@@ -35,9 +36,9 @@ export class GameV1FromGameBuilder
     apiModels.GameDirectionV1,
     [GameDirection]
   >;
-  readonly #gameSpecV1FromGameCardSpecsBuilder: Builder<
+  readonly #gameSpecV1FromGameSpecBuilder: Builder<
     apiModels.GameSpecV1,
-    [GameCardSpec[]]
+    [GameSpec]
   >;
 
   readonly #nonStartedGameSlotV1FromNonStartedGameSlotBuilder: Builder<
@@ -63,11 +64,8 @@ export class GameV1FromGameBuilder
       apiModels.GameDirectionV1,
       [GameDirection]
     >,
-    @Inject(GameSpecV1FromGameCardSpecsBuilder)
-    gameSpecV1FromGameCardSpecsBuilder: Builder<
-      apiModels.GameSpecV1,
-      [GameCardSpec[]]
-    >,
+    @Inject(GameSpecV1FromGameSpecBuilder)
+    gameSpecV1FromGameSpecBuilder: Builder<apiModels.GameSpecV1, [GameSpec]>,
     @Inject(NonStartedGameSlotV1FromNonStartedGameSlotBuilder)
     nonStartedGameSlotV1FromNonStartedGameSlotBuilder: Builder<
       apiModels.NonStartedGameSlotV1,
@@ -80,8 +78,7 @@ export class GameV1FromGameBuilder
     this.#cardV1FromCardBuilder = cardV1FromCardBuilder;
     this.#gameDirectionV1FromGameDirectionBuilder =
       gameDirectionV1FromGameDirectionBuilder;
-    this.#gameSpecV1FromGameCardSpecsBuilder =
-      gameSpecV1FromGameCardSpecsBuilder;
+    this.#gameSpecV1FromGameSpecBuilder = gameSpecV1FromGameSpecBuilder;
     this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder =
       nonStartedGameSlotV1FromNonStartedGameSlotBuilder;
   }
@@ -91,39 +88,41 @@ export class GameV1FromGameBuilder
 
     if (this.#isActiveGame(game)) {
       const activeGameV1: apiModels.ActiveGameV1 = {
-        currentCard: this.#cardV1FromCardBuilder.build(game.state.currentCard),
-        currentColor: this.#cardColorV1FromCardColorBuilder.build(
-          game.state.currentColor,
-        ),
-        currentDirection: this.#gameDirectionV1FromGameDirectionBuilder.build(
-          game.state.currentDirection,
-        ),
-        currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
-        currentTurnCardsPlayed: game.state.currentTurnCardsPlayed,
-        drawCount: game.state.drawCount,
-        gameSlotsAmount: game.gameSlotsAmount,
-        gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(
-          game.spec.cards,
-        ),
         id: game.id,
-        slots: game.state.slots.map((gameSlot: ActiveGameSlot) =>
-          this.#activeGameSlotV1FromActiveGameSlotBuilder.build(gameSlot),
-        ),
+        spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
+        state: {
+          currentCard: this.#cardV1FromCardBuilder.build(
+            game.state.currentCard,
+          ),
+          currentColor: this.#cardColorV1FromCardColorBuilder.build(
+            game.state.currentColor,
+          ),
+          currentDirection: this.#gameDirectionV1FromGameDirectionBuilder.build(
+            game.state.currentDirection,
+          ),
+          currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+          currentTurnCardsPlayed: game.state.currentTurnCardsPlayed,
+          drawCount: game.state.drawCount,
+          slots: game.state.slots.map((gameSlot: ActiveGameSlot) =>
+            this.#activeGameSlotV1FromActiveGameSlotBuilder.build(gameSlot),
+          ),
+          status: 'active',
+        },
       };
 
       gameV1 = activeGameV1;
     } else {
       const nonStartedGameV1: apiModels.NonStartedGameV1 = {
-        gameSlotsAmount: game.gameSlotsAmount,
-        gameSpec: this.#gameSpecV1FromGameCardSpecsBuilder.build(
-          game.spec.cards,
-        ),
         id: game.id,
-        slots: game.state.slots.map((gameSlot: NonStartedGameSlot) =>
-          this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build(
-            gameSlot,
+        spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
+        state: {
+          slots: game.state.slots.map((gameSlot: NonStartedGameSlot) =>
+            this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build(
+              gameSlot,
+            ),
           ),
-        ),
+          status: 'nonStarted',
+        },
       };
 
       gameV1 = nonStartedGameV1;
@@ -133,6 +132,6 @@ export class GameV1FromGameBuilder
   }
 
   #isActiveGame(game: Game): game is ActiveGame {
-    return game.state.active;
+    return game.state.status === GameStatus.active;
   }
 }

@@ -35,6 +35,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
       jest.Mocked<CreateGameTypeOrmService>
     > as jest.Mocked<CreateGameTypeOrmService>;
     findGameTypeOrmServiceMock = {
+      find: jest.fn(),
       findOne: jest.fn(),
     } as Partial<
       jest.Mocked<FindGameTypeOrmService>
@@ -95,6 +96,43 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
       it('should return a Game', () => {
         expect(result).toBe(gameFixture);
+      });
+    });
+  });
+
+  describe('.find', () => {
+    let gameFindQueryFixture: GameFindQuery;
+
+    beforeAll(() => {
+      gameFindQueryFixture = GameFindQueryFixtures.any;
+    });
+
+    describe('when called', () => {
+      let gameFixture: Game;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameFixture = NonStartedGameFixtures.any;
+
+        findGameTypeOrmServiceMock.find.mockResolvedValueOnce([gameFixture]);
+
+        result = await gamePersistenceTypeOrmAdapter.find(gameFindQueryFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call findGameTypeOrmService.find()', () => {
+        expect(findGameTypeOrmServiceMock.find).toHaveBeenCalledTimes(1);
+        expect(findGameTypeOrmServiceMock.find).toHaveBeenCalledWith(
+          gameFindQueryFixture,
+        );
+      });
+
+      it('should return a Game[]', () => {
+        expect(result).toStrictEqual([gameFixture]);
       });
     });
   });

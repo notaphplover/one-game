@@ -5,6 +5,9 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "active": {
+      "type": "boolean"
+    },
     "id": {
       "type": "string"
     },
@@ -12,5 +15,5 @@
       "type": "string"
     }
   },
-  "required": ["id", "name"]
+  "required": ["active", "id", "name"]
 }

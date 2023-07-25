@@ -6,7 +6,7 @@ import {
   RequestWithBody,
   Response,
   ResponseWithBody,
-  SingleEntityHttpRequestController,
+  HttpRequestController,
   SingleEntityPostResponseBuilder,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
@@ -16,7 +16,7 @@ import { PostGameV1RequestParamHandler } from '../handlers/PostGameV1RequestPara
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
 @Injectable()
-export class PostGameV1HttpRequestController extends SingleEntityHttpRequestController<
+export class PostGameV1HttpRequestController extends HttpRequestController<
   RequestWithBody,
   [apiModels.GameCreateQueryV1],
   apiModels.GameV1
@@ -32,7 +32,7 @@ export class PostGameV1HttpRequestController extends SingleEntityHttpRequestCont
     @Inject(SingleEntityPostResponseBuilder)
     responseBuilder: Builder<
       Response | ResponseWithBody<unknown>,
-      [apiModels.GameV1 | undefined]
+      [apiModels.GameV1]
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<

@@ -1,5 +1,5 @@
-import { UserDb } from '@cornie-js/backend-app-user-db/entities';
 import { userSeeds } from '@cornie-js/backend-app-user-seeds';
+import { UserDb } from '@cornie-js/backend-user-adapter-typeorm/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

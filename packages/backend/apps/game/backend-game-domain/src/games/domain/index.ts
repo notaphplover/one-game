@@ -7,6 +7,8 @@ import { GameCardSpec } from './models/GameCardSpec';
 import { GameDirection } from './models/GameDirection';
 import { GameInitialDraws } from './models/GameInitialDraws';
 import { GameOptions } from './models/GameOptions';
+import { GameSpec } from './models/GameSpec';
+import { GameStatus } from './models/GameStatus';
 import { NonStartedGame } from './models/NonStartedGame';
 import { NonStartedGameSlot } from './models/NonStartedGameSlot';
 import { GameCreateQuery } from './query/GameCreateQuery';
@@ -19,8 +21,11 @@ import { GameSlotUpdateQuery } from './query/GameSlotUpdateQuery';
 import { GameSpecCreateQuery } from './query/GameSpecCreateQuery';
 import { GameUpdateQuery } from './query/GameUpdateQuery';
 import { GameService } from './services/GameService';
+import { CurrentPlayerCanPlayCardsSpec } from './specs/CurrentPlayerCanPlayCardsSpec';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
+import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
+import { PlayerCanUpdateGameSpec } from './specs/PlayerCanUpdateGameSpec';
 
 export type {
   ActiveGame,
@@ -29,19 +34,20 @@ export type {
   BaseGameSlot,
   Game,
   GameCardSpec,
-  GameInitialDraws,
-  NonStartedGame,
-  NonStartedGameSlot,
   GameCreateQuery,
   GameFindQuery,
+  GameInitialDraws,
   GameOptions,
   GameOptionsCreateQuery,
   GameOptionsFindQuery,
   GameSlotCreateQuery,
   GameSlotFindQuery,
   GameSlotUpdateQuery,
+  GameSpec,
   GameSpecCreateQuery,
   GameUpdateQuery,
+  NonStartedGame,
+  NonStartedGameSlot,
 };
 
 export {
@@ -49,4 +55,8 @@ export {
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameDirection,
   GameService,
+  GameStatus,
+  PlayerCanPassTurnSpec,
+  CurrentPlayerCanPlayCardsSpec,
+  PlayerCanUpdateGameSpec,
 };

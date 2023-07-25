@@ -5,6 +5,9 @@
   },
   "description": "One game",
   "devDependencies": {
+    "@commitlint/cli": "17.6.7",
+    "@commitlint/config-conventional": "17.6.7",
+    "@commitlint/prompt-cli": "17.6.7",
     "@cornie-js/backend-dev-game-db": "workspace:*",
     "@cornie-js/backend-dev-user-db": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
@@ -14,7 +17,7 @@
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
     "lint-staged": "13.2.3",
-    "turbo": "1.10.6"
+    "turbo": "1.10.11"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
@@ -22,15 +25,16 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@8.6.5",
+  "packageManager": "pnpm@8.6.10",
   "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/notaphplover/one-game.git"
   },
   "scripts": {
-    "close:e2e": "turbo run close:e2e",
     "build": "turbo run build",
+    "close:e2e": "turbo run close:e2e",
+    "commit": "commit",
     "format": "turbo run format",
     "lint": "turbo run lint",
     "migrations:run": "turbo run migrations:run",

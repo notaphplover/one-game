@@ -7,10 +7,9 @@ import {
   Request,
   RequestFromFastifyRequestBuilder,
 } from '@cornie-js/backend-http';
+import { GetUserV1MeHttpRequestController } from '@cornie-js/backend-user-application/users';
 import { Controller, Get, Inject, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
-
-import { GetUserV1MeHttpRequestController } from '../../../application/controllers/GetUserV1MeHttpRequestController';
 
 @Controller('v1/users/me')
 export class GetUserV1MeHttpRequestNestController extends HttpNestFastifyController<Request> {

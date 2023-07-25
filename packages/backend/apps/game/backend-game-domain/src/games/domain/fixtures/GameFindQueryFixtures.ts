@@ -1,4 +1,6 @@
+import { GameStatus } from '../models/GameStatus';
 import { GameFindQuery } from '../query/GameFindQuery';
+import { GameSlotFindQueryFixtures } from './GameSlotFindQueryFixtures';
 
 export class GameFindQueryFixtures {
   public static get any(): GameFindQuery {
@@ -9,6 +11,34 @@ export class GameFindQueryFixtures {
     return {
       ...GameFindQueryFixtures.any,
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+    };
+  }
+
+  public static get withGameSlotFindQuery(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      gameSlotFindQuery: GameSlotFindQueryFixtures.any,
+    };
+  }
+
+  public static get withLimit(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      limit: 10,
+    };
+  }
+
+  public static get withOffset(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      offset: 10,
+    };
+  }
+
+  public static get withStatusActive(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      status: GameStatus.active,
     };
   }
 }
