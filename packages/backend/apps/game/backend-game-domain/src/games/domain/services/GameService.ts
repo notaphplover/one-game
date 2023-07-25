@@ -38,6 +38,9 @@ export class GameService {
       drawCount: 0,
       gameFindQuery: {
         id: game.id,
+        state: {
+          currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        },
       },
     };
 
@@ -84,6 +87,9 @@ export class GameService {
       currentCard: nextCurrentCard,
       gameFindQuery: {
         id: game.id,
+        state: {
+          currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        },
       },
       gameSlotUpdateQueries: [
         {
