@@ -1,4 +1,4 @@
-import { Spec } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Spec } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
 import { Card } from '../../../cards/domain/models/Card';
@@ -8,6 +8,7 @@ import { NormalCard } from '../../../cards/domain/models/NormalCard';
 import { ReverseCard } from '../../../cards/domain/models/ReverseCard';
 import { SkipCard } from '../../../cards/domain/models/SkipCard';
 import { ActiveGame } from '../models/ActiveGame';
+import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameOptions } from '../models/GameOptions';
 
 @Injectable()
@@ -15,6 +16,53 @@ export class CardCanBePlayedSpec
   implements Spec<[Card, ActiveGame, GameOptions]>
 {
   public isSatisfiedBy(
+    card: Card,
+    game: ActiveGame,
+    gameOptions: GameOptions,
+  ): boolean {
+    const cardCanBePlayedBasedOnTheCurrentCard: boolean =
+      this.#isCardPlayableBasedOnTheCurrentCard(card, game, gameOptions);
+
+    return (
+      cardCanBePlayedBasedOnTheCurrentCard &&
+      (!gameOptions.playWildDraw4IfNoOtherAlternative ||
+        card.kind !== CardKind.wildDraw4 ||
+        !this.#isAnyNonWildCardDraw4Playable(game, gameOptions))
+    );
+  }
+
+  #getActiveGameSlotOrThrow(game: ActiveGame): ActiveGameSlot {
+    const slotIndex: number = game.state.currentPlayingSlotIndex;
+    const activeGameSlot: ActiveGameSlot | undefined =
+      game.state.slots[slotIndex];
+
+    if (activeGameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
+      );
+    }
+
+    return activeGameSlot;
+  }
+
+  #isAnyNonWildCardDraw4Playable(
+    game: ActiveGame,
+    gameOptions: GameOptions,
+  ): boolean {
+    const currentActiveGameSlot: ActiveGameSlot =
+      this.#getActiveGameSlotOrThrow(game);
+
+    const nonWildDraw4Cards: Card[] = currentActiveGameSlot.cards.filter(
+      (card: Card) => card.kind !== CardKind.wildDraw4,
+    );
+
+    return nonWildDraw4Cards.some((card: Card) =>
+      this.isSatisfiedBy(card, game, gameOptions),
+    );
+  }
+
+  #isCardPlayableBasedOnTheCurrentCard(
     card: Card,
     game: ActiveGame,
     gameOptions: GameOptions,

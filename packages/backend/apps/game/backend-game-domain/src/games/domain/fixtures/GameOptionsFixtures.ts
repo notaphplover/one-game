@@ -15,23 +15,25 @@ export class GameOptionsFixtures {
     };
   }
 
-  public static get withChainAnyDrawCardsDisabled(): GameOptions {
+  public static get withChainAnyDrawCardsDisabledAndPlayWildDraw4IfNoOtherAlternativeDisabled(): GameOptions {
     return {
       ...GameOptionsFixtures.any,
       chainDraw2Draw2Cards: false,
       chainDraw2Draw4Cards: false,
       chainDraw4Draw2Cards: false,
       chainDraw4Draw4Cards: false,
+      playWildDraw4IfNoOtherAlternative: false,
     };
   }
 
-  public static get withChainAnyDrawCardsEnabled(): GameOptions {
+  public static get withChainAnyDrawCardsEnabledAndPlayWildDraw4IfNoOtherAlternativeDisabled(): GameOptions {
     return {
       ...GameOptionsFixtures.any,
       chainDraw2Draw2Cards: true,
       chainDraw2Draw4Cards: true,
       chainDraw4Draw2Cards: true,
       chainDraw4Draw4Cards: true,
+      playWildDraw4IfNoOtherAlternative: false,
     };
   }
 
@@ -60,6 +62,20 @@ export class GameOptionsFixtures {
     return {
       ...GameOptionsFixtures.any,
       playMultipleSameCards: true,
+    };
+  }
+
+  public static get withPlayWildDraw4IfNoOtherAlternativeDisabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      playWildDraw4IfNoOtherAlternative: false,
+    };
+  }
+
+  public static get withPlayWildDraw4IfNoOtherAlternativeEnabled(): GameOptions {
+    return {
+      ...GameOptionsFixtures.any,
+      playWildDraw4IfNoOtherAlternative: true,
     };
   }
 }
