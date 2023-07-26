@@ -165,6 +165,7 @@ export interface GameIdPassTurnQueryV1 {
 }
 export interface GameIdPlayCardsQueryV1 {
   cardIndexes: number[];
+  colorChoice?: CardColorV1;
   kind: 'playCards';
   slotIndex: number;
 }

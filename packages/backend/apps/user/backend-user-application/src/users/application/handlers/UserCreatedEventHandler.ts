@@ -19,14 +19,13 @@ import { UuidContext } from '../../../foundation/common/application/models/UuidC
 import { RandomHexStringBuilder } from '../../../foundation/string/application/builders/RandomHexStringBuilder';
 import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreateQueryFromUserBuilder } from '../builders/UserCodeCreateQueryFromUserBuilder';
+import { USER_CODE_LENGHT } from '../data/userCodeLength';
 import { UserCodeContext } from '../models/UserCodeContext';
 import { UserCreatedEvent } from '../models/UserCreatedEvent';
 import {
   UserCodePersistenceOutputPort,
   userCodePersistenceOutputPortSymbol,
 } from '../ports/output/UserCodePersistenceOutputPort';
-
-const USER_CODE_LENGHT: number = 64;
 
 @Injectable()
 export class UserCreatedEventHandler

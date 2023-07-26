@@ -2,8 +2,10 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
+import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/models/Card';
 import { CardColor } from '../../../cards/domain/models/CardColor';
+import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { ActiveGame } from '../models/ActiveGame';
@@ -230,6 +232,7 @@ describe(GameService.name, () => {
               gameFixture,
               cardIndexesFixture,
               slotIndexFixture,
+              undefined,
             );
           } catch (error: unknown) {
             result = error;
@@ -270,6 +273,7 @@ describe(GameService.name, () => {
               gameFixture,
               cardIndexesFixture,
               slotIndexFixture,
+              undefined,
             );
           } catch (error: unknown) {
             result = error;
@@ -291,13 +295,16 @@ describe(GameService.name, () => {
       });
     });
 
-    describe('having an existing slotIndex and existing cardIndexes', () => {
+    describe('having an existing slotIndex and existing cardIndexes targeting a colored card and no color choice', () => {
+      let cardFixture: Card & ColoredCard;
       let gameFixture: ActiveGame;
       let cardIndexesFixture: number[];
       let slotIndexFixture: number;
 
       beforeAll(() => {
+        cardFixture = CardFixtures.normalBlueTwoCard;
         gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
         cardIndexesFixture = [0];
         slotIndexFixture = 0;
       });
@@ -310,12 +317,14 @@ describe(GameService.name, () => {
             gameFixture,
             cardIndexesFixture,
             slotIndexFixture,
+            undefined,
           );
         });
 
         it('should return a GameUpdateQuery', () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentCard: expect.any(Object) as unknown as Card,
+            currentColor: cardFixture.color,
             gameFindQuery: {
               id: gameFixture.id,
               state: {
@@ -335,6 +344,153 @@ describe(GameService.name, () => {
           };
 
           expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes targeting a colored card and color choice', () => {
+      let cardFixture: Card & ColoredCard;
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+      let colorChoiceFixture: CardColor;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.normalBlueTwoCard;
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+        colorChoiceFixture = CardColor.green;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameService.buildPlayCardsGameUpdateQuery(
+              gameFixture,
+              cardIndexesFixture,
+              slotIndexFixture,
+              colorChoiceFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message:
+              'Operation not allowed. Reason: unexpected color choice when playing these cards',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes targeting a non colored card and color choice', () => {
+      let cardFixture: Card;
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+      let colorChoiceFixture: CardColor;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.wildCard;
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+        colorChoiceFixture = CardColor.green;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.buildPlayCardsGameUpdateQuery(
+            gameFixture,
+            cardIndexesFixture,
+            slotIndexFixture,
+            colorChoiceFixture,
+          );
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentCard: expect.any(Object) as unknown as Card,
+            currentColor: colorChoiceFixture,
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: expect.any(Array) as unknown as Card[],
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: slotIndexFixture,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes targeting a non colored card and no color choice', () => {
+      let cardFixture: Card;
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.wildCard;
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameService.buildPlayCardsGameUpdateQuery(
+              gameFixture,
+              cardIndexesFixture,
+              slotIndexFixture,
+              undefined,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message:
+              'Operation not allowed. Reason: expecting a color choice when playing these cards',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
         });
       });
     });

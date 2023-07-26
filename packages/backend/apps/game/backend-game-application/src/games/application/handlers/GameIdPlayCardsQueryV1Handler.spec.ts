@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   CurrentPlayerCanPlayCardsSpec,
@@ -30,6 +31,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
+  let cardColorFromCardColorV1BuilderMock: jest.Mocked<
+    Builder<CardColor, [apiModels.CardColorV1]>
+  >;
   let currentPlayerCanPlayCardsSpecMock: jest.Mocked<CurrentPlayerCanPlayCardsSpec>;
 
   let gameIdPlayCardsQueryV1Handler: GameIdPlayCardsQueryV1Handler;
@@ -52,6 +56,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     playerCanUpdateGameSpecMock = {
       isSatisfiedBy: jest.fn(),
     };
+    cardColorFromCardColorV1BuilderMock = {
+      build: jest.fn(),
+    };
     currentPlayerCanPlayCardsSpecMock = {
       isSatisfiedBy: jest.fn(),
     } as Partial<
@@ -63,18 +70,20 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       gamePersistenceOutputPortMock,
       gameServiceMock,
       playerCanUpdateGameSpecMock,
+      cardColorFromCardColorV1BuilderMock,
       currentPlayerCanPlayCardsSpecMock,
     );
   });
 
-  describe('having a gameId', () => {
+  describe('having a gameId and GameIdPlayCardsQueryV1 with no colorChoice', () => {
     let gameIdFixture: string;
     let gameIdPlayCardsQueryV1Fixture: apiModels.GameIdPlayCardsQueryV1;
     let userV1Fixture: apiModels.UserV1;
 
     beforeAll(() => {
       gameIdFixture = ActiveGameFixtures.any.id;
-      gameIdPlayCardsQueryV1Fixture = GameIdPlayCardsQueryV1Fixtures.any;
+      gameIdPlayCardsQueryV1Fixture =
+        GameIdPlayCardsQueryV1Fixtures.withColorChoice;
       userV1Fixture = UserV1Fixtures.any;
     });
 
@@ -555,6 +564,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           activeGameFixture,
           gameIdPlayCardsQueryV1Fixture.cardIndexes,
           gameIdPlayCardsQueryV1Fixture.slotIndex,
+          undefined,
         );
       });
 
