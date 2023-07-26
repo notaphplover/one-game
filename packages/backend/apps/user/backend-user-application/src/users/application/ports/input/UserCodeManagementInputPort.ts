@@ -12,12 +12,11 @@ import {
 import { Inject } from '@nestjs/common';
 
 import { RandomHexStringBuilder } from '../../../../foundation/string/application/builders/RandomHexStringBuilder';
+import { USER_CODE_LENGHT } from '../../data/userCodeLength';
 import {
   UserCodePersistenceOutputPort,
   userCodePersistenceOutputPortSymbol,
 } from '../output/UserCodePersistenceOutputPort';
-
-const USER_CODE_LENGHT: number = 64;
 
 export class UserCodeManagementInputPort {
   readonly #randomHexStringBuilder: Builder<string, [number]>;
