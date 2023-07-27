@@ -6,6 +6,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm, useShowPassword } from '../../hooks';
 import { AuthLayout } from '../layout/AuthLayout';
 import { fetchCreateUser } from '../../store/features/auth';
+import { CheckingAuth } from '../components/CheckingAuth';
 
 export const Register = () => {
 
@@ -20,13 +21,11 @@ export const Register = () => {
     const { showPassword, handleClickShowPassword, handleMouseDownPassword } = useShowPassword(false);
     
     const dispatch = useDispatch();
-    const { id, errorMessage } = useSelector((state) => state.auth);
+    const { status, id, errorMessage } = useSelector((state) => state.auth);
 
     const onSubmit = (event) => {
 
         event.preventDefault();
-        console.log(`${id} - ${errorMessage}`);
-        console.log(isFormValid);
         setFormSubmitted(true);
         if (isFormValid) {
           dispatch(fetchCreateUser(formState));
@@ -37,6 +36,10 @@ export const Register = () => {
             
           setFormSubmitted(false);
         } 
+    }
+
+    if (status === 'checking') {
+      return <CheckingAuth />
     }
 
     return (
