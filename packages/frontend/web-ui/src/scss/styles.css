@@ -1,6 +1,4 @@
-:root{
-    --principal-font: Montserrat, sans-serif;
- 
+:root{ 
     /* --- COLORS ---*/
     --cg-bkg-primary-light: #a44fbb;   /* theme.palette.primary.light */
     --cg-bkg-primary-main:  #8e24aa;       /* theme.palette.primary.main */
@@ -8,13 +6,24 @@
     --cg-text-primary: #fff;          /* theme.palette.primary.contrastText */
     --cg-bkg-secondary-light: #ee99fc;     /* theme.palette.secondary.light */
     --cg-bkg-secondary-main: #ea80fc;       /* theme.palette.secondary.main */
-    --cg-btn-second-bg-hover: #a359b0; /* theme.palette.secondary.dark */
+    --cg-btn-second-bg-dark: #a359b0; /* theme.palette.secondary.dark */
     --cg-btn-second-txt: gray;
 
   }
 
+html {
+    /*font-size: 62.5%; /* Para que 1rem = 10px */
+    box-sizing: border-box; /* Para que el border, el padding, etc no afecte al ancho de nuestros elementos */ 
+  }
+
+*, 
+*:before, 
+*:after {
+    box-sizing: inherit; /* inherit hereda del elemento padre, en este caso del html */
+ }
+
 .box-shadow {
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 5px 5px rgba(68, 2, 131, 0.5);
     color: #a44fbb;
 }
 
@@ -31,4 +40,13 @@ a:link {
 a:hover {
     color: var(--cg-bkg-secondary-light);
     text-decoration: none;
+}
+
+.logo_register:hover {
+    color: var(--cg-text-primary);
+}
+
+.link_navbar {
+    margin: 10px;
+    color: var(--cg-bkg-primary-dark);
 }
