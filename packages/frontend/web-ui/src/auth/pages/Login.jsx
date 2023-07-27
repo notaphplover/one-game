@@ -1,47 +1,88 @@
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useForm } from '../../cornie/hooks/useForm';
+import { Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useForm, useShowPassword } from '../../hooks';
 import { AuthLayout } from '../layout/AuthLayout';
+import { useState } from 'react';
 
 export const Login = () => {
 
-    const {email, password, onInputChange} = useForm({
-        username: '',
+    const {formState, onInputChange, onResetForm, formValidation, isFormValid} = useForm({
         email: '',
-        password: ''
+        password: '',
+        component: 'Login'
     });
+
+    const { showPassword, handleClickShowPassword, handleMouseDownPassword } = useShowPassword(false);
+
+    const [formSubmitted, setFormSubmitted] = useState(false);
+
+    const onSubmitLogin = (event) => {
+
+      event.preventDefault();
+      
+      if (isFormValid) {
+          setFormSubmitted(true);
+          //dispatch(fetchCreateUser(formState));
+          onResetForm();
+      }
+      setFormSubmitted(false);
+  }
 
     return (
 
-        <AuthLayout title="Welcome to Cornie's game !!">
+      <AuthLayout title="Welcome to Cornie's game !!">
 
         <form>
           
-          <Grid container>
+          <Grid container 
+              sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&:hover fieldset': {
+                      borderColor: 'Orchid',
+                    },
+                  },
+                }}>
             <Grid item xs={12} sx={{mt: 2}}>
               <TextField 
-                label="e-mail" 
+                autoFocus
+                label="Email" 
                 type="email" 
                 placeholder="mail@google.com" 
                 fullWidth 
                 name="email"
-                value={email}
+                value={formState.email}
                 onChange={onInputChange}
-                //error={emailValid !== null}
-                //helperText={emailValid}
+                error={formValidation.emailValid !== null && formSubmitted}
+                helperText={(formValidation.emailValid && formSubmitted) && formValidation.emailValid}
               />
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
               <TextField 
                 label="Password" 
-                type="password" 
-                placeholder="*******" 
+                type={showPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          color="primary"
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+                placeholder="******" 
                 fullWidth 
                 name="password"
-                value={password}
+                value={formState.password}
                 onChange={onInputChange}
-                //error={passwordValid !== null}
-                //helperText={passwordValid}
+                error={formValidation.passwordValid !== null && formSubmitted}
+                helperText={(formValidation.passwordValid && formSubmitted) && formValidation.passwordValid}
               />
             </Grid>
           </Grid>
@@ -54,7 +95,7 @@ export const Login = () => {
                 type="submit" 
                 variant='contained' 
                 fullWidth
-                //onClick={onSubmit}
+                onClick={onSubmitLogin}
               >
                 <Typography textAlign='center'>Login</Typography> 
               </Button>
@@ -69,7 +110,7 @@ export const Login = () => {
 
           </Grid>
         </form>
-    </AuthLayout>
+      </AuthLayout>
 
     )
 }
