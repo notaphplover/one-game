@@ -35,6 +35,15 @@ export class GameFindQueryFixtures {
     };
   }
 
+  public static get withStateWithCurrentPlayingSlotIndex(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      state: {
+        currentPlayingSlotIndex: 1,
+      },
+    };
+  }
+
   public static get withStatusActive(): GameFindQuery {
     return {
       ...GameFindQueryFixtures.any,

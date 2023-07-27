@@ -87,6 +87,18 @@ export class GameFindQueryToGameFindQueryTypeOrmConverter
       );
     }
 
+    if (gameFindQuery.state !== undefined) {
+      if (gameFindQuery.state.currentPlayingSlotIndex !== undefined) {
+        queryBuilder = queryBuilder.andWhere(
+          `${gamePropertiesPrefix}currentPlayingSlotIndex = :${GameDb.name}currentPlayingSlotIndex`,
+          {
+            [`${GameDb.name}currentPlayingSlotIndex`]:
+              gameFindQuery.state.currentPlayingSlotIndex,
+          },
+        );
+      }
+    }
+
     if (gameFindQuery.status !== undefined) {
       queryBuilder = queryBuilder.andWhere(
         `${gamePropertiesPrefix}status = :${GameDb.name}status`,

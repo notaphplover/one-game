@@ -1,5 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Handler,
+  Writable,
+} from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameStatus,
@@ -37,7 +42,7 @@ export class GetGameV1MineRequestParamHandler
   public async handle(
     request: Request & AuthRequestContextHolder,
   ): Promise<[GameFindQuery]> {
-    const gameFindQuery: GameFindQuery = {};
+    const gameFindQuery: Writable<GameFindQuery> = {};
 
     const page: number = this.#parsePage(request);
     const pageSize: number = this.#parsePageSize(request);

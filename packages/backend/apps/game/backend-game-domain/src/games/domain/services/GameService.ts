@@ -5,6 +5,7 @@ import { Card } from '../../../cards/domain/models/Card';
 import { CardColor } from '../../../cards/domain/models/CardColor';
 import { CardKind } from '../../../cards/domain/models/CardKind';
 import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { SkipCard } from '../../../cards/domain/models/SkipCard';
 import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { Game } from '../models/Game';
@@ -38,6 +39,9 @@ export class GameService {
       drawCount: 0,
       gameFindQuery: {
         id: game.id,
+        state: {
+          currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        },
       },
     };
 
@@ -74,16 +78,20 @@ export class GameService {
     game: ActiveGame,
     cardIndexes: number[],
     slotIndex: number,
+    colorChoice: CardColor | undefined,
   ): GameUpdateQuery {
     const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(game, slotIndex);
 
-    const nextCurrentCard: Card | undefined =
+    const nextCurrentCard: Card =
       this.#getPlayCardsGameUpdateQueryNextCurrentCard(gameSlot, cardIndexes);
 
-    return {
+    const gameUpdateQuery: GameUpdateQuery = {
       currentCard: nextCurrentCard,
       gameFindQuery: {
         id: game.id,
+        state: {
+          currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        },
       },
       gameSlotUpdateQueries: [
         {
@@ -97,6 +105,20 @@ export class GameService {
         },
       ],
     };
+
+    this.#setPlayCardsGameUpdateQueryColor(
+      gameUpdateQuery,
+      nextCurrentCard,
+      colorChoice,
+    );
+
+    this.#setPlayCardsGameUpdateQueryDirection(
+      game,
+      gameUpdateQuery,
+      nextCurrentCard,
+    );
+
+    return gameUpdateQuery;
   }
 
   public buildStartGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
@@ -196,6 +218,44 @@ export class GameService {
         }),
       ),
     ];
+  }
+
+  #setPlayCardsGameUpdateQueryColor(
+    gameUpdateQuery: GameUpdateQuery,
+    nextCurrentCard: Card,
+    colorChoice: CardColor | undefined,
+  ): void {
+    if (this.#isColored(nextCurrentCard)) {
+      if (colorChoice !== undefined) {
+        throw new AppError(
+          AppErrorKind.unprocessableOperation,
+          'Operation not allowed. Reason: unexpected color choice when playing these cards',
+        );
+      }
+
+      gameUpdateQuery.currentColor = nextCurrentCard.color;
+    } else {
+      if (colorChoice === undefined) {
+        throw new AppError(
+          AppErrorKind.unprocessableOperation,
+          'Operation not allowed. Reason: expecting a color choice when playing these cards',
+        );
+      }
+
+      gameUpdateQuery.currentColor = colorChoice;
+    }
+  }
+
+  #setPlayCardsGameUpdateQueryDirection(
+    game: ActiveGame,
+    gameUpdateQuery: GameUpdateQuery,
+    nextCurrentCard: Card,
+  ): void {
+    if (this.#isSkip(nextCurrentCard)) {
+      gameUpdateQuery.currentDirection = this.#getReverseDirection(
+        game.state.currentDirection,
+      );
+    }
   }
 
   #drawCards(cards: GameCardSpec[], amount: number): [Card[], GameCardSpec[]] {
@@ -376,6 +436,15 @@ export class GameService {
     return nextTurnPlayerIndex;
   }
 
+  #getReverseDirection(direction: GameDirection): GameDirection {
+    switch (direction) {
+      case GameDirection.antiClockwise:
+        return GameDirection.clockwise;
+      case GameDirection.clockwise:
+        return GameDirection.antiClockwise;
+    }
+  }
+
   #getSortedCardDrawIndexes(cardsAmount: number, drawAmount: number): number[] {
     if (drawAmount > cardsAmount) {
       throw new AppError(
@@ -412,6 +481,14 @@ export class GameService {
     const randomIndex: number = Math.floor(Math.random() * colorCount);
 
     return cardColorArray[randomIndex] as CardColor;
+  }
+
+  #isColored(card: Card): card is Card & ColoredCard {
+    return (card as ColoredCard).color !== undefined;
+  }
+
+  #isSkip(card: Card): card is SkipCard {
+    return card.kind === CardKind.skip;
   }
 
   #shuffle<T>(array: T[]): void {

@@ -9,6 +9,22 @@ export class GameIdPlayCardsQueryV1Fixtures {
     };
   }
 
+  public static get withColorChoice(): apiModels.GameIdPlayCardsQueryV1 {
+    return {
+      ...GameIdPlayCardsQueryV1Fixtures.any,
+      colorChoice: 'green',
+    };
+  }
+
+  public static get withNoColorChoice(): apiModels.GameIdPlayCardsQueryV1 {
+    const anyFixture: apiModels.GameIdPlayCardsQueryV1 =
+      GameIdPlayCardsQueryV1Fixtures.any;
+
+    delete anyFixture.colorChoice;
+
+    return anyFixture;
+  }
+
   public static get withSlotIndexZero(): apiModels.GameIdPlayCardsQueryV1 {
     return {
       ...GameIdPlayCardsQueryV1Fixtures.any,

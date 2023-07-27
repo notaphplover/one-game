@@ -1,10 +1,14 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { Writable } from '@cornie-js/backend-common';
+
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/models/Card';
+import { CardKind } from '../../../cards/domain/models/CardKind';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
 import { ActiveGame } from '../models/ActiveGame';
+import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameOptions } from '../models/GameOptions';
 import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 
@@ -16,13 +20,14 @@ describe(CardCanBePlayedSpec.name, () => {
   });
 
   describe('.isSatisfiedBy', () => {
-    describe('having a game with current draw blue card and draw count greater than zero and options with chain draw card options enabled', () => {
+    describe('having a game with current draw blue card and draw count greater than zero and options with chain draw card options enabled and play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withCurrentDrawBlueCardAndDrawCountTwo;
-        gameOptionsFixture = GameOptionsFixtures.withChainAnyDrawCardsEnabled;
+        gameOptionsFixture =
+          GameOptionsFixtures.withChainAnyDrawCardsEnabledAndPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -55,13 +60,14 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current draw card and draw count greater than zero and options with chain draw card options disabled', () => {
+    describe('having a game with current draw card and draw count greater than zero and options with chain draw card options disabled and play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withCurrentDrawBlueCardAndDrawCountTwo;
-        gameOptionsFixture = GameOptionsFixtures.withChainAnyDrawCardsDisabled;
+        gameOptionsFixture =
+          GameOptionsFixtures.withChainAnyDrawCardsDisabledAndPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -93,14 +99,15 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current draw card and draw count zero', () => {
+    describe('having a game with current draw card and draw count zero and play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture =
           ActiveGameFixtures.withCurrentDrawBlueCardAndDrawCountZero;
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -136,14 +143,15 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current wild draw four card and draw count greater than zero and options with chain draw card options enabled', () => {
+    describe('having a game with current wild draw four card and draw count greater than zero and options with chain draw card options enabled and play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture =
           ActiveGameFixtures.withCurrentWildDraw4CardAndCurrentColorBlueAndDrawCountFour;
-        gameOptionsFixture = GameOptionsFixtures.withChainAnyDrawCardsEnabled;
+        gameOptionsFixture =
+          GameOptionsFixtures.withChainAnyDrawCardsEnabledAndPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -176,14 +184,15 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current wild draw four card and draw count greater than zero and options with chain draw card options disabled', () => {
+    describe('having a game with current wild draw four card and draw count greater than zero and options with chain draw card options disabled and play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture =
           ActiveGameFixtures.withCurrentWildDraw4CardAndCurrentColorBlueAndDrawCountFour;
-        gameOptionsFixture = GameOptionsFixtures.withChainAnyDrawCardsDisabled;
+        gameOptionsFixture =
+          GameOptionsFixtures.withChainAnyDrawCardsDisabledAndPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -216,14 +225,15 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current wild draw four card and current color blue and draw count zero', () => {
+    describe('having a game with current wild draw four card and current color blue and draw count zero and options with play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture =
           ActiveGameFixtures.withCurrentWildDraw4CardAndCurrentColorBlueAndDrawCountZero;
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -259,13 +269,14 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current normal blue two card', () => {
+    describe('having a game with current normal blue two card and options with play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withCurrentNormalBlueTwoCard;
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -303,13 +314,14 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with a reverse blue card', () => {
+    describe('having a game with a reverse blue card and options with play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withCurrentReverseBlueCard;
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -345,13 +357,14 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with a skip blue card', () => {
+    describe('having a game with a skip blue card and options with play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withCurrentSkipBlueCard;
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -387,13 +400,14 @@ describe(CardCanBePlayedSpec.name, () => {
       );
     });
 
-    describe('having a game with current wild card and current color blue', () => {
+    describe('having a game with current wild card and current color blue and and options with play wild draw 4 cards if no other alternative disabled', () => {
       let gameFixture: ActiveGame;
       let gameOptionsFixture: GameOptions;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withCurrentWildCardAndCurrentColorBlue;
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeDisabled;
       });
 
       describe.each<[string, Card, boolean]>([
@@ -407,6 +421,80 @@ describe(CardCanBePlayedSpec.name, () => {
         ['skip red card', CardFixtures.skipRedCard, false],
         ['wild card', CardFixtures.wildCard, true],
         ['wild draw 4 card', CardFixtures.wildDraw4Card, true],
+      ])(
+        'having a %s',
+        (_: string, cardFixture: Card, expectedResult: boolean) => {
+          describe('when called', () => {
+            let result: unknown;
+
+            beforeAll(() => {
+              result = isCardPlayableSpec.isSatisfiedBy(
+                cardFixture,
+                gameFixture,
+                gameOptionsFixture,
+              );
+            });
+
+            it(`should return  ${expectedResult.toString()}`, () => {
+              expect(result).toBe(expectedResult);
+            });
+          });
+        },
+      );
+    });
+
+    describe('having a game with current normal card current player with no cards and options with play wild draw 4 cards if no other alternative enabled', () => {
+      let gameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withCurrentNormalBlueTwoCard;
+        (gameFixture.state.slots[0] as Writable<ActiveGameSlot>).cards = [];
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeEnabled;
+      });
+
+      describe.each<[string, Card, boolean]>([
+        ['wild draw 4 card', CardFixtures.wildDraw4Card, true],
+      ])(
+        'having a %s',
+        (_: string, cardFixture: Card, expectedResult: boolean) => {
+          describe('when called', () => {
+            let result: unknown;
+
+            beforeAll(() => {
+              result = isCardPlayableSpec.isSatisfiedBy(
+                cardFixture,
+                gameFixture,
+                gameOptionsFixture,
+              );
+            });
+
+            it(`should return  ${expectedResult.toString()}`, () => {
+              expect(result).toBe(expectedResult);
+            });
+          });
+        },
+      );
+    });
+
+    describe('having a game with current normal card current player with other playable cards and options with play wild draw 4 cards if no other alternative enabled', () => {
+      let gameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+
+      beforeAll(() => {
+        gameFixture = ActiveGameFixtures.withCurrentNormalBlueTwoCard;
+        (gameFixture.state.slots[0] as Writable<ActiveGameSlot>).cards = [
+          {
+            kind: CardKind.wild,
+          },
+        ];
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayWildDraw4IfNoOtherAlternativeEnabled;
+      });
+
+      describe.each<[string, Card, boolean]>([
+        ['wild draw 4 card', CardFixtures.wildDraw4Card, false],
       ])(
         'having a %s',
         (_: string, cardFixture: Card, expectedResult: boolean) => {
