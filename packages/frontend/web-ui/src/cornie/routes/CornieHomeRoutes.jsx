@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { CornieHome } from '../pages';
-import { AboutUs } from '../pages/AboutUs';
+import { CornieHome, AboutUs } from '../pages';
 
 export const CornieHomeRoutes = () => {
   return (
