@@ -1,15 +1,16 @@
-import { Box } from '@mui/material';
+import { Box, autocompleteClasses } from '@mui/material';
 import { Footer, Navbar } from '../components';
 
 export const CornieLayout = ({children}) => {
   return (
-    <Box sx={{display: 'flex'}}>
+    <Box
+      sx={{bgcolor: 'secondary.light'}} >
 
       <Navbar />
 
-      <Footer />
       {children}
 
+      <Footer />
       
     </Box>
   )
