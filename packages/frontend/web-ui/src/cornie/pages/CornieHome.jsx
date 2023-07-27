@@ -10,7 +10,7 @@ export const CornieHome= () => {
             
             <Box component="span" sx={{ p: 10, color: 'primary.dark'}}>
                 <Typography variant="h3" component="h3" 
-                    sx={{textAlign: 'center', lineHeight: 2, fontWeight: 'bold'}}>Wellcome to Cornie's Game</Typography>
+                    sx={{textAlign: 'center', lineHeight: 2, fontWeight: 'bold'}}>Welcome to Cornie's Game</Typography> 
                 <Grid container spacing={3}
                   direction="row"
                   justifyContent="space-between"
