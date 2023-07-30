@@ -5,6 +5,7 @@ import { Builder } from './common/domain/modules/Builder';
 import { BuilderAsync } from './common/domain/modules/BuilderAsync';
 import { Converter } from './common/domain/modules/Converter';
 import { ConverterAsync } from './common/domain/modules/ConverterAsync';
+import { ReportBasedSpec } from './common/domain/modules/ReportBasedSpec';
 import { Spec } from './common/domain/modules/Spec';
 import {
   BaseEither,
@@ -27,6 +28,7 @@ export type {
   ConverterAsync,
   Entity,
   Left,
+  ReportBasedSpec,
   Right,
   Spec,
   Writable,
