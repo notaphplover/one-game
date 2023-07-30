@@ -7,9 +7,12 @@ import {
   AppError,
   AppErrorKind,
   Builder,
+  Either,
   Handler,
+  ReportBasedSpec,
 } from '@cornie-js/backend-common';
 import {
+  IsValidUserCreateQuerySpec,
   User,
   UserCreateQuery,
   UserFindQuery,
@@ -38,6 +41,10 @@ import {
 @Injectable()
 export class UserManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
+  readonly #isValidUserCreateQuerySpec: ReportBasedSpec<
+    [UserCreateQuery],
+    string[]
+  >;
   readonly #userCreatedEventHandler: Handler<[UserCreatedEvent], void>;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
@@ -55,6 +62,8 @@ export class UserManagementInputPort {
   constructor(
     @Inject(bcryptHashProviderOutputPortSymbol)
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
+    @Inject(IsValidUserCreateQuerySpec)
+    isValidUserCreateQuerySpec: ReportBasedSpec<[UserCreateQuery], string[]>,
     @Inject(UserCreatedEventHandler)
     userCreatedEventHandler: Handler<[UserCreatedEvent], void>,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
@@ -77,6 +86,7 @@ export class UserManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
+    this.#isValidUserCreateQuerySpec = isValidUserCreateQuerySpec;
     this.#userCreatedEventHandler = userCreatedEventHandler;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
@@ -99,6 +109,18 @@ export class UserManagementInputPort {
         userCreateQueryV1,
         userCreateQueryContext,
       );
+
+    const isValidUserCreateQueryResult: Either<string[], undefined> =
+      this.#isValidUserCreateQuerySpec.isSatisfiedOrReport(userCreateQuery);
+
+    if (!isValidUserCreateQueryResult.isRight) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Invalid user create request. Reasons:
+
+${isValidUserCreateQueryResult.value.join('\n')}`,
+      );
+    }
 
     const user: User = await this.#userPersistenceOutputPort.create(
       userCreateQuery,

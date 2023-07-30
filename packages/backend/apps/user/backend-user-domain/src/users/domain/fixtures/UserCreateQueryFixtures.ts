@@ -13,4 +13,18 @@ export class UserCreateQueryFixtures {
 
     return fixture;
   }
+
+  public static get withEmailInvalid(): UserCreateQuery {
+    return {
+      ...UserCreateQueryFixtures.any,
+      email: 'thisi$notanemail',
+    };
+  }
+
+  public static get withNameEmpty(): UserCreateQuery {
+    return {
+      ...UserCreateQueryFixtures.any,
+      name: '',
+    };
+  }
 }
