@@ -7,6 +7,7 @@ import {
   AppErrorKind,
   Builder,
   Handler,
+  ReportBasedSpec,
 } from '@cornie-js/backend-common';
 import {
   User,
@@ -33,6 +34,9 @@ import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
   let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
+  let isValidUserCreateQuerySpecMock: jest.Mocked<
+    ReportBasedSpec<[UserCreateQuery], string[]>
+  >;
   let userCreatedEventHandlerMock: jest.Mocked<
     Handler<[UserCreatedEvent], void>
   >;
@@ -58,6 +62,9 @@ describe(UserManagementInputPort.name, () => {
     bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
+    isValidUserCreateQuerySpecMock = {
+      isSatisfiedOrReport: jest.fn(),
+    };
     userCreatedEventHandlerMock = {
       handle: jest.fn(),
     };
@@ -81,6 +88,7 @@ describe(UserManagementInputPort.name, () => {
 
     userManagementInputPort = new UserManagementInputPort(
       bcryptHashProviderOutputPortMock,
+      isValidUserCreateQuerySpecMock,
       userCreatedEventHandlerMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
@@ -98,7 +106,7 @@ describe(UserManagementInputPort.name, () => {
       userCreateQueryV1Fixture = UserCreateQueryV1Fixtures.any;
     });
 
-    describe('when called', () => {
+    describe('when called, and isValidUserCreateQuerySpecMock.isSatisfiedOrReport() returns Right', () => {
       let hashFixture: string;
       let userCreateQueryFixture: UserCreateQuery;
       let userFixture: User;
@@ -119,6 +127,10 @@ describe(UserManagementInputPort.name, () => {
         bcryptHashProviderOutputPortMock.hash.mockResolvedValueOnce(
           hashFixture,
         );
+        isValidUserCreateQuerySpecMock.isSatisfiedOrReport.mockReturnValueOnce({
+          isRight: true,
+          value: undefined,
+        });
         userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           userCreateQueryFixture,
         );
@@ -143,6 +155,15 @@ describe(UserManagementInputPort.name, () => {
         expect(bcryptHashProviderOutputPortMock.hash).toHaveBeenCalledWith(
           userCreateQueryV1Fixture.password,
         );
+      });
+
+      it('should call isValidUserCreateQuerySpec.isSatisfiedOrReport()', () => {
+        expect(
+          isValidUserCreateQuerySpecMock.isSatisfiedOrReport,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          isValidUserCreateQuerySpecMock.isSatisfiedOrReport,
+        ).toHaveBeenCalledWith(userCreateQueryFixture);
       });
 
       it('should call userCreateQueryConverterFromUserCreateQueryV1Builder.build()', () => {
