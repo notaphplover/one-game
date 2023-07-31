@@ -7,12 +7,9 @@ import {
   AppError,
   AppErrorKind,
   Builder,
-  Either,
   Handler,
-  ReportBasedSpec,
 } from '@cornie-js/backend-common';
 import {
-  IsValidUserCreateQuerySpec,
   User,
   UserCreateQuery,
   UserFindQuery,
@@ -29,9 +26,8 @@ import {
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
-import { UserCreatedEventHandler } from '../../handlers/UserCreatedEventHandler';
+import { CreateUserUseCaseHandler } from '../../handlers/CreateUserUseCaseHandler';
 import { UserUpdatedEventHandler } from '../../handlers/UserUpdatedEventHandler';
-import { UserCreatedEvent } from '../../models/UserCreatedEvent';
 import { UserUpdatedEvent } from '../../models/UserUpdatedEvent';
 import {
   UserPersistenceOutputPort,
@@ -41,11 +37,7 @@ import {
 @Injectable()
 export class UserManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
-  readonly #isValidUserCreateQuerySpec: ReportBasedSpec<
-    [UserCreateQuery],
-    string[]
-  >;
-  readonly #userCreatedEventHandler: Handler<[UserCreatedEvent], void>;
+  readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, HashContext & UuidContext]
@@ -62,10 +54,8 @@ export class UserManagementInputPort {
   constructor(
     @Inject(bcryptHashProviderOutputPortSymbol)
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
-    @Inject(IsValidUserCreateQuerySpec)
-    isValidUserCreateQuerySpec: ReportBasedSpec<[UserCreateQuery], string[]>,
-    @Inject(UserCreatedEventHandler)
-    userCreatedEventHandler: Handler<[UserCreatedEvent], void>,
+    @Inject(CreateUserUseCaseHandler)
+    createUserUseCaseHandler: Handler<[UserCreateQuery], User>,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
     userCreateQueryFromUserCreateQueryV1Builder: Builder<
       UserCreateQuery,
@@ -86,8 +76,7 @@ export class UserManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
-    this.#isValidUserCreateQuerySpec = isValidUserCreateQuerySpec;
-    this.#userCreatedEventHandler = userCreatedEventHandler;
+    this.#createUserUseCaseHandler = createUserUseCaseHandler;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
@@ -110,26 +99,9 @@ export class UserManagementInputPort {
         userCreateQueryContext,
       );
 
-    const isValidUserCreateQueryResult: Either<string[], undefined> =
-      this.#isValidUserCreateQuerySpec.isSatisfiedOrReport(userCreateQuery);
-
-    if (!isValidUserCreateQueryResult.isRight) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        `Invalid user create request. Reasons:
-
-${isValidUserCreateQueryResult.value.join('\n')}`,
-      );
-    }
-
-    const user: User = await this.#userPersistenceOutputPort.create(
+    const user: User = await this.#createUserUseCaseHandler.handle(
       userCreateQuery,
     );
-
-    await this.#userCreatedEventHandler.handle({
-      user,
-      userCreateQuery,
-    });
 
     return this.#userV1FromUserBuilder.build(user);
   }

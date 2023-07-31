@@ -7,7 +7,6 @@ import {
   AppErrorKind,
   Builder,
   Handler,
-  ReportBasedSpec,
 } from '@cornie-js/backend-common';
 import {
   User,
@@ -27,18 +26,14 @@ import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/applic
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
-import { UserCreatedEvent } from '../../models/UserCreatedEvent';
 import { UserUpdatedEvent } from '../../models/UserUpdatedEvent';
 import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
   let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
-  let isValidUserCreateQuerySpecMock: jest.Mocked<
-    ReportBasedSpec<[UserCreateQuery], string[]>
-  >;
-  let userCreatedEventHandlerMock: jest.Mocked<
-    Handler<[UserCreatedEvent], void>
+  let createUserUseCaseHandlerMock: jest.Mocked<
+    Handler<[UserCreateQuery], User>
   >;
   let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
     Builder<
@@ -62,10 +57,7 @@ describe(UserManagementInputPort.name, () => {
     bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
       jest.Mocked<BcryptHashProviderOutputPort>
     > as jest.Mocked<BcryptHashProviderOutputPort>;
-    isValidUserCreateQuerySpecMock = {
-      isSatisfiedOrReport: jest.fn(),
-    };
-    userCreatedEventHandlerMock = {
+    createUserUseCaseHandlerMock = {
       handle: jest.fn(),
     };
     userCreateQueryFromUserCreateQueryV1BuilderMock = {
@@ -88,8 +80,7 @@ describe(UserManagementInputPort.name, () => {
 
     userManagementInputPort = new UserManagementInputPort(
       bcryptHashProviderOutputPortMock,
-      isValidUserCreateQuerySpecMock,
-      userCreatedEventHandlerMock,
+      createUserUseCaseHandlerMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
       userUpdatedEventHandlerMock,
@@ -127,15 +118,10 @@ describe(UserManagementInputPort.name, () => {
         bcryptHashProviderOutputPortMock.hash.mockResolvedValueOnce(
           hashFixture,
         );
-        isValidUserCreateQuerySpecMock.isSatisfiedOrReport.mockReturnValueOnce({
-          isRight: true,
-          value: undefined,
-        });
         userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           userCreateQueryFixture,
         );
-        userPersistenceOutputPortMock.create.mockResolvedValueOnce(userFixture);
-        userCreatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
+        createUserUseCaseHandlerMock.handle.mockResolvedValueOnce(userFixture);
         userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
 
         result = await userManagementInputPort.create(userCreateQueryV1Fixture);
@@ -157,15 +143,6 @@ describe(UserManagementInputPort.name, () => {
         );
       });
 
-      it('should call isValidUserCreateQuerySpec.isSatisfiedOrReport()', () => {
-        expect(
-          isValidUserCreateQuerySpecMock.isSatisfiedOrReport,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          isValidUserCreateQuerySpecMock.isSatisfiedOrReport,
-        ).toHaveBeenCalledWith(userCreateQueryFixture);
-      });
-
       it('should call userCreateQueryConverterFromUserCreateQueryV1Builder.build()', () => {
         const expectedContext: HashContext & UuidContext = {
           hash: hashFixture,
@@ -180,22 +157,10 @@ describe(UserManagementInputPort.name, () => {
         ).toHaveBeenCalledWith(userCreateQueryV1Fixture, expectedContext);
       });
 
-      it('should call userPersistenceOutputPort.create()', () => {
-        expect(userPersistenceOutputPortMock.create).toHaveBeenCalledTimes(1);
-        expect(userPersistenceOutputPortMock.create).toHaveBeenCalledWith(
+      it('should call createUserUseCaseHandler.handle()', () => {
+        expect(createUserUseCaseHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(createUserUseCaseHandlerMock.handle).toHaveBeenCalledWith(
           userCreateQueryFixture,
-        );
-      });
-
-      it('should call userCreatedEventHandler.handle()', () => {
-        const expectedUserCreatedEvent: UserCreatedEvent = {
-          user: userFixture,
-          userCreateQuery: userCreateQueryFixture,
-        };
-
-        expect(userCreatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
-        expect(userCreatedEventHandlerMock.handle).toHaveBeenCalledWith(
-          expectedUserCreatedEvent,
         );
       });
 
