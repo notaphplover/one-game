@@ -3,19 +3,18 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useForm, useShowPassword } from '../../hooks';
-import { AuthLayout } from '../layout/AuthLayout';
+import { useFormRegister, useShowPassword } from '../../common/hooks';
+import { RegisterLayout } from '../layout/RegisterLayout';
 import { fetchCreateUser } from '../../store/features/auth';
 import { CheckingAuth } from '../components/CheckingAuth';
 
 export const Register = () => {
 
-    const {formState, onInputChange, onResetForm, formValidation, isFormValid} = useForm({
+    const { formState, onInputChange, onResetForm, formValidation, isFormValid } = useFormRegister({
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
-        component: 'Register'
+        confirmPassword: ''
     });
     const [ formSubmitted, setFormSubmitted ] = useState(false);
     const { showPassword, handleClickShowPassword, handleMouseDownPassword } = useShowPassword(false);
@@ -44,7 +43,7 @@ export const Register = () => {
 
     return (
 
-      <AuthLayout title="Create an account">
+      <RegisterLayout title="Create an account">
 
         <form>
           
@@ -66,8 +65,8 @@ export const Register = () => {
                 name="name"
                 value={formState.name}
                 onChange={onInputChange}
-                error={formValidation.nameValid !== null && formSubmitted}
-                helperText={(formValidation.nameValid && formSubmitted) && formValidation.nameValid}
+                error={formValidation.nameValidationError !== null && formSubmitted}
+                helperText={(formValidation.nameValidationError && formSubmitted) && formValidation.nameValidationError}
               />
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
@@ -75,13 +74,13 @@ export const Register = () => {
                 disabled={id !== null ? true : false}
                 label="Email" 
                 type="email" 
-                placeholder="mail@google.com" 
+                placeholder="mail@example.com" 
                 fullWidth 
                 name="email"
                 value={formState.email}
                 onChange={onInputChange}
-                error={formValidation.emailValid !== null && formSubmitted}
-                helperText={(formValidation.emailValid && formSubmitted) && formValidation.emailValid}
+                error={formValidation.emailValidationError !== null && formSubmitted}
+                helperText={(formValidation.emailValidationError && formSubmitted) && formValidation.emailValidationError}
               />
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
@@ -109,8 +108,8 @@ export const Register = () => {
                 name="password"
                 value={formState.password}
                 onChange={onInputChange}
-                error={formValidation.passwordValid !== null && formSubmitted}
-                helperText={(formValidation.passwordValid && formSubmitted) && formValidation.passwordValid}
+                error={formValidation.passwordValidationError !== null && formSubmitted}
+                helperText={(formValidation.passwordValidationError && formSubmitted) && formValidation.passwordValidationError}
               />
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
@@ -138,8 +137,8 @@ export const Register = () => {
                   name="confirmPassword"
                   value={formState.confirmPassword}
                   onChange={onInputChange}
-                  error={formValidation.confirmPasswordValid !== null && formSubmitted}
-                  helperText={(formValidation.confirmPasswordValid && formSubmitted) && formValidation.confirmPasswordValid}
+                  error={formValidation.confirmPasswordValidationError !== null && formSubmitted}
+                  helperText={(formValidation.confirmPasswordValidationError && formSubmitted) && formValidation.confirmPasswordValidationError}
                 />
               </Grid>
             </Grid>
@@ -199,7 +198,7 @@ export const Register = () => {
 
           </Grid>
         </form>
-      </AuthLayout>
+      </RegisterLayout>
 
     )
 }

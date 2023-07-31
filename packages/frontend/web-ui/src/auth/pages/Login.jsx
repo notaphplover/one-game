@@ -1,16 +1,15 @@
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useForm, useShowPassword } from '../../hooks';
-import { AuthLayout } from '../layout/AuthLayout';
-import { useState } from 'react';
+import { useFormLogin, useShowPassword } from '../../common/hooks';
+import { LoginLayout } from '../layout/LoginLayout';
 
 export const Login = () => {
 
-    const {formState, onInputChange, onResetForm, formValidation, isFormValid} = useForm({
+    const {formState, onInputChange, onResetForm, formValidation, isFormValid} = useFormLogin({
         email: '',
-        password: '',
-        component: 'Login'
+        password: ''
     });
 
     const { showPassword, handleClickShowPassword, handleMouseDownPassword } = useShowPassword(false);
@@ -23,7 +22,6 @@ export const Login = () => {
       
       if (isFormValid) {
           setFormSubmitted(true);
-          //dispatch(fetchCreateUser(formState));
           onResetForm();
       }
       setFormSubmitted(false);
@@ -31,7 +29,7 @@ export const Login = () => {
 
     return (
 
-      <AuthLayout title="Welcome to Cornie's game !!">
+      <LoginLayout title="Welcome to Cornie's game !!">
 
         <form>
           
@@ -48,13 +46,13 @@ export const Login = () => {
                 autoFocus
                 label="Email" 
                 type="email" 
-                placeholder="mail@google.com" 
+                placeholder="mail@example.com" 
                 fullWidth 
                 name="email"
                 value={formState.email}
                 onChange={onInputChange}
-                error={formValidation.emailValid !== null && formSubmitted}
-                helperText={(formValidation.emailValid && formSubmitted) && formValidation.emailValid}
+                error={formValidation.emailValidationError !== null && formSubmitted}
+                helperText={(formValidation.emailValidationError && formSubmitted) && formValidation.emailValidationError}
               />
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
@@ -81,8 +79,8 @@ export const Login = () => {
                 name="password"
                 value={formState.password}
                 onChange={onInputChange}
-                error={formValidation.passwordValid !== null && formSubmitted}
-                helperText={(formValidation.passwordValid && formSubmitted) && formValidation.passwordValid}
+                error={formValidation.passwordValidationError !== null && formSubmitted}
+                helperText={(formValidation.passwordValidationError && formSubmitted) && formValidation.passwordValidationError}
               />
             </Grid>
           </Grid>
@@ -110,7 +108,7 @@ export const Login = () => {
 
           </Grid>
         </form>
-      </AuthLayout>
-
+      </LoginLayout>
+  
     )
 }
