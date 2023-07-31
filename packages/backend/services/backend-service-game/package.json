@@ -6,9 +6,9 @@
   "description": "Backend game service for one-game-js",
   "dependencies": {
     "@fastify/helmet": "11.0.0",
-    "@nestjs/common": "10.1.2",
-    "@nestjs/core": "10.1.2",
-    "@nestjs/platform-fastify": "10.1.2",
+    "@nestjs/common": "10.1.3",
+    "@nestjs/core": "10.1.3",
+    "@nestjs/platform-fastify": "10.1.3",
     "@cornie-js/api-http-client": "workspace:*",
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-game-adapter-typeorm": "workspace:*",
