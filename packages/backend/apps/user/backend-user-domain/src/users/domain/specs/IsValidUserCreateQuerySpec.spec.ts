@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { Left } from '@cornie-js/backend-common';
+import { Left, Right } from '@cornie-js/backend-common';
 
-import { UserCreateQuery } from '..';
-import { UserCreateQueryFixtures } from '../fixtures';
+import { UserCreateQueryFixtures } from '../fixtures/UserCreateQueryFixtures';
+import { UserCreateQuery } from '../query/UserCreateQuery';
 import { IsValidUserCreateQuerySpec } from './IsValidUserCreateQuerySpec';
 
 describe(IsValidUserCreateQuerySpec.name, () => {
@@ -61,6 +61,33 @@ describe(IsValidUserCreateQuerySpec.name, () => {
           const expected: Left<string[]> = {
             isRight: false,
             value: ['Expected a non empty name'],
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a valid UserCreateQuery', () => {
+      let userCreateQueryFixture: UserCreateQuery;
+
+      beforeAll(() => {
+        userCreateQueryFixture = UserCreateQueryFixtures.any;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = isValidUserCreateQuerySpec.isSatisfiedOrReport(
+            userCreateQueryFixture,
+          );
+        });
+
+        it('should return a Right', () => {
+          const expected: Right<undefined> = {
+            isRight: true,
+            value: undefined,
           };
 
           expect(result).toStrictEqual(expected);

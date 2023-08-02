@@ -6,6 +6,7 @@ import { UserCreateQuery } from './query/UserCreateQuery';
 import { UserFindQuery } from './query/UserFindQuery';
 import { UserUpdateQuery } from './query/UserUpdateQuery';
 import { IsValidUserCreateQuerySpec } from './specs/IsValidUserCreateQuerySpec';
+import { IsValidUserUpdateQuerySpec } from './specs/IsValidUserUpdateQuerySpec';
 import { UserCanCreateAuthSpec } from './specs/UserCanCreateAuthSpec';
 import { UserCanCreateCodeSpec } from './specs/UserCanCreateCodeSpec';
 
@@ -21,6 +22,7 @@ export type {
 
 export {
   IsValidUserCreateQuerySpec,
+  IsValidUserUpdateQuerySpec,
   UserCanCreateAuthSpec,
   UserCanCreateCodeSpec,
 };
