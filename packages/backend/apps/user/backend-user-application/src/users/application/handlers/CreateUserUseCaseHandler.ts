@@ -44,17 +44,7 @@ export class CreateUserUseCaseHandler
   }
 
   public async handle(userCreateQuery: UserCreateQuery): Promise<User> {
-    const isValidUserCreateQueryResult: Either<string[], undefined> =
-      this.#isValidUserCreateQuerySpec.isSatisfiedOrReport(userCreateQuery);
-
-    if (!isValidUserCreateQueryResult.isRight) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        `Invalid user create request. Reasons:
-
-${isValidUserCreateQueryResult.value.join('\n')}`,
-      );
-    }
+    this.#validate(userCreateQuery);
 
     const user: User = await this.#userPersistenceOutputPort.create(
       userCreateQuery,
@@ -66,5 +56,19 @@ ${isValidUserCreateQueryResult.value.join('\n')}`,
     });
 
     return user;
+  }
+
+  #validate(userCreateQuery: UserCreateQuery): void {
+    const isValidUserCreateQueryResult: Either<string[], undefined> =
+      this.#isValidUserCreateQuerySpec.isSatisfiedOrReport(userCreateQuery);
+
+    if (!isValidUserCreateQueryResult.isRight) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Invalid user create request. Reasons:
+
+${isValidUserCreateQueryResult.value.join('\n')}`,
+      );
+    }
   }
 }
