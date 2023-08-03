@@ -1,8 +1,8 @@
 import { AppError, AppErrorKind, Spec } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Card } from '../../../cards/domain/models/Card';
 import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
+import { Card } from '../../../cards/domain/valueObjects/Card';
 import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { GameOptions } from '../models/GameOptions';

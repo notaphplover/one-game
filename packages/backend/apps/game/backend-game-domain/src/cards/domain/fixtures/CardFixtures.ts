@@ -1,12 +1,12 @@
-import { Card } from '../models/Card';
-import { CardColor } from '../models/CardColor';
-import { CardKind } from '../models/CardKind';
-import { DrawCard } from '../models/DrawCard';
-import { NormalCard } from '../models/NormalCard';
-import { ReverseCard } from '../models/ReverseCard';
-import { SkipCard } from '../models/SkipCard';
-import { WildCard } from '../models/WildCard';
-import { WildDraw4Card } from '../models/WildDraw4Card';
+import { Card } from '../valueObjects/Card';
+import { CardColor } from '../valueObjects/CardColor';
+import { CardKind } from '../valueObjects/CardKind';
+import { DrawCard } from '../valueObjects/DrawCard';
+import { NormalCard } from '../valueObjects/NormalCard';
+import { ReverseCard } from '../valueObjects/ReverseCard';
+import { SkipCard } from '../valueObjects/SkipCard';
+import { WildCard } from '../valueObjects/WildCard';
+import { WildDraw4Card } from '../valueObjects/WildDraw4Card';
 
 export class CardFixtures {
   public static get any(): Card {

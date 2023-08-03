@@ -1,5 +1,5 @@
-import { Card } from '../../../cards/domain/models/Card';
-import { CardColor } from '../../../cards/domain/models/CardColor';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { ActiveGameSlot } from './ActiveGameSlot';
 import { GameCardSpec } from './GameCardSpec';
 import { GameDirection } from './GameDirection';
