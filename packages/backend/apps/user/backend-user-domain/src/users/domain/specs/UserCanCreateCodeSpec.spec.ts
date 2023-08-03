@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { User } from '../entities/User';
 import { UserFixtures } from '../fixtures/UserFixtures';
-import { User } from '../models/User';
 import { UserCanCreateCodeSpec } from './UserCanCreateCodeSpec';
 
 describe(UserCanCreateCodeSpec.name, () => {
