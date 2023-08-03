@@ -1,5 +1,5 @@
-import { GameStatus } from '../models/GameStatus';
-import { NonStartedGame } from '../models/NonStartedGame';
+import { NonStartedGame } from '../entities/NonStartedGame';
+import { GameStatus } from '../valueObjects/GameStatus';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { GameSpecFixtures } from './GameSpecFixtures';
 import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';

@@ -1,5 +1,5 @@
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 
 export class ActiveGameSlotFixtures {
   public static get any(): ActiveGameSlot {

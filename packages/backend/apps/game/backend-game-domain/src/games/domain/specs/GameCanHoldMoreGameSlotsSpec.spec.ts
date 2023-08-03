@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { Game } from '../entities/Game';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
-import { Game } from '../models/Game';
 import { GameCanHoldMoreGameSlotsSpec } from './GameCanHoldMoreGameSlotsSpec';
 
 describe(GameCanHoldMoreGameSlotsSpec.name, () => {

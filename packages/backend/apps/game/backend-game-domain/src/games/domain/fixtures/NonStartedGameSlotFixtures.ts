@@ -1,4 +1,4 @@
-import { NonStartedGameSlot } from '../models/NonStartedGameSlot';
+import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
 
 export class NonStartedGameSlotFixtures {
   public static get any(): NonStartedGameSlot {

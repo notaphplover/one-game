@@ -1,8 +1,8 @@
 import { Spec } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
+import { ActiveGame } from '../entities/ActiveGame';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 
 @Injectable()
 export class PlayerCanUpdateGameSpec

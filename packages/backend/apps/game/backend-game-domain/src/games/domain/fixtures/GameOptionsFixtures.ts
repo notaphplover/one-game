@@ -1,4 +1,4 @@
-import { GameOptions } from '../models/GameOptions';
+import { GameOptions } from '../valueObjects/GameOptions';
 
 export class GameOptionsFixtures {
   public static get any(): GameOptions {

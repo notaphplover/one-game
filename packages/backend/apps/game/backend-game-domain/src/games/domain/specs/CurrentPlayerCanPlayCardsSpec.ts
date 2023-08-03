@@ -3,9 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { GameOptions } from '../models/GameOptions';
+import { ActiveGame } from '../entities/ActiveGame';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameOptions } from '../valueObjects/GameOptions';
 import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 
 @Injectable()

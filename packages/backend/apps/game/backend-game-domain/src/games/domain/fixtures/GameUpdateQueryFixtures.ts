@@ -1,8 +1,8 @@
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
-import { GameDirection } from '../models/GameDirection';
-import { GameStatus } from '../models/GameStatus';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { GameDirection } from '../valueObjects/GameDirection';
+import { GameStatus } from '../valueObjects/GameStatus';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { GameFindQueryFixtures } from './GameFindQueryFixtures';
 import { GameSlotUpdateQueryFixtures } from './GameSlotUpdateQueryFixtures';

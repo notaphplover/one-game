@@ -5,11 +5,11 @@ import { Writable } from '@cornie-js/backend-common';
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
+import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { GameOptions } from '../models/GameOptions';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameOptions } from '../valueObjects/GameOptions';
 import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 
 describe(CardCanBePlayedSpec.name, () => {
