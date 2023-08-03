@@ -1,5 +1,4 @@
-import { User } from './models/User';
-import { UserCode } from './models/UserCode';
+import { User } from './entities/User';
 import { UserCodeCreateQuery } from './query/UserCodeCreateQuery';
 import { UserCodeFindQuery } from './query/UserCodeFindQuery';
 import { UserCreateQuery } from './query/UserCreateQuery';
@@ -9,6 +8,7 @@ import { IsValidUserCreateQuerySpec } from './specs/IsValidUserCreateQuerySpec';
 import { IsValidUserUpdateQuerySpec } from './specs/IsValidUserUpdateQuerySpec';
 import { UserCanCreateAuthSpec } from './specs/UserCanCreateAuthSpec';
 import { UserCanCreateCodeSpec } from './specs/UserCanCreateCodeSpec';
+import { UserCode } from './valueObjects/UserCode';
 
 export type {
   User,
