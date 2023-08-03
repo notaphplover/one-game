@@ -54,4 +54,4 @@ That's all! You are ready to start calling the API
 
 Sometimes a database is not properly created. Trying to launch the servers with no env variables is a way to do this. Reseting the db is probably the easiest way to go, at least in a local setup.
 
-Db state is saved on local volumes. Deleting the db container is not enough to reset the db state. Only after killing the container, removing it and removing its image the db state is reset.
+Db state is saved on local volumes. Deleting the db container is not enough to reset the db state. Only after killing the container, removing it and removing its volume the db state is reset.
