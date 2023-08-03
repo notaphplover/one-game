@@ -1,5 +1,5 @@
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { GameCardSpec } from '../models/GameCardSpec';
+import { GameCardSpec } from '../valueObjects/GameCardSpec';
 
 export class GameCardSpecFixtures {
   public static get any(): GameCardSpec {

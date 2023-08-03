@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameFixtures } from '../fixtures';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { PlayerCanUpdateGameSpec } from './PlayerCanUpdateGameSpec';
 
 describe(PlayerCanUpdateGameSpec.name, () => {

@@ -1,5 +1,5 @@
-import { GameStatus } from '../models/GameStatus';
 import { GameFindQuery } from '../query/GameFindQuery';
+import { GameStatus } from '../valueObjects/GameStatus';
 import { GameSlotFindQueryFixtures } from './GameSlotFindQueryFixtures';
 
 export class GameFindQueryFixtures {

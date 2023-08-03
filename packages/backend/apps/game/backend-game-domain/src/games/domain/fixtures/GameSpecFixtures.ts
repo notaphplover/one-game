@@ -1,4 +1,4 @@
-import { GameSpec } from '../models/GameSpec';
+import { GameSpec } from '../valueObjects/GameSpec';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 
 export class GameSpecFixtures {

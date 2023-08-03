@@ -6,17 +6,17 @@ import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
 import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
 import { SkipCard } from '../../../cards/domain/valueObjects/SkipCard';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { Game } from '../models/Game';
-import { GameCardSpec } from '../models/GameCardSpec';
-import { GameDirection } from '../models/GameDirection';
-import { GameInitialDraws } from '../models/GameInitialDraws';
-import { GameStatus } from '../models/GameStatus';
-import { NonStartedGame } from '../models/NonStartedGame';
-import { NonStartedGameSlot } from '../models/NonStartedGameSlot';
+import { ActiveGame } from '../entities/ActiveGame';
+import { Game } from '../entities/Game';
+import { NonStartedGame } from '../entities/NonStartedGame';
 import { GameSlotUpdateQuery } from '../query/GameSlotUpdateQuery';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameCardSpec } from '../valueObjects/GameCardSpec';
+import { GameDirection } from '../valueObjects/GameDirection';
+import { GameInitialDraws } from '../valueObjects/GameInitialDraws';
+import { GameStatus } from '../valueObjects/GameStatus';
+import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
 

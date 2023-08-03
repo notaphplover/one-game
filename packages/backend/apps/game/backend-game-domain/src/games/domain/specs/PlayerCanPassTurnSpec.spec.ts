@@ -2,10 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
+import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
-import { ActiveGame } from '../models/ActiveGame';
-import { GameOptions } from '../models/GameOptions';
+import { GameOptions } from '../valueObjects/GameOptions';
 import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 import { PlayerCanPassTurnSpec } from './PlayerCanPassTurnSpec';
 

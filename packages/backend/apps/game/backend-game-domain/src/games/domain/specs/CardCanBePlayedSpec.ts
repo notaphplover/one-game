@@ -7,9 +7,9 @@ import { DrawCard } from '../../../cards/domain/valueObjects/DrawCard';
 import { NormalCard } from '../../../cards/domain/valueObjects/NormalCard';
 import { ReverseCard } from '../../../cards/domain/valueObjects/ReverseCard';
 import { SkipCard } from '../../../cards/domain/valueObjects/SkipCard';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { GameOptions } from '../models/GameOptions';
+import { ActiveGame } from '../entities/ActiveGame';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameOptions } from '../valueObjects/GameOptions';
 
 @Injectable()
 export class CardCanBePlayedSpec
