@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { Card } from '../../../cards/domain/models/Card';
-import { CardColor } from '../../../cards/domain/models/CardColor';
-import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
+import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { ActiveGame } from '../models/ActiveGame';

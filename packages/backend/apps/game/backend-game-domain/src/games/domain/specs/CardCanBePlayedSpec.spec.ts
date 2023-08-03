@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { Writable } from '@cornie-js/backend-common';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { Card } from '../../../cards/domain/models/Card';
-import { CardKind } from '../../../cards/domain/models/CardKind';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
 import { ActiveGame } from '../models/ActiveGame';

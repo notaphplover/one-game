@@ -1,4 +1,4 @@
-import { Card } from '../../../cards/domain/models/Card';
+import { Card } from '../../../cards/domain/valueObjects/Card';
 import { GameSlotFindQuery } from './GameSlotFindQuery';
 
 export interface GameSlotUpdateQuery {

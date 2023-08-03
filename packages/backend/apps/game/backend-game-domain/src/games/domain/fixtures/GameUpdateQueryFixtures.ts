@@ -1,5 +1,5 @@
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { CardColor } from '../../../cards/domain/models/CardColor';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { GameDirection } from '../models/GameDirection';
 import { GameStatus } from '../models/GameStatus';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';

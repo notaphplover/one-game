@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { CardFixtures } from '../fixtures/CardFixtures';
-import { Card } from '../models/Card';
+import { Card } from '../valueObjects/Card';
 import { AreCardsEqualsSpec } from './AreCardsEqualsSpec';
 
 describe(AreCardsEqualsSpec.name, () => {

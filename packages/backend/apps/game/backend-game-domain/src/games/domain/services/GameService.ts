@@ -1,11 +1,11 @@
 import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
-import { Card } from '../../../cards/domain/models/Card';
-import { CardColor } from '../../../cards/domain/models/CardColor';
-import { CardKind } from '../../../cards/domain/models/CardKind';
-import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
-import { SkipCard } from '../../../cards/domain/models/SkipCard';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
+import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
+import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
+import { SkipCard } from '../../../cards/domain/valueObjects/SkipCard';
 import { ActiveGame } from '../models/ActiveGame';
 import { ActiveGameSlot } from '../models/ActiveGameSlot';
 import { Game } from '../models/Game';
