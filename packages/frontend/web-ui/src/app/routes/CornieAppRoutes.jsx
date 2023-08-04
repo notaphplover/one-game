@@ -4,17 +4,14 @@ import { AboutUsRoutes } from '../../about/routes/AboutUsRoutes';
 import { HomeRoutes } from '../../home/routes/HomeRoutes';
 
 export const CornieAppRoutes = () => {
-  
-    return (
-        <Routes>
+  return (
+    <Routes>
+      {/* Login and register */}
+      <Route path="/auth/*" element={<AuthRoutes />} />
 
-            {/* Login and register */}
-            <Route path="/auth/*" element={<AuthRoutes />}/>
-
-            {/* Cornie App */}
-            <Route path="/about" element={<AboutUsRoutes />} />
-            <Route path="/*" element={<HomeRoutes />}/>
-
-        </Routes>
-    )
-}
+      {/* Cornie App */}
+      <Route path="/about" element={<AboutUsRoutes />} />
+      <Route path="/*" element={<HomeRoutes />} />
+    </Routes>
+  );
+};

@@ -2,54 +2,47 @@
 import { useEffect, useMemo, useState } from 'react';
 import { validateFormEmail, validateFormPassword } from '../../common/helpers';
 
-export const useLoginForm = ( initialForm = {} ) => {
+export const useLoginForm = (initialForm = {}) => {
+  const [formState, setFormState] = useState(initialForm);
+  const [formValidation, setFormValidation] = useState({});
 
-    const [ formState, setFormState ] = useState( initialForm );
-    const [ formValidation, setFormValidation ] = useState({});
-    
-    const isFormValid = useMemo( () => {
+  const isFormValid = useMemo(() => {
+    for (const formValue of Object.keys(formValidation)) {
+      if (formValidation[formValue] !== null) return false;
+    }
+    return true;
+  });
 
-        for (const formValue of Object.keys(formValidation)) {
-            if(formValidation[formValue] !== null) return false;
-        }
-        return true;
+  useEffect(() => {
+    createValidators();
+  }, [formState]);
 
+  const onInputChange = ({ target }) => {
+    const { name, value } = target;
+    setFormState({
+      ...formState,
+      [name]: value,
     });
+  };
 
-    useEffect(() => {
+  const onResetForm = () => {
+    setFormState(initialForm);
+  };
 
-      createValidators();    
+  const createValidators = () => {
+    const formCheckedValues = {};
 
-    }, [formState]);
-    
-    const onInputChange = ({ target }) => {
-        const { name, value } = target;
-        setFormState({
-            ...formState,
-            [ name ]: value
-        });
-    }
+    validateFormEmail(formCheckedValues, formState.email);
+    validateFormPassword(formCheckedValues, formState.password);
 
-    const onResetForm = () => {
-        setFormState( initialForm );
-    }
+    setFormValidation(formCheckedValues);
+  };
 
-    const createValidators = () => {
-
-        const formCheckedValues = {};
-
-        validateFormEmail(formCheckedValues, formState.email);
-        validateFormPassword(formCheckedValues, formState.password);
-              
-        setFormValidation(formCheckedValues);
-
-    }
-
-    return {
-        formState,
-        onInputChange,
-        onResetForm,
-        formValidation,
-        isFormValid
-    }
-}
+  return {
+    formState,
+    onInputChange,
+    onResetForm,
+    formValidation,
+    isFormValid,
+  };
+};

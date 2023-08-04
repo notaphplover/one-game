@@ -14,102 +14,86 @@ const STATUS_IDLE = 'idle';
 const STATUS_PENDING = 'pending';
 
 export const RegisterConfirm = () => {
+  const [isHidden, setIsHidden] = useState(false);
 
-    const [ isHidden, setIsHidden ] = useState(false);
-    
-    const [ status, setStatus ] = useState(STATUS_IDLE);
+  const [status, setStatus] = useState(STATUS_IDLE);
 
-    const url = new URL(window.location.href);
-    const codeParam = url.searchParams.get(CODE_QUERY_PARAM);
+  const url = new URL(window.location.href);
+  const codeParam = url.searchParams.get(CODE_QUERY_PARAM);
 
-    const dispatch = useDispatch();
-    const { token, errorMessage } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { token, errorMessage } = useSelector((state) => state.auth);
 
-    useEffect(() => {
-      if (status === STATUS_PENDING && token !== null) {
-          updateUserMe(token);
-          setStatus(STATUS_FULFILLED);
-          setIsHidden(true);
-      }
-          
-    }, [token, status, errorMessage])
-    
+  useEffect(() => {
+    if (status === STATUS_PENDING && token !== null) {
+      updateUserMe(token);
+      setStatus(STATUS_FULFILLED);
+      setIsHidden(true);
+    }
+  }, [token, status, errorMessage]);
 
-    window.onload = async () => {
-        setStatus(STATUS_PENDING);
-          if (codeParam !== null) {
-              await dispatch(createAuthByToken(codeParam));          
-          }
-    };
+  window.onload = async () => {
+    setStatus(STATUS_PENDING);
+    if (codeParam !== null) {
+      await dispatch(createAuthByToken(codeParam));
+    }
+  };
 
-    const updateUserMe = async(token) => {
-        const response = await httpClient.updateUserMe(
-            {
-                authorization: `Bearer ${token}`
-            }, 
-            { 
-                active: true
-            }
-        );
-        return buildSerializableResponse(response);
-    };
+  const updateUserMe = async (token) => {
+    const response = await httpClient.updateUserMe(
+      {
+        authorization: `Bearer ${token}`,
+      },
+      {
+        active: true,
+      },
+    );
+    return buildSerializableResponse(response);
+  };
 
-    if (status === STATUS_PENDING) {
-        return <CheckingAuth />
-    };
+  if (status === STATUS_PENDING) {
+    return <CheckingAuth />;
+  }
 
   return (
     <RegisterConfirmLayout title="Confirm your account user">
-      
-       <Grid container>
-          <Grid container 
-              display={status === STATUS_FULFILLED ? '' : 'none'}
-          >
-            <Grid 
-                item 
-                xs={12}
-                sx={{mt: 2, mb: 3}}
-            >
-              <Alert severity='success'>{`Your account have been created succesfully!`}</Alert>
+      <Grid container>
+        <Grid container display={status === STATUS_FULFILLED ? '' : 'none'}>
+          <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
+            <Alert severity="success">{`Your account have been created succesfully!`}</Alert>
           </Grid>
         </Grid>
 
-        <Grid container 
-                  display={codeParam !== null ? 'none' : ''}>
-              <Grid 
-                item 
-                xs={12}
-                sx={{mt: 2, mb: 3}}
-              >
-                <Alert severity='error'>{`Unexpected error!`}</Alert>
-              </Grid>
+        <Grid container display={codeParam !== null ? 'none' : ''}>
+          <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
+            <Alert severity="error">{`Unexpected error!`}</Alert>
+          </Grid>
         </Grid>
 
-        <Grid container 
-              display={errorMessage !== null ? '' : 'none'}>
-            <Grid 
-                item 
-                xs={12}
-                sx={{mt: 2, mb: 3}}
-            >
-                <Alert severity='error'>{errorMessage}</Alert>
-            </Grid>
+        <Grid container display={errorMessage !== null ? '' : 'none'}>
+          <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
+            <Alert severity="error">{errorMessage}</Alert>
+          </Grid>
         </Grid>
 
-        <Grid 
-              container 
-              direction='row' 
-              justifyContent='end' 
-              sx={{mt: 4}}
-              display={isHidden ? '' : 'none'}
-            >
-              <Typography sx={{mt: 2, mr:1}}>Return to</Typography>
-              <Link sx={{mt: 2, mr:1}} component={RouterLink} color='primary' to="/">Cornie</Link>
-            </Grid>
-
+        <Grid
+          container
+          direction="row"
+          justifyContent="end"
+          sx={{ mt: 4 }}
+          display={isHidden ? '' : 'none'}
+        >
+          <Typography sx={{ mt: 2, mr: 1 }}>Return to</Typography>
+          <Link
+            sx={{ mt: 2, mr: 1 }}
+            component={RouterLink}
+            color="primary"
+            to="/"
+          >
+            Cornie
+          </Link>
+        </Grid>
       </Grid>
-
     </RegisterConfirmLayout>
-    
-  )
-}
+  );
+};
