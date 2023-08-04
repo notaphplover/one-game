@@ -90,7 +90,6 @@ export const Login = () => {
             
             <Grid item xs={12}>
               <Button 
-                //disabled={isAuthenticating}
                 type="submit" 
                 variant='contained' 
                 fullWidth

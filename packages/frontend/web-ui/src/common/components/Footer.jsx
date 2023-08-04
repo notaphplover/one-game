@@ -11,7 +11,6 @@ export const Footer = () => {
         <Grid item
           sx={{
               width: '80%',
-              //backgroundColor: '#fff', 
               padding: 4, 
               borderRadius: 2
           }}
