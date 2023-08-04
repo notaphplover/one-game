@@ -13,6 +13,7 @@ export class GameDbFixtures {
     fixture.currentColor = null;
     fixture.currentPlayingSlotIndex = null;
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
+    fixture.discardPile = '[]';
     fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
@@ -49,6 +50,7 @@ export class GameDbFixtures {
     fixture.currentPlayingSlotIndex = 0;
     fixture.currentTurnCardsPlayed = false;
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
+    fixture.discardPile = '[]';
     fixture.drawCount = 0;
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
