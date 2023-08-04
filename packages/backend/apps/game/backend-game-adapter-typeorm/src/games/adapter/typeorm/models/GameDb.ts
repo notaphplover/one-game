@@ -61,6 +61,12 @@ export class GameDb {
   public readonly deck!: string;
 
   @Column({
+    name: 'discard_pile',
+    type: 'json',
+  })
+  public readonly discardPile!: string;
+
+  @Column({
     name: 'draw_count',
     nullable: true,
     type: 'smallint',

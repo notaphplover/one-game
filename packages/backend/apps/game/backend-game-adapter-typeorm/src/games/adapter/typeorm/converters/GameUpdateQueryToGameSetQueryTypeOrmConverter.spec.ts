@@ -266,6 +266,53 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
       });
     });
 
+    describe('having a GameUpdateQuery with discardPile', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.withDiscardPile;
+      });
+
+      describe('when called', () => {
+        let gameSpecCardsDbStringifiedFixture: string;
+        let result: unknown;
+
+        beforeAll(() => {
+          gameSpecCardsDbStringifiedFixture = 'discard-pile-fixture';
+          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+            gameSpecCardsDbStringifiedFixture,
+          );
+
+          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+          expect(
+            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+          ).toHaveBeenCalledWith(gameUpdateQueryFixture.discardPile);
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            discardPile: gameSpecCardsDbStringifiedFixture,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
     describe('having a GameUpdateQuery with drawCount', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 

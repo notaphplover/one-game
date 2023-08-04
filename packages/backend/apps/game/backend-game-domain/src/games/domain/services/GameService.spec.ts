@@ -1,8 +1,9 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
+import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
@@ -18,10 +19,18 @@ import { GameStatus } from '../valueObjects/GameStatus';
 import { GameService } from './GameService';
 
 describe(GameService.name, () => {
+  let areCardsEqualsSpecMock: jest.Mocked<AreCardsEqualsSpec>;
+
   let gameService: GameService;
 
   beforeAll(() => {
-    gameService = new GameService();
+    areCardsEqualsSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    } as Partial<
+      jest.Mocked<AreCardsEqualsSpec>
+    > as jest.Mocked<AreCardsEqualsSpec>;
+
+    gameService = new GameService(areCardsEqualsSpecMock);
   });
 
   describe('.buildPassTurnGameUpdateQuery', () => {
@@ -309,10 +318,12 @@ describe(GameService.name, () => {
         slotIndexFixture = 0;
       });
 
-      describe('when called', () => {
+      describe('when called, and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValue(false);
+
           result = gameService.buildPlayCardsGameUpdateQuery(
             gameFixture,
             cardIndexesFixture,
@@ -321,10 +332,23 @@ describe(GameService.name, () => {
           );
         });
 
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReset();
+        });
+
         it('should return a GameUpdateQuery', () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentCard: expect.any(Object) as unknown as Card,
             currentColor: cardFixture.color,
+            discardPile: [
+              ...gameFixture.state.discardPile,
+              {
+                amount: 1,
+                card: cardFixture,
+              },
+            ],
             gameFindQuery: {
               id: gameFixture.id,
               state: {
@@ -411,10 +435,12 @@ describe(GameService.name, () => {
         colorChoiceFixture = CardColor.green;
       });
 
-      describe('when called', () => {
+      describe('when called, and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValue(false);
+
           result = gameService.buildPlayCardsGameUpdateQuery(
             gameFixture,
             cardIndexesFixture,
@@ -423,10 +449,23 @@ describe(GameService.name, () => {
           );
         });
 
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReset();
+        });
+
         it('should return a GameUpdateQuery', () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentCard: expect.any(Object) as unknown as Card,
             currentColor: colorChoiceFixture,
+            discardPile: [
+              ...gameFixture.state.discardPile,
+              {
+                amount: 1,
+                card: cardFixture,
+              },
+            ],
             gameFindQuery: {
               id: gameFixture.id,
               state: {

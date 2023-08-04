@@ -113,6 +113,13 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
         );
     }
 
+    if (gameUpdateQuery.discardPile !== undefined) {
+      gameSetQueryTypeOrm.discardPile =
+        this.#gameCardSpecArrayToGameCardSpecArrayDbConverter.convert(
+          gameUpdateQuery.discardPile,
+        );
+    }
+
     if (gameUpdateQuery.drawCount !== undefined) {
       gameSetQueryTypeOrm.drawCount = gameUpdateQuery.drawCount;
     }

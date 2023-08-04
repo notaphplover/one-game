@@ -70,6 +70,15 @@ export class GameUpdateQueryFixtures {
     return fixture;
   }
 
+  public static get withDiscardPile(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      discardPile: [GameCardSpecFixtures.any],
+    };
+
+    return fixture;
+  }
+
   public static get withDrawCount(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       ...GameUpdateQueryFixtures.any,

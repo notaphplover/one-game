@@ -38,6 +38,8 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
         gameCreateQuery.spec.cards,
       );
 
+    const discardPileStringified: string = JSON.stringify([]);
+
     return {
       currentCard: null,
       currentColor: null,
@@ -45,6 +47,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       currentPlayingSlotIndex: null,
       currentTurnCardsPlayed: null,
       deck: gameCardsStringified,
+      discardPile: discardPileStringified,
       gameSlotsAmount: gameCreateQuery.spec.gameSlotsAmount,
       id: gameCreateQuery.id,
       spec: gameCardsStringified,
