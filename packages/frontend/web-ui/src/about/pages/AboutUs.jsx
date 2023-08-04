@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
-import { CornieLayout } from '../layout/CornieLayout';
+import { CornieLayout } from '../../common/layout/CornieLayout';
 
 export const AboutUs = () => {
   return (

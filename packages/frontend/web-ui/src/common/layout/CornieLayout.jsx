@@ -1,4 +1,4 @@
-import { Box, autocompleteClasses } from '@mui/material';
+import { Box } from '@mui/material';
 import { Footer, Navbar } from '../components';
 
 export const CornieLayout = ({children}) => {

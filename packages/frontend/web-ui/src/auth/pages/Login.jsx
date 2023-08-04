@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useFormLogin, useShowPassword } from '../../common/hooks';
+import { useLoginForm } from '../hooks';
+import { useShowPassword } from '../../common/hooks';
 import { LoginLayout } from '../layout/LoginLayout';
 
 export const Login = () => {
 
-    const {formState, onInputChange, onResetForm, formValidation, isFormValid} = useFormLogin({
+    const {formState, onInputChange, onResetForm, formValidation, isFormValid} = useLoginForm({
         email: '',
         password: ''
     });

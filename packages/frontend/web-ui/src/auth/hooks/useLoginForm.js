@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useState } from 'react';
-import { validateFormName, validateFormEmail, validateFormPassword, validateFormConfirmPassword } from '../helpers';
+import { validateFormEmail, validateFormPassword } from '../../common/helpers';
 
-export const useFormRegister = ( initialForm = {} ) => {
+export const useLoginForm = ( initialForm = {} ) => {
 
     const [ formState, setFormState ] = useState( initialForm );
     const [ formValidation, setFormValidation ] = useState({});
@@ -38,11 +38,9 @@ export const useFormRegister = ( initialForm = {} ) => {
 
         const formCheckedValues = {};
 
-        validateFormName(formCheckedValues, formState.name);
         validateFormEmail(formCheckedValues, formState.email);
         validateFormPassword(formCheckedValues, formState.password);
-        validateFormConfirmPassword(formCheckedValues, formState.password, formState.confirmPassword);
-
+              
         setFormValidation(formCheckedValues);
 
     }

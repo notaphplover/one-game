@@ -1,44 +1,71 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useFormRegister, useShowPassword } from '../../common/hooks';
+import { useRegisterForm } from '../hooks';
+import { useShowPassword } from '../../common/hooks';
 import { RegisterLayout } from '../layout/RegisterLayout';
-import { fetchCreateUser } from '../../store/features/auth';
 import { CheckingAuth } from '../components/CheckingAuth';
+import { httpClient } from '../../common/http/services/HttpService';
+import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
+
+const STATUS_FULFILLED = 'fulfilled';
+const STATUS_IDLE = 'idle';
+const STATUS_PENDING = 'pending';
 
 export const Register = () => {
 
-    const { formState, onInputChange, onResetForm, formValidation, isFormValid } = useFormRegister({
+    const { formState, onInputChange, formValidation, isFormValid } = useRegisterForm({
         name: '',
         email: '',
         password: '',
         confirmPassword: ''
     });
-    const [ formSubmitted, setFormSubmitted ] = useState(false);
     const { showPassword, handleClickShowPassword, handleMouseDownPassword } = useShowPassword(false);
-    
-    const dispatch = useDispatch();
-    const { status, id, errorMessage } = useSelector((state) => state.auth);
 
-    const onSubmit = (event) => {
+    const [ formSubmitted, setFormSubmitted ] = useState(false);
+    const [ status, setStatus ] = useState(STATUS_IDLE);
+    const [ error, setError ] = useState('');
+    
+    const onSubmit = async (event) => {
 
         event.preventDefault();
+
         setFormSubmitted(true);
+        
         if (isFormValid) {
-          dispatch(fetchCreateUser(formState));
+            setStatus(STATUS_PENDING);
+            setError('');
 
-          if (errorMessage || id) {
-            onResetForm();
-          }
-            
-          setFormSubmitted(false);
-        } 
-    }
+            const response = await fetchCreateUser(formState);
 
-    if (status === 'checking') {
-      return <CheckingAuth />
+            if (response.statusCode === 200) {
+              setStatus(STATUS_FULFILLED);
+              setFormSubmitted(false);
+            } else if (response.statusCode === 409) {
+              setStatus(STATUS_IDLE);
+              setError(`The user already exists.`);
+            } else {
+              setStatus(STATUS_IDLE);
+              setError(`Ups... Something strange happened. Try again?`);
+            }
+
+        }
+    };
+
+    const fetchCreateUser = async ({email, name, password}) => {
+      
+      const response = await httpClient.createUser({}, {
+         email: email,
+         name: name,
+         password: password
+      });
+      
+      return buildSerializableResponse(response);
+    }; 
+
+    if (status === STATUS_PENDING) {
+       return <CheckingAuth />
     }
 
     return (
@@ -57,7 +84,7 @@ export const Register = () => {
           <Grid item xs={12} sx={{ mt: 2 }}>
               <TextField
                 autoFocus
-                disabled={id !== null ? true : false}
+                disabled={status == STATUS_FULFILLED ? true : false}
                 label="Alias" 
                 type="text" 
                 placeholder="alias" 
@@ -71,7 +98,7 @@ export const Register = () => {
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
               <TextField 
-                disabled={id !== null ? true : false}
+                disabled={status == STATUS_FULFILLED ? true : false}
                 label="Email" 
                 type="email" 
                 placeholder="mail@example.com" 
@@ -85,13 +112,14 @@ export const Register = () => {
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
               <TextField 
-                disabled={id !== null ? true : false}
+                disabled={status == STATUS_FULFILLED ? true : false}
                 label="Password" 
                 type={showPassword ? 'text' : 'password'}
                 InputProps={{
                   endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
+                          disabled={status == STATUS_FULFILLED ? true : false}
                           color="primary"
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
@@ -114,13 +142,14 @@ export const Register = () => {
             </Grid>
             <Grid item xs={12} sx={{mt: 2}}>
                 <TextField 
-                  disabled={id !== null ? true : false}
+                  disabled={status == STATUS_FULFILLED ? true : false}
                   label="Confirm Password" 
                   type={showPassword ? 'text' : 'password'}
                   InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
+                            disabled={status == STATUS_FULFILLED ? true : false}
                             color="primary"
                             aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
@@ -144,18 +173,18 @@ export const Register = () => {
             </Grid>
 
             <Grid container 
-                  display={errorMessage !== null ? '' : 'none'}>
+                  display={error !== '' ? '' : 'none'}>
               <Grid 
                 item 
                 xs={12}
                 sx={{mt:3}}
               >
-                <Alert severity='error'>{errorMessage}</Alert>
+                <Alert severity='error'>{error}</Alert>
               </Grid>
             </Grid>
 
             <Grid container 
-                  display={id !== null ? '' : 'none'}>
+                  display={status === STATUS_FULFILLED ? '' : 'none'}>
               <Grid 
                 item 
                 xs={12}
@@ -163,7 +192,7 @@ export const Register = () => {
               >
                 <Alert severity='success'>{`User created! We sent an email, please, complete the steps.`}</Alert>
               </Grid>
-            </Grid>
+            </Grid> 
 
           <Grid container spacing={2} 
                 sx={{mt: 2, mb: 2, 
@@ -174,7 +203,7 @@ export const Register = () => {
             
             <Grid item xs={12} sm={12}>
               <Button 
-                disabled={id !== null ? true : false}
+                disabled={status === STATUS_FULFILLED ? true : false}
                 type="submit" 
                 variant='contained' 
                 fullWidth

@@ -1,5 +1,5 @@
 import { Box, Container, Grid, Typography } from '@mui/material';
-import { CornieLayout } from '../layout/CornieLayout';
+import { CornieLayout } from '../../common/layout/CornieLayout';
 
 export const CornieHome= () => {
   return (
@@ -17,9 +17,9 @@ export const CornieHome= () => {
                 >
 
                   <Grid item md={4} xs={12} sx={{p: 1, mt: 2}}>
-                    <img src="src/images/unicornio2.avif" 
+                    <img src="src/home/images/unicorn.avif" 
                          loading="lazy"
-                         alt="Unicornio"
+                         alt="Cornie Unicorn"
                          width = "320" 
                          height = "450" />
                   </Grid>
