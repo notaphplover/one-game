@@ -15,6 +15,7 @@ export interface GameUpdateQuery {
   currentPlayingSlotIndex?: number;
   currentTurnCardsPlayed?: boolean | null;
   deck?: GameCardSpec[];
+  discardPile?: GameCardSpec[];
   drawCount?: number;
   gameSlotUpdateQueries?: GameSlotUpdateQuery[];
   status?: GameStatus;
