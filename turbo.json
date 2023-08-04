@@ -27,7 +27,12 @@
     },
     "@cornie-js/web-ui#build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.{cjs,js,jsx}", "vite.config.js"]
+      "inputs": ["src/**/*.{cjs,css,js,jsx,scss}", "vite.config.js"],
+      "outputs": ["src/**/*.{cjs,css,js,jsx}", "vite.config.js"]
+    },
+    "@cornie-js/web-ui#format": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.{cjs,js,jsx}"]
     },
     "close:e2e": {
       "cache": false
