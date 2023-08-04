@@ -1,4 +1,4 @@
-import { GameStatus } from '../models/GameStatus';
+import { GameStatus } from '../valueObjects/GameStatus';
 import { GameSlotFindQuery } from './GameSlotFindQuery';
 import { GameStateFindQuery } from './GameStateFindQuery';
 

@@ -1,5 +1,5 @@
-import { GameSpec } from './GameSpec';
-import { GameState } from './GameState';
+import { GameSpec } from '../valueObjects/GameSpec';
+import { GameState } from '../valueObjects/GameState';
 
 export interface BaseGame<TState extends GameState> {
   readonly id: string;

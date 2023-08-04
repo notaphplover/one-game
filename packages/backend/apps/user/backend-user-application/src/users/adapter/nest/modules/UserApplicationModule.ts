@@ -10,6 +10,8 @@ import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builder
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
+import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
+import { UpdateUserUseCaseHandler } from '../../../application/handlers/UpdateUserUseCaseHandler';
 import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';
 import { UserUpdatedEventHandler } from '../../../application/handlers/UserUpdatedEventHandler';
 import { UserCodeManagementInputPort } from '../../../application/ports/input/UserCodeManagementInputPort';
@@ -35,6 +37,8 @@ export class UserApplicationModule {
       ],
       module: UserApplicationModule,
       providers: [
+        CreateUserUseCaseHandler,
+        UpdateUserUseCaseHandler,
         UserActivationMailDeliveryOptionsFromUserBuilder,
         UserCodeCreateQueryFromUserBuilder,
         UserCodeManagementInputPort,

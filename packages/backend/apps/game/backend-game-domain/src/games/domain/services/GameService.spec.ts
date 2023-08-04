@@ -3,18 +3,18 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { Card } from '../../../cards/domain/models/Card';
-import { CardColor } from '../../../cards/domain/models/CardColor';
-import { ColoredCard } from '../../../cards/domain/models/ColoredCard';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
+import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
+import { ActiveGame } from '../entities/ActiveGame';
+import { NonStartedGame } from '../entities/NonStartedGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { GameCardSpec } from '../models/GameCardSpec';
-import { GameDirection } from '../models/GameDirection';
-import { GameStatus } from '../models/GameStatus';
-import { NonStartedGame } from '../models/NonStartedGame';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameCardSpec } from '../valueObjects/GameCardSpec';
+import { GameDirection } from '../valueObjects/GameDirection';
+import { GameStatus } from '../valueObjects/GameStatus';
 import { GameService } from './GameService';
 
 describe(GameService.name, () => {

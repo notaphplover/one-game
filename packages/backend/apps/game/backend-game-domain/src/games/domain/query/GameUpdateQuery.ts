@@ -1,8 +1,8 @@
-import { Card } from '../../../cards/domain/models/Card';
-import { CardColor } from '../../../cards/domain/models/CardColor';
-import { GameCardSpec } from '../models/GameCardSpec';
-import { GameDirection } from '../models/GameDirection';
-import { GameStatus } from '../models/GameStatus';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
+import { GameCardSpec } from '../valueObjects/GameCardSpec';
+import { GameDirection } from '../valueObjects/GameDirection';
+import { GameStatus } from '../valueObjects/GameStatus';
 import { GameFindQuery } from './GameFindQuery';
 import { GameSlotUpdateQuery } from './GameSlotUpdateQuery';
 

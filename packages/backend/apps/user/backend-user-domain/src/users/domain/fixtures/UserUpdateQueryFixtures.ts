@@ -31,4 +31,11 @@ export class UserUpdateQueryFixtures {
       name: 'Name',
     };
   }
+
+  public static get withNameEmpty(): UserUpdateQuery {
+    return {
+      ...UserUpdateQueryFixtures.any,
+      name: '',
+    };
+  }
 }

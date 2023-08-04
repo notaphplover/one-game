@@ -3,12 +3,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import {
-  AppError,
-  AppErrorKind,
-  Builder,
-  Handler,
-} from '@cornie-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   User,
   UserCreateQuery,
@@ -26,10 +21,8 @@ import {
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
-import { UserCreatedEventHandler } from '../../handlers/UserCreatedEventHandler';
-import { UserUpdatedEventHandler } from '../../handlers/UserUpdatedEventHandler';
-import { UserCreatedEvent } from '../../models/UserCreatedEvent';
-import { UserUpdatedEvent } from '../../models/UserUpdatedEvent';
+import { CreateUserUseCaseHandler } from '../../handlers/CreateUserUseCaseHandler';
+import { UpdateUserUseCaseHandler } from '../../handlers/UpdateUserUseCaseHandler';
 import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
@@ -38,13 +31,13 @@ import {
 @Injectable()
 export class UserManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
-  readonly #userCreatedEventHandler: Handler<[UserCreatedEvent], void>;
+  readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
+  readonly #updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, HashContext & UuidContext]
   >;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
-  readonly #userUpdatedEventHandler: Handler<[UserUpdatedEvent], void>;
   readonly #userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
     UserUpdateQuery,
     [apiModels.UserMeUpdateQueryV1, UuidContext]
@@ -55,8 +48,10 @@ export class UserManagementInputPort {
   constructor(
     @Inject(bcryptHashProviderOutputPortSymbol)
     bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
-    @Inject(UserCreatedEventHandler)
-    userCreatedEventHandler: Handler<[UserCreatedEvent], void>,
+    @Inject(CreateUserUseCaseHandler)
+    createUserUseCaseHandler: Handler<[UserCreateQuery], User>,
+    @Inject(UpdateUserUseCaseHandler)
+    updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
     userCreateQueryFromUserCreateQueryV1Builder: Builder<
       UserCreateQuery,
@@ -64,8 +59,6 @@ export class UserManagementInputPort {
     >,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
-    @Inject(UserUpdatedEventHandler)
-    userUpdatedEventHandler: Handler<[UserUpdatedEvent], void>,
     @Inject(UserUpdateQueryFromUserMeUpdateQueryV1Builder)
     userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
       UserUpdateQuery,
@@ -77,11 +70,11 @@ export class UserManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
-    this.#userCreatedEventHandler = userCreatedEventHandler;
+    this.#createUserUseCaseHandler = createUserUseCaseHandler;
+    this.#updateUserUseCaseHandler = updateUserUseCaseHandler;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
-    this.#userUpdatedEventHandler = userUpdatedEventHandler;
     this.#userUpdateQueryFromUserMeUpdateQueryV1Builder =
       userUpdateQueryFromUserMeUpdateQueryV1Builder;
     this.#userV1FromUserBuilder = userV1FromUserBuilder;
@@ -100,14 +93,9 @@ export class UserManagementInputPort {
         userCreateQueryContext,
       );
 
-    const user: User = await this.#userPersistenceOutputPort.create(
+    const user: User = await this.#createUserUseCaseHandler.handle(
       userCreateQuery,
     );
-
-    await this.#userCreatedEventHandler.handle({
-      user,
-      userCreateQuery,
-    });
 
     return this.#userV1FromUserBuilder.build(user);
   }
@@ -135,8 +123,6 @@ export class UserManagementInputPort {
     id: string,
     userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
   ): Promise<apiModels.UserV1> {
-    const userBeforeUpdate: User = await this.#getUserOrThrowUnknown(id);
-
     const userUpdateQuery: UserUpdateQuery =
       this.#userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
         userMeUpdateQueryV1,
@@ -145,19 +131,11 @@ export class UserManagementInputPort {
         },
       );
 
-    await this.#userPersistenceOutputPort.update(userUpdateQuery);
-
-    await this.#userUpdatedEventHandler.handle({
-      userBeforeUpdate: userBeforeUpdate,
+    const user: User = await this.#updateUserUseCaseHandler.handle(
       userUpdateQuery,
-    });
+    );
 
-    const userOrUndefined: User | undefined =
-      await this.#userPersistenceOutputPort.findOne({
-        id,
-      });
-
-    return this.#buildUserV1OrThrowUnknownError(id, userOrUndefined);
+    return this.#userV1FromUserBuilder.build(user);
   }
 
   async #buildCreateContext(
@@ -175,20 +153,6 @@ export class UserManagementInputPort {
     };
   }
 
-  #buildUserV1OrThrowUnknownError(
-    id: string,
-    userOrUndefined: User | undefined,
-  ): apiModels.UserV1 {
-    const userV1: apiModels.UserV1 | undefined =
-      this.#buildUserV1OrUndefined(userOrUndefined);
-
-    if (userV1 === undefined) {
-      throw new AppError(AppErrorKind.unknown, `Unable to fetch user "${id}"`);
-    }
-
-    return userV1;
-  }
-
   #buildUserV1OrUndefined(
     userOrUndefined: User | undefined,
   ): apiModels.UserV1 | undefined {
@@ -201,18 +165,5 @@ export class UserManagementInputPort {
     }
 
     return userV1OrUndefined;
-  }
-
-  async #getUserOrThrowUnknown(id: string): Promise<User> {
-    const userOrUndefined: User | undefined =
-      await this.#userPersistenceOutputPort.findOne({
-        id,
-      });
-
-    if (userOrUndefined === undefined) {
-      throw new AppError(AppErrorKind.unknown, `Unable to fetch user "${id}"`);
-    }
-
-    return userOrUndefined;
   }
 }

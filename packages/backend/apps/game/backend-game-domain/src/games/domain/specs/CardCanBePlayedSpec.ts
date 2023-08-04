@@ -1,15 +1,15 @@
 import { AppError, AppErrorKind, Spec } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
-import { Card } from '../../../cards/domain/models/Card';
-import { CardKind } from '../../../cards/domain/models/CardKind';
-import { DrawCard } from '../../../cards/domain/models/DrawCard';
-import { NormalCard } from '../../../cards/domain/models/NormalCard';
-import { ReverseCard } from '../../../cards/domain/models/ReverseCard';
-import { SkipCard } from '../../../cards/domain/models/SkipCard';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { GameOptions } from '../models/GameOptions';
+import { Card } from '../../../cards/domain/valueObjects/Card';
+import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
+import { DrawCard } from '../../../cards/domain/valueObjects/DrawCard';
+import { NormalCard } from '../../../cards/domain/valueObjects/NormalCard';
+import { ReverseCard } from '../../../cards/domain/valueObjects/ReverseCard';
+import { SkipCard } from '../../../cards/domain/valueObjects/SkipCard';
+import { ActiveGame } from '../entities/ActiveGame';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameOptions } from '../valueObjects/GameOptions';
 
 @Injectable()
 export class CardCanBePlayedSpec

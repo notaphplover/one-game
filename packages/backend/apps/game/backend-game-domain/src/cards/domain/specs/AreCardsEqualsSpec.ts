@@ -1,12 +1,12 @@
 import { Spec } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
-import { BaseCard } from '../models/BaseCard';
-import { Card } from '../models/Card';
-import { CardColor } from '../models/CardColor';
-import { CardKind } from '../models/CardKind';
-import { ColoredCard } from '../models/ColoredCard';
-import { NormalCard } from '../models/NormalCard';
+import { BaseCard } from '../valueObjects/BaseCard';
+import { Card } from '../valueObjects/Card';
+import { CardColor } from '../valueObjects/CardColor';
+import { CardKind } from '../valueObjects/CardKind';
+import { ColoredCard } from '../valueObjects/ColoredCard';
+import { NormalCard } from '../valueObjects/NormalCard';
 
 @Injectable()
 export class AreCardsEqualsSpec implements Spec<Card[]> {

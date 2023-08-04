@@ -1,8 +1,8 @@
 import { Spec } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
-import { Game } from '../models/Game';
-import { GameStatus } from '../models/GameStatus';
+import { Game } from '../entities/Game';
+import { GameStatus } from '../valueObjects/GameStatus';
 
 @Injectable()
 export class GameCanHoldOnlyOneMoreGameSlotSpec implements Spec<[Game]> {

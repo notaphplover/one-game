@@ -8,14 +8,14 @@
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.2.0",
-    "@typescript-eslint/parser": "6.2.0",
-    "eslint": "8.45.0",
+    "@typescript-eslint/eslint-plugin": "6.2.1",
+    "@typescript-eslint/parser": "6.2.1",
+    "eslint": "8.46.0",
     "eslint-import-resolver-typescript": "3.5.5",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jest": "27.2.3",
     "eslint-plugin-prettier": "5.0.0",
-    "prettier": "3.0.0",
+    "prettier": "3.0.1",
     "rimraf": "5.0.1",
     "typeorm": "0.3.17",
     "typescript": "5.1.6"

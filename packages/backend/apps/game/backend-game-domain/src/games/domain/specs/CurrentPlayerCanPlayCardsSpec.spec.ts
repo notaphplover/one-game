@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
+import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameFixtures } from '../fixtures';
 import { ActiveGameSlotFixtures } from '../fixtures/ActiveGameSlotFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
-import { ActiveGame } from '../models/ActiveGame';
-import { ActiveGameSlot } from '../models/ActiveGameSlot';
-import { GameOptions } from '../models/GameOptions';
+import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
+import { GameOptions } from '../valueObjects/GameOptions';
 import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 import { CurrentPlayerCanPlayCardsSpec } from './CurrentPlayerCanPlayCardsSpec';
 

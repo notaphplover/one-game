@@ -1,16 +1,7 @@
-import { ActiveGame } from './models/ActiveGame';
-import { ActiveGameSlot } from './models/ActiveGameSlot';
-import { BaseGame } from './models/BaseGame';
-import { BaseGameSlot } from './models/BaseGameSlot';
-import { Game } from './models/Game';
-import { GameCardSpec } from './models/GameCardSpec';
-import { GameDirection } from './models/GameDirection';
-import { GameInitialDraws } from './models/GameInitialDraws';
-import { GameOptions } from './models/GameOptions';
-import { GameSpec } from './models/GameSpec';
-import { GameStatus } from './models/GameStatus';
-import { NonStartedGame } from './models/NonStartedGame';
-import { NonStartedGameSlot } from './models/NonStartedGameSlot';
+import { ActiveGame } from './entities/ActiveGame';
+import { BaseGame } from './entities/BaseGame';
+import { Game } from './entities/Game';
+import { NonStartedGame } from './entities/NonStartedGame';
 import { GameCreateQuery } from './query/GameCreateQuery';
 import { GameFindQuery } from './query/GameFindQuery';
 import { GameOptionsCreateQuery } from './query/GameOptionsCreateQuery';
@@ -26,6 +17,15 @@ import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSp
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
 import { PlayerCanUpdateGameSpec } from './specs/PlayerCanUpdateGameSpec';
+import { ActiveGameSlot } from './valueObjects/ActiveGameSlot';
+import { BaseGameSlot } from './valueObjects/BaseGameSlot';
+import { GameCardSpec } from './valueObjects/GameCardSpec';
+import { GameDirection } from './valueObjects/GameDirection';
+import { GameInitialDraws } from './valueObjects/GameInitialDraws';
+import { GameOptions } from './valueObjects/GameOptions';
+import { GameSpec } from './valueObjects/GameSpec';
+import { GameStatus } from './valueObjects/GameStatus';
+import { NonStartedGameSlot } from './valueObjects/NonStartedGameSlot';
 
 export type {
   ActiveGame,

@@ -1,4 +1,4 @@
-import { UserCode } from '../models/UserCode';
+import { UserCode } from '../valueObjects/UserCode';
 
 export class UserCodeFixtures {
   public static get any(): UserCode {

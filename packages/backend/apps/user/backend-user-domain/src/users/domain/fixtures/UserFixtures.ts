@@ -1,4 +1,4 @@
-import { User } from '../models/User';
+import { User } from '../entities/User';
 
 export class UserFixtures {
   public static get any(): User {

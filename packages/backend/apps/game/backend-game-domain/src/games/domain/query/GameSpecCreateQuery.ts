@@ -1,4 +1,4 @@
-import { GameCardSpec } from '../models/GameCardSpec';
+import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameOptionsCreateQuery } from './GameOptionsCreateQuery';
 
 export interface GameSpecCreateQuery {
