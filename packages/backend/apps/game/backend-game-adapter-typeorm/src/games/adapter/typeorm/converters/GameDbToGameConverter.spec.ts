@@ -314,6 +314,7 @@ describe(GameDbToGameConverter.name, () => {
                 card: cardFixture,
               },
             ],
+            discardPile: [],
             drawCount: gameDbFixture.drawCount as number,
             slots: [gameSlotFixture],
             status: GameStatus.active,

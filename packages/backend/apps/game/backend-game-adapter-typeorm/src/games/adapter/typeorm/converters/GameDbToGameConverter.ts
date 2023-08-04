@@ -125,6 +125,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
         currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
         currentTurnCardsPlayed: gameDb.currentTurnCardsPlayed,
         deck: this.#convertCardSpecs(gameDb.deck),
+        discardPile: this.#convertCardSpecs(gameDb.discardPile),
         drawCount: gameDb.drawCount,
         slots: gameSlots,
         status: GameStatus.active,
