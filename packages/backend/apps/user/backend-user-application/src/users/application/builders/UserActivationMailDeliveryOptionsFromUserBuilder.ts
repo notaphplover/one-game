@@ -36,7 +36,9 @@ export class UserActivationMailDeliveryOptionsFromUserBuilder
   }
 
   #buildConfirmUserUrl(userCode: UserCode): string {
-    return `${this.#frontendBaseUrl}/register/confirm?code=${userCode.code}`;
+    return `${this.#frontendBaseUrl}/auth/register/confirm?code=${
+      userCode.code
+    }`;
   }
 
   #buildHtmlMessage(user: User, userCode: UserCode): string {
