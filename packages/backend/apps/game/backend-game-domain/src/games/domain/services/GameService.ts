@@ -1,6 +1,7 @@
 import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
+import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
@@ -30,6 +31,15 @@ const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 
 @Injectable()
 export class GameService {
+  #areCardsEqualsSpec: AreCardsEqualsSpec;
+
+  constructor(
+    @Inject(AreCardsEqualsSpec)
+    areCardsEqualsSpec: AreCardsEqualsSpec,
+  ) {
+    this.#areCardsEqualsSpec = areCardsEqualsSpec;
+  }
+
   public buildPassTurnGameUpdateQuery(game: ActiveGame): GameUpdateQuery {
     const isPlayerDrawingCards: boolean = !game.state.currentTurnCardsPlayed;
 
@@ -82,11 +92,19 @@ export class GameService {
   ): GameUpdateQuery {
     const gameSlot: ActiveGameSlot = this.#getGameSlotOrThrow(game, slotIndex);
 
-    const nextCurrentCard: Card =
+    const nextCurrentCards: [Card, ...Card[]] =
       this.#getPlayCardsGameUpdateQueryNextCurrentCard(gameSlot, cardIndexes);
+
+    const nextDiscardPile: GameCardSpec[] = this.#buildNextDiscardPile(
+      game,
+      nextCurrentCards,
+    );
+
+    const [nextCurrentCard]: [Card, ...Card[]] = nextCurrentCards;
 
     const gameUpdateQuery: GameUpdateQuery = {
       currentCard: nextCurrentCard,
+      discardPile: nextDiscardPile,
       gameFindQuery: {
         id: game.id,
         state: {
@@ -220,6 +238,44 @@ export class GameService {
     ];
   }
 
+  #buildNextDiscardPile(
+    game: ActiveGame,
+    nextCurrentCards: Card[],
+  ): GameCardSpec[] {
+    const nextDiscardPile: GameCardSpec[] = game.state.discardPile.map(
+      (gameCardSpec: GameCardSpec) => ({ ...gameCardSpec }),
+    );
+
+    this.#putCardsInDiscardPile(nextDiscardPile, nextCurrentCards);
+
+    return nextDiscardPile;
+  }
+
+  #putCardsInDiscardPile(discardPile: GameCardSpec[], cards: Card[]): void {
+    for (const card of cards) {
+      this.#putCardInDiscardPile(discardPile, card);
+    }
+  }
+
+  #putCardInDiscardPile(discardPile: GameCardSpec[], card: Card): void {
+    const cardsToAdd: number = 1;
+    let cardSpec: Writable<GameCardSpec> | undefined = discardPile.find(
+      (cardSpec: GameCardSpec) =>
+        this.#areCardsEqualsSpec.isSatisfiedBy(card, cardSpec.card),
+    );
+
+    if (cardSpec === undefined) {
+      cardSpec = {
+        amount: 0,
+        card,
+      };
+
+      discardPile.push(cardSpec);
+    }
+
+    cardSpec.amount += cardsToAdd;
+  }
+
   #setPlayCardsGameUpdateQueryColor(
     gameUpdateQuery: GameUpdateQuery,
     nextCurrentCard: Card,
@@ -331,22 +387,28 @@ export class GameService {
   #getPlayCardsGameUpdateQueryNextCurrentCard(
     gameSlot: ActiveGameSlot,
     cardIndexes: number[],
-  ): Card {
-    const [nextCurrentCardIndex]: number[] = cardIndexes;
+  ): [Card, ...Card[]] {
+    const nextCurrentCards: Card[] = cardIndexes.map((cardIndex: number) => {
+      const card: Card | undefined = gameSlot.cards[cardIndex];
 
-    const nextCurrentCard: Card | undefined =
-      nextCurrentCardIndex === undefined
-        ? undefined
-        : gameSlot.cards[nextCurrentCardIndex];
+      if (card === undefined) {
+        throw new AppError(
+          AppErrorKind.unknown,
+          'An unexpected error happened while attempting to update game',
+        );
+      }
 
-    if (nextCurrentCard === undefined) {
+      return card;
+    });
+
+    if (nextCurrentCards[0] === undefined) {
       throw new AppError(
         AppErrorKind.unknown,
         'An unexpected error happened while attempting to update game',
       );
     }
 
-    return nextCurrentCard;
+    return nextCurrentCards as [Card, ...Card[]];
   }
 
   #getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
