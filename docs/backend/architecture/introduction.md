@@ -9,3 +9,4 @@ refers this last layer as "infrastructure" or "framework").
 
 An overview of each layer can be found in these docs:
 - [Domain](./domain/introduction.md)
+- [Application](./application/introduction.md)
