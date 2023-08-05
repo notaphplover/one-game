@@ -9,6 +9,7 @@ const GAME_STATUS_TO_GAME_STATUS_DB_MAP: {
 } = {
   [GameStatus.active]: GameStatusDb.active,
   [GameStatus.nonStarted]: GameStatusDb.nonStarted,
+  [GameStatus.finished]: GameStatusDb.finished,
 };
 
 @Injectable()

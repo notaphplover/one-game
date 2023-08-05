@@ -90,6 +90,8 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
           gameSlots as NonStartedGameSlot[],
         );
         break;
+      default:
+        throw new AppError(AppErrorKind.unknown, 'Unexpected game status');
     }
 
     return game;
