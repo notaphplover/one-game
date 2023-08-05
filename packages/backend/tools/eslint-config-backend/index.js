@@ -62,6 +62,7 @@ module.exports = {
         format: ['strictCamelCase', 'UPPER_CASE', 'snake_case'],
       },
     ],
+    '@typescript-eslint/no-duplicate-type-constituents': 'off',
     '@typescript-eslint/no-dynamic-delete': 'error',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-empty-interface': 'warn',
