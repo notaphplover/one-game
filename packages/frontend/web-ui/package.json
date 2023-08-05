@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "format": "prettier --write ./src/**/*.{css,js,jsx,scss}",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.4",
     "@vitejs/plugin-react": "^4.0.0",
+    "prettier": "3.0.1",
     "vite": "^4.3.5"
   }
 }

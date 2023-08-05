@@ -4,7 +4,7 @@ import { AboutUs } from '../pages/AboutUs';
 export const AboutUsRoutes = () => {
   return (
     <Routes>
-        <Route path="/" element={<AboutUs />} />
+      <Route path="/" element={<AboutUs />} />
     </Routes>
-  )
-}
+  );
+};

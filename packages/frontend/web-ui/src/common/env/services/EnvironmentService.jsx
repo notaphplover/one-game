@@ -4,9 +4,8 @@ class EnvironmentService {
 
     return {
       backendBaseUrl: env.VITE_BACKEND_BASE_URL,
-    }
+    };
   }
 }
 
-export const environmentService = new EnvironmentService()
-
+export const environmentService = new EnvironmentService();

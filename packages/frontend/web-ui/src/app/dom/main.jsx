@@ -7,16 +7,14 @@ import { CornieAppTheme } from '../theme';
 import { CornieAppRoutes } from '../routes';
 import '../../scss/styles.css';
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <BrowserRouter>
-                <CornieAppTheme>
-                    <CornieAppRoutes />
-                </CornieAppTheme>
-            </BrowserRouter>
-        </Provider>
-    </React.StrictMode>,
-)
-
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <CornieAppTheme>
+          <CornieAppRoutes />
+        </CornieAppTheme>
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>,
+);
