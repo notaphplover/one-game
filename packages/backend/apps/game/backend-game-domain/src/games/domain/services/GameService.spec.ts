@@ -41,7 +41,7 @@ describe(GameService.name, () => {
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
-          ActiveGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
+          ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
 
         gameFixture = {
           ...baseFixture,
@@ -110,7 +110,7 @@ describe(GameService.name, () => {
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
-          ActiveGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
+          ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
 
         gameFixture = {
           ...baseFixture,
@@ -176,12 +176,86 @@ describe(GameService.name, () => {
       });
     });
 
+    describe('having a Game with two players and not enough deck cards and enouth discard pile cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 2', () => {
+      let gameFixture: ActiveGame;
+
+      let deckCardSpec: GameCardSpec;
+
+      beforeAll(() => {
+        const baseFixture: ActiveGame =
+          ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckEmptyAndDiscardPileWithSpecOneWithAmount120;
+
+        gameFixture = {
+          ...baseFixture,
+          state: {
+            ...baseFixture.state,
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: false,
+            drawCount: 2,
+          },
+        };
+
+        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const currentPlayingGameSlotCards: Card[] = (
+            gameFixture.state.slots[
+              gameFixture.state.currentPlayingSlotIndex
+            ] as ActiveGameSlot
+          ).cards;
+
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentPlayingSlotIndex: 0,
+            currentTurnCardsPlayed: false,
+            deck: [
+              {
+                amount: deckCardSpec.amount - 2,
+                card: deckCardSpec.card,
+              },
+            ],
+            discardPile: [],
+            drawCount: 0,
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: [
+                  ...currentPlayingGameSlotCards,
+                  deckCardSpec.card,
+                  deckCardSpec.card,
+                ],
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: gameFixture.state.currentPlayingSlotIndex,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
     describe('having a Game with two players and enough cards and currentTurnCardsPlayed true and currentPlayingSlotIndex 0', () => {
       let gameFixture: ActiveGame;
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
-          ActiveGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
+          ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
 
         gameFixture = {
           ...baseFixture,

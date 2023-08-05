@@ -20,4 +20,11 @@ export class AppError extends Error {
       (value as Record<string | symbol, unknown>)[isAppErrorSymbol] === true
     );
   }
+
+  public static isAppErrorOfKind(
+    value: unknown,
+    kind: AppErrorKind,
+  ): value is AppError {
+    return AppError.isAppError(value) && value.kind === kind;
+  }
 }
