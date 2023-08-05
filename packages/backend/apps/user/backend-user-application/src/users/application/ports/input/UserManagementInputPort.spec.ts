@@ -16,8 +16,6 @@ import {
 } from '@cornie-js/backend-user-domain/users/fixtures';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
-import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
-import { BcryptHashProviderOutputPort } from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
@@ -25,7 +23,6 @@ import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
-  let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
   let createUserUseCaseHandlerMock: jest.Mocked<
     Handler<[UserCreateQuery], User>
   >;
@@ -33,10 +30,7 @@ describe(UserManagementInputPort.name, () => {
     Handler<[UserUpdateQuery], User>
   >;
   let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
-    Builder<
-      UserCreateQuery,
-      [apiModels.UserCreateQueryV1, HashContext & UuidContext]
-    >
+    Builder<UserCreateQuery, [apiModels.UserCreateQueryV1, UuidContext]>
   >;
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
   let userUpdateQueryFromUserMeUpdateQueryV1BuilderMock: jest.Mocked<
@@ -48,9 +42,6 @@ describe(UserManagementInputPort.name, () => {
   let userManagementInputPort: UserManagementInputPort;
 
   beforeAll(() => {
-    bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
-      jest.Mocked<BcryptHashProviderOutputPort>
-    > as jest.Mocked<BcryptHashProviderOutputPort>;
     createUserUseCaseHandlerMock = {
       handle: jest.fn(),
     };
@@ -73,7 +64,6 @@ describe(UserManagementInputPort.name, () => {
     uuidProviderOutputPortMock = { generateV4: jest.fn() };
 
     userManagementInputPort = new UserManagementInputPort(
-      bcryptHashProviderOutputPortMock,
       createUserUseCaseHandlerMock,
       updateUserUseCaseHandlerMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
@@ -92,7 +82,6 @@ describe(UserManagementInputPort.name, () => {
     });
 
     describe('when called, and isValidUserCreateQuerySpecMock.isSatisfiedOrReport() returns Right', () => {
-      let hashFixture: string;
       let userCreateQueryFixture: UserCreateQuery;
       let userFixture: User;
       let userV1Fixture: apiModels.UserV1;
@@ -101,17 +90,12 @@ describe(UserManagementInputPort.name, () => {
       let result: unknown;
 
       beforeAll(async () => {
-        hashFixture =
-          '$2y$10$/Q/7HB2eWCzGILadcebdf.8fvya0/cnYkPdgy4q63K3IGdlnpc.7K';
         userCreateQueryFixture = UserCreateQueryFixtures.any;
         userFixture = UserFixtures.any;
         userV1Fixture = UserV1Fixtures.any;
         uuidFixture = '83073aec-b81b-4107-97f9-baa46de5dd40';
 
         uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
-        bcryptHashProviderOutputPortMock.hash.mockResolvedValueOnce(
-          hashFixture,
-        );
         userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
           userCreateQueryFixture,
         );
@@ -130,16 +114,8 @@ describe(UserManagementInputPort.name, () => {
         expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
       });
 
-      it('should call bcryptHashProviderOutputPort.hash()', () => {
-        expect(bcryptHashProviderOutputPortMock.hash).toHaveBeenCalledTimes(1);
-        expect(bcryptHashProviderOutputPortMock.hash).toHaveBeenCalledWith(
-          userCreateQueryV1Fixture.password,
-        );
-      });
-
       it('should call userCreateQueryConverterFromUserCreateQueryV1Builder.build()', () => {
-        const expectedContext: HashContext & UuidContext = {
-          hash: hashFixture,
+        const expectedContext: UuidContext = {
           uuid: uuidFixture,
         };
 
