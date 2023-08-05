@@ -33,6 +33,25 @@ describe(GameStatusToGameStatusDbConverter.name, () => {
       });
     });
 
+    describe('having a GameStatus finished', () => {
+      let gameStatusFixture: GameStatus;
+
+      beforeAll(() => {
+        gameStatusFixture = GameStatus.finished;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameStatusToGameStatusDbConverter.convert(gameStatusFixture);
+        });
+
+        it('should return GameStatusDb finished', () => {
+          expect(result).toBe(GameStatusDb.finished);
+        });
+      });
+    });
     describe('having a GameStatus nonStarted', () => {
       let gameStatusFixture: GameStatus;
 
