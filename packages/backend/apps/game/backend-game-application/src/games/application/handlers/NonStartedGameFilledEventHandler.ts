@@ -1,6 +1,5 @@
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
-  ActiveGame,
   Game,
   GameService,
   GameStatus,
@@ -58,7 +57,7 @@ export class NonStartedGameFilledEventHandler
       );
     }
 
-    if (this.#isGameActive(game)) {
+    if (!this.#isNonStartedGame(game)) {
       throw new AppError(
         AppErrorKind.unknown,
         'Unexpected attempt to fill an already active game',
@@ -68,7 +67,7 @@ export class NonStartedGameFilledEventHandler
     return game;
   }
 
-  #isGameActive(game: Game): game is ActiveGame {
-    return game.state.status === GameStatus.active;
+  #isNonStartedGame(game: Game): game is NonStartedGame {
+    return game.state.status === GameStatus.nonStarted;
   }
 }
