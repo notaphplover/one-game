@@ -4,5 +4,8 @@
 # node modules
 /node_modules/
 
+# test coverage reports
+/coverage
+
 # Turborepo files
 .turbo/

@@ -56,29 +56,7 @@ export class GameService {
     };
 
     if (isPlayerDrawingCards) {
-      const playerSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
-        game,
-        game.state.currentPlayingSlotIndex,
-      );
-
-      const cardsToDraw: number = Math.max(
-        MIN_CARDS_TO_DRAW,
-        game.state.drawCount,
-      );
-
-      const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
-        this.#drawCards(game.spec.cards, cardsToDraw);
-
-      gameUpdateQuery.deck = gameDeckCardsSpec;
-      gameUpdateQuery.gameSlotUpdateQueries = [
-        {
-          cards: [...playerSlot.cards, ...cardsDrawn],
-          gameSlotFindQuery: {
-            gameId: game.id,
-            position: game.state.currentPlayingSlotIndex,
-          },
-        },
-      ];
+      this.#setPassTurnGameUpdateQueryDrawCards(game, gameUpdateQuery);
     }
 
     return gameUpdateQuery;
@@ -251,6 +229,14 @@ export class GameService {
     return nextDiscardPile;
   }
 
+  #countCards(deck: GameCardSpec[]): number {
+    return deck.reduce(
+      (count: number, cardSpec: GameCardSpec): number =>
+        count + cardSpec.amount,
+      0,
+    );
+  }
+
   #putCardsInDiscardPile(discardPile: GameCardSpec[], cards: Card[]): void {
     for (const card of cards) {
       this.#putCardInDiscardPile(discardPile, card);
@@ -274,6 +260,36 @@ export class GameService {
     }
 
     cardSpec.amount += cardsToAdd;
+  }
+
+  #setPassTurnGameUpdateQueryDrawCards(
+    game: ActiveGame,
+    gameUpdateQuery: GameUpdateQuery,
+  ): void {
+    const [cardsDrawn, gameDeckCardsSpec, discardPileOrUndefined]:
+      | [Card[], GameCardSpec[]]
+      | [Card[], GameCardSpec[], GameCardSpec[]] =
+      this.#drawCardsFromDeckAndFallBackToDiscardPileIfNecessary(game);
+
+    if (discardPileOrUndefined !== undefined) {
+      gameUpdateQuery.discardPile = discardPileOrUndefined;
+    }
+
+    const playerSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
+      game,
+      game.state.currentPlayingSlotIndex,
+    );
+
+    gameUpdateQuery.deck = gameDeckCardsSpec;
+    gameUpdateQuery.gameSlotUpdateQueries = [
+      {
+        cards: [...playerSlot.cards, ...cardsDrawn],
+        gameSlotFindQuery: {
+          gameId: game.id,
+          position: game.state.currentPlayingSlotIndex,
+        },
+      },
+    ];
   }
 
   #setPlayCardsGameUpdateQueryColor(
@@ -315,10 +331,7 @@ export class GameService {
   }
 
   #drawCards(cards: GameCardSpec[], amount: number): [Card[], GameCardSpec[]] {
-    const gameCards: number = cards.reduce(
-      (count: number, cardSpec: GameCardSpec) => count + cardSpec.amount,
-      0,
-    );
+    const gameCards: number = this.#countCards(cards);
 
     const drawIndexes: number[] = this.#getSortedCardDrawIndexes(
       gameCards,
@@ -340,6 +353,67 @@ export class GameService {
     }
 
     return cardsAndGameDeck;
+  }
+
+  #drawCardsFromDeckAndFallBackToDiscardPile(
+    game: ActiveGame,
+    amount: number,
+  ): [Card[], GameCardSpec[]] {
+    const deckCards: number = this.#countCards(game.state.deck);
+
+    if (amount <= deckCards) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected error trying to draw cards',
+      );
+    }
+
+    const [cardsFromDeck]: [Card[], GameCardSpec[]] = this.#drawCards(
+      game.state.deck,
+      deckCards,
+    );
+
+    const cardsDrawnAndGameDeck: [Card[], GameCardSpec[]] = this.#drawCards(
+      game.state.discardPile,
+      amount - deckCards,
+    );
+
+    const [cardsDrawn]: [Card[], GameCardSpec[]] = cardsDrawnAndGameDeck;
+
+    cardsDrawn.push(...cardsFromDeck);
+
+    return cardsDrawnAndGameDeck;
+  }
+
+  #drawCardsFromDeckAndFallBackToDiscardPileIfNecessary(
+    game: ActiveGame,
+  ): [Card[], GameCardSpec[]] | [Card[], GameCardSpec[], GameCardSpec[]] {
+    const cardsToDraw: number = Math.max(
+      MIN_CARDS_TO_DRAW,
+      game.state.drawCount,
+    );
+
+    try {
+      const cardsDrawnAndDeck: [Card[], GameCardSpec[]] = this.#drawCards(
+        game.state.deck,
+        cardsToDraw,
+      );
+
+      return cardsDrawnAndDeck;
+    } catch (error: unknown) {
+      if (
+        !AppError.isAppErrorOfKind(error, AppErrorKind.unprocessableOperation)
+      ) {
+        throw error;
+      }
+
+      const cardsDrawnAndDeck: [Card[], GameCardSpec[]] =
+        this.#drawCardsFromDeckAndFallBackToDiscardPile(game, cardsToDraw);
+
+      cardsDrawnAndDeck.push([]);
+
+      return cardsDrawnAndDeck;
+    }
   }
 
   #getCardsFromDeck(
