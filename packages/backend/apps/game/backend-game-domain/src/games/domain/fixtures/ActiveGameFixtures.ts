@@ -149,7 +149,7 @@ export class ActiveGameFixtures {
     };
   }
 
-  public static get withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120(): ActiveGame {
+  public static get withGameSlotsAmountTwoAndSpecWithCardsWithSpecOneWithAmount120(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
 
     return {
@@ -160,6 +160,47 @@ export class ActiveGameFixtures {
       },
       state: {
         ...anyActiveGameFixture.state,
+        slots: [
+          ActiveGameSlotFixtures.withPositionZero,
+          ActiveGameSlotFixtures.withPositionOne,
+        ],
+      },
+    };
+  }
+
+  public static get withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      spec: {
+        cards: [GameCardSpecFixtures.withAmount120],
+        gameSlotsAmount: 2,
+      },
+      state: {
+        ...anyActiveGameFixture.state,
+        deck: [GameCardSpecFixtures.withAmount120],
+        slots: [
+          ActiveGameSlotFixtures.withPositionZero,
+          ActiveGameSlotFixtures.withPositionOne,
+        ],
+      },
+    };
+  }
+
+  public static get withGameSlotsAmountTwoAndStateWithDeckEmptyAndDiscardPileWithSpecOneWithAmount120(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      spec: {
+        cards: [GameCardSpecFixtures.withAmount120],
+        gameSlotsAmount: 2,
+      },
+      state: {
+        ...anyActiveGameFixture.state,
+        deck: [],
+        discardPile: [GameCardSpecFixtures.withAmount120],
         slots: [
           ActiveGameSlotFixtures.withPositionZero,
           ActiveGameSlotFixtures.withPositionOne,
