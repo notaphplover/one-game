@@ -6,6 +6,8 @@ import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
 import {
   ActiveGame,
   ActiveGameSlot,
+  FinishedGame,
+  FinishedGameSlot,
   GameDirection,
   GameStatus,
   NonStartedGame,
@@ -13,6 +15,7 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameSlotFixtures,
+  FinishedGameSlotFixtures,
   NonStartedGameSlotFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
@@ -206,6 +209,83 @@ describe(GameDbToGameConverter.name, () => {
           state: {
             slots: [firstGameSlotFixture, secondGameSlotFixture],
             status: GameStatus.nonStarted,
+          },
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having a finished GameDb with two slots', () => {
+    let gameCardSpecDbFixture: GameCardSpecDb;
+    let gameDbFixture: GameDb;
+
+    beforeAll(() => {
+      gameDbFixture = GameDbFixtures.withStatusFinishedAndGameSlotsTwo;
+
+      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
+        GameCardSpecDb,
+      ];
+    });
+
+    describe('when called', () => {
+      let cardFixture: Card;
+      let firstGameSlotFixture: FinishedGameSlot;
+      let secondGameSlotFixture: FinishedGameSlot;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.any;
+        firstGameSlotFixture = FinishedGameSlotFixtures.withPositionZero;
+        secondGameSlotFixture = FinishedGameSlotFixtures.withPositionZero;
+
+        cardBuilderMock.build.mockReturnValueOnce(cardFixture);
+        gameSlotDbToGameSlotConverterMock.convert
+          .mockReturnValueOnce(secondGameSlotFixture)
+          .mockReturnValueOnce(firstGameSlotFixture);
+
+        result = gameDbToGameConverter.convert(gameDbFixture);
+      });
+
+      afterAll(() => {
+        gameSlotDbToGameSlotConverterMock.convert.mockReset();
+
+        jest.clearAllMocks();
+      });
+
+      it('should call cardBuilder.build()', () => {
+        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
+        expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
+          gameDbFixture.gameSlotsDb.length,
+        );
+
+        for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
+          expect(
+            gameSlotDbToGameSlotConverterMock.convert,
+          ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
+        }
+      });
+
+      it('should return a FinishedGame with sorted game slots', () => {
+        const expected: Partial<FinishedGame> = {
+          id: gameDbFixture.id,
+          spec: {
+            cards: [
+              {
+                amount: gameCardSpecDbFixture.amount,
+                card: cardFixture,
+              },
+            ],
+            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
+          },
+          state: {
+            slots: [firstGameSlotFixture, secondGameSlotFixture],
+            status: GameStatus.finished,
           },
         };
 

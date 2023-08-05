@@ -6,6 +6,33 @@ import { GameStatusDb } from '../models/GameStatusDb';
 import { GameSlotDbFixtures } from './GameSlotDbFixtures';
 
 export class GameDbFixtures {
+  public static get withStatusFinished(): GameDb {
+    const fixture: Writable<GameDb> = new GameDb();
+
+    fixture.currentCard = null;
+    fixture.currentColor = null;
+    fixture.currentPlayingSlotIndex = null;
+    fixture.deck = '[{ "amount": 1, "card": 39 }]';
+    fixture.discardPile = '[]';
+    fixture.gameSlotsDb = [GameSlotDbFixtures.nonStartedWithPositionZero];
+    fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
+    fixture.spec = '[{ "amount": 1, "card": 39 }]';
+    fixture.status = GameStatusDb.finished;
+
+    return fixture;
+  }
+
+  public static get withStatusFinishedAndGameSlotsTwo(): GameDb {
+    const fixture: Writable<GameDb> = GameDbFixtures.withStatusFinished;
+
+    fixture.gameSlotsDb = [
+      GameSlotDbFixtures.finishedWithPositionZero,
+      GameSlotDbFixtures.finishedWithPositionOne,
+    ];
+
+    return fixture;
+  }
+
   public static get withStatusNonStarted(): GameDb {
     const fixture: Writable<GameDb> = new GameDb();
 
@@ -14,7 +41,7 @@ export class GameDbFixtures {
     fixture.currentPlayingSlotIndex = null;
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.discardPile = '[]';
-    fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
+    fixture.gameSlotsDb = [GameSlotDbFixtures.nonStartedWithPositionZero];
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
     fixture.status = GameStatusDb.nonStarted;
@@ -25,7 +52,7 @@ export class GameDbFixtures {
   public static get withStatusNonStartedAndGameSlotsOne(): GameDb {
     const fixture: Writable<GameDb> = GameDbFixtures.withStatusNonStarted;
 
-    fixture.gameSlotsDb = [GameSlotDbFixtures.nonActiveWithPositionZero];
+    fixture.gameSlotsDb = [GameSlotDbFixtures.nonStartedWithPositionZero];
 
     return fixture;
   }
@@ -34,8 +61,8 @@ export class GameDbFixtures {
     const fixture: Writable<GameDb> = GameDbFixtures.withStatusNonStarted;
 
     fixture.gameSlotsDb = [
-      GameSlotDbFixtures.nonActiveWithPositionZero,
-      GameSlotDbFixtures.nonActiveWithPositionOne,
+      GameSlotDbFixtures.nonStartedWithPositionZero,
+      GameSlotDbFixtures.nonStartedWithPositionOne,
     ];
 
     return fixture;

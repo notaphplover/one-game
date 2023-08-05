@@ -8,6 +8,8 @@ import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   ActiveGameSlot,
+  FinishedGame,
+  FinishedGameSlot,
   Game,
   GameCardSpec,
   GameDirection,
@@ -55,7 +57,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     @Inject(GameSlotDbToGameSlotConverter)
     gameSlotDbToGameSlotConverter: Converter<
       GameSlotDb,
-      ActiveGameSlot | NonStartedGameSlot
+      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot
     >,
   ) {
     this.#cardBuilder = cardBuilder;
@@ -90,8 +92,12 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
           gameSlots as NonStartedGameSlot[],
         );
         break;
-      default:
-        throw new AppError(AppErrorKind.unknown, 'Unexpected game status');
+      case GameStatusDb.finished:
+        game = this.#convertFinishedGameDb(
+          gameDb,
+          gameSlots as FinishedGameSlot[],
+        );
+        break;
     }
 
     return game;
@@ -131,6 +137,23 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
         drawCount: gameDb.drawCount,
         slots: gameSlots,
         status: GameStatus.active,
+      },
+    };
+  }
+
+  #convertFinishedGameDb(
+    gameDb: GameDb,
+    gameSlots: FinishedGameSlot[],
+  ): FinishedGame {
+    return {
+      id: gameDb.id,
+      spec: {
+        cards: this.#convertCardSpecs(gameDb.spec),
+        gameSlotsAmount: gameDb.gameSlotsAmount,
+      },
+      state: {
+        slots: gameSlots,
+        status: GameStatus.finished,
       },
     };
   }

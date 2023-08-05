@@ -7,6 +7,7 @@ import {
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGameSlot,
+  FinishedGameSlot,
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -17,7 +18,11 @@ import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
 export class GameSlotDbToGameSlotConverter
-  implements Converter<GameSlotDb, ActiveGameSlot | NonStartedGameSlot>
+  implements
+    Converter<
+      GameSlotDb,
+      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot
+    >
 {
   readonly #cardBuilder: Builder<Card, [CardDb]>;
 
@@ -25,11 +30,13 @@ export class GameSlotDbToGameSlotConverter
     this.#cardBuilder = cardBuilder;
   }
 
-  public convert(gameSlotDb: GameSlotDb): ActiveGameSlot | NonStartedGameSlot {
+  public convert(
+    gameSlotDb: GameSlotDb,
+  ): ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot {
     if (gameSlotDb.cards === null) {
       return this.#convertToNonStartedGameSlot(gameSlotDb);
     } else {
-      return this.#convertToActiveGameSlots(gameSlotDb);
+      return this.#convertToActiveOrFinishedGameSlots(gameSlotDb);
     }
   }
 
@@ -46,7 +53,9 @@ export class GameSlotDbToGameSlotConverter
     return jsonCards.map((cardDb: CardDb) => this.#cardBuilder.build(cardDb));
   }
 
-  #convertToActiveGameSlots(gameSlotDb: GameSlotDb): ActiveGameSlot {
+  #convertToActiveOrFinishedGameSlots(
+    gameSlotDb: GameSlotDb,
+  ): ActiveGameSlot | FinishedGameSlot {
     if (gameSlotDb.userId === null) {
       throw new AppError(
         AppErrorKind.unknown,
