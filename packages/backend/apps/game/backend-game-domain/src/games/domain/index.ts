@@ -1,5 +1,6 @@
 import { ActiveGame } from './entities/ActiveGame';
 import { BaseGame } from './entities/BaseGame';
+import { FinishedGame } from './entities/FinishedGame';
 import { Game } from './entities/Game';
 import { NonStartedGame } from './entities/NonStartedGame';
 import { GameCreateQuery } from './query/GameCreateQuery';
@@ -19,6 +20,7 @@ import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
 import { PlayerCanUpdateGameSpec } from './specs/PlayerCanUpdateGameSpec';
 import { ActiveGameSlot } from './valueObjects/ActiveGameSlot';
 import { BaseGameSlot } from './valueObjects/BaseGameSlot';
+import { FinishedGameSlot } from './valueObjects/FinishedGameSlot';
 import { GameCardSpec } from './valueObjects/GameCardSpec';
 import { GameDirection } from './valueObjects/GameDirection';
 import { GameInitialDraws } from './valueObjects/GameInitialDraws';
@@ -32,6 +34,8 @@ export type {
   ActiveGameSlot,
   BaseGame,
   BaseGameSlot,
+  FinishedGame,
+  FinishedGameSlot,
   Game,
   GameCardSpec,
   GameCreateQuery,

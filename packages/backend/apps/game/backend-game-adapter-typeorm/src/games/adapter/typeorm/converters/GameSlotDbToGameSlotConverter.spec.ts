@@ -33,7 +33,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
       let nonActiveGameSlotDbFixture: GameSlotDb;
 
       beforeAll(() => {
-        nonActiveGameSlotDbFixture = GameSlotDbFixtures.nonActive;
+        nonActiveGameSlotDbFixture = GameSlotDbFixtures.nonStarted;
       });
 
       describe('when called', () => {

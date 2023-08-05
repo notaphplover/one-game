@@ -1,5 +1,6 @@
 import { ActiveGameFixtures } from './ActiveGameFixtures';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';
+import { FinishedGameSlotFixtures } from './FinishedGameSlotFixtures';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { GameCreateQueryFixtures } from './GameCreateQueryFixtures';
 import { GameFindQueryFixtures } from './GameFindQueryFixtures';
@@ -17,6 +18,7 @@ import { NonStartedGameSlotFixtures } from './NonStartedGameSlotFixtures';
 export {
   ActiveGameFixtures,
   ActiveGameSlotFixtures,
+  FinishedGameSlotFixtures,
   GameCardSpecFixtures,
   GameCreateQueryFixtures,
   GameFindQueryFixtures,
