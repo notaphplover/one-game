@@ -13,11 +13,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
-import { HashContext } from '../../../../foundation/hash/application/models/HashContext';
-import {
-  bcryptHashProviderOutputPortSymbol,
-  BcryptHashProviderOutputPort,
-} from '../../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
@@ -30,12 +25,11 @@ import {
 
 @Injectable()
 export class UserManagementInputPort {
-  readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
   readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
   readonly #updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
     UserCreateQuery,
-    [apiModels.UserCreateQueryV1, HashContext & UuidContext]
+    [apiModels.UserCreateQueryV1, UuidContext]
   >;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
   readonly #userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
@@ -46,8 +40,6 @@ export class UserManagementInputPort {
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
-    @Inject(bcryptHashProviderOutputPortSymbol)
-    bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
     @Inject(CreateUserUseCaseHandler)
     createUserUseCaseHandler: Handler<[UserCreateQuery], User>,
     @Inject(UpdateUserUseCaseHandler)
@@ -55,7 +47,7 @@ export class UserManagementInputPort {
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
     userCreateQueryFromUserCreateQueryV1Builder: Builder<
       UserCreateQuery,
-      [apiModels.UserCreateQueryV1, HashContext & UuidContext]
+      [apiModels.UserCreateQueryV1, UuidContext]
     >,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
@@ -69,7 +61,6 @@ export class UserManagementInputPort {
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
-    this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
     this.#createUserUseCaseHandler = createUserUseCaseHandler;
     this.#updateUserUseCaseHandler = updateUserUseCaseHandler;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
@@ -84,8 +75,8 @@ export class UserManagementInputPort {
   public async create(
     userCreateQueryV1: apiModels.UserCreateQueryV1,
   ): Promise<apiModels.UserV1> {
-    const userCreateQueryContext: HashContext & UuidContext =
-      await this.#buildCreateContext(userCreateQueryV1);
+    const userCreateQueryContext: UuidContext =
+      await this.#buildCreateContext();
 
     const userCreateQuery: UserCreateQuery =
       this.#userCreateQueryFromUserCreateQueryV1Builder.build(
@@ -138,17 +129,10 @@ export class UserManagementInputPort {
     return this.#userV1FromUserBuilder.build(user);
   }
 
-  async #buildCreateContext(
-    userCreateQueryV1: apiModels.UserCreateQueryV1,
-  ): Promise<HashContext & UuidContext> {
-    const passwordHash: string = await this.#bcryptHashProviderOutputPort.hash(
-      userCreateQueryV1.password,
-    );
-
+  async #buildCreateContext(): Promise<UuidContext> {
     const uuid: string = this.#uuidProviderOutputPort.generateV4();
 
     return {
-      hash: passwordHash,
       uuid,
     };
   }

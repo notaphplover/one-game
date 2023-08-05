@@ -1,29 +1,40 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Builder } from '@cornie-js/backend-common';
+import { BuilderAsync } from '@cornie-js/backend-common';
 import { UserCreateQuery } from '@cornie-js/backend-user-domain/users';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
-import { HashContext } from '../../../foundation/hash/application/models/HashContext';
+import {
+  BcryptHashProviderOutputPort,
+  bcryptHashProviderOutputPortSymbol,
+} from '../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 
 @Injectable()
 export class UserCreateQueryFromUserCreateQueryV1Builder
   implements
-    Builder<
-      UserCreateQuery,
-      [apiModels.UserCreateQueryV1, HashContext & UuidContext]
-    >
+    BuilderAsync<UserCreateQuery, [apiModels.UserCreateQueryV1, UuidContext]>
 {
-  public build(
+  readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
+
+  constructor(
+    @Inject(bcryptHashProviderOutputPortSymbol)
+    bcryptHashProviderOutputPort: BcryptHashProviderOutputPort,
+  ) {
+    this.#bcryptHashProviderOutputPort = bcryptHashProviderOutputPort;
+  }
+
+  public async build(
     userCreateQueryV1: apiModels.UserCreateQueryV1,
-    context: HashContext & UuidContext,
-  ): UserCreateQuery {
+    context: UuidContext,
+  ): Promise<UserCreateQuery> {
     return {
       active: false,
       email: userCreateQueryV1.email,
       id: context.uuid,
       name: userCreateQueryV1.name,
-      passwordHash: context.hash,
+      passwordHash: await this.#bcryptHashProviderOutputPort.hash(
+        userCreateQueryV1.password,
+      ),
     };
   }
 }
