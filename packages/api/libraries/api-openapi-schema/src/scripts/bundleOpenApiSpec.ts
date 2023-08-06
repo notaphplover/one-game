@@ -9,14 +9,11 @@ import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
   JsonSchema202012,
-  traverseJsonSchema,
-  TraverseJsonSchemaCallbackParams,
 } from '@cornie-js/json-schema-utils';
 import {
   OpenApi3Dot1ComponentsObject,
   OpenApi3Dot1Object,
   OpenApi3Dot1SchemaObject,
-  traverseOpenApiObjectJsonSchemas,
 } from '@cornie-js/openapi-utils';
 import cloneDeep from 'clone-deep';
 import yaml from 'yaml';
@@ -110,28 +107,6 @@ function checkDuplicatedSchemas(
   }
 }
 
-function traverseOpenApiJsonSchemas(
-  idToJsonSchemaEntriesMap: Map<string, JsonSchemaEntry>,
-  openApiObject: OpenApi3Dot1Object,
-): void {
-  traverseOpenApiObjectJsonSchemas(
-    openApiObject,
-    (params: TraverseJsonSchemaCallbackParams): void => {
-      if (params.schema !== true && params.schema !== false) {
-        if (params.schema.$ref !== undefined) {
-          const jsonSchemaEntry: JsonSchemaEntry | undefined =
-            idToJsonSchemaEntriesMap.get(params.schema.$ref);
-
-          if (jsonSchemaEntry !== undefined) {
-            params.schema.$ref =
-              buildOpenApiComponentSchemaRef(jsonSchemaEntry);
-          }
-        }
-      }
-    },
-  );
-}
-
 async function generateAllSchemas(
   openApiFilePath: string,
   destinationPath: string,
@@ -154,8 +129,6 @@ async function generateAllSchemas(
     idToJsonSchemaEntriesMap.values(),
     openApiComponentsSchemas,
   );
-
-  traverseOpenApiJsonSchemas(idToJsonSchemaEntriesMap, openApi);
 
   for (const jsonSchemaEntry of idToJsonSchemaEntriesMap.values()) {
     openApiComponentsSchemas[jsonSchemaEntry.alias] = buildOpenApiJsonSchema(
@@ -203,10 +176,6 @@ async function parseJsonSchemaFiles(): Promise<Map<string, JsonSchemaEntry>> {
     ),
   );
 
-  for (const jsonSchemaEntry of jsonSchemaEntries) {
-    transformJsonSchemaRefs(jsonSchemaEntry.schema, idToJsonSchemaEntriesMap);
-  }
-
   return idToJsonSchemaEntriesMap;
 }
 
@@ -230,31 +199,6 @@ ${JSON.stringify(schema)}`,
       };
     }
   }
-}
-
-function transformJsonSchemaRefs(
-  schema: JsonRootSchema202012,
-  idToJsonSchemaEntries: Map<string, JsonSchemaEntry>,
-): void {
-  traverseJsonSchema(
-    { schema },
-    (
-      traverseJsonSchemaCallbackParams: TraverseJsonSchemaCallbackParams,
-    ): void => {
-      const schema: JsonSchema202012 = traverseJsonSchemaCallbackParams.schema;
-
-      if (typeof schema === 'object' && schema.$ref !== undefined) {
-        const jsonSchemaEntryOrUndefined: JsonSchemaEntry | undefined =
-          idToJsonSchemaEntries.get(schema.$ref);
-
-        if (jsonSchemaEntryOrUndefined !== undefined) {
-          schema.$ref = buildOpenApiComponentSchemaRef(
-            jsonSchemaEntryOrUndefined,
-          );
-        }
-      }
-    },
-  );
 }
 
 void (async () => {

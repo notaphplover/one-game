@@ -5,7 +5,17 @@ const JSON_STRINGIFY_SPACES: number = 2;
 const POINTER_REGEX: RegExp = /^#((?:\/[^\\/]+)*)$/;
 
 export class JsonPointerResolver {
-  public resolve(pointer: string, rootObject: JsonValue): JsonValue {
+  public resolve(
+    pointer: string,
+    rootObject: JsonValue,
+    uriToJsonMap: Map<string, JsonValue>,
+  ): JsonValue {
+    const jsonValueFromMap: JsonValue | undefined = uriToJsonMap.get(pointer);
+
+    if (jsonValueFromMap !== undefined) {
+      return jsonValueFromMap;
+    }
+
     const pointerElements: RegExpMatchArray | null =
       pointer.match(POINTER_REGEX);
 
