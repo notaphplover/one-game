@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import { Builder, BuilderAsync, Handler } from '@cornie-js/backend-common';
 import {
   User,
   UserCreateQuery,
@@ -30,7 +30,7 @@ describe(UserManagementInputPort.name, () => {
     Handler<[UserUpdateQuery], User>
   >;
   let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
-    Builder<UserCreateQuery, [apiModels.UserCreateQueryV1, UuidContext]>
+    BuilderAsync<UserCreateQuery, [apiModels.UserCreateQueryV1, UuidContext]>
   >;
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
   let userUpdateQueryFromUserMeUpdateQueryV1BuilderMock: jest.Mocked<
@@ -96,7 +96,7 @@ describe(UserManagementInputPort.name, () => {
         uuidFixture = '83073aec-b81b-4107-97f9-baa46de5dd40';
 
         uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
-        userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockReturnValueOnce(
+        userCreateQueryFromUserCreateQueryV1BuilderMock.build.mockResolvedValueOnce(
           userCreateQueryFixture,
         );
         createUserUseCaseHandlerMock.handle.mockResolvedValueOnce(userFixture);

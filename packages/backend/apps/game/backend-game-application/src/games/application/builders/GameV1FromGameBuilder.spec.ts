@@ -6,6 +6,8 @@ import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   ActiveGameSlot,
+  FinishedGame,
+  FinishedGameSlot,
   GameDirection,
   GameSpec,
   NonStartedGame,
@@ -13,11 +15,13 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,
+  FinishedGameFixtures,
   NonStartedGameFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures/CardV1Fixtures';
 import { ActiveGameSlotV1Fixtures } from '../fixtures/ActiveGameSlotV1Fixtures';
+import { FinishedGameSlotV1Fixtures } from '../fixtures/FinishedGameSlotV1Fixtures';
 import { GameSpecV1Fixtures } from '../fixtures/GameSpecV1Fixtures';
 import { NonStartedGameSlotV1Fixtures } from '../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameV1FromGameBuilder } from './GameV1FromGameBuilder';
@@ -30,6 +34,9 @@ describe(GameV1FromGameBuilder.name, () => {
     Builder<apiModels.CardColorV1, [CardColor]>
   >;
   let cardV1FromCardBuilderMock: jest.Mocked<Builder<apiModels.CardV1, [Card]>>;
+  let finishedGameSlotV1FromFinishedGameSlotBuilderMock: jest.Mocked<
+    Builder<apiModels.FinishedGameSlotV1, [FinishedGameSlot]>
+  >;
   let gameDirectionV1FromGameDirectionBuilderMock: jest.Mocked<
     Builder<apiModels.GameDirectionV1, [GameDirection]>
   >;
@@ -52,6 +59,9 @@ describe(GameV1FromGameBuilder.name, () => {
     cardV1FromCardBuilderMock = {
       build: jest.fn(),
     };
+    finishedGameSlotV1FromFinishedGameSlotBuilderMock = {
+      build: jest.fn(),
+    };
     gameDirectionV1FromGameDirectionBuilderMock = {
       build: jest.fn(),
     };
@@ -66,6 +76,7 @@ describe(GameV1FromGameBuilder.name, () => {
       activeGameSlotV1FromActiveGameSlotBuilderMock,
       cardColorV1FromCardColorBuilderMock,
       cardV1FromCardBuilderMock,
+      finishedGameSlotV1FromFinishedGameSlotBuilderMock,
       gameDirectionV1FromGameDirectionBuilderMock,
       gameSpecV1FromGameSpecBuilderMock,
       nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock,
@@ -176,6 +187,73 @@ describe(GameV1FromGameBuilder.name, () => {
               drawCount: gameFixture.state.drawCount,
               slots: [activeGameSlotV1Fixture],
               status: 'active',
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a FinishedGame', () => {
+      let gameSlotFixture: FinishedGameSlot;
+      let gameFixture: FinishedGame;
+
+      beforeAll(() => {
+        gameFixture = FinishedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        [gameSlotFixture] = gameFixture.state.slots as [FinishedGameSlot];
+      });
+
+      describe('when called', () => {
+        let finishedGameSlotV1Fixture: apiModels.FinishedGameSlotV1;
+        let gameSpecV1Fixture: apiModels.GameSpecV1;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          finishedGameSlotV1Fixture = FinishedGameSlotV1Fixtures.any;
+          gameSpecV1Fixture = GameSpecV1Fixtures.any;
+
+          gameSpecV1FromGameSpecBuilderMock.build.mockReturnValueOnce(
+            gameSpecV1Fixture,
+          );
+
+          finishedGameSlotV1FromFinishedGameSlotBuilderMock.build.mockReturnValueOnce(
+            finishedGameSlotV1Fixture,
+          );
+
+          result = gameV1FromGameBuilder.build(gameFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
+          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
+            gameFixture.spec,
+          );
+        });
+
+        it('should call finishedGameSlotV1FromFinishedGameSlotBuilder.build()', () => {
+          expect(
+            finishedGameSlotV1FromFinishedGameSlotBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            finishedGameSlotV1FromFinishedGameSlotBuilderMock.build,
+          ).toHaveBeenCalledWith(gameSlotFixture);
+        });
+
+        it('should return a GameV1', () => {
+          const expected: apiModels.FinishedGameV1 = {
+            id: gameFixture.id,
+            spec: gameSpecV1Fixture,
+            state: {
+              slots: [finishedGameSlotV1Fixture],
+              status: 'finished',
             },
           };
 

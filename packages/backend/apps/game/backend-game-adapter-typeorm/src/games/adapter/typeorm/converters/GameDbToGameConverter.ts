@@ -41,7 +41,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
   >;
   readonly #gameSlotDbToGameSlotConverter: Converter<
     GameSlotDb,
-    ActiveGameSlot | NonStartedGameSlot
+    ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot
   >;
 
   constructor(

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/finished-game-state.json",
+  "title": "FinishedGameStateV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "slots": {
+      "type": "array",
+      "items": {
+        "$ref": "https://onegame.schemas/api/v1/games/finished-game-slot.json"
+      }
+    },
+    "status": {
+      "const": "finished",
+      "type": "string"
+    }
+  },
+  "required": [
+    "slots",
+    "status"
+  ]
+}

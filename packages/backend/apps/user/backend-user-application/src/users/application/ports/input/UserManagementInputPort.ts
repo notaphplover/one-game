@@ -3,7 +3,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import { Builder, BuilderAsync, Handler } from '@cornie-js/backend-common';
 import {
   User,
   UserCreateQuery,
@@ -27,7 +27,7 @@ import {
 export class UserManagementInputPort {
   readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
   readonly #updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>;
-  readonly #userCreateQueryFromUserCreateQueryV1Builder: Builder<
+  readonly #userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, UuidContext]
   >;
@@ -45,7 +45,7 @@ export class UserManagementInputPort {
     @Inject(UpdateUserUseCaseHandler)
     updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
-    userCreateQueryFromUserCreateQueryV1Builder: Builder<
+    userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
       UserCreateQuery,
       [apiModels.UserCreateQueryV1, UuidContext]
     >,
@@ -79,7 +79,7 @@ export class UserManagementInputPort {
       await this.#buildCreateContext();
 
     const userCreateQuery: UserCreateQuery =
-      this.#userCreateQueryFromUserCreateQueryV1Builder.build(
+      await this.#userCreateQueryFromUserCreateQueryV1Builder.build(
         userCreateQueryV1,
         userCreateQueryContext,
       );

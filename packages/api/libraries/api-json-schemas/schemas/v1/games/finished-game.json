@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/finished-game.json",
+  "title": "FinishedGameV1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "spec": {
+      "$ref": "https://onegame.schemas/api/v1/games/game-spec.json"
+    },
+    "state": {
+      "$ref": "https://onegame.schemas/api/v1/games/finished-game-state.json"
+    }
+  },
+  "required": [
+    "id",
+    "spec",
+    "state"
+  ]
+}

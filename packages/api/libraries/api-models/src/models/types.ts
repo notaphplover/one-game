@@ -24,6 +24,9 @@ export type TypesV1 =
   | ActiveGameSlotV1
   | ActiveGameStateV1
   | ActiveGameV1
+  | FinishedGameSlotV1
+  | FinishedGameStateV1
+  | FinishedGameV1
   | GameArrayV1
   | GameCardSpecV1
   | GameCreateQueryV1
@@ -57,12 +60,15 @@ export type CardNumberV1 = number;
 export type CardArrayV1 = CardV1[];
 export type ActiveGameSlotCardsV1 = CardV1[];
 export type GameDirectionV1 = 'antiClockwise' | 'clockwise';
-export type GameV1 = ActiveGameV1 | NonStartedGameV1;
+export type GameV1 = ActiveGameV1 | FinishedGameV1 | NonStartedGameV1;
 export type GameArrayV1 = GameV1[];
 export type GameIdUpdateQueryV1 =
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1;
-export type GameSlotV1 = ActiveGameSlotV1 | NonStartedGameSlotV1;
+export type GameSlotV1 =
+  | ActiveGameSlotV1
+  | FinishedGameSlotV1
+  | NonStartedGameSlotV1;
 
 export interface CodeAuthCreateQueryV1 {
   code: string;
@@ -131,6 +137,19 @@ export interface GameCardSpecV1 {
   amount: number;
   card: CardV1;
 }
+export interface FinishedGameSlotV1 {
+  cardsAmount: number;
+  userId: string;
+}
+export interface FinishedGameStateV1 {
+  slots: FinishedGameSlotV1[];
+  status: 'finished';
+}
+export interface FinishedGameV1 {
+  id: string;
+  spec: GameSpecV1;
+  state: FinishedGameStateV1;
+}
 export interface NonStartedGameV1 {
   id: string;
   spec: GameSpecV1;
@@ -141,7 +160,7 @@ export interface NonStartedGameStateV1 {
   status: 'nonStarted';
 }
 export interface NonStartedGameSlotV1 {
-  userId: null | string;
+  userId: string;
 }
 export interface GameCreateQueryV1 {
   gameSlotsAmount: number;

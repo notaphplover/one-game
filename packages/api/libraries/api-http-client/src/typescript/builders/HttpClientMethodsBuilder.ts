@@ -115,7 +115,7 @@ ${JSON.stringify(operation, undefined, JSON_STRINGIFY_SPACES)}`);
     }
 
     const parameterDeclarations: ts.ParameterDeclaration[] =
-      this.#buildParameters(options.root, operation);
+      this.#buildParameters(options, operation);
 
     return ts.factory.createMethodDeclaration(
       [
@@ -127,7 +127,7 @@ ${JSON.stringify(operation, undefined, JSON_STRINGIFY_SPACES)}`);
       undefined,
       undefined,
       parameterDeclarations,
-      this.#buildResponseType(options.root, operation.responses),
+      this.#buildResponseType(options, operation.responses),
       this.#buildMethodBodyBlock(
         httpMethod,
         options.path,
@@ -137,9 +137,10 @@ ${JSON.stringify(operation, undefined, JSON_STRINGIFY_SPACES)}`);
   }
 
   #buildParameters(
-    rootObject: OpenApi3Dot1Object,
+    options: HttpClientMethodsOptions,
     operation: OpenApi3Dot1OperationObject,
   ): ts.ParameterDeclaration[] {
+    const rootObject: OpenApi3Dot1Object = options.root;
     const parameterDeclarations: ts.ParameterDeclaration[] = [];
 
     let operationParameters: OpenApi3Dot1ParameterObject[];
@@ -218,6 +219,7 @@ ${JSON.stringify(operation.parameters)}
         requestBody = this.#openApiJsonPointerResolver.resolveDeep(
           (operation.requestBody as OpenApi3Dot1ReferenceObject).$ref,
           rootObject,
+          options.idToSchemaMap,
         ) as unknown as OpenApi3Dot1RequestBodyObject;
       }
 
@@ -234,10 +236,7 @@ ${JSON.stringify(operation.requestBody)}
 
       if (applicationJsonMediaContent.schema !== undefined) {
         parameterDeclarations.push(
-          this.#buildBodyParameter(
-            rootObject,
-            applicationJsonMediaContent.schema,
-          ),
+          this.#buildBodyParameter(options, applicationJsonMediaContent.schema),
         );
       }
     }
@@ -246,7 +245,7 @@ ${JSON.stringify(operation.requestBody)}
   }
 
   #buildApiModelIdentifierName(
-    rootObject: OpenApi3Dot1Object,
+    options: HttpClientMethodsOptions,
     model: JsonSchema202012,
   ): string {
     if (typeof model === 'boolean') {
@@ -262,7 +261,8 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
     } else {
       resolvedModel = this.#openApiJsonPointerResolver.resolveDeep(
         model.$ref,
-        rootObject,
+        options.root,
+        options.idToSchemaMap,
       ) as JsonSchema202012;
     }
 
@@ -279,7 +279,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
   }
 
   #buildBodyParameter(
-    rootObject: OpenApi3Dot1Object,
+    options: HttpClientMethodsOptions,
     requestBodySchema: JsonSchema202012,
   ): ts.ParameterDeclaration {
     const parameterDeclaration: ts.ParameterDeclaration =
@@ -288,7 +288,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
         undefined,
         ts.factory.createIdentifier(BODY_PARAMETER_NAME),
         undefined,
-        this.#buildNodeTypeFromSchema(rootObject, requestBodySchema),
+        this.#buildNodeTypeFromSchema(options, requestBodySchema),
         undefined,
       );
 
@@ -373,12 +373,12 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
   }
 
   #buildNodeTypeFromSchema(
-    rootObject: OpenApi3Dot1Object,
+    options: HttpClientMethodsOptions,
     schema: JsonSchema202012,
   ): ts.TypeNode {
     return ts.factory.createTypeReferenceNode(
       ts.factory.createIdentifier(
-        this.#buildApiModelIdentifierName(rootObject, schema),
+        this.#buildApiModelIdentifierName(options, schema),
       ),
     );
   }
@@ -431,7 +431,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
   }
 
   #buildResponseHeadersType(
-    rootObject: OpenApi3Dot1Object,
+    options: HttpClientMethodsOptions,
     headers: Record<
       string,
       OpenApi3Dot1ReferenceObject | OpenApi3Dot1HeaderObject
@@ -453,7 +453,8 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
       ) {
         headerObject = this.#openApiJsonPointerResolver.resolveDeep(
           (headerObject as OpenApi3Dot1ReferenceObject).$ref,
-          rootObject,
+          options.root,
+          options.idToSchemaMap,
         ) as unknown as OpenApi3Dot1HeaderObject;
       }
 
@@ -476,7 +477,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
   }
 
   #buildResponseType(
-    rootObject: OpenApi3Dot1Object,
+    options: HttpClientMethodsOptions,
     responses: OpenApi3Dot1ResponsesObject | undefined,
   ): ts.TypeNode {
     if (responses === undefined) {
@@ -533,7 +534,8 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
           (
             responseObject as Partial<OpenApi3Dot1ReferenceObject> as OpenApi3Dot1ReferenceObject
           ).$ref,
-          rootObject,
+          options.root,
+          options.idToSchemaMap,
         ) as unknown as OpenApi3Dot1ResponseObject;
       }
 
@@ -550,7 +552,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
         headersType = this.#buildStringToStringRecordTypeNode();
       } else {
         headersType = this.#buildResponseHeadersType(
-          rootObject,
+          options,
           responseObjectHeaders,
         );
       }
@@ -572,7 +574,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
           );
         } else {
           responseBodyType = this.#buildNodeTypeFromSchema(
-            rootObject,
+            options,
             applicationJsonMediaContent.schema,
           );
         }

@@ -10,10 +10,12 @@ export class OpenApiJsonPointerResolver extends JsonPointerResolver {
   public resolveDeep(
     pointer: string,
     rootObject: OpenApi3Dot1Object,
+    uriToJsonMap: Map<string, JsonValue>,
   ): JsonValue {
     const resolvedValue: JsonValue = this.resolve(
       pointer,
       rootObject as unknown as JsonValue,
+      uriToJsonMap,
     );
 
     if (
@@ -31,6 +33,7 @@ export class OpenApiJsonPointerResolver extends JsonPointerResolver {
       return this.resolveDeep(
         (resolvedValue as unknown as OpenApi3Dot1ReferenceObject).$ref,
         rootObject,
+        uriToJsonMap,
       );
     } else {
       return resolvedValue;

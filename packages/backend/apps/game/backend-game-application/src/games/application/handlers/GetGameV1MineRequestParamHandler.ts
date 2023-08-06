@@ -22,6 +22,7 @@ const GAME_V1_STATE_STATUS_TO_GAME_STATUS_MAP: {
   [TKey in apiModels.GameV1['state']['status']]: GameStatus;
 } & { [key: string]: GameStatus } = {
   active: GameStatus.active,
+  finished: GameStatus.finished,
   nonStarted: GameStatus.nonStarted,
 };
 
