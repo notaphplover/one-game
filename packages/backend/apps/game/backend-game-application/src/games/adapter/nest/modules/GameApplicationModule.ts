@@ -4,6 +4,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from '../../../application/builders/ActiveGameSlotV1FromActiveGameSlotBuilder';
+import { FinishedGameSlotV1FromFinishedGameSlotBuilder } from '../../../application/builders/FinishedGameSlotV1FromFinishedGameSlotBuilder';
 import { GameCardSpecFromGameCardSpecV1Builder } from '../../../application/builders/GameCardSpecFromGameCardSpecV1Builder';
 import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builders/GameCardSpecsFromGameSpecV1Builder';
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
@@ -42,6 +43,7 @@ export class GameApplicationModule {
       module: GameApplicationModule,
       providers: [
         ActiveGameSlotV1FromActiveGameSlotBuilder,
+        FinishedGameSlotV1FromFinishedGameSlotBuilder,
         GameCardSpecFromGameCardSpecV1Builder,
         GameCardSpecsFromGameSpecV1Builder,
         GameCardSpecV1FromGameCardSpecBuilder,

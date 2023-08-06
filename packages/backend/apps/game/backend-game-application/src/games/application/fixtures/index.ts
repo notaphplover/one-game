@@ -1,5 +1,6 @@
 import { ActiveGameSlotV1Fixtures } from './ActiveGameSlotV1Fixtures';
 import { ActiveGameV1Fixtures } from './ActiveGameV1Fixtures';
+import { FinishedGameSlotV1Fixtures } from './FinishedGameSlotV1Fixtures';
 import { GameCardSpecV1Fixtures } from './GameCardSpecV1Fixtures';
 import { GameCreateQueryV1Fixtures } from './GameCreateQueryV1Fixtures';
 import { GameSlotCreateQueryContextFixtures } from './GameSlotCreateQueryContextFixtures';
@@ -12,6 +13,7 @@ import { NonStartedGameV1Fixtures } from './NonStartedGameV1Fixtures';
 export {
   ActiveGameSlotV1Fixtures,
   ActiveGameV1Fixtures,
+  FinishedGameSlotV1Fixtures,
   GameCardSpecV1Fixtures,
   GameCreateQueryV1Fixtures,
   GameSlotCreateQueryContextFixtures,
