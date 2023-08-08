@@ -12,6 +12,7 @@ import { Game } from '../entities/Game';
 import { NonStartedGame } from '../entities/NonStartedGame';
 import { GameSlotUpdateQuery } from '../query/GameSlotUpdateQuery';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { IsGameFinishedSpec } from '../specs/IsGameFinishedSpec';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
@@ -31,13 +32,17 @@ const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 
 @Injectable()
 export class GameService {
-  #areCardsEqualsSpec: AreCardsEqualsSpec;
+  readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
+  readonly #isGameFinishedSpec: IsGameFinishedSpec;
 
   constructor(
     @Inject(AreCardsEqualsSpec)
     areCardsEqualsSpec: AreCardsEqualsSpec,
+    @Inject(IsGameFinishedSpec)
+    isGameFinishedSpec: IsGameFinishedSpec,
   ) {
     this.#areCardsEqualsSpec = areCardsEqualsSpec;
+    this.#isGameFinishedSpec = isGameFinishedSpec;
   }
 
   public buildPassTurnGameUpdateQuery(game: ActiveGame): GameUpdateQuery {
@@ -54,6 +59,10 @@ export class GameService {
         },
       },
     };
+
+    if (this.#isGameFinishedSpec.isSatisfiedBy(game)) {
+      gameUpdateQuery.status = GameStatus.finished;
+    }
 
     if (isPlayerDrawingCards) {
       this.#setPassTurnGameUpdateQueryDrawCards(game, gameUpdateQuery);
