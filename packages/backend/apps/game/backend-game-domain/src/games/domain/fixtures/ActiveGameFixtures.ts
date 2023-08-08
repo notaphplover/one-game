@@ -221,6 +221,32 @@ export class ActiveGameFixtures {
     };
   }
 
+  public static get withSlotsOneWithCards(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentPlayingSlotIndex: 0,
+        slots: [ActiveGameSlotFixtures.withPositionZeroAndCardsOne],
+      },
+    };
+  }
+
+  public static get withSlotsOneWithNoCards(): ActiveGame {
+    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyActiveGameFixture,
+      state: {
+        ...anyActiveGameFixture.state,
+        currentPlayingSlotIndex: 0,
+        slots: [ActiveGameSlotFixtures.withPositionZeroAndCardsEmpty],
+      },
+    };
+  }
+
   public static get withSlotsTwoAndCurrentPlayingSlotZero(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
 

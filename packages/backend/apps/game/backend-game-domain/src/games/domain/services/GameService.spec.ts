@@ -12,6 +12,7 @@ import { NonStartedGame } from '../entities/NonStartedGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { IsGameFinishedSpec } from '../specs/IsGameFinishedSpec';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
@@ -20,6 +21,7 @@ import { GameService } from './GameService';
 
 describe(GameService.name, () => {
   let areCardsEqualsSpecMock: jest.Mocked<AreCardsEqualsSpec>;
+  let isGameFinishedSpecMock: jest.Mocked<IsGameFinishedSpec>;
 
   let gameService: GameService;
 
@@ -30,7 +32,16 @@ describe(GameService.name, () => {
       jest.Mocked<AreCardsEqualsSpec>
     > as jest.Mocked<AreCardsEqualsSpec>;
 
-    gameService = new GameService(areCardsEqualsSpecMock);
+    isGameFinishedSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    } as Partial<
+      jest.Mocked<IsGameFinishedSpec>
+    > as jest.Mocked<IsGameFinishedSpec>;
+
+    gameService = new GameService(
+      areCardsEqualsSpecMock,
+      isGameFinishedSpecMock,
+    );
   });
 
   describe('.buildPassTurnGameUpdateQuery', () => {
@@ -56,11 +67,24 @@ describe(GameService.name, () => {
         [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
-      describe('when called', () => {
+      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
           result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            gameFixture,
+          );
         });
 
         it('should return a GameUpdateQuery', () => {
@@ -125,11 +149,24 @@ describe(GameService.name, () => {
         [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
-      describe('when called', () => {
+      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
           result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            gameFixture,
+          );
         });
 
         it('should return a GameUpdateQuery', () => {
@@ -198,11 +235,24 @@ describe(GameService.name, () => {
         [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
-      describe('when called', () => {
+      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
           result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            gameFixture,
+          );
         });
 
         it('should return a GameUpdateQuery', () => {
@@ -267,11 +317,24 @@ describe(GameService.name, () => {
         };
       });
 
-      describe('when called', () => {
+      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
           result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            gameFixture,
+          );
         });
 
         it('should return a GameUpdateQuery', () => {
@@ -286,6 +349,45 @@ describe(GameService.name, () => {
                   gameFixture.state.currentPlayingSlotIndex,
               },
             },
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+
+      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns true', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            gameFixture,
+          );
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: false,
+            drawCount: 0,
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            status: GameStatus.finished,
           };
 
           expect(result).toStrictEqual(expectedGameUpdateQuery);

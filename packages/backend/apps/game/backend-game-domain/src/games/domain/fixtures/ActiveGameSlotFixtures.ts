@@ -37,4 +37,20 @@ export class ActiveGameSlotFixtures {
       position: 0,
     };
   }
+
+  public static get withPositionZeroAndCardsOne(): ActiveGameSlot {
+    return {
+      ...ActiveGameSlotFixtures.any,
+      cards: [CardFixtures.any],
+      position: 0,
+    };
+  }
+
+  public static get withPositionZeroAndCardsEmpty(): ActiveGameSlot {
+    return {
+      ...ActiveGameSlotFixtures.any,
+      cards: [],
+      position: 0,
+    };
+  }
 }
