@@ -24,7 +24,6 @@ import { BaseGameSlot } from './valueObjects/BaseGameSlot';
 import { FinishedGameSlot } from './valueObjects/FinishedGameSlot';
 import { GameCardSpec } from './valueObjects/GameCardSpec';
 import { GameDirection } from './valueObjects/GameDirection';
-import { GameInitialDraws } from './valueObjects/GameInitialDraws';
 import { GameOptions } from './valueObjects/GameOptions';
 import { GameSpec } from './valueObjects/GameSpec';
 import { GameStatus } from './valueObjects/GameStatus';
@@ -41,7 +40,6 @@ export type {
   GameCardSpec,
   GameCreateQuery,
   GameFindQuery,
-  GameInitialDraws,
   GameOptions,
   GameOptionsCreateQuery,
   GameOptionsFindQuery,
