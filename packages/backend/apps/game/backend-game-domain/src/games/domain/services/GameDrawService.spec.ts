@@ -1,8 +1,13 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+
+import { Card } from '../../../cards/domain/valueObjects/Card';
 import { GameCardSpecFixtures } from '../fixtures/GameCardSpecFixtures';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
+import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
+import { GameSpec } from '../valueObjects/GameSpec';
 import { GameDrawService } from './GameDrawService';
 
 describe(GameDrawService.name, () => {
@@ -290,6 +295,85 @@ describe(GameDrawService.name, () => {
           };
 
           expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+  });
+
+  describe('.calculateInitialCardsDrawMutation', () => {
+    describe('having a GameSpec with hundred of cards and a gameSlotAmount of two', () => {
+      let gameCardSpecFixture: GameCardSpec;
+      let gameSpecFixture: GameSpec;
+
+      beforeAll(() => {
+        gameCardSpecFixture = GameCardSpecFixtures.withAmount120;
+        gameSpecFixture = {
+          cards: [gameCardSpecFixture],
+          gameSlotsAmount: 2,
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result =
+            gameDrawService.calculateInitialCardsDrawMutation(gameSpecFixture);
+        });
+
+        it('should return a GameInitialDrawsMutation', () => {
+          const expected: GameInitialDrawsMutation = {
+            cards: new Array<Card[]>(2).fill(
+              new Array<Card>(7).fill(gameCardSpecFixture.card),
+            ),
+            currentCard: gameCardSpecFixture.card,
+            deck: [
+              {
+                amount: gameCardSpecFixture.amount - 15,
+                card: gameCardSpecFixture.card,
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a GameSpec with no cards and a gameSlotAmount of two', () => {
+      let gameCardSpecFixture: GameCardSpec;
+      let gameSpecFixture: GameSpec;
+
+      beforeAll(() => {
+        gameCardSpecFixture = GameCardSpecFixtures.withAmount0;
+        gameSpecFixture = {
+          cards: [gameCardSpecFixture],
+          gameSlotsAmount: 2,
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          try {
+            gameDrawService.calculateInitialCardsDrawMutation(gameSpecFixture);
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        it('should throw an Error', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message:
+              'Unable to calculate draw. Reason: the spec has not enough cards!',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
         });
       });
     });

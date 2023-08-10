@@ -1,8 +1,12 @@
-import { Writable } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
 
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
+import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
+import { GameSpec } from '../valueObjects/GameSpec';
+
+const INITIAL_CARDS_PER_PLAYER: number = 7;
 
 export class GameDrawService {
   public calculateDrawMutation(
@@ -15,6 +19,36 @@ export class GameDrawService {
       discardPile,
       amount,
     );
+  }
+
+  public calculateInitialCardsDrawMutation(
+    gameSpec: GameSpec,
+  ): GameInitialDrawsMutation {
+    let gameDeckCardsSpec: GameCardSpec[] = gameSpec.cards;
+    const playerCardDraws: Card[][] = [];
+
+    for (let i: number = 0; i < gameSpec.gameSlotsAmount; ++i) {
+      const drawMutation: GameDrawMutation =
+        this.#calculateGameDrawMutationFromDeckOrFail(
+          gameDeckCardsSpec,
+          INITIAL_CARDS_PER_PLAYER,
+        );
+
+      gameDeckCardsSpec = drawMutation.deck;
+
+      playerCardDraws.push(drawMutation.cards);
+    }
+
+    const currentCardDrawMutation: GameDrawMutation =
+      this.#calculateGameDrawMutationFromDeckOrFail(gameDeckCardsSpec, 1);
+
+    const [currentCard]: [Card] = currentCardDrawMutation.cards as [Card];
+
+    return {
+      cards: playerCardDraws,
+      currentCard,
+      deck: currentCardDrawMutation.deck,
+    };
   }
 
   #calculateDrawMutationFromDeck(
@@ -59,6 +93,26 @@ export class GameDrawService {
       deck: updatedDeck,
       isDiscardPileEmptied: true,
     };
+  }
+
+  #calculateGameDrawMutationFromDeckOrFail(
+    deck: GameCardSpec[],
+    amount: number,
+  ): GameDrawMutation {
+    const drawMutation: GameDrawMutation = this.calculateDrawMutation(
+      deck,
+      [],
+      amount,
+    );
+
+    if (drawMutation.isDiscardPileEmptied) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unable to calculate draw. Reason: the spec has not enough cards!',
+      );
+    }
+
+    return drawMutation;
   }
 
   #cloneDeck(deck: GameCardSpec[]): GameCardSpec[] {
