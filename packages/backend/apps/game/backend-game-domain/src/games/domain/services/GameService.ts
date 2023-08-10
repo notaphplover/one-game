@@ -16,9 +16,11 @@ import { IsGameFinishedSpec } from '../specs/IsGameFinishedSpec';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
+import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
 import { GameInitialDraws } from '../valueObjects/GameInitialDraws';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
+import { GameDrawService } from './GameDrawService';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
 
@@ -33,15 +35,19 @@ const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 @Injectable()
 export class GameService {
   readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
+  readonly #gameDrawService: GameDrawService;
   readonly #isGameFinishedSpec: IsGameFinishedSpec;
 
   constructor(
     @Inject(AreCardsEqualsSpec)
     areCardsEqualsSpec: AreCardsEqualsSpec,
+    @Inject(GameDrawService)
+    gameDrawService: GameDrawService,
     @Inject(IsGameFinishedSpec)
     isGameFinishedSpec: IsGameFinishedSpec,
   ) {
     this.#areCardsEqualsSpec = areCardsEqualsSpec;
+    this.#gameDrawService = gameDrawService;
     this.#isGameFinishedSpec = isGameFinishedSpec;
   }
 
@@ -238,12 +244,21 @@ export class GameService {
     return nextDiscardPile;
   }
 
-  #countCards(deck: GameCardSpec[]): number {
-    return deck.reduce(
-      (count: number, cardSpec: GameCardSpec): number =>
-        count + cardSpec.amount,
-      0,
-    );
+  #calculateGameDrawMutationFromDeckOrFail(
+    deck: GameCardSpec[],
+    amount: number,
+  ): GameDrawMutation {
+    const drawMutation: GameDrawMutation =
+      this.#gameDrawService.calculateDrawMutation(deck, [], amount);
+
+    if (drawMutation.isDiscardPileEmptied) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unable to start a game. Reason: the game has not enough cards!',
+      );
+    }
+
+    return drawMutation;
   }
 
   #putCardsInDiscardPile(discardPile: GameCardSpec[], cards: Card[]): void {
@@ -275,13 +290,20 @@ export class GameService {
     game: ActiveGame,
     gameUpdateQuery: GameUpdateQuery,
   ): void {
-    const [cardsDrawn, gameDeckCardsSpec, discardPileOrUndefined]:
-      | [Card[], GameCardSpec[]]
-      | [Card[], GameCardSpec[], GameCardSpec[]] =
-      this.#drawCardsFromDeckAndFallBackToDiscardPileIfNecessary(game);
+    const cardsToDraw: number = Math.max(
+      MIN_CARDS_TO_DRAW,
+      game.state.drawCount,
+    );
 
-    if (discardPileOrUndefined !== undefined) {
-      gameUpdateQuery.discardPile = discardPileOrUndefined;
+    const drawMutation: GameDrawMutation =
+      this.#gameDrawService.calculateDrawMutation(
+        game.state.deck,
+        game.state.discardPile,
+        cardsToDraw,
+      );
+
+    if (drawMutation.isDiscardPileEmptied) {
+      gameUpdateQuery.discardPile = [];
     }
 
     const playerSlot: ActiveGameSlot = this.#getGameSlotOrThrow(
@@ -289,10 +311,10 @@ export class GameService {
       game.state.currentPlayingSlotIndex,
     );
 
-    gameUpdateQuery.deck = gameDeckCardsSpec;
+    gameUpdateQuery.deck = drawMutation.deck;
     gameUpdateQuery.gameSlotUpdateQueries = [
       {
-        cards: [...playerSlot.cards, ...cardsDrawn],
+        cards: [...playerSlot.cards, ...drawMutation.cards],
         gameSlotFindQuery: {
           gameId: game.id,
           position: game.state.currentPlayingSlotIndex,
@@ -337,134 +359,6 @@ export class GameService {
         game.state.currentDirection,
       );
     }
-  }
-
-  #drawCards(cards: GameCardSpec[], amount: number): [Card[], GameCardSpec[]] {
-    const gameCards: number = this.#countCards(cards);
-
-    const drawIndexes: number[] = this.#getSortedCardDrawIndexes(
-      gameCards,
-      amount,
-    );
-
-    const cardsAndGameDeck: [Card[], GameCardSpec[]] = this.#getCardsFromDeck(
-      cards,
-      drawIndexes,
-    );
-
-    const [cardsDrawn]: [Card[], GameCardSpec[]] = cardsAndGameDeck;
-
-    if (cardsDrawn.length < amount) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        'Deck has not enough cards to perform this operation',
-      );
-    }
-
-    return cardsAndGameDeck;
-  }
-
-  #drawCardsFromDeckAndFallBackToDiscardPile(
-    game: ActiveGame,
-    amount: number,
-  ): [Card[], GameCardSpec[]] {
-    const deckCards: number = this.#countCards(game.state.deck);
-
-    if (amount <= deckCards) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected error trying to draw cards',
-      );
-    }
-
-    const [cardsFromDeck]: [Card[], GameCardSpec[]] = this.#drawCards(
-      game.state.deck,
-      deckCards,
-    );
-
-    const cardsDrawnAndGameDeck: [Card[], GameCardSpec[]] = this.#drawCards(
-      game.state.discardPile,
-      amount - deckCards,
-    );
-
-    const [cardsDrawn]: [Card[], GameCardSpec[]] = cardsDrawnAndGameDeck;
-
-    cardsDrawn.push(...cardsFromDeck);
-
-    return cardsDrawnAndGameDeck;
-  }
-
-  #drawCardsFromDeckAndFallBackToDiscardPileIfNecessary(
-    game: ActiveGame,
-  ): [Card[], GameCardSpec[]] | [Card[], GameCardSpec[], GameCardSpec[]] {
-    const cardsToDraw: number = Math.max(
-      MIN_CARDS_TO_DRAW,
-      game.state.drawCount,
-    );
-
-    try {
-      const cardsDrawnAndDeck: [Card[], GameCardSpec[]] = this.#drawCards(
-        game.state.deck,
-        cardsToDraw,
-      );
-
-      return cardsDrawnAndDeck;
-    } catch (error: unknown) {
-      if (
-        !AppError.isAppErrorOfKind(error, AppErrorKind.unprocessableOperation)
-      ) {
-        throw error;
-      }
-
-      const cardsDrawnAndDeck: [Card[], GameCardSpec[]] =
-        this.#drawCardsFromDeckAndFallBackToDiscardPile(game, cardsToDraw);
-
-      cardsDrawnAndDeck.push([]);
-
-      return cardsDrawnAndDeck;
-    }
-  }
-
-  #getCardsFromDeck(
-    deckCards: GameCardSpec[],
-    drawIndexes: number[],
-  ): [Card[], GameCardSpec[]] {
-    const cards: Card[] = [];
-    const gameDeckCardSpecsAfterDraw: Writable<GameCardSpec>[] = [
-      ...deckCards.map((cardSpec: GameCardSpec) => ({ ...cardSpec })),
-    ];
-
-    let cardsTraversed: number = 0;
-    const drawIndexesIterator: IterableIterator<number> = drawIndexes.values();
-
-    let drawIndexIteratorResult: IteratorResult<number, unknown> =
-      drawIndexesIterator.next();
-
-    if (drawIndexIteratorResult.done === true) {
-      return [cards, gameDeckCardSpecsAfterDraw];
-    }
-
-    for (const spec of gameDeckCardSpecsAfterDraw) {
-      let currentSpecExtractions: number = 0;
-
-      cardsTraversed += spec.amount;
-
-      while (drawIndexIteratorResult.value < cardsTraversed) {
-        cards.push(spec.card);
-        ++currentSpecExtractions;
-        drawIndexIteratorResult = drawIndexesIterator.next();
-
-        if (drawIndexIteratorResult.done === true) {
-          spec.amount -= currentSpecExtractions;
-
-          return [cards, gameDeckCardSpecsAfterDraw];
-        }
-      }
-
-      spec.amount -= currentSpecExtractions;
-    }
-
-    return [cards, gameDeckCardSpecsAfterDraw];
   }
 
   #getPlayCardsGameUpdateQueryNextCurrentCard(
@@ -525,22 +419,29 @@ export class GameService {
   }
 
   #getInitialCardsDraw(game: NonStartedGame): GameInitialDraws {
-    const [cardsDrawn, gameDeckCardsSpec]: [Card[], GameCardSpec[]] =
-      this.#drawCards(
-        game.spec.cards,
-        INITIAL_CARDS_PER_PLAYER * game.spec.gameSlotsAmount + 1,
-      );
+    const playerCardDraws: Card[][] = [];
+    let gameDeckCardsSpec: GameCardSpec[] = game.spec.cards;
 
-    this.#shuffle(cardsDrawn);
+    for (let i: number = 0; i < game.spec.gameSlotsAmount; ++i) {
+      const drawMutation: GameDrawMutation =
+        this.#calculateGameDrawMutationFromDeckOrFail(
+          gameDeckCardsSpec,
+          INITIAL_CARDS_PER_PLAYER,
+        );
 
-    const currentCard: Card = cardsDrawn.pop() as Card;
+      gameDeckCardsSpec = drawMutation.deck;
+
+      playerCardDraws.push(drawMutation.cards);
+    }
+
+    const currentCardDrawMutation: GameDrawMutation =
+      this.#calculateGameDrawMutationFromDeckOrFail(gameDeckCardsSpec, 1);
+
+    const [currentCard]: [Card] = currentCardDrawMutation.cards as [Card];
 
     return {
       currentCard,
-      playersCards: this.#splitAllInEqualParts(
-        cardsDrawn,
-        game.spec.gameSlotsAmount,
-      ),
+      playersCards: playerCardDraws,
       remainingDeck: gameDeckCardsSpec,
     };
   }
@@ -590,35 +491,6 @@ export class GameService {
     }
   }
 
-  #getSortedCardDrawIndexes(cardsAmount: number, drawAmount: number): number[] {
-    if (drawAmount > cardsAmount) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        'Not enough cards to perform this operation',
-      );
-    }
-
-    const randomIndexes: number[] = new Array<number>(drawAmount);
-
-    for (let i: number = 0; i < drawAmount; ++i) {
-      let randomIndex: number = Math.floor(Math.random() * (cardsAmount - i));
-
-      for (let j: number = 0; j < i; ++j) {
-        const previousRandomIndex: number = randomIndexes[j] as number;
-
-        if (previousRandomIndex >= randomIndex) {
-          randomIndex += 1;
-        }
-      }
-
-      randomIndexes[i] = randomIndex;
-    }
-
-    randomIndexes.sort((i1: number, i2: number) => i1 - i2);
-
-    return randomIndexes;
-  }
-
   #getRandomColor(): CardColor {
     const cardColorArray: CardColor[] = Object.values(CardColor);
 
@@ -634,53 +506,5 @@ export class GameService {
 
   #isSkip(card: Card): card is SkipCard {
     return card.kind === CardKind.skip;
-  }
-
-  #shuffle<T>(array: T[]): void {
-    let pivot: T;
-
-    for (let i: number = array.length - 1; i >= 0; --i) {
-      const randomIndex: number = Math.floor(Math.random() * i);
-
-      pivot = array[randomIndex] as T;
-      array[randomIndex] = array[i] as T;
-      array[i] = pivot;
-    }
-  }
-
-  #splitAllInEqualParts<T>(array: T[], amount: number): T[][] {
-    if (amount <= 0) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected negative split amount',
-      );
-    }
-
-    if (amount !== Math.floor(amount)) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected non integeer split amount',
-      );
-    }
-
-    if (array.length % amount !== 0) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected amount. Expected such an amount that can be equally divided',
-      );
-    }
-
-    const arrayArray: T[][] = [];
-
-    const maxLengthArrayLength: number = array.length / amount;
-
-    for (let i: number = 0; i < amount; ++i) {
-      const start: number = i * maxLengthArrayLength;
-      const end: number = start + maxLengthArrayLength;
-
-      arrayArray.push(array.slice(start, end));
-    }
-
-    return arrayArray;
   }
 }
