@@ -17,12 +17,10 @@ import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
-import { GameInitialDraws } from '../valueObjects/GameInitialDraws';
+import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
 import { GameDrawService } from './GameDrawService';
-
-const INITIAL_CARDS_PER_PLAYER: number = 7;
 
 const MIN_CARDS_TO_DRAW: number = 1;
 
@@ -133,10 +131,11 @@ export class GameService {
   }
 
   public buildStartGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
-    const gameInitialDraws: GameInitialDraws = this.#getInitialCardsDraw(game);
+    const gameInitialDraws: GameInitialDrawsMutation =
+      this.#gameDrawService.calculateInitialCardsDrawMutation(game.spec);
 
     const gameSlotUpdateQueries: GameSlotUpdateQuery[] =
-      gameInitialDraws.playersCards.map(
+      gameInitialDraws.cards.map(
         (cards: Card[], index: number): GameSlotUpdateQuery => ({
           cards: cards,
           gameSlotFindQuery: {
@@ -152,7 +151,7 @@ export class GameService {
       currentDirection: this.#getInitialDirection(),
       currentPlayingSlotIndex: this.#getInitialPlayingSlotIndex(),
       currentTurnCardsPlayed: false,
-      deck: gameInitialDraws.remainingDeck,
+      deck: gameInitialDraws.deck,
       drawCount: this.#getInitialDrawCount(),
       gameFindQuery: {
         id: game.id,
@@ -242,23 +241,6 @@ export class GameService {
     this.#putCardsInDiscardPile(nextDiscardPile, nextCurrentCards);
 
     return nextDiscardPile;
-  }
-
-  #calculateGameDrawMutationFromDeckOrFail(
-    deck: GameCardSpec[],
-    amount: number,
-  ): GameDrawMutation {
-    const drawMutation: GameDrawMutation =
-      this.#gameDrawService.calculateDrawMutation(deck, [], amount);
-
-    if (drawMutation.isDiscardPileEmptied) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unable to start a game. Reason: the game has not enough cards!',
-      );
-    }
-
-    return drawMutation;
   }
 
   #putCardsInDiscardPile(discardPile: GameCardSpec[], cards: Card[]): void {
@@ -416,34 +398,6 @@ export class GameService {
     }
 
     return this.#getRandomColor();
-  }
-
-  #getInitialCardsDraw(game: NonStartedGame): GameInitialDraws {
-    const playerCardDraws: Card[][] = [];
-    let gameDeckCardsSpec: GameCardSpec[] = game.spec.cards;
-
-    for (let i: number = 0; i < game.spec.gameSlotsAmount; ++i) {
-      const drawMutation: GameDrawMutation =
-        this.#calculateGameDrawMutationFromDeckOrFail(
-          gameDeckCardsSpec,
-          INITIAL_CARDS_PER_PLAYER,
-        );
-
-      gameDeckCardsSpec = drawMutation.deck;
-
-      playerCardDraws.push(drawMutation.cards);
-    }
-
-    const currentCardDrawMutation: GameDrawMutation =
-      this.#calculateGameDrawMutationFromDeckOrFail(gameDeckCardsSpec, 1);
-
-    const [currentCard]: [Card] = currentCardDrawMutation.cards as [Card];
-
-    return {
-      currentCard,
-      playersCards: playerCardDraws,
-      remainingDeck: gameDeckCardsSpec,
-    };
   }
 
   #getInitialDirection(): GameDirection {

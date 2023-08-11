@@ -11,12 +11,14 @@ import { ActiveGame } from '../entities/ActiveGame';
 import { NonStartedGame } from '../entities/NonStartedGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameDrawMutationFixtures } from '../fixtures/GameDrawMutationFixtures';
+import { GameInitialDrawsMutationFixtures } from '../fixtures/GameInitialDrawsMutationFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { IsGameFinishedSpec } from '../specs/IsGameFinishedSpec';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameDirection } from '../valueObjects/GameDirection';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
+import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { GameDrawService } from './GameDrawService';
 import { GameService } from './GameService';
@@ -37,6 +39,7 @@ describe(GameService.name, () => {
 
     gameDrawServiceMock = {
       calculateDrawMutation: jest.fn(),
+      calculateInitialCardsDrawMutation: jest.fn(),
     } as Partial<jest.Mocked<GameDrawService>> as jest.Mocked<GameDrawService>;
 
     isGameFinishedSpecMock = {
@@ -661,17 +664,17 @@ describe(GameService.name, () => {
         gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
       });
 
-      describe('when called, and gameDrawServiceMock.calculateDrawMutation() returns a mutation with isDiscardPileEmptied false', () => {
-        let gameDrawMutationFixture: GameDrawMutation;
+      describe('when called', () => {
+        let gameInitialDrawsMutationFixture: GameInitialDrawsMutation;
         let result: unknown;
 
         beforeAll(() => {
-          gameDrawMutationFixture =
-            GameDrawMutationFixtures.withIsDiscardPileEmptiedFalse;
+          gameInitialDrawsMutationFixture =
+            GameInitialDrawsMutationFixtures.withCardsOneCardArray;
 
-          gameDrawServiceMock.calculateDrawMutation
-            .mockReturnValueOnce(gameDrawMutationFixture)
-            .mockReturnValueOnce(gameDrawMutationFixture);
+          gameDrawServiceMock.calculateInitialCardsDrawMutation.mockReturnValueOnce(
+            gameInitialDrawsMutationFixture,
+          );
 
           result = gameService.buildStartGameUpdateQuery(gameFixture);
         });
@@ -680,33 +683,30 @@ describe(GameService.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameDrawService.calculateDrawMutation()', () => {
+        it('should call gameDrawService.calculateInitialCardsDrawMutation()', () => {
           expect(
-            gameDrawServiceMock.calculateDrawMutation,
-          ).toHaveBeenCalledTimes(2);
+            gameDrawServiceMock.calculateInitialCardsDrawMutation,
+          ).toHaveBeenCalledTimes(1);
           expect(
-            gameDrawServiceMock.calculateDrawMutation,
-          ).toHaveBeenNthCalledWith(1, gameFixture.spec.cards, [], 7);
-          expect(
-            gameDrawServiceMock.calculateDrawMutation,
-          ).toHaveBeenNthCalledWith(2, gameDrawMutationFixture.deck, [], 1);
+            gameDrawServiceMock.calculateInitialCardsDrawMutation,
+          ).toHaveBeenCalledWith(gameFixture.spec);
         });
 
         it('should return a GameUpdateQuery', () => {
           const expectedGameUpdateQueryProperties: Partial<GameUpdateQuery> = {
-            currentCard: gameDrawMutationFixture.cards[0] as Card,
+            currentCard: gameInitialDrawsMutationFixture.currentCard,
             currentColor: expect.any(String) as unknown as CardColor,
             currentDirection: GameDirection.antiClockwise,
             currentPlayingSlotIndex: 0,
             currentTurnCardsPlayed: false,
-            deck: gameDrawMutationFixture.deck,
+            deck: gameInitialDrawsMutationFixture.deck,
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
             },
             gameSlotUpdateQueries: [
               {
-                cards: gameDrawMutationFixture.cards,
+                cards: gameInitialDrawsMutationFixture.cards[0] as Card[],
                 gameSlotFindQuery: {
                   gameId: gameFixture.id,
                   position: 0,
@@ -718,48 +718,6 @@ describe(GameService.name, () => {
 
           expect(result).toStrictEqual(
             expect.objectContaining(expectedGameUpdateQueryProperties),
-          );
-        });
-      });
-
-      describe('when called, and gameDrawServiceMock.calculateDrawMutation() returns a mutation with isDiscardPileEmptied true', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          gameDrawServiceMock.calculateDrawMutation.mockReturnValueOnce(
-            GameDrawMutationFixtures.withIsDiscardPileEmptiedTrue,
-          );
-
-          try {
-            gameService.buildStartGameUpdateQuery(gameFixture);
-          } catch (error) {
-            result = error;
-          }
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should call gameDrawService.calculateDrawMutation()', () => {
-          expect(
-            gameDrawServiceMock.calculateDrawMutation,
-          ).toHaveBeenCalledTimes(1);
-          expect(
-            gameDrawServiceMock.calculateDrawMutation,
-          ).toHaveBeenCalledWith(gameFixture.spec.cards, [], 7);
-        });
-
-        it('should throw an Error', () => {
-          const expectedErrorProperties: Partial<AppError> = {
-            kind: AppErrorKind.unknown,
-            message:
-              'Unable to start a game. Reason: the game has not enough cards!',
-          };
-
-          expect(result).toBeInstanceOf(AppError);
-          expect(result).toStrictEqual(
-            expect.objectContaining(expectedErrorProperties),
           );
         });
       });

@@ -1,8 +1,8 @@
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { GameCardSpec } from './GameCardSpec';
 
-export interface GameInitialDraws {
+export interface GameInitialDrawsMutation {
   currentCard: Card;
-  playersCards: Card[][];
-  remainingDeck: GameCardSpec[];
+  cards: Card[][];
+  deck: GameCardSpec[];
 }
