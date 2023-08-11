@@ -40,7 +40,15 @@ pnpm run migrations:run
 
 Don't worry, build tasks are cached through `turbo`.
 
-6. Launch services. On the root folder of the monorepo, launch the `serve` script:
+6. Generate a certificate to be used by the dev proxy server.
+
+To accomplish that, go to `packages/backend/tools/backend-dev-proxy` and run the following command:
+
+```
+openssl req -x509 -newkey rsa:4096 -keyout ssl/localhost.key.pem -out ssl/localhost.cert.pem -sha256 -days 3650 -nodes -subj "/CN=Dev proxy certificate"
+```
+
+7. Launch services. On the root folder of the monorepo, launch the `serve` script:
 
 ```
 pnpm run serve

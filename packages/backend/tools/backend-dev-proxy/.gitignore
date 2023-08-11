@@ -1,1 +1,4 @@
 /.env
+
+/ssl/localhost.cert.pem
+/ssl/localhost.key.pem
