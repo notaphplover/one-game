@@ -1,9 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../utils/typeorm/isQueryBuilder');
+
 import { Converter, ConverterAsync } from '@cornie-js/backend-common';
 import { FindManyOptions, InsertResult, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 interface ModelTest {
@@ -95,6 +98,7 @@ describe(InsertTypeOrmService.name, () => {
 
         typeOrmQueryFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
         (
@@ -175,6 +179,7 @@ describe(InsertTypeOrmService.name, () => {
 
         typeOrmQueryFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
         (
@@ -225,6 +230,7 @@ describe(InsertTypeOrmService.name, () => {
           identifiers: [{ id: 'sample-id' }],
         } as Partial<InsertResult> as InsertResult;
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
         (
@@ -291,6 +297,7 @@ describe(InsertTypeOrmService.name, () => {
 
         typeOrmQueryFixture = [{}];
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
         (
@@ -373,6 +380,7 @@ describe(InsertTypeOrmService.name, () => {
 
         typeOrmQueryFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
         repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
         (

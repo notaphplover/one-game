@@ -1,5 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../utils/typeorm/findManyOptionsToFindOptionsWhere');
+jest.mock('../../utils/typeorm/isQueryBuilder');
+
 import { ConverterAsync } from '@cornie-js/backend-common';
 import {
   FindManyOptions,
@@ -11,10 +14,9 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-jest.mock('../../utils/typeorm/findManyOptionsToFindOptionsWhere');
-
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 import { UpdateTypeOrmService } from './UpdateTypeOrmService';
 
 interface ModelTest {
@@ -94,6 +96,7 @@ describe(UpdateTypeOrmService.name, () => {
           foo: 'sample-string-modified',
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         (
           updateQueryToFindQueryTypeOrmConverterMock.convert as jest.Mock<
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
@@ -163,6 +166,7 @@ describe(UpdateTypeOrmService.name, () => {
           foo: 'sample-string-modified',
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(true);
         (
           updateQueryToFindQueryTypeOrmConverterMock.convert as jest.Mock<
             (
