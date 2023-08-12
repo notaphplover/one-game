@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../utils/typeorm/isQueryBuilder');
+
 import { Converter, ConverterAsync } from '@cornie-js/backend-common';
 import {
   FindManyOptions,
@@ -10,6 +12,7 @@ import {
 } from 'typeorm';
 
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 import { FindTypeOrmService } from './FindTypeOrmService';
 
 interface ModelTest {
@@ -33,18 +36,13 @@ describe(FindTypeOrmService.name, () => {
   let findTypeOrmService: FindTypeOrmService<ModelTest, ModelTest, QueryTest>;
 
   beforeAll(() => {
-    queryBuilderMock = Object.assign(
-      Object.create(
-        SelectQueryBuilder.prototype,
-      ) as SelectQueryBuilder<ModelTest>,
-      {
-        getMany: jest.fn(),
-        getOne: jest.fn(),
-        select: jest.fn().mockReturnThis(),
-      } as Partial<jest.Mocked<SelectQueryBuilder<ModelTest>>> as jest.Mocked<
-        SelectQueryBuilder<ModelTest>
-      >,
-    );
+    queryBuilderMock = {
+      getMany: jest.fn(),
+      getOne: jest.fn(),
+      select: jest.fn().mockReturnThis(),
+    } as Partial<jest.Mocked<SelectQueryBuilder<ModelTest>>> as jest.Mocked<
+      SelectQueryBuilder<ModelTest>
+    >;
 
     repositoryMock = {
       createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
@@ -94,6 +92,7 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         (
           modelDbToModelConverterMock as jest.Mocked<
             ConverterAsync<ModelTest, ModelTest>
@@ -151,6 +150,7 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         (
           modelDbToModelConverterMock as jest.Mocked<
             ConverterAsync<ModelTest, ModelTest>
@@ -190,6 +190,7 @@ describe(FindTypeOrmService.name, () => {
           fooValue: 'bar',
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(true);
         (
           modelDbToModelConverterMock as jest.Mocked<
             ConverterAsync<ModelTest, ModelTest>
@@ -233,6 +234,7 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
@@ -288,6 +290,7 @@ describe(FindTypeOrmService.name, () => {
         };
         queryTypeOrmFixture = {};
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         (
           modelDbToModelConverterMock as jest.Mocked<
             ConverterAsync<ModelTest, ModelTest>
@@ -347,6 +350,7 @@ describe(FindTypeOrmService.name, () => {
           fooValue: 'bar',
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(true);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (
@@ -401,6 +405,7 @@ describe(FindTypeOrmService.name, () => {
           fooValue: 'bar',
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(true);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (

@@ -1,5 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../utils/typeorm/findManyOptionsToFindOptionsWhere');
+jest.mock('../../utils/typeorm/isQueryBuilder');
+
 import {
   FindManyOptions,
   FindOptionsWhere,
@@ -8,10 +11,9 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-jest.mock('../../utils/typeorm/findManyOptionsToFindOptionsWhere');
-
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 import { DeleteTypeOrmService } from './DeleteTypeOrmService';
 
 interface ModelTest {
@@ -79,6 +81,7 @@ describe(DeleteTypeOrmService.name, () => {
           where: findOptionsWhereFixture,
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
@@ -141,6 +144,7 @@ describe(DeleteTypeOrmService.name, () => {
           fooValue: 'foo-value',
         };
 
+        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(true);
         (
           queryToQueryTypeOrmConverterMock.convert as jest.Mock<
             (

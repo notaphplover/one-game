@@ -10,6 +10,7 @@ import {
 
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
 import { QueryWithQueryBuilderToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryWithQueryBuilderToFindQueryTypeOrmConverter';
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 
 export class FindTypeOrmService<
   TModel,
@@ -114,7 +115,7 @@ export class FindTypeOrmService<
 
     let outputDb: TOutputDb;
 
-    if (findQueryTypeOrmOrQueryBuilder instanceof QueryBuilder) {
+    if (isQueryBuilder<TModelDb>(findQueryTypeOrmOrQueryBuilder)) {
       outputDb = await findByQueryBuilder(
         findQueryTypeOrmOrQueryBuilder as SelectQueryBuilder<TModelDb>,
       );
