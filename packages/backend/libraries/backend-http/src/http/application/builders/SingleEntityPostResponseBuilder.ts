@@ -2,11 +2,11 @@ import httpStatusCodes from 'http-status-codes';
 
 import { Response } from '../models/Response';
 import { ResponseWithBody } from '../models/ResponseWithBody';
-import { ResponseBuilder } from './ResponseBuilder';
+import { JsonResponseBuilder } from './JsonResponseBuilder';
 
-export class SingleEntityPostResponseBuilder<TModel> extends ResponseBuilder<
-  [TModel | undefined]
-> {
+export class SingleEntityPostResponseBuilder<
+  TModel,
+> extends JsonResponseBuilder<[TModel | undefined]> {
   public build(
     model: TModel | undefined,
   ): Response | ResponseWithBody<unknown> {

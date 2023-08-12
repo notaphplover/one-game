@@ -2,9 +2,9 @@ import httpStatusCodes from 'http-status-codes';
 
 import { Response } from '../models/Response';
 import { ResponseWithBody } from '../models/ResponseWithBody';
-import { ResponseBuilder } from './ResponseBuilder';
+import { JsonResponseBuilder } from './JsonResponseBuilder';
 
-export class SingleEntityGetResponseBuilder<TModel> extends ResponseBuilder<
+export class SingleEntityGetResponseBuilder<TModel> extends JsonResponseBuilder<
   [TModel | undefined]
 > {
   public build(

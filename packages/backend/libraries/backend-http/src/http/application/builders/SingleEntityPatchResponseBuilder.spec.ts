@@ -30,7 +30,7 @@ describe(SingleEntityPatchResponseBuilder.name, () => {
 
         it('should return a Response', () => {
           const expected: Response = {
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'content-type': 'application/json' },
             statusCode: httpStatusCodes.NO_CONTENT,
           };
 
@@ -56,7 +56,7 @@ describe(SingleEntityPatchResponseBuilder.name, () => {
         it('should return a Response', () => {
           const expected: ResponseWithBody<unknown> = {
             body: modelFixture,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'content-type': 'application/json' },
             statusCode: httpStatusCodes.OK,
           };
 
