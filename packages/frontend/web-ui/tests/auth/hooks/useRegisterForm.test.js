@@ -9,11 +9,13 @@ describe('Testing in hook useRegisterForm', () => {
       password: '',
       confirmPassword: '',
     };
+
     const { result } = renderHook(() => useRegisterForm(initialForm));
+
     const { formState, isFormValid } = result.current;
 
     expect(formState.name).toBe('');
-    expect(isFormValid).toBeFalsy();
+    expect(isFormValid).toBe(false);
   });
 
   test('should invalid email and  invalid confirm password', () => {
