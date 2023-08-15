@@ -11,6 +11,8 @@ export interface Environment {
   jwtPrivateKey: string;
   jwtPublicKey: string;
   port: number;
+  pubSubRedisHost: string;
+  pubSubRedisPort: number;
   seedDummyData: boolean;
   typeOrmDatasourceOptions: Record<string, unknown>;
 }
