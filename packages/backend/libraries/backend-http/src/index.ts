@@ -8,6 +8,7 @@ import { FastifyReplyFromResponseBuilder } from './http/adapter/fastify/builders
 import { RequestFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestFromFastifyRequestBuilder';
 import { RequestWithBodyFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestWithBodyFromFastifyRequestBuilder';
 import { HttpNestFastifyController } from './http/adapter/nest/controllers/HttpNestFastifyController';
+import { HttpNestFastifySseController } from './http/adapter/nest/controllers/HttpNestFastifySseController';
 import { ErrorV1ResponseFromErrorBuilder } from './http/application/builders/ErrorV1ResponseFromErrorBuilder';
 import { MultipleEntitiesGetResponseBuilder } from './http/application/builders/MultipleEntitiesGetResponseBuilder';
 import { SingleEntityDeleteResponseBuilder } from './http/application/builders/SingleEntityDeleteResponseBuilder';
@@ -23,6 +24,9 @@ import { Response } from './http/application/models/Response';
 import { ResponseWithBody } from './http/application/models/ResponseWithBody';
 import { Middleware } from './http/application/modules/Middleware';
 import { MiddlewarePipeline } from './http/application/modules/MiddlewarePipeline';
+import { SseConsumer } from './http/application/modules/SseConsumer';
+import { SsePublisher } from './http/application/modules/SsePublisher';
+import { SseTeardownExecutor } from './http/application/modules/SseTeardownExecutor';
 import { AuthMiddleware } from './user/application/middleware/AuthMiddleware';
 import { UserManagementInputPort } from './user/application/ports/input/UserManagementInputPort';
 
@@ -37,6 +41,8 @@ export type {
   RequestWithBody,
   Response,
   ResponseWithBody,
+  SseConsumer,
+  SseTeardownExecutor,
   UserAuth,
   UserManagementInputPort,
 };
@@ -47,6 +53,7 @@ export {
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
+  HttpNestFastifySseController,
   HttpRequestController,
   MiddlewarePipeline,
   MultipleEntitiesGetResponseBuilder,
@@ -57,4 +64,5 @@ export {
   SingleEntityGetResponseBuilder,
   SingleEntityPatchResponseBuilder,
   SingleEntityPostResponseBuilder,
+  SsePublisher,
 };
