@@ -6,11 +6,11 @@
   "description": "Backend game domain package",
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
-    "@nestjs/common": "10.2.0"
+    "@nestjs/common": "10.2.1"
   },
   "devDependencies": {
     "@jest/globals": "29.6.3",
-    "@types/node": "18.17.6",
+    "@types/node": "18.17.7",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
     "eslint": "8.47.0",
