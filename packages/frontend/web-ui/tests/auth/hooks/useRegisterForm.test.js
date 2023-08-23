@@ -18,7 +18,7 @@ describe('Testing in hook useRegisterForm', () => {
     expect(isFormValid).toBe(false);
   });
 
-  test('should invalid email and  invalid confirm password', () => {
+  test('should invalid email and invalid confirm password', () => {
     const initialForm = {
       name: 'Mariote',
       email: 'marioAgmail.com',
@@ -46,6 +46,6 @@ describe('Testing in hook useRegisterForm', () => {
     const { result } = renderHook(() => useRegisterForm(initialForm));
     const { isFormValid } = result.current;
 
-    expect(isFormValid).toBeTruthy();
+    expect(isFormValid).toBe(true);
   });
 });

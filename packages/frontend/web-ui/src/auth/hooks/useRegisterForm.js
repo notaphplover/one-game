@@ -12,10 +12,7 @@ export const useRegisterForm = (initialForm = {}) => {
   const [formValidation, setFormValidation] = useState({});
 
   const isFormValid = useMemo(() => {
-    for (const formValue of Object.keys(formValidation)) {
-      if (formValidation[formValue] !== null) return false;
-    }
-    return true;
+    return Object.values(formValidation).length === 0;
   });
 
   useEffect(() => {
@@ -31,13 +28,13 @@ export const useRegisterForm = (initialForm = {}) => {
   };
 
   const createValidators = () => {
-    const formCheckedValues = {};
+    const formValidationValue = {};
 
-    validateFormName(formCheckedValues, formState.name);
-    validateFormEmail(formCheckedValues, formState.email);
-    validateFormPassword(formCheckedValues, formState.password);
+    validateFormName(formValidationValue, formState.name);
+    validateFormEmail(formValidationValue, formState.email);
+    validateFormPassword(formValidationValue, formState.password);
     validateFormConfirmPassword(
-      formCheckedValues,
+      formValidationValue,
       formState.password,
       formState.confirmPassword,
     );
