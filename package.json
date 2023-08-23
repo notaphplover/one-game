@@ -17,7 +17,7 @@
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
     "lint-staged": "14.0.1",
-    "turbo": "1.10.12"
+    "turbo": "1.10.13"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
