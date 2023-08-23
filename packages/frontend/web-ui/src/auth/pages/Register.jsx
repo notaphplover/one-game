@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Alert,
@@ -15,66 +14,53 @@ import { useRegisterForm } from '../hooks';
 import { useShowPassword } from '../../common/hooks';
 import { RegisterLayout } from '../layout/RegisterLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
-import { httpClient } from '../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
-
-const STATUS_FULFILLED = 'fulfilled';
-const STATUS_IDLE = 'idle';
-const STATUS_PENDING = 'pending';
 
 export const Register = () => {
-  const { formState, onInputChange, formValidation, isFormValid } =
-    useRegisterForm({
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
+  const {
+    backendError,
+    formFields,
+    formStatus,
+    formValidation,
+    notifyFormFieldsFilled,
+    setFormField,
+    STATUS_REG_BACKEND_OK,
+    STATUS_REG_PENDING_BACKEND,
+    STATUS_REG_PENDING_VAL,
+  } = useRegisterForm({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
-
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [status, setStatus] = useState(STATUS_IDLE);
-  const [error, setError] = useState('');
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    setFormSubmitted(true);
-
-    if (isFormValid) {
-      setStatus(STATUS_PENDING);
-      setError('');
-
-      const response = await fetchCreateUser(formState);
-
-      if (response.statusCode === 200) {
-        setStatus(STATUS_FULFILLED);
-        setFormSubmitted(false);
-      } else if (response.statusCode === 409) {
-        setStatus(STATUS_IDLE);
-        setError(`The user already exists.`);
-      } else {
-        setStatus(STATUS_IDLE);
-        setError(`Ups... Something strange happened. Try again?`);
-      }
-    }
+    notifyFormFieldsFilled();
   };
 
-  const fetchCreateUser = async ({ email, name, password }) => {
-    const response = await httpClient.createUser(
-      {},
-      {
-        email: email,
-        name: name,
-        password: password,
-      },
+  const isTextFieldDisabled = () => {
+    return (
+      formStatus === STATUS_REG_BACKEND_OK ||
+      formStatus === STATUS_REG_PENDING_BACKEND ||
+      formStatus === STATUS_REG_PENDING_VAL
     );
-
-    return buildSerializableResponse(response);
   };
 
-  if (status === STATUS_PENDING) {
+  const isShowPasswordButtonDisabled = () => {
+    return (
+      formStatus === STATUS_REG_BACKEND_OK ||
+      formStatus === STATUS_REG_PENDING_BACKEND ||
+      formStatus === STATUS_REG_PENDING_VAL
+    );
+  };
+
+  if (
+    formStatus === STATUS_REG_PENDING_VAL ||
+    formStatus === STATUS_REG_PENDING_BACKEND
+  ) {
     return <CheckingAuth />;
   }
 
@@ -94,54 +80,42 @@ export const Register = () => {
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               autoFocus
-              disabled={status == STATUS_FULFILLED ? true : false}
+              disabled={isTextFieldDisabled()}
               label="Alias"
               type="text"
               placeholder="alias"
               fullWidth
               name="name"
-              value={formState.name}
-              onChange={onInputChange}
-              error={
-                formValidation.nameValidationError !== null && formSubmitted
-              }
-              helperText={
-                formValidation.nameValidationError &&
-                formSubmitted &&
-                formValidation.nameValidationError
-              }
+              value={formFields.name}
+              onChange={setFormField}
+              error={formValidation.nameValidationError !== undefined}
+              helperText={formValidation.nameValidationError}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              disabled={status == STATUS_FULFILLED ? true : false}
+              disabled={isTextFieldDisabled()}
               label="Email"
               type="email"
               placeholder="mail@example.com"
               fullWidth
               name="email"
-              value={formState.email}
-              onChange={onInputChange}
-              error={
-                formValidation.emailValidationError !== null && formSubmitted
-              }
-              helperText={
-                formValidation.emailValidationError &&
-                formSubmitted &&
-                formValidation.emailValidationError
-              }
+              value={formFields.email}
+              onChange={setFormField}
+              error={formValidation.emailValidationError !== undefined}
+              helperText={formValidation.emailValidationError}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              disabled={status == STATUS_FULFILLED ? true : false}
+              disabled={isTextFieldDisabled()}
               label="Password"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      disabled={status == STATUS_FULFILLED ? true : false}
+                      disabled={isShowPasswordButtonDisabled()}
                       color="primary"
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
@@ -156,28 +130,22 @@ export const Register = () => {
               placeholder="******"
               fullWidth
               name="password"
-              value={formState.password}
-              onChange={onInputChange}
-              error={
-                formValidation.passwordValidationError !== null && formSubmitted
-              }
-              helperText={
-                formValidation.passwordValidationError &&
-                formSubmitted &&
-                formValidation.passwordValidationError
-              }
+              value={formFields.password}
+              onChange={setFormField}
+              error={formValidation.passwordValidationError !== undefined}
+              helperText={formValidation.passwordValidationError}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              disabled={status == STATUS_FULFILLED ? true : false}
+              disabled={isTextFieldDisabled()}
               label="Confirm Password"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      disabled={status == STATUS_FULFILLED ? true : false}
+                      disabled={isShowPasswordButtonDisabled()}
                       color="primary"
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
@@ -192,28 +160,26 @@ export const Register = () => {
               placeholder="******"
               fullWidth
               name="confirmPassword"
-              value={formState.confirmPassword}
-              onChange={onInputChange}
+              value={formFields.confirmPassword}
+              onChange={setFormField}
               error={
-                formValidation.confirmPasswordValidationError !== null &&
-                formSubmitted
+                formValidation.confirmPasswordValidationError !== undefined
               }
-              helperText={
-                formValidation.confirmPasswordValidationError &&
-                formSubmitted &&
-                formValidation.confirmPasswordValidationError
-              }
+              helperText={formValidation.confirmPasswordValidationError}
             />
           </Grid>
         </Grid>
 
-        <Grid container display={error !== '' ? '' : 'none'}>
+        <Grid container display={backendError !== null ? '' : 'none'}>
           <Grid item xs={12} sx={{ mt: 3 }}>
-            <Alert severity="error">{error}</Alert>
+            <Alert severity="error">{backendError}</Alert>
           </Grid>
         </Grid>
 
-        <Grid container display={status === STATUS_FULFILLED ? '' : 'none'}>
+        <Grid
+          container
+          display={formStatus === STATUS_REG_BACKEND_OK ? '' : 'none'}
+        >
           <Grid item xs={12} sx={{ mt: 3 }}>
             <Alert severity="success">{`User created! We sent an email, please, complete the steps.`}</Alert>
           </Grid>
@@ -232,7 +198,7 @@ export const Register = () => {
         >
           <Grid item xs={12} sm={12}>
             <Button
-              disabled={status === STATUS_FULFILLED ? true : false}
+              disabled={formStatus === STATUS_REG_BACKEND_OK ? true : false}
               type="submit"
               variant="contained"
               fullWidth
