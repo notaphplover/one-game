@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   validateFormName,
   validateFormEmail,
@@ -81,7 +81,7 @@ export const useRegisterForm = (initialFormFields = {}) => {
 
   const createUser = async (formFields) => {
     if (formStatus !== STATUS_REG_PENDING_BACKEND) {
-      throw new Error('Unexpected form state at validateFormFields');
+      throw new Error('Unexpected form state at createUser');
     }
 
     const response = await fetchCreateUser(formFields);
