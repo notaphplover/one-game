@@ -5,35 +5,32 @@ import { Subscriber } from '../../application/Subscriber';
 export abstract class IoredisSubscriber<TContext = void>
   implements Subscriber<TContext>
 {
-  private readonly channelToContextMap: Map<string, TContext>;
+  readonly #redisClient: Redis;
 
-  constructor(private readonly redisClient: Redis) {
-    this.channelToContextMap = new Map<string, TContext>();
+  constructor(redisClient: Redis) {
+    this.#redisClient = redisClient;
 
-    this.redisClient.on(
-      'message',
-      (channel: string, message: string): void =>
-        void this.handleMessageFromChannel(
-          channel,
-          message,
-          this.channelToContextMap.get(channel) as TContext,
-        ),
-    );
+    this.#handleMessages();
   }
 
-  public async subscribe(channel: string, context: TContext): Promise<void> {
-    this.channelToContextMap.set(channel, context);
-
-    await this.redisClient.subscribe(channel);
+  public async subscribe(channel: string, _context: TContext): Promise<void> {
+    await this.#redisClient.subscribe(channel);
   }
 
   public async unsubscribe(channel: string): Promise<void> {
-    await this.redisClient.unsubscribe(channel);
+    await this.#redisClient.unsubscribe(channel);
+  }
+
+  #handleMessages(): void {
+    this.#redisClient.on(
+      'message',
+      (channel: string, message: string): void =>
+        void this.handleMessageFromChannel(channel, message),
+    );
   }
 
   protected abstract handleMessageFromChannel(
     channel: string,
     message: string,
-    context: TContext,
   ): Promise<void>;
 }
