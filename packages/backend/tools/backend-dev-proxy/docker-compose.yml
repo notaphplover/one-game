@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   proxy:
-    image: nginx:1.25.1-alpine
+    image: nginx:1.25.2-alpine
     environment:
       - USER_SERVICE_BASE_URL=${USER_SERVICE_BASE_URL}
       - GAME_SERVICE_BASE_URL=${GAME_SERVICE_BASE_URL}
@@ -11,4 +11,6 @@ services:
     volumes:
       - ./templates:/etc/nginx/templates
       - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/conf.d/locations.conf:/etc/nginx/conf.d/locations.conf
       - ./config/conf.d/redirect-headers.conf:/etc/nginx/conf.d/redirect-headers.conf
+      - ./ssl:/etc/ssl

@@ -1,3 +1,7 @@
+/**
+ * @param {Object} formChecked
+ * @param {String} password
+ */
 export const validateFormPassword = (formChecked, password) => {
   const varValidationError = 'ValidationError';
 
@@ -6,6 +10,4 @@ export const validateFormPassword = (formChecked, password) => {
       `password${varValidationError}`
     ] = `The password's length must be larger than five characters.`;
   }
-
-  return formChecked;
 };

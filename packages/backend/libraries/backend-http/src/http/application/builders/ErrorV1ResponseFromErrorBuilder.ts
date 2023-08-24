@@ -3,10 +3,10 @@ import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import httpStatusCodes from 'http-status-codes';
 
 import { ResponseWithBody } from '../models/ResponseWithBody';
-import { ResponseBuilder } from './ResponseBuilder';
+import { JsonResponseBuilder } from './JsonResponseBuilder';
 
 export class ErrorV1ResponseFromErrorBuilder
-  extends ResponseBuilder<[unknown]>
+  extends JsonResponseBuilder<[unknown]>
   implements Builder<ResponseWithBody<apiModels.ErrorV1>, [unknown]>
 {
   public build(error: unknown): ResponseWithBody<apiModels.ErrorV1> {

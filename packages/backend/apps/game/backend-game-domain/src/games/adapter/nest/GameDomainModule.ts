@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { CardDomainModule } from '../../../cards/adapter/nest/CardDomainModule';
+import { GameDrawService } from '../../domain/services/GameDrawService';
 import { GameService } from '../../domain/services/GameService';
 import { CardCanBePlayedSpec } from '../../domain/specs/CardCanBePlayedSpec';
 import { CurrentPlayerCanPlayCardsSpec } from '../../domain/specs/CurrentPlayerCanPlayCardsSpec';
@@ -22,6 +23,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
   ],
   imports: [CardDomainModule],
   providers: [
+    GameDrawService,
     GameService,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,

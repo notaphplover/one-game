@@ -10,6 +10,7 @@ import {
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
 import { QueryWithQueryBuilderToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryWithQueryBuilderToFindQueryTypeOrmConverter';
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 
 export class DeleteTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
   readonly #repository: Repository<TModelDb>;
@@ -44,7 +45,7 @@ export class DeleteTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
       >
     ).convert(query, deleteQueryBuilder);
 
-    if (findQueryTypeOrmOrQueryBuilder instanceof QueryBuilder) {
+    if (isQueryBuilder<TModelDb>(findQueryTypeOrmOrQueryBuilder)) {
       await (
         findQueryTypeOrmOrQueryBuilder as DeleteQueryBuilder<TModelDb>
       ).execute();

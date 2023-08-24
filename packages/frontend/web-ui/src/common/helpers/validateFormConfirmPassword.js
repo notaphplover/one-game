@@ -1,3 +1,8 @@
+/**
+ * @param {Object} formChecked
+ * @param {String} password
+ * @param {String} confirmPassword
+ */
 export const validateFormConfirmPassword = (
   formChecked,
   password,
@@ -9,11 +14,9 @@ export const validateFormConfirmPassword = (
     formChecked[
       `confirmPassword${varValidationError}`
     ] = `The confirm password's length must be larger than five characters.`;
-  } else if (password !== confirmPassword) {
+  } else if (password.trim() !== confirmPassword.trim()) {
     formChecked[
       `confirmPassword${varValidationError}`
     ] = `The confirm password must be equal than the password.`;
   }
-
-  return formChecked;
 };

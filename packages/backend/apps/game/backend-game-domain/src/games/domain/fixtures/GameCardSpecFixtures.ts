@@ -16,6 +16,13 @@ export class GameCardSpecFixtures {
     };
   }
 
+  public static get withAmount4(): GameCardSpec {
+    return {
+      ...GameCardSpecFixtures.any,
+      amount: 4,
+    };
+  }
+
   public static get withAmount120(): GameCardSpec {
     return {
       ...GameCardSpecFixtures.any,

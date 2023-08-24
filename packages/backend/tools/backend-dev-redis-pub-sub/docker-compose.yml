@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  pubSub:
+    image: redis:7-alpine
+    network_mode: 'host'
+    ports:
+      - 6379:6379

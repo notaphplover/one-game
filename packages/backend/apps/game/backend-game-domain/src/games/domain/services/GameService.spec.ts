@@ -10,17 +10,22 @@ import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
 import { ActiveGame } from '../entities/ActiveGame';
 import { NonStartedGame } from '../entities/NonStartedGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
+import { GameDrawMutationFixtures } from '../fixtures/GameDrawMutationFixtures';
+import { GameInitialDrawsMutationFixtures } from '../fixtures/GameInitialDrawsMutationFixtures';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { IsGameFinishedSpec } from '../specs/IsGameFinishedSpec';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
-import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
+import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
+import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
 import { GameStatus } from '../valueObjects/GameStatus';
+import { GameDrawService } from './GameDrawService';
 import { GameService } from './GameService';
 
 describe(GameService.name, () => {
   let areCardsEqualsSpecMock: jest.Mocked<AreCardsEqualsSpec>;
+  let gameDrawServiceMock: jest.Mocked<GameDrawService>;
   let isGameFinishedSpecMock: jest.Mocked<IsGameFinishedSpec>;
 
   let gameService: GameService;
@@ -32,6 +37,11 @@ describe(GameService.name, () => {
       jest.Mocked<AreCardsEqualsSpec>
     > as jest.Mocked<AreCardsEqualsSpec>;
 
+    gameDrawServiceMock = {
+      calculateDrawMutation: jest.fn(),
+      calculateInitialCardsDrawMutation: jest.fn(),
+    } as Partial<jest.Mocked<GameDrawService>> as jest.Mocked<GameDrawService>;
+
     isGameFinishedSpecMock = {
       isSatisfiedBy: jest.fn(),
     } as Partial<
@@ -40,15 +50,14 @@ describe(GameService.name, () => {
 
     gameService = new GameService(
       areCardsEqualsSpecMock,
+      gameDrawServiceMock,
       isGameFinishedSpecMock,
     );
   });
 
   describe('.buildPassTurnGameUpdateQuery', () => {
-    describe('having a Game with two players and enough cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 0', () => {
+    describe('having a Game with two players currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 0', () => {
       let gameFixture: ActiveGame;
-
-      let deckCardSpec: GameCardSpec;
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
@@ -63,14 +72,17 @@ describe(GameService.name, () => {
             drawCount: 0,
           },
         };
-
-        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
+        let gameDrawMutationFixture: GameDrawMutation;
         let result: unknown;
 
         beforeAll(() => {
+          gameDrawMutationFixture = GameDrawMutationFixtures.any;
+          gameDrawServiceMock.calculateDrawMutation.mockReturnValueOnce(
+            gameDrawMutationFixture,
+          );
           isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
 
           result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
@@ -78,6 +90,19 @@ describe(GameService.name, () => {
 
         afterAll(() => {
           jest.clearAllMocks();
+        });
+
+        it('should call gameDrawService.calculateDrawMutation()', () => {
+          expect(
+            gameDrawServiceMock.calculateDrawMutation,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameDrawServiceMock.calculateDrawMutation,
+          ).toHaveBeenCalledWith(
+            gameFixture.state.deck,
+            gameFixture.state.discardPile,
+            1,
+          );
         });
 
         it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
@@ -97,12 +122,7 @@ describe(GameService.name, () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentPlayingSlotIndex: 0,
             currentTurnCardsPlayed: false,
-            deck: [
-              {
-                amount: deckCardSpec.amount - 1,
-                card: deckCardSpec.card,
-              },
-            ],
+            deck: gameDrawMutationFixture.deck,
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
@@ -113,7 +133,10 @@ describe(GameService.name, () => {
             },
             gameSlotUpdateQueries: [
               {
-                cards: [...currentPlayingGameSlotCards, deckCardSpec.card],
+                cards: [
+                  ...currentPlayingGameSlotCards,
+                  ...gameDrawMutationFixture.cards,
+                ],
                 gameSlotFindQuery: {
                   gameId: gameFixture.id,
                   position: gameFixture.state.currentPlayingSlotIndex,
@@ -130,8 +153,6 @@ describe(GameService.name, () => {
     describe('having a Game with two players and enough cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 2', () => {
       let gameFixture: ActiveGame;
 
-      let deckCardSpec: GameCardSpec;
-
       beforeAll(() => {
         const baseFixture: ActiveGame =
           ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
@@ -145,21 +166,38 @@ describe(GameService.name, () => {
             drawCount: 2,
           },
         };
-
-        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
+        let gameDrawMutationFixture: GameDrawMutation;
         let result: unknown;
 
         beforeAll(() => {
+          gameDrawMutationFixture = GameDrawMutationFixtures.any;
+
           isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+          gameDrawServiceMock.calculateDrawMutation.mockReturnValueOnce(
+            gameDrawMutationFixture,
+          );
 
           result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
         });
 
         afterAll(() => {
           jest.clearAllMocks();
+        });
+
+        it('should call gameDrawService.calculateDrawMutation()', () => {
+          expect(
+            gameDrawServiceMock.calculateDrawMutation,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameDrawServiceMock.calculateDrawMutation,
+          ).toHaveBeenCalledWith(
+            gameFixture.state.deck,
+            gameFixture.state.discardPile,
+            gameFixture.state.drawCount,
+          );
         });
 
         it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
@@ -179,12 +217,7 @@ describe(GameService.name, () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentPlayingSlotIndex: 0,
             currentTurnCardsPlayed: false,
-            deck: [
-              {
-                amount: deckCardSpec.amount - 2,
-                card: deckCardSpec.card,
-              },
-            ],
+            deck: gameDrawMutationFixture.deck,
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
@@ -197,95 +230,7 @@ describe(GameService.name, () => {
               {
                 cards: [
                   ...currentPlayingGameSlotCards,
-                  deckCardSpec.card,
-                  deckCardSpec.card,
-                ],
-                gameSlotFindQuery: {
-                  gameId: gameFixture.id,
-                  position: gameFixture.state.currentPlayingSlotIndex,
-                },
-              },
-            ],
-          };
-
-          expect(result).toStrictEqual(expectedGameUpdateQuery);
-        });
-      });
-    });
-
-    describe('having a Game with two players and not enough deck cards and enouth discard pile cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 2', () => {
-      let gameFixture: ActiveGame;
-
-      let deckCardSpec: GameCardSpec;
-
-      beforeAll(() => {
-        const baseFixture: ActiveGame =
-          ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckEmptyAndDiscardPileWithSpecOneWithAmount120;
-
-        gameFixture = {
-          ...baseFixture,
-          state: {
-            ...baseFixture.state,
-            currentPlayingSlotIndex: 1,
-            currentTurnCardsPlayed: false,
-            drawCount: 2,
-          },
-        };
-
-        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
-      });
-
-      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
-
-          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
-          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
-          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-            gameFixture,
-          );
-        });
-
-        it('should return a GameUpdateQuery', () => {
-          const currentPlayingGameSlotCards: Card[] = (
-            gameFixture.state.slots[
-              gameFixture.state.currentPlayingSlotIndex
-            ] as ActiveGameSlot
-          ).cards;
-
-          const expectedGameUpdateQuery: GameUpdateQuery = {
-            currentPlayingSlotIndex: 0,
-            currentTurnCardsPlayed: false,
-            deck: [
-              {
-                amount: deckCardSpec.amount - 2,
-                card: deckCardSpec.card,
-              },
-            ],
-            discardPile: [],
-            drawCount: 0,
-            gameFindQuery: {
-              id: gameFixture.id,
-              state: {
-                currentPlayingSlotIndex:
-                  gameFixture.state.currentPlayingSlotIndex,
-              },
-            },
-            gameSlotUpdateQueries: [
-              {
-                cards: [
-                  ...currentPlayingGameSlotCards,
-                  deckCardSpec.card,
-                  deckCardSpec.card,
+                  ...gameDrawMutationFixture.cards,
                 ],
                 gameSlotFindQuery: {
                   gameId: gameFixture.id,
@@ -712,56 +657,59 @@ describe(GameService.name, () => {
   });
 
   describe('.buildStartGameUpdateQuery', () => {
-    describe('having a Game with enough cards', () => {
+    describe('having a Game', () => {
       let gameFixture: NonStartedGame;
-      let deckCardSpec: GameCardSpec;
 
       beforeAll(() => {
-        gameFixture =
-          NonStartedGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount120;
-
-        [deckCardSpec] = gameFixture.spec.cards as [GameCardSpec];
+        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
       });
 
       describe('when called', () => {
+        let gameInitialDrawsMutationFixture: GameInitialDrawsMutation;
         let result: unknown;
 
         beforeAll(() => {
+          gameInitialDrawsMutationFixture =
+            GameInitialDrawsMutationFixtures.withCardsOneCardArray;
+
+          gameDrawServiceMock.calculateInitialCardsDrawMutation.mockReturnValueOnce(
+            gameInitialDrawsMutationFixture,
+          );
+
           result = gameService.buildStartGameUpdateQuery(gameFixture);
         });
 
-        it('should return a GameUpdateQuery', () => {
-          const expectedDeckSpec: GameCardSpec[] = [
-            {
-              amount: deckCardSpec.amount - 15,
-              card: deckCardSpec.card,
-            },
-          ];
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
+        it('should call gameDrawService.calculateInitialCardsDrawMutation()', () => {
+          expect(
+            gameDrawServiceMock.calculateInitialCardsDrawMutation,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameDrawServiceMock.calculateInitialCardsDrawMutation,
+          ).toHaveBeenCalledWith(gameFixture.spec);
+        });
+
+        it('should return a GameUpdateQuery', () => {
           const expectedGameUpdateQueryProperties: Partial<GameUpdateQuery> = {
-            currentCard: deckCardSpec.card,
+            currentCard: gameInitialDrawsMutationFixture.currentCard,
             currentColor: expect.any(String) as unknown as CardColor,
             currentDirection: GameDirection.antiClockwise,
             currentPlayingSlotIndex: 0,
             currentTurnCardsPlayed: false,
-            deck: expectedDeckSpec,
+            deck: gameInitialDrawsMutationFixture.deck,
             drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
             },
             gameSlotUpdateQueries: [
               {
-                cards: new Array<Card>(7).fill(deckCardSpec.card),
+                cards: gameInitialDrawsMutationFixture.cards[0] as Card[],
                 gameSlotFindQuery: {
                   gameId: gameFixture.id,
                   position: 0,
-                },
-              },
-              {
-                cards: new Array<Card>(7).fill(deckCardSpec.card),
-                gameSlotFindQuery: {
-                  gameId: gameFixture.id,
-                  position: 1,
                 },
               },
             ],
@@ -770,39 +718,6 @@ describe(GameService.name, () => {
 
           expect(result).toStrictEqual(
             expect.objectContaining(expectedGameUpdateQueryProperties),
-          );
-        });
-      });
-    });
-
-    describe('having a Game with not enough cards', () => {
-      let gameFixture: NonStartedGame;
-
-      beforeAll(() => {
-        gameFixture =
-          NonStartedGameFixtures.withGameSlotsAmountTwoAndDeckWithSpecOneWithAmount0;
-      });
-
-      describe('when called', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          try {
-            gameService.buildStartGameUpdateQuery(gameFixture);
-          } catch (error) {
-            result = error;
-          }
-        });
-
-        it('should throw an Error', () => {
-          const expectedErrorProperties: Partial<AppError> = {
-            kind: AppErrorKind.unprocessableOperation,
-            message: 'Not enough cards to perform this operation',
-          };
-
-          expect(result).toBeInstanceOf(AppError);
-          expect(result).toStrictEqual(
-            expect.objectContaining(expectedErrorProperties),
           );
         });
       });

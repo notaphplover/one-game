@@ -11,6 +11,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { QueryToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryToFindQueryTypeOrmConverter';
 import { QueryWithQueryBuilderToFindQueryTypeOrmConverter } from '../../converters/typeorm/QueryWithQueryBuilderToFindQueryTypeOrmConverter';
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
+import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 
 export class UpdateTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
   readonly #repository: Repository<TModelDb>;
@@ -60,7 +61,7 @@ export class UpdateTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
     const setQueryTypeOrm: QueryDeepPartialEntity<TModelDb> =
       await this.#updateQueryToSetQueryTypeOrmConverter.convert(query);
 
-    if (findQueryTypeOrmOrQueryBuilder instanceof QueryBuilder) {
+    if (isQueryBuilder<TModelDb>(findQueryTypeOrmOrQueryBuilder)) {
       await (findQueryTypeOrmOrQueryBuilder as UpdateQueryBuilder<TModelDb>)
         .set(setQueryTypeOrm)
         .execute();
