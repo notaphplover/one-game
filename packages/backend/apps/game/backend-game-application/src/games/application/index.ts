@@ -1,3 +1,4 @@
+import { GameEventsChannelFromGameIdBuilder } from './builders/GameEventsChannelFromGameIdBuilder';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from './controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
 import { GetGameV1GameIdGameOptionsHttpRequestController } from './controllers/GetGameV1GameIdGameOptionsHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from './controllers/GetGameV1GameIdHttpRequestController';
@@ -9,6 +10,10 @@ import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './handlers/Ge
 import { GetGameV1GameIdRequestParamHandler } from './handlers/GetGameV1GameIdRequestParamHandler';
 import { PatchGameGameIdV1RequestParamHandler } from './handlers/PatchGameGameIdV1RequestParamHandler';
 import { GameMiddleware } from './middlewares/GameMiddleware';
+import {
+  GameEventsSubscriptionOutputPort,
+  gameEventsSubscriptionOutputPortSymbol,
+} from './ports/output/GameEventsSubscriptionOutputPort';
 import {
   GameOptionsPersistenceOutputPort,
   gameOptionsPersistenceOutputPortSymbol,
@@ -23,12 +28,15 @@ import {
 } from './ports/output/GameSlotPersistenceOutputPort';
 
 export type {
+  GameEventsSubscriptionOutputPort,
   GameOptionsPersistenceOutputPort,
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
 };
 
 export {
+  GameEventsChannelFromGameIdBuilder,
+  gameEventsSubscriptionOutputPortSymbol,
   GameMiddleware,
   gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,

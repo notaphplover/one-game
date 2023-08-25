@@ -1,4 +1,7 @@
-import { gameEventsSubscriptionOutputPortSymbol } from '@cornie-js/backend-game-application/games';
+import {
+  GameEventsChannelFromGameIdBuilder,
+  gameEventsSubscriptionOutputPortSymbol,
+} from '@cornie-js/backend-game-application/games';
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { PubSubIoredisModuleOptions } from '../../../../foundation/redis/adapter/nest/models/PubSubIoredisModuleOptions';
@@ -17,6 +20,7 @@ export class GameIoredisModule {
       imports: [PubSubIoredisModule.forRootAsync(options)],
       module: GameIoredisModule,
       providers: [
+        GameEventsChannelFromGameIdBuilder,
         GameEventsIoredisSubscriber,
         {
           provide: gameEventsSubscriptionOutputPortSymbol,
