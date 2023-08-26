@@ -1,4 +1,5 @@
 import { GameEventsChannelFromGameIdBuilder } from './builders/GameEventsChannelFromGameIdBuilder';
+import { GetGameGameIdEventsV1SseController } from './controllers/GetGameGameIdEventsV1SseController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from './controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
 import { GetGameV1GameIdGameOptionsHttpRequestController } from './controllers/GetGameV1GameIdGameOptionsHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from './controllers/GetGameV1GameIdHttpRequestController';
@@ -41,6 +42,7 @@ export {
   gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
+  GetGameGameIdEventsV1SseController,
   GetGameGameIdSlotSlotIdCardsV1RequestController,
   GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
   GetGameV1GameIdGameOptionsHttpRequestController,

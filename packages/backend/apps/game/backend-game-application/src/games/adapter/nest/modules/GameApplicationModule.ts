@@ -21,6 +21,7 @@ import { GameCreatedEventHandler } from '../../../application/handlers/GameCreat
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
 import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
+import { GameEventsManagementInputPort } from '../../../application/ports/input/GameEventsManagementInputPort';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
 import { GameOptionsManagementInputPort } from '../../../application/ports/input/GameOptionsManagementInputPort';
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
@@ -34,6 +35,7 @@ export class GameApplicationModule {
   ): DynamicModule {
     return {
       exports: [
+        GameEventsManagementInputPort,
         GameManagementInputPort,
         GameOptionsManagementInputPort,
         GameSlotManagementInputPort,
@@ -51,6 +53,7 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
+        GameEventsManagementInputPort,
         GameIdPassTurnQueryV1Handler,
         GameIdPlayCardsQueryV1Handler,
         GameManagementInputPort,
