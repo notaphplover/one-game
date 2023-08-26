@@ -1,4 +1,4 @@
-import axios from 'axios';
+import * as axios from 'axios';
 
 import { Response } from '../models/Response';
 
@@ -6,7 +6,7 @@ export class AxiosHttpClient {
   readonly #axiosClient: axios.AxiosInstance;
 
   constructor(baseUrl: string) {
-    this.#axiosClient = axios.create({
+    this.#axiosClient = axios.default.create({
       baseURL: baseUrl,
     });
   }
