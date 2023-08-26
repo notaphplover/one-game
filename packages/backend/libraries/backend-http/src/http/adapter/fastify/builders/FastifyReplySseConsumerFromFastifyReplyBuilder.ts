@@ -26,11 +26,9 @@ export class FastifyReplySseConsumerFromFastifyReplyBuilder
 
   public build(fastifyReply: FastifyReply): DelayedSseConsumer {
     const sseConsumer: SseConsumer = {
-      consume: (event: string) => {
+      consume: (event: MessageEvent) => {
         fastifyReply.raw.write(
-          this.#stringifiedSseFromMessageEventBuilder.build({
-            data: event,
-          }),
+          this.#stringifiedSseFromMessageEventBuilder.build(event),
         );
       },
       onComplete: () => {

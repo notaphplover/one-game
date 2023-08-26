@@ -1,3 +1,4 @@
+import { MessageEvent } from '../models/MessageEvent';
 import { SseConsumer } from './SseConsumer';
 
 export class SsePublisher {
@@ -7,7 +8,7 @@ export class SsePublisher {
     this.#consumer = consumer;
   }
 
-  public publish(event: string): void {
+  public publish(event: MessageEvent): void {
     this.#consumer.consume(event);
   }
 

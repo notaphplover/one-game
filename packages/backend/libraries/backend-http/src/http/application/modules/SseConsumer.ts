@@ -1,4 +1,6 @@
+import { MessageEvent } from '../models/MessageEvent';
+
 export interface SseConsumer {
-  consume(event: string): void;
+  consume(event: MessageEvent): void;
   onComplete(): void;
 }

@@ -20,6 +20,7 @@ import { SingleEntityPostResponseBuilder } from './http/application/builders/Sin
 import { StringifiedSseFromMessageEventBuilder } from './http/application/builders/StringifiedSseFromMessageEventBuilder';
 import { HttpRequestController } from './http/application/controllers/HttpRequestController';
 import { HttpSseRequestController } from './http/application/controllers/HttpSseRequestController';
+import { MessageEvent } from './http/application/models/MessageEvent';
 import { Request } from './http/application/models/Request';
 import { RequestContextHolder } from './http/application/models/RequestContextHolder';
 import { requestContextProperty } from './http/application/models/requestContextProperty';
@@ -40,6 +41,7 @@ export type {
   AuthRequestContext,
   AuthRequestContextHolder,
   BackendServiceAuth,
+  MessageEvent,
   Middleware,
   Request,
   RequestContextHolder,

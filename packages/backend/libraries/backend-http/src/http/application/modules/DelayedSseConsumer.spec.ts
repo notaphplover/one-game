@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { MessageEvent } from '../models/MessageEvent';
 import { DelayedSseConsumer } from './DelayedSseConsumer';
 import { SseConsumer } from './SseConsumer';
 
@@ -16,12 +17,12 @@ describe(DelayedSseConsumer.name, () => {
   describe('.consume', () => {
     describe('when called', () => {
       let delayedSseConsumer: DelayedSseConsumer;
-      let eventFixture: string;
+      let eventFixture: MessageEvent;
 
       let result: unknown;
 
       beforeAll(() => {
-        eventFixture = 'event-fixture';
+        eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
@@ -43,12 +44,12 @@ describe(DelayedSseConsumer.name, () => {
 
     describe('when called, after free() is called', () => {
       let delayedSseConsumer: DelayedSseConsumer;
-      let eventFixture: string;
+      let eventFixture: MessageEvent;
 
       let result: unknown;
 
       beforeAll(() => {
-        eventFixture = 'event-fixture';
+        eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
@@ -75,12 +76,12 @@ describe(DelayedSseConsumer.name, () => {
   describe('.free', () => {
     describe('when called, after consume() and onComplete() have been called', () => {
       let delayedSseConsumer: DelayedSseConsumer;
-      let eventFixture: string;
+      let eventFixture: MessageEvent;
 
       let result: unknown;
 
       beforeAll(() => {
-        eventFixture = 'event-fixture';
+        eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 

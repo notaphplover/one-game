@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MessageEvent } from '../models/MessageEvent';
 import { SseConsumer } from './SseConsumer';
 
 @Injectable()
@@ -7,7 +8,7 @@ export class DelayedSseConsumer implements SseConsumer {
   #delayEnabled: boolean;
   #innerConsumer: SseConsumer;
   #pendingOnComplete: boolean;
-  #eventsBuffer: string[] | undefined;
+  #eventsBuffer: MessageEvent[] | undefined;
 
   constructor(consumer: SseConsumer) {
     this.#delayEnabled = true;
@@ -16,7 +17,7 @@ export class DelayedSseConsumer implements SseConsumer {
     this.#pendingOnComplete = false;
   }
 
-  public consume(event: string): void {
+  public consume(event: MessageEvent): void {
     if (this.#delayEnabled) {
       this.#eventsBuffer?.push(event);
     } else {
