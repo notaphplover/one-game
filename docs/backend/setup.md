@@ -45,6 +45,7 @@ Don't worry, build tasks are cached through `turbo`.
 To accomplish that, go to `packages/backend/tools/backend-dev-proxy` and run the following command:
 
 ```
+mkdir ssl && \
 openssl req -x509 -newkey rsa:4096 -keyout ssl/localhost.key.pem -out ssl/localhost.cert.pem -sha256 -days 3650 -nodes -subj "/CN=Dev proxy certificate"
 ```
 
