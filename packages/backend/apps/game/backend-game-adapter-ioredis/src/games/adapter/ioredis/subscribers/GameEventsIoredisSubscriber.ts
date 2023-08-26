@@ -80,7 +80,9 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<SsePublisher>
     }
 
     gamePublishers.map(async (gamePublisher: SsePublisher) =>
-      gamePublisher.publish(event),
+      gamePublisher.publish({
+        data: event,
+      }),
     );
   }
 
