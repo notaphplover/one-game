@@ -35,9 +35,11 @@ export type TypesV1 =
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1
   | GameIdUpdateQueryV1
+  | GameMessageEventV1
   | GameOptionsV1
   | GameSlotV1
   | GameSpecV1
+  | GameUpdatedMessageEventV1
   | GameV1
   | NonStartedGameSlotV1
   | NonStartedGameStateV1
@@ -65,6 +67,7 @@ export type GameArrayV1 = GameV1[];
 export type GameIdUpdateQueryV1 =
   | GameIdPassTurnQueryV1
   | GameIdPlayCardsQueryV1;
+export type GameMessageEventV1 = GameUpdatedMessageEventV1;
 export type GameSlotV1 =
   | ActiveGameSlotV1
   | FinishedGameSlotV1
@@ -187,6 +190,10 @@ export interface GameIdPlayCardsQueryV1 {
   colorChoice?: CardColorV1;
   kind: 'playCards';
   slotIndex: number;
+}
+export interface GameUpdatedMessageEventV1 {
+  game: GameV1;
+  kind: 'game-updated';
 }
 export interface UserCreateQueryV1 {
   email: string;
