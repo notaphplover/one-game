@@ -10,12 +10,14 @@ import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builder
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../application/builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
+import { GameMessageEventV1FromGameMessageEventBuilder } from '../../../application/builders/GameMessageEventV1FromGameMessageEventBuilder';
 import { GameOptionsCreateQueryFromGameOptionsV1Builder } from '../../../application/builders/GameOptionsCreateQueryFromGameOptionsV1Builder';
 import { GameOptionsV1FromGameOptionsBuilder } from '../../../application/builders/GameOptionsV1FromGameOptionsBuilder';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../../application/builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/GameSlotV1FromGameSlotBuilder';
 import { GameSpecV1FromGameSpecBuilder } from '../../../application/builders/GameSpecV1FromGameSpecBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
+import { MessageEventFromStringifiedGameMessageEventBuilder } from '../../../application/builders/MessageEventFromStringifiedGameMessageEventBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { GameCreatedEventHandler } from '../../../application/handlers/GameCreatedEventHandler';
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
@@ -57,6 +59,7 @@ export class GameApplicationModule {
         GameIdPassTurnQueryV1Handler,
         GameIdPlayCardsQueryV1Handler,
         GameManagementInputPort,
+        GameMessageEventV1FromGameMessageEventBuilder,
         GameOptionsCreateQueryFromGameOptionsV1Builder,
         GameOptionsManagementInputPort,
         GameOptionsV1FromGameOptionsBuilder,
@@ -65,6 +68,7 @@ export class GameApplicationModule {
         GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
         GameSlotV1FromGameSlotBuilder,
         GameV1FromGameBuilder,
+        MessageEventFromStringifiedGameMessageEventBuilder,
         NonStartedGameFilledEventHandler,
         NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
       ],

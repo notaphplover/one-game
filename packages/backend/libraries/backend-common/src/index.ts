@@ -1,5 +1,6 @@
 import { Writable } from './common/application/models/Writable';
 import { Handler } from './common/application/modules/Handler';
+import { Publisher } from './common/application/modules/Publisher';
 import { Entity } from './common/domain/models/Entity';
 import { Builder } from './common/domain/modules/Builder';
 import { BuilderAsync } from './common/domain/modules/BuilderAsync';
@@ -28,6 +29,7 @@ export type {
   ConverterAsync,
   Entity,
   Left,
+  Publisher,
   ReportBasedSpec,
   Right,
   Spec,
