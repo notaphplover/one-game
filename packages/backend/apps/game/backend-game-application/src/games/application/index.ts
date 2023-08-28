@@ -11,6 +11,10 @@ import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './handlers/Ge
 import { GetGameV1GameIdRequestParamHandler } from './handlers/GetGameV1GameIdRequestParamHandler';
 import { PatchGameGameIdV1RequestParamHandler } from './handlers/PatchGameGameIdV1RequestParamHandler';
 import { GameMiddleware } from './middlewares/GameMiddleware';
+import { BaseGameMessageEvent } from './models/BaseGameMessageEvent';
+import { GameMessageEvent } from './models/GameMessageEvent';
+import { GameMessageEventKind } from './models/GameMessageEventKind';
+import { GameUpdatedMessageEvent } from './models/GameUpdatedMessageEvent';
 import {
   GameEventsSubscriptionOutputPort,
   gameEventsSubscriptionOutputPortSymbol,
@@ -29,10 +33,14 @@ import {
 } from './ports/output/GameSlotPersistenceOutputPort';
 
 export type {
+  BaseGameMessageEvent,
   GameEventsSubscriptionOutputPort,
+  GameMessageEvent,
+  GameMessageEventKind,
   GameOptionsPersistenceOutputPort,
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
+  GameUpdatedMessageEvent,
 };
 
 export {
