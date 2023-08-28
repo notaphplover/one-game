@@ -1,7 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder } from '@cornie-js/backend-common';
-import { SsePublisher, SseTeardownExecutor } from '@cornie-js/backend-http';
+import { Builder, Publisher } from '@cornie-js/backend-common';
+import { GameMessageEvent } from '@cornie-js/backend-game-application/games';
+import { SseTeardownExecutor } from '@cornie-js/backend-http';
+import { IoredisPublisher } from '@cornie-js/backend-pub-sub';
 
 import { GameEventsIoredisSubscriber } from '../subscribers/GameEventsIoredisSubscriber';
 import { GameEventsSubscriptionIoredisOutputAdapter } from './GameEventsSubscriptionIoredisOutputAdapter';
@@ -11,6 +13,7 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
     Builder<string, [string]>
   >;
   let gameEventsIoredisSubscriberMock: jest.Mocked<GameEventsIoredisSubscriber>;
+  let ioredisPublisherMock: jest.Mocked<IoredisPublisher>;
 
   let gameEventsSubscriptionIoredisOutputAdapter: GameEventsSubscriptionIoredisOutputAdapter;
 
@@ -24,23 +27,72 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
     } as Partial<
       jest.Mocked<GameEventsIoredisSubscriber>
     > as jest.Mocked<GameEventsIoredisSubscriber>;
+    ioredisPublisherMock = {
+      publish: jest.fn(),
+    } as Partial<
+      jest.Mocked<IoredisPublisher>
+    > as jest.Mocked<IoredisPublisher>;
 
     gameEventsSubscriptionIoredisOutputAdapter =
       new GameEventsSubscriptionIoredisOutputAdapter(
         gameEventsChannelFromGameIdBuilderMock,
         gameEventsIoredisSubscriberMock,
+        ioredisPublisherMock,
       );
+  });
+
+  describe('.publish', () => {
+    let gameIdFixture: string;
+    let channelFixture: string;
+    let gameMessageEventFixture: GameMessageEvent;
+
+    beforeAll(() => {
+      gameIdFixture = 'game id';
+      channelFixture = 'channel fixture';
+      gameMessageEventFixture = Symbol() as unknown as GameMessageEvent;
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameEventsChannelFromGameIdBuilderMock.build.mockReturnValueOnce(
+          channelFixture,
+        );
+
+        result = await gameEventsSubscriptionIoredisOutputAdapter.publish(
+          gameIdFixture,
+          gameMessageEventFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call ioredisPublisher.publish()', () => {
+        expect(ioredisPublisherMock.publish).toHaveBeenCalledTimes(1);
+        expect(ioredisPublisherMock.publish).toHaveBeenCalledWith(
+          channelFixture,
+          JSON.stringify(gameMessageEventFixture),
+        );
+      });
+
+      it('should resolve to undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
   });
 
   describe('.subscribe', () => {
     let gameIdFixture: string;
     let channelFixture: string;
-    let publisherFixture: SsePublisher;
+    let publisherFixture: Publisher<string>;
 
     beforeAll(() => {
       gameIdFixture = 'game id';
       channelFixture = 'channel fixture';
-      publisherFixture = Symbol() as unknown as SsePublisher;
+      publisherFixture = Symbol() as unknown as Publisher<string>;
     });
 
     describe('when called', () => {
