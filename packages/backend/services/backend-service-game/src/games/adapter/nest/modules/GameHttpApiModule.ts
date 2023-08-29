@@ -1,3 +1,9 @@
+import {
+  EnvModule,
+  Environment,
+  EnvironmentService,
+} from '@cornie-js/backend-app-game-env';
+import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
 import { GameDbModule } from '@cornie-js/backend-game-adapter-typeorm';
 import { GameHttpApiModule as GameHttpApiApplicationModule } from '@cornie-js/backend-game-application';
 import { Module } from '@nestjs/common';
@@ -26,6 +32,18 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
   imports: [
     GameHttpApiApplicationModule.forRootAsync([
       GameDbModule.forRootAsync(buildDbModuleOptions()),
+      GameIoredisModule.forRootAsync({
+        imports: [EnvModule],
+        inject: [EnvironmentService],
+        useFactory: (environmentService: EnvironmentService) => {
+          const environment: Environment = environmentService.getEnvironment();
+
+          return {
+            host: environment.pubSubRedisHost,
+            port: environment.pubSubRedisPort,
+          };
+        },
+      }),
     ]),
     HttpModule,
   ],

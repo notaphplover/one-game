@@ -11,6 +11,7 @@
     "@nestjs/platform-fastify": "10.2.2",
     "@cornie-js/api-http-client": "workspace:*",
     "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/backend-game-adapter-ioredis": "workspace:*",
     "@cornie-js/backend-game-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-app-game-env": "workspace:*",

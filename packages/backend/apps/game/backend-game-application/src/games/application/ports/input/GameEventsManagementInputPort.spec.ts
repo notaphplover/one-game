@@ -7,7 +7,6 @@ import {
   SseTeardownExecutor,
 } from '@cornie-js/backend-http';
 
-import { GameMessageEvent } from '../../models/GameMessageEvent';
 import { GameEventsSubscriptionOutputPort } from '../output/GameEventsSubscriptionOutputPort';
 import { GameEventsManagementInputPort } from './GameEventsManagementInputPort';
 
@@ -32,44 +31,6 @@ describe(GameEventsManagementInputPort.name, () => {
       gameEventsSubscriptionOutputPortMock,
       messageEventFromStringifiedGameMessageEventBuilderMock,
     );
-  });
-
-  describe('.publish', () => {
-    let gameIdFixture: string;
-    let gameMessageEventFixture: GameMessageEvent;
-
-    beforeAll(() => {
-      gameIdFixture = 'game-id-fixture';
-      gameMessageEventFixture = Symbol() as unknown as GameMessageEvent;
-    });
-
-    describe('when called', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        result = await gameEventsManagementInputPort.publish(
-          gameIdFixture,
-          gameMessageEventFixture,
-        );
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gameEventsSubscriptionOutputPort.publish()', () => {
-        expect(
-          gameEventsSubscriptionOutputPortMock.publish,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameEventsSubscriptionOutputPortMock.publish,
-        ).toHaveBeenCalledWith(gameIdFixture, gameMessageEventFixture);
-      });
-
-      it('should resolve to undefined', () => {
-        expect(result).toBeUndefined();
-      });
-    });
   });
 
   describe('.subscribe', () => {

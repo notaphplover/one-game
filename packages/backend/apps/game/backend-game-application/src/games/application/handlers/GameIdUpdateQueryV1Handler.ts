@@ -12,6 +12,7 @@ import {
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 
+import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 
@@ -22,17 +23,20 @@ export abstract class GameIdUpdateQueryV1Handler<
   protected readonly _gamePersistenceOutputPort: GamePersistenceOutputPort;
   protected readonly _gameService: GameService;
   readonly #gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort;
+  readonly #gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>;
   readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
 
   constructor(
     gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort,
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     gameService: GameService,
+    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
   ) {
     this.#gameOptionsPersistenceOutputPort = gameOptionsPersistenceOutputPort;
     this._gamePersistenceOutputPort = gamePersistenceOutputPort;
     this._gameService = gameService;
+    this.#gameUpdatedEventHandler = gameUpdatedEventHandler;
     this.#playerCanUpdateGameSpec = playerCanUpdateGameSpec;
   }
 
@@ -55,6 +59,11 @@ export abstract class GameIdUpdateQueryV1Handler<
     );
 
     await this._gamePersistenceOutputPort.update(gameUpdateQuery);
+
+    await this.#gameUpdatedEventHandler.handle({
+      gameBeforeUpdate: game,
+      gameUpdateQuery,
+    });
   }
 
   #checkRightPlayer(

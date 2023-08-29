@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
   ActiveGame,
   GameFindQuery,
@@ -21,6 +21,7 @@ import {
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdPassTurnQueryV1Fixtures } from '../fixtures/GameIdPassTurnQueryV1Fixtures';
+import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameIdPassTurnQueryV1Handler } from './GameIdPassTurnQueryV1Handler';
@@ -29,6 +30,9 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
   let gameOptionsPersistenceOutputPortMock: jest.Mocked<GameOptionsPersistenceOutputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
+  let gameUpdatedEventHandlerMock: jest.Mocked<
+    Handler<[GameUpdatedEvent], void>
+  >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let playerCanPassTurnSpecMock: jest.Mocked<PlayerCanPassTurnSpec>;
 
@@ -49,6 +53,9 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     gameServiceMock = {
       buildPassTurnGameUpdateQuery: jest.fn(),
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
+    gameUpdatedEventHandlerMock = {
+      handle: jest.fn(),
+    };
     playerCanUpdateGameSpecMock = {
       isSatisfiedBy: jest.fn(),
     };
@@ -62,6 +69,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       gameOptionsPersistenceOutputPortMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
+      gameUpdatedEventHandlerMock,
       playerCanUpdateGameSpecMock,
       playerCanPassTurnSpecMock,
     );
@@ -480,6 +488,8 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
 
         playerCanPassTurnSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
+        gameUpdatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
+
         result = await gameIdPassTurnQueryV1Handler.handle(
           gameIdFixture,
           gameIdPassTurnQueryV1Fixture,
@@ -550,6 +560,18 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
           gameUpdateQueryFixture,
+        );
+      });
+
+      it('should call gameUpdatedEventHandler.handle()', () => {
+        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+          gameBeforeUpdate: activeGameFixture,
+          gameUpdateQuery: gameUpdateQueryFixture,
+        };
+
+        expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expectedGameUpdatedEvent,
         );
       });
 

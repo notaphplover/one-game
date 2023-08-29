@@ -3,7 +3,7 @@ import { IoredisSubscriber } from '@cornie-js/backend-pub-sub';
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 
-import { ioredisClientSymbol } from '../../../../foundation/redis/adapter/nest/models/ioredisClientSymbol';
+import { ioredisClientSubscriberSymbol } from '../../../../foundation/redis/adapter/nest/models/ioredisClientSymbol';
 
 const GAME_EVENT_CHANNEL_REGEX: RegExp =
   /^v1\/games\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
@@ -15,7 +15,7 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<
   readonly #gameIdToSseStreamsMap: Map<string, Publisher<string>[]>;
 
   constructor(
-    @Inject(ioredisClientSymbol)
+    @Inject(ioredisClientSubscriberSymbol)
     redisClient: Redis,
   ) {
     super(redisClient);

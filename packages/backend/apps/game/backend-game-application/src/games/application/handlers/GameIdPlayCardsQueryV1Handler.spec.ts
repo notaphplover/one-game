@@ -1,7 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import { CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
@@ -22,6 +27,7 @@ import {
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdPlayCardsQueryV1Fixtures } from '../fixtures/GameIdPlayCardsQueryV1Fixtures';
+import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameIdPlayCardsQueryV1Handler } from './GameIdPlayCardsQueryV1Handler';
@@ -30,6 +36,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
   let gameOptionsPersistenceOutputPortMock: jest.Mocked<GameOptionsPersistenceOutputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
+  let gameUpdatedEventHandlerMock: jest.Mocked<
+    Handler<[GameUpdatedEvent], void>
+  >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let cardColorFromCardColorV1BuilderMock: jest.Mocked<
     Builder<CardColor, [apiModels.CardColorV1]>
@@ -53,6 +62,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     gameServiceMock = {
       buildPlayCardsGameUpdateQuery: jest.fn(),
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
+    gameUpdatedEventHandlerMock = {
+      handle: jest.fn(),
+    };
     playerCanUpdateGameSpecMock = {
       isSatisfiedBy: jest.fn(),
     };
@@ -69,6 +81,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       gameOptionsPersistenceOutputPortMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
+      gameUpdatedEventHandlerMock,
       playerCanUpdateGameSpecMock,
       cardColorFromCardColorV1BuilderMock,
       currentPlayerCanPlayCardsSpecMock,
@@ -495,6 +508,8 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           true,
         );
 
+        gameUpdatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
+
         result = await gameIdPlayCardsQueryV1Handler.handle(
           gameIdFixture,
           gameIdPlayCardsQueryV1Fixture,
@@ -572,6 +587,18 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
           gameUpdateQueryFixture,
+        );
+      });
+
+      it('should call gameUpdatedEventHandler.handle()', () => {
+        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+          gameBeforeUpdate: activeGameFixture,
+          gameUpdateQuery: gameUpdateQueryFixture,
+        };
+
+        expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expectedGameUpdatedEvent,
         );
       });
 

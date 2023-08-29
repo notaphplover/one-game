@@ -7,7 +7,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { MessageEventFromStringifiedGameMessageEventBuilder } from '../../builders/MessageEventFromStringifiedGameMessageEventBuilder';
-import { GameMessageEvent } from '../../models/GameMessageEvent';
 import {
   GameEventsSubscriptionOutputPort,
   gameEventsSubscriptionOutputPortSymbol,
@@ -33,16 +32,6 @@ export class GameEventsManagementInputPort {
     this.#gameEventsSubscriptionOutputPort = gameEventsSubscriptionOutputPort;
     this.#messageEventFromStringifiedGameMessageEventBuilder =
       messageEventFromStringifiedGameMessageEventBuilder;
-  }
-
-  public async publish(
-    gameId: string,
-    gameMessageEvent: GameMessageEvent,
-  ): Promise<void> {
-    return this.#gameEventsSubscriptionOutputPort.publish(
-      gameId,
-      gameMessageEvent,
-    );
   }
 
   public async subscribe(
