@@ -45,6 +45,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Set proxy certificates
+        run: mkdir ssl && openssl req -x509 -newkey rsa:4096 -keyout ssl/localhost.key.pem -out ssl/localhost.cert.pem -sha256 -days 3650 -nodes -subj "/CN=Dev proxy certificate"
+        working-directory: ./packages/backend/tools/backend-dev-proxy
+
       - name: Start services with e2e config
         run: pnpm run start:e2e
 
