@@ -10,7 +10,12 @@ import {
   Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useRegisterForm } from '../hooks';
+import {
+  STATUS_REG_BACKEND_OK,
+  STATUS_REG_PENDING_BACKEND,
+  STATUS_REG_PENDING_VAL,
+  useRegisterForm,
+} from '../hooks';
 import { useShowPassword } from '../../common/hooks';
 import { RegisterLayout } from '../layout/RegisterLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
@@ -23,9 +28,6 @@ export const Register = () => {
     formValidation,
     notifyFormFieldsFilled,
     setFormField,
-    STATUS_REG_BACKEND_OK,
-    STATUS_REG_PENDING_BACKEND,
-    STATUS_REG_PENDING_VAL,
   } = useRegisterForm({
     name: '',
     email: '',
@@ -88,8 +90,8 @@ export const Register = () => {
               name="name"
               value={formFields.name}
               onChange={setFormField}
-              error={formValidation.nameValidationError !== undefined}
-              helperText={formValidation.nameValidationError}
+              error={formValidation.name !== undefined}
+              helperText={formValidation.name}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
@@ -102,8 +104,8 @@ export const Register = () => {
               name="email"
               value={formFields.email}
               onChange={setFormField}
-              error={formValidation.emailValidationError !== undefined}
-              helperText={formValidation.emailValidationError}
+              error={formValidation.email !== undefined}
+              helperText={formValidation.email}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
@@ -132,8 +134,8 @@ export const Register = () => {
               name="password"
               value={formFields.password}
               onChange={setFormField}
-              error={formValidation.passwordValidationError !== undefined}
-              helperText={formValidation.passwordValidationError}
+              error={formValidation.password !== undefined}
+              helperText={formValidation.password}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
@@ -162,10 +164,8 @@ export const Register = () => {
               name="confirmPassword"
               value={formFields.confirmPassword}
               onChange={setFormField}
-              error={
-                formValidation.confirmPasswordValidationError !== undefined
-              }
-              helperText={formValidation.confirmPasswordValidationError}
+              error={formValidation.confirmPassword !== undefined}
+              helperText={formValidation.confirmPassword}
             />
           </Grid>
         </Grid>

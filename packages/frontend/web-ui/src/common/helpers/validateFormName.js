@@ -3,9 +3,7 @@
  * @param {String} name
  */
 export const validateFormName = (formChecked, name) => {
-  const varValidationError = 'ValidationError';
-
   if (name.trim() === '') {
-    formChecked[`name${varValidationError}`] = 'The name is mandatory.';
+    formChecked.name = 'The name is mandatory.';
   }
 };
