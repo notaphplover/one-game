@@ -1,5 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
   ActiveGame,
   GameOptions,
@@ -10,6 +10,7 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
   GameOptionsPersistenceOutputPort,
   gameOptionsPersistenceOutputPortSymbol,
@@ -19,6 +20,7 @@ import {
   gamePersistenceOutputPortSymbol,
 } from '../ports/output/GamePersistenceOutputPort';
 import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
+import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
 @Injectable()
 export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPassTurnQueryV1> {
@@ -31,6 +33,8 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
     gameService: GameService,
+    @Inject(GameUpdatedEventHandler)
+    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(PlayerCanPassTurnSpec)
@@ -40,6 +44,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
       gameOptionsPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameService,
+      gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
     );
     this.#playerCanPassTurnSpec = playerCanPassTurnSpec;

@@ -22,6 +22,7 @@ import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../appl
 import { GameCreatedEventHandler } from '../../../application/handlers/GameCreatedEventHandler';
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
+import { GameUpdatedEventHandler } from '../../../application/handlers/GameUpdatedEventHandler';
 import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
 import { GameEventsManagementInputPort } from '../../../application/ports/input/GameEventsManagementInputPort';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
@@ -67,6 +68,7 @@ export class GameApplicationModule {
         GameSpecV1FromGameSpecBuilder,
         GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
         GameSlotV1FromGameSlotBuilder,
+        GameUpdatedEventHandler,
         GameV1FromGameBuilder,
         MessageEventFromStringifiedGameMessageEventBuilder,
         NonStartedGameFilledEventHandler,
