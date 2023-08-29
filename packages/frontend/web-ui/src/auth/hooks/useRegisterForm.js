@@ -9,12 +9,12 @@ import {
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 
-const STATUS_REG_INITIAL = 0;
-const STATUS_REG_PENDING_VAL = 1;
-const STATUS_REG_VALIDATION_KO = 2;
-const STATUS_REG_PENDING_BACKEND = 3;
-const STATUS_REG_BACKEND_KO = 4;
-const STATUS_REG_BACKEND_OK = 5;
+export const STATUS_REG_INITIAL = 0;
+export const STATUS_REG_PENDING_VAL = 1;
+export const STATUS_REG_VALIDATION_KO = 2;
+export const STATUS_REG_PENDING_BACKEND = 3;
+export const STATUS_REG_BACKEND_KO = 4;
+export const STATUS_REG_BACKEND_OK = 5;
 
 export const useRegisterForm = (initialFormFields = {}) => {
   const [formFields, setFormFields] = useState(initialFormFields);
@@ -117,11 +117,5 @@ export const useRegisterForm = (initialFormFields = {}) => {
     formValidation,
     notifyFormFieldsFilled,
     setFormField,
-    STATUS_REG_BACKEND_KO,
-    STATUS_REG_BACKEND_OK,
-    STATUS_REG_INITIAL,
-    STATUS_REG_PENDING_BACKEND,
-    STATUS_REG_PENDING_VAL,
-    STATUS_REG_VALIDATION_KO,
   };
 };
