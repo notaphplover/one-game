@@ -10,6 +10,7 @@ import { Module } from '@nestjs/common';
 
 import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
+import { GetEventsGamesGameIdV1RequestNestController } from '../controllers/GetEventsGamesGameIdV1RequestNestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
 import { GetGameV1GameIdGameOptionsHttpRequestNestController } from '../controllers/GetGameV1GameIdGameOptionsHttpRequestNestController';
 import { GetGameV1GameIdHttpRequestNestController } from '../controllers/GetGameV1GameIdHttpRequestNestController';
@@ -21,6 +22,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
 @Module({
   controllers: [
     // Mind the order
+    GetEventsGamesGameIdV1RequestNestController,
     GetGameV1MineHttpRequestNestController,
     GetGameV1GameIdGameOptionsHttpRequestNestController,
     GetGameV1GameIdHttpRequestNestController,
