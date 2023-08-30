@@ -34,7 +34,6 @@ import { SseConsumer } from './http/application/modules/SseConsumer';
 import { SsePublisher } from './http/application/modules/SsePublisher';
 import { SseTeardownExecutor } from './http/application/modules/SseTeardownExecutor';
 import { AuthMiddleware } from './user/application/middleware/AuthMiddleware';
-import { UserManagementInputPort } from './user/application/ports/input/UserManagementInputPort';
 
 export type {
   Auth,
@@ -51,7 +50,6 @@ export type {
   SseConsumer,
   SseTeardownExecutor,
   UserAuth,
-  UserManagementInputPort,
 };
 
 export {

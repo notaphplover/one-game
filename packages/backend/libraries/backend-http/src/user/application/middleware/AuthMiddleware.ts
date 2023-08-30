@@ -11,7 +11,6 @@ import { RequestWithBody } from '../../../http/application/models/RequestWithBod
 import { Response } from '../../../http/application/models/Response';
 import { ResponseWithBody } from '../../../http/application/models/ResponseWithBody';
 import { Middleware } from '../../../http/application/modules/Middleware';
-import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 
 // Auth headers are not case sensitive. Consider https://github.com/fastify/help/issues/71
 const AUTH_HEADER_NAME: string = 'authorization';
@@ -23,16 +22,10 @@ export abstract class AuthMiddleware<
 {
   readonly #backendServicesSecret: string;
   readonly #jwtService: JwtService<TPayload>;
-  readonly #userManagementInputPort: UserManagementInputPort;
 
-  constructor(
-    backendServicesSecret: string,
-    jwtService: JwtService<TPayload>,
-    userManagementInputPort: UserManagementInputPort,
-  ) {
+  constructor(backendServicesSecret: string, jwtService: JwtService<TPayload>) {
     this.#backendServicesSecret = backendServicesSecret;
     this.#jwtService = jwtService;
-    this.#userManagementInputPort = userManagementInputPort;
   }
 
   public async handle(
@@ -98,7 +91,7 @@ export abstract class AuthMiddleware<
     const userId: string = this._getUserId(jwtPayload);
 
     const userV1OrUndefined: apiModels.UserV1 | undefined =
-      await this.#userManagementInputPort.findOne(userId);
+      await this._findUser(userId);
 
     if (userV1OrUndefined === undefined) {
       throw new AppError(
@@ -116,6 +109,10 @@ export abstract class AuthMiddleware<
       user: userV1OrUndefined,
     };
   }
+
+  protected abstract _findUser(
+    id: string,
+  ): Promise<apiModels.UserV1 | undefined>;
 
   protected abstract _getUserId(jwtPayload: TPayload): string;
 }
