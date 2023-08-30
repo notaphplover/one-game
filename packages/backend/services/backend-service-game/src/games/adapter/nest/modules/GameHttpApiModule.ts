@@ -1,8 +1,3 @@
-import {
-  EnvModule,
-  Environment,
-  EnvironmentService,
-} from '@cornie-js/backend-app-game-env';
 import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
 import { GameDbModule } from '@cornie-js/backend-game-adapter-typeorm';
 import { GameHttpApiModule as GameHttpApiApplicationModule } from '@cornie-js/backend-game-application';
@@ -10,6 +5,7 @@ import { Module } from '@nestjs/common';
 
 import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
+import { buildIoredisModuleOptions } from '../../../../foundation/redis/adapter/ioredis/calculations/buildIoredisModuleOptions';
 import { GetEventsGamesGameIdV1RequestNestController } from '../controllers/GetEventsGamesGameIdV1RequestNestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
 import { GetGameV1GameIdGameOptionsHttpRequestNestController } from '../controllers/GetGameV1GameIdGameOptionsHttpRequestNestController';
@@ -34,18 +30,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
   imports: [
     GameHttpApiApplicationModule.forRootAsync([
       GameDbModule.forRootAsync(buildDbModuleOptions()),
-      GameIoredisModule.forRootAsync({
-        imports: [EnvModule],
-        inject: [EnvironmentService],
-        useFactory: (environmentService: EnvironmentService) => {
-          const environment: Environment = environmentService.getEnvironment();
-
-          return {
-            host: environment.pubSubRedisHost,
-            port: environment.pubSubRedisPort,
-          };
-        },
-      }),
+      GameIoredisModule.forRootAsync(buildIoredisModuleOptions()),
     ]),
     HttpModule,
   ],
