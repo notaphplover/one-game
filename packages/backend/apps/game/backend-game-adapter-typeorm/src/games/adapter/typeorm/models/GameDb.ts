@@ -56,9 +56,10 @@ export class GameDb {
 
   @Column({
     name: 'deck',
+    nullable: true,
     type: 'json',
   })
-  public readonly deck!: string;
+  public readonly deck!: string | null;
 
   @Column({
     name: 'discard_pile',

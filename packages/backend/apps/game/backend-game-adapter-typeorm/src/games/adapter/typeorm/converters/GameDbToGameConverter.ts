@@ -113,6 +113,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       gameDb.currentDirection === null ||
       gameDb.currentPlayingSlotIndex === null ||
       gameDb.currentTurnCardsPlayed === null ||
+      gameDb.deck === null ||
       gameDb.drawCount === null
     ) {
       throw new AppError(AppErrorKind.unknown, 'Unexpected card spec db entry');
