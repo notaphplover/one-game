@@ -46,7 +46,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       currentDirection: null,
       currentPlayingSlotIndex: null,
       currentTurnCardsPlayed: null,
-      deck: gameCardsStringified,
+      deck: null,
       discardPile: discardPileStringified,
       gameSlotsAmount: gameCreateQuery.spec.gameSlotsAmount,
       id: gameCreateQuery.id,

@@ -306,7 +306,7 @@ describe(GameDbToGameConverter.name, () => {
         GameCardSpecDb,
       ];
 
-      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck) as [
+      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck as string) as [
         GameCardSpecDb,
       ];
     });
