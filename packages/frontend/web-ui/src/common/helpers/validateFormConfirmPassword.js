@@ -20,7 +20,7 @@ export const validateFormConfirmPassword = (
     errorMessages.push('Confirm password must match the password.');
   }
 
-  if (formChecked.confirmPassword !== '') {
+  if (errorMessages.length !== 0) {
     formChecked.confirmPassword = errorMessages.join('\n');
   }
 };
