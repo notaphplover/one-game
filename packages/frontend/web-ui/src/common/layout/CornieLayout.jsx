@@ -3,7 +3,7 @@ import { Footer, Navbar } from '../components';
 
 export const CornieLayout = ({ children }) => {
   return (
-    <Box sx={{ bgcolor: 'secondary.light' }}>
+    <Box className="bkg-layout">
       <Navbar />
 
       {children}

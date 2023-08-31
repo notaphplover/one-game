@@ -1,0 +1,6 @@
+@use '../base/variables' as variables;
+
+div.cornie-card {
+  border-radius: 10px;
+  background-color: variables.$black;
+}

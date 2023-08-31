@@ -71,9 +71,13 @@ export const Navbar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  className="navbar-menu-item"
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                >
                   <Link
-                    className="link_navbar"
+                    className="navbar_link"
                     component={RouterLink}
                     to={directTo(page)}
                   >
