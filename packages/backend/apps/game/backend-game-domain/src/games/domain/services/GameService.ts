@@ -166,7 +166,9 @@ export class GameService {
   public getInitialCardsSpec(): GameCardSpec[] {
     const [zeroNumber, ...nonZeroNumbers]: [number, ...number[]] = new Array(
       UNO_ORIGINAL_NUMBERS_AMOUNT,
-    ).map((_: unknown, index: number) => index) as [number, ...number[]];
+    )
+      .fill(null)
+      .map((_: unknown, index: number) => index) as [number, ...number[]];
 
     const actionCardKinds: (
       | CardKind.draw

@@ -5,6 +5,8 @@ import { AuthRequestContextHolder } from './auth/application/models/AuthRequestC
 import { BackendServiceAuth } from './auth/application/models/BackendServiceAuth';
 import { UserAuth } from './auth/application/models/UserAuth';
 import { FastifyReplyFromResponseBuilder } from './http/adapter/fastify/builders/FastifyReplyFromResponseBuilder';
+import { FastifyReplySseConsumerFromFastifyReplyBuilder } from './http/adapter/fastify/builders/FastifyReplySseConsumerFromFastifyReplyBuilder';
+import { FastifySseReplyFromResponseBuilder } from './http/adapter/fastify/builders/FastifySseReplyFromResponseBuilder';
 import { RequestFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestFromFastifyRequestBuilder';
 import { RequestWithBodyFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestWithBodyFromFastifyRequestBuilder';
 import { HttpNestFastifyController } from './http/adapter/nest/controllers/HttpNestFastifyController';
@@ -15,26 +17,30 @@ import { SingleEntityDeleteResponseBuilder } from './http/application/builders/S
 import { SingleEntityGetResponseBuilder } from './http/application/builders/SingleEntityGetResponseBuilder';
 import { SingleEntityPatchResponseBuilder } from './http/application/builders/SingleEntityPatchResponseBuilder';
 import { SingleEntityPostResponseBuilder } from './http/application/builders/SingleEntityPostResponseBuilder';
+import { StringifiedSseFromMessageEventBuilder } from './http/application/builders/StringifiedSseFromMessageEventBuilder';
 import { HttpRequestController } from './http/application/controllers/HttpRequestController';
+import { HttpSseRequestController } from './http/application/controllers/HttpSseRequestController';
+import { MessageEvent } from './http/application/models/MessageEvent';
 import { Request } from './http/application/models/Request';
 import { RequestContextHolder } from './http/application/models/RequestContextHolder';
 import { requestContextProperty } from './http/application/models/requestContextProperty';
 import { RequestWithBody } from './http/application/models/RequestWithBody';
 import { Response } from './http/application/models/Response';
 import { ResponseWithBody } from './http/application/models/ResponseWithBody';
+import { DelayedSseConsumer } from './http/application/modules/DelayedSseConsumer';
 import { Middleware } from './http/application/modules/Middleware';
 import { MiddlewarePipeline } from './http/application/modules/MiddlewarePipeline';
 import { SseConsumer } from './http/application/modules/SseConsumer';
 import { SsePublisher } from './http/application/modules/SsePublisher';
 import { SseTeardownExecutor } from './http/application/modules/SseTeardownExecutor';
 import { AuthMiddleware } from './user/application/middleware/AuthMiddleware';
-import { UserManagementInputPort } from './user/application/ports/input/UserManagementInputPort';
 
 export type {
   Auth,
   AuthRequestContext,
   AuthRequestContextHolder,
   BackendServiceAuth,
+  MessageEvent,
   Middleware,
   Request,
   RequestContextHolder,
@@ -44,17 +50,20 @@ export type {
   SseConsumer,
   SseTeardownExecutor,
   UserAuth,
-  UserManagementInputPort,
 };
 
 export {
   AuthKind,
   AuthMiddleware,
+  DelayedSseConsumer,
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
+  FastifyReplySseConsumerFromFastifyReplyBuilder,
+  FastifySseReplyFromResponseBuilder,
   HttpNestFastifyController,
   HttpNestFastifySseController,
   HttpRequestController,
+  HttpSseRequestController,
   MiddlewarePipeline,
   MultipleEntitiesGetResponseBuilder,
   RequestFromFastifyRequestBuilder,
@@ -65,4 +74,5 @@ export {
   SingleEntityPatchResponseBuilder,
   SingleEntityPostResponseBuilder,
   SsePublisher,
+  StringifiedSseFromMessageEventBuilder,
 };

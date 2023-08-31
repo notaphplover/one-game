@@ -1,3 +1,4 @@
+import { UserV1 } from '@cornie-js/api-models/lib/models/types';
 import { EnvironmentService } from '@cornie-js/backend-app-game-env';
 import { JwtService } from '@cornie-js/backend-app-jwt';
 import * as backendHttp from '@cornie-js/backend-http';
@@ -8,6 +9,8 @@ import { UserManagementInputPort } from '../../../users/application/ports/input/
 
 @Injectable()
 export class AuthMiddleware extends backendHttp.AuthMiddleware<UserJwtPayload> {
+  readonly #userManagementInputPort: UserManagementInputPort;
+
   constructor(
     @Inject(EnvironmentService)
     environmentService: EnvironmentService,
@@ -19,11 +22,16 @@ export class AuthMiddleware extends backendHttp.AuthMiddleware<UserJwtPayload> {
     super(
       environmentService.getEnvironment().apiBackendServiceSecret,
       jwtService,
-      userManagementInputPort,
     );
+
+    this.#userManagementInputPort = userManagementInputPort;
   }
 
-  protected _getUserId(jwtPayload: UserJwtPayload): string {
+  protected override async _findUser(id: string): Promise<UserV1 | undefined> {
+    return this.#userManagementInputPort.findOne(id);
+  }
+
+  protected override _getUserId(jwtPayload: UserJwtPayload): string {
     return jwtPayload.sub;
   }
 }

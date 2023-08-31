@@ -1,5 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import { CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
@@ -12,6 +17,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardColorFromCardColorV1Builder } from '../../../cards/application/builders/CardColorFromCardColorV1Builder';
+import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
   GameOptionsPersistenceOutputPort,
   gameOptionsPersistenceOutputPortSymbol,
@@ -37,6 +43,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
     gameService: GameService,
+    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(CardColorFromCardColorV1Builder)
@@ -51,6 +58,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       gameOptionsPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameService,
+      gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
     );
 
