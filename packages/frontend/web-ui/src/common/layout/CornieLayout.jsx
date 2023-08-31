@@ -6,7 +6,7 @@ export const CornieLayout = ({ children }) => {
     <Box className="bkg-layout">
       <Navbar />
 
-      {children}
+      <article>{children}</article>
 
       <Footer />
     </Box>
