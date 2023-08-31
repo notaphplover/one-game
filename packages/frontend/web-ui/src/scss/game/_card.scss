@@ -1,6 +1,44 @@
 @use '../base/variables' as variables;
 
 div.cornie-card {
-  border-radius: 10px;
+  border-radius: 1.5rem;
   background-color: variables.$black;
+  height: 100%;
+  padding: 0.5rem 0.5rem;
+  width: 100%;
+}
+
+div.cornie-card div.cornie-card-inner-border {
+  border-radius: 1rem;
+  background-color: var(--cg-bkg-primary-light);
+  height: 100%;
+  padding: 0.5rem 0.5rem;
+  width: 100%;
+}
+
+div.cornie-card div.cornie-card-inner-content {
+  background-color: variables.$black;
+  border-radius: 0.5rem;
+  display: grid;
+  height: 100%;
+  width: 100%;
+}
+
+div.cornie-card div.cornie-card-icon {
+  align-self: end;
+  padding: 0 1rem;
+}
+
+div.cornie-card div.cornie-card-icon path {
+  stroke: var(--cg-bkg-primary-main);
+}
+
+div.cornie-card div.cornie-card-text {
+  align-self: start;
+  color: var(--cg-bkg-primary-main);
+  font-family: 'Gochi Hand';
+  font-weight: bold;
+  font-size: 1.5rem;
+  letter-spacing: 0.3rem;
+  text-align: center;
 }
