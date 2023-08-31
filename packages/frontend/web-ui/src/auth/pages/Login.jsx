@@ -59,13 +59,9 @@ export const Login = () => {
               name="email"
               value={formState.email}
               onChange={onInputChange}
-              error={
-                formValidation.emailValidationError !== null && formSubmitted
-              }
+              error={formValidation.email !== null && formSubmitted}
               helperText={
-                formValidation.emailValidationError &&
-                formSubmitted &&
-                formValidation.emailValidationError
+                formValidation.email && formSubmitted && formValidation.email
               }
             />
           </Grid>
@@ -93,13 +89,11 @@ export const Login = () => {
               name="password"
               value={formState.password}
               onChange={onInputChange}
-              error={
-                formValidation.passwordValidationError !== null && formSubmitted
-              }
+              error={formValidation.password !== null && formSubmitted}
               helperText={
-                formValidation.passwordValidationError &&
+                formValidation.password &&
                 formSubmitted &&
-                formValidation.passwordValidationError
+                formValidation.password
               }
             />
           </Grid>
