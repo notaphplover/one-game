@@ -11,6 +11,7 @@
     "test": "jest",
     "test:js": "pnpm run test",
     "test:uncommitted": "pnpm run test --changedSince=HEAD",
+    "test:unit:js": "pnpm run test:js",
     "test:watch": "pnpm run test --watchAll"
   },
   "dependencies": {
