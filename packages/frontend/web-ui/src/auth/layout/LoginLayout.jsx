@@ -3,7 +3,7 @@ import { Grid, Typography } from '@mui/material';
 export const LoginLayout = ({ children, title = '' }) => {
   return (
     <Grid
-      className="bkg-register-login"
+      className="bkg-layout"
       container
       spacing={0}
       direction="column"
@@ -12,7 +12,7 @@ export const LoginLayout = ({ children, title = '' }) => {
     >
       <Grid item sx={{ mb: 2 }}>
         <Typography
-          className="logo_register"
+          className="contrast-text-hover"
           variant="h4"
           noWrap
           component="a"
@@ -37,10 +37,11 @@ export const LoginLayout = ({ children, title = '' }) => {
         className="box-shadow"
         xs={3}
         sx={{
-          width: { sm: 450 },
           backgroundColor: 'primary.white',
-          padding: 3,
           borderRadius: 2,
+          color: 'primary.light',
+          padding: 3,
+          width: { sm: 450 },
         }}
       >
         <Typography variant="h5" sx={{ mb: 1, paddingBottom: 2 }}>
