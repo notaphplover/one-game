@@ -1,7 +1,18 @@
 @use 'variables' as v;
 
+:root {
+  /* --- COLORS ---*/
+  --cg-bkg-primary-light: #a44fbb; /* theme.palette.primary.light */
+  --cg-bkg-primary-main: #8e24aa; /* theme.palette.primary.main */
+  --cg-bkg-primary-dark: #631976; /* theme.palette.primary.dark */
+  --cg-text-primary: #fff; /* theme.palette.primary.contrastText */
+  --cg-bkg-secondary-light: #ee99fc; /* theme.palette.secondary.light */
+  --cg-bkg-secondary-main: #ea80fc; /* theme.palette.secondary.main */
+  --cg-btn-second-bg-dark: #a359b0; /* theme.palette.secondary.dark */
+  --cg-btn-second-txt: gray;
+}
+
 html {
-  font-size: 62.5%;
   box-sizing: border-box;
 }
 
@@ -13,27 +24,54 @@ html {
 
 body {
   font-family: v.$principal_font;
-  font-size: 1.6rem;
+  font-size: 1rem;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--cg-bkg-secondary-light);
+  text-decoration: none;
 }
 
 h1 {
-  font-size: 4rem;
-}
-
-h2 {
-  font-size: 3.6rem;
-}
-
-h3 {
   font-size: 3rem;
 }
 
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
 img {
-  max-width: 95%;
-  /* **** */
-  /* Se recomienda poner estas propiedades ya que las imagenes en el HTML se deben configurar con un width=300 y un height=200 */
+  max-width: 100%;
   width: 100%;
   height: auto;
-  /* **** */
   display: block;
+}
+
+.box-shadow {
+  box-shadow: 0px 5px 5px rgba(68, 2, 131, 0.5);
+}
+
+.bkg-layout {
+  background-color: var(--cg-bkg-secondary-light);
+  min-height: 100vh;
+}
+
+a.contrast-text-hover:hover {
+  color: var(--cg-text-primary);
+}
+
+.navbar_link {
+  color: var(--cg-bkg-primary-dark);
+}
+
+.navbar-menu-item {
+  padding: 1rem;
 }
