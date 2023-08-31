@@ -1,0 +1,31 @@
+.home-cards-grid {
+  display: flex;
+  gap: 0 1rem;
+  justify-content: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.home-cards-grid .home-cards-grid-element {
+  height: 225px;
+  width: 150px;
+}
+
+.home-cards-grid .home-cards-grid-element.rotate-left {
+  transform: rotate(-8deg);
+}
+
+.home-cards-grid .home-cards-grid-element.rotate-right {
+  transform: rotate(8deg);
+}
+
+@media (min-width: 576px) {
+  .home-cards-grid {
+    gap: 0 2rem;
+  }
+
+  .home-cards-grid .home-cards-grid-element {
+    height: 300px;
+    width: 200px;
+  }
+}
