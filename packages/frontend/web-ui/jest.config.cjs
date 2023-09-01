@@ -1,5 +1,6 @@
 /** @type {!import("@jest/types").Config.InitialOptions} */
 module.exports = {
+  passWithNoTests: true,
   rootDir: '.',
   roots: ['<rootDir>'],
   testEnvironment: 'jest-environment-jsdom',
