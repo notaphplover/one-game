@@ -5,7 +5,7 @@ import { ReversedCard } from '../../game/components/ReversedCard';
 
 export const CornieHome = () => {
   return (
-    <CornieLayout>
+    <CornieLayout withFooter withNavBar>
       <Grid container className="page-section-container">
         <Grid item xs={12}>
           <Box component="div" className="home-cards-grid">
