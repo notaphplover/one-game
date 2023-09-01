@@ -1,0 +1,35 @@
+@use '../base/variables' as variables;
+
+.home-button-container {
+  background-color: variables.$white;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.home-button-container .home-button {
+  display: block;
+  margin: 1rem auto;
+}
+
+.home-description {
+  color: var(--cg-bkg-primary-main);
+  display: none;
+}
+
+.home-description-mobile {
+  color: var(--cg-bkg-primary-main);
+  padding: 0rem 4rem;
+  text-align: center;
+}
+
+@media (min-width: variables.$sm) {
+  .home-description-mobile {
+    display: none;
+  }
+
+  .home-description {
+    display: inherit;
+    padding: 0rem 4rem;
+    text-align: center;
+  }
+}

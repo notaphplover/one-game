@@ -71,6 +71,11 @@ a.contrast-text-hover:hover {
   color: var(--cg-text-primary);
 }
 
+.page-section-container {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
 .navbar_link {
   color: var(--cg-bkg-primary-dark);
 }

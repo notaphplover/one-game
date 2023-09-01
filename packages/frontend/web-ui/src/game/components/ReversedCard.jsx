@@ -28,7 +28,7 @@ export const ReversedCard = () => {
             </svg>
           </Box>
           <Box component="div" className="cornie-card-text">
-            Cornie
+            CORNIE
           </Box>
         </Box>
       </Box>
