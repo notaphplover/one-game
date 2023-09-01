@@ -1,74 +1,68 @@
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Link, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { ReversedCard } from '../../game/components/ReversedCard';
 
 export const CornieHome = () => {
   return (
     <CornieLayout>
-      <Grid container sx={{ margin: '0 auto', maxWidth: '1200px' }}>
-        <Box component="span" sx={{ p: 10, color: 'primary.dark' }}>
-          <Typography
-            variant="h3"
-            component="h3"
-            sx={{ textAlign: 'center', lineHeight: 2, fontWeight: 'bold' }}
-          >
-            Welcome to Cornie's Game
-          </Typography>
-          <Grid
-            container
-            spacing={3}
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Grid item md={4} xs={12} sx={{ p: 1, mt: 2 }}>
-              <img
-                src="src/home/images/unicorn.avif"
-                loading="lazy"
-                alt="Cornie Unicorn"
-                width="320"
-                height="450"
-              />
-            </Grid>
-            <Grid item md={8} xs={12} sx={{ p: 1, mt: 2 }}>
-              <Typography
-                component="p"
-                sx={{ textAlign: 'justify', lineHeight: 2 }}
-              >
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
-                <br />
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
-                <br />
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
-              </Typography>
-            </Grid>
+      <Grid container className="page-section-container">
+        <Grid item xs={12}>
+          <Box component="div" className="home-cards-grid">
+            <Box component="div" className="home-cards-grid-element card-left">
+              <Box component="div" className="home-card-animation-panel">
+                <ReversedCard></ReversedCard>
+              </Box>
+            </Box>
+            <Box
+              component="div"
+              className="home-cards-grid-element card-middle"
+            >
+              <Box component="div" className="home-card-animation-panel">
+                <ReversedCard></ReversedCard>
+              </Box>
+            </Box>
+            <Box component="div" className="home-cards-grid-element card-right">
+              <Box component="div" className="home-card-animation-panel">
+                <ReversedCard></ReversedCard>
+              </Box>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={12}>
+          <Grid item xs={12}>
+            <Box component="div" className="home-button-container">
+              <Box component="div" className="page-section-container">
+                <Typography
+                  variant="h3"
+                  className="home-description-mobile"
+                  component="h3"
+                >
+                  Made with ❤ and passion
+                </Typography>
+                <Typography
+                  variant="h3"
+                  className="home-description"
+                  component="h3"
+                >
+                  Enjoy this magical card game made with ❤ and passion
+                </Typography>
+
+                <Link component={RouterLink} to="/auth/register">
+                  <Button
+                    type="button"
+                    className="home-button"
+                    variant="contained"
+                  >
+                    Join us
+                  </Button>
+                </Link>
+              </Box>
+            </Box>
           </Grid>
-        </Box>
+        </Grid>
       </Grid>
     </CornieLayout>
   );

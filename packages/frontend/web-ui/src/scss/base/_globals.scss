@@ -61,11 +61,19 @@ img {
 
 .bkg-layout {
   background-color: var(--cg-bkg-secondary-light);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  margin: 0;
   min-height: 100vh;
 }
 
 a.contrast-text-hover:hover {
   color: var(--cg-text-primary);
+}
+
+.page-section-container {
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .navbar_link {

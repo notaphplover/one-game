@@ -1,0 +1,60 @@
+@use '../base/variables' as variables;
+
+.home-cards-grid {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.home-cards-grid .home-cards-grid-element {
+  height: 225px;
+  margin: 0 -32px;
+  width: 150px;
+}
+
+.home-cards-grid .home-cards-grid-element.card-left {
+  transform: rotate(-8deg);
+}
+
+.home-cards-grid .home-cards-grid-element.card-middle {
+  transform: translate(0, -1rem);
+  z-index: 1;
+}
+
+.home-cards-grid .home-cards-grid-element.card-right {
+  transform: rotate(8deg);
+}
+
+.home-cards-grid .home-cards-grid-element .home-card-animation-panel {
+  animation: wave 5s ease-in-out infinite;
+  height: 100%;
+}
+
+.home-cards-grid
+  .home-cards-grid-element.card-middle
+  .home-card-animation-panel {
+  animation: wave 5s ease-in-out -0.5s infinite;
+}
+
+.home-cards-grid .home-cards-grid-element div.cornie-card {
+  box-shadow: 2px 4px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: variables.$sm) {
+  .home-cards-grid .home-cards-grid-element {
+    height: 300px;
+    margin: 0 -40px;
+    width: 200px;
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0, -1rem);
+  }
+}
