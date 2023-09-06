@@ -38,45 +38,6 @@ describe(Register.name, () => {
     handleMouseDownPasswordMock = jest.fn();
   });
 
-  // describe('when called, take a snapshot', () => {
-  //   let containerForSnapshot;
-
-  //   beforeAll(() => {
-  //     const backendErrorFixture = 'backend Error';
-  //     useRegisterForm.mockReturnValue({
-  //       backendError: backendErrorFixture,
-  //       formFields: formFieldsFixture,
-  //       formStatus: STATUS_REG_BACKEND_KO,
-  //       formValidation: {},
-  //       notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-  //       setFormField: setFormFieldMock,
-  //     });
-
-  //     useShowPassword.mockReturnValue({
-  //       showPassword: false,
-  //       handleClickShowPassword: handleClickShowPasswordMock,
-  //       handleMouseDownPassword: handleMouseDownPasswordMock,
-  //     });
-
-  //     const { container } = render(
-  //       <MemoryRouter>
-  //         <Register />
-  //       </MemoryRouter>,
-  //     );
-
-  //     containerForSnapshot = container;
-  //   });
-
-  //   afterAll(() => {
-  //     jest.clearAllMocks();
-  //     jest.resetAllMocks();
-  //   });
-
-  //   it('should initialize alias', () => {
-  //     expect(containerForSnapshot).toMatchSnapshot();
-  //   });
-  // });
-
   describe('when called, on an initial state', () => {
     let inputAlias;
     let inputEmail;
