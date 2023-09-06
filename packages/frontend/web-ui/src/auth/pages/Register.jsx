@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Alert,
+  AlertTitle,
   Button,
   Grid,
   IconButton,
@@ -81,6 +82,7 @@ export const Register = () => {
         >
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              aria-label="form-register-alias"
               autoFocus
               disabled={isTextFieldDisabled()}
               label="Alias"
@@ -96,6 +98,7 @@ export const Register = () => {
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              aria-label="form-register-email"
               disabled={isTextFieldDisabled()}
               label="Email"
               type="email"
@@ -110,6 +113,7 @@ export const Register = () => {
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              aria-label="form-register-password"
               disabled={isTextFieldDisabled()}
               label="Password"
               type={showPassword ? 'text' : 'password'}
@@ -140,6 +144,7 @@ export const Register = () => {
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              aria-label="form-register-confirm-password"
               disabled={isTextFieldDisabled()}
               label="Confirm Password"
               type={showPassword ? 'text' : 'password'}
@@ -170,18 +175,29 @@ export const Register = () => {
           </Grid>
         </Grid>
 
-        <Grid container display={backendError !== null ? '' : 'none'}>
+        <Grid
+          aria-label="form-register-error"
+          container
+          display={backendError !== null ? '' : 'none'}
+        >
           <Grid item xs={12} sx={{ mt: 3 }}>
-            <Alert severity="error">{backendError}</Alert>
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {backendError}
+            </Alert>
           </Grid>
         </Grid>
 
         <Grid
+          aria-label="form-register-ok"
           container
           display={formStatus === STATUS_REG_BACKEND_OK ? '' : 'none'}
         >
           <Grid item xs={12} sx={{ mt: 3 }}>
-            <Alert severity="success">{`User created! We sent an email, please, complete the steps.`}</Alert>
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              {`User created! We sent an email, please, complete the steps.`}
+            </Alert>
           </Grid>
         </Grid>
 
@@ -198,6 +214,7 @@ export const Register = () => {
         >
           <Grid item xs={12} sm={12}>
             <Button
+              aria-label="form-register-button"
               disabled={formStatus === STATUS_REG_BACKEND_OK ? true : false}
               type="submit"
               variant="contained"
