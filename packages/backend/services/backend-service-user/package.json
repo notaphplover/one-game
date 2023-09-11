@@ -6,9 +6,9 @@
   "description": "Backend user service for one-game-js",
   "dependencies": {
     "@fastify/helmet": "11.0.0",
-    "@nestjs/common": "10.2.4",
-    "@nestjs/core": "10.2.4",
-    "@nestjs/platform-fastify": "10.2.4",
+    "@nestjs/common": "10.2.5",
+    "@nestjs/core": "10.2.5",
+    "@nestjs/platform-fastify": "10.2.5",
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-adapter-nodemailer": "workspace:*",
     "@cornie-js/backend-application-mail": "workspace:*",
@@ -17,7 +17,7 @@
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-user-application": "workspace:*",
-    "fastify": "4.22.2",
+    "fastify": "4.23.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1",
     "typeorm": "0.3.17"
