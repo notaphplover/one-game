@@ -242,7 +242,7 @@ describe(Register.name, () => {
     });
   });
 
-  describe('when called, and create user is ok and the message is displayed', () => {
+  describe('when called, and the Create button is pressed', () => {
     let userCreateOK;
     const messageConfirmation =
       'User created! We sent an email, please, complete the steps.';
