@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { Register } from './Register';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import {
   STATUS_REG_BACKEND_KO,
@@ -283,6 +283,44 @@ describe(Register.name, () => {
 
     it('should display a textbox with the confirmation message', () => {
       expect(userCreateOK).toBe(messageConfirmation);
+    });
+  });
+
+  describe('when called, and the Create button is pressed', () => {
+    beforeAll(() => {
+      useRegisterForm.mockReturnValue({
+        backendError: null,
+        formFields: formFieldsFixture,
+        formStatus: STATUS_REG_INITIAL,
+        formValidation: {},
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormField: setFormFieldMock,
+      });
+
+      useShowPassword.mockReturnValue({
+        showPassword: false,
+        handleClickShowPassword: handleClickShowPasswordMock,
+        handleMouseDownPassword: handleMouseDownPasswordMock,
+      });
+
+      render(
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>,
+      );
+
+      const buttonCreate = screen.getByLabelText('form-register-button');
+      fireEvent.click(buttonCreate);
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('should call to notifyFormFieldsFilled', () => {
+      expect(notifyFormFieldsFilledMock).toHaveBeenCalledTimes(1);
+      expect(notifyFormFieldsFilledMock).toHaveBeenCalledWith();
     });
   });
 });
