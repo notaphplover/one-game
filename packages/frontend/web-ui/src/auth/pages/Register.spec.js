@@ -242,7 +242,7 @@ describe(Register.name, () => {
     });
   });
 
-  describe('when called, and the Create button is pressed', () => {
+  describe('when called, and create user is ok and the message is displayed', () => {
     let userCreateOK;
     const messageConfirmation =
       'User created! We sent an email, please, complete the steps.';
@@ -286,7 +286,7 @@ describe(Register.name, () => {
     });
   });
 
-  describe('when called, and click on the button Create', () => {
+  describe('when called, and the Create button is pressed', () => {
     beforeAll(() => {
       useRegisterForm.mockReturnValue({
         backendError: null,
