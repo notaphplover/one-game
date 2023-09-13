@@ -17,7 +17,7 @@
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-user-application": "workspace:*",
-    "fastify": "4.23.0",
+    "fastify": "4.23.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1",
     "typeorm": "0.3.17"
