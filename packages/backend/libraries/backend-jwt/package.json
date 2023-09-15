@@ -6,7 +6,7 @@
   "description": "Backend jwt library for one-game-js services",
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
-    "@types/jsonwebtoken": "9.0.2",
+    "@types/jsonwebtoken": "9.0.3",
     "jsonwebtoken": "9.0.2"
   },
   "devDependencies": {
@@ -17,7 +17,7 @@
     "eslint": "8.49.0",
     "eslint-import-resolver-typescript": "3.6.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jest": "27.2.3",
+    "eslint-plugin-jest": "27.4.0",
     "eslint-plugin-prettier": "5.0.0",
     "jest": "29.7.0",
     "prettier": "3.0.3",
