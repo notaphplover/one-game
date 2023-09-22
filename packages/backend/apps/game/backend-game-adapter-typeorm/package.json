@@ -5,7 +5,7 @@
   },
   "description": "Backend user app models",
   "dependencies": {
-    "@nestjs/common": "10.2.5",
+    "@nestjs/common": "10.2.6",
     "@nestjs/typeorm": "10.0.0",
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
@@ -21,7 +21,7 @@
     "@typescript-eslint/eslint-plugin": "6.7.2",
     "@typescript-eslint/parser": "6.7.2",
     "eslint": "8.49.0",
-    "eslint-import-resolver-typescript": "3.6.0",
+    "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jest": "27.4.0",
     "eslint-plugin-prettier": "5.0.0",
