@@ -7,12 +7,12 @@
   "dependencies": {
     "@cornie-js/backend-application-mail": "workspace:*",
     "@nestjs/common": "10.2.6",
-    "@types/nodemailer": "6.4.10",
+    "@types/nodemailer": "6.4.11",
     "nodemailer": "6.9.5"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@types/node": "18.17.18",
+    "@types/node": "18.17.19",
     "@typescript-eslint/eslint-plugin": "6.7.2",
     "@typescript-eslint/parser": "6.7.2",
     "eslint": "8.50.0",
