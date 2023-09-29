@@ -10,7 +10,7 @@
     "@cornie-js/json-schema-utils": "workspace:*",
     "@cornie-js/openapi-utils": "workspace:*",
     "@types/clone-deep": "4.0.2",
-    "@types/node": "18.18.0",
+    "@types/node": "18.18.1",
     "@typescript-eslint/eslint-plugin": "6.7.3",
     "@typescript-eslint/parser": "6.7.3",
     "eslint": "8.50.0",
