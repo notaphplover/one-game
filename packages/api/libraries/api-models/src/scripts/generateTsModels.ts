@@ -68,9 +68,9 @@ function jsonRootSchema202012ToIdToBufferMapEntry(
 }
 
 function arrayHasThreeElements<T>(value: T[]): value is [T, T, T, ...T[]] {
-  const fourElementArrayLength: number = 3;
+  const arrayMinimumLength: number = 3;
 
-  return value.length >= fourElementArrayLength;
+  return value.length >= arrayMinimumLength;
 }
 
 async function generateAllSchemas(destinationPath: string): Promise<void> {
