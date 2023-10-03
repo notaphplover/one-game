@@ -47,22 +47,40 @@ export type CodeAuthCreateInput = {
 };
 
 export type CreateAuthMutation = {
-  __typename?: 'CreateAuthMutation';
-  createByCode: Maybe<Auth>;
-  createByCredentials: Maybe<Auth>;
+  createAuthByCode: Auth;
+  createAuthByCredentials: Auth;
 };
 
-export type CreateAuthMutationCreateByCodeArgs = {
+export type CreateAuthMutationCreateAuthByCodeArgs = {
   codeAuthCreateInput: CodeAuthCreateInput;
 };
 
-export type CreateAuthMutationCreateByCredentialsArgs = {
+export type CreateAuthMutationCreateAuthByCredentialsArgs = {
   emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
 };
 
 export type EmailPasswordAuthCreateInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type RootMutation = CreateAuthMutation & {
+  __typename?: 'RootMutation';
+  createAuthByCode: Auth;
+  createAuthByCredentials: Auth;
+};
+
+export type RootMutationCreateAuthByCodeArgs = {
+  codeAuthCreateInput: CodeAuthCreateInput;
+};
+
+export type RootMutationCreateAuthByCredentialsArgs = {
+  emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+};
+
+export type RootQuery = {
+  __typename?: 'RootQuery';
+  foo: Maybe<Scalars['String']['output']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -173,13 +191,23 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
+  ResolversObject<{
+    CreateAuthMutation: RootMutation;
+  }>;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Auth: ResolverTypeWrapper<Auth>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CodeAuthCreateInput: CodeAuthCreateInput;
-  CreateAuthMutation: ResolverTypeWrapper<CreateAuthMutation>;
+  CreateAuthMutation: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['CreateAuthMutation']
+  >;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  RootMutation: ResolverTypeWrapper<{}>;
+  RootQuery: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 }>;
 
@@ -188,8 +216,10 @@ export type ResolversParentTypes = ResolversObject<{
   Auth: Auth;
   Boolean: Scalars['Boolean']['output'];
   CodeAuthCreateInput: CodeAuthCreateInput;
-  CreateAuthMutation: CreateAuthMutation;
+  CreateAuthMutation: ResolversInterfaceTypes<ResolversParentTypes>['CreateAuthMutation'];
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  RootMutation: {};
+  RootQuery: {};
   String: Scalars['String']['output'];
 }>;
 
@@ -207,25 +237,57 @@ export type CreateAuthMutationResolvers<
   ParentType extends
     ResolversParentTypes['CreateAuthMutation'] = ResolversParentTypes['CreateAuthMutation'],
 > = ResolversObject<{
-  createByCode: Resolver<
-    Maybe<ResolversTypes['Auth']>,
+  __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
+  createAuthByCode: Resolver<
+    ResolversTypes['Auth'],
     ParentType,
     ContextType,
-    RequireFields<CreateAuthMutationCreateByCodeArgs, 'codeAuthCreateInput'>
+    RequireFields<CreateAuthMutationCreateAuthByCodeArgs, 'codeAuthCreateInput'>
   >;
-  createByCredentials: Resolver<
-    Maybe<ResolversTypes['Auth']>,
+  createAuthByCredentials: Resolver<
+    ResolversTypes['Auth'],
     ParentType,
     ContextType,
     RequireFields<
-      CreateAuthMutationCreateByCredentialsArgs,
+      CreateAuthMutationCreateAuthByCredentialsArgs,
       'emailPasswordAuthCreateInput'
     >
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type RootMutationResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['RootMutation'] = ResolversParentTypes['RootMutation'],
+> = ResolversObject<{
+  createAuthByCode: Resolver<
+    ResolversTypes['Auth'],
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationCreateAuthByCodeArgs, 'codeAuthCreateInput'>
+  >;
+  createAuthByCredentials: Resolver<
+    ResolversTypes['Auth'],
+    ParentType,
+    ContextType,
+    RequireFields<
+      RootMutationCreateAuthByCredentialsArgs,
+      'emailPasswordAuthCreateInput'
+    >
+  >;
+}>;
+
+export type RootQueryResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['RootQuery'] = ResolversParentTypes['RootQuery'],
+> = ResolversObject<{
+  foo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Auth: AuthResolvers<ContextType>;
   CreateAuthMutation: CreateAuthMutationResolvers<ContextType>;
+  RootMutation: RootMutationResolvers<ContextType>;
+  RootQuery: RootQueryResolvers<ContextType>;
 }>;

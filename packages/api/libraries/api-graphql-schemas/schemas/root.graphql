@@ -1,0 +1,18 @@
+#import Auth from './auth/Auth.graphql'
+#import CodeAuthCreateInput from './auth/CodeAuthCreateInput.graphql'
+#import CreateAuthMutation from './auth/CreateAuthMutation.graphql'
+#import EmailPasswordAuthCreateInput from './auth/EmailPasswordAuthCreateInput.graphql'
+
+type RootMutation implements CreateAuthMutation {
+  createAuthByCode(codeAuthCreateInput: CodeAuthCreateInput!): Auth!
+  createAuthByCredentials(emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput!): Auth!
+}
+
+type RootQuery {
+  foo: String
+}
+
+schema {
+  mutation: RootMutation
+  query: RootQuery
+}
