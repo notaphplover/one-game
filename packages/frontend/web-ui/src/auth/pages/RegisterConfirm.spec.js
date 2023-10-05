@@ -167,6 +167,53 @@ describe(RegisterConfirm.name, () => {
 
       it('should show the error grid', () => {
         expect(confirmRegisterErrorTokenGridDisplayValue).not.toBe('none');
+        expect(dispatchMock).toHaveBeenCalled();
+      });
+    });
+
+    afterAll(() => {
+      Object.defineProperty(window, 'location', {
+        value: previousLocation,
+        configurable: true,
+      });
+    });
+  });
+
+  describe('having a window with location.href without code query', () => {
+    let previousLocation;
+    let locationFixture;
+
+    beforeAll(() => {
+      previousLocation = window.location;
+      locationFixture = new URL('http://corniegame.com/auth/path?code=');
+
+      Object.defineProperty(window, 'location', {
+        value: new URL(locationFixture),
+        configurable: true,
+      });
+    });
+
+    describe('when called, and code query not exists and the error grid is showed', () => {
+      let confirmRegisterErrorGridDisplayValue;
+
+      beforeAll(async () => {
+        render(
+          <MemoryRouter>
+            <RegisterConfirm />
+          </MemoryRouter>,
+        );
+
+        const confirmRegisterErrorGrid = screen.getByLabelText(
+          'confirm-register-error-message',
+        );
+
+        confirmRegisterErrorGridDisplayValue = window
+          .getComputedStyle(confirmRegisterErrorGrid)
+          .getPropertyValue('display');
+      });
+
+      it('should show the error grid', () => {
+        expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
       });
     });
 
