@@ -97,6 +97,79 @@ describe(RegisterConfirm.name, () => {
       });
     });
 
+    describe('when called, and httpClient.updateUserMe() returns a non OK response', () => {
+      let confirmRegisterErrorGridDisplayValue;
+
+      beforeAll(async () => {
+        tokenFixture = 'jwt token fixture';
+        authErrorMessageFixture = 'Unexpected error!';
+
+        httpClient.updateUserMe.mockReturnValueOnce({
+          headers: {},
+          body: {
+            code: null,
+            description: 'Error Fixture',
+            parameters: {},
+          },
+          statusCode: 401,
+        });
+
+        buildSerializableResponse.mockImplementation((response) => ({
+          body: response.body,
+          statusCode: response.statusCode,
+        }));
+
+        render(
+          <MemoryRouter>
+            <RegisterConfirm />
+          </MemoryRouter>,
+        );
+
+        await waitFor(() => {
+          const confirmRegisterErrorGrid = screen.getByLabelText(
+            'confirm-register-error-message',
+          );
+
+          confirmRegisterErrorGridDisplayValue = window
+            .getComputedStyle(confirmRegisterErrorGrid)
+            .getPropertyValue('display');
+
+          expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
+        });
+      });
+
+      it('should show the error grid', () => {
+        expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
+      });
+    });
+
+    describe('when called, and token is null', () => {
+      let confirmRegisterErrorTokenGridDisplayValue;
+
+      beforeAll(async () => {
+        tokenFixture = null;
+        authErrorMessageFixture = 'Unexpected error!';
+
+        render(
+          <MemoryRouter>
+            <RegisterConfirm />
+          </MemoryRouter>,
+        );
+
+        const confirmRegisterErrorTokenGrid = screen.getByLabelText(
+          'confirm-register-error-message',
+        );
+
+        confirmRegisterErrorTokenGridDisplayValue = window
+          .getComputedStyle(confirmRegisterErrorTokenGrid)
+          .getPropertyValue('display');
+      });
+
+      it('should show the error grid', () => {
+        expect(confirmRegisterErrorTokenGridDisplayValue).not.toBe('none');
+      });
+    });
+
     afterAll(() => {
       Object.defineProperty(window, 'location', {
         value: previousLocation,
