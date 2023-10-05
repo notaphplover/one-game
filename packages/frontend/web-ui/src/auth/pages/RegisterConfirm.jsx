@@ -61,6 +61,7 @@ export const RegisterConfirm = () => {
 
           if (authErrorMessage !== null) {
             setErrorMessage(authErrorMessage);
+            setStatus(STATUS_REJECTED);
           }
           break;
       }
@@ -102,7 +103,7 @@ export const RegisterConfirm = () => {
         <Grid
           aria-label="confirm-register-error-message"
           container
-          display={errorMessage !== null ? '' : 'none'}
+          display={status === STATUS_REJECTED ? '' : 'none'}
         >
           <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
             <Alert severity="error">
