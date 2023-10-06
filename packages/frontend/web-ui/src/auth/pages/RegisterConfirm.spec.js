@@ -12,11 +12,6 @@ import {
 jest.mock('../hooks/useRegisterConfirm');
 
 describe(RegisterConfirm.name, () => {
-  afterAll(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
-  });
-
   describe('when called, and status is fulfilled', () => {
     let confirmRegisterOkGridDisplayValue;
 
@@ -44,9 +39,14 @@ describe(RegisterConfirm.name, () => {
     it('should show the success grid', () => {
       expect(confirmRegisterOkGridDisplayValue).not.toBe('none');
     });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+      jest.clearAllMocks();
+    });
   });
 
-  describe('when called, and is rejected', () => {
+  describe('when called, and status is rejected', () => {
     let confirmRegisterErrorGridDisplayValue;
 
     beforeAll(() => {
@@ -72,6 +72,11 @@ describe(RegisterConfirm.name, () => {
 
     it('should show the error grid', () => {
       expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
+    });
+
+    afterAll(() => {
+      jest.resetAllMocks();
+      jest.clearAllMocks();
     });
   });
 });
