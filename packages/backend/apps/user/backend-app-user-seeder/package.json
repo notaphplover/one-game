@@ -7,20 +7,20 @@
   "dependencies": {
     "@cornie-js/backend-app-user-seeds": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
-    "@nestjs/common": "10.2.6",
+    "@nestjs/common": "10.2.7",
     "@nestjs/typeorm": "10.0.0",
     "typeorm": "0.3.17"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.7.2",
-    "@typescript-eslint/parser": "6.7.2",
+    "@typescript-eslint/eslint-plugin": "6.7.4",
+    "@typescript-eslint/parser": "6.7.4",
     "eslint": "8.50.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jest": "27.4.0",
+    "eslint-plugin-jest": "27.4.2",
     "eslint-plugin-prettier": "5.0.0",
     "prettier": "3.0.3",
-    "rimraf": "5.0.1",
+    "rimraf": "5.0.5",
     "typescript": "5.2.2"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",

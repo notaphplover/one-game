@@ -1,0 +1,8 @@
+#import Auth from './Auth.graphql'
+#import CodeAuthCreateInput from './CodeAuthCreateInput.graphql'
+#import EmailPasswordAuthCreateInput from './EmailPasswordAuthCreateInput.graphql'
+
+interface CreateAuthMutation {
+  createAuthByCode(codeAuthCreateInput: CodeAuthCreateInput!): Auth!
+  createAuthByCredentials(emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput!): Auth!
+}

@@ -11,6 +11,10 @@
         "!lib/**/.spec.js"
       ]
     },
+    "@cornie-js/api-graphql-schemas#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["schemas/**/*.graphql"]
+    },
     "@cornie-js/api-json-schemas#build": {
       "dependsOn": ["^build"],
       "inputs": ["schemas/**/*.json"]
@@ -22,7 +26,12 @@
     },
     "@cornie-js/api-models#build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts"],
+      "inputs": ["src/**/*.ts", "!src/models/ApiSchemaId.ts.ts", "!src/models/types.ts"],
+      "outputs": ["lib/**", "src/models/ApiSchemaId.ts.ts", "src/models/types.ts"]
+    },
+    "@cornie-js/api-graphql-models#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts", "!src/models/types.ts"],
       "outputs": ["lib/**", "src/models/types.ts"]
     },
     "@cornie-js/web-ui#build": {
