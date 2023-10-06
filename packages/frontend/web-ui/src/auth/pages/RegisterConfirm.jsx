@@ -12,6 +12,14 @@ import {
 export const RegisterConfirm = () => {
   const { status, errorMessage } = useRegisterConfirm();
 
+  const isRegisterConfirmOk = () => {
+    return status === STATUS_FULFILLED ? '' : 'none';
+  };
+
+  const isRegisterConfirmError = () => {
+    return status === STATUS_REJECTED ? '' : 'none';
+  };
+
   if (status === STATUS_PENDING) {
     return <CheckingAuth />;
   }
@@ -22,7 +30,7 @@ export const RegisterConfirm = () => {
         <Grid
           aria-label="confirm-register-ok"
           container
-          display={status === STATUS_FULFILLED ? '' : 'none'}
+          display={isRegisterConfirmOk()}
         >
           <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
             <Alert severity="success">
@@ -35,7 +43,7 @@ export const RegisterConfirm = () => {
         <Grid
           aria-label="confirm-register-error-message"
           container
-          display={status === STATUS_REJECTED ? '' : 'none'}
+          display={isRegisterConfirmError()}
         >
           <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
             <Alert severity="error">
