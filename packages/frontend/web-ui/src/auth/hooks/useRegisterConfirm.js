@@ -10,7 +10,7 @@ export const STATUS_IDLE = 'idle';
 export const STATUS_PENDING = 'pending';
 export const STATUS_REJECTED = 'rejected';
 
-const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error!';
+export const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error!';
 
 export const useRegisterConfirm = () => {
   const [errorMessage, setErrorMessage] = useState(null);
