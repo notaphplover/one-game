@@ -87,6 +87,14 @@ describe(useRegisterConfirm.name, () => {
         jest.clearAllMocks();
       });
 
+      it('should called useDispatch()', () => {
+        expect(useDispatch).toHaveBeenCalled();
+      });
+
+      it('should called useSelector() ', () => {
+        expect(useSelector).toHaveBeenCalled();
+      });
+
       it('should return a fulfilled status', () => {
         expect(status).toBe(STATUS_FULFILLED);
       });
@@ -133,6 +141,14 @@ describe(useRegisterConfirm.name, () => {
         errorMessage = result.current.errorMessage;
       });
 
+      it('should called useDispatch()', () => {
+        expect(useDispatch).toHaveBeenCalled();
+      });
+
+      it('should called useSelector() ', () => {
+        expect(useSelector).toHaveBeenCalled();
+      });
+
       it('should return a rejected status', () => {
         expect(status).toBe(STATUS_REJECTED);
       });
@@ -167,6 +183,14 @@ describe(useRegisterConfirm.name, () => {
         });
         status = result.current.status;
         errorMessage = result.current.errorMessage;
+      });
+
+      it('should called useDispatch()', () => {
+        expect(useDispatch).toHaveBeenCalled();
+      });
+
+      it('should called useSelector() ', () => {
+        expect(useSelector).toHaveBeenCalled();
       });
 
       it('should return a rejected status', () => {
@@ -223,6 +247,14 @@ describe(useRegisterConfirm.name, () => {
 
         status = result.current.status;
         errorMessage = result.current.errorMessage;
+      });
+
+      it('should called useDispatch()', () => {
+        expect(useDispatch).toHaveBeenCalled();
+      });
+
+      it('should called useSelector() ', () => {
+        expect(useSelector).toHaveBeenCalled();
       });
 
       it('should return a rejected status', () => {
