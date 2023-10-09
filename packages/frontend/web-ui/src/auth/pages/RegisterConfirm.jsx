@@ -12,11 +12,11 @@ import {
 export const RegisterConfirm = () => {
   const { status, errorMessage } = useRegisterConfirm();
 
-  const isRegisterConfirmOk = () => {
+  const getRegisterConfirmOkDisplay = () => {
     return status === STATUS_FULFILLED ? '' : 'none';
   };
 
-  const isRegisterConfirmError = () => {
+  const getRegisterConfirmErrorDisplay = () => {
     return status === STATUS_REJECTED ? '' : 'none';
   };
 
@@ -30,7 +30,7 @@ export const RegisterConfirm = () => {
         <Grid
           aria-label="confirm-register-ok"
           container
-          display={isRegisterConfirmOk()}
+          display={getRegisterConfirmOkDisplay()}
         >
           <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
             <Alert severity="success">
@@ -43,7 +43,7 @@ export const RegisterConfirm = () => {
         <Grid
           aria-label="confirm-register-error-message"
           container
-          display={isRegisterConfirmError()}
+          display={getRegisterConfirmErrorDisplay()}
         >
           <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
             <Alert severity="error">

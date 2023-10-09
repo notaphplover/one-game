@@ -12,7 +12,7 @@ import {
 jest.mock('../hooks/useRegisterConfirm');
 
 describe(RegisterConfirm.name, () => {
-  describe('when called, and status is fulfilled', () => {
+  describe('when called, and useRegisterConfirm() returns a fulfilled status', () => {
     let confirmRegisterOkGridDisplayValue;
 
     beforeAll(() => {
@@ -46,7 +46,7 @@ describe(RegisterConfirm.name, () => {
     });
   });
 
-  describe('when called, and status is rejected', () => {
+  describe('when called, and useRegisterConfirm() returns a rejected status', () => {
     let confirmRegisterErrorGridDisplayValue;
 
     beforeAll(() => {
@@ -72,6 +72,11 @@ describe(RegisterConfirm.name, () => {
 
     it('should show the error grid', () => {
       expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
+    });
+
+    it('should call hook useRegisterConfirm() was called once with certain arguments (no args in this case)', () => {
+      expect(useRegisterConfirm).toHaveBeenCalledTimes(1);
+      expect(useRegisterConfirm).toHaveBeenCalledWith();
     });
 
     afterAll(() => {
