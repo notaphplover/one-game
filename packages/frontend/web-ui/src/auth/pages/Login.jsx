@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
+  Alert,
+  AlertTitle,
   Button,
   Grid,
   IconButton,
@@ -10,31 +11,61 @@ import {
   Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useLoginForm } from '../hooks';
+import {
+  STATUS_LOG_BACKEND_KO,
+  STATUS_LOG_BACKEND_OK,
+  STATUS_LOG_PENDING_BACKEND,
+  STATUS_LOG_PENDING_VAL,
+  useLoginForm,
+} from '../hooks';
 import { useShowPassword } from '../../common/hooks';
 import { LoginLayout } from '../layout/LoginLayout';
+import { CheckingAuth } from '../components/CheckingAuth';
 
 export const Login = () => {
-  const { formState, onInputChange, onResetForm, formValidation, isFormValid } =
-    useLoginForm({
-      email: '',
-      password: '',
-    });
+  const {
+    backendError,
+    formFields,
+    formStatus,
+    formValidation,
+    notifyFormFieldsFilled,
+    setFormField,
+  } = useLoginForm({
+    email: '',
+    password: '',
+  });
 
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
-
-  const onSubmitLogin = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
 
-    if (isFormValid) {
-      setFormSubmitted(true);
-      onResetForm();
-    }
-    setFormSubmitted(false);
+    notifyFormFieldsFilled();
   };
+
+  const isTextFieldDisabled = () => {
+    return (
+      formStatus === STATUS_LOG_BACKEND_OK ||
+      formStatus === STATUS_LOG_PENDING_BACKEND ||
+      formStatus === STATUS_LOG_PENDING_VAL
+    );
+  };
+
+  const isShowPasswordButtonDisabled = () => {
+    return (
+      formStatus === STATUS_LOG_BACKEND_OK ||
+      formStatus === STATUS_LOG_PENDING_BACKEND ||
+      formStatus === STATUS_LOG_PENDING_VAL
+    );
+  };
+  /*
+  if (
+    formStatus === STATUS_LOG_PENDING_VAL ||
+    formStatus === STATUS_LOG_PENDING_BACKEND
+  ) {
+    return <CheckingAuth />;
+  }*/
 
   return (
     <LoginLayout title="Welcome to Cornie's game !!">
@@ -52,27 +83,30 @@ export const Login = () => {
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               autoFocus
+              aria-label="form-login-email"
+              disabled={isTextFieldDisabled()}
               label="Email"
               type="email"
               placeholder="mail@example.com"
               fullWidth
               name="email"
-              value={formState.email}
-              onChange={onInputChange}
-              error={formValidation.email !== null && formSubmitted}
-              helperText={
-                formValidation.email && formSubmitted && formValidation.email
-              }
+              value={formFields.email}
+              onChange={setFormField}
+              error={formValidation.email !== undefined}
+              helperText={formValidation.email}
             />
           </Grid>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
+              aria-label="form-login-password"
+              disabled={isTextFieldDisabled()}
               label="Password"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
+                      disabled={isShowPasswordButtonDisabled()}
                       color="primary"
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
@@ -87,43 +121,52 @@ export const Login = () => {
               placeholder="******"
               fullWidth
               name="password"
-              value={formState.password}
-              onChange={onInputChange}
-              error={formValidation.password !== null && formSubmitted}
-              helperText={
-                formValidation.password &&
-                formSubmitted &&
-                formValidation.password
-              }
+              value={formFields.password}
+              onChange={setFormField}
+              error={formValidation.password !== undefined}
+              helperText={formValidation.password}
             />
           </Grid>
-        </Grid>
 
-        <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              onClick={onSubmitLogin}
-            >
-              <Typography textAlign="center">Login</Typography>
-            </Button>
+          <Grid
+            aria-label="form-login-error"
+            container
+            display={formStatus === STATUS_LOG_BACKEND_KO ? '' : 'none'}
+          >
+            <Grid item xs={12} sx={{ mt: 3 }}>
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {backendError}
+              </Alert>
+            </Grid>
           </Grid>
 
-          <Grid container direction="row" justifyContent="end" sx={{ mt: 4 }}>
-            <Typography sx={{ mt: 2, mr: 1 }}>
-              {' '}
-              {`Don't you have a Cornie's account?`}
-            </Typography>
-            <Link
-              sx={{ mt: 2, mr: 1 }}
-              component={RouterLink}
-              color="primary"
-              to="/auth/register"
-            >
-              Sign up
-            </Link>
+          <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                onClick={onSubmit}
+              >
+                <Typography textAlign="center">Login</Typography>
+              </Button>
+            </Grid>
+
+            <Grid container direction="row" justifyContent="end" sx={{ mt: 4 }}>
+              <Typography sx={{ mt: 2, mr: 1 }}>
+                {' '}
+                {`Don't you have a Cornie's account?`}
+              </Typography>
+              <Link
+                sx={{ mt: 2, mr: 1 }}
+                component={RouterLink}
+                color="primary"
+                to="/auth/register"
+              >
+                Sign up
+              </Link>
+            </Grid>
           </Grid>
         </Grid>
       </form>

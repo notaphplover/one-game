@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { validateFormEmail, validateFormPassword } from '../../common/helpers';
-import { httpClient } from '../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
+import { createAuthByToken } from '../../app/store/features/authSlice';
 
 export const STATUS_LOG_INITIAL = 0;
 export const STATUS_LOG_PENDING_VAL = 1;
@@ -10,18 +11,17 @@ export const STATUS_LOG_PENDING_BACKEND = 3;
 export const STATUS_LOG_BACKEND_KO = 4;
 export const STATUS_LOG_BACKEND_OK = 5;
 
-export const useLoginForm = (initialForm = {}) => {
+const USER_NOT_EXISTS_ERROR = 'The user not exists.';
+const UNEXPECTED_ERROR = 'Ups... Something strange happened. Try again?';
+
+export const useLoginForm = (initialFormFields = {}) => {
   const [formFields, setFormFields] = useState(initialFormFields);
   const [formStatus, setFormStatus] = useState(STATUS_LOG_INITIAL);
   const [backendError, setBackendError] = useState(null);
   const [formValidation, setFormValidation] = useState({});
 
-  const isFormValid = useMemo(() => {
-    for (const formValue of Object.keys(formValidation)) {
-      if (formValidation[formValue] !== null) return false;
-    }
-    return true;
-  });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     switch (formStatus) {
@@ -29,11 +29,11 @@ export const useLoginForm = (initialForm = {}) => {
         validateFormFields();
         break;
       case STATUS_LOG_PENDING_BACKEND:
-        //createUser(formFields);  <--- GET A TOKEN
+        authUser();
         break;
       default:
     }
-  }, [formFields]);
+  }, [formFields, formStatus]);
 
   const setFormField = ({ target }) => {
     if (
@@ -71,6 +71,25 @@ export const useLoginForm = (initialForm = {}) => {
       setFormStatus(STATUS_LOG_PENDING_BACKEND);
     } else {
       setFormStatus(STATUS_LOG_VALIDATION_KO);
+    }
+  };
+
+  const authUser = async () => {
+    if (formStatus !== STATUS_LOG_PENDING_BACKEND) {
+      throw new Error('Unexpected form state at createUser');
+    }
+
+    const response = await dispatch(createAuthByToken(formFields));
+
+    if (response.statusCode === 200) {
+      setFormStatus(STATUS_LOG_BACKEND_OK);
+      navigate('/');
+    } else if (response.statusCode === 422) {
+      setBackendError(USER_NOT_EXISTS_ERROR);
+      setFormStatus(STATUS_LOG_BACKEND_KO);
+    } else {
+      setBackendError(UNEXPECTED_ERROR);
+      setFormStatus(STATUS_LOG_BACKEND_KO);
     }
   };
 
