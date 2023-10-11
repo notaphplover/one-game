@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CreateAuthMutationResolver } from '../../../auth/application/resolvers/CreateAuthMutationResolver';
+import { CreateUserMutationResolver } from '../../../users/application/resolvers/CreateUserMutationResolver';
 
 @Injectable()
 export class RootMutationResolver
@@ -11,12 +12,16 @@ export class RootMutationResolver
     graphqlModels.RootMutationResolvers<Request, graphqlModels.RootMutation>
 {
   readonly #createAuthMutation: graphqlModels.CreateAuthMutationResolvers<Request>;
+  readonly #createUserMutation: graphqlModels.CreateUserMutationResolvers<Request>;
 
   constructor(
     @Inject(CreateAuthMutationResolver)
     createAuthMutationResolver: graphqlModels.CreateAuthMutationResolvers<Request>,
+    @Inject(CreateUserMutationResolver)
+    createUserMutationResolver: graphqlModels.CreateUserMutationResolvers<Request>,
   ) {
     this.#createAuthMutation = createAuthMutationResolver;
+    this.#createUserMutation = createUserMutationResolver;
   }
 
   public async createAuthByCode(
@@ -40,6 +45,18 @@ export class RootMutationResolver
     return this.#getResolverFunction(
       this.#createAuthMutation,
       this.#createAuthMutation.createAuthByCredentials,
+    )(parent, args, request, info);
+  }
+
+  public async createUser(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.CreateUserMutationCreateUserArgs,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.User> {
+    return this.#getResolverFunction(
+      this.#createUserMutation,
+      this.#createUserMutation.createUser,
     )(parent, args, request, info);
   }
 

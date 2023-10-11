@@ -147,4 +147,137 @@ describe(CreateAuthMutationResolver.name, () => {
       });
     });
   });
+
+  describe('.createAuthByCredentials', () => {
+    let emailFixture: string;
+    let passwordFixture: string;
+
+    beforeAll(() => {
+      emailFixture = 'email-fixture';
+      passwordFixture = 'password-fixture';
+    });
+
+    describe('when called, and httpClient.createAuth() returns an OK response', () => {
+      let authV1: apiModels.AuthV1;
+      let requestFixture: Request;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        authV1 = {
+          jwt: 'jwt fixture',
+        };
+
+        requestFixture = {
+          headers: {
+            foo: 'bar',
+          },
+          query: {},
+          urlParameters: {},
+        };
+
+        httpClientMock.createAuth.mockResolvedValueOnce({
+          body: authV1,
+          headers: {},
+          statusCode: HttpStatus.OK,
+        });
+
+        result = await createAuthMutationResolver.createAuthByCredentials(
+          undefined,
+          {
+            emailPasswordAuthCreateInput: {
+              email: emailFixture,
+              password: passwordFixture,
+            },
+          },
+          requestFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.createAuth()', () => {
+        const expectedBody: apiModels.AuthCreateQueryV1 = {
+          email: emailFixture,
+          password: passwordFixture,
+        };
+
+        expect(httpClientMock.createAuth).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.createAuth).toHaveBeenCalledWith(
+          requestFixture.headers,
+          expectedBody,
+        );
+      });
+
+      it('should return AuthV1', () => {
+        expect(result).toBe(authV1);
+      });
+    });
+
+    describe('when called, and httpClient.createAuth() returns an BAD_REQUEST response', () => {
+      let errorV1: apiModels.ErrorV1;
+      let requestFixture: Request;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        errorV1 = {
+          description: 'error description fixture',
+        };
+
+        requestFixture = {
+          headers: {
+            foo: 'bar',
+          },
+          query: {},
+          urlParameters: {},
+        };
+
+        httpClientMock.createAuth.mockResolvedValueOnce({
+          body: errorV1,
+          headers: {},
+          statusCode: HttpStatus.BAD_REQUEST,
+        });
+
+        try {
+          await createAuthMutationResolver.createAuthByCredentials(
+            undefined,
+            {
+              emailPasswordAuthCreateInput: {
+                email: emailFixture,
+                password: passwordFixture,
+              },
+            },
+            requestFixture,
+          );
+        } catch (error) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.createAuth()', () => {
+        const expectedBody: apiModels.AuthCreateQueryV1 = {
+          email: emailFixture,
+          password: passwordFixture,
+        };
+
+        expect(httpClientMock.createAuth).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.createAuth).toHaveBeenCalledWith(
+          requestFixture.headers,
+          expectedBody,
+        );
+      });
+
+      it('should throw a GraphQLError', () => {
+        expect(result).toBeInstanceOf(GraphQLError);
+        expect((result as GraphQLError).message).toBe(errorV1.description);
+      });
+    });
+  });
 });

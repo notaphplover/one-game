@@ -1,0 +1,6 @@
+#import User from './User.graphql'
+#import UserCreateInput from './UserCreateInput.graphql'
+
+interface CreateUserMutation {
+  createUser(userCreateInput: UserCreateInput!): User!
+}
