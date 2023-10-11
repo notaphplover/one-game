@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { validateFormEmail, validateFormPassword } from '../../common/helpers';
-import { createAuthByToken } from '../../app/store/features/authSlice';
+import { createAuthByCredentials } from '../../app/store/thunk';
 
 export const STATUS_LOG_INITIAL = 0;
 export const STATUS_LOG_PENDING_VAL = 1;
@@ -79,12 +79,12 @@ export const useLoginForm = (initialFormFields = {}) => {
       throw new Error('Unexpected form state at createUser');
     }
 
-    const response = await dispatch(createAuthByToken(formFields));
+    const response = await dispatch(createAuthByCredentials(formFields));
 
-    if (response.statusCode === 200) {
+    if (response.payload.statusCode === 200) {
       setFormStatus(STATUS_LOG_BACKEND_OK);
       navigate('/');
-    } else if (response.statusCode === 422) {
+    } else if (response.payload.statusCode === 422) {
       setBackendError(USER_NOT_EXISTS_ERROR);
       setFormStatus(STATUS_LOG_BACKEND_KO);
     } else {

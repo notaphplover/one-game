@@ -59,13 +59,13 @@ export const Login = () => {
       formStatus === STATUS_LOG_PENDING_VAL
     );
   };
-  /*
+
   if (
     formStatus === STATUS_LOG_PENDING_VAL ||
     formStatus === STATUS_LOG_PENDING_BACKEND
   ) {
     return <CheckingAuth />;
-  }*/
+  }
 
   return (
     <LoginLayout title="Welcome to Cornie's game !!">
