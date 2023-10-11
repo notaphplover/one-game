@@ -1,0 +1,5 @@
+type User {
+  active: Boolean!
+  id: ID!
+  name: String!
+}
