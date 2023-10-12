@@ -1,15 +1,26 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { HttpStatus } from '@nestjs/common';
 
 import { ResponseWithBody } from '../models/ResponseWithBody';
 import { ErrorV1ResponseFromErrorBuilder } from './ErrorV1ResponseFromErrorBuilder';
 
 describe(ErrorV1ResponseFromErrorBuilder, () => {
+  let httpStatusCodeFromErrorBuilderMock: jest.Mocked<
+    Builder<number, [AppError]>
+  >;
+
   let responseFromErrorBuilder: ErrorV1ResponseFromErrorBuilder;
 
   beforeAll(() => {
-    responseFromErrorBuilder = new ErrorV1ResponseFromErrorBuilder();
+    httpStatusCodeFromErrorBuilderMock = {
+      build: jest.fn(),
+    };
+
+    responseFromErrorBuilder = new ErrorV1ResponseFromErrorBuilder(
+      httpStatusCodeFromErrorBuilderMock,
+    );
   });
 
   describe('.build()', () => {
@@ -27,13 +38,17 @@ describe(ErrorV1ResponseFromErrorBuilder, () => {
           result = responseFromErrorBuilder.build(inputFixture);
         });
 
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
         it('should return a ResponseWithBody', () => {
           const expected: ResponseWithBody<unknown> = {
             body: {
               description: expect.any(String),
             },
             headers: expect.anything() as unknown as Record<string, string>,
-            statusCode: 500,
+            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           };
 
           expect(result).toStrictEqual(expected);
@@ -51,10 +66,22 @@ describe(ErrorV1ResponseFromErrorBuilder, () => {
       });
 
       describe('when called', () => {
+        let statusCodeFixture: number;
+
         let result: unknown;
 
         beforeAll(() => {
+          statusCodeFixture = HttpStatus.BAD_REQUEST;
+
+          httpStatusCodeFromErrorBuilderMock.build.mockReturnValueOnce(
+            statusCodeFixture,
+          );
+
           result = responseFromErrorBuilder.build(errorFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
         });
 
         it('should return a ResponseWithBody', () => {
@@ -63,7 +90,7 @@ describe(ErrorV1ResponseFromErrorBuilder, () => {
               description: errorDescriptionFixture,
             },
             headers: expect.anything() as unknown as Record<string, string>,
-            statusCode: 500,
+            statusCode: statusCodeFixture,
           };
 
           expect(result).toStrictEqual(expected);
@@ -71,44 +98,56 @@ describe(ErrorV1ResponseFromErrorBuilder, () => {
       });
     });
 
-    describe.each<[AppErrorKind, number]>([
-      [AppErrorKind.contractViolation, 400],
-      [AppErrorKind.entityConflict, 409],
-      [AppErrorKind.invalidCredentials, 403],
-      [AppErrorKind.missingCredentials, 401],
-      [AppErrorKind.unknown, 500],
-      [AppErrorKind.unprocessableOperation, 422],
-    ])(
-      'having a %s AppError error input',
-      (errorKind: AppErrorKind, statusCode: number) => {
-        let errorDescriptionFixture: string;
-        let errorFixture: AppError;
+    describe('having an AppError error input', () => {
+      let statusCodeFixture: number;
+      let errorDescriptionFixture: string;
+      let errorFixture: AppError;
+
+      beforeAll(() => {
+        statusCodeFixture = HttpStatus.BAD_REQUEST;
+        errorDescriptionFixture = 'Error description';
+        errorFixture = new AppError(
+          AppErrorKind.contractViolation,
+          errorDescriptionFixture,
+        );
+      });
+
+      describe('when called', () => {
+        let result: unknown;
 
         beforeAll(() => {
-          errorDescriptionFixture = 'Error description';
-          errorFixture = new AppError(errorKind, errorDescriptionFixture);
+          httpStatusCodeFromErrorBuilderMock.build.mockReturnValueOnce(
+            statusCodeFixture,
+          );
+
+          result = responseFromErrorBuilder.build(errorFixture);
         });
 
-        describe('when called', () => {
-          let result: unknown;
-
-          beforeAll(() => {
-            result = responseFromErrorBuilder.build(errorFixture);
-          });
-
-          it('should return a ResponseWithBody', () => {
-            const expected: ResponseWithBody<unknown> = {
-              body: {
-                description: errorDescriptionFixture,
-              },
-              headers: expect.anything() as unknown as Record<string, string>,
-              statusCode,
-            };
-
-            expect(result).toStrictEqual(expected);
-          });
+        afterAll(() => {
+          jest.clearAllMocks();
         });
-      },
-    );
+
+        it('should call httpStatusCodeFromErrorBuilder.build()', () => {
+          expect(
+            httpStatusCodeFromErrorBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(httpStatusCodeFromErrorBuilderMock.build).toHaveBeenCalledWith(
+            errorFixture,
+          );
+        });
+
+        it('should return a ResponseWithBody', () => {
+          const expected: ResponseWithBody<unknown> = {
+            body: {
+              description: errorDescriptionFixture,
+            },
+            headers: expect.anything() as unknown as Record<string, string>,
+            statusCode: statusCodeFixture,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
   });
 });

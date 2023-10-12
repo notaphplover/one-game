@@ -1,14 +1,27 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import httpStatusCodes from 'http-status-codes';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 
 import { ResponseWithBody } from '../models/ResponseWithBody';
+import { HttpStatusCodeFromErrorBuilder } from './HttpStatusCodeFromErrorBuilder';
 import { JsonResponseBuilder } from './JsonResponseBuilder';
 
+@Injectable()
 export class ErrorV1ResponseFromErrorBuilder
   extends JsonResponseBuilder<[unknown]>
   implements Builder<ResponseWithBody<apiModels.ErrorV1>, [unknown]>
 {
+  readonly #httpStatusCodeFromErrorBuilder: Builder<number, [AppError]>;
+
+  constructor(
+    @Inject(HttpStatusCodeFromErrorBuilder)
+    httpStatusCodeFromErrorBuilder: Builder<number, [AppError]>,
+  ) {
+    super();
+
+    this.#httpStatusCodeFromErrorBuilder = httpStatusCodeFromErrorBuilder;
+  }
+
   public build(error: unknown): ResponseWithBody<apiModels.ErrorV1> {
     let httpResponse: ResponseWithBody<apiModels.ErrorV1>;
 
@@ -46,39 +59,9 @@ export class ErrorV1ResponseFromErrorBuilder
   #buildHttpResponseFromAppError(
     error: AppError,
   ): ResponseWithBody<apiModels.ErrorV1> {
-    let statusCode: number;
-    let errorMessage: string;
-
-    switch (error.kind) {
-      case AppErrorKind.contractViolation:
-        statusCode = httpStatusCodes.BAD_REQUEST;
-        errorMessage = this.#stringifyError(error);
-        break;
-      case AppErrorKind.entityNotFound:
-        statusCode = httpStatusCodes.NOT_FOUND;
-        errorMessage = this.#stringifyError(error);
-        break;
-      case AppErrorKind.entityConflict:
-        statusCode = httpStatusCodes.CONFLICT;
-        errorMessage = this.#stringifyError(error);
-        break;
-      case AppErrorKind.invalidCredentials:
-        statusCode = httpStatusCodes.FORBIDDEN;
-        errorMessage = this.#stringifyError(error);
-        break;
-      case AppErrorKind.missingCredentials:
-        statusCode = httpStatusCodes.UNAUTHORIZED;
-        errorMessage = this.#stringifyError(error);
-        break;
-      case AppErrorKind.unknown:
-        statusCode = httpStatusCodes.INTERNAL_SERVER_ERROR;
-        errorMessage = this.#stringifyError(error);
-        break;
-      case AppErrorKind.unprocessableOperation:
-        statusCode = httpStatusCodes.UNPROCESSABLE_ENTITY;
-        errorMessage = this.#stringifyError(error);
-        break;
-    }
+    const statusCode: number =
+      this.#httpStatusCodeFromErrorBuilder.build(error);
+    const errorMessage: string = this.#stringifyError(error);
 
     return {
       body: {
@@ -95,7 +78,7 @@ export class ErrorV1ResponseFromErrorBuilder
         description: 'Unexpected error occurred while processing the request.',
       },
       headers: this._getHttpResponseHeaders(),
-      statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
     };
   }
 
