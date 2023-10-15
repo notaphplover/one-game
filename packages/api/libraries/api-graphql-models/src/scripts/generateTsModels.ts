@@ -2,8 +2,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { argv } from 'node:process';
 
+import * as prettierConfig from '@cornie-js/backend-prettier-config';
 import { CodegenConfig, executeCodegen } from '@graphql-codegen/cli';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import prettier from 'prettier';
 
 const API_SCHEMAS_PACKAGE: string = '@cornie-js/api-graphql-schemas';
 const API_SCHEMAS_PACKAGE_SCHEMAS_FOLDER: string = 'schemas';
@@ -57,10 +59,13 @@ async function generateAllModels(destinationPath: string): Promise<void> {
 
   await Promise.all(
     fileOutputs.map(async (fileOutput: Types.FileOutput): Promise<void> => {
-      await fs.writeFile(
-        fileOutput.filename,
-        bannerContent + fileOutput.content,
-      );
+      const sourceCode: string = bannerContent + fileOutput.content;
+      const formattedSourceCode: string = await prettier.format(sourceCode, {
+        ...prettierConfig,
+        parser: 'typescript',
+      });
+
+      await fs.writeFile(fileOutput.filename, formattedSourceCode);
     }),
   );
 }
