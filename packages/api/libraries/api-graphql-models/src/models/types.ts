@@ -72,6 +72,15 @@ export type EmailPasswordAuthCreateInput = {
   password: Scalars['String']['input'];
 };
 
+export type FindUsersQuery = {
+  __typename?: 'FindUsersQuery';
+  userById: Maybe<User>;
+};
+
+export type FindUsersQueryUserByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
 export type RootMutation = CreateAuthMutation &
   CreateUserMutation & {
     __typename?: 'RootMutation';
@@ -92,9 +101,13 @@ export type RootMutationCreateUserArgs = {
   userCreateInput: UserCreateInput;
 };
 
-export type RootQuery = {
+export type RootQuery = FindUsersQuery & {
   __typename?: 'RootQuery';
-  foo: Maybe<Scalars['String']['output']>;
+  userById: Maybe<User>;
+};
+
+export type RootQueryUserByIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type User = {
@@ -237,6 +250,7 @@ export type ResolversTypes = ResolversObject<{
     ResolversInterfaceTypes<ResolversTypes>['CreateUserMutation']
   >;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  FindUsersQuery: ResolverTypeWrapper<FindUsersQuery>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   RootMutation: ResolverTypeWrapper<{}>;
   RootQuery: ResolverTypeWrapper<{}>;
@@ -253,6 +267,7 @@ export type ResolversParentTypes = ResolversObject<{
   CreateAuthMutation: ResolversInterfaceTypes<ResolversParentTypes>['CreateAuthMutation'];
   CreateUserMutation: ResolversInterfaceTypes<ResolversParentTypes>['CreateUserMutation'];
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  FindUsersQuery: FindUsersQuery;
   ID: Scalars['ID']['output'];
   RootMutation: {};
   RootQuery: {};
@@ -307,6 +322,20 @@ export type CreateUserMutationResolvers<
   >;
 }>;
 
+export type FindUsersQueryResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['FindUsersQuery'] = ResolversParentTypes['FindUsersQuery'],
+> = ResolversObject<{
+  userById: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<FindUsersQueryUserByIdArgs, 'id'>
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type RootMutationResolvers<
   ContextType = any,
   ParentType extends
@@ -340,7 +369,12 @@ export type RootQueryResolvers<
   ParentType extends
     ResolversParentTypes['RootQuery'] = ResolversParentTypes['RootQuery'],
 > = ResolversObject<{
-  foo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userById: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<RootQueryUserByIdArgs, 'id'>
+  >;
 }>;
 
 export type UserResolvers<
@@ -358,6 +392,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Auth: AuthResolvers<ContextType>;
   CreateAuthMutation: CreateAuthMutationResolvers<ContextType>;
   CreateUserMutation: CreateUserMutationResolvers<ContextType>;
+  FindUsersQuery: FindUsersQueryResolvers<ContextType>;
   RootMutation: RootMutationResolvers<ContextType>;
   RootQuery: RootQueryResolvers<ContextType>;
   User: UserResolvers<ContextType>;
