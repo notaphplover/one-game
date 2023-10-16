@@ -1,0 +1,5 @@
+#import User from './User.graphql'
+
+type FindUsersQuery {
+  userById(id: ID!): User
+}

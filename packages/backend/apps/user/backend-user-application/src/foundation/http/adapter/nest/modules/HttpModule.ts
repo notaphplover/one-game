@@ -1,5 +1,6 @@
 import {
   ErrorV1ResponseFromErrorBuilder,
+  HttpStatusCodeFromErrorBuilder,
   MultipleEntitiesGetResponseBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
   SingleEntityDeleteResponseBuilder,
@@ -21,6 +22,7 @@ import { Module } from '@nestjs/common';
   ],
   providers: [
     ErrorV1ResponseFromErrorBuilder,
+    HttpStatusCodeFromErrorBuilder,
     MultipleEntitiesGetResponseBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
     SingleEntityDeleteResponseBuilder,

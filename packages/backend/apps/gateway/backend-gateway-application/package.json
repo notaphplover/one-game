@@ -7,6 +7,7 @@
   "dependencies": {
     "@cornie-js/api-http-client": "workspace:*",
     "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-gateway-env": "workspace:*",
     "@nestjs/common": "10.2.7",
     "graphql": "16.8.1"
@@ -15,7 +16,7 @@
     "@jest/globals": "29.7.0",
     "@cornie-js/api-graphql-models": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
-    "@types/node": "18.18.4",
+    "@types/node": "18.18.5",
     "@typescript-eslint/eslint-plugin": "6.7.5",
     "@typescript-eslint/parser": "6.7.5",
     "eslint": "8.51.0",
