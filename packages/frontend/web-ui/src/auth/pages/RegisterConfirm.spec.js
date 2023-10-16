@@ -74,7 +74,7 @@ describe(RegisterConfirm.name, () => {
       expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
     });
 
-    it('should call hook useRegisterConfirm() was called once with certain arguments (no args in this case)', () => {
+    it('should call hook useRegisterConfirm()', () => {
       expect(useRegisterConfirm).toHaveBeenCalledTimes(1);
       expect(useRegisterConfirm).toHaveBeenCalledWith();
     });

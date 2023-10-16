@@ -89,10 +89,12 @@ describe(useRegisterConfirm.name, () => {
 
       it('should called useDispatch()', () => {
         expect(useDispatch).toHaveBeenCalled();
+        expect(useDispatch).toHaveBeenCalledWith();
       });
 
       it('should called useSelector() ', () => {
         expect(useSelector).toHaveBeenCalled();
+        expect(useSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should return a fulfilled status', () => {
@@ -143,10 +145,12 @@ describe(useRegisterConfirm.name, () => {
 
       it('should called useDispatch()', () => {
         expect(useDispatch).toHaveBeenCalled();
+        expect(useDispatch).toHaveBeenCalledWith();
       });
 
       it('should called useSelector() ', () => {
         expect(useSelector).toHaveBeenCalled();
+        expect(useSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should return a rejected status', () => {
@@ -187,10 +191,12 @@ describe(useRegisterConfirm.name, () => {
 
       it('should called useDispatch()', () => {
         expect(useDispatch).toHaveBeenCalled();
+        expect(useDispatch).toHaveBeenCalledWith();
       });
 
       it('should called useSelector() ', () => {
         expect(useSelector).toHaveBeenCalled();
+        expect(useSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should return a rejected status', () => {
@@ -251,10 +257,12 @@ describe(useRegisterConfirm.name, () => {
 
       it('should called useDispatch()', () => {
         expect(useDispatch).toHaveBeenCalled();
+        expect(useDispatch).toHaveBeenCalledWith();
       });
 
       it('should called useSelector() ', () => {
         expect(useSelector).toHaveBeenCalled();
+        expect(useSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should return a rejected status', () => {
