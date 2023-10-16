@@ -4,20 +4,20 @@ import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
 import { GraphQLError } from 'graphql';
 
-import { GraphQlErrorFromAppErrorBuilder } from './GraphQlErrorFromAppErrorBuilder';
+import { GraphQlErrorFromErrorBuilder } from './GraphQlErrorFromErrorBuilder';
 
-describe(GraphQlErrorFromAppErrorBuilder.name, () => {
+describe(GraphQlErrorFromErrorBuilder.name, () => {
   let httpStatusCodeFromErrorBuilderMock: jest.Mocked<
     Builder<number, [AppError]>
   >;
-  let graphQlErrorFromAppErrorBuilder: GraphQlErrorFromAppErrorBuilder;
+  let graphQlErrorFromAppErrorBuilder: GraphQlErrorFromErrorBuilder;
 
   beforeAll(() => {
     httpStatusCodeFromErrorBuilderMock = {
       build: jest.fn(),
     };
 
-    graphQlErrorFromAppErrorBuilder = new GraphQlErrorFromAppErrorBuilder(
+    graphQlErrorFromAppErrorBuilder = new GraphQlErrorFromErrorBuilder(
       httpStatusCodeFromErrorBuilderMock,
     );
   });
