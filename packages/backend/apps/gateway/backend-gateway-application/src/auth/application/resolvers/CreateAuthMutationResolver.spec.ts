@@ -2,9 +2,9 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
-import { GraphQLError } from 'graphql';
 
 import { CreateAuthMutationResolver } from './CreateAuthMutationResolver';
 
@@ -141,9 +141,16 @@ describe(CreateAuthMutationResolver.name, () => {
         );
       });
 
-      it('should throw a GraphQLError', () => {
-        expect(result).toBeInstanceOf(GraphQLError);
-        expect((result as GraphQLError).message).toBe(errorV1.description);
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message: errorV1.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
       });
     });
   });
@@ -274,9 +281,16 @@ describe(CreateAuthMutationResolver.name, () => {
         );
       });
 
-      it('should throw a GraphQLError', () => {
-        expect(result).toBeInstanceOf(GraphQLError);
-        expect((result as GraphQLError).message).toBe(errorV1.description);
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message: errorV1.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
       });
     });
   });
