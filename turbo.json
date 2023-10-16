@@ -43,6 +43,10 @@
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.{cjs,js,jsx}"]
     },
+    "@cornie-js/web-ui#test:uncommitted": {
+      "inputs": ["src/**/*.js"],
+      "outputs": []
+    },
     "close:e2e": {
       "cache": false
     },

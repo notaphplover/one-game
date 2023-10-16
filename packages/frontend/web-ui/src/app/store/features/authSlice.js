@@ -1,20 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { httpClient } from '../../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../../common/http/helpers';
-
-export const createAuthByToken = createAsyncThunk(
-  'auth/createAuthByToken',
-  async (code) => {
-    const response = await httpClient.createAuth(
-      {},
-      {
-        code: code,
-      },
-    );
-
-    return buildSerializableResponse(response);
-  },
-);
+import { createSlice } from '@reduxjs/toolkit';
+import { createAuthByToken } from '../thunk/createAuthByToken';
 
 export const authSlice = createSlice({
   name: 'auth',

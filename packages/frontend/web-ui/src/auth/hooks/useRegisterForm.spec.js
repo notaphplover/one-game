@@ -200,9 +200,7 @@ describe(useRegisterForm.name, () => {
       statusCode: response.statusCode,
     }));
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useRegisterForm(initialForm),
-    );
+    const { result } = renderHook(() => useRegisterForm(initialForm));
     const { notifyFormFieldsFilled } = result.current;
 
     act(() => {
