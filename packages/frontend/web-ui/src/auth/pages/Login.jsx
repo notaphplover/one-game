@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Alert,
   AlertTitle,
@@ -38,12 +38,17 @@ export const Login = () => {
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
 
+  const navigate = useNavigate();
+
   const onSubmit = (event) => {
     event.preventDefault();
 
     notifyFormFieldsFilled();
   };
 
+  if (formStatus === STATUS_LOG_BACKEND_OK) {
+    return navigate('/', { replace: true });
+  }
   const isTextFieldDisabled = () => {
     return (
       formStatus === STATUS_LOG_BACKEND_OK ||

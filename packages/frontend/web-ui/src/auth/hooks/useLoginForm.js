@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { validateFormEmail, validateFormPassword } from '../../common/helpers';
 import { createAuthByCredentials } from '../../app/store/thunk';
 
@@ -20,7 +19,6 @@ export const useLoginForm = (initialFormFields = {}) => {
   const [backendError, setBackendError] = useState(null);
   const [formValidation, setFormValidation] = useState({});
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,7 +81,6 @@ export const useLoginForm = (initialFormFields = {}) => {
 
     if (response.payload.statusCode === 200) {
       setFormStatus(STATUS_LOG_BACKEND_OK);
-      navigate('/');
     } else if (response.payload.statusCode === 422) {
       setBackendError(USER_NOT_EXISTS_ERROR);
       setFormStatus(STATUS_LOG_BACKEND_KO);
