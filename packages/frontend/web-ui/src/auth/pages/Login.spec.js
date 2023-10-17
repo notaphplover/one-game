@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { Login } from './Login';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
 import {
   STATUS_LOG_BACKEND_KO,
   STATUS_LOG_BACKEND_OK,
@@ -13,6 +13,10 @@ import { useShowPassword } from '../../common/hooks';
 
 jest.mock('../hooks');
 jest.mock('../../common/hooks');
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 describe(Login.name, () => {
   let formFieldsFixture;
@@ -37,7 +41,7 @@ describe(Login.name, () => {
     handleClickShowPasswordMock = jest.fn();
     handleMouseDownPasswordMock = jest.fn();
 
-    navigateMock = jest.fn();
+    navigateMock = jest.fn().mockResolvedValue(undefined);
   });
 
   describe('when called, on an initial state', () => {
@@ -191,6 +195,42 @@ describe(Login.name, () => {
 
     it('should display a textbox with the message error', () => {
       expect(pErrorBackend).toBe(backendErrorFixture);
+    });
+  });
+
+  describe('when called, and user exists and navigate to the next page', () => {
+    beforeAll(() => {
+      useNavigate.mockReturnValue(navigateMock);
+
+      useLoginForm.mockReturnValue({
+        backendError: null,
+        formFields: formFieldsFixture,
+        formStatus: STATUS_LOG_BACKEND_OK,
+        formValidation: {},
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormField: setFormFieldMock,
+      });
+
+      useShowPassword.mockReturnValue({
+        showPassword: false,
+        handleClickShowPassword: handleClickShowPasswordMock,
+        handleMouseDownPassword: handleMouseDownPasswordMock,
+      });
+
+      render(
+        <MemoryRouter>
+          <Login />
+        </MemoryRouter>,
+      );
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('should navigate to the next page', () => {
+      expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
     });
   });
 });
