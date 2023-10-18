@@ -26,6 +26,13 @@ export function buildApolloApplicationResolver(
         applicationResolver.RootMutation.createUser,
       ),
     },
+    RootQuery: {
+      userById: buildApolloResolver(
+        applicationResolver.RootQuery,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootQuery.userById,
+      ),
+    },
   };
 }
 

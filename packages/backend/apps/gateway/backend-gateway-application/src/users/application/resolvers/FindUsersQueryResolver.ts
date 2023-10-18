@@ -38,4 +38,9 @@ export class FindUsersQueryResolver
         return null;
     }
   }
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  public __resolveType(): never {
+    throw new Error('Method not implemented');
+  }
 }
