@@ -10,7 +10,7 @@ export const STATUS_LOG_PENDING_BACKEND = 3;
 export const STATUS_LOG_BACKEND_KO = 4;
 export const STATUS_LOG_BACKEND_OK = 5;
 
-const USER_NOT_EXISTS_ERROR = 'The user not exists.';
+export const USER_NOT_EXISTS_ERROR = 'The user not exists.';
 const UNEXPECTED_ERROR = 'Ups... Something strange happened. Try again?';
 
 export const useLoginForm = (initialFormFields = {}) => {
