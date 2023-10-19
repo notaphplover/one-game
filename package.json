@@ -16,7 +16,7 @@
     "@cornie-js/backend-typescript-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
-    "lint-staged": "15.0.1",
+    "lint-staged": "15.0.2",
     "turbo": "1.10.15"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
