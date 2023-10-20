@@ -8,11 +8,11 @@ import {
   STATUS_LOG_INITIAL,
   STATUS_LOG_VALIDATION_KO,
   useLoginForm,
-} from '../hooks';
-import { useShowPassword } from '../../common/hooks';
+} from '../hooks/useLoginForm';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
 
-jest.mock('../hooks');
-jest.mock('../../common/hooks');
+jest.mock('../hooks/useLoginForm');
+jest.mock('../../common/hooks/useShowPassword');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: jest.fn(),

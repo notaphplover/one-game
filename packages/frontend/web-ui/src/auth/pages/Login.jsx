@@ -17,8 +17,8 @@ import {
   STATUS_LOG_PENDING_BACKEND,
   STATUS_LOG_PENDING_VAL,
   useLoginForm,
-} from '../hooks';
-import { useShowPassword } from '../../common/hooks';
+} from '../hooks/useLoginForm';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { LoginLayout } from '../layout/LoginLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
 

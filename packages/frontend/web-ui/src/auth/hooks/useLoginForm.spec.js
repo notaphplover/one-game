@@ -7,10 +7,12 @@ import {
   USER_NOT_EXISTS_ERROR,
   useLoginForm,
 } from './useLoginForm';
-import { validateFormEmail, validateFormPassword } from '../../common/helpers';
+import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateFormPassword } from '../../common/helpers/validateFormPassword';
 import { useDispatch } from 'react-redux';
 
-jest.mock('../../common/helpers');
+jest.mock('../../common/helpers/validateFormEmail');
+jest.mock('../../common/helpers/validateFormPassword');
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
 }));

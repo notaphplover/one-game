@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { validateFormEmail, validateFormPassword } from '../../common/helpers';
+import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateFormPassword } from '../../common/helpers/validateFormPassword';
 import { createAuthByCredentials } from '../../app/store/thunk';
 
 export const STATUS_LOG_INITIAL = 0;
