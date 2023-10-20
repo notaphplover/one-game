@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Login, Register, RegisterConfirm } from '../pages';
+import { Login } from '../pages/Login';
+import { Register } from '../pages/Register';
+import { RegisterConfirm } from '../pages/RegisterConfirm';
 
 export const AuthRoutes = () => {
   return (

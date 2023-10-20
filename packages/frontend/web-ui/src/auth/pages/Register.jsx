@@ -16,8 +16,8 @@ import {
   STATUS_REG_PENDING_BACKEND,
   STATUS_REG_PENDING_VAL,
   useRegisterForm,
-} from '../hooks';
-import { useShowPassword } from '../../common/hooks';
+} from '../hooks/useRegisterForm';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { RegisterLayout } from '../layout/RegisterLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
 

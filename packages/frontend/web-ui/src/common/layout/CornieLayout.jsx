@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
-import { Footer, Navbar } from '../components';
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
 
 /**
  * @param {boolean} withFooter

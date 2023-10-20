@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import {
-  validateFormName,
-  validateFormEmail,
-  validateFormPassword,
-  validateFormConfirmPassword,
-} from '../../common/helpers';
+import { validateFormName } from '../../common/helpers/validateFormName';
+import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateFormPassword } from '../../common/helpers/validateFormPassword';
+import { validateFormConfirmPassword } from '../../common/helpers/validateFormConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 

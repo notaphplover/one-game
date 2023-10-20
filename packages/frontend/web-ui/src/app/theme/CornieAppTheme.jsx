@@ -1,5 +1,5 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import { cornieTheme } from './';
+import { cornieTheme } from './cornieTheme';
 
 export const CornieAppTheme = ({ children }) => {
   return (

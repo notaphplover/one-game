@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useState } from 'react';
-import { validateFormEmail, validateFormPassword } from '../../common/helpers';
+import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateFormPassword } from '../../common/helpers/validateFormPassword';
 
 export const useLoginForm = (initialForm = {}) => {
   const [formState, setFormState] = useState(initialForm);

@@ -10,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useLoginForm } from '../hooks';
-import { useShowPassword } from '../../common/hooks';
+import { useLoginForm } from '../hooks/useLoginForm';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { LoginLayout } from '../layout/LoginLayout';
 
 export const Login = () => {
