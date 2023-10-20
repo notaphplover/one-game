@@ -1,3 +1,3 @@
-import { GraphQlErrorFromAppErrorBuilder } from './foundation/graphql/adapter/graphql/builders/GraphQlErrorFromAppErrorBuilder';
+import { GraphQlErrorFromErrorBuilder } from './foundation/graphql/adapter/graphql/builders/GraphQlErrorFromErrorBuilder';
 
-export { GraphQlErrorFromAppErrorBuilder };
+export { GraphQlErrorFromErrorBuilder };
