@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { createAuthByToken } from './createAuthByToken';
 import { httpClient } from '../../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../../common/http/helpers';
+import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
 
 jest.mock('../../../common/http/services/HttpService');
-jest.mock('../../../common/http/helpers');
+jest.mock('../../../common/http/helpers/buildSerializableResponse');
 
 describe(createAuthByToken.name, () => {
   describe('when called', () => {

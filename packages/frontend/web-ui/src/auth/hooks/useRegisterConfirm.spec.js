@@ -8,7 +8,7 @@ import {
   useRegisterConfirm,
 } from './useRegisterConfirm';
 import { httpClient } from '../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../common/http/helpers';
+import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 
 jest.mock('react-redux', () => {
   return {
@@ -18,7 +18,7 @@ jest.mock('react-redux', () => {
   };
 });
 jest.mock('../../common/http/services/HttpService');
-jest.mock('../../common/http/helpers');
+jest.mock('../../common/http/helpers/buildSerializableResponse');
 
 describe(useRegisterConfirm.name, () => {
   let authErrorMessageFixture;
