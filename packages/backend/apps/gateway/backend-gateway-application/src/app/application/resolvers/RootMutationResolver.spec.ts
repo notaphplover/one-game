@@ -14,7 +14,7 @@ describe(RootMutationResolver.name, () => {
       unknown,
       Request,
       graphqlModels.RequireFields<
-        graphqlModels.CreateAuthMutationCreateAuthByCodeArgs,
+        graphqlModels.AuthMutationCreateAuthByCodeArgs,
         'codeAuthCreateInput'
       >
     >
@@ -25,7 +25,7 @@ describe(RootMutationResolver.name, () => {
       unknown,
       Request,
       graphqlModels.RequireFields<
-        graphqlModels.CreateAuthMutationCreateAuthByCredentialsArgs,
+        graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
         'emailPasswordAuthCreateInput'
       >
     >
@@ -36,17 +36,17 @@ describe(RootMutationResolver.name, () => {
       unknown,
       Request,
       graphqlModels.RequireFields<
-        graphqlModels.CreateUserMutationCreateUserArgs,
+        graphqlModels.UserMutationCreateUserArgs,
         'userCreateInput'
       >
     >
   >;
 
-  let createAuthMutationMock: jest.Mocked<
-    graphqlModels.CreateAuthMutationResolvers<Request>
+  let authMutationMock: jest.Mocked<
+    graphqlModels.AuthMutationResolvers<Request>
   >;
-  let createUserMutationMock: jest.Mocked<
-    graphqlModels.CreateUserMutationResolvers<Request>
+  let userMutationMock: jest.Mocked<
+    graphqlModels.UserMutationResolvers<Request>
   >;
 
   let rootMutationResolver: RootMutationResolver;
@@ -56,22 +56,22 @@ describe(RootMutationResolver.name, () => {
     createAuthByCredentialsMock = jest.fn();
     createUserMock = jest.fn();
 
-    createAuthMutationMock = {
+    authMutationMock = {
       createAuthByCode: createAuthByCodeMock,
       createAuthByCredentials: createAuthByCredentialsMock,
     } as Partial<
-      jest.Mocked<graphqlModels.CreateAuthMutationResolvers<Request>>
-    > as jest.Mocked<graphqlModels.CreateAuthMutationResolvers<Request>>;
+      jest.Mocked<graphqlModels.AuthMutationResolvers<Request>>
+    > as jest.Mocked<graphqlModels.AuthMutationResolvers<Request>>;
 
-    createUserMutationMock = {
+    userMutationMock = {
       createUser: createUserMock,
     } as Partial<
-      jest.Mocked<graphqlModels.CreateUserMutationResolvers<Request>>
-    > as jest.Mocked<graphqlModels.CreateUserMutationResolvers<Request>>;
+      jest.Mocked<graphqlModels.UserMutationResolvers<Request>>
+    > as jest.Mocked<graphqlModels.UserMutationResolvers<Request>>;
 
     rootMutationResolver = new RootMutationResolver(
-      createAuthMutationMock,
-      createUserMutationMock,
+      authMutationMock,
+      userMutationMock,
     );
   });
 
@@ -86,7 +86,7 @@ describe(RootMutationResolver.name, () => {
 
     describe('when called', () => {
       let parentFixture: graphqlModels.RootMutation;
-      let argsFixture: graphqlModels.CreateAuthMutationCreateAuthByCodeArgs;
+      let argsFixture: graphqlModels.AuthMutationCreateAuthByCodeArgs;
       let requestFixture: Request;
       let infoFixture: GraphQLResolveInfo;
 
@@ -118,7 +118,7 @@ describe(RootMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call createAuthMutation.createAuthByCode()', () => {
+      it('should call authMutation.createAuthByCode()', () => {
         expect(createAuthByCodeMock).toHaveBeenCalledTimes(1);
         expect(createAuthByCodeMock).toHaveBeenCalledWith(
           parentFixture,
@@ -145,7 +145,7 @@ describe(RootMutationResolver.name, () => {
 
     describe('when called', () => {
       let parentFixture: graphqlModels.RootMutation;
-      let argsFixture: graphqlModels.CreateAuthMutationCreateAuthByCredentialsArgs;
+      let argsFixture: graphqlModels.AuthMutationCreateAuthByCredentialsArgs;
       let requestFixture: Request;
       let infoFixture: GraphQLResolveInfo;
 
@@ -178,7 +178,7 @@ describe(RootMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call createAuthMutation.createAuthByCredentialsMock()', () => {
+      it('should call authMutation.createAuthByCredentialsMock()', () => {
         expect(createAuthByCredentialsMock).toHaveBeenCalledTimes(1);
         expect(createAuthByCredentialsMock).toHaveBeenCalledWith(
           parentFixture,
@@ -207,7 +207,7 @@ describe(RootMutationResolver.name, () => {
 
     describe('when called', () => {
       let parentFixture: graphqlModels.RootMutation;
-      let argsFixture: graphqlModels.CreateUserMutationCreateUserArgs;
+      let argsFixture: graphqlModels.UserMutationCreateUserArgs;
       let requestFixture: Request;
       let infoFixture: GraphQLResolveInfo;
 
@@ -239,7 +239,7 @@ describe(RootMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call createUserMutation.createUser()', () => {
+      it('should call userMutation.createUser()', () => {
         expect(createUserMock).toHaveBeenCalledTimes(1);
         expect(createUserMock).toHaveBeenCalledWith(
           parentFixture,
