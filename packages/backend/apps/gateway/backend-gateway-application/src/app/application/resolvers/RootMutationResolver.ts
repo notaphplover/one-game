@@ -3,60 +3,72 @@ import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CreateAuthMutationResolver } from '../../../auth/application/resolvers/CreateAuthMutationResolver';
-import { CreateUserMutationResolver } from '../../../users/application/resolvers/CreateUserMutationResolver';
+import { AuthMutationResolver } from '../../../auth/application/resolvers/AuthMutationResolver';
+import { UserMutationResolver } from '../../../users/application/resolvers/UserMutationResolver';
 
 @Injectable()
 export class RootMutationResolver
   implements
     graphqlModels.RootMutationResolvers<Request, graphqlModels.RootMutation>
 {
-  readonly #createAuthMutation: graphqlModels.CreateAuthMutationResolvers<Request>;
-  readonly #createUserMutation: graphqlModels.CreateUserMutationResolvers<Request>;
+  readonly #authMutation: graphqlModels.AuthMutationResolvers<Request>;
+  readonly #userMutation: graphqlModels.UserMutationResolvers<Request>;
 
   constructor(
-    @Inject(CreateAuthMutationResolver)
-    createAuthMutationResolver: graphqlModels.CreateAuthMutationResolvers<Request>,
-    @Inject(CreateUserMutationResolver)
-    createUserMutationResolver: graphqlModels.CreateUserMutationResolvers<Request>,
+    @Inject(AuthMutationResolver)
+    authMutationResolver: graphqlModels.AuthMutationResolvers<Request>,
+    @Inject(UserMutationResolver)
+    userMutationResolver: graphqlModels.UserMutationResolvers<Request>,
   ) {
-    this.#createAuthMutation = createAuthMutationResolver;
-    this.#createUserMutation = createUserMutationResolver;
+    this.#authMutation = authMutationResolver;
+    this.#userMutation = userMutationResolver;
   }
 
   public async createAuthByCode(
     parent: graphqlModels.RootMutation,
-    args: graphqlModels.CreateAuthMutationCreateAuthByCodeArgs,
+    args: graphqlModels.AuthMutationCreateAuthByCodeArgs,
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.Auth> {
     return this.#getResolverFunction(
-      this.#createAuthMutation,
-      this.#createAuthMutation.createAuthByCode,
+      this.#authMutation,
+      this.#authMutation.createAuthByCode,
     )(parent, args, request, info);
   }
 
   public async createAuthByCredentials(
     parent: graphqlModels.RootMutation,
-    args: graphqlModels.CreateAuthMutationCreateAuthByCredentialsArgs,
+    args: graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.Auth> {
     return this.#getResolverFunction(
-      this.#createAuthMutation,
-      this.#createAuthMutation.createAuthByCredentials,
+      this.#authMutation,
+      this.#authMutation.createAuthByCredentials,
     )(parent, args, request, info);
   }
 
   public async createUser(
     parent: graphqlModels.RootMutation,
-    args: graphqlModels.CreateUserMutationCreateUserArgs,
+    args: graphqlModels.UserMutationCreateUserArgs,
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.User> {
     return this.#getResolverFunction(
-      this.#createUserMutation,
-      this.#createUserMutation.createUser,
+      this.#userMutation,
+      this.#userMutation.createUser,
+    )(parent, args, request, info);
+  }
+
+  public async updateUserMe(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.UserMutationUpdateUserMeArgs,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.User> {
+    return this.#getResolverFunction(
+      this.#userMutation,
+      this.#userMutation.updateUserMe,
     )(parent, args, request, info);
   }
 

@@ -6,19 +6,19 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
-import { CreateAuthMutationResolver } from './CreateAuthMutationResolver';
+import { AuthMutationResolver } from './AuthMutationResolver';
 
-describe(CreateAuthMutationResolver.name, () => {
+describe(AuthMutationResolver.name, () => {
   let httpClientMock: jest.Mocked<HttpClient>;
 
-  let createAuthMutationResolver: CreateAuthMutationResolver;
+  let authMutationResolver: AuthMutationResolver;
 
   beforeAll(() => {
     httpClientMock = {
       createAuth: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
-    createAuthMutationResolver = new CreateAuthMutationResolver(httpClientMock);
+    authMutationResolver = new AuthMutationResolver(httpClientMock);
   });
 
   describe('.createAuthByCode', () => {
@@ -53,7 +53,7 @@ describe(CreateAuthMutationResolver.name, () => {
           statusCode: HttpStatus.OK,
         });
 
-        result = await createAuthMutationResolver.createAuthByCode(
+        result = await authMutationResolver.createAuthByCode(
           undefined,
           {
             codeAuthCreateInput: {
@@ -111,7 +111,7 @@ describe(CreateAuthMutationResolver.name, () => {
         });
 
         try {
-          await createAuthMutationResolver.createAuthByCode(
+          await authMutationResolver.createAuthByCode(
             undefined,
             {
               codeAuthCreateInput: {
@@ -189,7 +189,7 @@ describe(CreateAuthMutationResolver.name, () => {
           statusCode: HttpStatus.OK,
         });
 
-        result = await createAuthMutationResolver.createAuthByCredentials(
+        result = await authMutationResolver.createAuthByCredentials(
           undefined,
           {
             emailPasswordAuthCreateInput: {
@@ -249,7 +249,7 @@ describe(CreateAuthMutationResolver.name, () => {
         });
 
         try {
-          await createAuthMutationResolver.createAuthByCredentials(
+          await authMutationResolver.createAuthByCredentials(
             undefined,
             {
               emailPasswordAuthCreateInput: {
