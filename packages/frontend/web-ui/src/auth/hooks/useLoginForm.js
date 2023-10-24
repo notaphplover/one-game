@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { validateFormEmail } from '../../common/helpers/validateFormEmail';
 import { validateFormPassword } from '../../common/helpers/validateFormPassword';
-import { createAuthByCredentials } from '../../app/store/thunk';
+import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 
 export const STATUS_LOG_INITIAL = 0;
 export const STATUS_LOG_PENDING_VAL = 1;
