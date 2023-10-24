@@ -1,29 +1,15 @@
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { LogoCard } from '../../common/components/LogoCard';
 
 export const HomeWithAuth = () => {
   return (
     <CornieLayout withFooter withNavBar>
       <Grid container className="page-section-container">
         <Grid item xs={12}>
-          <Box component="div" className="home-cards-grid">
-            <Box component="div" className="home-cards-grid-element card-left">
-              <Box component="div" className="home-card-animation-panel"></Box>
-            </Box>
-            <Box
-              component="div"
-              className="home-cards-grid-element card-middle"
-            >
-              <Box component="div" className="home-card-animation-panel"></Box>
-            </Box>
-            <Box component="div" className="home-cards-grid-element card-right">
-              <Box component="div" className="home-card-animation-panel"></Box>
-            </Box>
-          </Box>
+          <LogoCard />
         </Grid>
-      </Grid>
-      {/* <Grid container>
+        {/* <Grid container>
         <Grid item xs={12}>
           <Grid item xs={12}>
             <Box component="div" className="home-button-container">
@@ -53,8 +39,8 @@ export const HomeWithAuth = () => {
               </Box>
             </Box>
           </Grid>
-        </Grid>
-      </Grid> */}
+        </Grid>*/}
+      </Grid>
     </CornieLayout>
   );
 };
