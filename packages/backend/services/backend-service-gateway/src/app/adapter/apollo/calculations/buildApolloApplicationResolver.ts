@@ -25,6 +25,11 @@ export function buildApolloApplicationResolver(
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootMutation.createUser,
       ),
+      updateUserMe: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.updateUserMe,
+      ),
     },
     RootQuery: {
       userById: buildApolloResolver(

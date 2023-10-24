@@ -1,16 +1,18 @@
 #import Auth from './auth/Auth.graphql'
 #import CodeAuthCreateInput from './auth/CodeAuthCreateInput.graphql'
-#import CreateAuthMutation from './auth/CreateAuthMutation.graphql'
-#import CreateUserMutation from './users/CreateUserMutation.graphql'
+#import AuthMutation from './auth/AuthMutation.graphql'
+#import UserMutation from './users/UserMutation.graphql'
 #import EmailPasswordAuthCreateInput from './auth/EmailPasswordAuthCreateInput.graphql'
 #import FindUsersQuery from './users/FindUsersQuery.graphql'
 #import User from './users/User.graphql'
 #import UserCreateInput from './users/UserCreateInput.graphql'
+#import UserUpdateInput from './users/UserUpdateInput.graphql'
 
-type RootMutation implements CreateAuthMutation & CreateUserMutation {
+type RootMutation implements AuthMutation & UserMutation {
   createAuthByCode(codeAuthCreateInput: CodeAuthCreateInput!): Auth!
   createAuthByCredentials(emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput!): Auth!
   createUser(userCreateInput: UserCreateInput!): User!
+  updateUserMe(userUpdateInput: UserUpdateInput!): User!
 }
 
 type RootQuery implements FindUsersQuery {

@@ -42,29 +42,21 @@ export type Auth = {
   jwt: Scalars['String']['output'];
 };
 
-export type CodeAuthCreateInput = {
-  code: Scalars['String']['input'];
-};
-
-export type CreateAuthMutation = {
+export type AuthMutation = {
   createAuthByCode: Auth;
   createAuthByCredentials: Auth;
 };
 
-export type CreateAuthMutationCreateAuthByCodeArgs = {
+export type AuthMutationCreateAuthByCodeArgs = {
   codeAuthCreateInput: CodeAuthCreateInput;
 };
 
-export type CreateAuthMutationCreateAuthByCredentialsArgs = {
+export type AuthMutationCreateAuthByCredentialsArgs = {
   emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
 };
 
-export type CreateUserMutation = {
-  createUser: User;
-};
-
-export type CreateUserMutationCreateUserArgs = {
-  userCreateInput: UserCreateInput;
+export type CodeAuthCreateInput = {
+  code: Scalars['String']['input'];
 };
 
 export type EmailPasswordAuthCreateInput = {
@@ -80,12 +72,13 @@ export type FindUsersQueryUserByIdArgs = {
   id: Scalars['ID']['input'];
 };
 
-export type RootMutation = CreateAuthMutation &
-  CreateUserMutation & {
+export type RootMutation = AuthMutation &
+  UserMutation & {
     __typename?: 'RootMutation';
     createAuthByCode: Auth;
     createAuthByCredentials: Auth;
     createUser: User;
+    updateUserMe: User;
   };
 
 export type RootMutationCreateAuthByCodeArgs = {
@@ -98,6 +91,10 @@ export type RootMutationCreateAuthByCredentialsArgs = {
 
 export type RootMutationCreateUserArgs = {
   userCreateInput: UserCreateInput;
+};
+
+export type RootMutationUpdateUserMeArgs = {
+  userUpdateInput: UserUpdateInput;
 };
 
 export type RootQuery = FindUsersQuery & {
@@ -120,6 +117,24 @@ export type UserCreateInput = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type UserMutation = {
+  createUser: User;
+  updateUserMe: User;
+};
+
+export type UserMutationCreateUserArgs = {
+  userCreateInput: UserCreateInput;
+};
+
+export type UserMutationUpdateUserMeArgs = {
+  userUpdateInput: UserUpdateInput;
+};
+
+export type UserUpdateInput = {
+  active: InputMaybe<Scalars['Boolean']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -233,22 +248,19 @@ export type DirectiveResolverFn<
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
   ResolversObject<{
-    CreateAuthMutation: RootMutation;
-    CreateUserMutation: RootMutation;
+    AuthMutation: RootMutation;
     FindUsersQuery: RootQuery;
+    UserMutation: RootMutation;
   }>;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Auth: ResolverTypeWrapper<Auth>;
+  AuthMutation: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['AuthMutation']
+  >;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CodeAuthCreateInput: CodeAuthCreateInput;
-  CreateAuthMutation: ResolverTypeWrapper<
-    ResolversInterfaceTypes<ResolversTypes>['CreateAuthMutation']
-  >;
-  CreateUserMutation: ResolverTypeWrapper<
-    ResolversInterfaceTypes<ResolversTypes>['CreateUserMutation']
-  >;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
   FindUsersQuery: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['FindUsersQuery']
@@ -259,15 +271,18 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
   UserCreateInput: UserCreateInput;
+  UserMutation: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['UserMutation']
+  >;
+  UserUpdateInput: UserUpdateInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Auth: Auth;
+  AuthMutation: ResolversInterfaceTypes<ResolversParentTypes>['AuthMutation'];
   Boolean: Scalars['Boolean']['output'];
   CodeAuthCreateInput: CodeAuthCreateInput;
-  CreateAuthMutation: ResolversInterfaceTypes<ResolversParentTypes>['CreateAuthMutation'];
-  CreateUserMutation: ResolversInterfaceTypes<ResolversParentTypes>['CreateUserMutation'];
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
   FindUsersQuery: ResolversInterfaceTypes<ResolversParentTypes>['FindUsersQuery'];
   ID: Scalars['ID']['output'];
@@ -276,6 +291,8 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String']['output'];
   User: User;
   UserCreateInput: UserCreateInput;
+  UserMutation: ResolversInterfaceTypes<ResolversParentTypes>['UserMutation'];
+  UserUpdateInput: UserUpdateInput;
 }>;
 
 export type AuthResolvers<
@@ -287,40 +304,26 @@ export type AuthResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type CreateAuthMutationResolvers<
+export type AuthMutationResolvers<
   ContextType = any,
   ParentType extends
-    ResolversParentTypes['CreateAuthMutation'] = ResolversParentTypes['CreateAuthMutation'],
+    ResolversParentTypes['AuthMutation'] = ResolversParentTypes['AuthMutation'],
 > = ResolversObject<{
   __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
   createAuthByCode: Resolver<
     ResolversTypes['Auth'],
     ParentType,
     ContextType,
-    RequireFields<CreateAuthMutationCreateAuthByCodeArgs, 'codeAuthCreateInput'>
+    RequireFields<AuthMutationCreateAuthByCodeArgs, 'codeAuthCreateInput'>
   >;
   createAuthByCredentials: Resolver<
     ResolversTypes['Auth'],
     ParentType,
     ContextType,
     RequireFields<
-      CreateAuthMutationCreateAuthByCredentialsArgs,
+      AuthMutationCreateAuthByCredentialsArgs,
       'emailPasswordAuthCreateInput'
     >
-  >;
-}>;
-
-export type CreateUserMutationResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['CreateUserMutation'] = ResolversParentTypes['CreateUserMutation'],
-> = ResolversObject<{
-  __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
-  createUser: Resolver<
-    ResolversTypes['User'],
-    ParentType,
-    ContextType,
-    RequireFields<CreateUserMutationCreateUserArgs, 'userCreateInput'>
   >;
 }>;
 
@@ -364,6 +367,12 @@ export type RootMutationResolvers<
     ContextType,
     RequireFields<RootMutationCreateUserArgs, 'userCreateInput'>
   >;
+  updateUserMe: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationUpdateUserMeArgs, 'userUpdateInput'>
+  >;
 }>;
 
 export type RootQueryResolvers<
@@ -390,12 +399,32 @@ export type UserResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserMutationResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['UserMutation'] = ResolversParentTypes['UserMutation'],
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
+  createUser: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<UserMutationCreateUserArgs, 'userCreateInput'>
+  >;
+  updateUserMe: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<UserMutationUpdateUserMeArgs, 'userUpdateInput'>
+  >;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   Auth: AuthResolvers<ContextType>;
-  CreateAuthMutation: CreateAuthMutationResolvers<ContextType>;
-  CreateUserMutation: CreateUserMutationResolvers<ContextType>;
+  AuthMutation: AuthMutationResolvers<ContextType>;
   FindUsersQuery: FindUsersQueryResolvers<ContextType>;
   RootMutation: RootMutationResolvers<ContextType>;
   RootQuery: RootQueryResolvers<ContextType>;
   User: UserResolvers<ContextType>;
+  UserMutation: UserMutationResolvers<ContextType>;
 }>;
