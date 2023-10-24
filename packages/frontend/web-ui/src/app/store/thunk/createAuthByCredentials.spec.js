@@ -6,7 +6,7 @@ import { buildSerializableResponse } from '../../../common/http/helpers/buildSer
 jest.mock('../../../common/http/services/HttpService');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');
 
-describe('thunk createAuthByCredentials', () => {
+describe('createAuthByCredentials', () => {
   describe('when called', () => {
     let emailPasswordFixture;
     let dispatchMock;
