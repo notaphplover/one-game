@@ -6,8 +6,8 @@ import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class CreateAuthMutationResolver
-  implements graphqlModels.CreateAuthMutationResolvers<Request>
+export class AuthMutationResolver
+  implements graphqlModels.AuthMutationResolvers<Request>
 {
   readonly #httpClient: HttpClient;
 
@@ -17,7 +17,7 @@ export class CreateAuthMutationResolver
 
   public async createAuthByCode(
     _: unknown,
-    args: graphqlModels.CreateAuthMutationCreateAuthByCodeArgs,
+    args: graphqlModels.AuthMutationCreateAuthByCodeArgs,
     request: Request,
   ): Promise<graphqlModels.Auth> {
     const httpResponse: Awaited<ReturnType<HttpClient['createAuth']>> =
@@ -39,7 +39,7 @@ export class CreateAuthMutationResolver
 
   public async createAuthByCredentials(
     _: unknown,
-    args: graphqlModels.CreateAuthMutationCreateAuthByCredentialsArgs,
+    args: graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
     request: Request,
   ): Promise<graphqlModels.Auth> {
     const httpResponse: Awaited<ReturnType<HttpClient['createAuth']>> =

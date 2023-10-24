@@ -1,0 +1,4 @@
+input UserUpdateInput {
+  active: Boolean
+  name: String
+}

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
 import { HttpApiModule } from '../../../../foundation/api/adapter/nest/modules/HttpApiModule';
-import { CreateAuthMutationResolver } from '../../../application/resolvers/CreateAuthMutationResolver';
+import { AuthMutationResolver } from '../../../application/resolvers/AuthMutationResolver';
 
 @Module({
-  exports: [CreateAuthMutationResolver],
+  exports: [AuthMutationResolver],
   imports: [HttpApiModule],
-  providers: [CreateAuthMutationResolver],
+  providers: [AuthMutationResolver],
 })
 export class AuthModule {}
