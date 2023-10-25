@@ -13,15 +13,12 @@ describe(RootQueryResolver.name, () => {
       graphqlModels.Maybe<graphqlModels.ResolversTypes['User']>,
       unknown,
       Request,
-      graphqlModels.RequireFields<
-        graphqlModels.FindUsersQueryUserByIdArgs,
-        'id'
-      >
+      graphqlModels.RequireFields<graphqlModels.UserQueryUserByIdArgs, 'id'>
     >
   >;
 
-  let findUsersQueryResolverMock: jest.Mocked<
-    graphqlModels.FindUsersQueryResolvers<Request>
+  let userQueryResolverMock: jest.Mocked<
+    graphqlModels.UserQueryResolvers<Request>
   >;
 
   let rootQueryResolver: RootQueryResolver;
@@ -29,13 +26,13 @@ describe(RootQueryResolver.name, () => {
   beforeAll(() => {
     userByIdMock = jest.fn();
 
-    findUsersQueryResolverMock = {
+    userQueryResolverMock = {
       userById: userByIdMock,
     } as Partial<
-      jest.Mocked<graphqlModels.FindUsersQueryResolvers<Request>>
-    > as jest.Mocked<graphqlModels.FindUsersQueryResolvers<Request>>;
+      jest.Mocked<graphqlModels.UserQueryResolvers<Request>>
+    > as jest.Mocked<graphqlModels.UserQueryResolvers<Request>>;
 
-    rootQueryResolver = new RootQueryResolver(findUsersQueryResolverMock);
+    rootQueryResolver = new RootQueryResolver(userQueryResolverMock);
   });
 
   describe('.userById', () => {
@@ -43,7 +40,7 @@ describe(RootQueryResolver.name, () => {
 
     describe('when called', () => {
       let parentFixture: graphqlModels.RootQuery;
-      let argsFixture: graphqlModels.FindUsersQueryUserByIdArgs;
+      let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let requestFixture: Request;
       let infoFixture: GraphQLResolveInfo;
 
@@ -71,7 +68,7 @@ describe(RootQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call findUsersQueryResolver.userById()', () => {
+      it('should call userQueryResolver.userById()', () => {
         expect(userByIdMock).toHaveBeenCalledTimes(1);
         expect(userByIdMock).toHaveBeenCalledWith(
           parentFixture,

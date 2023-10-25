@@ -29,7 +29,7 @@ export class AuthMutationResolver
       case 200:
         return httpResponse.body;
       case 400:
-      case 422:
+      case 401:
         throw new AppError(
           AppErrorKind.unprocessableOperation,
           httpResponse.body.description,
@@ -52,7 +52,7 @@ export class AuthMutationResolver
       case 200:
         return httpResponse.body;
       case 400:
-      case 422:
+      case 401:
         throw new AppError(
           AppErrorKind.unprocessableOperation,
           httpResponse.body.description,
