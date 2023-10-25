@@ -8,11 +8,11 @@ import {
   STATUS_REG_INITIAL,
   STATUS_REG_VALIDATION_KO,
   useRegisterForm,
-} from '../hooks';
-import { useShowPassword } from '../../common/hooks';
+} from '../hooks/useRegisterForm';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
 
-jest.mock('../hooks');
-jest.mock('../../common/hooks');
+jest.mock('../hooks/useRegisterForm');
+jest.mock('../../common/hooks/useShowPassword');
 
 describe(Register.name, () => {
   let formFieldsFixture;

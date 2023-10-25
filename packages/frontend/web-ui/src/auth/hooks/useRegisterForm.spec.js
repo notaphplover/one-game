@@ -1,6 +1,9 @@
 import { describe, expect, jest, it } from '@jest/globals';
 
-jest.mock('../../common/helpers');
+jest.mock('../../common/helpers/validateFormName');
+jest.mock('../../common/helpers/validateFormEmail');
+jest.mock('../../common/helpers/validateFormPassword');
+jest.mock('../../common/helpers/validateFormConfirmPassword');
 jest.mock('../../common/http/services/HttpService');
 jest.mock('../../common/http/helpers/buildSerializableResponse');
 
@@ -11,12 +14,10 @@ import {
   STATUS_REG_INITIAL,
   useRegisterForm,
 } from './useRegisterForm';
-import {
-  validateFormName,
-  validateFormEmail,
-  validateFormPassword,
-  validateFormConfirmPassword,
-} from '../../common/helpers';
+import { validateFormName } from '../../common/helpers/validateFormName';
+import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateFormPassword } from '../../common/helpers/validateFormPassword';
+import { validateFormConfirmPassword } from '../../common/helpers/validateFormConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 

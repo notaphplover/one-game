@@ -6,19 +6,19 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
-import { CreateUserMutationResolver } from './CreateUserMutationResolver';
+import { UserMutationResolver } from './UserMutationResolver';
 
-describe(CreateUserMutationResolver.name, () => {
+describe(UserMutationResolver.name, () => {
   let httpClientMock: jest.Mocked<HttpClient>;
 
-  let createUserMutationResolver: CreateUserMutationResolver;
+  let userMutationResolver: UserMutationResolver;
 
   beforeAll(() => {
     httpClientMock = {
       createUser: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
-    createUserMutationResolver = new CreateUserMutationResolver(httpClientMock);
+    userMutationResolver = new UserMutationResolver(httpClientMock);
   });
 
   describe('.createUser', () => {
@@ -59,7 +59,7 @@ describe(CreateUserMutationResolver.name, () => {
           statusCode: HttpStatus.OK,
         });
 
-        result = await createUserMutationResolver.createUser(
+        result = await userMutationResolver.createUser(
           undefined,
           {
             userCreateInput: {
@@ -121,7 +121,7 @@ describe(CreateUserMutationResolver.name, () => {
         });
 
         try {
-          await createUserMutationResolver.createUser(
+          await userMutationResolver.createUser(
             undefined,
             {
               userCreateInput: {
@@ -157,7 +157,7 @@ describe(CreateUserMutationResolver.name, () => {
 
       it('should throw an AppError', () => {
         const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.entityConflict,
+          kind: AppErrorKind.contractViolation,
           message: errorV1.description,
         };
 
