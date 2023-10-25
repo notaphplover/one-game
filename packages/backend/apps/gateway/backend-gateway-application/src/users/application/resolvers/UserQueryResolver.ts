@@ -7,8 +7,8 @@ import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class FindUsersQueryResolver
-  implements graphqlModels.FindUsersQueryResolvers<Request>
+export class UserQueryResolver
+  implements graphqlModels.UserQueryResolvers<Request>
 {
   readonly #httpClient: HttpClient;
 
@@ -18,7 +18,7 @@ export class FindUsersQueryResolver
 
   public async userById(
     _: unknown,
-    args: graphqlModels.FindUsersQueryUserByIdArgs,
+    args: graphqlModels.UserQueryUserByIdArgs,
     request: Request,
   ): Promise<graphqlModels.User | null> {
     const httpResponse: Awaited<ReturnType<HttpClient['getUser']>> =

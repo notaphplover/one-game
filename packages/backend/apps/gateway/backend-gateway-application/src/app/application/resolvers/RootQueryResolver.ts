@@ -3,30 +3,30 @@ import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { FindUsersQueryResolver } from '../../../users/application/resolvers/FindUsersQueryResolver';
+import { UserQueryResolver } from '../../../users/application/resolvers/UserQueryResolver';
 
 @Injectable()
 export class RootQueryResolver
   implements graphqlModels.RootQueryResolvers<Request, graphqlModels.RootQuery>
 {
-  readonly #findUsersQueryResolver: graphqlModels.FindUsersQueryResolvers<Request>;
+  readonly #userQueryResolver: graphqlModels.UserQueryResolvers<Request>;
 
   constructor(
-    @Inject(FindUsersQueryResolver)
-    findUsersQueryResolver: graphqlModels.FindUsersQueryResolvers<Request>,
+    @Inject(UserQueryResolver)
+    userQueryResolver: graphqlModels.UserQueryResolvers<Request>,
   ) {
-    this.#findUsersQueryResolver = findUsersQueryResolver;
+    this.#userQueryResolver = userQueryResolver;
   }
 
   public async userById(
     parent: graphqlModels.RootQuery,
-    args: graphqlModels.FindUsersQueryUserByIdArgs,
+    args: graphqlModels.UserQueryUserByIdArgs,
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.User | null> {
     return this.#getResolverFunction(
-      this.#findUsersQueryResolver,
-      this.#findUsersQueryResolver.userById,
+      this.#userQueryResolver,
+      this.#userQueryResolver.userById,
     )(parent, args, request, info);
   }
 

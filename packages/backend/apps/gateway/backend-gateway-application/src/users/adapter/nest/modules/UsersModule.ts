@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
 import { HttpApiModule } from '../../../../foundation/api/adapter/nest/modules/HttpApiModule';
-import { FindUsersQueryResolver } from '../../../application/resolvers/FindUsersQueryResolver';
 import { UserMutationResolver } from '../../../application/resolvers/UserMutationResolver';
+import { UserQueryResolver } from '../../../application/resolvers/UserQueryResolver';
 
 @Module({
-  exports: [FindUsersQueryResolver, UserMutationResolver],
+  exports: [UserQueryResolver, UserMutationResolver],
   imports: [HttpApiModule],
-  providers: [FindUsersQueryResolver, UserMutationResolver],
+  providers: [UserQueryResolver, UserMutationResolver],
 })
 export class UsersModule {}
