@@ -6,7 +6,7 @@ import { SseConsumer } from './SseConsumer';
 @Injectable()
 export class DelayedSseConsumer implements SseConsumer {
   #delayEnabled: boolean;
-  #innerConsumer: SseConsumer;
+  readonly #innerConsumer: SseConsumer;
   #pendingOnComplete: boolean;
   #eventsBuffer: MessageEvent[] | undefined;
 
