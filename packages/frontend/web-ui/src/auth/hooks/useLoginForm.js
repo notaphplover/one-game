@@ -11,7 +11,7 @@ export const STATUS_LOG_PENDING_BACKEND = 3;
 export const STATUS_LOG_BACKEND_KO = 4;
 export const STATUS_LOG_BACKEND_OK = 5;
 
-export const USER_NOT_EXISTS_ERROR = 'The user not exists.';
+export const INVALID_CREDENTIALS_ERROR = 'Invalid credentials.';
 const UNEXPECTED_ERROR = 'Ups... Something strange happened. Try again?';
 
 export const useLoginForm = (initialFormFields = {}) => {
@@ -82,8 +82,8 @@ export const useLoginForm = (initialFormFields = {}) => {
 
     if (response.payload.statusCode === 200) {
       setFormStatus(STATUS_LOG_BACKEND_OK);
-    } else if (response.payload.statusCode === 422) {
-      setBackendError(USER_NOT_EXISTS_ERROR);
+    } else if (response.payload.statusCode === 401) {
+      setBackendError(INVALID_CREDENTIALS_ERROR);
       setFormStatus(STATUS_LOG_BACKEND_KO);
     } else {
       setBackendError(UNEXPECTED_ERROR);

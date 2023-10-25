@@ -4,7 +4,7 @@ import {
   STATUS_LOG_BACKEND_KO,
   STATUS_LOG_BACKEND_OK,
   STATUS_LOG_INITIAL,
-  USER_NOT_EXISTS_ERROR,
+  INVALID_CREDENTIALS_ERROR,
   useLoginForm,
 } from './useLoginForm';
 import { validateFormEmail } from '../../common/helpers/validateFormEmail';
@@ -192,7 +192,7 @@ describe(useLoginForm.name, () => {
       dispatchMock = jest.fn().mockResolvedValue({
         payload: {
           body: { jwt: null },
-          statusCode: 422,
+          statusCode: 401,
         },
       });
 
@@ -221,8 +221,8 @@ describe(useLoginForm.name, () => {
     it('should return an status backend KO', () => {
       expect(formStatus).toBe(STATUS_LOG_BACKEND_KO);
     });
-    it('should return an error message User Not Exist', () => {
-      expect(backendError).toBe(USER_NOT_EXISTS_ERROR);
+    it('should return an error message Invalid Credentials', () => {
+      expect(backendError).toBe(INVALID_CREDENTIALS_ERROR);
     });
   });
 });
