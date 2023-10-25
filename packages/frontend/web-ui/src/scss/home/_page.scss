@@ -33,3 +33,40 @@
     text-align: center;
   }
 }
+
+// Home with auth - Pending and active games
+
+.home-auth-container {
+  display: block;
+  margin: 1rem auto;
+  padding: 2rem 0;
+}
+
+.home-auth-container .home-auth-text {
+  color: var(--cg-bkg-primary-dark);
+  text-align: left;
+  padding: 1rem 2rem;
+}
+
+.home-auth-container-games {
+  border: 1px solid var(--cg-bkg-primary-dark);
+}
+
+.home-auth-button-container {
+  display: flex;
+  justify-content: end;
+  margin: 1rem auto;
+  padding: 1rem 0;
+}
+
+.pending-game {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  border: 1px solid var(--cg-bkg-primary-dark);
+  margin: 5px 5px;
+}
+
+.pending-button-game {
+  padding: 1rem 0;
+}
