@@ -11,7 +11,7 @@
     "@cucumber/cucumber": "10.0.1",
     "@nestjs/common": "10.2.7",
     "@nestjs/core": "10.2.7",
-    "axios": "1.5.1",
+    "axios": "1.6.0",
     "envalid": "8.0.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1"
@@ -24,7 +24,7 @@
     "eslint": "8.52.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jest": "27.4.3",
+    "eslint-plugin-jest": "27.6.0",
     "eslint-plugin-prettier": "5.0.1",
     "prettier": "3.0.3",
     "rimraf": "5.0.5",
