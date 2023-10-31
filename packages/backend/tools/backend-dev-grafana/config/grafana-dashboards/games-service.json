@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -30,9 +30,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 7,
+      "id": 8,
       "panels": [],
-      "title": "Auth",
+      "title": "Games",
       "type": "row"
     },
     {
@@ -100,133 +100,6 @@
         "x": 0,
         "y": 1
       },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "filters": [
-            {
-              "id": "8c7c1fd7",
-              "operator": "=",
-              "scope": "span",
-              "tag": "http.route",
-              "value": [
-                "\"/v1/auth\""
-              ]
-            },
-            {
-              "id": "service-name",
-              "operator": "=",
-              "scope": "resource",
-              "tag": "service.name",
-              "value": [
-                "@cornie-js/backend-service-user"
-              ],
-              "valueType": "string"
-            }
-          ],
-          "limit": 20,
-          "queryType": "traceqlSearch",
-          "refId": "POST /v1/auth",
-          "tableType": "traces"
-        }
-      ],
-      "title": "POST /v1/auth",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 6
-      },
-      "id": 8,
-      "panels": [],
-      "title": "Users",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "tempo",
-        "uid": "tempo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 11,
-        "x": 0,
-        "y": 7
-      },
       "id": 4,
       "options": {
         "legend": {
@@ -252,7 +125,9 @@
               "operator": "=",
               "scope": "span",
               "tag": "http.route",
-              "value": "/v1/users/me",
+              "value": [
+                "/v1/games"
+              ],
               "valueType": "string"
             },
             {
@@ -261,7 +136,7 @@
               "scope": "span",
               "tag": "http.method",
               "value": [
-                "DELETE"
+                "POST"
               ],
               "valueType": "string"
             },
@@ -271,7 +146,7 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
@@ -282,7 +157,7 @@
           "tableType": "traces"
         }
       ],
-      "title": "DELETE /v1/users/me",
+      "title": "POST /v1/games",
       "type": "timeseries"
     },
     {
@@ -348,7 +223,7 @@
         "h": 5,
         "w": 11,
         "x": 11,
-        "y": 7
+        "y": 1
       },
       "id": 6,
       "options": {
@@ -376,7 +251,7 @@
               "scope": "span",
               "tag": "http.route",
               "value": [
-                "/v1/users/email/:email/code"
+                "/v1/games/mine"
               ],
               "valueType": "string"
             },
@@ -386,7 +261,7 @@
               "scope": "span",
               "tag": "http.method",
               "value": [
-                "DELETE"
+                "GET"
               ],
               "valueType": "string"
             },
@@ -396,18 +271,18 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
           ],
           "limit": 20,
           "queryType": "traceqlSearch",
-          "refId": "DELETE /v1/users/:email/code",
+          "refId": "GET /v1/games/mine",
           "tableType": "traces"
         }
       ],
-      "title": "DELETE /v1/users/:email/code",
+      "title": "GET /v1/games/mine",
       "type": "timeseries"
     },
     {
@@ -473,7 +348,7 @@
         "h": 5,
         "w": 11,
         "x": 0,
-        "y": 12
+        "y": 6
       },
       "id": 2,
       "options": {
@@ -500,7 +375,9 @@
               "operator": "=",
               "scope": "span",
               "tag": "http.route",
-              "value": "/v1/users/me",
+              "value": [
+                "/v1/games/:gameId"
+              ],
               "valueType": "string"
             },
             {
@@ -519,18 +396,18 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
           ],
           "limit": 20,
           "queryType": "traceqlSearch",
-          "refId": "GET /v1/users/me",
+          "refId": "GET /v1/games/:gameId",
           "tableType": "traces"
         }
       ],
-      "title": "GET /v1/users/me",
+      "title": "GET /v1/games/:gameId",
       "type": "timeseries"
     },
     {
@@ -596,7 +473,7 @@
         "h": 5,
         "w": 11,
         "x": 11,
-        "y": 12
+        "y": 6
       },
       "id": 5,
       "options": {
@@ -624,7 +501,7 @@
               "scope": "span",
               "tag": "http.route",
               "value": [
-                "/v1/users/email/:email/code"
+                "/v1/games/:gameId"
               ],
               "valueType": "string"
             },
@@ -634,7 +511,7 @@
               "scope": "span",
               "tag": "http.method",
               "value": [
-                "POST"
+                "PATCH"
               ],
               "valueType": "string"
             },
@@ -644,18 +521,18 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
           ],
           "limit": 20,
           "queryType": "traceqlSearch",
-          "refId": "POST /v1/users/:email/code",
+          "refId": "PATCH /v1/games/:gameId",
           "tableType": "traces"
         }
       ],
-      "title": "POST /v1/users/:email/code",
+      "title": "PATCH /v1/games/:gameId",
       "type": "timeseries"
     },
     {
@@ -721,7 +598,7 @@
         "h": 5,
         "w": 11,
         "x": 0,
-        "y": 17
+        "y": 11
       },
       "id": 3,
       "options": {
@@ -748,7 +625,9 @@
               "operator": "=",
               "scope": "span",
               "tag": "http.route",
-              "value": "/v1/users/me",
+              "value": [
+                "/v1/games/:gameId/options"
+              ],
               "valueType": "string"
             },
             {
@@ -757,7 +636,7 @@
               "scope": "span",
               "tag": "http.method",
               "value": [
-                "PATCH"
+                "GET"
               ],
               "valueType": "string"
             },
@@ -767,18 +646,268 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
           ],
           "limit": 20,
           "queryType": "traceqlSearch",
-          "refId": "PATCH /v1/users/me",
+          "refId": "GET /v1/games/:gameId/options",
           "tableType": "traces"
         }
       ],
-      "title": "PATCH /v1/users/me",
+      "title": "GET /v1/games/:gameId/options",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "tempo",
+        "uid": "tempo"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 11,
+        "x": 11,
+        "y": 11
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "tempo"
+          },
+          "filters": [
+            {
+              "id": "8c7c1fd7",
+              "operator": "=",
+              "scope": "span",
+              "tag": "http.route",
+              "value": [
+                "/v1/games/:gameId/slots"
+              ],
+              "valueType": "string"
+            },
+            {
+              "id": "94fc22b2",
+              "operator": "=",
+              "scope": "span",
+              "tag": "http.method",
+              "value": [
+                "POST"
+              ],
+              "valueType": "string"
+            },
+            {
+              "id": "service-name",
+              "operator": "=",
+              "scope": "resource",
+              "tag": "service.name",
+              "value": [
+                "@cornie-js/backend-service-game"
+              ],
+              "valueType": "string"
+            }
+          ],
+          "limit": 20,
+          "queryType": "traceqlSearch",
+          "refId": "POST /v1/games/:gameId/slots",
+          "tableType": "traces"
+        }
+      ],
+      "title": "POST /v1/games/:gameId/slots",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "tempo",
+        "uid": "tempo"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 11,
+        "x": 0,
+        "y": 16
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "tempo"
+          },
+          "filters": [
+            {
+              "id": "8c7c1fd7",
+              "operator": "=",
+              "scope": "span",
+              "tag": "http.route",
+              "value": [
+                "/v1/games/:gameId/slots/:slotIndex/cards"
+              ],
+              "valueType": "string"
+            },
+            {
+              "id": "94fc22b2",
+              "operator": "=",
+              "scope": "span",
+              "tag": "http.method",
+              "value": [
+                "GET"
+              ],
+              "valueType": "string"
+            },
+            {
+              "id": "service-name",
+              "operator": "=",
+              "scope": "resource",
+              "tag": "service.name",
+              "value": [
+                "@cornie-js/backend-service-game"
+              ],
+              "valueType": "string"
+            }
+          ],
+          "limit": 20,
+          "queryType": "traceqlSearch",
+          "refId": "GET /v1/games/:gameId/slots/:slotIndex/cards",
+          "tableType": "traces"
+        }
+      ],
+      "title": "GET /v1/games/:gameId/slots/:slotIndex/cards",
       "type": "timeseries"
     },
     {
@@ -787,7 +916,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 21
       },
       "id": 9,
       "panels": [],
@@ -825,7 +954,7 @@
         "h": 18,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 22
       },
       "id": 10,
       "options": {
@@ -880,7 +1009,7 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
@@ -956,7 +1085,7 @@
         "h": 18,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 22
       },
       "id": 11,
       "options": {
@@ -1011,7 +1140,7 @@
               "scope": "resource",
               "tag": "service.name",
               "value": [
-                "@cornie-js/backend-service-user"
+                "@cornie-js/backend-service-game"
               ],
               "valueType": "string"
             }
@@ -1069,8 +1198,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "User service",
-  "uid": "c2b20002-e378-44ff-a000-155a8aaecee5",
-  "version": 2,
+  "title": "Game service",
+  "uid": "c2b20002-e378-44ff-a000-155a8aaecee6",
+  "version": 11,
   "weekStart": ""
 }
