@@ -99,6 +99,14 @@ export class GameDb {
   public readonly gameSlotsDb!: GameSlotDb[];
 
   @Column({
+    length: 255,
+    name: 'name',
+    nullable: true,
+    type: 'varchar',
+  })
+  public readonly name!: string | null;
+
+  @Column({
     name: 'spec',
     type: 'json',
   })
