@@ -4,6 +4,7 @@ export interface Environment {
   apiBackendServiceSecret: string;
   apiBaseUrl: string;
   corsOrigins: string[];
+  grafanaTraceUrl: string;
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;
   jwtExpirationMs: number;
