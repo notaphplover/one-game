@@ -17,6 +17,22 @@
       "automerge": true,
       "matchUpdateTypes": ["patch", "minor"],
       "excludePackageNames": ["turbo", "typescript"]
+    },
+    {
+      "matchPackagePatterns": ["node"],
+      "groupName": "auto merge docker node on patch or minor",
+      "automerge": true,
+      "matchDatasources": ["docker"],
+      "allowedVersions": "^20.0.0",
+      "labels": ["docker-update"]
+    },
+    {
+      "enabled": false,
+      "matchPackagePatterns": ["node"],
+      "groupName": "forbid docker node on unstable versions",
+      "matchDatasources": ["docker"],
+      "allowedVersions": "^21.0.0",
+      "labels": ["docker-update"]
     }
   ]
 }
