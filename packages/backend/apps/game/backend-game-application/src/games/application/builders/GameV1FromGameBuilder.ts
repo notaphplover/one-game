@@ -115,7 +115,7 @@ export class GameV1FromGameBuilder
   }
 
   #buildActiveGameV1(game: ActiveGame): apiModels.ActiveGameV1 {
-    return {
+    const gameV1: apiModels.ActiveGameV1 = {
       id: game.id,
       spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
       state: {
@@ -135,10 +135,16 @@ export class GameV1FromGameBuilder
         status: 'active',
       },
     };
+
+    if (game.name !== null) {
+      gameV1.name = game.name;
+    }
+
+    return gameV1;
   }
 
   #buildFinishedGameV1(game: FinishedGame): apiModels.FinishedGameV1 {
-    return {
+    const gameV1: apiModels.FinishedGameV1 = {
       id: game.id,
       spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
       state: {
@@ -148,10 +154,16 @@ export class GameV1FromGameBuilder
         status: 'finished',
       },
     };
+
+    if (game.name !== null) {
+      gameV1.name = game.name;
+    }
+
+    return gameV1;
   }
 
   #buildNonStartedGameV1(game: NonStartedGame): apiModels.NonStartedGameV1 {
-    return {
+    const gameV1: apiModels.NonStartedGameV1 = {
       id: game.id,
       spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
       state: {
@@ -163,6 +175,12 @@ export class GameV1FromGameBuilder
         status: 'nonStarted',
       },
     };
+
+    if (game.name !== null) {
+      gameV1.name = game.name;
+    }
+
+    return gameV1;
   }
 
   #isActiveGame(game: Game): game is ActiveGame {

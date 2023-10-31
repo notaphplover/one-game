@@ -129,6 +129,7 @@ export interface ActiveGameStateV1 {
 }
 export interface ActiveGameV1 {
   id: string;
+  name?: string;
   spec: GameSpecV1;
   state: ActiveGameStateV1;
 }
@@ -150,11 +151,13 @@ export interface FinishedGameStateV1 {
 }
 export interface FinishedGameV1 {
   id: string;
+  name?: string;
   spec: GameSpecV1;
   state: FinishedGameStateV1;
 }
 export interface NonStartedGameV1 {
   id: string;
+  name?: string;
   spec: GameSpecV1;
   state: NonStartedGameStateV1;
 }
