@@ -4,6 +4,7 @@ export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: string;
   ONE_JS_GAME_API_BASE_URL: string;
   ONE_JS_GAME_SERVICE_CORS_ORIGINS: string[];
+  ONE_JS_GAME_SERVICE_GRAFANA_TRACE_URL: string;
   ONE_JS_GAME_SERVICE_PORT: number;
   ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST: string;
   ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT: number;
