@@ -7,25 +7,25 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
-import { FindUsersQueryResolver } from './FindUsersQueryResolver';
+import { UserQueryResolver } from './UserQueryResolver';
 
-describe(FindUsersQueryResolver.name, () => {
+describe(UserQueryResolver.name, () => {
   let httpClientMock: jest.Mocked<HttpClient>;
 
-  let findUsersQueryResolver: FindUsersQueryResolver;
+  let userQueryResolver: UserQueryResolver;
 
   beforeAll(() => {
     httpClientMock = {
       getUser: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
-    findUsersQueryResolver = new FindUsersQueryResolver(httpClientMock);
+    userQueryResolver = new UserQueryResolver(httpClientMock);
   });
 
   describe('.userById', () => {
     describe('when called, and httpClient.getUser() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
-      let argsFixture: graphqlModels.FindUsersQueryUserByIdArgs;
+      let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let requestFixture: Request;
 
       let responseFixture: Response<
@@ -59,7 +59,7 @@ describe(FindUsersQueryResolver.name, () => {
 
         httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
 
-        result = await findUsersQueryResolver.userById(
+        result = await userQueryResolver.userById(
           firstArgFixture,
           argsFixture,
           requestFixture,
@@ -87,7 +87,7 @@ describe(FindUsersQueryResolver.name, () => {
 
     describe('when called, and httpClient.getUser() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
-      let argsFixture: graphqlModels.FindUsersQueryUserByIdArgs;
+      let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let requestFixture: Request;
 
       let responseFixture: Response<
@@ -120,7 +120,7 @@ describe(FindUsersQueryResolver.name, () => {
         httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
 
         try {
-          await findUsersQueryResolver.userById(
+          await userQueryResolver.userById(
             firstArgFixture,
             argsFixture,
             requestFixture,
@@ -159,7 +159,7 @@ describe(FindUsersQueryResolver.name, () => {
 
     describe('when called, and httpClient.getUser() returns a Response with status code 404', () => {
       let firstArgFixture: unknown;
-      let argsFixture: graphqlModels.FindUsersQueryUserByIdArgs;
+      let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let requestFixture: Request;
 
       let responseFixture: Response<
@@ -191,7 +191,7 @@ describe(FindUsersQueryResolver.name, () => {
 
         httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
 
-        result = await findUsersQueryResolver.userById(
+        result = await userQueryResolver.userById(
           firstArgFixture,
           argsFixture,
           requestFixture,

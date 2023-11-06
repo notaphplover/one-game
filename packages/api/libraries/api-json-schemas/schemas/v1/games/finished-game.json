@@ -8,6 +8,9 @@
     "id": {
       "type": "string"
     },
+    "name": {
+      "type": "string"
+    },
     "spec": {
       "$ref": "https://onegame.schemas/api/v1/games/game-spec.json"
     },

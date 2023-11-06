@@ -118,8 +118,9 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       it('should return a NonStartedGame', () => {
-        const expected: Partial<NonStartedGame> = {
+        const expected: NonStartedGame = {
           id: gameDbFixture.id,
+          name: gameDbFixture.name,
           spec: {
             cards: [
               {
@@ -195,8 +196,9 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       it('should return a NonStartedGame with sorted game slots', () => {
-        const expected: Partial<NonStartedGame> = {
+        const expected: NonStartedGame = {
           id: gameDbFixture.id,
+          name: gameDbFixture.name,
           spec: {
             cards: [
               {
@@ -272,8 +274,9 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       it('should return a FinishedGame with sorted game slots', () => {
-        const expected: Partial<FinishedGame> = {
+        const expected: FinishedGame = {
           id: gameDbFixture.id,
+          name: gameDbFixture.name,
           spec: {
             cards: [
               {
@@ -369,8 +372,9 @@ describe(GameDbToGameConverter.name, () => {
       });
 
       it('should return an ActiveGame', () => {
-        const expected: Partial<ActiveGame> = {
+        const expected: ActiveGame = {
           id: gameDbFixture.id,
+          name: gameDbFixture.name,
           spec: {
             cards: [
               {

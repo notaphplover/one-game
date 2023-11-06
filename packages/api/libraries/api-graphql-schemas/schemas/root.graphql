@@ -3,7 +3,7 @@
 #import AuthMutation from './auth/AuthMutation.graphql'
 #import UserMutation from './users/UserMutation.graphql'
 #import EmailPasswordAuthCreateInput from './auth/EmailPasswordAuthCreateInput.graphql'
-#import FindUsersQuery from './users/FindUsersQuery.graphql'
+#import UserQuery from './users/UserQuery.graphql'
 #import User from './users/User.graphql'
 #import UserCreateInput from './users/UserCreateInput.graphql'
 #import UserUpdateInput from './users/UserUpdateInput.graphql'
@@ -15,7 +15,7 @@ type RootMutation implements AuthMutation & UserMutation {
   updateUserMe(userUpdateInput: UserUpdateInput!): User!
 }
 
-type RootQuery implements FindUsersQuery {
+type RootQuery implements UserQuery {
   userById(id: ID!): User
 }
 

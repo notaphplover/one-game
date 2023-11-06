@@ -7,6 +7,7 @@ export class FinishedGameFixtures {
   public static get any(): FinishedGame {
     const fixture: FinishedGame = {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      name: 'Game name',
       spec: GameSpecFixtures.any,
       state: {
         slots: [FinishedGameSlotFixtures.withPositionZero],

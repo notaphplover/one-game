@@ -17,6 +17,7 @@ export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      name: 'Game name',
       spec: GameSpecFixtures.withGameSlotsAmountOne,
       state: {
         currentCard: CardFixtures.any,
