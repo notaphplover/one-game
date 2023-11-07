@@ -170,6 +170,7 @@ export interface NonStartedGameSlotV1 {
 }
 export interface GameCreateQueryV1 {
   gameSlotsAmount: number;
+  name?: string;
   options: GameOptionsV1;
 }
 export interface GameOptionsV1 {
