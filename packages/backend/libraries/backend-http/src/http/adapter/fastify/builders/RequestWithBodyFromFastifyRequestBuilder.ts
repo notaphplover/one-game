@@ -22,7 +22,7 @@ export class RequestWithBodyFromFastifyRequestBuilder
   #parseBody(body: unknown): Record<string, unknown> {
     if (!this.#isBody(body)) {
       throw new AppError(
-        AppErrorKind.unknown,
+        AppErrorKind.contractViolation,
         'Invalid body. Expecting a body, but none was found',
       );
     }
