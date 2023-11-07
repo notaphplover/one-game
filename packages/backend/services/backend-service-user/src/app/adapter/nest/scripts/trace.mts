@@ -3,7 +3,7 @@ import {
   Environment,
   EnvironmentService,
 } from '@cornie-js/backend-app-user-env';
-import { Tracer } from '@cornie-js/backend-monitoring';
+import { PyroscopeProfiler, Tracer } from '@cornie-js/backend-monitoring';
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
@@ -21,3 +21,14 @@ const tracer: Tracer = new Tracer({
 });
 
 tracer.start();
+
+const profiler: PyroscopeProfiler = new PyroscopeProfiler({
+  applicationName: 'cornie-js-backend-service-user',
+  samplingDurationMs: 10000,
+  samplingIntervalBytes: 1048576,
+  samplingIntervalMs: 10,
+  serverAddress: 'http://localhost:4040',
+  stackDepth: 64,
+});
+
+profiler.start();
