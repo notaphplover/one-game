@@ -15,6 +15,10 @@ export class HttpNestFastifyController<
     [TRequest],
     Response | ResponseWithBody<unknown>
   >;
+  readonly #responseFromErrorBuilder: Builder<
+    Response | ResponseWithBody<unknown>,
+    [unknown]
+  >;
   readonly #resultBuilder: Builder<
     FastifyReply,
     [Response | ResponseWithBody<unknown>, FastifyReply]
@@ -26,6 +30,10 @@ export class HttpNestFastifyController<
       [TRequest],
       Response | ResponseWithBody<unknown>
     >,
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
@@ -33,6 +41,7 @@ export class HttpNestFastifyController<
   ) {
     this.#requestBuilder = requestBuilder;
     this.#requestController = requestController;
+    this.#responseFromErrorBuilder = responseFromErrorBuilder;
     this.#resultBuilder = resultBuilder;
   }
 
@@ -40,10 +49,15 @@ export class HttpNestFastifyController<
     request: FastifyRequest,
     reply: FastifyReply,
   ): Promise<void> {
-    const appRequest: TRequest = this.#requestBuilder.build(request);
+    let appResponse: Response | ResponseWithBody<unknown>;
 
-    const appResponse: Response | ResponseWithBody<unknown> =
-      await this.#requestController.handle(appRequest);
+    try {
+      const appRequest: TRequest = this.#requestBuilder.build(request);
+
+      appResponse = await this.#requestController.handle(appRequest);
+    } catch (error: unknown) {
+      appResponse = this.#responseFromErrorBuilder.build(error);
+    }
 
     await this.#resultBuilder.build(appResponse, reply);
   }

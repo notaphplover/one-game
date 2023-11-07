@@ -1,7 +1,9 @@
 import {
+  ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
   FastifyReplySseConsumerFromFastifyReplyBuilder,
   FastifySseReplyFromResponseBuilder,
+  HttpStatusCodeFromErrorBuilder,
   RequestFromFastifyRequestBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
   StringifiedSseFromMessageEventBuilder,
@@ -10,6 +12,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
   exports: [
+    ErrorV1ResponseFromErrorBuilder,
     FastifyReplyFromResponseBuilder,
     FastifyReplySseConsumerFromFastifyReplyBuilder,
     FastifySseReplyFromResponseBuilder,
@@ -17,9 +20,11 @@ import { Module } from '@nestjs/common';
     RequestWithBodyFromFastifyRequestBuilder,
   ],
   providers: [
+    ErrorV1ResponseFromErrorBuilder,
     FastifyReplyFromResponseBuilder,
     FastifyReplySseConsumerFromFastifyReplyBuilder,
     FastifySseReplyFromResponseBuilder,
+    HttpStatusCodeFromErrorBuilder,
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
     StringifiedSseFromMessageEventBuilder,
