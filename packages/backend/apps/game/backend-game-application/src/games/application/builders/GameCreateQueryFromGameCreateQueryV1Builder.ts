@@ -56,6 +56,7 @@ export class GameCreateQueryFromGameCreateQueryV1Builder
 
     return {
       id: context.uuid,
+      name: gameCreateQueryV1.name,
       spec: {
         cards: this.#gameService.getInitialCardsSpec(),
         gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
