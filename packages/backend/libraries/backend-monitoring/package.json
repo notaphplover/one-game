@@ -6,15 +6,15 @@
   "description": "Prometheus client library for one-game-js services",
   "dependencies": {
     "@opentelemetry/auto-instrumentations-node": "0.39.4",
-    "@opentelemetry/exporter-metrics-otlp-grpc": "0.44.0",
-    "@opentelemetry/exporter-trace-otlp-grpc": "0.44.0",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "0.45.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "0.45.0",
     "@opentelemetry/resource-detector-container": "0.3.2",
     "@opentelemetry/resource-detector-gcp": "0.29.2",
-    "@opentelemetry/sdk-metrics": "1.17.1",
-    "@opentelemetry/sdk-node": "0.44.0",
-    "@opentelemetry/sdk-trace-node": "1.17.1",
-    "@opentelemetry/resources": "1.17.1",
-    "@opentelemetry/semantic-conventions": "1.17.1"
+    "@opentelemetry/sdk-metrics": "1.18.0",
+    "@opentelemetry/sdk-node": "0.45.0",
+    "@opentelemetry/sdk-trace-node": "1.18.0",
+    "@opentelemetry/resources": "1.18.0",
+    "@opentelemetry/semantic-conventions": "1.18.0"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
