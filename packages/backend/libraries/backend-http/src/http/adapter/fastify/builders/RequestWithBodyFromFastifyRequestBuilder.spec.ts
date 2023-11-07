@@ -103,7 +103,7 @@ describe(RequestWithBodyFromFastifyRequestBuilder.name, () => {
 
         it('should throw an Error', () => {
           const expectedProperties: Partial<AppError> = {
-            kind: AppErrorKind.unknown,
+            kind: AppErrorKind.contractViolation,
             message: 'Invalid body. Expecting a body, but none was found',
           };
 

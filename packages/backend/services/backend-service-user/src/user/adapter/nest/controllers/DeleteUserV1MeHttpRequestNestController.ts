@@ -6,6 +6,7 @@ import {
   ResponseWithBody,
   Request,
   RequestFromFastifyRequestBuilder,
+  ErrorV1ResponseFromErrorBuilder,
 } from '@cornie-js/backend-http';
 import { DeleteUserV1MeHttpRequestController } from '@cornie-js/backend-user-application/users';
 import { Controller, Delete, Inject, Req, Res } from '@nestjs/common';
@@ -18,13 +19,23 @@ export class DeleteUserV1MeHttpRequestNestController extends HttpNestFastifyCont
     requestBuilder: Builder<Request, [FastifyRequest]>,
     @Inject(DeleteUserV1MeHttpRequestController)
     requestController: Handler<[Request], Response | ResponseWithBody<unknown>>,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
   ) {
-    super(requestBuilder, requestController, resultBuilder);
+    super(
+      requestBuilder,
+      requestController,
+      responseFromErrorBuilder,
+      resultBuilder,
+    );
   }
 
   @Delete('')

@@ -6,6 +6,7 @@ import {
   ResponseWithBody,
   Request,
   RequestFromFastifyRequestBuilder,
+  ErrorV1ResponseFromErrorBuilder,
 } from '@cornie-js/backend-http';
 import {
   BaseUserV1EmailCodeRequestParamHandler,
@@ -23,13 +24,23 @@ export class DeleteUserV1EmailCodeRequestNestController extends HttpNestFastifyC
     requestBuilder: Builder<Request, [FastifyRequest]>,
     @Inject(DeleteUserV1EmailCodeRequestController)
     requestController: Handler<[Request], Response | ResponseWithBody<unknown>>,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
   ) {
-    super(requestBuilder, requestController, resultBuilder);
+    super(
+      requestBuilder,
+      requestController,
+      responseFromErrorBuilder,
+      resultBuilder,
+    );
   }
 
   @Delete('code')

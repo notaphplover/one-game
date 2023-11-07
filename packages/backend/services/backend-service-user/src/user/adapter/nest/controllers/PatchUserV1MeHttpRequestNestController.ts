@@ -1,5 +1,6 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
+  ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
   RequestWithBody,
@@ -21,13 +22,23 @@ export class PatchUserV1MeHttpRequestNestController extends HttpNestFastifyContr
       [RequestWithBody],
       Response | ResponseWithBody<unknown>
     >,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
   ) {
-    super(requestBuilder, requestController, resultBuilder);
+    super(
+      requestBuilder,
+      requestController,
+      responseFromErrorBuilder,
+      resultBuilder,
+    );
   }
 
   @Patch()

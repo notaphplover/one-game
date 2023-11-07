@@ -6,6 +6,7 @@ import {
   RequestWithBody,
   Response,
   ResponseWithBody,
+  ErrorV1ResponseFromErrorBuilder,
 } from '@cornie-js/backend-http';
 import { PostUserV1HttpRequestController } from '@cornie-js/backend-user-application/users';
 import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
@@ -21,13 +22,23 @@ export class PostUserV1HttpRequestNestController extends HttpNestFastifyControll
       [RequestWithBody],
       Response | ResponseWithBody<unknown>
     >,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
   ) {
-    super(requestBuilder, requestController, resultBuilder);
+    super(
+      requestBuilder,
+      requestController,
+      responseFromErrorBuilder,
+      resultBuilder,
+    );
   }
 
   @Post()

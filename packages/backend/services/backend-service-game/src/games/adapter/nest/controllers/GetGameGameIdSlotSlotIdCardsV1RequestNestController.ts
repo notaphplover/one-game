@@ -11,6 +11,7 @@ import {
   ResponseWithBody,
   RequestFromFastifyRequestBuilder,
   Request,
+  ErrorV1ResponseFromErrorBuilder,
 } from '@cornie-js/backend-http';
 import { Controller, Get, Inject, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -22,13 +23,23 @@ export class GetGameGameIdSlotSlotIdCardsV1RequestNestController extends HttpNes
     requestBuilder: Builder<Request, [FastifyRequest]>,
     @Inject(GetGameGameIdSlotSlotIdCardsV1RequestController)
     requestController: Handler<[Request], Response | ResponseWithBody<unknown>>,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
   ) {
-    super(requestBuilder, requestController, resultBuilder);
+    super(
+      requestBuilder,
+      requestController,
+      responseFromErrorBuilder,
+      resultBuilder,
+    );
   }
 
   @Get(
