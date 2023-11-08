@@ -3,7 +3,7 @@ export interface PyroscopeConfig {
   authToken?: string;
   samplingDurationMs: number;
   samplingIntervalBytes: number;
-  samplingIntervalMs: number;
+  samplingIntervalMicros: number;
   serverAddress: string;
   stackDepth: number;
 }

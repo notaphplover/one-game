@@ -5,11 +5,11 @@ import { Profiler } from '../modules/Profiler';
 
 export class CpuProfiler implements Profiler {
   readonly #samplingDurationMs: number;
-  readonly #samplingIntervalMs: number;
+  readonly #samplingIntervalMicros: number;
 
-  constructor(samplingDurationMs: number, samplingIntervalMs: number) {
+  constructor(samplingDurationMs: number, samplingIntervalMicros: number) {
     this.#samplingDurationMs = samplingDurationMs;
-    this.#samplingIntervalMs = samplingIntervalMs;
+    this.#samplingIntervalMicros = samplingIntervalMicros;
   }
 
   public profile(): Profile {
@@ -20,7 +20,7 @@ export class CpuProfiler implements Profiler {
     if (!time.isStarted()) {
       time.start({
         durationMillis: this.#samplingDurationMs,
-        intervalMicros: this.#samplingIntervalMs,
+        intervalMicros: this.#samplingIntervalMicros,
         withContexts: false,
         workaroundV8Bug: true,
       });

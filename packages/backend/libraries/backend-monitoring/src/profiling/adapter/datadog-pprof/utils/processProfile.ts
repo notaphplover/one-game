@@ -1,40 +1,25 @@
 import { Function as PprofFunction, Profile } from 'pprof-format';
 
+// eslint-disable-next-line @typescript-eslint/typedef
+const V8_NAME_TO_GOLANG_NAME_MAP: Record<string, string> = {
+  objects: 'inuse_objects',
+  sample: 'samples',
+  space: 'inuse_space',
+};
+
 export function processProfile(profile: Profile): Profile {
-  // eslint-disable-next-line @typescript-eslint/typedef
-  const replacements: Record<string, string> = {
-    objects: 'inuse_objects',
-    sample: 'samples',
-    space: 'inuse_space',
-  };
+  adjustSampleNames(profile);
+  adjustCwdPaths(profile);
 
-  // Replace the names of the samples to meet golang naming
-  for (const valueType of profile.sampleType) {
-    for (const [replacementsKey, replacementVal] of Object.entries(
-      replacements,
-    )) {
-      const unit: string | undefined =
-        profile.stringTable.strings[valueType.unit as number];
+  return profile;
+}
 
-      if (unit === replacementsKey) {
-        valueType.unit = profile.stringTable.dedup(replacementVal);
-      }
-
-      const type: string | undefined =
-        profile.stringTable.strings[valueType.type as number];
-
-      if (type === replacementsKey) {
-        valueType.type = profile.stringTable.dedup(replacementVal);
-      }
-    }
-  }
-
+function adjustCwdPaths(profile: Profile): void {
   for (const location of profile.location) {
     for (const line of location.line) {
-      const functionId: number | bigint = line.functionId;
-      const contextFunction: PprofFunction | undefined = profile.function.find(
-        (pprofFunction: PprofFunction) => pprofFunction.id == functionId,
-      );
+      const functionId: number = Number(line.functionId);
+      const contextFunction: PprofFunction | undefined =
+        profile.function[functionId];
 
       if (contextFunction !== undefined) {
         const functionName: string | undefined =
@@ -55,6 +40,27 @@ export function processProfile(profile: Profile): Profile {
       }
     }
   }
+}
 
-  return profile;
+function adjustSampleNames(profile: Profile): void {
+  // Replace the names of the samples to meet golang naming
+  for (const valueType of profile.sampleType) {
+    for (const [replacementsKey, replacementVal] of Object.entries(
+      V8_NAME_TO_GOLANG_NAME_MAP,
+    )) {
+      const unit: string | undefined =
+        profile.stringTable.strings[Number(valueType.unit)];
+
+      if (unit === replacementsKey) {
+        valueType.unit = profile.stringTable.dedup(replacementVal);
+      }
+
+      const type: string | undefined =
+        profile.stringTable.strings[Number(valueType.type)];
+
+      if (type === replacementsKey) {
+        valueType.type = profile.stringTable.dedup(replacementVal);
+      }
+    }
+  }
 }
