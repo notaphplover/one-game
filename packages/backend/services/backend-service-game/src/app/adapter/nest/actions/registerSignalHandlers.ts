@@ -34,6 +34,6 @@ function registerExitSignalHandlers(
   signals: NodeJS.Signals[],
 ): void {
   for (const signal of signals) {
-    process.on(signal, exitSignalHandler(nestApplication, logger));
+    process.once(signal, exitSignalHandler(nestApplication, logger));
   }
 }
