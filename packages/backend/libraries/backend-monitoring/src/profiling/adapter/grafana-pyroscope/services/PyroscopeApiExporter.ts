@@ -7,7 +7,7 @@ import { ProfileExporter } from '../../datadog-pprof/modules/ProfileExporter';
 import { processProfile } from '../../datadog-pprof/utils/processProfile';
 import { PyroscopeConfig } from '../models/PyroscopeConfig';
 
-const MILLISECONDS_PER_SECOND: number = 1000;
+const MICROSECONDS_PER_SECOND: number = 1e6;
 
 export class PyroscopeApiExporter implements ProfileExporter {
   readonly #sampleTypeConfig: string | undefined;
@@ -64,7 +64,7 @@ export class PyroscopeApiExporter implements ProfileExporter {
     }
 
     const rate: number =
-      MILLISECONDS_PER_SECOND / Number(config.samplingIntervalMicros);
+      MICROSECONDS_PER_SECOND / Number(config.samplingIntervalMicros);
 
     const url: string = `${
       config.serverAddress
