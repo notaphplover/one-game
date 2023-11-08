@@ -64,7 +64,7 @@ export class PyroscopeApiExporter implements ProfileExporter {
     }
 
     const rate: number =
-      MILLISECONDS_PER_SECOND / Number(config.samplingIntervalMs);
+      MILLISECONDS_PER_SECOND / Number(config.samplingIntervalMicros);
 
     const url: string = `${
       config.serverAddress
