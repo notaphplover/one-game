@@ -55,6 +55,12 @@ openssl req -x509 -newkey rsa:4096 -keyout ssl/localhost.key.pem -out ssl/localh
 pnpm run serve
 ```
 
+You might be interested in just running the HTTP REST API services. In that case, launch the `serve:api:rest` script:
+
+```
+pnpm run serve:api:rest
+```
+
 That's all! You are ready to start calling the API
 
 ## Throubleshoot topics
