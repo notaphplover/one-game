@@ -34,6 +34,9 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       ONE_JS_USER_API_BACKEND_SERVICE_SECRET: str(),
       ONE_JS_USER_FRONTEND_BASE_URL: url(),
       ONE_JS_USER_SERVICE_CORS_ORIGINS: json(),
+      ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_ENABLED: bool(),
+      ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_URL: url(),
+      ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED: bool(),
       ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL: url(),
       ONE_JS_USER_SERVICE_JWT_ALGORITHM: str<JwtAlgorithm>({
         choices: Object.values(JwtAlgorithm),
@@ -59,6 +62,12 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
         rawEnvironment.ONE_JS_USER_API_BACKEND_SERVICE_SECRET,
       corsOrigins: rawEnvironment.ONE_JS_USER_SERVICE_CORS_ORIGINS,
       frontendBaseUrl: rawEnvironment.ONE_JS_USER_FRONTEND_BASE_URL,
+      grafanaPyroscopeEnabled:
+        rawEnvironment.ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_ENABLED,
+      grafanaPyroscopeUrl:
+        rawEnvironment.ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_URL,
+      grafanaTraceEnabled:
+        rawEnvironment.ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED,
       grafanaTraceUrl: rawEnvironment.ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL,
       jwtAlgorithm: rawEnvironment.ONE_JS_USER_SERVICE_JWT_ALGORITHM,
       jwtAudience: rawEnvironment.ONE_JS_USER_SERVICE_JWT_AUDIENCE,

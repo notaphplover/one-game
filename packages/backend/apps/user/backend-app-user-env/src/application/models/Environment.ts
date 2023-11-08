@@ -6,6 +6,9 @@ export interface Environment {
   apiBackendServiceSecret: string;
   frontendBaseUrl: string;
   corsOrigins: string[];
+  grafanaPyroscopeEnabled: boolean;
+  grafanaPyroscopeUrl: string;
+  grafanaTraceEnabled: boolean;
   grafanaTraceUrl: string;
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;
