@@ -21,6 +21,7 @@ import {
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { LoginLayout } from '../layout/LoginLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
+import { useEffect } from 'react';
 
 export const Login = () => {
   const {
@@ -46,9 +47,12 @@ export const Login = () => {
     notifyFormFieldsFilled();
   };
 
-  if (formStatus === STATUS_LOG_BACKEND_OK) {
-    return navigate('/', { replace: true });
-  }
+  useEffect(() => {
+    if (formStatus === STATUS_LOG_BACKEND_OK) {
+      navigate('/', { replace: true });
+    }
+  }, [formStatus]);
+
   const isTextFieldDisabled = () => {
     return (
       formStatus === STATUS_LOG_BACKEND_OK ||
