@@ -4,6 +4,7 @@ import {
   PatchGameGameIdV1RequestParamHandler,
 } from '@cornie-js/backend-game-application/games';
 import {
+  ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
   RequestWithBody,
@@ -24,13 +25,23 @@ export class PatchGameV1GameIdHttpRequestNestController extends HttpNestFastifyC
       [RequestWithBody],
       Response | ResponseWithBody<unknown>
     >,
+    @Inject(ErrorV1ResponseFromErrorBuilder)
+    responseFromErrorBuilder: Builder<
+      Response | ResponseWithBody<unknown>,
+      [unknown]
+    >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
   ) {
-    super(requestBuilder, requestController, resultBuilder);
+    super(
+      requestBuilder,
+      requestController,
+      responseFromErrorBuilder,
+      resultBuilder,
+    );
   }
 
   @Patch(

@@ -8,6 +8,9 @@
     "gameSlotsAmount": {
       "type": "integer"
     },
+    "name": {
+      "type": "string"
+    },
     "options": {
       "$ref": "https://onegame.schemas/api/v1/games/game-options.json"
     }
