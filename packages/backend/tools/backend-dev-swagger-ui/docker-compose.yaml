@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  openapi_doc_server:
+    image: swaggerapi/swagger-ui:v5.9.2
+    environment:
+      - SWAGGER_JSON=/schemas/one-game.yaml
+    ports:
+      - 8080:8080
+    volumes:
+      - ./node_modules/@cornie-js/api-openapi-schema/schemas/generated/one-game.yaml:/schemas/one-game.yaml

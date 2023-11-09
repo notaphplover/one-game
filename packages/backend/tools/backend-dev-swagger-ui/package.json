@@ -1,0 +1,22 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Dev Grafana tool for one-game-js services",
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/backend-dev-swagger-ui",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "dependencies": {
+    "@cornie-js/api-openapi-schema": "workspace:*"
+  },
+  "scripts": {
+    "postserve": "docker compose down",
+    "serve": "docker compose up"
+  }
+}
