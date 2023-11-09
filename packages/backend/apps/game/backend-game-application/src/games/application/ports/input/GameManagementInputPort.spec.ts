@@ -2,11 +2,18 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+  Left,
+} from '@cornie-js/backend-common';
 import {
   Game,
   GameCreateQuery,
   GameFindQuery,
+  IsValidGameCreateQuerySpec,
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,
@@ -42,6 +49,7 @@ describe(GameManagementInputPort.name, () => {
   >;
   let gameV1FromGameBuilderMock: jest.Mocked<Builder<apiModels.GameV1, [Game]>>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
+  let isValidGameCreateQuerySpecMock: jest.Mocked<IsValidGameCreateQuerySpec>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
   let gameManagementInputPort: GameManagementInputPort;
@@ -68,6 +76,9 @@ describe(GameManagementInputPort.name, () => {
       findOne: jest.fn(),
       update: jest.fn(),
     };
+    isValidGameCreateQuerySpecMock = {
+      isSatisfiedOrReport: jest.fn(),
+    };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
     };
@@ -79,6 +90,7 @@ describe(GameManagementInputPort.name, () => {
       gameIdPlayCardsQueryV1HandlerMock,
       gameV1FromGameBuilderMock,
       gamePersistenceOutputPortMock,
+      isValidGameCreateQuerySpecMock,
       uuidProviderOutputPortMock,
     );
   });
@@ -90,7 +102,7 @@ describe(GameManagementInputPort.name, () => {
       gameCreateQueryV1Fixture = GameCreateQueryV1Fixtures.any;
     });
 
-    describe('when called', () => {
+    describe('when called, and isValidGameCreateQuerySpec.isSatisfiedOrReport() returns Right', () => {
       let uuidFixture: string;
       let gameCreateQueryFixture: GameCreateQuery;
       let gameFixture: Game;
@@ -111,6 +123,10 @@ describe(GameManagementInputPort.name, () => {
         gamePersistenceOutputPortMock.create.mockResolvedValueOnce(gameFixture);
         gameCreatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
         gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
+        isValidGameCreateQuerySpecMock.isSatisfiedOrReport.mockReturnValueOnce({
+          isRight: true,
+          value: undefined,
+        });
 
         result = await gameManagementInputPort.create(gameCreateQueryV1Fixture);
       });
@@ -167,6 +183,76 @@ describe(GameManagementInputPort.name, () => {
 
       it('should return a GameV1', () => {
         expect(result).toBe(gameV1Fixture);
+      });
+    });
+
+    describe('when called, and isValidGameCreateQuerySpec.isSatisfiedOrReport() returns Left', () => {
+      let uuidFixture: string;
+      let gameCreateQueryFixture: GameCreateQuery;
+      let gameFixture: Game;
+      let gameV1Fixture: apiModels.GameV1;
+      let reportFixture: Left<string[]>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        uuidFixture = 'uuid-fixture';
+        gameCreateQueryFixture = GameCreateQueryFixtures.any;
+        reportFixture = {
+          isRight: false,
+          value: ['Error fixture'],
+        };
+
+        uuidProviderOutputPortMock.generateV4.mockReturnValue(uuidFixture);
+        gameCreateQueryFromGameCreateQueryV1BuilderMock.build.mockReturnValueOnce(
+          gameCreateQueryFixture,
+        );
+        isValidGameCreateQuerySpecMock.isSatisfiedOrReport.mockReturnValueOnce(
+          reportFixture,
+        );
+
+        try {
+          await gameManagementInputPort.create(gameCreateQueryV1Fixture);
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+
+        uuidProviderOutputPortMock.generateV4.mockReset();
+      });
+
+      it('should call uuidProviderOutputPort.generateV4()', () => {
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(2);
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
+      });
+
+      it('should call gameCreateQueryFromGameCreateQueryV1Builder.build()', () => {
+        const expectedUuidContext: GameCreateQueryContext = {
+          gameOptionsId: uuidFixture,
+          uuid: uuidFixture,
+        };
+
+        expect(
+          gameCreateQueryFromGameCreateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCreateQueryFromGameCreateQueryV1BuilderMock.build,
+        ).toHaveBeenCalledWith(gameCreateQueryV1Fixture, expectedUuidContext);
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperies: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message: 'Unable to create game. Error fixture.',
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperies),
+        );
       });
     });
   });
