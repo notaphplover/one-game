@@ -34,7 +34,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
     let gameCreateQueryFixture: GameCreateQuery;
 
     beforeAll(() => {
-      gameCreateQueryFixture = GameCreateQueryFixtures.withSpecOne;
+      gameCreateQueryFixture = GameCreateQueryFixtures.withSpecWithCardsOne;
     });
 
     describe('when called', () => {

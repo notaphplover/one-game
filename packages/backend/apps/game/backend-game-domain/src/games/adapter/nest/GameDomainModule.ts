@@ -8,6 +8,7 @@ import { CurrentPlayerCanPlayCardsSpec } from '../../domain/specs/CurrentPlayerC
 import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { IsGameFinishedSpec } from '../../domain/specs/IsGameFinishedSpec';
+import { IsValidGameCreateQuerySpec } from '../../domain/specs/IsValidGameCreateQuerySpec';
 import { PlayerCanPassTurnSpec } from '../../domain/specs/PlayerCanPassTurnSpec';
 import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameSpec';
 
@@ -16,6 +17,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameService,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
+    IsValidGameCreateQuerySpec,
     CardCanBePlayedSpec,
     PlayerCanPassTurnSpec,
     CurrentPlayerCanPlayCardsSpec,
@@ -28,6 +30,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
     IsGameFinishedSpec,
+    IsValidGameCreateQuerySpec,
     CardCanBePlayedSpec,
     PlayerCanPassTurnSpec,
     CurrentPlayerCanPlayCardsSpec,

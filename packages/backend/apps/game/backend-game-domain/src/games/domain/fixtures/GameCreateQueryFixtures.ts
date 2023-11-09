@@ -9,7 +9,7 @@ export class GameCreateQueryFixtures {
       name: undefined,
       spec: {
         cards: [],
-        gameSlotsAmount: 1,
+        gameSlotsAmount: 2,
         options: GameOptionsCreateQueryFixtures.any,
       },
     };
@@ -17,7 +17,7 @@ export class GameCreateQueryFixtures {
     return fixture;
   }
 
-  public static get withSpecOne(): GameCreateQuery {
+  public static get withSpecWithCardsOne(): GameCreateQuery {
     const anyFixture: GameCreateQuery = GameCreateQueryFixtures.any;
 
     const fixture: GameCreateQuery = {
@@ -30,6 +30,48 @@ export class GameCreateQueryFixtures {
             card: CardFixtures.any,
           },
         ],
+      },
+    };
+
+    return fixture;
+  }
+
+  public static get withSpecWithGameSlotAmountTwo(): GameCreateQuery {
+    const anyFixture: GameCreateQuery = GameCreateQueryFixtures.any;
+
+    const fixture: GameCreateQuery = {
+      ...anyFixture,
+      spec: {
+        ...anyFixture.spec,
+        gameSlotsAmount: 2,
+      },
+    };
+
+    return fixture;
+  }
+
+  public static get withSpecWithGameSlotAmountTwoAndAHalf(): GameCreateQuery {
+    const anyFixture: GameCreateQuery = GameCreateQueryFixtures.any;
+
+    const fixture: GameCreateQuery = {
+      ...anyFixture,
+      spec: {
+        ...anyFixture.spec,
+        gameSlotsAmount: 2.5,
+      },
+    };
+
+    return fixture;
+  }
+
+  public static get withSpecWithGameSlotAmountZero(): GameCreateQuery {
+    const anyFixture: GameCreateQuery = GameCreateQueryFixtures.any;
+
+    const fixture: GameCreateQuery = {
+      ...anyFixture,
+      spec: {
+        ...anyFixture.spec,
+        gameSlotsAmount: 0,
       },
     };
 

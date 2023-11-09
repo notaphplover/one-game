@@ -7,12 +7,14 @@ import {
   AppError,
   AppErrorKind,
   Builder,
+  Either,
   Handler,
 } from '@cornie-js/backend-common';
 import {
   Game,
   GameCreateQuery,
   GameFindQuery,
+  IsValidGameCreateQuerySpec,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -46,6 +48,7 @@ export class GameManagementInputPort {
   >;
   readonly #gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>;
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
+  readonly #isValidGameCreateQuerySpec: IsValidGameCreateQuerySpec;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
@@ -70,6 +73,8 @@ export class GameManagementInputPort {
     gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
+    @Inject(IsValidGameCreateQuerySpec)
+    isValidGameCreateQuerySpec: IsValidGameCreateQuerySpec,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
@@ -80,6 +85,7 @@ export class GameManagementInputPort {
     this.#gameIdPlayCardsQueryV1Handler = gameIdPlayCardsQueryV1Handler;
     this.#gameV1FromGameBuilder = gameV1FromGameBuilder;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
+    this.#isValidGameCreateQuerySpec = isValidGameCreateQuerySpec;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
@@ -92,9 +98,20 @@ export class GameManagementInputPort {
         this.#createGameCreationQueryContext(),
       );
 
-    const game: Game = await this.#gamePersistenceOutputPort.create(
-      gameCreateQuery,
-    );
+    const isValidGameCreateQueryResport: Either<string[], undefined> =
+      this.#isValidGameCreateQuerySpec.isSatisfiedOrReport(gameCreateQuery);
+
+    if (!isValidGameCreateQueryResport.isRight) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        ['Unable to create game', ...isValidGameCreateQueryResport.value].join(
+          '. ',
+        ) + '.',
+      );
+    }
+
+    const game: Game =
+      await this.#gamePersistenceOutputPort.create(gameCreateQuery);
 
     await this.#gameCreatedEventHandler.handle({
       gameCreateQuery,
@@ -104,9 +121,8 @@ export class GameManagementInputPort {
   }
 
   public async find(gameFindQuery: GameFindQuery): Promise<apiModels.GameV1[]> {
-    const games: Game[] = await this.#gamePersistenceOutputPort.find(
-      gameFindQuery,
-    );
+    const games: Game[] =
+      await this.#gamePersistenceOutputPort.find(gameFindQuery);
 
     return games.map(
       (game: Game): apiModels.GameV1 => this.#gameV1FromGameBuilder.build(game),
@@ -162,9 +178,8 @@ export class GameManagementInputPort {
       id,
     };
 
-    const game: apiModels.GameV1 | undefined = await this.findOne(
-      gameFindQuery,
-    );
+    const game: apiModels.GameV1 | undefined =
+      await this.findOne(gameFindQuery);
 
     if (game === undefined) {
       throw new AppError(
