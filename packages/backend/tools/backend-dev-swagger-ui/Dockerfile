@@ -1,4 +1,4 @@
-FROM swaggerapi/swagger-ui:v5.9.2
+FROM swaggerapi/swagger-ui:v5.9.3
 
 COPY ./node_modules/@cornie-js/api-openapi-schema/schemas/generated/one-game.yaml /schemas/one-game.yaml
 

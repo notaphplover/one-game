@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   openapi_doc_server:
-    image: swaggerapi/swagger-ui:v5.9.2
+    image: swaggerapi/swagger-ui:v5.9.3
     environment:
       - SWAGGER_JSON=/schemas/one-game.yaml
     ports:
