@@ -15,7 +15,7 @@ export class PyroscopeProfiler {
       name: config.applicationName,
       profiler: new CpuProfiler(
         config.samplingDurationMs,
-        config.samplingIntervalMs,
+        config.samplingIntervalMicros,
       ),
     });
 

@@ -17,6 +17,7 @@ import { CurrentPlayerCanPlayCardsSpec } from './specs/CurrentPlayerCanPlayCards
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { IsGameFinishedSpec } from './specs/IsGameFinishedSpec';
+import { IsValidGameCreateQuerySpec } from './specs/IsValidGameCreateQuerySpec';
 import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
 import { PlayerCanUpdateGameSpec } from './specs/PlayerCanUpdateGameSpec';
 import { ActiveGameSlot } from './valueObjects/ActiveGameSlot';
@@ -60,6 +61,7 @@ export {
   GameService,
   GameStatus,
   IsGameFinishedSpec,
+  IsValidGameCreateQuerySpec,
   PlayerCanPassTurnSpec,
   CurrentPlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,
