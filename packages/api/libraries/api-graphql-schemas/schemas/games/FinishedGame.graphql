@@ -1,0 +1,9 @@
+#import FinishedGameState from './FinishedGameState.graphql'
+#import GameSpec from './GameSpec.graphql'
+
+type FinishedGame {
+  id: ID!
+  name: String
+  spec: GameSpec!
+  state: FinishedGameState!
+}
