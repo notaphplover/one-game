@@ -1,0 +1,7 @@
+#import GameCreateInputOptions from './GameCreateInputOptions.graphql'
+
+input GameCreateInput {
+  gameSlotsAmount: Int!
+  name: String
+  options: GameCreateInputOptions!
+}

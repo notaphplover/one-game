@@ -1,0 +1,9 @@
+input GameCreateInputOptions {
+  chainDraw2Draw2Cards: Boolean!
+  chainDraw2Draw4Cards: Boolean!
+  chainDraw4Draw2Cards: Boolean!
+  chainDraw4Draw4Cards: Boolean!
+  playCardIsMandatory: Boolean!
+  playMultipleSameCards: Boolean!
+  playWildDraw4IfNoOtherAlternative: Boolean!
+}
