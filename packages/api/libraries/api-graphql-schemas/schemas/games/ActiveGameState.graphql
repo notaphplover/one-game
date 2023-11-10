@@ -1,0 +1,19 @@
+#import ActiveGameSlot from './ActiveGameSlot.graphql'
+#import Card from '../cards/Card.graphql'
+#import CardColor from '../cards/CardColor.graphql'
+#import GameDirection from './GameDirection.graphql'
+
+enum ActiveGameStateStatus {
+  active
+}
+
+type ActiveGameState {
+  currentCard: Card!
+  currentColor: CardColor!
+  currentDirection: GameDirection!
+  currentPlayingSlotIndex: Int!
+  currentTurnCardsPlayed: Boolean!
+  drawCount: Int!
+  slots: [ActiveGameSlot]!
+  status: ActiveGameStateStatus!
+}

@@ -1,0 +1,4 @@
+type ActiveGameSlot {
+  cardsAmount: Int!
+  userId: ID!
+}
