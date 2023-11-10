@@ -1,0 +1,10 @@
+#import CardColor from './CardColor.graphql'
+
+enum ReverseCardKind {
+  reverse
+}
+
+type ReverseCard {
+  color: CardColor!
+  kind: ReverseCardKind!
+}

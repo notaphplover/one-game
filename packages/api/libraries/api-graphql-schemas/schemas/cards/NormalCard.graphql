@@ -1,0 +1,11 @@
+#import CardColor from './CardColor.graphql'
+
+enum NormalCardKind {
+  normal
+}
+
+type NormalCard {
+  color: CardColor!
+  kind: NormalCardKind!
+  number: Int!
+}

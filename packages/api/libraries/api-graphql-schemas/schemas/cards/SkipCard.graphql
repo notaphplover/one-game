@@ -1,0 +1,10 @@
+#import CardColor from './CardColor.graphql'
+
+enum SkipCardKind {
+  skip
+}
+
+type SkipCard {
+  color: CardColor!
+  kind: SkipCardKind!
+}

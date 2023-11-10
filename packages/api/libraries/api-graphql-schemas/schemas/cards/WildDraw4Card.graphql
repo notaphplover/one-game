@@ -1,0 +1,9 @@
+#import CardColor from './CardColor.graphql'
+
+enum WildDraw4CardKind {
+  wildDraw4
+}
+
+type WildDraw4Card {
+  kind: WildDraw4CardKind!
+}

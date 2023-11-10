@@ -1,0 +1,8 @@
+#import DrawCard from './DrawCard.graphql'
+#import NormalCard from './NormalCard.graphql'
+#import ReverseCard from './ReverseCard.graphql'
+#import SkipCard from './SkipCard.graphql'
+#import WildCard from './WildCard.graphql'
+#import WildDraw4Card from './WildDraw4Card.graphql'
+
+union Card = DrawCard | NormalCard | ReverseCard | SkipCard | WildCard | WildDraw4Card
