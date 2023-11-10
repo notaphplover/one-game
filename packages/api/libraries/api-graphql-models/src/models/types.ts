@@ -212,10 +212,12 @@ export type ReverseCard = {
 export type ReverseCardKind = 'reverse';
 
 export type RootMutation = AuthMutation &
+  GameMutation &
   UserMutation & {
     __typename?: 'RootMutation';
     createAuthByCode: Auth;
     createAuthByCredentials: Auth;
+    createGame: Game;
     createUser: User;
     updateUserMe: User;
   };
@@ -226,6 +228,10 @@ export type RootMutationCreateAuthByCodeArgs = {
 
 export type RootMutationCreateAuthByCredentialsArgs = {
   emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+};
+
+export type RootMutationCreateGameArgs = {
+  gameCreateInput: GameCreateInput;
 };
 
 export type RootMutationCreateUserArgs = {
@@ -430,9 +436,15 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
   ResolversObject<{
-    AuthMutation: RootMutation;
-    GameMutation: never;
-    UserMutation: RootMutation;
+    AuthMutation: Omit<RootMutation, 'createGame'> & {
+      createGame: RefType['Game'];
+    };
+    GameMutation: Omit<RootMutation, 'createGame'> & {
+      createGame: RefType['Game'];
+    };
+    UserMutation: Omit<RootMutation, 'createGame'> & {
+      createGame: RefType['Game'];
+    };
     UserQuery: RootQuery;
   }>;
 
@@ -731,7 +743,7 @@ export type GameMutationResolvers<
   ParentType extends
     ResolversParentTypes['GameMutation'] = ResolversParentTypes['GameMutation'],
 > = ResolversObject<{
-  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
   createGame: Resolver<
     ResolversTypes['Game'],
     ParentType,
@@ -837,6 +849,12 @@ export type RootMutationResolvers<
       RootMutationCreateAuthByCredentialsArgs,
       'emailPasswordAuthCreateInput'
     >
+  >;
+  createGame: Resolver<
+    ResolversTypes['Game'],
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationCreateGameArgs, 'gameCreateInput'>
   >;
   createUser: Resolver<
     ResolversTypes['User'],

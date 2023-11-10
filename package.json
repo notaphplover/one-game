@@ -40,6 +40,7 @@
     "migrations:run": "turbo run migrations:run",
     "prepare": "husky install",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
+    "serve:api:graphql": "pnpm run serve:api:rest --filter=backend-service-gateway",
     "serve:api:rest": "pnpm run serve --filter=backend-maildev --filter=backend-dev-redis-pub-sub --filter=backend-dev-user-db --filter=backend-dev-game-db --filter=backend-service-user --filter=backend-service-game --filter=backend-dev-proxy",
     "serve:api:rest:docs": "pnpm run serve --filter=backend-dev-swagger-ui",
     "start:e2e": "turbo run start:e2e",

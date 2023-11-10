@@ -9,6 +9,7 @@ export function buildApolloApplicationResolver(
   graphQlErrorFromErrorBuilder: Builder<GraphQLError, [unknown]>,
 ): ApplicationResolver {
   return {
+    Game: applicationResolver.Game,
     RootMutation: {
       createAuthByCode: buildApolloResolver(
         applicationResolver.RootMutation,
@@ -19,6 +20,11 @@ export function buildApolloApplicationResolver(
         applicationResolver.RootMutation,
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootMutation.createAuthByCredentials,
+      ),
+      createGame: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.createGame,
       ),
       createUser: buildApolloResolver(
         applicationResolver.RootMutation,
