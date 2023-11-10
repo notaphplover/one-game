@@ -1,0 +1,6 @@
+#import Game from './Game.graphql'
+#import GameCreateInput from './GameCreateInput.graphql'
+
+interface GameMutation {
+  createGame(gameCreateInput: GameCreateInput!): Game!
+}

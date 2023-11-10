@@ -1,0 +1,9 @@
+#import GameSpec from './GameSpec.graphql'
+#import NonStartedGameState from './NonStartedGameState.graphql'
+
+type NonStartedGame {
+  id: ID!
+  name: String
+  spec: GameSpec!
+  state: NonStartedGameState!
+}

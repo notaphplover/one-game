@@ -1,0 +1,4 @@
+enum GameDirection {
+  antiClockwise,
+  clockwise,
+}

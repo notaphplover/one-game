@@ -1,0 +1,5 @@
+#import ActiveGame from './ActiveGame.graphql'
+#import FinishedGame from './FinishedGame.graphql'
+#import NonStartedGame from './NonStartedGame.graphql'
+
+union Game = ActiveGame | NonStartedGame | FinishedGame
