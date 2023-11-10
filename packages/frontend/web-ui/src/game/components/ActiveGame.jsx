@@ -1,13 +1,17 @@
 import { Button, Grid, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-export const ActiveGame = () => {
+export const ActiveGame = ({ game }) => {
   return (
     <Grid item xs={3}>
       <Grid component="div" className="pending-game">
         <Grid item>
-          <Typography variant="h5" className="home-auth-text" component="h5">
-            Our match
+          <Typography
+            variant="h5"
+            className="home-auth-text-game"
+            component="h5"
+          >
+            {game.id}
           </Typography>
         </Grid>
         <Grid item className="pending-button-game">
