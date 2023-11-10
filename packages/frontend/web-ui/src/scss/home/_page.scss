@@ -34,22 +34,23 @@
   }
 }
 
-// Home with auth - Pending and active games
-
-.home-auth-container {
+.home-auth-container .home-auth-text {
+  color: var(--cg-bkg-primary-dark);
   display: block;
   margin: 1rem auto;
   padding: 2rem 0;
+  text-align: left;
 }
 
-.home-auth-container .home-auth-text {
+.home-auth-text-game {
   color: var(--cg-bkg-primary-dark);
-  text-align: left;
+  text-align: center;
   padding: 1rem 2rem;
 }
 
 .home-auth-container-games {
   border: 1px solid var(--cg-bkg-primary-dark);
+  color: var(--cg-bkg-primary-dark);
 }
 
 .home-auth-button-container {
