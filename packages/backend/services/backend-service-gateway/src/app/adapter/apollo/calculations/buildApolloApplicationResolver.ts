@@ -43,6 +43,11 @@ export function buildApolloApplicationResolver(
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootQuery.userById,
       ),
+      userMe: buildApolloResolver(
+        applicationResolver.RootQuery,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootQuery.userMe,
+      ),
     },
   };
 }

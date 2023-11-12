@@ -245,6 +245,7 @@ export type RootMutationUpdateUserMeArgs = {
 export type RootQuery = UserQuery & {
   __typename?: 'RootQuery';
   userById: Maybe<User>;
+  userMe: User;
 };
 
 export type RootQueryUserByIdArgs = {
@@ -287,6 +288,7 @@ export type UserMutationUpdateUserMeArgs = {
 
 export type UserQuery = {
   userById: Maybe<User>;
+  userMe: User;
 };
 
 export type UserQueryUserByIdArgs = {
@@ -881,6 +883,7 @@ export type RootQueryResolvers<
     ContextType,
     RequireFields<RootQueryUserByIdArgs, 'id'>
   >;
+  userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 }>;
 
 export type SkipCardResolvers<
@@ -936,6 +939,7 @@ export type UserQueryResolvers<
     ContextType,
     RequireFields<UserQueryUserByIdArgs, 'id'>
   >;
+  userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 }>;
 
 export type WildCardResolvers<

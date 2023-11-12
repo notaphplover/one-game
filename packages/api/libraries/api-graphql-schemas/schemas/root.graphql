@@ -21,6 +21,7 @@ type RootMutation implements AuthMutation & GameMutation & UserMutation {
 
 type RootQuery implements UserQuery {
   userById(id: ID!): User
+  userMe: User!
 }
 
 schema {
