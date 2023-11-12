@@ -17,6 +17,15 @@ describe(RootQueryResolver.name, () => {
     >
   >;
 
+  let userMeMock: jest.Mock<
+    graphqlModels.ResolverFn<
+      graphqlModels.Maybe<graphqlModels.ResolversTypes['User']>,
+      unknown,
+      Request,
+      Record<string, unknown>
+    >
+  >;
+
   let userQueryResolverMock: jest.Mocked<
     graphqlModels.UserQueryResolvers<Request>
   >;
@@ -25,9 +34,11 @@ describe(RootQueryResolver.name, () => {
 
   beforeAll(() => {
     userByIdMock = jest.fn();
+    userMeMock = jest.fn();
 
     userQueryResolverMock = {
       userById: userByIdMock,
+      userMe: userMeMock,
     } as Partial<
       jest.Mocked<graphqlModels.UserQueryResolvers<Request>>
     > as jest.Mocked<graphqlModels.UserQueryResolvers<Request>>;
@@ -71,6 +82,53 @@ describe(RootQueryResolver.name, () => {
       it('should call userQueryResolver.userById()', () => {
         expect(userByIdMock).toHaveBeenCalledTimes(1);
         expect(userByIdMock).toHaveBeenCalledWith(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      it('should return UserV1', () => {
+        expect(result).toBe(userV1Fixture);
+      });
+    });
+  });
+
+  describe('.userMe', () => {
+    let userV1Fixture: apiModels.UserV1;
+
+    describe('when called', () => {
+      let parentFixture: graphqlModels.RootQuery;
+      let argsFixture: Record<string, unknown>;
+      let requestFixture: Request;
+      let infoFixture: GraphQLResolveInfo;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
+        argsFixture = {};
+        requestFixture = Symbol() as unknown as Request;
+        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
+
+        userMeMock.mockReturnValueOnce(Promise.resolve(userV1Fixture));
+
+        result = await rootQueryResolver.userMe(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userQueryResolver.userMe()', () => {
+        expect(userMeMock).toHaveBeenCalledTimes(1);
+        expect(userMeMock).toHaveBeenCalledWith(
           parentFixture,
           argsFixture,
           requestFixture,

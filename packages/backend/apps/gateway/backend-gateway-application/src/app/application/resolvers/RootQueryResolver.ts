@@ -30,6 +30,18 @@ export class RootQueryResolver
     )(parent, args, request, info);
   }
 
+  public async userMe(
+    parent: graphqlModels.RootQuery,
+    args: Record<string, unknown>,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.User> {
+    return this.#getResolverFunction(
+      this.#userQueryResolver,
+      this.#userQueryResolver.userMe,
+    )(parent, args, request, info);
+  }
+
   #getResolverFunction<TResult, TArgs>(
     self: unknown,
     resolver: graphqlModels.Resolver<
