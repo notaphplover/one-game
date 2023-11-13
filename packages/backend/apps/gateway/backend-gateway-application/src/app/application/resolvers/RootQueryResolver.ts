@@ -3,19 +3,43 @@ import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
+import { GameQueryResolver } from '../../../games/application/resolvers/GameQueryResolver';
 import { UserQueryResolver } from '../../../users/application/resolvers/UserQueryResolver';
+
+type ResolverFnReturnType<TResult, TArgs> = ReturnType<
+  graphqlModels.ResolverFn<TResult, graphqlModels.RootQuery, Request, TArgs>
+>;
 
 @Injectable()
 export class RootQueryResolver
   implements graphqlModels.RootQueryResolvers<Request, graphqlModels.RootQuery>
 {
+  readonly #gameQueryResolver: graphqlModels.GameQueryResolvers<Request>;
   readonly #userQueryResolver: graphqlModels.UserQueryResolvers<Request>;
 
   constructor(
+    @Inject(GameQueryResolver)
+    gameQueryResolver: graphqlModels.GameQueryResolvers<Request>,
     @Inject(UserQueryResolver)
     userQueryResolver: graphqlModels.UserQueryResolvers<Request>,
   ) {
+    this.#gameQueryResolver = gameQueryResolver;
     this.#userQueryResolver = userQueryResolver;
+  }
+
+  public myGames(
+    parent: graphqlModels.RootQuery,
+    args: Partial<graphqlModels.RootQueryMyGamesArgs>,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): ResolverFnReturnType<
+    Array<graphqlModels.ResolversTypes['Game']>,
+    Partial<graphqlModels.RootQueryMyGamesArgs>
+  > {
+    return this.#getResolverFunction(
+      this.#gameQueryResolver,
+      this.#gameQueryResolver.myGames,
+    )(parent, args, request, info);
   }
 
   public async userById(

@@ -1,9 +1,11 @@
 #import Auth from './auth/Auth.graphql'
 #import CodeAuthCreateInput from './auth/CodeAuthCreateInput.graphql'
 #import AuthMutation from './auth/AuthMutation.graphql'
+#import FindMyGamesInput from './games/FindMyGamesInput.graphql'
 #import Game from './games/Game.graphql'
 #import GameCreateInput from './games/GameCreateInput.graphql'
 #import GameMutation from './games/GameMutation.graphql'
+#import GameQuery from './games/GameQuery.graphql'
 #import UserMutation from './users/UserMutation.graphql'
 #import EmailPasswordAuthCreateInput from './auth/EmailPasswordAuthCreateInput.graphql'
 #import UserQuery from './users/UserQuery.graphql'
@@ -19,7 +21,8 @@ type RootMutation implements AuthMutation & GameMutation & UserMutation {
   updateUserMe(userUpdateInput: UserUpdateInput!): User!
 }
 
-type RootQuery implements UserQuery {
+type RootQuery implements GameQuery & UserQuery {
+  myGames(findMyGamesInput: FindMyGamesInput): [Game!]!
   userById(id: ID!): User
   userMe: User!
 }

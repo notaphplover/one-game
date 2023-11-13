@@ -1,13 +1,25 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { models as apiModels } from '@cornie-js/api-models';
 import { Request } from '@cornie-js/backend-http';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { RootQueryResolver } from './RootQueryResolver';
 
 describe(RootQueryResolver.name, () => {
+  let myGamesMock: jest.Mock<
+    graphqlModels.ResolverFn<
+      Array<graphqlModels.ResolversTypes['Game']>,
+      unknown,
+      Request,
+      Partial<graphqlModels.RootQueryMyGamesArgs>
+    >
+  >;
+
+  let gameQueryResolverMock: jest.Mocked<
+    graphqlModels.GameQueryResolvers<Request>
+  >;
+
   let userByIdMock: jest.Mock<
     graphqlModels.ResolverFn<
       graphqlModels.Maybe<graphqlModels.ResolversTypes['User']>,
@@ -33,6 +45,14 @@ describe(RootQueryResolver.name, () => {
   let rootQueryResolver: RootQueryResolver;
 
   beforeAll(() => {
+    myGamesMock = jest.fn();
+
+    gameQueryResolverMock = {
+      myGames: myGamesMock,
+    } as Partial<
+      jest.Mocked<graphqlModels.GameQueryResolvers<Request>>
+    > as jest.Mocked<graphqlModels.GameQueryResolvers<Request>>;
+
     userByIdMock = jest.fn();
     userMeMock = jest.fn();
 
@@ -43,11 +63,75 @@ describe(RootQueryResolver.name, () => {
       jest.Mocked<graphqlModels.UserQueryResolvers<Request>>
     > as jest.Mocked<graphqlModels.UserQueryResolvers<Request>>;
 
-    rootQueryResolver = new RootQueryResolver(userQueryResolverMock);
+    rootQueryResolver = new RootQueryResolver(
+      gameQueryResolverMock,
+      userQueryResolverMock,
+    );
+  });
+
+  describe('.myGames', () => {
+    let gameFixture: graphqlModels.Game;
+
+    beforeAll(() => {
+      gameFixture = Symbol() as unknown as graphqlModels.Game;
+    });
+
+    describe('when called', () => {
+      let parentFixture: graphqlModels.RootQuery;
+      let argsFixture: Partial<graphqlModels.RootQueryMyGamesArgs>;
+      let requestFixture: Request;
+      let infoFixture: GraphQLResolveInfo;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
+        argsFixture = {
+          findMyGamesInput: {
+            page: 1,
+            pageSize: null,
+            status: 'active',
+          },
+        };
+        requestFixture = Symbol() as unknown as Request;
+        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
+
+        myGamesMock.mockReturnValueOnce(Promise.resolve([gameFixture]));
+
+        result = await rootQueryResolver.myGames(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameQueryResolver.myGames()', () => {
+        expect(myGamesMock).toHaveBeenCalledTimes(1);
+        expect(myGamesMock).toHaveBeenCalledWith(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      it('should return Game', () => {
+        expect(result).toStrictEqual([gameFixture]);
+      });
+    });
   });
 
   describe('.userById', () => {
-    let userV1Fixture: apiModels.UserV1;
+    let userFixture: graphqlModels.User;
+
+    beforeAll(() => {
+      userFixture = Symbol() as unknown as graphqlModels.User;
+    });
 
     describe('when called', () => {
       let parentFixture: graphqlModels.RootQuery;
@@ -65,7 +149,7 @@ describe(RootQueryResolver.name, () => {
         requestFixture = Symbol() as unknown as Request;
         infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
-        userByIdMock.mockReturnValueOnce(Promise.resolve(userV1Fixture));
+        userByIdMock.mockReturnValueOnce(Promise.resolve(userFixture));
 
         result = await rootQueryResolver.userById(
           parentFixture,
@@ -90,13 +174,17 @@ describe(RootQueryResolver.name, () => {
       });
 
       it('should return UserV1', () => {
-        expect(result).toBe(userV1Fixture);
+        expect(result).toBe(userFixture);
       });
     });
   });
 
   describe('.userMe', () => {
-    let userV1Fixture: apiModels.UserV1;
+    let userFixture: graphqlModels.User;
+
+    beforeAll(() => {
+      userFixture = Symbol() as unknown as graphqlModels.User;
+    });
 
     describe('when called', () => {
       let parentFixture: graphqlModels.RootQuery;
@@ -112,7 +200,7 @@ describe(RootQueryResolver.name, () => {
         requestFixture = Symbol() as unknown as Request;
         infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
-        userMeMock.mockReturnValueOnce(Promise.resolve(userV1Fixture));
+        userMeMock.mockReturnValueOnce(Promise.resolve(userFixture));
 
         result = await rootQueryResolver.userMe(
           parentFixture,
@@ -137,7 +225,7 @@ describe(RootQueryResolver.name, () => {
       });
 
       it('should return UserV1', () => {
-        expect(result).toBe(userV1Fixture);
+        expect(result).toBe(userFixture);
       });
     });
   });
