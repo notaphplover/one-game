@@ -31,6 +31,7 @@ export function thenCreateGameResponseShouldContainValidGame(
   expectObjectContaining<ResponseType>(response, {
     body: {
       id: () => undefined,
+      name: gameCreateQueryV1.name as string,
       spec: {
         cardSpecs: () => undefined,
         gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
