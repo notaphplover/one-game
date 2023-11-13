@@ -189,8 +189,6 @@ describe(GameManagementInputPort.name, () => {
     describe('when called, and isValidGameCreateQuerySpec.isSatisfiedOrReport() returns Left', () => {
       let uuidFixture: string;
       let gameCreateQueryFixture: GameCreateQuery;
-      let gameFixture: Game;
-      let gameV1Fixture: apiModels.GameV1;
       let reportFixture: Left<string[]>;
 
       let result: unknown;
