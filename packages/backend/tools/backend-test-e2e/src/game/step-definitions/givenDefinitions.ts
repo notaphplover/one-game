@@ -78,6 +78,7 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
 
   const gameCreateQueryV1: apiModels.GameCreateQueryV1 = {
     gameSlotsAmount,
+    name: 'Game created by E2E tests',
     options: processedGameOptions,
   };
 
