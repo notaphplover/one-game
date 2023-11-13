@@ -38,6 +38,11 @@ export function buildApolloApplicationResolver(
       ),
     },
     RootQuery: {
+      myGames: buildApolloResolver(
+        applicationResolver.RootQuery,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootQuery.myGames,
+      ),
       userById: buildApolloResolver(
         applicationResolver.RootQuery,
         graphQlErrorFromErrorBuilder,

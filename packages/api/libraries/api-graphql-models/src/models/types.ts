@@ -256,10 +256,16 @@ export type RootMutationUpdateUserMeArgs = {
   userUpdateInput: UserUpdateInput;
 };
 
-export type RootQuery = UserQuery & {
-  __typename?: 'RootQuery';
-  userById: Maybe<User>;
-  userMe: User;
+export type RootQuery = GameQuery &
+  UserQuery & {
+    __typename?: 'RootQuery';
+    myGames: Array<Game>;
+    userById: Maybe<User>;
+    userMe: User;
+  };
+
+export type RootQueryMyGamesArgs = {
+  findMyGamesInput: InputMaybe<FindMyGamesInput>;
 };
 
 export type RootQueryUserByIdArgs = {
@@ -912,6 +918,12 @@ export type RootQueryResolvers<
   ParentType extends
     ResolversParentTypes['RootQuery'] = ResolversParentTypes['RootQuery'],
 > = ResolversObject<{
+  myGames: Resolver<
+    Array<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    Partial<RootQueryMyGamesArgs>
+  >;
   userById: Resolver<
     Maybe<ResolversTypes['User']>,
     ParentType,
