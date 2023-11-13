@@ -2,6 +2,7 @@ import { Button, Grid, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 export const PendingGame = ({ game }) => {
+  console.log(game);
   return (
     <Grid item xs={3}>
       <Grid component="div" className="pending-game">
@@ -11,7 +12,7 @@ export const PendingGame = ({ game }) => {
             className="home-auth-text-game"
             component="h5"
           >
-            {game.id.substring(1, 18)}
+            {game.name === undefined ? '<Unknown>' : game.name}
           </Typography>
         </Grid>
         <Grid item className="pending-button-game">
