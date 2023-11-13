@@ -18,13 +18,13 @@ import { GetUserV1MeRequestParamHandler } from '../handlers/GetUserV1MeRequestPa
 export class GetUserV1MeHttpRequestController extends HttpRequestController<
   Request,
   [apiModels.UserV1],
-  apiModels.UserV1 | undefined
+  apiModels.UserV1
 > {
   constructor(
     @Inject(GetUserV1MeRequestParamHandler)
     requestParamHandler: Handler<[Request], [apiModels.UserV1]>,
     @Inject(SingleEntityGetResponseBuilder)
-    responseBuilder: Builder<Response, [apiModels.UserV1 | undefined]>,
+    responseBuilder: Builder<Response, [apiModels.UserV1]>,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<
       Response | ResponseWithBody<unknown>,
@@ -43,7 +43,7 @@ export class GetUserV1MeHttpRequestController extends HttpRequestController<
 
   protected async _handleUseCase(
     userV1: apiModels.UserV1,
-  ): Promise<apiModels.UserV1 | undefined> {
+  ): Promise<apiModels.UserV1> {
     return userV1;
   }
 }

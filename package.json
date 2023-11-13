@@ -5,9 +5,9 @@
   },
   "description": "One game",
   "devDependencies": {
-    "@commitlint/cli": "18.4.0",
+    "@commitlint/cli": "18.4.1",
     "@commitlint/config-conventional": "18.4.0",
-    "@commitlint/prompt-cli": "18.4.0",
+    "@commitlint/prompt-cli": "18.4.1",
     "@cornie-js/backend-dev-game-db": "workspace:*",
     "@cornie-js/backend-dev-user-db": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
@@ -16,7 +16,7 @@
     "@cornie-js/backend-typescript-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "8.0.3",
-    "lint-staged": "15.0.2",
+    "lint-staged": "15.1.0",
     "turbo": "1.10.16"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
@@ -25,7 +25,7 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@8.10.2",
+  "packageManager": "pnpm@8.10.3",
   "private": true,
   "repository": {
     "type": "git",
@@ -40,6 +40,7 @@
     "migrations:run": "turbo run migrations:run",
     "prepare": "husky install",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
+    "serve:api:graphql": "pnpm run serve:api:rest --filter=backend-service-gateway",
     "serve:api:rest": "pnpm run serve --filter=backend-maildev --filter=backend-dev-redis-pub-sub --filter=backend-dev-user-db --filter=backend-dev-game-db --filter=backend-service-user --filter=backend-service-game --filter=backend-dev-proxy",
     "serve:api:rest:docs": "pnpm run serve --filter=backend-dev-swagger-ui",
     "start:e2e": "turbo run start:e2e",

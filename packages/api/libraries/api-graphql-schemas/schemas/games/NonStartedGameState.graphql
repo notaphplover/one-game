@@ -1,0 +1,10 @@
+#import NonStartedGameSlot from './NonStartedGameSlot.graphql'
+
+enum NonStartedGameStateStatus {
+  nonStarted
+}
+
+type NonStartedGameState {
+  slots: [NonStartedGameSlot]!
+  status: NonStartedGameStateStatus!
+}

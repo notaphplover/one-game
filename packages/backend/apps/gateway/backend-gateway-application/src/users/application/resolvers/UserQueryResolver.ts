@@ -39,6 +39,30 @@ export class UserQueryResolver
     }
   }
 
+  public async userMe(
+    _: unknown,
+    _args: unknown,
+    request: Request,
+  ): Promise<graphqlModels.User> {
+    const httpResponse: Awaited<ReturnType<HttpClient['getUserMe']>> =
+      await this.#httpClient.getUserMe(request.headers);
+
+    switch (httpResponse.statusCode) {
+      case 200:
+        return httpResponse.body;
+      case 401:
+        throw new AppError(
+          AppErrorKind.missingCredentials,
+          httpResponse.body.description,
+        );
+      case 403:
+        throw new AppError(
+          AppErrorKind.invalidCredentials,
+          httpResponse.body.description,
+        );
+    }
+  }
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   public __resolveType(): never {
     throw new Error('Method not implemented');

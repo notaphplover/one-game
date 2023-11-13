@@ -39,6 +39,7 @@ async function generateAllModels(destinationPath: string): Promise<void> {
       [destinationPath]: {
         config: {
           avoidOptionals: true,
+          enumsAsTypes: true,
           useIndexSignature: true,
         },
         plugins: ['typescript', 'typescript-resolvers'],

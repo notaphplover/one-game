@@ -263,8 +263,7 @@ export class HttpClient {
   }): Promise<
     | Response<Record<string, string>, apiModels.UserV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
-    | Response<Record<string, string>, apiModels.ErrorV1, 404>
-    | Response<Record<string, string>, apiModels.ErrorV1, 422>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
     return this.#axiosHttpClient.callEndpoint(
       'GET',

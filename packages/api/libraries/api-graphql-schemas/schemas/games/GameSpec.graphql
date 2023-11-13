@@ -1,0 +1,6 @@
+#import GameCardSpec from './GameCardSpec.graphql'
+
+type GameSpec {
+  cardSpecs: [GameCardSpec]!
+  gameSlotsAmount: Int!
+}

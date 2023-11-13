@@ -17,6 +17,7 @@ describe(UserQueryResolver.name, () => {
   beforeAll(() => {
     httpClientMock = {
       getUser: jest.fn(),
+      getUserMe: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     userQueryResolver = new UserQueryResolver(httpClientMock);
@@ -214,6 +215,199 @@ describe(UserQueryResolver.name, () => {
 
       it('should return null', () => {
         expect(result).toBeNull();
+      });
+    });
+  });
+
+  describe('.userMe', () => {
+    describe('when called, and httpClient.getUserMe() returns a Response with status code 200', () => {
+      let firstArgFixture: unknown;
+      let argsFixture: Record<string, string>;
+      let requestFixture: Request;
+
+      let responseFixture: Response<
+        Record<string, string>,
+        apiModels.UserV1,
+        HttpStatus.OK
+      >;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        firstArgFixture = Symbol();
+        argsFixture = {};
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+
+        responseFixture = {
+          body: {
+            active: false,
+            id: 'id-fixture',
+            name: 'name',
+          },
+          headers: {},
+          statusCode: HttpStatus.OK,
+        };
+
+        httpClientMock.getUserMe.mockResolvedValueOnce(responseFixture);
+
+        result = await userQueryResolver.userMe(
+          firstArgFixture,
+          argsFixture,
+          requestFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.getUserMe()', () => {
+        expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
+          requestFixture.headers,
+        );
+      });
+
+      it('should return response body', () => {
+        expect(result).toBe(responseFixture.body);
+      });
+    });
+
+    describe('when called, and httpClient.getUserMe() returns a Response with status code 401', () => {
+      let firstArgFixture: unknown;
+      let argsFixture: Record<string, string>;
+      let requestFixture: Request;
+
+      let responseFixture: Response<
+        Record<string, string>,
+        apiModels.ErrorV1,
+        HttpStatus.UNAUTHORIZED
+      >;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        firstArgFixture = Symbol();
+        argsFixture = {};
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+
+        responseFixture = {
+          body: {
+            description: 'Error description fixture',
+          },
+          headers: {},
+          statusCode: HttpStatus.UNAUTHORIZED,
+        };
+
+        httpClientMock.getUserMe.mockResolvedValueOnce(responseFixture);
+
+        try {
+          await userQueryResolver.userMe(
+            firstArgFixture,
+            argsFixture,
+            requestFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.getUserMe()', () => {
+        expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
+          requestFixture.headers,
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.missingCredentials,
+          message: responseFixture.body.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and httpClient.getUserMe() returns a Response with status code 403', () => {
+      let firstArgFixture: unknown;
+      let argsFixture: Record<string, string>;
+      let requestFixture: Request;
+
+      let responseFixture: Response<
+        Record<string, string>,
+        apiModels.ErrorV1,
+        HttpStatus.FORBIDDEN
+      >;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        firstArgFixture = Symbol();
+        argsFixture = {};
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+
+        responseFixture = {
+          body: {
+            description: 'Error description fixture',
+          },
+          headers: {},
+          statusCode: HttpStatus.FORBIDDEN,
+        };
+
+        httpClientMock.getUserMe.mockResolvedValueOnce(responseFixture);
+
+        try {
+          await userQueryResolver.userMe(
+            firstArgFixture,
+            argsFixture,
+            requestFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.getUserMe()', () => {
+        expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
+          requestFixture.headers,
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.invalidCredentials,
+          message: responseFixture.body.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
       });
     });
   });

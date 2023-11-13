@@ -25,6 +25,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -36,6 +37,34 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
 };
+
+export type ActiveGame = {
+  __typename?: 'ActiveGame';
+  id: Scalars['ID']['output'];
+  name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
+  state: ActiveGameState;
+};
+
+export type ActiveGameSlot = {
+  __typename?: 'ActiveGameSlot';
+  cardsAmount: Scalars['Int']['output'];
+  userId: Scalars['ID']['output'];
+};
+
+export type ActiveGameState = {
+  __typename?: 'ActiveGameState';
+  currentCard: Card;
+  currentColor: CardColor;
+  currentDirection: GameDirection;
+  currentPlayingSlotIndex: Scalars['Int']['output'];
+  currentTurnCardsPlayed: Scalars['Boolean']['output'];
+  drawCount: Scalars['Int']['output'];
+  slots: Array<Maybe<ActiveGameSlot>>;
+  status: ActiveGameStateStatus;
+};
+
+export type ActiveGameStateStatus = 'active';
 
 export type Auth = {
   __typename?: 'Auth';
@@ -55,20 +84,140 @@ export type AuthMutationCreateAuthByCredentialsArgs = {
   emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
 };
 
+export type Card =
+  | DrawCard
+  | NormalCard
+  | ReverseCard
+  | SkipCard
+  | WildCard
+  | WildDraw4Card;
+
+export type CardColor = 'blue' | 'green' | 'red' | 'yellow';
+
 export type CodeAuthCreateInput = {
   code: Scalars['String']['input'];
 };
+
+export type DrawCard = {
+  __typename?: 'DrawCard';
+  color: CardColor;
+  kind: DrawCardKind;
+};
+
+export type DrawCardKind = 'draw';
 
 export type EmailPasswordAuthCreateInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
+export type FinishedGame = {
+  __typename?: 'FinishedGame';
+  id: Scalars['ID']['output'];
+  name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
+  state: FinishedGameState;
+};
+
+export type FinishedGameSlot = {
+  __typename?: 'FinishedGameSlot';
+  cardsAmount: Scalars['Int']['output'];
+  userId: Scalars['String']['output'];
+};
+
+export type FinishedGameState = {
+  __typename?: 'FinishedGameState';
+  slots: Array<Maybe<FinishedGameSlot>>;
+  status: FinishedGameStateStatus;
+};
+
+export type FinishedGameStateStatus = 'finished';
+
+export type Game = ActiveGame | FinishedGame | NonStartedGame;
+
+export type GameCardSpec = {
+  __typename?: 'GameCardSpec';
+  amount: Scalars['Int']['output'];
+  card: Card;
+};
+
+export type GameCreateInput = {
+  gameSlotsAmount: Scalars['Int']['input'];
+  name: InputMaybe<Scalars['String']['input']>;
+  options: GameCreateInputOptions;
+};
+
+export type GameCreateInputOptions = {
+  chainDraw2Draw2Cards: Scalars['Boolean']['input'];
+  chainDraw2Draw4Cards: Scalars['Boolean']['input'];
+  chainDraw4Draw2Cards: Scalars['Boolean']['input'];
+  chainDraw4Draw4Cards: Scalars['Boolean']['input'];
+  playCardIsMandatory: Scalars['Boolean']['input'];
+  playMultipleSameCards: Scalars['Boolean']['input'];
+  playWildDraw4IfNoOtherAlternative: Scalars['Boolean']['input'];
+};
+
+export type GameDirection = 'antiClockwise' | 'clockwise';
+
+export type GameMutation = {
+  createGame: Game;
+};
+
+export type GameMutationCreateGameArgs = {
+  gameCreateInput: GameCreateInput;
+};
+
+export type GameSpec = {
+  __typename?: 'GameSpec';
+  cardSpecs: Array<Maybe<GameCardSpec>>;
+  gameSlotsAmount: Scalars['Int']['output'];
+};
+
+export type NonStartedGame = {
+  __typename?: 'NonStartedGame';
+  id: Scalars['ID']['output'];
+  name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
+  state: NonStartedGameState;
+};
+
+export type NonStartedGameSlot = {
+  __typename?: 'NonStartedGameSlot';
+  userId: Scalars['ID']['output'];
+};
+
+export type NonStartedGameState = {
+  __typename?: 'NonStartedGameState';
+  slots: Array<Maybe<NonStartedGameSlot>>;
+  status: NonStartedGameStateStatus;
+};
+
+export type NonStartedGameStateStatus = 'nonStarted';
+
+export type NormalCard = {
+  __typename?: 'NormalCard';
+  color: CardColor;
+  kind: NormalCardKind;
+  number: Scalars['Int']['output'];
+};
+
+export type NormalCardKind = 'normal';
+
+export type ReverseCard = {
+  __typename?: 'ReverseCard';
+  color: CardColor;
+  kind: ReverseCardKind;
+};
+
+export type ReverseCardKind = 'reverse';
+
 export type RootMutation = AuthMutation &
+  GameMutation &
   UserMutation & {
     __typename?: 'RootMutation';
     createAuthByCode: Auth;
     createAuthByCredentials: Auth;
+    createGame: Game;
     createUser: User;
     updateUserMe: User;
   };
@@ -79,6 +228,10 @@ export type RootMutationCreateAuthByCodeArgs = {
 
 export type RootMutationCreateAuthByCredentialsArgs = {
   emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+};
+
+export type RootMutationCreateGameArgs = {
+  gameCreateInput: GameCreateInput;
 };
 
 export type RootMutationCreateUserArgs = {
@@ -92,11 +245,20 @@ export type RootMutationUpdateUserMeArgs = {
 export type RootQuery = UserQuery & {
   __typename?: 'RootQuery';
   userById: Maybe<User>;
+  userMe: User;
 };
 
 export type RootQueryUserByIdArgs = {
   id: Scalars['ID']['input'];
 };
+
+export type SkipCard = {
+  __typename?: 'SkipCard';
+  color: CardColor;
+  kind: SkipCardKind;
+};
+
+export type SkipCardKind = 'skip';
 
 export type User = {
   __typename?: 'User';
@@ -126,6 +288,7 @@ export type UserMutationUpdateUserMeArgs = {
 
 export type UserQuery = {
   userById: Maybe<User>;
+  userMe: User;
 };
 
 export type UserQueryUserByIdArgs = {
@@ -136,6 +299,20 @@ export type UserUpdateInput = {
   active: InputMaybe<Scalars['Boolean']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
 };
+
+export type WildCard = {
+  __typename?: 'WildCard';
+  kind: WildCardKind;
+};
+
+export type WildCardKind = 'wild';
+
+export type WildDraw4Card = {
+  __typename?: 'WildDraw4Card';
+  kind: WildDraw4CardKind;
+};
+
+export type WildDraw4CardKind = 'wildDraw4';
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -245,26 +422,84 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
+  ResolversObject<{
+    Card:
+      | DrawCard
+      | NormalCard
+      | ReverseCard
+      | SkipCard
+      | WildCard
+      | WildDraw4Card;
+    Game: ActiveGame | FinishedGame | NonStartedGame;
+  }>;
+
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
   ResolversObject<{
-    AuthMutation: RootMutation;
-    UserMutation: RootMutation;
+    AuthMutation: Omit<RootMutation, 'createGame'> & {
+      createGame: RefType['Game'];
+    };
+    GameMutation: Omit<RootMutation, 'createGame'> & {
+      createGame: RefType['Game'];
+    };
+    UserMutation: Omit<RootMutation, 'createGame'> & {
+      createGame: RefType['Game'];
+    };
     UserQuery: RootQuery;
   }>;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  ActiveGame: ResolverTypeWrapper<ActiveGame>;
+  ActiveGameSlot: ResolverTypeWrapper<ActiveGameSlot>;
+  ActiveGameState: ResolverTypeWrapper<
+    Omit<ActiveGameState, 'currentCard'> & {
+      currentCard: ResolversTypes['Card'];
+    }
+  >;
+  ActiveGameStateStatus: ActiveGameStateStatus;
   Auth: ResolverTypeWrapper<Auth>;
   AuthMutation: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['AuthMutation']
   >;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Card: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Card']>;
+  CardColor: CardColor;
   CodeAuthCreateInput: CodeAuthCreateInput;
+  DrawCard: ResolverTypeWrapper<DrawCard>;
+  DrawCardKind: DrawCardKind;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  FinishedGame: ResolverTypeWrapper<FinishedGame>;
+  FinishedGameSlot: ResolverTypeWrapper<FinishedGameSlot>;
+  FinishedGameState: ResolverTypeWrapper<FinishedGameState>;
+  FinishedGameStateStatus: FinishedGameStateStatus;
+  Game: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Game']>;
+  GameCardSpec: ResolverTypeWrapper<
+    Omit<GameCardSpec, 'card'> & { card: ResolversTypes['Card'] }
+  >;
+  GameCreateInput: GameCreateInput;
+  GameCreateInputOptions: GameCreateInputOptions;
+  GameDirection: GameDirection;
+  GameMutation: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['GameMutation']
+  >;
+  GameSpec: ResolverTypeWrapper<GameSpec>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  NonStartedGame: ResolverTypeWrapper<NonStartedGame>;
+  NonStartedGameSlot: ResolverTypeWrapper<NonStartedGameSlot>;
+  NonStartedGameState: ResolverTypeWrapper<NonStartedGameState>;
+  NonStartedGameStateStatus: NonStartedGameStateStatus;
+  NormalCard: ResolverTypeWrapper<NormalCard>;
+  NormalCardKind: NormalCardKind;
+  ReverseCard: ResolverTypeWrapper<ReverseCard>;
+  ReverseCardKind: ReverseCardKind;
   RootMutation: ResolverTypeWrapper<{}>;
   RootQuery: ResolverTypeWrapper<{}>;
+  SkipCard: ResolverTypeWrapper<SkipCard>;
+  SkipCardKind: SkipCardKind;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
   UserCreateInput: UserCreateInput;
@@ -275,24 +510,113 @@ export type ResolversTypes = ResolversObject<{
     ResolversInterfaceTypes<ResolversTypes>['UserQuery']
   >;
   UserUpdateInput: UserUpdateInput;
+  WildCard: ResolverTypeWrapper<WildCard>;
+  WildCardKind: WildCardKind;
+  WildDraw4Card: ResolverTypeWrapper<WildDraw4Card>;
+  WildDraw4CardKind: WildDraw4CardKind;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  ActiveGame: ActiveGame;
+  ActiveGameSlot: ActiveGameSlot;
+  ActiveGameState: Omit<ActiveGameState, 'currentCard'> & {
+    currentCard: ResolversParentTypes['Card'];
+  };
   Auth: Auth;
   AuthMutation: ResolversInterfaceTypes<ResolversParentTypes>['AuthMutation'];
   Boolean: Scalars['Boolean']['output'];
+  Card: ResolversUnionTypes<ResolversParentTypes>['Card'];
   CodeAuthCreateInput: CodeAuthCreateInput;
+  DrawCard: DrawCard;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  FinishedGame: FinishedGame;
+  FinishedGameSlot: FinishedGameSlot;
+  FinishedGameState: FinishedGameState;
+  Game: ResolversUnionTypes<ResolversParentTypes>['Game'];
+  GameCardSpec: Omit<GameCardSpec, 'card'> & {
+    card: ResolversParentTypes['Card'];
+  };
+  GameCreateInput: GameCreateInput;
+  GameCreateInputOptions: GameCreateInputOptions;
+  GameMutation: ResolversInterfaceTypes<ResolversParentTypes>['GameMutation'];
+  GameSpec: GameSpec;
   ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
+  NonStartedGame: NonStartedGame;
+  NonStartedGameSlot: NonStartedGameSlot;
+  NonStartedGameState: NonStartedGameState;
+  NormalCard: NormalCard;
+  ReverseCard: ReverseCard;
   RootMutation: {};
   RootQuery: {};
+  SkipCard: SkipCard;
   String: Scalars['String']['output'];
   User: User;
   UserCreateInput: UserCreateInput;
   UserMutation: ResolversInterfaceTypes<ResolversParentTypes>['UserMutation'];
   UserQuery: ResolversInterfaceTypes<ResolversParentTypes>['UserQuery'];
   UserUpdateInput: UserUpdateInput;
+  WildCard: WildCard;
+  WildDraw4Card: WildDraw4Card;
+}>;
+
+export type ActiveGameResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['ActiveGame'] = ResolversParentTypes['ActiveGame'],
+> = ResolversObject<{
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
+  state: Resolver<ResolversTypes['ActiveGameState'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ActiveGameSlotResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['ActiveGameSlot'] = ResolversParentTypes['ActiveGameSlot'],
+> = ResolversObject<{
+  cardsAmount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  userId: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ActiveGameStateResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['ActiveGameState'] = ResolversParentTypes['ActiveGameState'],
+> = ResolversObject<{
+  currentCard: Resolver<ResolversTypes['Card'], ParentType, ContextType>;
+  currentColor: Resolver<ResolversTypes['CardColor'], ParentType, ContextType>;
+  currentDirection: Resolver<
+    ResolversTypes['GameDirection'],
+    ParentType,
+    ContextType
+  >;
+  currentPlayingSlotIndex: Resolver<
+    ResolversTypes['Int'],
+    ParentType,
+    ContextType
+  >;
+  currentTurnCardsPlayed: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  drawCount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  slots: Resolver<
+    Array<Maybe<ResolversTypes['ActiveGameSlot']>>,
+    ParentType,
+    ContextType
+  >;
+  status: Resolver<
+    ResolversTypes['ActiveGameStateStatus'],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type AuthResolvers<
@@ -327,6 +651,187 @@ export type AuthMutationResolvers<
   >;
 }>;
 
+export type CardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Card'] = ResolversParentTypes['Card'],
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    | 'DrawCard'
+    | 'NormalCard'
+    | 'ReverseCard'
+    | 'SkipCard'
+    | 'WildCard'
+    | 'WildDraw4Card',
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type DrawCardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['DrawCard'] = ResolversParentTypes['DrawCard'],
+> = ResolversObject<{
+  color: Resolver<ResolversTypes['CardColor'], ParentType, ContextType>;
+  kind: Resolver<ResolversTypes['DrawCardKind'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type FinishedGameResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['FinishedGame'] = ResolversParentTypes['FinishedGame'],
+> = ResolversObject<{
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
+  state: Resolver<ResolversTypes['FinishedGameState'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type FinishedGameSlotResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['FinishedGameSlot'] = ResolversParentTypes['FinishedGameSlot'],
+> = ResolversObject<{
+  cardsAmount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  userId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type FinishedGameStateResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['FinishedGameState'] = ResolversParentTypes['FinishedGameState'],
+> = ResolversObject<{
+  slots: Resolver<
+    Array<Maybe<ResolversTypes['FinishedGameSlot']>>,
+    ParentType,
+    ContextType
+  >;
+  status: Resolver<
+    ResolversTypes['FinishedGameStateStatus'],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GameResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Game'] = ResolversParentTypes['Game'],
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    'ActiveGame' | 'FinishedGame' | 'NonStartedGame',
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type GameCardSpecResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['GameCardSpec'] = ResolversParentTypes['GameCardSpec'],
+> = ResolversObject<{
+  amount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  card: Resolver<ResolversTypes['Card'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GameMutationResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['GameMutation'] = ResolversParentTypes['GameMutation'],
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
+  createGame: Resolver<
+    ResolversTypes['Game'],
+    ParentType,
+    ContextType,
+    RequireFields<GameMutationCreateGameArgs, 'gameCreateInput'>
+  >;
+}>;
+
+export type GameSpecResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['GameSpec'] = ResolversParentTypes['GameSpec'],
+> = ResolversObject<{
+  cardSpecs: Resolver<
+    Array<Maybe<ResolversTypes['GameCardSpec']>>,
+    ParentType,
+    ContextType
+  >;
+  gameSlotsAmount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NonStartedGameResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['NonStartedGame'] = ResolversParentTypes['NonStartedGame'],
+> = ResolversObject<{
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
+  state: Resolver<
+    ResolversTypes['NonStartedGameState'],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NonStartedGameSlotResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['NonStartedGameSlot'] = ResolversParentTypes['NonStartedGameSlot'],
+> = ResolversObject<{
+  userId: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NonStartedGameStateResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['NonStartedGameState'] = ResolversParentTypes['NonStartedGameState'],
+> = ResolversObject<{
+  slots: Resolver<
+    Array<Maybe<ResolversTypes['NonStartedGameSlot']>>,
+    ParentType,
+    ContextType
+  >;
+  status: Resolver<
+    ResolversTypes['NonStartedGameStateStatus'],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NormalCardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['NormalCard'] = ResolversParentTypes['NormalCard'],
+> = ResolversObject<{
+  color: Resolver<ResolversTypes['CardColor'], ParentType, ContextType>;
+  kind: Resolver<ResolversTypes['NormalCardKind'], ParentType, ContextType>;
+  number: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ReverseCardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['ReverseCard'] = ResolversParentTypes['ReverseCard'],
+> = ResolversObject<{
+  color: Resolver<ResolversTypes['CardColor'], ParentType, ContextType>;
+  kind: Resolver<ResolversTypes['ReverseCardKind'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type RootMutationResolvers<
   ContextType = any,
   ParentType extends
@@ -346,6 +851,12 @@ export type RootMutationResolvers<
       RootMutationCreateAuthByCredentialsArgs,
       'emailPasswordAuthCreateInput'
     >
+  >;
+  createGame: Resolver<
+    ResolversTypes['Game'],
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationCreateGameArgs, 'gameCreateInput'>
   >;
   createUser: Resolver<
     ResolversTypes['User'],
@@ -372,6 +883,17 @@ export type RootQueryResolvers<
     ContextType,
     RequireFields<RootQueryUserByIdArgs, 'id'>
   >;
+  userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+}>;
+
+export type SkipCardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['SkipCard'] = ResolversParentTypes['SkipCard'],
+> = ResolversObject<{
+  color: Resolver<ResolversTypes['CardColor'], ParentType, ContextType>;
+  kind: Resolver<ResolversTypes['SkipCardKind'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<
@@ -417,14 +939,53 @@ export type UserQueryResolvers<
     ContextType,
     RequireFields<UserQueryUserByIdArgs, 'id'>
   >;
+  userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+}>;
+
+export type WildCardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['WildCard'] = ResolversParentTypes['WildCard'],
+> = ResolversObject<{
+  kind: Resolver<ResolversTypes['WildCardKind'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type WildDraw4CardResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['WildDraw4Card'] = ResolversParentTypes['WildDraw4Card'],
+> = ResolversObject<{
+  kind: Resolver<ResolversTypes['WildDraw4CardKind'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  ActiveGame: ActiveGameResolvers<ContextType>;
+  ActiveGameSlot: ActiveGameSlotResolvers<ContextType>;
+  ActiveGameState: ActiveGameStateResolvers<ContextType>;
   Auth: AuthResolvers<ContextType>;
   AuthMutation: AuthMutationResolvers<ContextType>;
+  Card: CardResolvers<ContextType>;
+  DrawCard: DrawCardResolvers<ContextType>;
+  FinishedGame: FinishedGameResolvers<ContextType>;
+  FinishedGameSlot: FinishedGameSlotResolvers<ContextType>;
+  FinishedGameState: FinishedGameStateResolvers<ContextType>;
+  Game: GameResolvers<ContextType>;
+  GameCardSpec: GameCardSpecResolvers<ContextType>;
+  GameMutation: GameMutationResolvers<ContextType>;
+  GameSpec: GameSpecResolvers<ContextType>;
+  NonStartedGame: NonStartedGameResolvers<ContextType>;
+  NonStartedGameSlot: NonStartedGameSlotResolvers<ContextType>;
+  NonStartedGameState: NonStartedGameStateResolvers<ContextType>;
+  NormalCard: NormalCardResolvers<ContextType>;
+  ReverseCard: ReverseCardResolvers<ContextType>;
   RootMutation: RootMutationResolvers<ContextType>;
   RootQuery: RootQueryResolvers<ContextType>;
+  SkipCard: SkipCardResolvers<ContextType>;
   User: UserResolvers<ContextType>;
   UserMutation: UserMutationResolvers<ContextType>;
   UserQuery: UserQueryResolvers<ContextType>;
+  WildCard: WildCardResolvers<ContextType>;
+  WildDraw4Card: WildDraw4CardResolvers<ContextType>;
 }>;

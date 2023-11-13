@@ -1,0 +1,6 @@
+enum CardColor {
+  blue
+  green
+  red
+  yellow
+}

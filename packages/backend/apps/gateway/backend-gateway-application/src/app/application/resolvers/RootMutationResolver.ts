@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { AuthMutationResolver } from '../../../auth/application/resolvers/AuthMutationResolver';
+import { GameMutationResolver } from '../../../games/application/resolvers/GameMutationResolver';
 import { UserMutationResolver } from '../../../users/application/resolvers/UserMutationResolver';
 
 @Injectable()
@@ -12,15 +13,19 @@ export class RootMutationResolver
     graphqlModels.RootMutationResolvers<Request, graphqlModels.RootMutation>
 {
   readonly #authMutation: graphqlModels.AuthMutationResolvers<Request>;
+  readonly #gameMutationResolver: graphqlModels.GameMutationResolvers<Request>;
   readonly #userMutation: graphqlModels.UserMutationResolvers<Request>;
 
   constructor(
     @Inject(AuthMutationResolver)
     authMutationResolver: graphqlModels.AuthMutationResolvers<Request>,
+    @Inject(GameMutationResolver)
+    gameMutationResolver: graphqlModels.GameMutationResolvers<Request>,
     @Inject(UserMutationResolver)
     userMutationResolver: graphqlModels.UserMutationResolvers<Request>,
   ) {
     this.#authMutation = authMutationResolver;
+    this.#gameMutationResolver = gameMutationResolver;
     this.#userMutation = userMutationResolver;
   }
 
@@ -45,6 +50,18 @@ export class RootMutationResolver
     return this.#getResolverFunction(
       this.#authMutation,
       this.#authMutation.createAuthByCredentials,
+    )(parent, args, request, info);
+  }
+
+  public async createGame(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.GameMutationCreateGameArgs,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.Game> {
+    return this.#getResolverFunction(
+      this.#gameMutationResolver,
+      this.#gameMutationResolver.createGame,
     )(parent, args, request, info);
   }
 

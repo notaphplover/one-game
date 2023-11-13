@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { models as apiModels } from '@cornie-js/api-models';
 import { Request } from '@cornie-js/backend-http';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -30,6 +29,17 @@ describe(RootMutationResolver.name, () => {
       >
     >
   >;
+  let createGameMock: jest.Mock<
+    graphqlModels.ResolverFn<
+      graphqlModels.ResolversTypes['Game'],
+      unknown,
+      Request,
+      graphqlModels.RequireFields<
+        graphqlModels.GameMutationCreateGameArgs,
+        'gameCreateInput'
+      >
+    >
+  >;
   let createUserMock: jest.Mock<
     graphqlModels.ResolverFn<
       graphqlModels.ResolversTypes['User'],
@@ -45,6 +55,9 @@ describe(RootMutationResolver.name, () => {
   let authMutationMock: jest.Mocked<
     graphqlModels.AuthMutationResolvers<Request>
   >;
+  let gameMutationMock: jest.Mocked<
+    graphqlModels.GameMutationResolvers<Request>
+  >;
   let userMutationMock: jest.Mocked<
     graphqlModels.UserMutationResolvers<Request>
   >;
@@ -54,6 +67,7 @@ describe(RootMutationResolver.name, () => {
   beforeAll(() => {
     createAuthByCodeMock = jest.fn();
     createAuthByCredentialsMock = jest.fn();
+    createGameMock = jest.fn();
     createUserMock = jest.fn();
 
     authMutationMock = {
@@ -63,6 +77,12 @@ describe(RootMutationResolver.name, () => {
       jest.Mocked<graphqlModels.AuthMutationResolvers<Request>>
     > as jest.Mocked<graphqlModels.AuthMutationResolvers<Request>>;
 
+    gameMutationMock = {
+      createGame: createGameMock,
+    } as Partial<
+      jest.Mocked<graphqlModels.GameMutationResolvers<Request>>
+    > as jest.Mocked<graphqlModels.GameMutationResolvers<Request>>;
+
     userMutationMock = {
       createUser: createUserMock,
     } as Partial<
@@ -71,15 +91,16 @@ describe(RootMutationResolver.name, () => {
 
     rootMutationResolver = new RootMutationResolver(
       authMutationMock,
+      gameMutationMock,
       userMutationMock,
     );
   });
 
   describe('.createAuthByCode', () => {
-    let authV1Fixture: apiModels.AuthV1;
+    let graphQlAuthFixture: graphqlModels.Auth;
 
     beforeAll(() => {
-      authV1Fixture = {
+      graphQlAuthFixture = {
         jwt: 'jwt fixture',
       };
     });
@@ -103,7 +124,7 @@ describe(RootMutationResolver.name, () => {
         infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
         createAuthByCodeMock.mockReturnValueOnce(
-          Promise.resolve(authV1Fixture),
+          Promise.resolve(graphQlAuthFixture),
         );
 
         result = await rootMutationResolver.createAuthByCode(
@@ -128,17 +149,17 @@ describe(RootMutationResolver.name, () => {
         );
       });
 
-      it('should return AuthV1', () => {
-        expect(result).toBe(authV1Fixture);
+      it('should return GraphQL Auth', () => {
+        expect(result).toBe(graphQlAuthFixture);
       });
     });
   });
 
   describe('.createAuthByCredentials', () => {
-    let authV1Fixture: apiModels.AuthV1;
+    let graphQlAuthFixture: graphqlModels.Auth;
 
     beforeAll(() => {
-      authV1Fixture = {
+      graphQlAuthFixture = {
         jwt: 'jwt fixture',
       };
     });
@@ -163,7 +184,7 @@ describe(RootMutationResolver.name, () => {
         infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
         createAuthByCredentialsMock.mockReturnValueOnce(
-          Promise.resolve(authV1Fixture),
+          Promise.resolve(graphQlAuthFixture),
         );
 
         result = await rootMutationResolver.createAuthByCredentials(
@@ -188,17 +209,69 @@ describe(RootMutationResolver.name, () => {
         );
       });
 
-      it('should return AuthV1', () => {
-        expect(result).toBe(authV1Fixture);
+      it('should return GraphQL Auth', () => {
+        expect(result).toBe(graphQlAuthFixture);
+      });
+    });
+  });
+
+  describe('.createGame', () => {
+    let graphQlGameFixture: graphqlModels.Game;
+
+    beforeAll(() => {
+      graphQlGameFixture = Symbol() as unknown as graphqlModels.Game;
+    });
+
+    describe('when called', () => {
+      let parentFixture: graphqlModels.RootMutation;
+      let argsFixture: graphqlModels.GameMutationCreateGameArgs;
+      let requestFixture: Request;
+      let infoFixture: GraphQLResolveInfo;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        parentFixture = Symbol() as unknown as graphqlModels.RootMutation;
+        argsFixture =
+          Symbol() as unknown as graphqlModels.GameMutationCreateGameArgs;
+        requestFixture = Symbol() as unknown as Request;
+        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
+
+        createGameMock.mockReturnValueOnce(Promise.resolve(graphQlGameFixture));
+
+        result = await rootMutationResolver.createGame(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameMutation.createGame()', () => {
+        expect(createGameMock).toHaveBeenCalledTimes(1);
+        expect(createGameMock).toHaveBeenCalledWith(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      it('should return GraphQL game', () => {
+        expect(result).toBe(graphQlGameFixture);
       });
     });
   });
 
   describe('.createUser', () => {
-    let userV1Fixture: apiModels.UserV1;
+    let graphQlUserFixture: graphqlModels.User;
 
     beforeAll(() => {
-      userV1Fixture = {
+      graphQlUserFixture = {
         active: false,
         id: 'id',
         name: 'name',
@@ -225,7 +298,7 @@ describe(RootMutationResolver.name, () => {
         requestFixture = Symbol() as unknown as Request;
         infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
-        createUserMock.mockReturnValueOnce(Promise.resolve(userV1Fixture));
+        createUserMock.mockReturnValueOnce(Promise.resolve(graphQlUserFixture));
 
         result = await rootMutationResolver.createUser(
           parentFixture,
@@ -249,8 +322,8 @@ describe(RootMutationResolver.name, () => {
         );
       });
 
-      it('should return UserV1', () => {
-        expect(result).toBe(userV1Fixture);
+      it('should return GraphQL User', () => {
+        expect(result).toBe(graphQlUserFixture);
       });
     });
   });

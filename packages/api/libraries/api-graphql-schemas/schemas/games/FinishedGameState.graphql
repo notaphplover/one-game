@@ -1,0 +1,10 @@
+#import FinishedGameSlot from './FinishedGameSlot.graphql'
+
+enum FinishedGameStateStatus {
+  finished
+}
+
+type FinishedGameState {
+  slots: [FinishedGameSlot]!
+  status: FinishedGameStateStatus!
+}
