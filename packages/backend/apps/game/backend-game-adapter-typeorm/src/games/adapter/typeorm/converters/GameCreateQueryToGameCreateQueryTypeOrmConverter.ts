@@ -50,6 +50,7 @@ export class GameCreateQueryToGameCreateQueryTypeOrmConverter
       discardPile: discardPileStringified,
       gameSlotsAmount: gameCreateQuery.spec.gameSlotsAmount,
       id: gameCreateQuery.id,
+      name: gameCreateQuery.name ?? null,
       spec: gameCardsStringified,
       status: GameStatusDb.nonStarted,
     };

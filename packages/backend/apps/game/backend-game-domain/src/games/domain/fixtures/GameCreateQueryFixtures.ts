@@ -17,11 +17,32 @@ export class GameCreateQueryFixtures {
     return fixture;
   }
 
-  public static get withSpecWithCardsOne(): GameCreateQuery {
+  public static get withSpecWithCardsOneAndName(): GameCreateQuery {
     const anyFixture: GameCreateQuery = GameCreateQueryFixtures.any;
 
     const fixture: GameCreateQuery = {
       ...anyFixture,
+      name: 'Name fixture',
+      spec: {
+        ...anyFixture.spec,
+        cards: [
+          {
+            amount: 1,
+            card: CardFixtures.any,
+          },
+        ],
+      },
+    };
+
+    return fixture;
+  }
+
+  public static get withSpecWithCardsOneAndNameUndefined(): GameCreateQuery {
+    const anyFixture: GameCreateQuery = GameCreateQueryFixtures.any;
+
+    const fixture: GameCreateQuery = {
+      ...anyFixture,
+      name: undefined,
       spec: {
         ...anyFixture.spec,
         cards: [
