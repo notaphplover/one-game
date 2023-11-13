@@ -1,0 +1,6 @@
+#import Game from './Game.graphql'
+#import FindMyGamesInput from './FindMyGamesInput.graphql'
+
+interface GameQuery {
+  myGames(findMyGamesInput: FindMyGamesInput): [Game!]!
+}
