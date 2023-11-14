@@ -1,8 +1,8 @@
-import { Button, Grid, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { Button, Grid, Typography, Link } from '@mui/material';
+import { Share } from '@mui/icons-material';
 
 export const PendingGame = ({ game }) => {
-  console.log(game);
   return (
     <Grid item xs={3}>
       <Grid component="div" className="pending-game">
@@ -12,7 +12,7 @@ export const PendingGame = ({ game }) => {
             className="home-auth-text-game"
             component="h5"
           >
-            {game.name === undefined ? '<Unknown>' : game.name}
+            {game.name === undefined ? '--' : game.name}
           </Typography>
         </Grid>
         <Grid item className="pending-button-game">
@@ -21,6 +21,7 @@ export const PendingGame = ({ game }) => {
               type="button"
               className="home-auth-button-new-game"
               variant="contained"
+              startIcon={<Share />}
             >
               Share
             </Button>

@@ -50,7 +50,12 @@
 
 .home-auth-container-games {
   border: 1px solid var(--cg-bkg-primary-dark);
+  border-radius: 10px;
+  box-shadow:
+    0 4px 8px 0 rgba(68, 2, 131, 0.5),
+    0 6px 20px 0 rgba(68, 2, 131, 0.5);
   color: var(--cg-bkg-primary-dark);
+  padding: 3px 3px;
 }
 
 .home-auth-button-container {
@@ -65,9 +70,13 @@
   justify-content: center;
   justify-items: center;
   border: 1px solid var(--cg-bkg-primary-dark);
+  border-radius: 10px;
+  box-shadow:
+    0 2px 4px 0 rgba(68, 2, 131, 0.5),
+    0 3px 10px 0 rgba(68, 2, 131, 0.5);
   margin: 5px 5px;
 }
 
 .pending-button-game {
-  padding: 1rem 0;
+  padding: 2rem 0;
 }
