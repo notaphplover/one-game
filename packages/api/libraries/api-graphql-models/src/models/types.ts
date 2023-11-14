@@ -111,6 +111,12 @@ export type EmailPasswordAuthCreateInput = {
   password: Scalars['String']['input'];
 };
 
+export type FindMyGamesInput = {
+  page: InputMaybe<Scalars['Int']['input']>;
+  pageSize: InputMaybe<Scalars['Int']['input']>;
+  status: InputMaybe<Scalars['String']['input']>;
+};
+
 export type FinishedGame = {
   __typename?: 'FinishedGame';
   id: Scalars['ID']['output'];
@@ -165,6 +171,14 @@ export type GameMutation = {
 
 export type GameMutationCreateGameArgs = {
   gameCreateInput: GameCreateInput;
+};
+
+export type GameQuery = {
+  myGames: Array<Game>;
+};
+
+export type GameQueryMyGamesArgs = {
+  findMyGamesInput: InputMaybe<FindMyGamesInput>;
 };
 
 export type GameSpec = {
@@ -242,10 +256,16 @@ export type RootMutationUpdateUserMeArgs = {
   userUpdateInput: UserUpdateInput;
 };
 
-export type RootQuery = UserQuery & {
-  __typename?: 'RootQuery';
-  userById: Maybe<User>;
-  userMe: User;
+export type RootQuery = GameQuery &
+  UserQuery & {
+    __typename?: 'RootQuery';
+    myGames: Array<Game>;
+    userById: Maybe<User>;
+    userMe: User;
+  };
+
+export type RootQueryMyGamesArgs = {
+  findMyGamesInput: InputMaybe<FindMyGamesInput>;
 };
 
 export type RootQueryUserByIdArgs = {
@@ -444,10 +464,11 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
     GameMutation: Omit<RootMutation, 'createGame'> & {
       createGame: RefType['Game'];
     };
+    GameQuery: Omit<RootQuery, 'myGames'> & { myGames: Array<RefType['Game']> };
     UserMutation: Omit<RootMutation, 'createGame'> & {
       createGame: RefType['Game'];
     };
-    UserQuery: RootQuery;
+    UserQuery: Omit<RootQuery, 'myGames'> & { myGames: Array<RefType['Game']> };
   }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -471,6 +492,7 @@ export type ResolversTypes = ResolversObject<{
   DrawCard: ResolverTypeWrapper<DrawCard>;
   DrawCardKind: DrawCardKind;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  FindMyGamesInput: FindMyGamesInput;
   FinishedGame: ResolverTypeWrapper<FinishedGame>;
   FinishedGameSlot: ResolverTypeWrapper<FinishedGameSlot>;
   FinishedGameState: ResolverTypeWrapper<FinishedGameState>;
@@ -484,6 +506,9 @@ export type ResolversTypes = ResolversObject<{
   GameDirection: GameDirection;
   GameMutation: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['GameMutation']
+  >;
+  GameQuery: ResolverTypeWrapper<
+    ResolversInterfaceTypes<ResolversTypes>['GameQuery']
   >;
   GameSpec: ResolverTypeWrapper<GameSpec>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -530,6 +555,7 @@ export type ResolversParentTypes = ResolversObject<{
   CodeAuthCreateInput: CodeAuthCreateInput;
   DrawCard: DrawCard;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
+  FindMyGamesInput: FindMyGamesInput;
   FinishedGame: FinishedGame;
   FinishedGameSlot: FinishedGameSlot;
   FinishedGameState: FinishedGameState;
@@ -540,6 +566,7 @@ export type ResolversParentTypes = ResolversObject<{
   GameCreateInput: GameCreateInput;
   GameCreateInputOptions: GameCreateInputOptions;
   GameMutation: ResolversInterfaceTypes<ResolversParentTypes>['GameMutation'];
+  GameQuery: ResolversInterfaceTypes<ResolversParentTypes>['GameQuery'];
   GameSpec: GameSpec;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -754,6 +781,20 @@ export type GameMutationResolvers<
   >;
 }>;
 
+export type GameQueryResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['GameQuery'] = ResolversParentTypes['GameQuery'],
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<'RootQuery', ParentType, ContextType>;
+  myGames: Resolver<
+    Array<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    Partial<GameQueryMyGamesArgs>
+  >;
+}>;
+
 export type GameSpecResolvers<
   ContextType = any,
   ParentType extends
@@ -877,6 +918,12 @@ export type RootQueryResolvers<
   ParentType extends
     ResolversParentTypes['RootQuery'] = ResolversParentTypes['RootQuery'],
 > = ResolversObject<{
+  myGames: Resolver<
+    Array<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    Partial<RootQueryMyGamesArgs>
+  >;
   userById: Resolver<
     Maybe<ResolversTypes['User']>,
     ParentType,
@@ -974,6 +1021,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Game: GameResolvers<ContextType>;
   GameCardSpec: GameCardSpecResolvers<ContextType>;
   GameMutation: GameMutationResolvers<ContextType>;
+  GameQuery: GameQueryResolvers<ContextType>;
   GameSpec: GameSpecResolvers<ContextType>;
   NonStartedGame: NonStartedGameResolvers<ContextType>;
   NonStartedGameSlot: NonStartedGameSlotResolvers<ContextType>;

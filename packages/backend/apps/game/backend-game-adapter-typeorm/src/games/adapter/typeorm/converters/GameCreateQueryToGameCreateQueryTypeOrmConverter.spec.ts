@@ -31,57 +31,119 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
   });
 
   describe('.convert', () => {
-    let gameCreateQueryFixture: GameCreateQuery;
-
-    beforeAll(() => {
-      gameCreateQueryFixture = GameCreateQueryFixtures.withSpecWithCardsOne;
-    });
-
-    describe('when called', () => {
-      let gameCardSpecArrayStringifiedFixture: string;
-      let result: unknown;
+    describe('having a GameCreateQuery with string name', () => {
+      let gameCreateQueryFixture: GameCreateQuery;
 
       beforeAll(() => {
-        gameCardSpecArrayStringifiedFixture = '[39]';
-
-        gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
-          gameCardSpecArrayStringifiedFixture,
-        );
-
-        result = gameCreateQueryToGameCreateQueryTypeOrmConverter.convert(
-          gameCreateQueryFixture,
-        );
+        gameCreateQueryFixture =
+          GameCreateQueryFixtures.withSpecWithCardsOneAndName;
       });
 
-      afterAll(() => {
-        jest.clearAllMocks();
+      describe('when called', () => {
+        let gameCardSpecArrayStringifiedFixture: string;
+        let result: unknown;
+
+        beforeAll(() => {
+          gameCardSpecArrayStringifiedFixture = '[39]';
+
+          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+            gameCardSpecArrayStringifiedFixture,
+          );
+
+          result = gameCreateQueryToGameCreateQueryTypeOrmConverter.convert(
+            gameCreateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+          expect(
+            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+          ).toHaveBeenCalledWith(gameCreateQueryFixture.spec.cards);
+        });
+
+        it('should return a DeepPartial<GameDb>', () => {
+          const expected: DeepPartial<GameDb> = {
+            currentCard: null,
+            currentColor: null,
+            currentDirection: null,
+            currentPlayingSlotIndex: null,
+            currentTurnCardsPlayed: null,
+            deck: null,
+            discardPile: '[]',
+            gameSlotsAmount: gameCreateQueryFixture.spec.gameSlotsAmount,
+            id: gameCreateQueryFixture.id,
+            name: gameCreateQueryFixture.name as string,
+            spec: gameCardSpecArrayStringifiedFixture,
+            status: GameStatusDb.nonStarted,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a GameCreateQuery with undefined name', () => {
+      let gameCreateQueryFixture: GameCreateQuery;
+
+      beforeAll(() => {
+        gameCreateQueryFixture =
+          GameCreateQueryFixtures.withSpecWithCardsOneAndNameUndefined;
       });
 
-      it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
-        expect(
-          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
-        ).toHaveBeenCalledWith(gameCreateQueryFixture.spec.cards);
-      });
+      describe('when called', () => {
+        let gameCardSpecArrayStringifiedFixture: string;
+        let result: unknown;
 
-      it('should return a DeepPartial<GameDb>', () => {
-        const expected: DeepPartial<GameDb> = {
-          currentCard: null,
-          currentColor: null,
-          currentDirection: null,
-          currentPlayingSlotIndex: null,
-          currentTurnCardsPlayed: null,
-          deck: null,
-          discardPile: '[]',
-          gameSlotsAmount: gameCreateQueryFixture.spec.gameSlotsAmount,
-          id: gameCreateQueryFixture.id,
-          spec: gameCardSpecArrayStringifiedFixture,
-          status: GameStatusDb.nonStarted,
-        };
+        beforeAll(() => {
+          gameCardSpecArrayStringifiedFixture = '[39]';
 
-        expect(result).toStrictEqual(expected);
+          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+            gameCardSpecArrayStringifiedFixture,
+          );
+
+          result = gameCreateQueryToGameCreateQueryTypeOrmConverter.convert(
+            gameCreateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+          expect(
+            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+          ).toHaveBeenCalledWith(gameCreateQueryFixture.spec.cards);
+        });
+
+        it('should return a DeepPartial<GameDb>', () => {
+          const expected: DeepPartial<GameDb> = {
+            currentCard: null,
+            currentColor: null,
+            currentDirection: null,
+            currentPlayingSlotIndex: null,
+            currentTurnCardsPlayed: null,
+            deck: null,
+            discardPile: '[]',
+            gameSlotsAmount: gameCreateQueryFixture.spec.gameSlotsAmount,
+            id: gameCreateQueryFixture.id,
+            name: null,
+            spec: gameCardSpecArrayStringifiedFixture,
+            status: GameStatusDb.nonStarted,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
       });
     });
   });
