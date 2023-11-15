@@ -1,54 +1,54 @@
-import { Profile } from 'pprof-format';
-
-import { ProfileExporter } from './ProfileExporter';
+import { ProfileExport, ProfileExporter } from './ProfileExporter';
 import { Profiler } from './Profiler';
 
-export interface ContinuousProfilerInput {
-  profiler: Profiler;
+export interface ContinuousProfilerInput<TStartArgs> {
   exporter: ProfileExporter;
-  name: string;
-  duration: number;
+  flushIntervalMs: number;
+  profiler: Profiler<TStartArgs>;
+  startArgs: TStartArgs;
 }
 
-export class ContinuousProfiler {
-  private readonly profiler: Profiler;
-  private readonly exporter: ProfileExporter;
-  private readonly duration: number;
-  private timer: NodeJS.Timeout | undefined;
-  private lastExport: Promise<void> | undefined;
+export class ContinuousProfiler<TStartArgs> {
+  readonly #profiler: Profiler<TStartArgs>;
+  readonly #exporter: ProfileExporter;
+  readonly #flushIntervalMs: number;
+  #lastExport: Promise<void> | undefined;
+  readonly #startArgs: TStartArgs;
+  #timer: NodeJS.Timeout | undefined;
 
-  constructor(input: ContinuousProfilerInput) {
-    this.profiler = input.profiler;
-    this.exporter = input.exporter;
-    this.duration = input.duration;
+  constructor(input: ContinuousProfilerInput<TStartArgs>) {
+    this.#exporter = input.exporter;
+    this.#flushIntervalMs = input.flushIntervalMs;
+    this.#profiler = input.profiler;
+    this.#startArgs = input.startArgs;
   }
 
   public start(): void {
-    if (this.timer !== undefined) {
+    if (this.#timer !== undefined) {
       return;
     }
 
-    this.profiler.start();
+    this.#profiler.start(this.#startArgs);
     this.scheduleProfilingRound();
   }
 
   public async stop(): Promise<void> {
-    if (this.timer === undefined) {
+    if (this.#timer === undefined) {
       return;
     }
 
-    clearTimeout(this.timer);
-    this.timer = undefined;
+    clearTimeout(this.#timer);
+    this.#timer = undefined;
 
-    if (this.lastExport !== undefined) {
-      await this.lastExport;
+    if (this.#lastExport !== undefined) {
+      await this.#lastExport;
     }
 
     try {
-      const profile: Profile | null = this.profiler.stop();
+      const profileExport: ProfileExport | null = this.#profiler.stop();
 
-      if (profile !== null) {
-        await this.exporter.export(profile);
+      if (profileExport !== null) {
+        await this.#exporter.export(profileExport);
       }
     } catch (e: unknown) {
       console.error(
@@ -58,22 +58,22 @@ export class ContinuousProfiler {
   }
 
   private scheduleProfilingRound() {
-    this.timer = setTimeout(() => {
+    this.#timer = setTimeout(() => {
       setImmediate(() => {
         void this.profilingRound();
         this.scheduleProfilingRound();
       });
-    }, this.duration);
+    }, this.#flushIntervalMs);
   }
 
   private async profilingRound(): Promise<void> {
-    const profile: Profile = this.profiler.profile();
+    const profileExport: ProfileExport = this.#profiler.profile();
 
-    if (this.lastExport === undefined) {
-      this.lastExport = this.exporter.export(profile).catch();
+    if (this.#lastExport === undefined) {
+      this.#lastExport = this.#exporter.export(profileExport).catch();
 
-      await this.lastExport;
-      this.lastExport = undefined;
+      await this.#lastExport;
+      this.#lastExport = undefined;
     }
   }
 }

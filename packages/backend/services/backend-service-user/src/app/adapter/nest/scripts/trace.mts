@@ -44,20 +44,9 @@ function configureProfiler(environment: Environment): void {
     return;
   }
 
-  const MICROS_PER_SECOND: number = 1e6;
-  const MS_PER_SECOND: number = 1e3;
-  const SAMPLING_DURATION_SECONDS: number = 60;
-  const SAMPLING_DURATION_MS: number =
-    MS_PER_SECOND * SAMPLING_DURATION_SECONDS;
-  const SAMPLING_HZ: number = 100;
-
   const profiler: PyroscopeProfiler = new PyroscopeProfiler({
     applicationName: 'cornie-js-backend-service-user',
-    samplingDurationMs: SAMPLING_DURATION_MS,
-    samplingIntervalBytes: 1048576,
-    samplingIntervalMicros: MICROS_PER_SECOND / SAMPLING_HZ, // 100 Hz
     serverAddress: environment.grafanaPyroscopeUrl,
-    stackDepth: 64,
   });
 
   profiler.start();
