@@ -44,7 +44,7 @@ export const HomeWithAuth = () => {
               ? pendingGames.map((game) => (
                   <PendingGame key={game.id} game={game} />
                 ))
-              : null}
+              : 'Not exists pending games.'}
           </Grid>
         </Grid>
         <Grid item xs={12} className="home-auth-container">
