@@ -24,7 +24,7 @@ services:
       - "4040:4040"
 
   prometheus:
-    image: prom/prometheus:v2.47.2
+    image: prom/prometheus:v2.48.0
     command:
       - --config.file=/etc/prometheus.yaml
       - --web.enable-remote-write-receiver
