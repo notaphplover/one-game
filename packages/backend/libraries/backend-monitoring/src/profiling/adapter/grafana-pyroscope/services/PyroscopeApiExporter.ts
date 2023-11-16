@@ -1,26 +1,84 @@
+import { URL } from 'node:url';
+
 import { encode } from '@datadog/pprof';
 import axios, { AxiosError } from 'axios';
-import FormData from 'form-data';
+import FormData, { Headers } from 'form-data';
 import { Profile } from 'pprof-format';
 
-import { ProfileExporter } from '../../datadog-pprof/modules/ProfileExporter';
+import { dateToUnixTimestamp } from '../../../../date/utils/dateToUnixTimestamp';
+import {
+  ProfileExport,
+  ProfileExporter,
+} from '../../datadog-pprof/modules/ProfileExporter';
 import { processProfile } from '../../datadog-pprof/utils/processProfile';
-import { PyroscopeConfig } from '../models/PyroscopeConfig';
-
-const MICROSECONDS_PER_SECOND: number = 1e6;
 
 export class PyroscopeApiExporter implements ProfileExporter {
-  readonly #sampleTypeConfig: string | undefined;
-  readonly #config: PyroscopeConfig;
+  readonly #applicationName: string;
+  readonly #authToken: string | undefined;
+  readonly #serverAddress: string;
 
-  constructor(config: PyroscopeConfig, sampleTypeConfig?: string) {
-    this.#config = config;
-
-    this.#sampleTypeConfig = sampleTypeConfig;
+  constructor(
+    applicationName: string,
+    authToken: string | undefined,
+    serverAddress: string,
+  ) {
+    this.#applicationName = applicationName;
+    this.#authToken = authToken;
+    this.#serverAddress = serverAddress;
   }
 
-  public async export(profile: Profile): Promise<void> {
-    await this.#uploadProfile(this.#config, profile, this.#sampleTypeConfig);
+  public async export(profileExport: ProfileExport): Promise<void> {
+    await this.#uploadProfile(profileExport);
+  }
+
+  #buildEndpointUrl(profileExport: ProfileExport): URL {
+    const endpointUrl: URL = new URL(`${this.#serverAddress}/ingest`);
+
+    endpointUrl.searchParams.append(
+      'from',
+      dateToUnixTimestamp(profileExport.startedAt).toString(),
+    );
+    endpointUrl.searchParams.append('name', this.#applicationName);
+    endpointUrl.searchParams.append('spyName', 'nodespy');
+    endpointUrl.searchParams.append(
+      'until',
+      dateToUnixTimestamp(profileExport.stoppedAt).toString(),
+    );
+
+    if (profileExport.sampleRate !== undefined) {
+      endpointUrl.searchParams.append(
+        'sampleRate',
+        profileExport.sampleRate.toString(),
+      );
+    }
+
+    return endpointUrl;
+  }
+
+  #buildRequestHeaders(formData: FormData): Headers {
+    const headers: Headers = formData.getHeaders();
+
+    if (this.#authToken !== undefined) {
+      headers['authorization'] = `Bearer ${this.#authToken}`;
+    }
+
+    return headers;
+  }
+
+  async #buildUploadProfileFormData(profile: Profile): Promise<FormData> {
+    const processedProfile: Profile = processProfile(profile);
+
+    const profileBuffer: Buffer = await encode(processedProfile);
+
+    const formData: FormData = new FormData();
+
+    formData.append('profile', profileBuffer, {
+      contentType: 'text/json',
+      filename: 'profile',
+      knownLength: profileBuffer.byteLength,
+    });
+
+    return formData;
   }
 
   #handleAxiosError(error: AxiosError): void {
@@ -40,49 +98,15 @@ export class PyroscopeApiExporter implements ProfileExporter {
     }
   }
 
-  async #uploadProfile(
-    config: PyroscopeConfig,
-    profile: Profile,
-    sampleTypeConfig?: string,
-  ): Promise<void> {
-    const newProfile: Profile = processProfile(profile);
+  async #uploadProfile(profileExport: ProfileExport): Promise<void> {
+    const formData: FormData = await this.#buildUploadProfileFormData(
+      profileExport.profile,
+    );
 
-    const buf: Buffer = await encode(newProfile);
-
-    const formData: FormData = new FormData();
-    formData.append('profile', buf, {
-      contentType: 'text/json',
-      filename: 'profile',
-      knownLength: buf.byteLength,
-    });
-
-    if (sampleTypeConfig !== undefined) {
-      formData.append('sample_type_config', sampleTypeConfig, {
-        filename: 'sample_type_config.json',
-        knownLength: sampleTypeConfig.length,
-      });
-    }
-
-    const rate: number =
-      MICROSECONDS_PER_SECOND / Number(config.samplingIntervalMicros);
-
-    const url: string = `${
-      config.serverAddress
-    }/ingest?name=${encodeURIComponent(
-      config.applicationName,
-    )}&sampleRate=${rate}&spyName=nodespy`;
-
-    // send data to the server
     try {
-      await axios(url, {
+      await axios(this.#buildEndpointUrl(profileExport).toString(), {
         data: formData,
-        headers:
-          config.authToken === undefined
-            ? formData.getHeaders()
-            : {
-                ...formData.getHeaders(),
-                authorization: `Bearer ${config.authToken}`,
-              },
+        headers: this.#buildRequestHeaders(formData),
         method: 'POST',
       });
     } catch (error: unknown) {
