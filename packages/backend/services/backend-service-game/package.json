@@ -27,7 +27,7 @@
     "@cornie-js/process-manager": "workspace:*",
     "@jest/globals": "29.7.0",
     "@nestjs/typeorm": "10.0.1",
-    "@types/node": "20.9.1",
+    "@types/node": "20.9.2",
     "@typescript-eslint/eslint-plugin": "6.11.0",
     "@typescript-eslint/parser": "6.11.0",
     "eslint": "8.54.0",
