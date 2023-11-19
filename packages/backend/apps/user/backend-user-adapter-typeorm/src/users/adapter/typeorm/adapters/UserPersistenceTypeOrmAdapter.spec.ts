@@ -106,9 +106,8 @@ describe(UserPersistenceTypeOrmAdapter, () => {
       beforeAll(async () => {
         deleteUserTypeOrmServiceMock.delete.mockResolvedValueOnce(undefined);
 
-        result = await userPersistenceTypeOrmAdapter.delete(
-          userFindQueryFixture,
-        );
+        result =
+          await userPersistenceTypeOrmAdapter.delete(userFindQueryFixture);
       });
 
       afterAll(() => {
@@ -145,9 +144,8 @@ describe(UserPersistenceTypeOrmAdapter, () => {
 
         findUserTypeOrmServiceMock.findOne.mockResolvedValueOnce(userFixture);
 
-        result = await userPersistenceTypeOrmAdapter.findOne(
-          userFindQueryFixture,
-        );
+        result =
+          await userPersistenceTypeOrmAdapter.findOne(userFindQueryFixture);
       });
 
       afterAll(() => {

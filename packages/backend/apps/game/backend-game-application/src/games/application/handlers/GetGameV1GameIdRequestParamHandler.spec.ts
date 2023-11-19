@@ -34,9 +34,8 @@ describe(GetGameV1GameIdRequestParamHandler.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
-          result = await getGameV1GameIdRequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await getGameV1GameIdRequestParamHandler.handle(requestFixture);
         });
 
         it('should return a string', () => {

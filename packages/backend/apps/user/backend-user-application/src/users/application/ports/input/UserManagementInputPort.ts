@@ -84,9 +84,8 @@ export class UserManagementInputPort {
         userCreateQueryContext,
       );
 
-    const user: User = await this.#createUserUseCaseHandler.handle(
-      userCreateQuery,
-    );
+    const user: User =
+      await this.#createUserUseCaseHandler.handle(userCreateQuery);
 
     return this.#userV1FromUserBuilder.build(user);
   }
@@ -122,9 +121,8 @@ export class UserManagementInputPort {
         },
       );
 
-    const user: User = await this.#updateUserUseCaseHandler.handle(
-      userUpdateQuery,
-    );
+    const user: User =
+      await this.#updateUserUseCaseHandler.handle(userUpdateQuery);
 
     return this.#userV1FromUserBuilder.build(user);
   }

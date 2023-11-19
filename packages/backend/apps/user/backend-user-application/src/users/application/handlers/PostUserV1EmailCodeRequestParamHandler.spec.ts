@@ -138,9 +138,8 @@ describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
             userFixture,
           );
 
-          result = await postUserV1EmailCodeRequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await postUserV1EmailCodeRequestParamHandler.handle(requestFixture);
         });
 
         afterAll(() => {

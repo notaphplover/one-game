@@ -280,9 +280,8 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
           let result: unknown;
 
           beforeAll(async () => {
-            result = await getGameV1MineRequestParamHandler.handle(
-              requestFixture,
-            );
+            result =
+              await getGameV1MineRequestParamHandler.handle(requestFixture);
           });
 
           it('should return a [GameFindQuery]', () => {
