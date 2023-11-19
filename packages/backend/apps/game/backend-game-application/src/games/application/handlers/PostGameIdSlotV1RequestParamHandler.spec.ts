@@ -120,9 +120,8 @@ describe(PostGameIdSlotV1RequestParamHandler.name, () => {
             gameIdSlotCreateQueryV1Fixture,
           ]);
 
-          result = await postGameIdSlotV1RequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await postGameIdSlotV1RequestParamHandler.handle(requestFixture);
         });
 
         afterAll(() => {

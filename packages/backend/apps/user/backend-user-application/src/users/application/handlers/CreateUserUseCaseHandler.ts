@@ -46,9 +46,8 @@ export class CreateUserUseCaseHandler
   public async handle(userCreateQuery: UserCreateQuery): Promise<User> {
     this.#validate(userCreateQuery);
 
-    const user: User = await this.#userPersistenceOutputPort.create(
-      userCreateQuery,
-    );
+    const user: User =
+      await this.#userPersistenceOutputPort.create(userCreateQuery);
 
     await this.#userCreatedEventHandler.handle({
       user,

@@ -57,9 +57,8 @@ export class AuthManagementInputPort {
     if (this.#isCodeAuthCreateQueryV1(authCreateQueryV1)) {
       user = await this.#getUserFromCodeAuthCreateQuery(authCreateQueryV1);
     } else {
-      user = await this.#getUserFromEmailPasswordAuthCreateQuery(
-        authCreateQueryV1,
-      );
+      user =
+        await this.#getUserFromEmailPasswordAuthCreateQuery(authCreateQueryV1);
     }
 
     const jwt: string = await this.#generateJwt(user);

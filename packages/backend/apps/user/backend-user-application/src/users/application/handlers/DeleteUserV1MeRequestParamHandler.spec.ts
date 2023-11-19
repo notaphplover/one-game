@@ -89,9 +89,8 @@ describe(DeleteUserV1MeRequestParamHandler.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
-          result = await deleteUserV1MeRequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await deleteUserV1MeRequestParamHandler.handle(requestFixture);
         });
 
         it('should return params', () => {
