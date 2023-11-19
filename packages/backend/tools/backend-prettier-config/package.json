@@ -2,7 +2,13 @@
   "author": "Multiple authors",
   "name": "@cornie-js/backend-prettier-config",
   "description": "common prettier config for backend packages",
-  "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    }
+  },
+  "type": "module",
   "license": "See license in \"LICENSE\" file",
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
