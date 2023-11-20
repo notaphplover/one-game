@@ -22,6 +22,7 @@ type RootMutation implements AuthMutation & GameMutation & UserMutation {
 }
 
 type RootQuery implements GameQuery & UserQuery {
+  gameById(id: ID!): Game
   myGames(findMyGamesInput: FindMyGamesInput): [Game!]!
   userById(id: ID!): User
   userMe: User!
