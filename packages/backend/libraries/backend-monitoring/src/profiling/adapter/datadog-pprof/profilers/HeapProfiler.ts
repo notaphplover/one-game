@@ -1,4 +1,4 @@
-import { heap } from '@datadog/pprof';
+import { SourceMapper, heap } from '@datadog/pprof';
 import { Profile } from 'pprof-format';
 
 import { ProfileExport } from '../modules/ProfileExporter';
@@ -11,13 +11,15 @@ export interface HeapProfilerStartArgs {
 
 export class HeapProfiler implements Profiler<HeapProfilerStartArgs> {
   #lastProfiledAt: Date;
+  readonly #sourceMapper: SourceMapper | undefined;
 
-  constructor() {
+  constructor(sourceMapper: SourceMapper | undefined) {
     this.#lastProfiledAt = new Date();
+    this.#sourceMapper = sourceMapper;
   }
 
   public profile(): ProfileExport {
-    const profile: Profile = heap.profile();
+    const profile: Profile = heap.profile(undefined, this.#sourceMapper);
 
     const lastProfileStartedAt: Date = this.#lastProfiledAt;
     this.#lastProfiledAt = new Date();

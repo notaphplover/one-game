@@ -1,4 +1,5 @@
-import { time } from '@datadog/pprof';
+import { SourceMapper, time } from '@datadog/pprof';
+import { TimeProfilerOptions } from '@datadog/pprof/out/src/time-profiler';
 import { Profile } from 'pprof-format';
 
 import { ProfileExport } from '../modules/ProfileExporter';
@@ -14,10 +15,12 @@ export interface WallProfilerStartArgs {
 export class WallProfiler implements Profiler<WallProfilerStartArgs> {
   #lastProfiledAt: Date;
   #lastSamplingIntervalMicros: number;
+  readonly #sourceMapper: SourceMapper | undefined;
 
-  constructor() {
+  constructor(sourceMapper: SourceMapper | undefined) {
     this.#lastProfiledAt = new Date();
     this.#lastSamplingIntervalMicros = Number.NaN;
+    this.#sourceMapper = sourceMapper;
   }
 
   public profile(): ProfileExport {
@@ -29,12 +32,19 @@ export class WallProfiler implements Profiler<WallProfilerStartArgs> {
       this.#lastProfiledAt = new Date();
       this.#lastSamplingIntervalMicros = args.samplingDurationMs;
 
-      time.start({
+      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+      const options: TimeProfilerOptions = {
         durationMillis: args.samplingDurationMs,
         intervalMicros: args.samplingIntervalMicros,
         withContexts: false,
         workaroundV8Bug: true,
-      });
+      };
+
+      if (this.#sourceMapper !== undefined) {
+        options.sourceMapper = this.#sourceMapper;
+      }
+
+      time.start(options);
     }
   }
 

@@ -219,15 +219,30 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "histogram_quantile(0.5, sum by(le, span_name) (rate(traces_spanmetrics_latency_bucket{service=\"@cornie-js/backend-service-game\", span_name=~\".+/v[1-9]+/.+\"}[1m])))",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "(0.5) {{span_name}}",
+          "range": true,
+          "refId": "Quartile 0.5"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
           "expr": "histogram_quantile(0.9, sum by(le, span_name) (rate(traces_spanmetrics_latency_bucket{service=\"@cornie-js/backend-service-game\", span_name=~\".+/v[1-9]+/.+\"}[1m])))",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "(0.9) {{span_name}}",
           "range": true,
-          "refId": "Calls",
+          "refId": "Quartile 0.9",
           "useBackend": false
         }
       ],

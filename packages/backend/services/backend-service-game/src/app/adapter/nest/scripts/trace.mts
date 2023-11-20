@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
 import {
   EnvModule,
   Environment,
@@ -6,6 +9,7 @@ import {
 import { PyroscopeProfiler, Tracer } from '@cornie-js/backend-monitoring';
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { glob } from 'glob';
 
 const KILL_SIGNALS: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
 
@@ -39,19 +43,54 @@ function configureTracer(environment: Environment): void {
   configureKillSignals(() => void tracer.stop());
 }
 
-function configureProfiler(environment: Environment): void {
+async function configureProfiler(environment: Environment): Promise<void> {
   if (!environment.grafanaPyroscopeEnabled) {
     return;
   }
 
-  const profiler: PyroscopeProfiler = new PyroscopeProfiler({
+  const cornieJsPaths: Iterable<string> = await fetchCornieDependencies();
+
+  const profiler: PyroscopeProfiler = await PyroscopeProfiler.create({
     applicationName: 'cornie-js-backend-service-game',
     serverAddress: environment.grafanaPyroscopeUrl,
+    sourceMap: {
+      searchDirectories: ['.', ...cornieJsPaths],
+    },
   });
 
   profiler.start();
 
   configureKillSignals(() => void profiler.stop());
+}
+
+async function fetchPackageCornieDependencies(
+  packagePath: string,
+): Promise<string[]> {
+  return Promise.all(
+    (await glob(path.join(packagePath, 'node_modules', '@cornie-js', '*'))).map(
+      async (path: string): Promise<string> => fs.realpath(path),
+    ),
+  );
+}
+
+async function fetchCornieDependencies(): Promise<Iterable<string>> {
+  const pathsSet: Set<string> = new Set();
+
+  let packagePaths: string[] = ['.'];
+
+  while (packagePaths.length > 0) {
+    packagePaths = (
+      await Promise.all(packagePaths.map(fetchPackageCornieDependencies))
+    )
+      .flat()
+      .filter((packagePath: string) => !pathsSet.has(packagePath));
+
+    for (const packagePath of packagePaths) {
+      pathsSet.add(packagePath);
+    }
+  }
+
+  return pathsSet.values();
 }
 
 async function main(): Promise<void> {
@@ -64,8 +103,7 @@ async function main(): Promise<void> {
   const environment: Environment = environmentService.getEnvironment();
 
   configureTracer(environment);
-
-  configureProfiler(environment);
+  await configureProfiler(environment);
 }
 
 await main();
