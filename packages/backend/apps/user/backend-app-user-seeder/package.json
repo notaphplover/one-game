@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-app-user-seeds": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
-    "@nestjs/common": "10.2.9",
+    "@nestjs/common": "10.2.10",
     "@nestjs/typeorm": "10.0.1",
     "typeorm": "0.3.17"
   },
