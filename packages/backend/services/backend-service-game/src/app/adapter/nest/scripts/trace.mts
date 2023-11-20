@@ -39,12 +39,12 @@ function configureTracer(environment: Environment): void {
   configureKillSignals(() => void tracer.stop());
 }
 
-function configureProfiler(environment: Environment): void {
+async function configureProfiler(environment: Environment): Promise<void> {
   if (!environment.grafanaPyroscopeEnabled) {
     return;
   }
 
-  const profiler: PyroscopeProfiler = new PyroscopeProfiler({
+  const profiler: PyroscopeProfiler = await PyroscopeProfiler.create({
     applicationName: 'cornie-js-backend-service-game',
     serverAddress: environment.grafanaPyroscopeUrl,
   });
@@ -64,8 +64,7 @@ async function main(): Promise<void> {
   const environment: Environment = environmentService.getEnvironment();
 
   configureTracer(environment);
-
-  configureProfiler(environment);
+  await configureProfiler(environment);
 }
 
 await main();
