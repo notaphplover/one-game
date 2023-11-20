@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, Response } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
@@ -23,6 +23,7 @@ describe(GameQueryResolver.name, () => {
     };
 
     httpClientMock = {
+      getGame: jest.fn(),
       getGamesMine: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
@@ -30,6 +31,209 @@ describe(GameQueryResolver.name, () => {
       gameGraphQlFromGameV1BuilderMock,
       httpClientMock,
     );
+  });
+
+  describe('.gameById', () => {
+    describe('when called, and httpClient.getGame() returns a Response with status code 200', () => {
+      let firstArgFixture: unknown;
+      let argsFixture: graphqlModels.GameQueryGameByIdArgs;
+      let requestFixture: Request;
+
+      let responseFixture: Response<
+        Record<string, string>,
+        apiModels.GameV1,
+        HttpStatus.OK
+      >;
+
+      let gameFixture: graphqlModels.Game;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        firstArgFixture = Symbol();
+        argsFixture = {
+          id: 'game-id',
+        };
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+
+        responseFixture = {
+          body: Symbol() as unknown as apiModels.GameV1,
+          headers: {},
+          statusCode: HttpStatus.OK,
+        };
+
+        gameGraphQlFromGameV1BuilderMock.build.mockReturnValueOnce(gameFixture);
+
+        httpClientMock.getGame.mockResolvedValueOnce(responseFixture);
+
+        result = await gameQueryResolver.gameById(
+          firstArgFixture,
+          argsFixture,
+          requestFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.getGame()', () => {
+        expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.getGame).toHaveBeenCalledWith(
+          requestFixture.headers,
+          {
+            gameId: argsFixture.id,
+          },
+        );
+      });
+
+      it('should call gameGraphQlFromGameV1Builder.build()', () => {
+        expect(gameGraphQlFromGameV1BuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(gameGraphQlFromGameV1BuilderMock.build).toHaveBeenCalledWith(
+          responseFixture.body,
+        );
+      });
+
+      it('should return response body', () => {
+        expect(result).toBe(gameFixture);
+      });
+    });
+
+    describe('when called, and httpClient.getGame() returns a Response with status code 401', () => {
+      let firstArgFixture: unknown;
+      let argsFixture: graphqlModels.GameQueryGameByIdArgs;
+      let requestFixture: Request;
+
+      let responseFixture: Response<
+        Record<string, string>,
+        apiModels.ErrorV1,
+        HttpStatus.UNAUTHORIZED
+      >;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        firstArgFixture = Symbol();
+        argsFixture = {
+          id: 'game-id',
+        };
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+
+        responseFixture = {
+          body: {
+            description: 'Error description fixture',
+          },
+          headers: {},
+          statusCode: HttpStatus.UNAUTHORIZED,
+        };
+
+        httpClientMock.getGame.mockResolvedValueOnce(responseFixture);
+
+        try {
+          await gameQueryResolver.gameById(
+            firstArgFixture,
+            argsFixture,
+            requestFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.getGame()', () => {
+        expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.getGame).toHaveBeenCalledWith(
+          requestFixture.headers,
+          {
+            gameId: argsFixture.id,
+          },
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.missingCredentials,
+          message: responseFixture.body.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and httpClient.getGame() returns a Response with status code 404', () => {
+      let firstArgFixture: unknown;
+      let argsFixture: graphqlModels.GameQueryGameByIdArgs;
+      let requestFixture: Request;
+
+      let responseFixture: Response<
+        Record<string, string>,
+        apiModels.ErrorV1,
+        HttpStatus.NOT_FOUND
+      >;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        firstArgFixture = Symbol();
+        argsFixture = {
+          id: 'game-id',
+        };
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+
+        responseFixture = {
+          body: {
+            description: 'Error description fixture',
+          },
+          headers: {},
+          statusCode: HttpStatus.NOT_FOUND,
+        };
+
+        httpClientMock.getGame.mockResolvedValueOnce(responseFixture);
+
+        result = await gameQueryResolver.gameById(
+          firstArgFixture,
+          argsFixture,
+          requestFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.getGame()', () => {
+        expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.getGame).toHaveBeenCalledWith(
+          requestFixture.headers,
+          {
+            gameId: argsFixture.id,
+          },
+        );
+      });
+
+      it('should return null', () => {
+        expect(result).toBeNull();
+      });
+    });
   });
 
   describe('.myGames', () => {

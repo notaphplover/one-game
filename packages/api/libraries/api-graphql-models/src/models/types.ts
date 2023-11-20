@@ -174,7 +174,12 @@ export type GameMutationCreateGameArgs = {
 };
 
 export type GameQuery = {
+  gameById: Maybe<Game>;
   myGames: Array<Game>;
+};
+
+export type GameQueryGameByIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type GameQueryMyGamesArgs = {
@@ -259,10 +264,15 @@ export type RootMutationUpdateUserMeArgs = {
 export type RootQuery = GameQuery &
   UserQuery & {
     __typename?: 'RootQuery';
+    gameById: Maybe<Game>;
     myGames: Array<Game>;
     userById: Maybe<User>;
     userMe: User;
   };
+
+export type RootQueryGameByIdArgs = {
+  id: Scalars['ID']['input'];
+};
 
 export type RootQueryMyGamesArgs = {
   findMyGamesInput: InputMaybe<FindMyGamesInput>;
@@ -464,11 +474,17 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
     GameMutation: Omit<RootMutation, 'createGame'> & {
       createGame: RefType['Game'];
     };
-    GameQuery: Omit<RootQuery, 'myGames'> & { myGames: Array<RefType['Game']> };
+    GameQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
+      gameById: Maybe<RefType['Game']>;
+      myGames: Array<RefType['Game']>;
+    };
     UserMutation: Omit<RootMutation, 'createGame'> & {
       createGame: RefType['Game'];
     };
-    UserQuery: Omit<RootQuery, 'myGames'> & { myGames: Array<RefType['Game']> };
+    UserQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
+      gameById: Maybe<RefType['Game']>;
+      myGames: Array<RefType['Game']>;
+    };
   }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -787,6 +803,12 @@ export type GameQueryResolvers<
     ResolversParentTypes['GameQuery'] = ResolversParentTypes['GameQuery'],
 > = ResolversObject<{
   __resolveType: TypeResolveFn<'RootQuery', ParentType, ContextType>;
+  gameById: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<GameQueryGameByIdArgs, 'id'>
+  >;
   myGames: Resolver<
     Array<ResolversTypes['Game']>,
     ParentType,
@@ -918,6 +940,12 @@ export type RootQueryResolvers<
   ParentType extends
     ResolversParentTypes['RootQuery'] = ResolversParentTypes['RootQuery'],
 > = ResolversObject<{
+  gameById: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<RootQueryGameByIdArgs, 'id'>
+  >;
   myGames: Resolver<
     Array<ResolversTypes['Game']>,
     ParentType,
