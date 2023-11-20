@@ -1,3 +1,5 @@
+import { SourceMapper } from '@datadog/pprof';
+
 import { ContinuousProfiler } from '../../datadog-pprof/modules/ContinuousProfiler';
 import {
   HeapProfiler,
@@ -28,10 +30,13 @@ const DEFAULT_SAMPLING_INTERVAL_BYTES: number = 1048576;
 const DEFAULT_STACK_DEPTH: number = 64;
 
 export class PyroscopeProfiler {
-  readonly #wallProfiler: ContinuousProfiler<WallProfilerStartArgs> | undefined;
   readonly #heapProfiler: ContinuousProfiler<HeapProfilerStartArgs> | undefined;
+  readonly #wallProfiler: ContinuousProfiler<WallProfilerStartArgs> | undefined;
 
-  constructor(config: PyroscopeConfig) {
+  private constructor(
+    config: PyroscopeConfig,
+    sourceMapper: SourceMapper | undefined,
+  ) {
     const exporter: PyroscopeApiExporter =
       this.#initializePyroscopeApiExporter(config);
 
@@ -39,12 +44,39 @@ export class PyroscopeProfiler {
     const heapProfilerEnabled: boolean = config.heap?.enabled ?? true;
 
     if (wallProfilerEnabled) {
-      this.#wallProfiler = this.#initializeWallProfiler(config, exporter);
+      this.#wallProfiler = this.#initializeWallProfiler(
+        config,
+        exporter,
+        sourceMapper,
+      );
     }
 
     if (heapProfilerEnabled) {
-      this.#heapProfiler = this.#initializeHeapProfiler(config, exporter);
+      this.#heapProfiler = this.#initializeHeapProfiler(
+        config,
+        exporter,
+        sourceMapper,
+      );
     }
+  }
+
+  public static async create(
+    config: PyroscopeConfig,
+  ): Promise<PyroscopeProfiler> {
+    const sourceMapper: SourceMapper | undefined =
+      await PyroscopeProfiler._initializeSourceMapper(config);
+
+    return new PyroscopeProfiler(config, sourceMapper);
+  }
+
+  private static async _initializeSourceMapper(
+    config: PyroscopeConfig,
+  ): Promise<SourceMapper | undefined> {
+    if (config.sourceMap === undefined) {
+      return undefined;
+    }
+
+    return SourceMapper.create(config.sourceMap.searchDirectories);
   }
 
   public start(): void {
@@ -73,13 +105,14 @@ export class PyroscopeProfiler {
   #initializeHeapProfiler(
     config: PyroscopeConfig,
     exporter: PyroscopeApiExporter,
+    sourceMapper: SourceMapper | undefined,
   ): ContinuousProfiler<HeapProfilerStartArgs> {
     const flushIntervalMs: number = this.#calculateFlushIntervalMs(config);
 
     return new ContinuousProfiler({
       exporter,
       flushIntervalMs: flushIntervalMs,
-      profiler: new HeapProfiler(),
+      profiler: new HeapProfiler(sourceMapper),
       startArgs: {
         samplingIntervalBytes:
           config.heap?.samplingIntervalBytes ?? DEFAULT_SAMPLING_INTERVAL_BYTES,
@@ -91,13 +124,14 @@ export class PyroscopeProfiler {
   #initializeWallProfiler(
     config: PyroscopeConfig,
     exporter: PyroscopeApiExporter,
+    sourceMapper: SourceMapper | undefined,
   ): ContinuousProfiler<WallProfilerStartArgs> {
     const flushIntervalMs: number = this.#calculateFlushIntervalMs(config);
 
     return new ContinuousProfiler({
       exporter,
       flushIntervalMs: flushIntervalMs,
-      profiler: new WallProfiler(),
+      profiler: new WallProfiler(sourceMapper),
       startArgs: {
         samplingDurationMs:
           config.wall?.samplingDurationMs ?? DEFAULT_SAMPLING_DURATION_MS,
