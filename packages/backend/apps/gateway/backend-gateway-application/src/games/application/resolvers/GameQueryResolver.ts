@@ -7,6 +7,7 @@ import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
 import { GameGraphQlFromGameV1Builder } from '../builders/GameGraphQlFromGameV1Builder';
 
 interface GetGamesMineQueryArgs extends Record<string, string | string[]> {
@@ -17,7 +18,7 @@ interface GetGamesMineQueryArgs extends Record<string, string | string[]> {
 
 @Injectable()
 export class GameQueryResolver
-  implements graphqlModels.GameQueryResolvers<Request>
+  implements CanonicalResolver<graphqlModels.GameQueryResolvers<Request>>
 {
   readonly #gameGraphQlFromGameV1Builder: Builder<
     graphqlModels.Game,

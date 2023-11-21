@@ -5,9 +5,11 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+
 @Injectable()
 export class AuthMutationResolver
-  implements graphqlModels.AuthMutationResolvers<Request>
+  implements CanonicalResolver<graphqlModels.AuthMutationResolvers<Request>>
 {
   readonly #httpClient: HttpClient;
 
