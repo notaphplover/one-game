@@ -17,6 +17,5 @@ export interface Environment {
   port: number;
   pubSubRedisHost: string;
   pubSubRedisPort: number;
-  seedDummyData: boolean;
   typeOrmDatasourceOptions: Record<string, unknown>;
 }
