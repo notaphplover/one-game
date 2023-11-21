@@ -144,9 +144,10 @@ describe(DeleteUserV1EmailCodeRequestParamHandler.name, () => {
             userFixture,
           );
 
-          result = await deleteUserV1EmailCodeRequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await deleteUserV1EmailCodeRequestParamHandler.handle(
+              requestFixture,
+            );
         });
 
         afterAll(() => {

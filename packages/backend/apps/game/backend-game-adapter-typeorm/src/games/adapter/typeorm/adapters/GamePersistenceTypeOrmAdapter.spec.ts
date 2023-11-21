@@ -154,9 +154,8 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
         findGameTypeOrmServiceMock.findOne.mockResolvedValueOnce(gameFixture);
 
-        result = await gamePersistenceTypeOrmAdapter.findOne(
-          gameFindQueryFixture,
-        );
+        result =
+          await gamePersistenceTypeOrmAdapter.findOne(gameFindQueryFixture);
       });
 
       afterAll(() => {

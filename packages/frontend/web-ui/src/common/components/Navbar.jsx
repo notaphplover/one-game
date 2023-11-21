@@ -31,8 +31,8 @@ export const Navbar = () => {
     return page === 'REGISTER'
       ? '/auth/register'
       : page === 'LOGIN'
-      ? '/auth/login'
-      : '/about';
+        ? '/auth/login'
+        : '/about';
   };
 
   return (

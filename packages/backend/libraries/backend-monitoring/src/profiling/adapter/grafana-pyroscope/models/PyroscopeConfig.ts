@@ -1,9 +1,25 @@
 export interface PyroscopeConfig {
   applicationName: string;
   authToken?: string;
-  samplingDurationMs: number;
-  samplingIntervalBytes: number;
-  samplingIntervalMicros: number;
+  flushIntervalMs?: number;
+  heap?: PyroscopeHeapConfig;
   serverAddress: string;
-  stackDepth: number;
+  sourceMap?: PyroscopeSourceMapConfig;
+  wall?: PyroscopeWallConfig;
+}
+
+export interface PyroscopeHeapConfig {
+  enabled?: boolean;
+  samplingIntervalBytes?: number;
+  stackDepth?: number;
+}
+
+export interface PyroscopeSourceMapConfig {
+  searchDirectories: string[];
+}
+
+export interface PyroscopeWallConfig {
+  enabled?: boolean;
+  samplingDurationMs?: number;
+  samplingIntervalMicros?: number;
 }

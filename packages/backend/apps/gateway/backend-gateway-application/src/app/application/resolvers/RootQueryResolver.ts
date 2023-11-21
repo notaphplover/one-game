@@ -27,6 +27,18 @@ export class RootQueryResolver
     this.#userQueryResolver = userQueryResolver;
   }
 
+  public async gameById(
+    parent: graphqlModels.RootQuery,
+    args: graphqlModels.GameQueryGameByIdArgs,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.Game | null> {
+    return this.#getResolverFunction(
+      this.#gameQueryResolver,
+      this.#gameQueryResolver.gameById,
+    )(parent, args, request, info);
+  }
+
   public myGames(
     parent: graphqlModels.RootQuery,
     args: Partial<graphqlModels.RootQueryMyGamesArgs>,

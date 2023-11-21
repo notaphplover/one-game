@@ -7,6 +7,15 @@ import { GraphQLResolveInfo } from 'graphql';
 import { RootQueryResolver } from './RootQueryResolver';
 
 describe(RootQueryResolver.name, () => {
+  let gameByIdMock: jest.Mock<
+    graphqlModels.ResolverFn<
+      graphqlModels.Maybe<graphqlModels.ResolversTypes['Game']>,
+      unknown,
+      Request,
+      graphqlModels.RequireFields<graphqlModels.GameQueryGameByIdArgs, 'id'>
+    >
+  >;
+
   let myGamesMock: jest.Mock<
     graphqlModels.ResolverFn<
       Array<graphqlModels.ResolversTypes['Game']>,
@@ -46,8 +55,10 @@ describe(RootQueryResolver.name, () => {
 
   beforeAll(() => {
     myGamesMock = jest.fn();
+    gameByIdMock = jest.fn();
 
     gameQueryResolverMock = {
+      gameById: gameByIdMock,
       myGames: myGamesMock,
     } as Partial<
       jest.Mocked<graphqlModels.GameQueryResolvers<Request>>
@@ -67,6 +78,59 @@ describe(RootQueryResolver.name, () => {
       gameQueryResolverMock,
       userQueryResolverMock,
     );
+  });
+
+  describe('.gameById', () => {
+    let gameFixture: graphqlModels.Game;
+
+    beforeAll(() => {
+      gameFixture = Symbol() as unknown as graphqlModels.Game;
+    });
+
+    describe('when called', () => {
+      let parentFixture: graphqlModels.RootQuery;
+      let argsFixture: graphqlModels.GameQueryGameByIdArgs;
+      let requestFixture: Request;
+      let infoFixture: GraphQLResolveInfo;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
+        argsFixture = {
+          id: 'id fixture',
+        };
+        requestFixture = Symbol() as unknown as Request;
+        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
+
+        gameByIdMock.mockReturnValueOnce(Promise.resolve(gameFixture));
+
+        result = await rootQueryResolver.gameById(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameQueryResolver.gameById()', () => {
+        expect(gameByIdMock).toHaveBeenCalledTimes(1);
+        expect(gameByIdMock).toHaveBeenCalledWith(
+          parentFixture,
+          argsFixture,
+          requestFixture,
+          infoFixture,
+        );
+      });
+
+      it('should return Game', () => {
+        expect(result).toBe(gameFixture);
+      });
+    });
   });
 
   describe('.myGames', () => {

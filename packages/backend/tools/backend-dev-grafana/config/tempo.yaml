@@ -31,6 +31,9 @@ compactor:
     block_retention: 1h                # overall Tempo trace retention. set for demo purposes
 
 metrics_generator:
+  processor:
+    service_graphs:
+      max_items: 20000
   registry:
     external_labels:
       source: tempo

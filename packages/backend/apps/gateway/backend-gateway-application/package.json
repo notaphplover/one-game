@@ -9,17 +9,17 @@
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-gateway-env": "workspace:*",
-    "@nestjs/common": "10.2.8",
+    "@nestjs/common": "10.2.10",
     "graphql": "16.8.1"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
     "@cornie-js/api-graphql-models": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
-    "@types/node": "20.9.0",
-    "@typescript-eslint/eslint-plugin": "6.11.0",
-    "@typescript-eslint/parser": "6.11.0",
-    "eslint": "8.53.0",
+    "@types/node": "20.9.3",
+    "@typescript-eslint/eslint-plugin": "6.12.0",
+    "@typescript-eslint/parser": "6.12.0",
+    "eslint": "8.54.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jest": "27.6.0",
@@ -29,7 +29,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.1",
     "ts-node": "10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",

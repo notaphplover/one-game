@@ -1,9 +1,9 @@
-import { Profile } from 'pprof-format';
+import { ProfileExport } from './ProfileExporter';
 
-export interface Profiler {
-  start(): void;
+export interface Profiler<TStartArgs> {
+  start(args: TStartArgs): void;
 
-  stop(): Profile | null;
+  stop(): ProfileExport | null;
 
-  profile(): Profile;
+  profile(): ProfileExport;
 }
