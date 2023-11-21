@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { AuthMutationResolver } from '../../../auth/application/resolvers/AuthMutationResolver';
+import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
 import { GameMutationResolver } from '../../../games/application/resolvers/GameMutationResolver';
 import { UserMutationResolver } from '../../../users/application/resolvers/UserMutationResolver';
 
@@ -12,21 +13,33 @@ export class RootMutationResolver
   implements
     graphqlModels.RootMutationResolvers<Request, graphqlModels.RootMutation>
 {
-  readonly #authMutation: graphqlModels.AuthMutationResolvers<Request>;
-  readonly #gameMutationResolver: graphqlModels.GameMutationResolvers<Request>;
-  readonly #userMutation: graphqlModels.UserMutationResolvers<Request>;
+  readonly #authMutationResolver: CanonicalResolver<
+    graphqlModels.AuthMutationResolvers<Request>
+  >;
+  readonly #gameMutationResolver: CanonicalResolver<
+    graphqlModels.GameMutationResolvers<Request>
+  >;
+  readonly #userMutationResolver: CanonicalResolver<
+    graphqlModels.UserMutationResolvers<Request>
+  >;
 
   constructor(
     @Inject(AuthMutationResolver)
-    authMutationResolver: graphqlModels.AuthMutationResolvers<Request>,
+    authMutationResolver: CanonicalResolver<
+      graphqlModels.AuthMutationResolvers<Request>
+    >,
     @Inject(GameMutationResolver)
-    gameMutationResolver: graphqlModels.GameMutationResolvers<Request>,
+    gameMutationResolver: CanonicalResolver<
+      graphqlModels.GameMutationResolvers<Request>
+    >,
     @Inject(UserMutationResolver)
-    userMutationResolver: graphqlModels.UserMutationResolvers<Request>,
+    userMutationResolver: CanonicalResolver<
+      graphqlModels.UserMutationResolvers<Request>
+    >,
   ) {
-    this.#authMutation = authMutationResolver;
+    this.#authMutationResolver = authMutationResolver;
     this.#gameMutationResolver = gameMutationResolver;
-    this.#userMutation = userMutationResolver;
+    this.#userMutationResolver = userMutationResolver;
   }
 
   public async createAuthByCode(
@@ -35,10 +48,12 @@ export class RootMutationResolver
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.Auth> {
-    return this.#getResolverFunction(
-      this.#authMutation,
-      this.#authMutation.createAuthByCode,
-    )(parent, args, request, info);
+    return this.#authMutationResolver.createAuthByCode(
+      parent,
+      args,
+      request,
+      info,
+    );
   }
 
   public async createAuthByCredentials(
@@ -47,10 +62,12 @@ export class RootMutationResolver
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.Auth> {
-    return this.#getResolverFunction(
-      this.#authMutation,
-      this.#authMutation.createAuthByCredentials,
-    )(parent, args, request, info);
+    return this.#authMutationResolver.createAuthByCredentials(
+      parent,
+      args,
+      request,
+      info,
+    );
   }
 
   public async createGame(
@@ -59,10 +76,7 @@ export class RootMutationResolver
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.Game> {
-    return this.#getResolverFunction(
-      this.#gameMutationResolver,
-      this.#gameMutationResolver.createGame,
-    )(parent, args, request, info);
+    return this.#gameMutationResolver.createGame(parent, args, request, info);
   }
 
   public async createUser(
@@ -71,10 +85,30 @@ export class RootMutationResolver
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.User> {
-    return this.#getResolverFunction(
-      this.#userMutation,
-      this.#userMutation.createUser,
-    )(parent, args, request, info);
+    return this.#userMutationResolver.createUser(parent, args, request, info);
+  }
+
+  public async passGameTurn(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.GameMutationPassGameTurnArgs,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.Game | null> {
+    return this.#gameMutationResolver.passGameTurn(parent, args, request, info);
+  }
+
+  public async playGameCards(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.GameMutationPlayGameCardsArgs,
+    request: Request,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.Game | null> {
+    return this.#gameMutationResolver.playGameCards(
+      parent,
+      args,
+      request,
+      info,
+    );
   }
 
   public async updateUserMe(
@@ -83,30 +117,6 @@ export class RootMutationResolver
     request: Request,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.User> {
-    return this.#getResolverFunction(
-      this.#userMutation,
-      this.#userMutation.updateUserMe,
-    )(parent, args, request, info);
-  }
-
-  #getResolverFunction<TResult, TArgs>(
-    self: unknown,
-    resolver: graphqlModels.Resolver<
-      TResult,
-      graphqlModels.RootMutation,
-      Request,
-      TArgs
-    >,
-  ): graphqlModels.ResolverFn<
-    TResult,
-    graphqlModels.RootMutation,
-    Request,
-    TArgs
-  > {
-    if (typeof resolver === 'function') {
-      return resolver.bind(self);
-    } else {
-      return resolver.resolve.bind(self);
-    }
+    return this.#userMutationResolver.updateUserMe(parent, args, request, info);
   }
 }

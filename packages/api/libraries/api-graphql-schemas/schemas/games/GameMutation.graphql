@@ -1,6 +1,10 @@
 #import Game from './Game.graphql'
 #import GameCreateInput from './GameCreateInput.graphql'
+#import GamePassTurnInput from './GamePassTurnInput.graphql'
+#import GamePlayCardsInput from './GamePlayCardsInput.graphql'
 
 interface GameMutation {
   createGame(gameCreateInput: GameCreateInput!): Game!
+  passGameTurn(gameId: ID!, gamePassTurnInput: GamePassTurnInput!): Game
+  playGameCards(gameId: ID!, gamePlayCardsInput: GamePlayCardsInput!): Game
 }

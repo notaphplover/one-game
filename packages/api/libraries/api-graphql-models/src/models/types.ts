@@ -167,10 +167,32 @@ export type GameDirection = 'antiClockwise' | 'clockwise';
 
 export type GameMutation = {
   createGame: Game;
+  passGameTurn: Maybe<Game>;
+  playGameCards: Maybe<Game>;
 };
 
 export type GameMutationCreateGameArgs = {
   gameCreateInput: GameCreateInput;
+};
+
+export type GameMutationPassGameTurnArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePassTurnInput: GamePassTurnInput;
+};
+
+export type GameMutationPlayGameCardsArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePlayCardsInput: GamePlayCardsInput;
+};
+
+export type GamePassTurnInput = {
+  slotIndex: Scalars['Int']['input'];
+};
+
+export type GamePlayCardsInput = {
+  cardIndexes: Array<Scalars['Int']['input']>;
+  colorChoice: InputMaybe<CardColor>;
+  slotIndex: Scalars['Int']['input'];
 };
 
 export type GameQuery = {
@@ -238,6 +260,8 @@ export type RootMutation = AuthMutation &
     createAuthByCredentials: Auth;
     createGame: Game;
     createUser: User;
+    passGameTurn: Maybe<Game>;
+    playGameCards: Maybe<Game>;
     updateUserMe: User;
   };
 
@@ -255,6 +279,16 @@ export type RootMutationCreateGameArgs = {
 
 export type RootMutationCreateUserArgs = {
   userCreateInput: UserCreateInput;
+};
+
+export type RootMutationPassGameTurnArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePassTurnInput: GamePassTurnInput;
+};
+
+export type RootMutationPlayGameCardsArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePlayCardsInput: GamePlayCardsInput;
 };
 
 export type RootMutationUpdateUserMeArgs = {
@@ -468,18 +502,33 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
   ResolversObject<{
-    AuthMutation: Omit<RootMutation, 'createGame'> & {
+    AuthMutation: Omit<
+      RootMutation,
+      'createGame' | 'passGameTurn' | 'playGameCards'
+    > & {
       createGame: RefType['Game'];
+      passGameTurn: Maybe<RefType['Game']>;
+      playGameCards: Maybe<RefType['Game']>;
     };
-    GameMutation: Omit<RootMutation, 'createGame'> & {
+    GameMutation: Omit<
+      RootMutation,
+      'createGame' | 'passGameTurn' | 'playGameCards'
+    > & {
       createGame: RefType['Game'];
+      passGameTurn: Maybe<RefType['Game']>;
+      playGameCards: Maybe<RefType['Game']>;
     };
     GameQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
       gameById: Maybe<RefType['Game']>;
       myGames: Array<RefType['Game']>;
     };
-    UserMutation: Omit<RootMutation, 'createGame'> & {
+    UserMutation: Omit<
+      RootMutation,
+      'createGame' | 'passGameTurn' | 'playGameCards'
+    > & {
       createGame: RefType['Game'];
+      passGameTurn: Maybe<RefType['Game']>;
+      playGameCards: Maybe<RefType['Game']>;
     };
     UserQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
       gameById: Maybe<RefType['Game']>;
@@ -523,6 +572,8 @@ export type ResolversTypes = ResolversObject<{
   GameMutation: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['GameMutation']
   >;
+  GamePassTurnInput: GamePassTurnInput;
+  GamePlayCardsInput: GamePlayCardsInput;
   GameQuery: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['GameQuery']
   >;
@@ -582,6 +633,8 @@ export type ResolversParentTypes = ResolversObject<{
   GameCreateInput: GameCreateInput;
   GameCreateInputOptions: GameCreateInputOptions;
   GameMutation: ResolversInterfaceTypes<ResolversParentTypes>['GameMutation'];
+  GamePassTurnInput: GamePassTurnInput;
+  GamePlayCardsInput: GamePlayCardsInput;
   GameQuery: ResolversInterfaceTypes<ResolversParentTypes>['GameQuery'];
   GameSpec: GameSpec;
   ID: Scalars['ID']['output'];
@@ -795,6 +848,21 @@ export type GameMutationResolvers<
     ContextType,
     RequireFields<GameMutationCreateGameArgs, 'gameCreateInput'>
   >;
+  passGameTurn: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<GameMutationPassGameTurnArgs, 'gameId' | 'gamePassTurnInput'>
+  >;
+  playGameCards: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      GameMutationPlayGameCardsArgs,
+      'gameId' | 'gamePlayCardsInput'
+    >
+  >;
 }>;
 
 export type GameQueryResolvers<
@@ -926,6 +994,21 @@ export type RootMutationResolvers<
     ParentType,
     ContextType,
     RequireFields<RootMutationCreateUserArgs, 'userCreateInput'>
+  >;
+  passGameTurn: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationPassGameTurnArgs, 'gameId' | 'gamePassTurnInput'>
+  >;
+  playGameCards: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      RootMutationPlayGameCardsArgs,
+      'gameId' | 'gamePlayCardsInput'
+    >
   >;
   updateUserMe: Resolver<
     ResolversTypes['User'],

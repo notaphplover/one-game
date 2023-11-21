@@ -1,0 +1,7 @@
+#import CardColor from '../cards/CardColor.graphql'
+
+input GamePlayCardsInput {
+  cardIndexes: [Int!]!
+  colorChoice: CardColor
+  slotIndex: Int!
+}
