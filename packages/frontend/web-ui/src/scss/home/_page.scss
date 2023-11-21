@@ -22,37 +22,6 @@
   text-align: center;
 }
 
-.login-form-grid {
-  background-color: var(--cg-text-primary);
-  border-radius: 10px;
-  text-align: center;
-  color: var(--cg-bkg-primary-light);
-  padding: 3rem;
-  margin: 0rem 2rem;
-}
-
-@media (min-width: variables.$sm) {
-  .login-form-grid {
-    margin: 0;
-    width: 450px;
-  }
-}
-
-.register-form-grid {
-  background-color: var(--cg-text-primary);
-  border-radius: 10px;
-  text-align: center;
-  color: var(--cg-bkg-primary-light);
-  padding: 3rem;
-  margin: 0rem 2rem;
-}
-
-@media (min-width: variables.$sm) {
-  .register-form-grid {
-    margin: 0;
-    width: 450px;
-  }
-}
 @media (min-width: variables.$sm) {
   .home-description-mobile {
     display: none;
@@ -65,18 +34,38 @@
   }
 }
 
-.home-auth-container .home-auth-text {
-  color: var(--cg-bkg-primary-dark);
-  display: block;
-  margin: 1rem auto;
-  padding: 2rem 0;
-  text-align: left;
+.home-auth-container {
+  padding: 2rem;
 }
 
-.home-auth-text-game {
+.home-auth-container .home-auth-text {
   color: var(--cg-bkg-primary-dark);
-  text-align: center;
-  padding: 1rem 2rem;
+  padding: 2rem 0;
+  text-align: left;
+  font-size: variables.$font-md;
+}
+
+.home-auth-container .home-auth-text-white {
+  color: var(--cg-text-primary);
+  padding: 2rem 1rem;
+  text-align: left;
+  font-size: variables.$font-sm;
+}
+
+.home-auth-button-container {
+  display: flex;
+  justify-content: end;
+}
+
+.home-auth-button-container .home-auth-button-new-game {
+  background-color: var(--cg-bkg-primary-dark);
+  margin: 2rem auto;
+  padding: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow:
+    0 4px 8px 0 rgba(68, 2, 131, 0.5),
+    0 6px 20px 0 rgba(68, 2, 131, 0.5);
 }
 
 .home-auth-container-games {
@@ -85,29 +74,11 @@
   box-shadow:
     0 4px 8px 0 rgba(68, 2, 131, 0.5),
     0 6px 20px 0 rgba(68, 2, 131, 0.5);
-  color: var(--cg-bkg-primary-dark);
-  padding: 3px 3px;
+  background-color: var(--cg-bkg-primary-dark);
 }
 
-.home-auth-button-container {
-  display: flex;
-  justify-content: end;
-  margin: 1rem auto;
-  padding: 1rem 0;
-}
-
-.pending-game {
-  display: grid;
-  justify-content: center;
-  justify-items: center;
-  border: 1px solid var(--cg-bkg-primary-dark);
-  border-radius: 10px;
-  box-shadow:
-    0 2px 4px 0 rgba(68, 2, 131, 0.5),
-    0 3px 10px 0 rgba(68, 2, 131, 0.5);
-  margin: 5px 5px;
-}
-
-.pending-button-game {
-  padding: 2rem 0;
+@media (min-width: variables.$sm) {
+  .home-auth-container-games {
+    margin: 1rem;
+  }
 }

@@ -24,7 +24,7 @@ html {
 
 body {
   font-family: v.$principal_font;
-  font-size: 1rem;
+  font-size: v.$font-xs;
 }
 
 a:link {
@@ -37,15 +37,15 @@ a:hover {
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: v.$font-lg;
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: v.$font-md;
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: v.$font-sm;
 }
 
 img {
