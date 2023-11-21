@@ -53,7 +53,6 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       ONE_JS_USER_SERVICE_MAIL_USE_TLS: bool(),
       ONE_JS_USER_SERVICE_MAIL_USER: str(),
       ONE_JS_USER_SERVICE_PORT: port(),
-      ONE_JS_USER_SERVICE_SEED_DUMMY: bool(),
       ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS: json(),
     });
 
@@ -84,7 +83,6 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
         useTls: rawEnvironment.ONE_JS_USER_SERVICE_MAIL_USE_TLS,
       },
       port: rawEnvironment.ONE_JS_USER_SERVICE_PORT,
-      seedDummyData: rawEnvironment.ONE_JS_USER_SERVICE_SEED_DUMMY,
       typeOrmDatasourceOptions:
         rawEnvironment.ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS,
     };
