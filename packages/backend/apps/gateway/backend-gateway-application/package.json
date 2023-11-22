@@ -16,7 +16,7 @@
     "@jest/globals": "29.7.0",
     "@cornie-js/api-graphql-models": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
-    "@types/node": "20.9.3",
+    "@types/node": "20.9.4",
     "@typescript-eslint/eslint-plugin": "6.12.0",
     "@typescript-eslint/parser": "6.12.0",
     "eslint": "8.54.0",
