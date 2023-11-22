@@ -21,6 +21,5 @@ export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_USER_SERVICE_MAIL_USE_TLS: boolean;
   ONE_JS_USER_SERVICE_MAIL_USER: string;
   ONE_JS_USER_SERVICE_PORT: number;
-  ONE_JS_USER_SERVICE_SEED_DUMMY: boolean;
   ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS: Record<string, unknown>;
 }

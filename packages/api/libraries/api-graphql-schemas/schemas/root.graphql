@@ -5,6 +5,8 @@
 #import Game from './games/Game.graphql'
 #import GameCreateInput from './games/GameCreateInput.graphql'
 #import GameMutation from './games/GameMutation.graphql'
+#import GamePassTurnInput from './games/GamePassTurnInput.graphql'
+#import GamePlayCardsInput from './games/GamePlayCardsInput.graphql'
 #import GameQuery from './games/GameQuery.graphql'
 #import UserMutation from './users/UserMutation.graphql'
 #import EmailPasswordAuthCreateInput from './auth/EmailPasswordAuthCreateInput.graphql'
@@ -18,6 +20,8 @@ type RootMutation implements AuthMutation & GameMutation & UserMutation {
   createAuthByCredentials(emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput!): Auth!
   createGame(gameCreateInput: GameCreateInput!): Game!
   createUser(userCreateInput: UserCreateInput!): User!
+  passGameTurn(gameId: ID!, gamePassTurnInput: GamePassTurnInput!): Game
+  playGameCards(gameId: ID!, gamePlayCardsInput: GamePlayCardsInput!): Game
   updateUserMe(userUpdateInput: UserUpdateInput!): User!
 }
 

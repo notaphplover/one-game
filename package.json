@@ -33,6 +33,8 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:api:rest": "turbo run build --filter=backend-service-user --filter=backend-service-game",
+    "build:api:graphql": "pnpm run build:api:rest --filter=backend-service-gateway",
     "close:e2e": "turbo run close:e2e",
     "commit": "commit",
     "format": "turbo run format",

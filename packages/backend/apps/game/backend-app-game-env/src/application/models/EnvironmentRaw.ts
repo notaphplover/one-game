@@ -11,7 +11,6 @@ export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_GAME_SERVICE_PORT: number;
   ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST: string;
   ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT: number;
-  ONE_JS_GAME_SERVICE_SEED_DUMMY: boolean;
   ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS: Record<string, unknown>;
   ONE_JS_GAME_SERVICE_JWT_ALGORITHM: JwtAlgorithm;
   ONE_JS_GAME_SERVICE_JWT_AUDIENCE: string;

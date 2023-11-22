@@ -31,6 +31,16 @@ export function buildApolloApplicationResolver(
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootMutation.createUser,
       ),
+      passGameTurn: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.passGameTurn,
+      ),
+      playGameCards: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.playGameCards,
+      ),
       updateUserMe: buildApolloResolver(
         applicationResolver.RootMutation,
         graphQlErrorFromErrorBuilder,
