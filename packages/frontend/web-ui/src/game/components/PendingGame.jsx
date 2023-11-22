@@ -11,7 +11,7 @@ export const PendingGame = ({ game }) => {
       <Link component={RouterLink} to="/auth/register">
         <Button
           type="button"
-          className="pending-button-game-share"
+          className="pending-game-button-share"
           variant="contained"
           startIcon={<Share />}
         >
