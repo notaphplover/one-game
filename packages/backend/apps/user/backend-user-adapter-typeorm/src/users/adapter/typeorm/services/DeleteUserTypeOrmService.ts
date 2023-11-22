@@ -1,27 +1,27 @@
-import { Converter } from '@cornie-js/backend-common';
-import { DeleteTypeOrmService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { DeleteTypeOrmServiceV2 } from '@cornie-js/backend-db';
 import { UserFindQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 
-import { UserFindQueryToUserFindQueryTypeOrmConverter } from '../converters/UserFindQueryToUserFindQueryTypeOrmConverter';
+import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../builders/UserFindQueryTypeOrmFromUserFindQueryBuilder';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class DeleteUserTypeOrmService extends DeleteTypeOrmService<
+export class DeleteUserTypeOrmService extends DeleteTypeOrmServiceV2<
   UserDb,
   UserFindQuery
 > {
   constructor(
     @InjectRepository(UserDb)
     repository: Repository<UserDb>,
-    @Inject(UserFindQueryToUserFindQueryTypeOrmConverter)
-    userFindQueryToUserFindQueryTypeOrmConverter: Converter<
-      UserFindQuery,
-      FindManyOptions<UserDb>
+    @Inject(UserFindQueryTypeOrmFromUserFindQueryBuilder)
+    userFindQueryTypeOrmFromUserFindQueryBuilder: Builder<
+      FindManyOptions<UserDb>,
+      [UserFindQuery]
     >,
   ) {
-    super(repository, userFindQueryToUserFindQueryTypeOrmConverter);
+    super(repository, userFindQueryTypeOrmFromUserFindQueryBuilder);
   }
 }
