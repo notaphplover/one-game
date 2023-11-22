@@ -9,14 +9,14 @@ import { DbModuleOptions } from '../../../foundation/db/adapter/nest/models/DbMo
 import { DbModule } from '../../../foundation/db/adapter/nest/modules/DbModule';
 import { UserCodePersistenceTypeOrmAdapter } from '../typeorm/adapters/UserCodePersistenceTypeOrmAdapter';
 import { UserPersistenceTypeOrmAdapter } from '../typeorm/adapters/UserPersistenceTypeOrmAdapter';
-import { UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter } from '../typeorm/converters/UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter';
-import { UserCodeDbToUserCodeConverter } from '../typeorm/converters/UserCodeDbToUserCodeConverter';
-import { UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter } from '../typeorm/converters/UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter';
-import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from '../typeorm/converters/UserCreateQueryToUserCreateQueryTypeOrmConverter';
-import { UserDbToUserConverter } from '../typeorm/converters/UserDbToUserConverter';
-import { UserFindQueryToUserFindQueryTypeOrmConverter } from '../typeorm/converters/UserFindQueryToUserFindQueryTypeOrmConverter';
-import { UserUpdateQueryToUserFindQueryTypeOrmConverter } from '../typeorm/converters/UserUpdateQueryToUserFindQueryTypeOrmConverter';
-import { UserUpdateQueryToUserSetQueryTypeOrmConverter } from '../typeorm/converters/UserUpdateQueryToUserSetQueryTypeOrmConverter';
+import { UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder } from '../typeorm/builders/UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder';
+import { UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder } from '../typeorm/builders/UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder';
+import { UserCodeFromUserDbCodeBuilder } from '../typeorm/builders/UserCodeFromUserCodeDbBuilder';
+import { UserCreateQueryTypeOrmFromUserCreateQueryBuilder } from '../typeorm/builders/UserCreateQueryTypeOrmFromUserCreateQueryBuilder';
+import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../typeorm/builders/UserFindQueryTypeOrmFromUserFindQueryBuilder';
+import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from '../typeorm/builders/UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
+import { UserFromUserDbBuilder } from '../typeorm/builders/UserFromUserDbBuilder';
+import { UserUpdateQueryFromUserSetQueryTypeOrmBuilder } from '../typeorm/builders/UserUpdateQueryFromUserSetQueryTypeOrmBuilder';
 import { UserCodeDb } from '../typeorm/models/UserCodeDb';
 import { UserDb } from '../typeorm/models/UserDb';
 import { CreateUserCodeTypeOrmService } from '../typeorm/services/CreateUserCodeTypeOrmService';
@@ -49,12 +49,13 @@ export class UserDbModule {
         FindUserCodeTypeOrmService,
         FindUserTypeOrmService,
         UpdateUserTypeOrmService,
-        UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter,
-        UserCodeDbToUserCodeConverter,
-        UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter,
-        UserCreateQueryToUserCreateQueryTypeOrmConverter,
-        UserFindQueryToUserFindQueryTypeOrmConverter,
-        UserDbToUserConverter,
+        UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder,
+        UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder,
+        UserCodeFromUserDbCodeBuilder,
+        UserCreateQueryTypeOrmFromUserCreateQueryBuilder,
+        UserFindQueryTypeOrmFromUserFindQueryBuilder,
+        UserFindQueryTypeOrmFromUserUpdateQueryBuilder,
+        UserFromUserDbBuilder,
         {
           provide: userCodePersistenceOutputPortSymbol,
           useClass: UserCodePersistenceTypeOrmAdapter,
@@ -63,8 +64,7 @@ export class UserDbModule {
           provide: userPersistenceOutputPortSymbol,
           useClass: UserPersistenceTypeOrmAdapter,
         },
-        UserUpdateQueryToUserFindQueryTypeOrmConverter,
-        UserUpdateQueryToUserSetQueryTypeOrmConverter,
+        UserUpdateQueryFromUserSetQueryTypeOrmBuilder,
       ],
     };
   }
