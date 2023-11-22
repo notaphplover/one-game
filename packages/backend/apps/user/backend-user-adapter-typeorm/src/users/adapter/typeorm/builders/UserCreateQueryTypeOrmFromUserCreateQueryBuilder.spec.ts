@@ -5,14 +5,14 @@ import { UserCreateQueryFixtures } from '@cornie-js/backend-user-domain/users/fi
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { UserDb } from '../models/UserDb';
-import { UserCreateQueryToUserCreateQueryTypeOrmConverter } from './UserCreateQueryToUserCreateQueryTypeOrmConverter';
+import { UserCreateQueryTypeOrmFromUserCreateQueryBuilder } from './UserCreateQueryTypeOrmFromUserCreateQueryBuilder';
 
-describe(UserCreateQueryToUserCreateQueryTypeOrmConverter.name, () => {
-  let userCreateQueryToUserCreateQueryTypeOrmConverter: UserCreateQueryToUserCreateQueryTypeOrmConverter;
+describe(UserCreateQueryTypeOrmFromUserCreateQueryBuilder.name, () => {
+  let userCreateQueryTypeOrmFromUserCreateQueryBuilder: UserCreateQueryTypeOrmFromUserCreateQueryBuilder;
 
   beforeAll(() => {
-    userCreateQueryToUserCreateQueryTypeOrmConverter =
-      new UserCreateQueryToUserCreateQueryTypeOrmConverter();
+    userCreateQueryTypeOrmFromUserCreateQueryBuilder =
+      new UserCreateQueryTypeOrmFromUserCreateQueryBuilder();
   });
 
   describe('when called', () => {
@@ -22,7 +22,7 @@ describe(UserCreateQueryToUserCreateQueryTypeOrmConverter.name, () => {
     beforeAll(() => {
       userCreateQueryFixture = UserCreateQueryFixtures.any;
 
-      result = userCreateQueryToUserCreateQueryTypeOrmConverter.convert(
+      result = userCreateQueryTypeOrmFromUserCreateQueryBuilder.build(
         userCreateQueryFixture,
       );
     });

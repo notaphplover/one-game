@@ -5,14 +5,14 @@ import { UserFindQueryFixtures } from '@cornie-js/backend-user-domain/users/fixt
 import { FindManyOptions } from 'typeorm';
 
 import { UserDb } from '../models/UserDb';
-import { UserFindQueryToUserFindQueryTypeOrmConverter } from './UserFindQueryToUserFindQueryTypeOrmConverter';
+import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from './UserFindQueryTypeOrmFromUserFindQueryBuilder';
 
-describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
-  let userFindQueryToUserFindQueryTypeOrmConverter: UserFindQueryToUserFindQueryTypeOrmConverter;
+describe(UserFindQueryTypeOrmFromUserFindQueryBuilder.name, () => {
+  let userFindQueryTypeOrmFromUserFindQueryBuilder: UserFindQueryTypeOrmFromUserFindQueryBuilder;
 
   beforeAll(() => {
-    userFindQueryToUserFindQueryTypeOrmConverter =
-      new UserFindQueryToUserFindQueryTypeOrmConverter();
+    userFindQueryTypeOrmFromUserFindQueryBuilder =
+      new UserFindQueryTypeOrmFromUserFindQueryBuilder();
   });
 
   describe('having a UserFindQuery with no properties', () => {
@@ -27,7 +27,7 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
 
       beforeAll(() => {
         result =
-          userFindQueryToUserFindQueryTypeOrmConverter.convert(
+          userFindQueryTypeOrmFromUserFindQueryBuilder.build(
             userFindQueryFixture,
           );
       });
@@ -53,7 +53,7 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
 
       beforeAll(() => {
         result =
-          userFindQueryToUserFindQueryTypeOrmConverter.convert(
+          userFindQueryTypeOrmFromUserFindQueryBuilder.build(
             userFindQueryFixture,
           );
       });
@@ -82,7 +82,7 @@ describe(UserFindQueryToUserFindQueryTypeOrmConverter.name, () => {
 
       beforeAll(() => {
         result =
-          userFindQueryToUserFindQueryTypeOrmConverter.convert(
+          userFindQueryTypeOrmFromUserFindQueryBuilder.build(
             userFindQueryFixture,
           );
       });

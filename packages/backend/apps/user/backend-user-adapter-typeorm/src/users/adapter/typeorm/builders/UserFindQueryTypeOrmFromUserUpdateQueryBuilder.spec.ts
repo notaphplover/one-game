@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import {
   UserFindQuery,
   UserUpdateQuery,
@@ -9,23 +9,23 @@ import { UserUpdateQueryFixtures } from '@cornie-js/backend-user-domain/users/fi
 import { FindManyOptions } from 'typeorm';
 
 import { UserDb } from '../models/UserDb';
-import { UserUpdateQueryToUserFindQueryTypeOrmConverter } from './UserUpdateQueryToUserFindQueryTypeOrmConverter';
+import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from './UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
 
-describe(UserUpdateQueryToUserFindQueryTypeOrmConverter.name, () => {
-  let userFindQueryToUserFindQueryTypeOrmConverterMock: jest.Mocked<
-    Converter<UserFindQuery, FindManyOptions<UserDb>>
+describe(UserFindQueryTypeOrmFromUserUpdateQueryBuilder.name, () => {
+  let userFindQueryTypeOrmFromUserFindQueryBuilderMock: jest.Mocked<
+    Builder<FindManyOptions<UserDb>, [UserFindQuery]>
   >;
 
-  let userUpdateQueryToUserFindQueryTypeOrmConverter: UserUpdateQueryToUserFindQueryTypeOrmConverter;
+  let userUpdateQueryToUserFindQueryTypeOrmConverter: UserFindQueryTypeOrmFromUserUpdateQueryBuilder;
 
   beforeAll(() => {
-    userFindQueryToUserFindQueryTypeOrmConverterMock = {
-      convert: jest.fn(),
+    userFindQueryTypeOrmFromUserFindQueryBuilderMock = {
+      build: jest.fn(),
     };
 
     userUpdateQueryToUserFindQueryTypeOrmConverter =
-      new UserUpdateQueryToUserFindQueryTypeOrmConverter(
-        userFindQueryToUserFindQueryTypeOrmConverterMock,
+      new UserFindQueryTypeOrmFromUserUpdateQueryBuilder(
+        userFindQueryTypeOrmFromUserFindQueryBuilderMock,
       );
   });
 
@@ -44,11 +44,11 @@ describe(UserUpdateQueryToUserFindQueryTypeOrmConverter.name, () => {
       beforeAll(() => {
         userFindTypeOrmOptionsFixture = {};
 
-        userFindQueryToUserFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
+        userFindQueryTypeOrmFromUserFindQueryBuilderMock.build.mockReturnValueOnce(
           userFindTypeOrmOptionsFixture,
         );
 
-        result = userUpdateQueryToUserFindQueryTypeOrmConverter.convert(
+        result = userUpdateQueryToUserFindQueryTypeOrmConverter.build(
           userUpdateQueryFixture,
         );
       });
@@ -57,12 +57,12 @@ describe(UserUpdateQueryToUserFindQueryTypeOrmConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call UserFindQueryToUserFindQueryTypeOrmConverter.convert()', () => {
+      it('should call userFindQueryTypeOrmFromUserFindQueryBuilder.build()', () => {
         expect(
-          userFindQueryToUserFindQueryTypeOrmConverterMock.convert,
+          userFindQueryTypeOrmFromUserFindQueryBuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          userFindQueryToUserFindQueryTypeOrmConverterMock.convert,
+          userFindQueryTypeOrmFromUserFindQueryBuilderMock.build,
         ).toHaveBeenCalledWith(userUpdateQueryFixture.userFindQuery);
       });
 

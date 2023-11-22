@@ -1,5 +1,5 @@
-import { Converter } from '@cornie-js/backend-common';
-import { FindTypeOrmService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { FindTypeOrmServiceV2 } from '@cornie-js/backend-db';
 import {
   UserCode,
   UserCodeFindQuery,
@@ -8,12 +8,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 
-import { UserCodeDbToUserCodeConverter } from '../converters/UserCodeDbToUserCodeConverter';
-import { UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter } from '../converters/UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter';
+import { UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder } from '../builders/UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder';
+import { UserCodeFromUserDbCodeBuilder } from '../builders/UserCodeFromUserCodeDbBuilder';
 import { UserCodeDb } from '../models/UserCodeDb';
 
 @Injectable()
-export class FindUserCodeTypeOrmService extends FindTypeOrmService<
+export class FindUserCodeTypeOrmService extends FindTypeOrmServiceV2<
   UserCode,
   UserCodeDb,
   UserCodeFindQuery
@@ -21,18 +21,18 @@ export class FindUserCodeTypeOrmService extends FindTypeOrmService<
   constructor(
     @InjectRepository(UserCodeDb)
     repository: Repository<UserCodeDb>,
-    @Inject(UserCodeDbToUserCodeConverter)
-    userCodeDbToUserCodeConverter: Converter<UserCodeDb, UserCode>,
-    @Inject(UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter)
-    userCodeFindQueryToUserCodeFindQueryTypeOrmConverter: Converter<
-      UserCodeFindQuery,
-      FindManyOptions<UserCodeDb>
+    @Inject(UserCodeFromUserDbCodeBuilder)
+    userCodeFromUserDbCodeBuilder: Builder<UserCode, [UserCodeDb]>,
+    @Inject(UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder)
+    userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder: Builder<
+      FindManyOptions<UserCodeDb>,
+      [UserCodeFindQuery]
     >,
   ) {
     super(
       repository,
-      userCodeDbToUserCodeConverter,
-      userCodeFindQueryToUserCodeFindQueryTypeOrmConverter,
+      userCodeFromUserDbCodeBuilder,
+      userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder,
     );
   }
 }

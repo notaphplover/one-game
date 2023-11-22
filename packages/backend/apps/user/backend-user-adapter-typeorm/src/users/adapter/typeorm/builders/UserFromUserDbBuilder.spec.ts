@@ -4,13 +4,13 @@ import { User } from '@cornie-js/backend-user-domain/users';
 
 import { UserDbFixtures } from '../fixtures/UserDbFixtures';
 import { UserDb } from '../models/UserDb';
-import { UserDbToUserConverter } from './UserDbToUserConverter';
+import { UserFromUserDbBuilder } from './UserFromUserDbBuilder';
 
-describe(UserDbToUserConverter.name, () => {
-  let userDbToUserConverter: UserDbToUserConverter;
+describe(UserFromUserDbBuilder.name, () => {
+  let userFromUserDbBuilder: UserFromUserDbBuilder;
 
   beforeAll(() => {
-    userDbToUserConverter = new UserDbToUserConverter();
+    userFromUserDbBuilder = new UserFromUserDbBuilder();
   });
 
   describe('when called', () => {
@@ -20,7 +20,7 @@ describe(UserDbToUserConverter.name, () => {
     beforeAll(() => {
       userDbFixture = UserDbFixtures.any;
 
-      result = userDbToUserConverter.convert(userDbFixture);
+      result = userFromUserDbBuilder.build(userDbFixture);
     });
 
     it('should return a user', () => {

@@ -1,4 +1,4 @@
-import { Converter, Writable } from '@cornie-js/backend-common';
+import { Builder, Writable } from '@cornie-js/backend-common';
 import { UserCodeFindQuery } from '@cornie-js/backend-user-domain/users';
 import { Injectable } from '@nestjs/common';
 import { FindManyOptions, FindOptionsWhere } from 'typeorm';
@@ -6,10 +6,10 @@ import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 import { UserCodeDb } from '../models/UserCodeDb';
 
 @Injectable()
-export class UserCodeFindQueryToUserCodeFindQueryTypeOrmConverter
-  implements Converter<UserCodeFindQuery, FindManyOptions<UserCodeDb>>
+export class UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder
+  implements Builder<FindManyOptions<UserCodeDb>, [UserCodeFindQuery]>
 {
-  public convert(
+  public build(
     userCodeFindQuery: UserCodeFindQuery,
   ): FindManyOptions<UserCodeDb> {
     const userCodeFindQueryTypeOrmWhere: Writable<

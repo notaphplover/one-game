@@ -4,13 +4,13 @@ import { UserCode } from '@cornie-js/backend-user-domain/users';
 
 import { UserCodeDbFixtures } from '../fixtures/UserCodeDbFixtures';
 import { UserCodeDb } from '../models/UserCodeDb';
-import { UserCodeDbToUserCodeConverter } from './UserCodeDbToUserCodeConverter';
+import { UserCodeFromUserDbCodeBuilder } from './UserCodeFromUserCodeDbBuilder';
 
-describe(UserCodeDbToUserCodeConverter.name, () => {
-  let userCodeDbToUserCodeConverter: UserCodeDbToUserCodeConverter;
+describe(UserCodeFromUserDbCodeBuilder.name, () => {
+  let userCodeFromUserCodeDbBuilder: UserCodeFromUserDbCodeBuilder;
 
   beforeAll(() => {
-    userCodeDbToUserCodeConverter = new UserCodeDbToUserCodeConverter();
+    userCodeFromUserCodeDbBuilder = new UserCodeFromUserDbCodeBuilder();
   });
 
   describe('.convert', () => {
@@ -24,7 +24,7 @@ describe(UserCodeDbToUserCodeConverter.name, () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = userCodeDbToUserCodeConverter.convert(userCodeDbFixture);
+        result = userCodeFromUserCodeDbBuilder.build(userCodeDbFixture);
       });
 
       it('should return a UserCode', () => {

@@ -1,4 +1,4 @@
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { UserCodeCreateQuery } from '@cornie-js/backend-user-domain/users';
 import { Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
@@ -6,10 +6,10 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { UserCodeDb } from '../models/UserCodeDb';
 
 @Injectable()
-export class UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter
-  implements Converter<UserCodeCreateQuery, QueryDeepPartialEntity<UserCodeDb>>
+export class UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder
+  implements Builder<QueryDeepPartialEntity<UserCodeDb>, [UserCodeCreateQuery]>
 {
-  public convert(
+  public build(
     userCodeCreateQuery: UserCodeCreateQuery,
   ): QueryDeepPartialEntity<UserCodeDb> {
     return {

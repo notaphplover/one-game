@@ -5,17 +5,17 @@ import { UserUpdateQueryFixtures } from '@cornie-js/backend-user-domain/users/fi
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { UserDb } from '../models/UserDb';
-import { UserUpdateQueryToUserSetQueryTypeOrmConverter } from './UserUpdateQueryToUserSetQueryTypeOrmConverter';
+import { UserUpdateQueryFromUserSetQueryTypeOrmBuilder } from './UserUpdateQueryFromUserSetQueryTypeOrmBuilder';
 
-describe(UserUpdateQueryToUserSetQueryTypeOrmConverter.name, () => {
-  let userUpdateQueryToUserSetQueryTypeOrmConverter: UserUpdateQueryToUserSetQueryTypeOrmConverter;
+describe(UserUpdateQueryFromUserSetQueryTypeOrmBuilder.name, () => {
+  let userUpdateQueryToUserSetQueryTypeOrmBuilder: UserUpdateQueryFromUserSetQueryTypeOrmBuilder;
 
   beforeAll(() => {
-    userUpdateQueryToUserSetQueryTypeOrmConverter =
-      new UserUpdateQueryToUserSetQueryTypeOrmConverter();
+    userUpdateQueryToUserSetQueryTypeOrmBuilder =
+      new UserUpdateQueryFromUserSetQueryTypeOrmBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a UserUpdateQuery with active', () => {
       let userUpdateQueryFixture: UserUpdateQuery;
 
@@ -27,7 +27,7 @@ describe(UserUpdateQueryToUserSetQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = userUpdateQueryToUserSetQueryTypeOrmConverter.convert(
+          result = userUpdateQueryToUserSetQueryTypeOrmBuilder.build(
             userUpdateQueryFixture,
           );
         });
@@ -53,7 +53,7 @@ describe(UserUpdateQueryToUserSetQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = userUpdateQueryToUserSetQueryTypeOrmConverter.convert(
+          result = userUpdateQueryToUserSetQueryTypeOrmBuilder.build(
             userUpdateQueryFixture,
           );
         });
