@@ -5,7 +5,7 @@ import { LogoCard } from '../../common/components/LogoCard';
 
 export const Home = () => {
   return (
-    <CornieLayout withFooter withNavBar>
+    <CornieLayout id="home-page" withFooter withNavBar>
       <Grid container>
         <Grid item xs={12}>
           <Box component="div" className="page-section-container">

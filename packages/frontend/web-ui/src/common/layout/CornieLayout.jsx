@@ -22,6 +22,7 @@ function getLayoutBoxClassName(withFooter, withNavBar) {
 
 export const CornieLayout = ({
   children,
+  id,
   withFooter = false,
   withNavBar = false,
 }) => {
@@ -29,7 +30,11 @@ export const CornieLayout = ({
   const footer = withFooter === true ? <Footer /> : undefined;
 
   return (
-    <Box className={getLayoutBoxClassName(withFooter, withNavBar)}>
+    <Box
+      component="div"
+      className={getLayoutBoxClassName(withFooter, withNavBar)}
+      id={id}
+    >
       {navbar}
 
       <article>{children}</article>

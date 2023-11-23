@@ -23,7 +23,7 @@ export const HomeWithAuth = () => {
   }
 
   return (
-    <CornieLayout withFooter withNavBar>
+    <CornieLayout id="home-page-with-auth" withFooter withNavBar>
       <Box
         component="div"
         className="page-section-container home-auth-container"
