@@ -68,6 +68,11 @@
     0 6px 20px 0 rgba(68, 2, 131, 0.5);
 }
 
+.home-auth-button-container .home-auth-button-new-game:hover {
+  background-color: var(--cg-bkg-primary-light);
+  font-weight: bold;
+}
+
 .home-auth-container-games {
   border: 1px solid var(--cg-bkg-primary-dark);
   border-radius: 10px;
