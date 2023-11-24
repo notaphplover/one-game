@@ -12,6 +12,8 @@ import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModul
 import { GameOptionsPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameOptionsPersistenceTypeOrmAdapter';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
+import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from '../../typeorm/builders/GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder';
+import { GameSpecFromGameSpecDbBuilder } from '../../typeorm/builders/GameSpecFromGameSpecDbBuilder';
 import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../../typeorm/converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
@@ -35,6 +37,7 @@ import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { GameSpecDb } from '../../typeorm/models/GameSpecDb';
 import { CreateGameOptionsTypeOrmService } from '../../typeorm/services/CreateGameOptionsTypeOrmService';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
+import { CreateGameSpecTypeOrmService } from '../../typeorm/services/CreateGameSpecTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
 import { FindGameOptionsTypeOrmService } from '../../typeorm/services/FindGameOptionsTypeOrmService';
 import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
@@ -65,6 +68,7 @@ export class GameDbModule {
       providers: [
         CreateGameOptionsTypeOrmService,
         CreateGameSlotTypeOrmService,
+        CreateGameSpecTypeOrmService,
         CreateGameTypeOrmService,
         FindGameTypeOrmService,
         FindGameOptionsTypeOrmService,
@@ -88,6 +92,8 @@ export class GameDbModule {
         GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter,
         GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
         GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
+        GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder,
+        GameSpecFromGameSpecDbBuilder,
         GameStatusToGameStatusDbConverter,
         GameUpdateQueryToGameFindQueryTypeOrmConverter,
         GameUpdateQueryToGameSetQueryTypeOrmConverter,
