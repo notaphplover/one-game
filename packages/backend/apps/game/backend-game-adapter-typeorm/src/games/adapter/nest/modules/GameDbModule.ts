@@ -2,6 +2,7 @@ import {
   gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
+  gameSpecPersistenceOutputPortSymbol,
 } from '@cornie-js/backend-game-application/games';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +13,7 @@ import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModul
 import { GameOptionsPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameOptionsPersistenceTypeOrmAdapter';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
+import { GameSpecPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSpecPersistenceTypeOrmAdapter';
 import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from '../../typeorm/builders/GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder';
 import { GameSpecFromGameSpecDbBuilder } from '../../typeorm/builders/GameSpecFromGameSpecDbBuilder';
 import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../../typeorm/converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
@@ -52,6 +54,7 @@ export class GameDbModule {
         gameOptionsPersistenceOutputPortSymbol,
         gamePersistenceOutputPortSymbol,
         gameSlotPersistenceOutputPortSymbol,
+        gameSpecPersistenceOutputPortSymbol,
       ],
       global: false,
       imports: [
@@ -94,6 +97,10 @@ export class GameDbModule {
         GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
         GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder,
         GameSpecFromGameSpecDbBuilder,
+        {
+          provide: gameSpecPersistenceOutputPortSymbol,
+          useClass: GameSpecPersistenceTypeOrmAdapter,
+        },
         GameStatusToGameStatusDbConverter,
         GameUpdateQueryToGameFindQueryTypeOrmConverter,
         GameUpdateQueryToGameSetQueryTypeOrmConverter,
