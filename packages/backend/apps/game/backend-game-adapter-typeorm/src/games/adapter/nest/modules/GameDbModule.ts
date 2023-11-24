@@ -32,6 +32,7 @@ import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/con
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameOptionsDb } from '../../typeorm/models/GameOptionsDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
+import { GameSpecDb } from '../../typeorm/models/GameSpecDb';
 import { CreateGameOptionsTypeOrmService } from '../../typeorm/services/CreateGameOptionsTypeOrmService';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
@@ -53,7 +54,12 @@ export class GameDbModule {
       imports: [
         CardDbModule,
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([GameDb, GameOptionsDb, GameSlotDb]),
+        TypeOrmModule.forFeature([
+          GameDb,
+          GameOptionsDb,
+          GameSlotDb,
+          GameSpecDb,
+        ]),
       ],
       module: GameDbModule,
       providers: [
