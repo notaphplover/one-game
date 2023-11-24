@@ -5,7 +5,7 @@ import { httpClient } from '../../common/http/services/HttpService';
 const STATUS_GAME_IDLE = 'idle';
 const STATUS_GAME_PENDING = 'pending';
 export const STATUS_GAME_FULFILLED = 'fulfilled';
-const STATUS_GAME_REJECTED = 'rejected';
+export const STATUS_GAME_REJECTED = 'rejected';
 
 const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error!';
 
