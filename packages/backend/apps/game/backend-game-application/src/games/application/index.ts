@@ -31,6 +31,10 @@ import {
   GameSlotPersistenceOutputPort,
   gameSlotPersistenceOutputPortSymbol,
 } from './ports/output/GameSlotPersistenceOutputPort';
+import {
+  GameSpecPersistenceOutputPort,
+  gameSpecPersistenceOutputPortSymbol,
+} from './ports/output/GameSpecPersistenceOutputPort';
 
 export type {
   BaseGameMessageEvent,
@@ -40,6 +44,7 @@ export type {
   GameOptionsPersistenceOutputPort,
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
+  GameSpecPersistenceOutputPort,
   GameUpdatedMessageEvent,
 };
 
@@ -49,6 +54,7 @@ export {
   GameMiddleware,
   gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,
+  gameSpecPersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
   GetGameGameIdEventsV1SseController,
   GetGameGameIdSlotSlotIdCardsV1RequestController,
