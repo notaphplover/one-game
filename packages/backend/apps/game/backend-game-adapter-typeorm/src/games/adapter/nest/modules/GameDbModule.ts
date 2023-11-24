@@ -2,6 +2,7 @@ import {
   gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
+  gameSpecPersistenceOutputPortSymbol,
 } from '@cornie-js/backend-game-application/games';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +13,9 @@ import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModul
 import { GameOptionsPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameOptionsPersistenceTypeOrmAdapter';
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
+import { GameSpecPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSpecPersistenceTypeOrmAdapter';
+import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from '../../typeorm/builders/GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder';
+import { GameSpecFromGameSpecDbBuilder } from '../../typeorm/builders/GameSpecFromGameSpecDbBuilder';
 import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../../typeorm/converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
@@ -32,8 +36,10 @@ import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/con
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameOptionsDb } from '../../typeorm/models/GameOptionsDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
+import { GameSpecDb } from '../../typeorm/models/GameSpecDb';
 import { CreateGameOptionsTypeOrmService } from '../../typeorm/services/CreateGameOptionsTypeOrmService';
 import { CreateGameSlotTypeOrmService } from '../../typeorm/services/CreateGameSlotTypeOrmService';
+import { CreateGameSpecTypeOrmService } from '../../typeorm/services/CreateGameSpecTypeOrmService';
 import { CreateGameTypeOrmService } from '../../typeorm/services/CreateGameTypeOrmService';
 import { FindGameOptionsTypeOrmService } from '../../typeorm/services/FindGameOptionsTypeOrmService';
 import { FindGameTypeOrmService } from '../../typeorm/services/FindGameTypeOrmService';
@@ -48,17 +54,24 @@ export class GameDbModule {
         gameOptionsPersistenceOutputPortSymbol,
         gamePersistenceOutputPortSymbol,
         gameSlotPersistenceOutputPortSymbol,
+        gameSpecPersistenceOutputPortSymbol,
       ],
       global: false,
       imports: [
         CardDbModule,
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([GameDb, GameOptionsDb, GameSlotDb]),
+        TypeOrmModule.forFeature([
+          GameDb,
+          GameOptionsDb,
+          GameSlotDb,
+          GameSpecDb,
+        ]),
       ],
       module: GameDbModule,
       providers: [
         CreateGameOptionsTypeOrmService,
         CreateGameSlotTypeOrmService,
+        CreateGameSpecTypeOrmService,
         CreateGameTypeOrmService,
         FindGameTypeOrmService,
         FindGameOptionsTypeOrmService,
@@ -82,6 +95,12 @@ export class GameDbModule {
         GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter,
         GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
         GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
+        GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder,
+        GameSpecFromGameSpecDbBuilder,
+        {
+          provide: gameSpecPersistenceOutputPortSymbol,
+          useClass: GameSpecPersistenceTypeOrmAdapter,
+        },
         GameStatusToGameStatusDbConverter,
         GameUpdateQueryToGameFindQueryTypeOrmConverter,
         GameUpdateQueryToGameSetQueryTypeOrmConverter,

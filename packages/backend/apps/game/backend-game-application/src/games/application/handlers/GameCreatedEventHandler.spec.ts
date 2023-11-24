@@ -5,10 +5,12 @@ import { GameOptionsFixtures } from '@cornie-js/backend-game-domain/games/fixtur
 import { GameCreatedEventFixtures } from '../fixtures/GameCreatedEventFixtures';
 import { GameCreatedEvent } from '../models/GameCreatedEvent';
 import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
+import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameCreatedEventHandler } from './GameCreatedEventHandler';
 
 describe(GameCreatedEventHandler.name, () => {
   let gameOptionsPersistenceOutputPortMock: jest.Mocked<GameOptionsPersistenceOutputPort>;
+  let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
 
   let gameCreatedEventHandler: GameCreatedEventHandler;
 
@@ -18,9 +20,13 @@ describe(GameCreatedEventHandler.name, () => {
     } as Partial<
       jest.Mocked<GameOptionsPersistenceOutputPort>
     > as jest.Mocked<GameOptionsPersistenceOutputPort>;
+    gameSpecPersistenceOutputPortMock = {
+      create: jest.fn(),
+    };
 
     gameCreatedEventHandler = new GameCreatedEventHandler(
       gameOptionsPersistenceOutputPortMock,
+      gameSpecPersistenceOutputPortMock,
     );
   });
 
@@ -50,6 +56,15 @@ describe(GameCreatedEventHandler.name, () => {
           gameOptionsPersistenceOutputPortMock.create,
         ).toHaveBeenCalledWith(
           gameCreatedEventFixture.gameCreateQuery.spec.options,
+        );
+      });
+
+      it('should call gameSpecPersistenceOutputPort.create()', () => {
+        expect(gameSpecPersistenceOutputPortMock.create).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.create).toHaveBeenCalledWith(
+          gameCreatedEventFixture.gameCreateQuery.spec,
         );
       });
 
