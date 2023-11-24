@@ -138,13 +138,14 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should call uuidProviderOutputPort.generateV4()', () => {
-        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(2);
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(3);
         expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
       });
 
       it('should call gameCreateQueryFromGameCreateQueryV1Builder.build()', () => {
         const expectedUuidContext: GameCreateQueryContext = {
           gameOptionsId: uuidFixture,
+          gameSpecId: uuidFixture,
           uuid: uuidFixture,
         };
 
@@ -223,13 +224,14 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should call uuidProviderOutputPort.generateV4()', () => {
-        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(2);
+        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(3);
         expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
       });
 
       it('should call gameCreateQueryFromGameCreateQueryV1Builder.build()', () => {
         const expectedUuidContext: GameCreateQueryContext = {
           gameOptionsId: uuidFixture,
+          gameSpecId: uuidFixture,
           uuid: uuidFixture,
         };
 
