@@ -78,7 +78,6 @@ describe(GameV1FromGameBuilder.name, () => {
       cardV1FromCardBuilderMock,
       finishedGameSlotV1FromFinishedGameSlotBuilderMock,
       gameDirectionV1FromGameDirectionBuilderMock,
-      gameSpecV1FromGameSpecBuilderMock,
       nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock,
     );
   });
@@ -164,20 +163,10 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledWith(gameFixture.state.currentDirection);
         });
 
-        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
-            1,
-          );
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.spec,
-          );
-        });
-
         it('should return a GameV1', () => {
           const expected: apiModels.ActiveGameV1 = {
             id: gameFixture.id,
             name: gameFixture.name as string,
-            spec: gameSpecV1Fixture,
             state: {
               currentCard: cardV1Fixture,
               currentColor: cardColorV1Fixture,
@@ -279,19 +268,9 @@ describe(GameV1FromGameBuilder.name, () => {
           ).toHaveBeenCalledWith(gameFixture.state.currentDirection);
         });
 
-        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
-            1,
-          );
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.spec,
-          );
-        });
-
         it('should return a GameV1', () => {
           const expected: apiModels.ActiveGameV1 = {
             id: gameFixture.id,
-            spec: gameSpecV1Fixture,
             state: {
               currentCard: cardV1Fixture,
               currentColor: cardColorV1Fixture,
@@ -344,15 +323,6 @@ describe(GameV1FromGameBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
-            1,
-          );
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.spec,
-          );
-        });
-
         it('should call finishedGameSlotV1FromFinishedGameSlotBuilder.build()', () => {
           expect(
             finishedGameSlotV1FromFinishedGameSlotBuilderMock.build,
@@ -366,7 +336,6 @@ describe(GameV1FromGameBuilder.name, () => {
           const expected: apiModels.FinishedGameV1 = {
             id: gameFixture.id,
             name: gameFixture.name as string,
-            spec: gameSpecV1Fixture,
             state: {
               slots: [finishedGameSlotV1Fixture],
               status: 'finished',
@@ -415,15 +384,6 @@ describe(GameV1FromGameBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
-            1,
-          );
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.spec,
-          );
-        });
-
         it('should call finishedGameSlotV1FromFinishedGameSlotBuilder.build()', () => {
           expect(
             finishedGameSlotV1FromFinishedGameSlotBuilderMock.build,
@@ -436,7 +396,6 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.FinishedGameV1 = {
             id: gameFixture.id,
-            spec: gameSpecV1Fixture,
             state: {
               slots: [finishedGameSlotV1Fixture],
               status: 'finished',
@@ -453,7 +412,7 @@ describe(GameV1FromGameBuilder.name, () => {
       let gameFixture: NonStartedGame;
 
       beforeAll(() => {
-        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        gameFixture = NonStartedGameFixtures.withGameSlotsOne;
         [gameSlotFixture] = gameFixture.state.slots as [NonStartedGameSlot];
       });
 
@@ -482,15 +441,6 @@ describe(GameV1FromGameBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
-            1,
-          );
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.spec,
-          );
-        });
-
         it('should call nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build()', () => {
           expect(
             nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock.build,
@@ -504,7 +454,6 @@ describe(GameV1FromGameBuilder.name, () => {
           const expected: apiModels.NonStartedGameV1 = {
             id: gameFixture.id,
             name: gameFixture.name as string,
-            spec: gameSpecV1Fixture,
             state: {
               slots: [nonStartedGameSlotV1Fixture],
               status: 'nonStarted',
@@ -522,7 +471,7 @@ describe(GameV1FromGameBuilder.name, () => {
 
       beforeAll(() => {
         gameFixture = {
-          ...NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne,
+          ...NonStartedGameFixtures.withGameSlotsOne,
           name: null,
         };
         [gameSlotFixture] = gameFixture.state.slots as [NonStartedGameSlot];
@@ -553,15 +502,6 @@ describe(GameV1FromGameBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
-            1,
-          );
-          expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
-            gameFixture.spec,
-          );
-        });
-
         it('should call nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build()', () => {
           expect(
             nonStartedGameSlotV1FromNonStartedGameSlotBuilderMock.build,
@@ -574,7 +514,6 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.NonStartedGameV1 = {
             id: gameFixture.id,
-            spec: gameSpecV1Fixture,
             state: {
               slots: [nonStartedGameSlotV1Fixture],
               status: 'nonStarted',

@@ -26,8 +26,8 @@ import { GameUpdatedEventHandler } from '../../../application/handlers/GameUpdat
 import { NonStartedGameFilledEventHandler } from '../../../application/handlers/NonStartedGameFilledEventHandler';
 import { GameEventsManagementInputPort } from '../../../application/ports/input/GameEventsManagementInputPort';
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
-import { GameOptionsManagementInputPort } from '../../../application/ports/input/GameOptionsManagementInputPort';
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
+import { GameSpecManagementInputPort } from '../../../application/ports/input/GameSpecManagementInputPort';
 
 @Module({})
 export class GameApplicationModule {
@@ -40,8 +40,8 @@ export class GameApplicationModule {
       exports: [
         GameEventsManagementInputPort,
         GameManagementInputPort,
-        GameOptionsManagementInputPort,
         GameSlotManagementInputPort,
+        GameSpecManagementInputPort,
       ],
       global: false,
       imports: [...(imports ?? []), GameDomainModule, UuidModule, CardModule],
@@ -62,9 +62,9 @@ export class GameApplicationModule {
         GameManagementInputPort,
         GameMessageEventV1FromGameMessageEventBuilder,
         GameOptionsCreateQueryFromGameOptionsV1Builder,
-        GameOptionsManagementInputPort,
         GameOptionsV1FromGameOptionsBuilder,
         GameSlotManagementInputPort,
+        GameSpecManagementInputPort,
         GameSpecV1FromGameSpecBuilder,
         GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
         GameSlotV1FromGameSlotBuilder,

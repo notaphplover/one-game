@@ -205,10 +205,10 @@ paths:
       security:
         - bearerAuth: []
 
-  /v1/games/{gameId}/options:
+  /v1/games/{gameId}/spec:
     get:
-      summary: Get a game options
-      operationId: getGameGameIdOptions
+      summary: Get a game spec
+      operationId: getGameGameIdSpec
       parameters:
         - in: path
           name: gameId
@@ -218,11 +218,11 @@ paths:
           description: Game id
       responses:
         '200':
-          description: Game options found
+          description: Game spec found
           content:
             application/json:
               schema:
-                $ref: 'https://onegame.schemas/api/v1/games/game-options.json'
+                $ref: 'https://onegame.schemas/api/v1/games/game-spec.json'
         '401':
           description: Unauthorized
           content:

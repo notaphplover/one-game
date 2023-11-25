@@ -1,9 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 
 import { BinaryToNumberTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/BinaryToNumberTransformer';
 import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
 import { GameDirectionDb } from './GameDirectionDb';
 import { GameSlotDb } from './GameSlotDb';
+import { GameSpecDb } from './GameSpecDb';
 import { GameStatusDb } from './GameStatusDb';
 
 @Entity({
@@ -97,6 +98,15 @@ export class GameDb {
     },
   )
   public readonly gameSlotsDb!: GameSlotDb[];
+
+  @OneToOne(
+    () => GameSpecDb,
+    (gameSpecDb: GameSpecDb): GameDb => gameSpecDb.game,
+    {
+      eager: true,
+    },
+  )
+  public readonly gameSpecDb!: GameSpecDb;
 
   @Column({
     length: 255,

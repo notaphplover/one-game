@@ -4,6 +4,7 @@ import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameStatusDb } from '../models/GameStatusDb';
 import { GameSlotDbFixtures } from './GameSlotDbFixtures';
+import { GameSpecDbFixtures } from './GameSpecDbFixtures';
 
 export class GameDbFixtures {
   public static get withStatusFinished(): GameDb {
@@ -15,6 +16,7 @@ export class GameDbFixtures {
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.discardPile = '[]';
     fixture.gameSlotsDb = [GameSlotDbFixtures.nonStartedWithPositionZero];
+    fixture.gameSpecDb = GameSpecDbFixtures.any;
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
     fixture.status = GameStatusDb.finished;
@@ -42,6 +44,7 @@ export class GameDbFixtures {
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.discardPile = '[]';
     fixture.gameSlotsDb = [GameSlotDbFixtures.nonStartedWithPositionZero];
+    fixture.gameSpecDb = GameSpecDbFixtures.any;
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
     fixture.status = GameStatusDb.nonStarted;
@@ -80,6 +83,7 @@ export class GameDbFixtures {
     fixture.discardPile = '[]';
     fixture.drawCount = 0;
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
+    fixture.gameSpecDb = GameSpecDbFixtures.any;
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
     fixture.spec = '[{ "amount": 1, "card": 39 }]';
     fixture.status = GameStatusDb.active;

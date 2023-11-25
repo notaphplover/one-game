@@ -18,6 +18,7 @@ import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
 import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
+import { GameSpec } from '../valueObjects/GameSpec';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
 import { GameDrawService } from './GameDrawService';
@@ -49,11 +50,14 @@ export class GameService {
     this.#isGameFinishedSpec = isGameFinishedSpec;
   }
 
-  public buildPassTurnGameUpdateQuery(game: ActiveGame): GameUpdateQuery {
+  public buildPassTurnGameUpdateQuery(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+  ): GameUpdateQuery {
     const isPlayerDrawingCards: boolean = !game.state.currentTurnCardsPlayed;
 
     const gameUpdateQuery: GameUpdateQuery = {
-      currentPlayingSlotIndex: this.#getNextTurnPlayerIndex(game),
+      currentPlayingSlotIndex: this.#getNextTurnPlayerIndex(game, gameSpec),
       currentTurnCardsPlayed: false,
       drawCount: 0,
       gameFindQuery: {
@@ -130,9 +134,12 @@ export class GameService {
     return gameUpdateQuery;
   }
 
-  public buildStartGameUpdateQuery(game: NonStartedGame): GameUpdateQuery {
+  public buildStartGameUpdateQuery(
+    game: NonStartedGame,
+    gameSpec: GameSpec,
+  ): GameUpdateQuery {
     const gameInitialDraws: GameInitialDrawsMutation =
-      this.#gameDrawService.calculateInitialCardsDrawMutation(game.spec);
+      this.#gameDrawService.calculateInitialCardsDrawMutation(gameSpec);
 
     const gameSlotUpdateQueries: GameSlotUpdateQuery[] =
       gameInitialDraws.cards.map(
@@ -414,8 +421,8 @@ export class GameService {
     return 0;
   }
 
-  #getNextTurnPlayerIndex(game: ActiveGame): number {
-    const players: number = game.spec.gameSlotsAmount;
+  #getNextTurnPlayerIndex(game: ActiveGame, gameSpec: GameSpec): number {
+    const players: number = gameSpec.gameSlotsAmount;
 
     const direction: GameDirection = game.state.currentDirection;
 

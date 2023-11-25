@@ -18,6 +18,7 @@ import {
   GameCanHoldMoreGameSlotsSpec,
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameSlotCreateQuery,
+  GameSpec,
   GameStatus,
   NonStartedGame,
   NonStartedGameSlot,
@@ -35,12 +36,16 @@ import {
   GameSlotPersistenceOutputPort,
   gameSlotPersistenceOutputPortSymbol,
 } from '../../ports/output/GameSlotPersistenceOutputPort';
+import {
+  GameSpecPersistenceOutputPort,
+  gameSpecPersistenceOutputPortSymbol,
+} from '../../ports/output/GameSpecPersistenceOutputPort';
 
 @Injectable()
 export class GameSlotManagementInputPort {
   readonly #cardV1FromCardBuilder: Builder<apiModels.CardV1, [Card]>;
-  readonly #gameCanHoldMoreGameSlotsSpec: Spec<[Game]>;
-  readonly #gameCanHoldOnlyOneMoreGameSlotSpec: Spec<[Game]>;
+  readonly #gameCanHoldMoreGameSlotsSpec: Spec<[Game, GameSpec]>;
+  readonly #gameCanHoldOnlyOneMoreGameSlotSpec: Spec<[Game, GameSpec]>;
   readonly #gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
     GameSlotCreateQuery,
     [apiModels.GameIdSlotCreateQueryV1, GameSlotCreateQueryContext]
@@ -50,6 +55,7 @@ export class GameSlotManagementInputPort {
     [ActiveGameSlot | NonStartedGameSlot]
   >;
   readonly #gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort;
+  readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
   readonly #nonStartedGameFilledEventHandler: Handler<
     [NonStartedGameFilledEvent],
     void
@@ -62,7 +68,7 @@ export class GameSlotManagementInputPort {
     @Inject(GameCanHoldMoreGameSlotsSpec)
     gameCanHoldMoreGameSlotsSpec: GameCanHoldMoreGameSlotsSpec,
     @Inject(GameCanHoldOnlyOneMoreGameSlotSpec)
-    gameCanHoldOnlyOneMoreGameSlotSpec: Spec<[Game]>,
+    gameCanHoldOnlyOneMoreGameSlotSpec: Spec<[Game, GameSpec]>,
     @Inject(GameSlotCreateQueryFromGameSlotCreateQueryV1Builder)
     gameSlotCreateQueryFromGameSlotCreateQueryV1Builder: Builder<
       GameSlotCreateQuery,
@@ -75,6 +81,8 @@ export class GameSlotManagementInputPort {
     >,
     @Inject(gameSlotPersistenceOutputPortSymbol)
     gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort,
+    @Inject(gameSpecPersistenceOutputPortSymbol)
+    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(NonStartedGameFilledEventHandler)
     nonStartedGameFilledEventHandler: Handler<
       [NonStartedGameFilledEvent],
@@ -91,6 +99,7 @@ export class GameSlotManagementInputPort {
       gameSlotCreateQueryFromGameSlotCreateQueryV1Builder;
     this.#gameSlotV1FromGameSlotBuilder = gameSlotV1FromGameSlotBuilder;
     this.#gameSlotPersistenceOutputPort = gameSlotPersistenceOutputPort;
+    this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
     this.#nonStartedGameFilledEventHandler = nonStartedGameFilledEventHandler;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
@@ -99,7 +108,9 @@ export class GameSlotManagementInputPort {
     gameSlotCreateQueryV1: apiModels.GameIdSlotCreateQueryV1,
     game: Game,
   ): Promise<apiModels.GameSlotV1> {
-    if (!this.#gameCanHoldMoreGameSlotsSpec.isSatisfiedBy(game)) {
+    const gameSpec: GameSpec = await this.#getGameSpecOrFail(game.id);
+
+    if (!this.#gameCanHoldMoreGameSlotsSpec.isSatisfiedBy(game, gameSpec)) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
         `Unable to process request: game "${game.id}" cannot hold more game slots`,
@@ -115,7 +126,7 @@ export class GameSlotManagementInputPort {
     const gameSlot: ActiveGameSlot | NonStartedGameSlot =
       await this.#gameSlotPersistenceOutputPort.create(gameSlotCreateQuery);
 
-    await this.#handleNonStartedGameFilledEvent(game);
+    await this.#handleNonStartedGameFilledEvent(game, gameSpec);
 
     return this.#gameSlotV1FromGameSlotBuilder.build(gameSlot);
   }
@@ -175,12 +186,28 @@ export class GameSlotManagementInputPort {
     return gameSlot;
   }
 
+  async #getGameSpecOrFail(gameId: string): Promise<GameSpec> {
+    const gameSpec: GameSpec | undefined =
+      await this.#gameSpecPersistenceOutputPort.findOne({ gameId });
+
+    if (gameSpec === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `No game spec was found for game "${gameId}"`,
+      );
+    }
+
+    return gameSpec;
+  }
+
   async #handleNonStartedGameFilledEvent(
     gameBeforeSlotCreation: Game,
+    gameSpec: GameSpec,
   ): Promise<void> {
     if (
       this.#gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy(
         gameBeforeSlotCreation,
+        gameSpec,
       )
     ) {
       /*

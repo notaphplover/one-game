@@ -10,10 +10,12 @@ import {
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CreateGameSpecTypeOrmService } from '../services/CreateGameSpecTypeOrmService';
+import { FindGameSpecTypeOrmService } from '../services/FindGameSpecTypeOrmService';
 import { GameSpecPersistenceTypeOrmAdapter } from './GameSpecPersistenceTypeOrmAdapter';
 
 describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
   let createGameSpecTypeOrmServiceMock: jest.Mocked<CreateGameSpecTypeOrmService>;
+  let findGameSpecTypeOrmServiceMock: jest.Mocked<FindGameSpecTypeOrmService>;
 
   let gameSpecPersistenceTypeOrmAdapter: GameSpecPersistenceTypeOrmAdapter;
 
@@ -26,6 +28,7 @@ describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
 
     gameSpecPersistenceTypeOrmAdapter = new GameSpecPersistenceTypeOrmAdapter(
       createGameSpecTypeOrmServiceMock,
+      findGameSpecTypeOrmServiceMock,
     );
   });
 

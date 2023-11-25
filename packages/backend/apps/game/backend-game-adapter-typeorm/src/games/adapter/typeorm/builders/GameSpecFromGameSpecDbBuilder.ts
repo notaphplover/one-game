@@ -22,6 +22,16 @@ export class GameSpecFromGameSpecDbBuilder
     return {
       cards: this.#convertCardSpecs(gameSpecDb.cardsSpec),
       gameSlotsAmount: gameSpecDb.gameSlotsAmount,
+      options: {
+        chainDraw2Draw2Cards: gameSpecDb.chainDraw2Draw2Cards,
+        chainDraw2Draw4Cards: gameSpecDb.chainDraw2Draw4Cards,
+        chainDraw4Draw2Cards: gameSpecDb.chainDraw4Draw2Cards,
+        chainDraw4Draw4Cards: gameSpecDb.chainDraw4Draw4Cards,
+        playCardIsMandatory: gameSpecDb.playCardIsMandatory,
+        playMultipleSameCards: gameSpecDb.playMultipleSameCards,
+        playWildDraw4IfNoOtherAlternative:
+          gameSpecDb.playWildDraw4IfNoOtherAlternative,
+      },
     };
   }
 
