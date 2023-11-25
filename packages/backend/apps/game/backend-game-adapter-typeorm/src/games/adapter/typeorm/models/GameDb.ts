@@ -117,12 +117,6 @@ export class GameDb {
   public readonly name!: string | null;
 
   @Column({
-    name: 'spec',
-    type: 'json',
-  })
-  public readonly spec!: string;
-
-  @Column({
     name: 'status',
     type: 'smallint',
     width: 2,
