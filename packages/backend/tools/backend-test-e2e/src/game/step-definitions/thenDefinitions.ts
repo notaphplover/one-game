@@ -32,10 +32,6 @@ export function thenCreateGameResponseShouldContainValidGame(
     body: {
       id: () => undefined,
       name: gameCreateQueryV1.name as string,
-      spec: {
-        cardSpecs: () => undefined,
-        gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
-      },
     },
     headers: {},
     statusCode: HttpStatus.OK,
@@ -92,10 +88,6 @@ export function thenGetGameResponseShouldContainStartedGame(
   expectObjectContaining<ResponseType>(response, {
     body: {
       id: gameV1Parameter.game.id,
-      spec: {
-        cardSpecs: () => undefined,
-        gameSlotsAmount: gameV1Parameter.gameCreateQuery.gameSlotsAmount,
-      },
       state: () => undefined,
     },
     headers: {},

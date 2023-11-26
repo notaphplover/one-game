@@ -66,15 +66,10 @@ describe(GameDbToGameConverter.name, () => {
   });
 
   describe('having a non started GameDb', () => {
-    let gameCardSpecDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withStatusNonStartedAndGameSlotsOne;
-
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
-        GameCardSpecDb,
-      ];
     });
 
     describe('when called', () => {
@@ -101,10 +96,6 @@ describe(GameDbToGameConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
-      });
-
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
         expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
@@ -121,15 +112,6 @@ describe(GameDbToGameConverter.name, () => {
         const expected: NonStartedGame = {
           id: gameDbFixture.id,
           name: gameDbFixture.name,
-          spec: {
-            cards: [
-              {
-                amount: gameCardSpecDbFixture.amount,
-                card: cardFixture,
-              },
-            ],
-            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
-          },
           state: {
             slots: [gameSlotFixture],
             status: GameStatus.nonStarted,
@@ -142,15 +124,10 @@ describe(GameDbToGameConverter.name, () => {
   });
 
   describe('having a non started GameDb with two slots', () => {
-    let gameCardSpecDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withStatusNonStartedAndGameSlotsTwo;
-
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
-        GameCardSpecDb,
-      ];
     });
 
     describe('when called', () => {
@@ -179,10 +156,6 @@ describe(GameDbToGameConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
-      });
-
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
         expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
@@ -199,15 +172,6 @@ describe(GameDbToGameConverter.name, () => {
         const expected: NonStartedGame = {
           id: gameDbFixture.id,
           name: gameDbFixture.name,
-          spec: {
-            cards: [
-              {
-                amount: gameCardSpecDbFixture.amount,
-                card: cardFixture,
-              },
-            ],
-            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
-          },
           state: {
             slots: [firstGameSlotFixture, secondGameSlotFixture],
             status: GameStatus.nonStarted,
@@ -220,15 +184,10 @@ describe(GameDbToGameConverter.name, () => {
   });
 
   describe('having a finished GameDb with two slots', () => {
-    let gameCardSpecDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withStatusFinishedAndGameSlotsTwo;
-
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
-        GameCardSpecDb,
-      ];
     });
 
     describe('when called', () => {
@@ -257,10 +216,6 @@ describe(GameDbToGameConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
-      });
-
       it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
         expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
@@ -277,15 +232,6 @@ describe(GameDbToGameConverter.name, () => {
         const expected: FinishedGame = {
           id: gameDbFixture.id,
           name: gameDbFixture.name,
-          spec: {
-            cards: [
-              {
-                amount: gameCardSpecDbFixture.amount,
-                card: cardFixture,
-              },
-            ],
-            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
-          },
           state: {
             slots: [firstGameSlotFixture, secondGameSlotFixture],
             status: GameStatus.finished,
@@ -298,16 +244,11 @@ describe(GameDbToGameConverter.name, () => {
   });
 
   describe('having a started GameDb', () => {
-    let gameCardSpecDbFixture: GameCardSpecDb;
     let gameDeckCardDbFixture: GameCardSpecDb;
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameDbFixture = GameDbFixtures.withStatusActiveAndGameSlotsOne;
-
-      [gameCardSpecDbFixture] = JSON.parse(gameDbFixture.spec) as [
-        GameCardSpecDb,
-      ];
 
       [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck as string) as [
         GameCardSpecDb,
@@ -375,15 +316,6 @@ describe(GameDbToGameConverter.name, () => {
         const expected: ActiveGame = {
           id: gameDbFixture.id,
           name: gameDbFixture.name,
-          spec: {
-            cards: [
-              {
-                amount: gameCardSpecDbFixture.amount,
-                card: cardFixture,
-              },
-            ],
-            gameSlotsAmount: gameDbFixture.gameSlotsAmount,
-          },
           state: {
             currentCard: cardFixture,
             currentColor: cardColorFixture,

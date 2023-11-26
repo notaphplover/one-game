@@ -1,6 +1,6 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
-  GetGameV1GameIdGameOptionsHttpRequestController,
+  GetGameV1GameIdGameSpecHttpRequestController,
   GetGameV1GameIdRequestParamHandler,
 } from '@cornie-js/backend-game-application/games';
 import {
@@ -18,11 +18,11 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 @Controller(
   `v1/games/:${GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam}`,
 )
-export class GetGameV1GameIdGameOptionsHttpRequestNestController extends HttpNestFastifyController<Request> {
+export class GetGameV1GameIdGameSpecHttpRequestNestController extends HttpNestFastifyController<Request> {
   constructor(
     @Inject(RequestFromFastifyRequestBuilder)
     requestBuilder: Builder<Request, [FastifyRequest]>,
-    @Inject(GetGameV1GameIdGameOptionsHttpRequestController)
+    @Inject(GetGameV1GameIdGameSpecHttpRequestController)
     requestController: Handler<[Request], Response | ResponseWithBody<unknown>>,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     responseFromErrorBuilder: Builder<
@@ -43,7 +43,7 @@ export class GetGameV1GameIdGameOptionsHttpRequestNestController extends HttpNes
     );
   }
 
-  @Get(`options`)
+  @Get(`spec`)
   public override async handle(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,

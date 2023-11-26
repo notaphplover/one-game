@@ -19,7 +19,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         activeGameV1Fixture = {
           id: 'id-fixture',
-          spec: Symbol() as unknown as apiModels.GameSpecV1,
           state: {
             status: 'active',
           } as apiModels.ActiveGameStateV1,
@@ -37,7 +36,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
           const expected: graphqlModels.ActiveGame = {
             id: activeGameV1Fixture.id,
             name: null,
-            spec: activeGameV1Fixture.spec,
             state: activeGameV1Fixture.state,
           };
 
@@ -53,7 +51,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         activeGameV1Fixture = {
           id: 'id-fixture',
           name: 'name fixture',
-          spec: Symbol() as unknown as apiModels.GameSpecV1,
           state: {
             status: 'active',
           } as apiModels.ActiveGameStateV1,
@@ -71,7 +68,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
           const expected: graphqlModels.ActiveGame = {
             id: activeGameV1Fixture.id,
             name: activeGameV1Fixture.name as string,
-            spec: activeGameV1Fixture.spec,
             state: activeGameV1Fixture.state,
           };
 
@@ -86,7 +82,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         finishedGameV1Fixture = {
           id: 'id-fixture',
-          spec: Symbol() as unknown as apiModels.GameSpecV1,
           state: {
             status: 'finished',
           } as apiModels.FinishedGameStateV1,
@@ -104,7 +99,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
           const expected: graphqlModels.FinishedGame = {
             id: finishedGameV1Fixture.id,
             name: null,
-            spec: finishedGameV1Fixture.spec,
             state: finishedGameV1Fixture.state,
           };
 
@@ -119,7 +113,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         finishedGameV1Fixture = {
           id: 'id-fixture',
-          spec: Symbol() as unknown as apiModels.GameSpecV1,
           state: {
             status: 'finished',
           } as apiModels.FinishedGameStateV1,
@@ -137,7 +130,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
           const expected: graphqlModels.FinishedGame = {
             id: finishedGameV1Fixture.id,
             name: null,
-            spec: finishedGameV1Fixture.spec,
             state: finishedGameV1Fixture.state,
           };
 
@@ -152,7 +144,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         nonStartedGameV1Fixture = {
           id: 'id-fixture',
-          spec: Symbol() as unknown as apiModels.GameSpecV1,
           state: {
             status: 'nonStarted',
           } as apiModels.NonStartedGameStateV1,
@@ -170,7 +161,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
           const expected: graphqlModels.NonStartedGame = {
             id: nonStartedGameV1Fixture.id,
             name: null,
-            spec: nonStartedGameV1Fixture.spec,
             state: nonStartedGameV1Fixture.state,
           };
 
@@ -185,7 +175,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         nonStartedGameV1Fixture = {
           id: 'id-fixture',
-          spec: Symbol() as unknown as apiModels.GameSpecV1,
           state: {
             status: 'nonStarted',
           } as apiModels.NonStartedGameStateV1,
@@ -203,7 +192,6 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
           const expected: graphqlModels.NonStartedGame = {
             id: nonStartedGameV1Fixture.id,
             name: null,
-            spec: nonStartedGameV1Fixture.spec,
             state: nonStartedGameV1Fixture.state,
           };
 

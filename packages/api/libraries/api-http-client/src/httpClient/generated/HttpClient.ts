@@ -122,7 +122,7 @@ export class HttpClient {
       body,
     );
   }
-  public async getGameGameIdOptions(
+  public async getGameGameIdSpec(
     headers: {
       [key: string]: string;
     },
@@ -131,14 +131,14 @@ export class HttpClient {
       gameId: string;
     },
   ): Promise<
-    | Response<Record<string, string>, apiModels.GameOptionsV1, 200>
+    | Response<Record<string, string>, apiModels.GameSpecV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
     return this.#axiosHttpClient.callEndpoint(
       'GET',
-      '/v1/games/{gameId}/options',
+      '/v1/games/{gameId}/spec',
       headers,
       undefined,
       url,

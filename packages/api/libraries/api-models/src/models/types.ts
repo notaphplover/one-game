@@ -130,16 +130,7 @@ export interface ActiveGameStateV1 {
 export interface ActiveGameV1 {
   id: string;
   name?: string;
-  spec: GameSpecV1;
   state: ActiveGameStateV1;
-}
-export interface GameSpecV1 {
-  cardSpecs: GameCardSpecV1[];
-  gameSlotsAmount: number;
-}
-export interface GameCardSpecV1 {
-  amount: number;
-  card: CardV1;
 }
 export interface FinishedGameSlotV1 {
   cardsAmount: number;
@@ -152,13 +143,11 @@ export interface FinishedGameStateV1 {
 export interface FinishedGameV1 {
   id: string;
   name?: string;
-  spec: GameSpecV1;
   state: FinishedGameStateV1;
 }
 export interface NonStartedGameV1 {
   id: string;
   name?: string;
-  spec: GameSpecV1;
   state: NonStartedGameStateV1;
 }
 export interface NonStartedGameStateV1 {
@@ -167,6 +156,10 @@ export interface NonStartedGameStateV1 {
 }
 export interface NonStartedGameSlotV1 {
   userId: string;
+}
+export interface GameCardSpecV1 {
+  amount: number;
+  card: CardV1;
 }
 export interface GameCreateQueryV1 {
   gameSlotsAmount: number;
@@ -198,6 +191,10 @@ export interface GameIdPlayCardsQueryV1 {
 export interface GameUpdatedMessageEventV1 {
   game: GameV1;
   kind: 'game-updated';
+}
+export interface GameSpecV1 {
+  cardSpecs: GameCardSpecV1[];
+  gameSlotsAmount: number;
 }
 export interface UserCreateQueryV1 {
   email: string;

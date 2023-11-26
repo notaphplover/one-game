@@ -13,15 +13,15 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
 import { GetGameV1GameIdRequestParamHandler } from '../handlers/GetGameV1GameIdRequestParamHandler';
-import { GameOptionsManagementInputPort } from '../ports/input/GameOptionsManagementInputPort';
+import { GameSpecManagementInputPort } from '../ports/input/GameSpecManagementInputPort';
 
 @Injectable()
-export class GetGameV1GameIdGameOptionsHttpRequestController extends HttpRequestController<
+export class GetGameV1GameIdGameSpecHttpRequestController extends HttpRequestController<
   Request,
   [string],
-  apiModels.GameOptionsV1 | undefined
+  apiModels.GameSpecV1 | undefined
 > {
-  readonly #gameOptionsManagementInputPort: GameOptionsManagementInputPort;
+  readonly #gameSpecManagementInputPort: GameSpecManagementInputPort;
 
   constructor(
     @Inject(GetGameV1GameIdRequestParamHandler)
@@ -29,15 +29,15 @@ export class GetGameV1GameIdGameOptionsHttpRequestController extends HttpRequest
     @Inject(SingleEntityGetResponseBuilder)
     responseBuilder: Builder<
       Response | ResponseWithBody<unknown>,
-      [apiModels.GameOptionsV1 | undefined]
+      [apiModels.GameSpecV1 | undefined]
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<
       Response | ResponseWithBody<unknown>,
       [unknown]
     >,
-    @Inject(GameOptionsManagementInputPort)
-    gameOptionsManagementInputPort: GameOptionsManagementInputPort,
+    @Inject(GameSpecManagementInputPort)
+    gameSpecManagementInputPort: GameSpecManagementInputPort,
     @Inject(AuthMiddleware)
     authMiddleware: AuthMiddleware,
   ) {
@@ -48,12 +48,12 @@ export class GetGameV1GameIdGameOptionsHttpRequestController extends HttpRequest
       new MiddlewarePipeline([authMiddleware]),
     );
 
-    this.#gameOptionsManagementInputPort = gameOptionsManagementInputPort;
+    this.#gameSpecManagementInputPort = gameSpecManagementInputPort;
   }
 
   protected async _handleUseCase(
     gameId: string,
-  ): Promise<apiModels.GameOptionsV1 | undefined> {
-    return this.#gameOptionsManagementInputPort.findOne(gameId);
+  ): Promise<apiModels.GameSpecV1 | undefined> {
+    return this.#gameSpecManagementInputPort.findOne(gameId);
   }
 }

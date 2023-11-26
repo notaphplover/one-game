@@ -11,6 +11,7 @@ import { GameSlotCreateQuery } from './query/GameSlotCreateQuery';
 import { GameSlotFindQuery } from './query/GameSlotFindQuery';
 import { GameSlotUpdateQuery } from './query/GameSlotUpdateQuery';
 import { GameSpecCreateQuery } from './query/GameSpecCreateQuery';
+import { GameSpecFindQuery } from './query/GameSpecFindQuery';
 import { GameUpdateQuery } from './query/GameUpdateQuery';
 import { GameService } from './services/GameService';
 import { CurrentPlayerCanPlayCardsSpec } from './specs/CurrentPlayerCanPlayCardsSpec';
@@ -49,6 +50,7 @@ export type {
   GameSlotUpdateQuery,
   GameSpec,
   GameSpecCreateQuery,
+  GameSpecFindQuery,
   GameUpdateQuery,
   NonStartedGame,
   NonStartedGameSlot,

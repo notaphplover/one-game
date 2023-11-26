@@ -73,6 +73,16 @@ describe(GameSpecFromGameSpecDbBuilder.name, () => {
             },
           ],
           gameSlotsAmount: gameSpecDbFixture.gameSlotsAmount,
+          options: {
+            chainDraw2Draw2Cards: gameSpecDbFixture.chainDraw2Draw2Cards,
+            chainDraw2Draw4Cards: gameSpecDbFixture.chainDraw2Draw4Cards,
+            chainDraw4Draw2Cards: gameSpecDbFixture.chainDraw4Draw2Cards,
+            chainDraw4Draw4Cards: gameSpecDbFixture.chainDraw4Draw4Cards,
+            playCardIsMandatory: gameSpecDbFixture.playCardIsMandatory,
+            playMultipleSameCards: gameSpecDbFixture.playMultipleSameCards,
+            playWildDraw4IfNoOtherAlternative:
+              gameSpecDbFixture.playWildDraw4IfNoOtherAlternative,
+          },
         };
 
         expect(result).toStrictEqual(expected);

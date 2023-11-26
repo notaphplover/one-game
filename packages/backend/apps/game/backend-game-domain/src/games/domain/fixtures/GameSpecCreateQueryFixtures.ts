@@ -1,6 +1,6 @@
+import { GameOptionsCreateQueryFixtures } from '.';
 import { GameSpecCreateQuery } from '../query/GameSpecCreateQuery';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
-import { GameOptionsFixtures } from './GameOptionsFixtures';
 
 export class GameSpecCreateQueryFixtures {
   public static get any(): GameSpecCreateQuery {
@@ -9,7 +9,7 @@ export class GameSpecCreateQueryFixtures {
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       gameSlotsAmount: 2,
       id: 'e3b54159-a4ef-41fc-094a-20709526bdaf',
-      options: GameOptionsFixtures.any,
+      options: GameOptionsCreateQueryFixtures.any,
     };
   }
 }

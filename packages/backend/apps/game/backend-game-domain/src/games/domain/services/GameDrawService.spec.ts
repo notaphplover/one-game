@@ -4,6 +4,7 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { GameCardSpecFixtures } from '../fixtures/GameCardSpecFixtures';
+import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
 import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
@@ -310,6 +311,7 @@ describe(GameDrawService.name, () => {
         gameSpecFixture = {
           cards: [gameCardSpecFixture],
           gameSlotsAmount: 2,
+          options: GameOptionsFixtures.any,
         };
       });
 
@@ -349,6 +351,7 @@ describe(GameDrawService.name, () => {
         gameSpecFixture = {
           cards: [gameCardSpecFixture],
           gameSlotsAmount: 2,
+          options: GameOptionsFixtures.any,
         };
       });
 
