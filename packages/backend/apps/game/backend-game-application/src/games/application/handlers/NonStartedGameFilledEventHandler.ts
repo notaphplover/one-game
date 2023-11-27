@@ -2,6 +2,7 @@ import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
   Game,
   GameService,
+  GameSpec,
   GameStatus,
   GameUpdateQuery,
   NonStartedGame,
@@ -13,6 +14,10 @@ import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from '../ports/output/GamePersistenceOutputPort';
+import {
+  GameSpecPersistenceOutputPort,
+  gameSpecPersistenceOutputPortSymbol,
+} from '../ports/output/GameSpecPersistenceOutputPort';
 
 @Injectable()
 export class NonStartedGameFilledEventHandler
@@ -20,26 +25,31 @@ export class NonStartedGameFilledEventHandler
 {
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #gameService: GameService;
+  readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
 
   constructor(
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
     gameService: GameService,
+    @Inject(gameSpecPersistenceOutputPortSymbol)
+    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
   ) {
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
     this.#gameService = gameService;
+    this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
   }
 
   public async handle(
     nonStartedGameFilledEvent: NonStartedGameFilledEvent,
   ): Promise<void> {
-    const game: NonStartedGame = await this.#getNonStartedGameOrFail(
-      nonStartedGameFilledEvent.gameId,
-    );
+    const [game, gameSpec]: [NonStartedGame, GameSpec] = await Promise.all([
+      this.#getNonStartedGameOrFail(nonStartedGameFilledEvent.gameId),
+      this.#getGameSpecOrFail(nonStartedGameFilledEvent.gameId),
+    ]);
 
     const gameUpdateQuery: GameUpdateQuery =
-      this.#gameService.buildStartGameUpdateQuery(game);
+      this.#gameService.buildStartGameUpdateQuery(game, gameSpec);
 
     await this.#gamePersistenceOutputPort.update(gameUpdateQuery);
   }
@@ -65,6 +75,20 @@ export class NonStartedGameFilledEventHandler
     }
 
     return game;
+  }
+
+  async #getGameSpecOrFail(gameId: string): Promise<GameSpec> {
+    const gameSpec: GameSpec | undefined =
+      await this.#gameSpecPersistenceOutputPort.findOne({ gameId });
+
+    if (gameSpec === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `No game spec was found for game "${gameId}"`,
+      );
+    }
+
+    return gameSpec;
   }
 
   #isNonStartedGame(game: Game): game is NonStartedGame {

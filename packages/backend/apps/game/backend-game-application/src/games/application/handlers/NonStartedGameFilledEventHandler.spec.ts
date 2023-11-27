@@ -5,11 +5,14 @@ import {
   ActiveGame,
   GameFindQuery,
   GameService,
+  GameSpec,
+  GameSpecFindQuery,
   GameUpdateQuery,
   NonStartedGame,
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,
+  GameSpecFixtures,
   GameUpdateQueryFixtures,
   NonStartedGameFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
@@ -17,11 +20,13 @@ import {
 import { NonStartedGameFilledEventFixtures } from '../fixtures/NonStartedGameFilledEventFixtures';
 import { NonStartedGameFilledEvent } from '../models/NonStartedGameFilledEvent';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
+import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { NonStartedGameFilledEventHandler } from './NonStartedGameFilledEventHandler';
 
 describe(NonStartedGameFilledEventHandler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
+  let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
 
   let nonStartedGameFilledEventHandler: NonStartedGameFilledEventHandler;
 
@@ -37,9 +42,16 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       buildStartGameUpdateQuery: jest.fn(),
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
 
+    gameSpecPersistenceOutputPortMock = {
+      findOne: jest.fn(),
+    } as Partial<
+      jest.Mocked<GameSpecPersistenceOutputPort>
+    > as jest.Mocked<GameSpecPersistenceOutputPort>;
+
     nonStartedGameFilledEventHandler = new NonStartedGameFilledEventHandler(
       gamePersistenceOutputPortMock,
       gameServiceMock,
+      gameSpecPersistenceOutputPortMock,
     );
   });
 
@@ -143,18 +155,24 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns a non started game', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns a non started game and gameSpecPersistenceOutputPort.findOne() returns a game spec', () => {
       let gameFixture: NonStartedGame;
+      let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
 
       beforeAll(async () => {
-        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        gameFixture = NonStartedGameFixtures.withGameSlotsOne;
+        gameSpecFixture = GameSpecFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gameServiceMock.buildStartGameUpdateQuery.mockReturnValueOnce(
           gameUpdateQueryFixture,
+        );
+
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
         );
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
@@ -181,12 +199,26 @@ describe(NonStartedGameFilledEventHandler.name, () => {
         );
       });
 
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expected: GameSpecFindQuery = {
+          gameId: nonStartedGameFilledEventFixture.gameId,
+        };
+
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
       it('should call gameService.buildStartGameUpdateQuery()', () => {
         expect(gameServiceMock.buildStartGameUpdateQuery).toHaveBeenCalledTimes(
           1,
         );
         expect(gameServiceMock.buildStartGameUpdateQuery).toHaveBeenCalledWith(
           gameFixture,
+          gameSpecFixture,
         );
       });
 

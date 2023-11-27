@@ -11,6 +11,7 @@ import { GameOptionsFixtures } from './GameOptionsFixtures';
 import { GameSlotCreateQueryFixtures } from './GameSlotCreateQueryFixtures';
 import { GameSlotFindQueryFixtures } from './GameSlotFindQueryFixtures';
 import { GameSlotUpdateQueryFixtures } from './GameSlotUpdateQueryFixtures';
+import { GameSpecCreateQueryFixtures } from './GameSpecCreateQueryFixtures';
 import { GameSpecFixtures } from './GameSpecFixtures';
 import { GameUpdateQueryFixtures } from './GameUpdateQueryFixtures';
 import { NonStartedGameFixtures } from './NonStartedGameFixtures';
@@ -30,6 +31,7 @@ export {
   GameSlotCreateQueryFixtures,
   GameSlotFindQueryFixtures,
   GameSlotUpdateQueryFixtures,
+  GameSpecCreateQueryFixtures,
   GameSpecFixtures,
   GameUpdateQueryFixtures,
   NonStartedGameFixtures,

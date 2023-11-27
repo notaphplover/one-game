@@ -24,6 +24,13 @@ export async function whenGetGameRequestIsSend(
   await sendRequest.bind(this)('getGame', requestAlias);
 }
 
+export async function whenGetGameSpecRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): Promise<void> {
+  await sendRequest.bind(this)('getGameGameIdSpec', requestAlias);
+}
+
 export async function whenUpdateGameRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -42,6 +49,13 @@ When<OneGameApiWorld>(
   'the create game slot request is sent',
   async function (this: OneGameApiWorld): Promise<void> {
     await whenCreateGameSlotRequestIsSend.bind(this)();
+  },
+);
+
+When<OneGameApiWorld>(
+  'the get game spec request is sent',
+  async function (this: OneGameApiWorld): Promise<void> {
+    await whenGetGameSpecRequestIsSend.bind(this)();
   },
 );
 

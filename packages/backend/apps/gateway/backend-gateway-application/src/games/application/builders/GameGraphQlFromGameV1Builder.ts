@@ -23,7 +23,6 @@ export class GameGraphQlFromGameV1Builder
     const activeGame: graphqlModels.ActiveGame = {
       id: gameV1.id,
       name: gameV1.name ?? null,
-      spec: gameV1.spec,
       state: gameV1.state,
     };
 
@@ -36,7 +35,6 @@ export class GameGraphQlFromGameV1Builder
     const finishedGame: graphqlModels.FinishedGame = {
       id: gameV1.id,
       name: gameV1.name ?? null,
-      spec: gameV1.spec,
       state: gameV1.state,
     };
 
@@ -49,7 +47,6 @@ export class GameGraphQlFromGameV1Builder
     const nonStartedGame: graphqlModels.NonStartedGame = {
       id: gameV1.id,
       name: gameV1.name ?? null,
-      spec: gameV1.spec,
       state: gameV1.state,
     };
 

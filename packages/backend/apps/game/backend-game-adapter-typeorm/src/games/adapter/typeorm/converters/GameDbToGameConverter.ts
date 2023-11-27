@@ -122,10 +122,6 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     return {
       id: gameDb.id,
       name: gameDb.name,
-      spec: {
-        cards: this.#convertCardSpecs(gameDb.spec),
-        gameSlotsAmount: gameDb.gameSlotsAmount,
-      },
       state: {
         currentCard: this.#cardBuilder.build(gameDb.currentCard),
         currentColor: this.#cardColorBuilder.build(gameDb.currentColor),
@@ -150,10 +146,6 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     return {
       id: gameDb.id,
       name: gameDb.name,
-      spec: {
-        cards: this.#convertCardSpecs(gameDb.spec),
-        gameSlotsAmount: gameDb.gameSlotsAmount,
-      },
       state: {
         slots: gameSlots,
         status: GameStatus.finished,
@@ -168,10 +160,6 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     return {
       id: gameDb.id,
       name: gameDb.name,
-      spec: {
-        cards: this.#convertCardSpecs(gameDb.spec),
-        gameSlotsAmount: gameDb.gameSlotsAmount,
-      },
       state: {
         slots: gameSlots,
         status: GameStatus.nonStarted,

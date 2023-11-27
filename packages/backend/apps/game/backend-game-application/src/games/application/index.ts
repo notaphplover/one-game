@@ -1,7 +1,7 @@
 import { GameEventsChannelFromGameIdBuilder } from './builders/GameEventsChannelFromGameIdBuilder';
 import { GetGameGameIdEventsV1SseController } from './controllers/GetGameGameIdEventsV1SseController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from './controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
-import { GetGameV1GameIdGameOptionsHttpRequestController } from './controllers/GetGameV1GameIdGameOptionsHttpRequestController';
+import { GetGameV1GameIdGameSpecHttpRequestController } from './controllers/GetGameV1GameIdGameSpecHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from './controllers/GetGameV1GameIdHttpRequestController';
 import { GetGameV1MineHttpRequestController } from './controllers/GetGameV1MineHttpRequestController';
 import { PatchGameV1GameIdHttpRequestController } from './controllers/PatchGameV1GameIdHttpRequestController';
@@ -20,10 +20,6 @@ import {
   gameEventsSubscriptionOutputPortSymbol,
 } from './ports/output/GameEventsSubscriptionOutputPort';
 import {
-  GameOptionsPersistenceOutputPort,
-  gameOptionsPersistenceOutputPortSymbol,
-} from './ports/output/GameOptionsPersistenceOutputPort';
-import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from './ports/output/GamePersistenceOutputPort';
@@ -31,15 +27,19 @@ import {
   GameSlotPersistenceOutputPort,
   gameSlotPersistenceOutputPortSymbol,
 } from './ports/output/GameSlotPersistenceOutputPort';
+import {
+  GameSpecPersistenceOutputPort,
+  gameSpecPersistenceOutputPortSymbol,
+} from './ports/output/GameSpecPersistenceOutputPort';
 
 export type {
   BaseGameMessageEvent,
   GameEventsSubscriptionOutputPort,
   GameMessageEvent,
   GameMessageEventKind,
-  GameOptionsPersistenceOutputPort,
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
+  GameSpecPersistenceOutputPort,
   GameUpdatedMessageEvent,
 };
 
@@ -47,13 +47,13 @@ export {
   GameEventsChannelFromGameIdBuilder,
   gameEventsSubscriptionOutputPortSymbol,
   GameMiddleware,
-  gameOptionsPersistenceOutputPortSymbol,
   gamePersistenceOutputPortSymbol,
+  gameSpecPersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
   GetGameGameIdEventsV1SseController,
   GetGameGameIdSlotSlotIdCardsV1RequestController,
   GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
-  GetGameV1GameIdGameOptionsHttpRequestController,
+  GetGameV1GameIdGameSpecHttpRequestController,
   GetGameV1GameIdHttpRequestController,
   GetGameV1GameIdRequestParamHandler,
   GetGameV1MineHttpRequestController,

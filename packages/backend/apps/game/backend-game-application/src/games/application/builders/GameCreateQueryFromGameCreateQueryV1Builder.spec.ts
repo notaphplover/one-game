@@ -109,7 +109,9 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
           name: gameCreateQueryV1Fixture.name,
           spec: {
             cards: [gameCardSpecFixture],
+            gameId: gameCreateQueryContextFixture.uuid,
             gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
+            id: gameCreateQueryContextFixture.gameSpecId,
             options: gameOptionsCreateQueryFixture,
           },
         };

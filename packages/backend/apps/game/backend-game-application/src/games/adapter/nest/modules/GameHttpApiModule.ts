@@ -5,7 +5,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
 import { GetGameGameIdEventsV1SseController } from '../../../application';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from '../../../application/controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
-import { GetGameV1GameIdGameOptionsHttpRequestController } from '../../../application/controllers/GetGameV1GameIdGameOptionsHttpRequestController';
+import { GetGameV1GameIdGameSpecHttpRequestController } from '../../../application/controllers/GetGameV1GameIdGameSpecHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from '../../../application/controllers/GetGameV1GameIdHttpRequestController';
 import { GetGameV1MineHttpRequestController } from '../../../application/controllers/GetGameV1MineHttpRequestController';
 import { PatchGameV1GameIdHttpRequestController } from '../../../application/controllers/PatchGameV1GameIdHttpRequestController';
@@ -34,7 +34,7 @@ export class GameHttpApiModule {
       exports: [
         GetGameGameIdEventsV1SseController,
         GetGameGameIdSlotSlotIdCardsV1RequestController,
-        GetGameV1GameIdGameOptionsHttpRequestController,
+        GetGameV1GameIdGameSpecHttpRequestController,
         GetGameV1GameIdHttpRequestController,
         GetGameV1MineHttpRequestController,
         PatchGameV1GameIdHttpRequestController,
@@ -56,7 +56,7 @@ export class GameHttpApiModule {
         GameMiddleware,
         GetGameGameIdSlotSlotIdCardsV1RequestController,
         GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
-        GetGameV1GameIdGameOptionsHttpRequestController,
+        GetGameV1GameIdGameSpecHttpRequestController,
         GetGameV1GameIdHttpRequestController,
         GetGameV1GameIdRequestParamHandler,
         GetGameV1MineHttpRequestController,

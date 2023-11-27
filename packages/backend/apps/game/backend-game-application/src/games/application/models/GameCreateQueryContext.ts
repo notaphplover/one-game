@@ -2,4 +2,5 @@ import { UuidContext } from '../../../foundation/common/application/models/UuidC
 
 export interface GameCreateQueryContext extends UuidContext {
   gameOptionsId: string;
+  gameSpecId: string;
 }

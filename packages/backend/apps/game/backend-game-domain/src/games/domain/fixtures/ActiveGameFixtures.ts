@@ -11,14 +11,12 @@ import { GameDirection } from '../valueObjects/GameDirection';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
-import { GameSpecFixtures } from './GameSpecFixtures';
 
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       name: 'Game name',
-      spec: GameSpecFixtures.withGameSlotsAmountOne,
       state: {
         currentCard: CardFixtures.any,
         currentColor: CardColor.blue,
@@ -150,58 +148,14 @@ export class ActiveGameFixtures {
     };
   }
 
-  public static get withGameSlotsAmountTwoAndSpecWithCardsWithSpecOneWithAmount120(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
-
-    return {
-      ...anyActiveGameFixture,
-      spec: {
-        cards: [GameCardSpecFixtures.withAmount120],
-        gameSlotsAmount: 2,
-      },
-      state: {
-        ...anyActiveGameFixture.state,
-        slots: [
-          ActiveGameSlotFixtures.withPositionZero,
-          ActiveGameSlotFixtures.withPositionOne,
-        ],
-      },
-    };
-  }
-
   public static get withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
 
     return {
       ...anyActiveGameFixture,
-      spec: {
-        cards: [GameCardSpecFixtures.withAmount120],
-        gameSlotsAmount: 2,
-      },
       state: {
         ...anyActiveGameFixture.state,
         deck: [GameCardSpecFixtures.withAmount120],
-        slots: [
-          ActiveGameSlotFixtures.withPositionZero,
-          ActiveGameSlotFixtures.withPositionOne,
-        ],
-      },
-    };
-  }
-
-  public static get withGameSlotsAmountTwoAndStateWithDeckEmptyAndDiscardPileWithSpecOneWithAmount120(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
-
-    return {
-      ...anyActiveGameFixture,
-      spec: {
-        cards: [GameCardSpecFixtures.withAmount120],
-        gameSlotsAmount: 2,
-      },
-      state: {
-        ...anyActiveGameFixture.state,
-        deck: [],
-        discardPile: [GameCardSpecFixtures.withAmount120],
         slots: [
           ActiveGameSlotFixtures.withPositionZero,
           ActiveGameSlotFixtures.withPositionOne,

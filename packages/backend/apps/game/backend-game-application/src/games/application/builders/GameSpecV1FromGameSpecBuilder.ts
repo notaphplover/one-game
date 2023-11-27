@@ -1,9 +1,14 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
-import { GameCardSpec, GameSpec } from '@cornie-js/backend-game-domain/games';
+import {
+  GameCardSpec,
+  GameOptions,
+  GameSpec,
+} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { GameCardSpecV1FromGameCardSpecBuilder } from './GameCardSpecV1FromGameCardSpecBuilder';
+import { GameOptionsV1FromGameOptionsBuilder } from './GameOptionsV1FromGameOptionsBuilder';
 
 @Injectable()
 export class GameSpecV1FromGameSpecBuilder
@@ -14,15 +19,27 @@ export class GameSpecV1FromGameSpecBuilder
     [GameCardSpec]
   >;
 
+  readonly #gameOptionsV1FromGameOptionsBuilder: Builder<
+    apiModels.GameOptionsV1,
+    [GameOptions]
+  >;
+
   constructor(
     @Inject(GameCardSpecV1FromGameCardSpecBuilder)
     gameCardSpecV1FromGameCardSpecBuilder: Builder<
       apiModels.GameCardSpecV1,
       [GameCardSpec]
     >,
+    @Inject(GameOptionsV1FromGameOptionsBuilder)
+    gameOptionsV1FromGameOptionsBuilder: Builder<
+      apiModels.GameOptionsV1,
+      [GameOptions]
+    >,
   ) {
     this.#gameCardSpecV1FromGameCardSpecBuilder =
       gameCardSpecV1FromGameCardSpecBuilder;
+    this.#gameOptionsV1FromGameOptionsBuilder =
+      gameOptionsV1FromGameOptionsBuilder;
   }
 
   public build(gameSpec: GameSpec): apiModels.GameSpecV1 {
@@ -31,6 +48,9 @@ export class GameSpecV1FromGameSpecBuilder
         this.#gameCardSpecV1FromGameCardSpecBuilder.build(gameCardSpec),
       ),
       gameSlotsAmount: gameSpec.gameSlotsAmount,
+      options: this.#gameOptionsV1FromGameOptionsBuilder.build(
+        gameSpec.options,
+      ),
     };
   }
 }
