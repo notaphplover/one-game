@@ -10,6 +10,6 @@ Feature: Create game
 
     Rule: Once a game is created, its spec is available
       Scenario: Authenticated user fetches game spec
-        And a get game spec request for the game with "Bob" credentials
-        And the get game spec request is sent
+        Given a get game spec request for the game with "Bob" credentials
+        When the get game spec request is sent
         Then the get game response should contain the game spec
