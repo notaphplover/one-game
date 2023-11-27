@@ -13,10 +13,14 @@
     },
     "gameSlotsAmount": {
       "type": "integer"
+    },
+    "options": {
+      "$ref": "https://onegame.schemas/api/v1/games/game-options.json"
     }
   },
   "required": [
     "cardSpecs",
-    "gameSlotsAmount"
+    "gameSlotsAmount",
+    "options"
   ]
 }

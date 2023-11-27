@@ -195,6 +195,7 @@ export interface GameUpdatedMessageEventV1 {
 export interface GameSpecV1 {
   cardSpecs: GameCardSpecV1[];
   gameSlotsAmount: number;
+  options: GameOptionsV1;
 }
 export interface UserCreateQueryV1 {
   email: string;
