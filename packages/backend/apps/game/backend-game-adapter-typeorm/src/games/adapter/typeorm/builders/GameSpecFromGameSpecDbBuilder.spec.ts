@@ -1,54 +1,50 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder } from '@cornie-js/backend-common';
-import { Card } from '@cornie-js/backend-game-domain/cards';
-import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
-import { GameSpec } from '@cornie-js/backend-game-domain/games';
+import { GameCardSpec, GameSpec } from '@cornie-js/backend-game-domain/games';
+import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
-import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameSpecDbFixtures } from '../fixtures/GameSpecDbFixtures';
-import { GameCardSpecDb } from '../models/GameCardSpecDb';
 import { GameSpecDb } from '../models/GameSpecDb';
 import { GameSpecFromGameSpecDbBuilder } from './GameSpecFromGameSpecDbBuilder';
 
 describe(GameSpecFromGameSpecDbBuilder.name, () => {
-  let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
+  let gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock: jest.Mocked<
+    Builder<GameCardSpec[], [string]>
+  >;
 
   let gameSpecFromGameSpecDbBuilder: GameSpecFromGameSpecDbBuilder;
 
   beforeAll(() => {
-    cardBuilderMock = {
+    gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock = {
       build: jest.fn(),
     };
 
     gameSpecFromGameSpecDbBuilder = new GameSpecFromGameSpecDbBuilder(
-      cardBuilderMock,
+      gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock,
     );
   });
 
-  describe('having a valid GameSpecDb with a card', () => {
-    let gameCardSpecDbFixture: GameCardSpecDb;
+  describe('having a GameSpecDb with a card', () => {
     let gameSpecDbFixture: GameSpecDb;
 
     beforeAll(() => {
-      gameSpecDbFixture = GameSpecDbFixtures.withCardSpecWithOne;
-
-      [gameCardSpecDbFixture] = JSON.parse(gameSpecDbFixture.cardsSpec) as [
-        GameCardSpecDb,
-      ];
+      gameSpecDbFixture = GameSpecDbFixtures.any;
     });
 
     describe('when called', () => {
-      let cardFixture: Card;
+      let gameCardSpecArrayFixture: GameCardSpec[];
 
       beforeAll(() => {
-        cardFixture = CardFixtures.any;
+        gameCardSpecArrayFixture = [GameCardSpecFixtures.any];
       });
 
       let result: unknown;
 
       beforeAll(() => {
-        cardBuilderMock.build.mockReturnValueOnce(cardFixture);
+        gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build.mockReturnValueOnce(
+          gameCardSpecArrayFixture,
+        );
 
         result = gameSpecFromGameSpecDbBuilder.build(gameSpecDbFixture);
       });
@@ -57,21 +53,18 @@ describe(GameSpecFromGameSpecDbBuilder.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call cardBuilder.build()', () => {
-        expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
-        expect(cardBuilderMock.build).toHaveBeenCalledWith(
-          gameCardSpecDbFixture.card,
-        );
+      it('should call gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build()', () => {
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenCalledWith(gameSpecDbFixture.cardsSpec);
       });
 
       it('should return a GameSpec', () => {
         const expected: GameSpec = {
-          cards: [
-            {
-              amount: gameCardSpecDbFixture.amount,
-              card: cardFixture,
-            },
-          ],
+          cards: gameCardSpecArrayFixture,
           gameSlotsAmount: gameSpecDbFixture.gameSlotsAmount,
           options: {
             chainDraw2Draw2Cards: gameSpecDbFixture.chainDraw2Draw2Cards,
