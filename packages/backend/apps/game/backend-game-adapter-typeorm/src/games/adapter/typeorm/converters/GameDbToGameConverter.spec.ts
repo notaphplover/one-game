@@ -8,6 +8,7 @@ import {
   ActiveGameSlot,
   FinishedGame,
   FinishedGameSlot,
+  GameCardSpec,
   GameDirection,
   GameStatus,
   NonStartedGame,
@@ -16,13 +17,13 @@ import {
 import {
   ActiveGameSlotFixtures,
   FinishedGameSlotFixtures,
+  GameCardSpecFixtures,
   NonStartedGameSlotFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameDbFixtures } from '../fixtures/GameDbFixtures';
-import { GameCardSpecDb } from '../models/GameCardSpecDb';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDb } from '../models/GameSlotDb';
@@ -31,6 +32,9 @@ import { GameDbToGameConverter } from './GameDbToGameConverter';
 describe(GameDbToGameConverter.name, () => {
   let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
   let cardColorBuilderMock: jest.Mocked<Builder<CardColor, [CardColorDb]>>;
+  let gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock: jest.Mocked<
+    Builder<GameCardSpec[], [string]>
+  >;
   let gameDirectionDbToGameDirectionConverterMock: jest.Mocked<
     Converter<GameDirectionDb, GameDirection>
   >;
@@ -44,15 +48,15 @@ describe(GameDbToGameConverter.name, () => {
     cardBuilderMock = {
       build: jest.fn(),
     };
-
     cardColorBuilderMock = {
       build: jest.fn(),
     };
-
+    gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock = {
+      build: jest.fn(),
+    };
     gameDirectionDbToGameDirectionConverterMock = {
       convert: jest.fn(),
     };
-
     gameSlotDbToGameSlotConverterMock = {
       convert: jest.fn(),
     };
@@ -60,6 +64,7 @@ describe(GameDbToGameConverter.name, () => {
     gameDbToGameConverter = new GameDbToGameConverter(
       cardBuilderMock,
       cardColorBuilderMock,
+      gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock,
       gameDirectionDbToGameDirectionConverterMock,
       gameSlotDbToGameSlotConverterMock,
     );
@@ -244,15 +249,12 @@ describe(GameDbToGameConverter.name, () => {
   });
 
   describe('having a started GameDb', () => {
-    let gameDeckCardDbFixture: GameCardSpecDb;
+    let gameCardSpecArrayFixture: GameCardSpec[];
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
+      gameCardSpecArrayFixture = [GameCardSpecFixtures.any];
       gameDbFixture = GameDbFixtures.withStatusActiveAndGameSlotsOne;
-
-      [gameDeckCardDbFixture] = JSON.parse(gameDbFixture.deck as string) as [
-        GameCardSpecDb,
-      ];
     });
 
     describe('when called', () => {
@@ -271,6 +273,9 @@ describe(GameDbToGameConverter.name, () => {
 
         cardBuilderMock.build.mockReturnValue(cardFixture);
         cardColorBuilderMock.build.mockReturnValue(cardColorFixture);
+        gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build
+          .mockReturnValueOnce(gameCardSpecArrayFixture)
+          .mockReturnValueOnce(gameCardSpecArrayFixture);
         gameDirectionDbToGameDirectionConverterMock.convert.mockReturnValueOnce(
           gameDirectionFixture,
         );
@@ -312,6 +317,18 @@ describe(GameDbToGameConverter.name, () => {
         );
       });
 
+      it('should call gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build()', () => {
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenCalledTimes(2);
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenNthCalledWith(1, gameDbFixture.deck);
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenNthCalledWith(2, gameDbFixture.discardPile);
+      });
+
       it('should return an ActiveGame', () => {
         const expected: ActiveGame = {
           id: gameDbFixture.id,
@@ -324,13 +341,8 @@ describe(GameDbToGameConverter.name, () => {
               gameDbFixture.currentPlayingSlotIndex as number,
             currentTurnCardsPlayed:
               gameDbFixture.currentTurnCardsPlayed as boolean,
-            deck: [
-              {
-                amount: gameDeckCardDbFixture.amount,
-                card: cardFixture,
-              },
-            ],
-            discardPile: [],
+            deck: gameCardSpecArrayFixture,
+            discardPile: gameCardSpecArrayFixture,
             drawCount: gameDbFixture.drawCount as number,
             slots: [gameSlotFixture],
             status: GameStatus.active,
