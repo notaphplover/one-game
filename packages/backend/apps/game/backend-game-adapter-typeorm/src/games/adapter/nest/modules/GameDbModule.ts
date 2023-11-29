@@ -12,6 +12,7 @@ import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModul
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
 import { GameSpecPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSpecPersistenceTypeOrmAdapter';
+import { GameCardSpecArrayFromGameCardSpecArrayDbBuilder } from '../../typeorm/builders/GameCardSpecArrayFromGameCardSpecArrayDbBuilder';
 import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from '../../typeorm/builders/GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder';
 import { GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder } from '../../typeorm/builders/GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder';
 import { GameSpecFromGameSpecDbBuilder } from '../../typeorm/builders/GameSpecFromGameSpecDbBuilder';
@@ -63,6 +64,7 @@ export class GameDbModule {
         FindGameTypeOrmService,
         FindGameSpecTypeOrmService,
         GameCardSpecArrayToGameCardSpecArrayDbConverter,
+        GameCardSpecArrayFromGameCardSpecArrayDbBuilder,
         GameCreateQueryToGameCreateQueryTypeOrmConverter,
         GameDbToGameConverter,
         GameDirectionDbToGameDirectionConverter,
