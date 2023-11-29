@@ -8,7 +8,7 @@ export const PendingGame = ({ game }) => {
       <Typography variant="h5" className="pending-game-text" component="h5">
         {game.name === undefined ? '--' : game.name}
       </Typography>
-      <Link component={RouterLink} to="/auth/register">
+      <Link component={RouterLink} to="/">
         <Button
           type="button"
           className="pending-game-button-share"

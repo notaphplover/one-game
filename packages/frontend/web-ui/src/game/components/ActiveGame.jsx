@@ -8,7 +8,7 @@ export const ActiveGame = ({ game }) => {
       <Typography variant="h5" className="active-game-text" component="h5">
         {game.name === undefined ? '--' : game.name}
       </Typography>
-      <Link component={RouterLink} to="/auth/register">
+      <Link component={RouterLink} to="/">
         <Button
           type="button"
           className="active-game-button-join"
