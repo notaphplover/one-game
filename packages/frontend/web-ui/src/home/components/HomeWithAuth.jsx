@@ -58,7 +58,7 @@ export const HomeWithAuth = () => {
                   className="home-auth-text-white"
                   component="h5"
                 >
-                  Not exists pending games.
+                  No pending games found.
                 </Typography>
               )}
             </Box>
@@ -78,7 +78,7 @@ export const HomeWithAuth = () => {
                   className="home-auth-text-white"
                   component="h5"
                 >
-                  Not exists active games.
+                  No active games found.
                 </Typography>
               )}
             </Box>
