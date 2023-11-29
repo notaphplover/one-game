@@ -1,8 +1,16 @@
-import { Box, Button, Grid, Link, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  Link,
+  Pagination,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { PendingGame } from '../../game/components/PendingGame';
-import { STATUS_GAME_FULFILLED, useGameStatus } from '../hooks/useGameStatus';
+import { STATUS_GAME_FULFILLED, useGetGames } from '../hooks/useGetGames';
 import { ActiveGame } from '../../game/components/ActiveGame';
 import GamesIcon from '@mui/icons-material/Games';
 
@@ -10,7 +18,7 @@ const GAME_STATUS_NON_STARTED = 'nonStarted';
 const GAME_STATUS_ACTIVE = 'active';
 
 export const HomeWithAuth = () => {
-  const { status, gameList } = useGameStatus();
+  const { status, gameList } = useGetGames();
   let pendingGames, activeGames;
 
   if (status === STATUS_GAME_FULFILLED) {
@@ -61,6 +69,11 @@ export const HomeWithAuth = () => {
                   No pending games found.
                 </Typography>
               )}
+              <Box component="div" className="home-auth-pagination">
+                <Stack className="home-auth-pagination-stack">
+                  <Pagination className="home-auth-pagination-item" count={0} />
+                </Stack>
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={12}>

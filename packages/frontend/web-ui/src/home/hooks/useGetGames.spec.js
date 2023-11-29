@@ -3,8 +3,8 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import {
   STATUS_GAME_FULFILLED,
   STATUS_GAME_REJECTED,
-  useGameStatus,
-} from './useGameStatus';
+  useGetGames,
+} from './useGetGames';
 import { useSelector } from 'react-redux';
 import { httpClient } from '../../common/http/services/HttpService';
 
@@ -16,7 +16,7 @@ jest.mock('react-redux', () => {
 });
 jest.mock('../../common/http/services/HttpService');
 
-describe(useGameStatus.name, () => {
+describe(useGetGames.name, () => {
   let errorMessageFixture;
   let tokenFixture;
 
@@ -55,7 +55,7 @@ describe(useGameStatus.name, () => {
       });
 
       await act(() => {
-        result = renderHook(() => useGameStatus()).result;
+        result = renderHook(() => useGetGames()).result;
       });
 
       status = result.current.status;
@@ -121,7 +121,7 @@ describe(useGameStatus.name, () => {
       });
 
       await act(() => {
-        result = renderHook(() => useGameStatus()).result;
+        result = renderHook(() => useGetGames()).result;
       });
 
       status = result.current.status;

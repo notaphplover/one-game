@@ -4,13 +4,13 @@ import { MemoryRouter } from 'react-router-dom';
 import {
   STATUS_GAME_FULFILLED,
   STATUS_GAME_REJECTED,
-  useGameStatus,
-} from '../hooks/useGameStatus';
+  useGetGames,
+} from '../hooks/useGetGames';
 import { HomeWithAuth } from './HomeWithAuth';
 
-jest.mock('../hooks/useGameStatus');
+jest.mock('../hooks/useGetGames');
 
-const NOT_EXISTS_PENDING_GAMES = 'Not exists pending games.';
+const NOT_EXISTS_PENDING_GAMES = 'No pending games found.';
 
 describe(HomeWithAuth.name, () => {
   let statusFixture;
@@ -27,7 +27,7 @@ describe(HomeWithAuth.name, () => {
     let pendingGameTextWhite;
 
     beforeAll(() => {
-      useGameStatus.mockReturnValue({
+      useGetGames.mockReturnValue({
         errorMessage: null,
         status: statusFixture,
         gameList: gameListFixture,
@@ -61,7 +61,7 @@ describe(HomeWithAuth.name, () => {
     let pendingGameName;
 
     beforeAll(() => {
-      useGameStatus.mockReturnValue({
+      useGetGames.mockReturnValue({
         errorMessage: null,
         status: STATUS_GAME_FULFILLED,
         gameList: [
@@ -103,7 +103,7 @@ describe(HomeWithAuth.name, () => {
     let activeGameName;
 
     beforeAll(() => {
-      useGameStatus.mockReturnValue({
+      useGetGames.mockReturnValue({
         errorMessage: null,
         status: STATUS_GAME_FULFILLED,
         gameList: [
@@ -146,7 +146,7 @@ describe(HomeWithAuth.name, () => {
     let pendingGameName;
 
     beforeAll(() => {
-      useGameStatus.mockReturnValue({
+      useGetGames.mockReturnValue({
         errorMessage: null,
         status: STATUS_GAME_FULFILLED,
         gameList: [
@@ -205,7 +205,7 @@ describe(HomeWithAuth.name, () => {
     let pendingGameTextWhite;
 
     beforeAll(() => {
-      useGameStatus.mockReturnValue({
+      useGetGames.mockReturnValue({
         errorMessage: 'error fixture',
         status: STATUS_GAME_REJECTED,
         gameList: [],

@@ -9,7 +9,7 @@ export const STATUS_GAME_REJECTED = 'rejected';
 
 const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error!';
 
-export const useGameStatus = () => {
+export const useGetGames = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [gameList, setGameList] = useState({});
   const [status, setStatus] = useState(STATUS_GAME_IDLE);
