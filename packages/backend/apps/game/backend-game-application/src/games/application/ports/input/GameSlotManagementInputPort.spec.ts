@@ -163,7 +163,7 @@ describe(GameSlotManagementInputPort.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expected: GameSpecFindQuery = {
-          gameId: gameFixture.id,
+          gameIds: [gameFixture.id],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
@@ -289,7 +289,7 @@ describe(GameSlotManagementInputPort.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expected: GameSpecFindQuery = {
-          gameId: gameFixture.id,
+          gameIds: [gameFixture.id],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
@@ -400,7 +400,7 @@ describe(GameSlotManagementInputPort.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expected: GameSpecFindQuery = {
-          gameId: gameFixture.id,
+          gameIds: [gameFixture.id],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(

@@ -141,7 +141,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expectedGameSpecFindQuery: GameSpecFindQuery = {
-          gameId: gameIdFixture,
+          gameIds: [gameIdFixture],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
@@ -204,7 +204,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expectedGameSpecFindQuery: GameSpecFindQuery = {
-          gameId: gameIdFixture,
+          gameIds: [gameIdFixture],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
@@ -309,7 +309,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expectedGameSpecFindQuery: GameSpecFindQuery = {
-          gameId: gameIdFixture,
+          gameIds: [gameIdFixture],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
@@ -416,7 +416,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expectedGameSpecFindQuery: GameSpecFindQuery = {
-          gameId: gameIdFixture,
+          gameIds: [gameIdFixture],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
@@ -534,7 +534,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expectedGameSpecFindQuery: GameSpecFindQuery = {
-          gameId: gameIdFixture,
+          gameIds: [gameIdFixture],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(

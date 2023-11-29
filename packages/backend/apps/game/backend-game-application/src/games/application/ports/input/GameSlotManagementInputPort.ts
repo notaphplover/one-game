@@ -188,7 +188,7 @@ export class GameSlotManagementInputPort {
 
   async #getGameSpecOrFail(gameId: string): Promise<GameSpec> {
     const gameSpec: GameSpec | undefined =
-      await this.#gameSpecPersistenceOutputPort.findOne({ gameId });
+      await this.#gameSpecPersistenceOutputPort.findOne({ gameIds: [gameId] });
 
     if (gameSpec === undefined) {
       throw new AppError(

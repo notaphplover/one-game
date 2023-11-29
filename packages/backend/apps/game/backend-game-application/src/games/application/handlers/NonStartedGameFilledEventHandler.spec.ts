@@ -201,7 +201,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
 
       it('should call gameSpecPersistenceOutputPort.findOne()', () => {
         const expected: GameSpecFindQuery = {
-          gameId: nonStartedGameFilledEventFixture.gameId,
+          gameIds: [nonStartedGameFilledEventFixture.gameId],
         };
 
         expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
