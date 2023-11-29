@@ -31,7 +31,7 @@ export const HomeWithAuth = () => {
         <Grid container>
           <Grid item xs={12}>
             <Box component="div" className="home-auth-button-container">
-              <Link component={RouterLink} to="/auth/register">
+              <Link component={RouterLink} to="/">
                 <Button
                   type="button"
                   className="home-auth-button-new-game"
