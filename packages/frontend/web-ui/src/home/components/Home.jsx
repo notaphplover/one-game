@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { LogoCard } from '../../common/components/LogoCard';
+import { ReversedCard } from '../../game/components/ReversedCard';
 
 export const Home = () => {
   return (
@@ -9,7 +9,32 @@ export const Home = () => {
       <Grid container>
         <Grid item xs={12}>
           <Box component="div" className="page-section-container">
-            <LogoCard />
+            <Box component="div" className="home-cards-grid">
+              <Box
+                component="div"
+                className="home-cards-grid-element card-left"
+              >
+                <Box component="div" className="home-card-animation-panel">
+                  <ReversedCard></ReversedCard>
+                </Box>
+              </Box>
+              <Box
+                component="div"
+                className="home-cards-grid-element card-middle"
+              >
+                <Box component="div" className="home-card-animation-panel">
+                  <ReversedCard></ReversedCard>
+                </Box>
+              </Box>
+              <Box
+                component="div"
+                className="home-cards-grid-element card-right"
+              >
+                <Box component="div" className="home-card-animation-panel">
+                  <ReversedCard></ReversedCard>
+                </Box>
+              </Box>
+            </Box>
           </Box>
         </Grid>
       </Grid>
