@@ -87,3 +87,19 @@
     margin: 1rem;
   }
 }
+
+.home-auth-pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.home-auth-pagination-stack {
+  margin: 1rem auto;
+  box-shadow:
+    0 6px 20px 0 rgba(223, 192, 252, 0.5),
+    0 6px 20px 0 rgba(202, 159, 241, 0.5);
+}
+
+.home-auth-pagination-item {
+  text-decoration-color: var(--cg-text-primary);
+}
