@@ -2,10 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createAuthByCredentials } from '../thunk/createAuthByCredentials';
 import { createAuthByToken } from '../thunk/createAuthByToken';
 import { createInitialState } from '../helpers/createInitialState';
-
-export const STATUS_AUTH_AUTHENTICATED = 'authenticated';
-export const STATUS_AUTH_NOT_AUTHENTICATED = 'not-authenticated';
-const STATUS_AUTH_CHECKING = 'checking';
+import {
+  STATUS_AUTH_AUTHENTICATED,
+  STATUS_AUTH_CHECKING,
+  STATUS_AUTH_NOT_AUTHENTICATED,
+} from '../data/authSliceStatus';
 
 function createAuthPendingReducer(state) {
   state.status = STATUS_AUTH_CHECKING;
