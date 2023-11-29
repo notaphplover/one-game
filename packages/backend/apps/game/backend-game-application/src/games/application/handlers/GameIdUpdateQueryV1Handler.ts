@@ -94,7 +94,7 @@ export abstract class GameIdUpdateQueryV1Handler<
     };
 
     const gameSpecFindQuery: GameSpecFindQuery = {
-      gameId,
+      gameIds: [gameId],
     };
 
     const [game, gameSpec]: [Game | undefined, GameSpec | undefined] =

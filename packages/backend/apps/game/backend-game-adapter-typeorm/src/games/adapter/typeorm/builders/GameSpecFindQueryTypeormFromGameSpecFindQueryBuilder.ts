@@ -24,15 +24,32 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
       GameSpecDb,
     );
 
-    if (gameSpecFindQuery.gameId !== undefined) {
-      queryBuilder.andWhere(
-        `${gameSpecPropertiesPrefix}game = :${GameSpecDb.name}game`,
-        {
-          [`${GameSpecDb.name}game`]: gameSpecFindQuery.gameId,
-        },
-      );
+    if (gameSpecFindQuery.gameIds !== undefined) {
+      if (gameSpecFindQuery.gameIds.length > 0) {
+        if (this.#isArrayWithOneElement(gameSpecFindQuery.gameIds)) {
+          const [gameId]: [string] = gameSpecFindQuery.gameIds;
+
+          queryBuilder.andWhere(
+            `${gameSpecPropertiesPrefix}game = :${GameSpecDb.name}game`,
+            {
+              [`${GameSpecDb.name}game`]: gameId,
+            },
+          );
+        } else {
+          queryBuilder.andWhere(
+            `${gameSpecPropertiesPrefix}game IN (:${GameSpecDb.name}games)`,
+            {
+              [`${GameSpecDb.name}games`]: gameSpecFindQuery.gameIds,
+            },
+          );
+        }
+      }
     }
 
     return queryBuilder;
+  }
+
+  #isArrayWithOneElement<T>(array: T[]): array is [T] {
+    return array.length === 1;
   }
 }
