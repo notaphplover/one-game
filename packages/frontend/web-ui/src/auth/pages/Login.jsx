@@ -21,6 +21,8 @@ import {
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { LoginLayout } from '../layout/LoginLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 export const Login = () => {
   const {
@@ -46,9 +48,15 @@ export const Login = () => {
     notifyFormFieldsFilled();
   };
 
-  if (formStatus === STATUS_LOG_BACKEND_OK) {
-    return navigate('/', { replace: true });
-  }
+  const { token } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (formStatus === STATUS_LOG_BACKEND_OK) {
+      window.localStorage.setItem('token', token);
+      navigate('/', { replace: true });
+    }
+  }, [formStatus, token]);
+
   const isTextFieldDisabled = () => {
     return (
       formStatus === STATUS_LOG_BACKEND_OK ||
