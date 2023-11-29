@@ -22,6 +22,7 @@ import {
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
+import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 export const Login = () => {
@@ -48,11 +49,14 @@ export const Login = () => {
     notifyFormFieldsFilled();
   };
 
+  const { token } = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (formStatus === STATUS_LOG_BACKEND_OK) {
+      window.localStorage.setItem('token', token);
       navigate('/', { replace: true });
     }
-  }, [formStatus]);
+  }, [formStatus, token]);
 
   const isTextFieldDisabled = () => {
     return (
