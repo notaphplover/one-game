@@ -1,7 +1,7 @@
 import {
   STATUS_AUTH_AUTHENTICATED,
   STATUS_AUTH_NOT_AUTHENTICATED,
-} from '../features/authSlice';
+} from '../data/authSliceStatus';
 
 export const createInitialState = () => {
   const token = window.localStorage.getItem('token');
