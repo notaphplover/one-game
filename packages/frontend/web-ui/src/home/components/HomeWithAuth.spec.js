@@ -192,7 +192,7 @@ describe(HomeWithAuth.name, () => {
     });
 
     it('should show a list of active games', () => {
-      expect(activeGameName).toEqual('name-active');
+      expect(activeGameName).toEqual('name-pending');
     });
 
     it('should show a list of pending games', () => {

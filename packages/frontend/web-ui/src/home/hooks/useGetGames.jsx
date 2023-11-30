@@ -9,9 +9,10 @@ export const STATUS_GAME_REJECTED = 'rejected';
 
 const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error!';
 
-export const useGetGames = () => {
+export const useGetGames = (statusGame, page, pageSize) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [gameList, setGameList] = useState({});
+  const [numPage, setNumPage] = useState(page);
   const [status, setStatus] = useState(STATUS_GAME_IDLE);
   const { token } = useSelector((state) => state.auth);
 
@@ -42,7 +43,11 @@ export const useGetGames = () => {
       {
         authorization: `Bearer ${token}`,
       },
-      {},
+      {
+        status: statusGame,
+        page,
+        pageSize,
+      },
     );
 
     switch (response.statusCode) {
@@ -53,9 +58,18 @@ export const useGetGames = () => {
     }
   };
 
+  const pageCounter = (numPage) => {
+    if (status === STATUS_GAME_FULFILLED) {
+      setNumPage(numPage);
+      setStatus(STATUS_GAME_IDLE);
+    }
+  };
+
   return {
     errorMessage,
     gameList,
+    setNumPage: pageCounter,
+    numPage,
     status,
   };
 };

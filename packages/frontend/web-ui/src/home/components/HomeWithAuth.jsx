@@ -13,22 +13,48 @@ import { PendingGame } from '../../game/components/PendingGame';
 import { STATUS_GAME_FULFILLED, useGetGames } from '../hooks/useGetGames';
 import { ActiveGame } from '../../game/components/ActiveGame';
 import GamesIcon from '@mui/icons-material/Games';
+import { useEffect, useState } from 'react';
 
 const GAME_STATUS_NON_STARTED = 'nonStarted';
 const GAME_STATUS_ACTIVE = 'active';
+const pageSize = 3;
 
 export const HomeWithAuth = () => {
-  const { status, gameList } = useGetGames();
-  let pendingGames, activeGames;
+  const [pageNumberNonStarted, setPageNumberNonStarted] = useState(1);
+  const [pageNumberActive, setPageNumberActive] = useState(1);
 
-  if (status === STATUS_GAME_FULFILLED) {
-    pendingGames = gameList.filter(
-      (game) => game.state.status === GAME_STATUS_NON_STARTED,
-    );
-    activeGames = gameList.filter(
-      (game) => game.state.status === GAME_STATUS_ACTIVE,
-    );
-  }
+  const {
+    status: statusNonStarted,
+    setNumPage: setNumPageNonStarted,
+    gameList: gameListNonStarted,
+    numPage: numPageNonStarted,
+  } = useGetGames(GAME_STATUS_NON_STARTED, pageNumberNonStarted, pageSize);
+  const {
+    status: statusActive,
+    setNumPage: setNumPageActive,
+    gameList: gameListActive,
+    numPage: numPageActive,
+  } = useGetGames(GAME_STATUS_ACTIVE, pageNumberActive, pageSize);
+
+  useEffect(() => {
+    setPageNumberNonStarted(numPageNonStarted);
+  }, [numPageNonStarted]);
+
+  useEffect(() => {
+    setPageNumberActive(numPageActive);
+  }, [numPageActive]);
+
+  const onNextPageNonStarted = (_, page) => {
+    if (statusNonStarted === STATUS_GAME_FULFILLED) {
+      setNumPageNonStarted(page);
+    }
+  };
+
+  const onNextPageActive = (_, page) => {
+    if (statusActive === STATUS_GAME_FULFILLED) {
+      setNumPageActive(page);
+    }
+  };
 
   return (
     <CornieLayout id="home-page-with-auth" withFooter withNavBar>
@@ -56,8 +82,9 @@ export const HomeWithAuth = () => {
               Pending Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              {status === STATUS_GAME_FULFILLED && pendingGames.length > 0 ? (
-                pendingGames.map((game) => (
+              {statusNonStarted === STATUS_GAME_FULFILLED &&
+              gameListNonStarted.length > 0 ? (
+                gameListNonStarted.map((game) => (
                   <PendingGame key={game.id} game={game} />
                 ))
               ) : (
@@ -71,7 +98,13 @@ export const HomeWithAuth = () => {
               )}
               <Box component="div" className="home-auth-pagination">
                 <Stack className="home-auth-pagination-stack">
-                  <Pagination className="home-auth-pagination-item" count={0} />
+                  <Pagination
+                    className="home-auth-pagination-item"
+                    count={5}
+                    color="secondary"
+                    shape="rounded"
+                    onChange={onNextPageNonStarted}
+                  />
                 </Stack>
               </Box>
             </Box>
@@ -81,8 +114,9 @@ export const HomeWithAuth = () => {
               Active Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              {status === STATUS_GAME_FULFILLED && activeGames.length > 0 ? (
-                activeGames.map((game) => (
+              {statusActive === STATUS_GAME_FULFILLED &&
+              gameListActive.length > 0 ? (
+                gameListActive.map((game) => (
                   <ActiveGame key={game.id} game={game} />
                 ))
               ) : (
@@ -94,6 +128,17 @@ export const HomeWithAuth = () => {
                   No active games found.
                 </Typography>
               )}
+              <Box component="div" className="home-auth-pagination">
+                <Stack className="home-auth-pagination-stack">
+                  <Pagination
+                    className="home-auth-pagination-item"
+                    count={5}
+                    color="secondary"
+                    shape="rounded"
+                    onChange={onNextPageActive}
+                  />
+                </Stack>
+              </Box>
             </Box>
           </Grid>
         </Grid>
