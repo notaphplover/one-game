@@ -54,6 +54,6 @@ export class GetGameV1GameIdGameSpecHttpRequestController extends HttpRequestCon
   protected async _handleUseCase(
     gameId: string,
   ): Promise<apiModels.GameSpecV1 | undefined> {
-    return this.#gameSpecManagementInputPort.findOne(gameId);
+    return this.#gameSpecManagementInputPort.findOne({ gameIds: [gameId] });
   }
 }
