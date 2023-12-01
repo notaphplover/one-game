@@ -22,6 +22,7 @@
 
 .pending-game .pending-game-button-share {
   background-color: var(--cg-bkg-primary-dark);
+  border: 1px solid var(--cg-bkg-secondary-light);
   font-weight: bold;
   height: 2.5rem;
   width: 7rem;
@@ -33,4 +34,5 @@
 .pending-game .pending-game-button-share:hover {
   background-color: var(--cg-bkg-secondary-main);
   font-weight: bold;
+  color: var(--cg-btn-third-txt);
 }

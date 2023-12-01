@@ -22,6 +22,7 @@
 
 .active-game .active-game-button-join {
   background-color: var(--cg-bkg-primary-dark);
+  border: 1px solid var(--cg-bkg-secondary-light);
   height: 2.5rem;
   width: 7rem;
   font-weight: bold;
@@ -33,4 +34,5 @@
 .active-game .active-game-button-join:hover {
   background-color: var(--cg-bkg-secondary-main);
   font-weight: bold;
+  color: var(--cg-btn-third-txt);
 }
