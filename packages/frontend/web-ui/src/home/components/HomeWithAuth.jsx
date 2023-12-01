@@ -14,10 +14,13 @@ import { STATUS_GAME_FULFILLED, useGetGames } from '../hooks/useGetGames';
 import { ActiveGame } from '../../game/components/ActiveGame';
 import GamesIcon from '@mui/icons-material/Games';
 import { useEffect, useState } from 'react';
+import ArrowForwardIosOutlined from '@mui/icons-material/ArrowForwardIosOutlined';
+import ArrowBackIosNewOutlined from '@mui/icons-material/ArrowBackIosNewOutlined';
 
 const GAME_STATUS_NON_STARTED = 'nonStarted';
 const GAME_STATUS_ACTIVE = 'active';
-const pageSize = 3;
+const PAGE_SIZE = 5;
+const ONE = 1;
 
 export const HomeWithAuth = () => {
   const [pageNumberNonStarted, setPageNumberNonStarted] = useState(1);
@@ -27,32 +30,51 @@ export const HomeWithAuth = () => {
     status: statusNonStarted,
     setNumPage: setNumPageNonStarted,
     gameList: gameListNonStarted,
-    numPage: numPageNonStarted,
-  } = useGetGames(GAME_STATUS_NON_STARTED, pageNumberNonStarted, pageSize);
+  } = useGetGames(GAME_STATUS_NON_STARTED, pageNumberNonStarted, PAGE_SIZE);
   const {
     status: statusActive,
     setNumPage: setNumPageActive,
     gameList: gameListActive,
-    numPage: numPageActive,
-  } = useGetGames(GAME_STATUS_ACTIVE, pageNumberActive, pageSize);
+  } = useGetGames(GAME_STATUS_ACTIVE, pageNumberActive, PAGE_SIZE);
 
-  useEffect(() => {
-    setPageNumberNonStarted(numPageNonStarted);
-  }, [numPageNonStarted]);
-
-  useEffect(() => {
-    setPageNumberActive(numPageActive);
-  }, [numPageActive]);
-
-  const onNextPageNonStarted = (_, page) => {
-    if (statusNonStarted === STATUS_GAME_FULFILLED) {
-      setNumPageNonStarted(page);
+  const onNextPageNonStarted = (event) => {
+    event.preventDefault();
+    if (
+      statusNonStarted === STATUS_GAME_FULFILLED &&
+      gameListNonStarted.length >= PAGE_SIZE
+    ) {
+      setPageNumberNonStarted(pageNumberNonStarted + ONE);
+      setNumPageNonStarted(pageNumberNonStarted);
     }
   };
 
-  const onNextPageActive = (_, page) => {
-    if (statusActive === STATUS_GAME_FULFILLED) {
-      setNumPageActive(page);
+  const onPreviousPageNonStarted = (event) => {
+    event.preventDefault();
+    if (
+      statusNonStarted === STATUS_GAME_FULFILLED &&
+      pageNumberNonStarted > ONE
+    ) {
+      setPageNumberNonStarted(pageNumberNonStarted - ONE);
+      setNumPageNonStarted(pageNumberNonStarted);
+    }
+  };
+
+  const onNextPageActive = (event) => {
+    event.preventDefault();
+    if (
+      statusActive === STATUS_GAME_FULFILLED &&
+      gameListActive.length >= PAGE_SIZE
+    ) {
+      setPageNumberActive(pageNumberActive + ONE);
+      setNumPageActive(pageNumberNonStarted);
+    }
+  };
+
+  const onPreviousPageActive = (event) => {
+    event.preventDefault();
+    if (statusActive === STATUS_GAME_FULFILLED && pageNumberActive > ONE) {
+      setPageNumberActive(pageNumberActive - ONE);
+      setNumPageActive(pageNumberNonStarted);
     }
   };
 
@@ -97,15 +119,20 @@ export const HomeWithAuth = () => {
                 </Typography>
               )}
               <Box component="div" className="home-auth-pagination">
-                <Stack className="home-auth-pagination-stack">
-                  <Pagination
-                    className="home-auth-pagination-item"
-                    count={5}
-                    color="secondary"
-                    shape="rounded"
-                    onChange={onNextPageNonStarted}
-                  />
-                </Stack>
+                <Button
+                  type="button"
+                  className="home-auth-pagination-button"
+                  variant="contained"
+                  startIcon={<ArrowBackIosNewOutlined />}
+                  onClick={onPreviousPageNonStarted}
+                ></Button>
+                <Button
+                  type="button"
+                  className="home-auth-pagination-button"
+                  variant="contained"
+                  endIcon={<ArrowForwardIosOutlined />}
+                  onClick={onNextPageNonStarted}
+                ></Button>
               </Box>
             </Box>
           </Grid>
@@ -129,15 +156,20 @@ export const HomeWithAuth = () => {
                 </Typography>
               )}
               <Box component="div" className="home-auth-pagination">
-                <Stack className="home-auth-pagination-stack">
-                  <Pagination
-                    className="home-auth-pagination-item"
-                    count={5}
-                    color="secondary"
-                    shape="rounded"
-                    onChange={onNextPageActive}
-                  />
-                </Stack>
+                <Button
+                  type="button"
+                  className="home-auth-pagination-button"
+                  variant="contained"
+                  startIcon={<ArrowBackIosNewOutlined />}
+                  onClick={onPreviousPageActive}
+                ></Button>
+                <Button
+                  type="button"
+                  className="home-auth-pagination-button"
+                  variant="contained"
+                  endIcon={<ArrowForwardIosOutlined />}
+                  onClick={onNextPageActive}
+                ></Button>
               </Box>
             </Box>
           </Grid>

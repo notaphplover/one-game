@@ -91,15 +91,20 @@
 .home-auth-pagination {
   display: flex;
   justify-content: center;
-}
-
-.home-auth-pagination-stack {
+  gap: 1rem;
   margin: 1rem auto;
-  box-shadow:
-    0 6px 20px 0 rgba(223, 192, 252, 0.5),
-    0 6px 20px 0 rgba(202, 159, 241, 0.5);
 }
 
-.home-auth-pagination-item {
-  text-decoration-color: var(--cg-text-primary);
+.home-auth-pagination .home-auth-pagination-button {
+  background-color: var(--cg-bkg-primary-main);
+  border: 1px solid var(--cg-bkg-secondary-light);
+  box-shadow:
+    0 2px 6px 0 rgba(223, 192, 252, 0.5),
+    0 2px 6px 0 rgba(202, 159, 241, 0.5);
+}
+
+.home-auth-pagination .home-auth-pagination-button:hover {
+  background-color: var(--cg-bkg-secondary-main);
+  font-weight: bold;
+  color: var(--cg-btn-third-txt);
 }
