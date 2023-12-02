@@ -32,6 +32,10 @@ export class GameSpecPersistenceTypeOrmAdapter
     return this.#createGameSpecTypeOrmService.insertOne(gameSpecCreateQuery);
   }
 
+  public async find(gameSpecFindQuery: GameSpecFindQuery): Promise<GameSpec[]> {
+    return this.#findGameSpecTypeOrmService.find(gameSpecFindQuery);
+  }
+
   public async findOne(
     gameSpecFindQuery: GameSpecFindQuery,
   ): Promise<GameSpec | undefined> {
