@@ -3,9 +3,11 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import {
   GameSpec,
   GameSpecCreateQuery,
+  GameSpecFindQuery,
 } from '@cornie-js/backend-game-domain/games';
 import {
   GameSpecCreateQueryFixtures,
+  GameSpecFindQueryFixtures,
   GameSpecFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
@@ -25,6 +27,13 @@ describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
     } as Partial<
       jest.Mocked<CreateGameSpecTypeOrmService>
     > as jest.Mocked<CreateGameSpecTypeOrmService>;
+
+    findGameSpecTypeOrmServiceMock = {
+      find: jest.fn(),
+      findOne: jest.fn(),
+    } as Partial<
+      jest.Mocked<FindGameSpecTypeOrmService>
+    > as jest.Mocked<FindGameSpecTypeOrmService>;
 
     gameSpecPersistenceTypeOrmAdapter = new GameSpecPersistenceTypeOrmAdapter(
       createGameSpecTypeOrmServiceMock,
@@ -66,6 +75,88 @@ describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(createGameSpecTypeOrmServiceMock.insertOne).toHaveBeenCalledWith(
           gameSpecCreateQueryFixture,
+        );
+      });
+
+      it('should return GameSpec', () => {
+        expect(result).toBe(gameSpecFixture);
+      });
+    });
+  });
+
+  describe('.find', () => {
+    let gameSpecFindQueryFixture: GameSpecFindQuery;
+
+    beforeAll(() => {
+      gameSpecFindQueryFixture = GameSpecFindQueryFixtures.any;
+    });
+
+    describe('when called', () => {
+      let gameSpecFixtures: GameSpec[];
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameSpecFixtures = [GameSpecFixtures.any];
+
+        findGameSpecTypeOrmServiceMock.find.mockResolvedValueOnce(
+          gameSpecFixtures,
+        );
+
+        result = await gameSpecPersistenceTypeOrmAdapter.find(
+          gameSpecFindQueryFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call findGameSpecTypeOrmService.find()', () => {
+        expect(findGameSpecTypeOrmServiceMock.find).toHaveBeenCalledTimes(1);
+        expect(findGameSpecTypeOrmServiceMock.find).toHaveBeenCalledWith(
+          gameSpecFindQueryFixture,
+        );
+      });
+
+      it('should return GameSpec', () => {
+        expect(result).toBe(gameSpecFixtures);
+      });
+    });
+  });
+
+  describe('.findOne', () => {
+    let gameSpecFindQueryFixture: GameSpecFindQuery;
+
+    beforeAll(() => {
+      gameSpecFindQueryFixture = GameSpecFindQueryFixtures.any;
+    });
+
+    describe('when called', () => {
+      let gameSpecFixture: GameSpec;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameSpecFixture = GameSpecFixtures.any;
+
+        findGameSpecTypeOrmServiceMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
+        );
+
+        result = await gameSpecPersistenceTypeOrmAdapter.findOne(
+          gameSpecFindQueryFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call findGameSpecTypeOrmService.findOne()', () => {
+        expect(findGameSpecTypeOrmServiceMock.findOne).toHaveBeenCalledTimes(1);
+        expect(findGameSpecTypeOrmServiceMock.findOne).toHaveBeenCalledWith(
+          gameSpecFindQueryFixture,
         );
       });
 
