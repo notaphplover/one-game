@@ -25,6 +25,7 @@ describe(GameSpecManagementInputPort.name, () => {
 
   beforeAll(() => {
     gameSpecPersistenceOutputPortMock = {
+      find: jest.fn(),
       findOne: jest.fn(),
     } as Partial<
       jest.Mocked<GameSpecPersistenceOutputPort>
@@ -37,6 +38,62 @@ describe(GameSpecManagementInputPort.name, () => {
       gameSpecPersistenceOutputPortMock,
       gameSpecV1FromGameSpecBuilderMock,
     );
+  });
+
+  describe('.find', () => {
+    let gameSpecFindQueryFixture: GameSpecFindQuery;
+
+    beforeAll(() => {
+      gameSpecFindQueryFixture = GameSpecFindQueryFixtures.any;
+    });
+
+    describe('when called, and gameSpecPersistenceOutputPort.find() resolves an array of one game spec', () => {
+      let gameSpecFixture: GameSpec;
+      let gameSpecV1Fixture: apiModels.GameSpecV1;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameSpecFixture = GameSpecFixtures.any;
+        gameSpecV1Fixture = GameSpecV1Fixtures.any;
+
+        gameSpecPersistenceOutputPortMock.find.mockResolvedValueOnce([
+          gameSpecFixture,
+        ]);
+
+        gameSpecV1FromGameSpecBuilderMock.build.mockReturnValueOnce(
+          gameSpecV1Fixture,
+        );
+
+        result = await gameSpecManagementInputPort.find(
+          gameSpecFindQueryFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameSpecPersistenceOutputPort.find()', () => {
+        expect(gameSpecPersistenceOutputPortMock.find).toHaveBeenCalledTimes(1);
+        expect(gameSpecPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+          gameSpecFindQueryFixture,
+        );
+      });
+
+      it('should call gameSpecV1FromGameSpecBuilder.build()', () => {
+        expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecV1FromGameSpecBuilderMock.build).toHaveBeenCalledWith(
+          gameSpecFixture,
+        );
+      });
+
+      it('should return GameSpecV1[]', () => {
+        expect(result).toStrictEqual([gameSpecV1Fixture]);
+      });
+    });
   });
 
   describe('.findOne', () => {
