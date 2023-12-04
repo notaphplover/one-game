@@ -82,8 +82,7 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const pendingGameText =
-        result.container.querySelector('.pending-game-text');
+      const pendingGameText = result.container.querySelector('.game-list-text');
 
       pendingGameName = pendingGameText.childNodes[0].nodeValue;
     });
@@ -124,8 +123,7 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const activeGameText =
-        result.container.querySelector('.active-game-text');
+      const activeGameText = result.container.querySelector('.game-list-text');
 
       activeGameName = activeGameText.childNodes[0].nodeValue;
     });
@@ -175,13 +173,11 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const pendingGameText =
-        result.container.querySelector('.pending-game-text');
+      const pendingGameText = result.container.querySelector('.game-list-text');
 
       pendingGameName = pendingGameText.childNodes[0].nodeValue;
 
-      const activeGameText =
-        result.container.querySelector('.active-game-text');
+      const activeGameText = result.container.querySelector('.game-list-text');
 
       activeGameName = activeGameText.childNodes[0].nodeValue;
     });

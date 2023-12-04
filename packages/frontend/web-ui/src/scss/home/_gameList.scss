@@ -1,0 +1,43 @@
+@use '../base/variables' as variables;
+
+.game-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--cg-bkg-primary-light);
+  border: 2px solid var(--cg-bkg-secondary-light);
+  border-radius: 10px;
+  box-shadow:
+    0 2px 4px 0 rgba(68, 2, 131, 0.5),
+    0 3px 10px 0 rgba(68, 2, 131, 0.5);
+  margin: 0.5rem;
+  padding: 1rem;
+}
+
+.game-list .game-list-text {
+  color: var(--cg-text-primary);
+  text-align: center;
+  font-size: variables.$font-sm;
+}
+
+.game-list .game-list-button {
+  background-color: var(--cg-bkg-primary-dark);
+  border: 1px solid var(--cg-bkg-secondary-light);
+  font-weight: bold;
+  height: 2.5rem;
+  width: 7rem;
+  box-shadow:
+    0 4px 8px 0 rgba(223, 192, 252, 0.5),
+    0 6px 20px 0 rgba(202, 159, 241, 0.5);
+}
+
+.hide-button-active-game,
+.hide-button-pending-game {
+  display: none;
+}
+
+.game-list .game-list-button:hover {
+  background-color: var(--cg-bkg-secondary-main);
+  font-weight: bold;
+  color: var(--cg-btn-third-txt);
+}

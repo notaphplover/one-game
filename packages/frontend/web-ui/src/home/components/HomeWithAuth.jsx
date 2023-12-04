@@ -1,26 +1,17 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Link,
-  Pagination,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { PendingGame } from '../../game/components/PendingGame';
+import { GameList } from '../../game/components/GameList';
 import { STATUS_GAME_FULFILLED, useGetGames } from '../hooks/useGetGames';
-import { ActiveGame } from '../../game/components/ActiveGame';
 import GamesIcon from '@mui/icons-material/Games';
-import { useEffect, useState } from 'react';
 import ArrowForwardIosOutlined from '@mui/icons-material/ArrowForwardIosOutlined';
 import ArrowBackIosNewOutlined from '@mui/icons-material/ArrowBackIosNewOutlined';
 
 const GAME_STATUS_NON_STARTED = 'nonStarted';
 const GAME_STATUS_ACTIVE = 'active';
 const PAGE_SIZE = 5;
-const ONE = 1;
+const ONE_PAGE = 1;
 
 export const HomeWithAuth = () => {
   const [pageNumberNonStarted, setPageNumberNonStarted] = useState(1);
@@ -43,7 +34,7 @@ export const HomeWithAuth = () => {
       statusNonStarted === STATUS_GAME_FULFILLED &&
       gameListNonStarted.length >= PAGE_SIZE
     ) {
-      setPageNumberNonStarted(pageNumberNonStarted + ONE);
+      setPageNumberNonStarted(pageNumberNonStarted + ONE_PAGE);
       setNumPageNonStarted(pageNumberNonStarted);
     }
   };
@@ -52,9 +43,9 @@ export const HomeWithAuth = () => {
     event.preventDefault();
     if (
       statusNonStarted === STATUS_GAME_FULFILLED &&
-      pageNumberNonStarted > ONE
+      pageNumberNonStarted > ONE_PAGE
     ) {
-      setPageNumberNonStarted(pageNumberNonStarted - ONE);
+      setPageNumberNonStarted(pageNumberNonStarted - ONE_PAGE);
       setNumPageNonStarted(pageNumberNonStarted);
     }
   };
@@ -65,15 +56,15 @@ export const HomeWithAuth = () => {
       statusActive === STATUS_GAME_FULFILLED &&
       gameListActive.length >= PAGE_SIZE
     ) {
-      setPageNumberActive(pageNumberActive + ONE);
+      setPageNumberActive(pageNumberActive + ONE_PAGE);
       setNumPageActive(pageNumberNonStarted);
     }
   };
 
   const onPreviousPageActive = (event) => {
     event.preventDefault();
-    if (statusActive === STATUS_GAME_FULFILLED && pageNumberActive > ONE) {
-      setPageNumberActive(pageNumberActive - ONE);
+    if (statusActive === STATUS_GAME_FULFILLED && pageNumberActive > ONE_PAGE) {
+      setPageNumberActive(pageNumberActive - ONE_PAGE);
       setNumPageActive(pageNumberNonStarted);
     }
   };
@@ -107,7 +98,11 @@ export const HomeWithAuth = () => {
               {statusNonStarted === STATUS_GAME_FULFILLED &&
               gameListNonStarted.length > 0 ? (
                 gameListNonStarted.map((game) => (
-                  <PendingGame key={game.id} game={game} />
+                  <GameList
+                    key={game.id}
+                    typeGame={GAME_STATUS_NON_STARTED}
+                    game={game}
+                  />
                 ))
               ) : (
                 <Typography
@@ -144,7 +139,11 @@ export const HomeWithAuth = () => {
               {statusActive === STATUS_GAME_FULFILLED &&
               gameListActive.length > 0 ? (
                 gameListActive.map((game) => (
-                  <ActiveGame key={game.id} game={game} />
+                  <GameList
+                    key={game.id}
+                    typeGame={GAME_STATUS_ACTIVE}
+                    game={game}
+                  />
                 ))
               ) : (
                 <Typography
