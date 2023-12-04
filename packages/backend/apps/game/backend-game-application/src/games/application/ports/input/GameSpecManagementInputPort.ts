@@ -30,16 +30,27 @@ export class GameSpecManagementInputPort {
     this.#gameSpecV1FromGameSpecBuilder = gameSpecV1FromGameSpecBuilder;
   }
 
+  public async find(
+    gameSpecFindQuery: GameSpecFindQuery,
+  ): Promise<apiModels.GameSpecV1[]> {
+    const gameSpecs: GameSpec[] =
+      await this.#gameSpecPersistenceOutputPort.find(gameSpecFindQuery);
+
+    return gameSpecs.map((gameSpec: GameSpec) =>
+      this.#gameSpecV1FromGameSpecBuilder.build(gameSpec),
+    );
+  }
+
   public async findOne(
     gameSpecFindQuery: GameSpecFindQuery,
   ): Promise<apiModels.GameSpecV1 | undefined> {
-    const game: GameSpec | undefined =
+    const gameSpecs: GameSpec | undefined =
       await this.#gameSpecPersistenceOutputPort.findOne(gameSpecFindQuery);
 
-    if (game === undefined) {
+    if (gameSpecs === undefined) {
       return undefined;
     } else {
-      return this.#gameSpecV1FromGameSpecBuilder.build(game);
+      return this.#gameSpecV1FromGameSpecBuilder.build(gameSpecs);
     }
   }
 }

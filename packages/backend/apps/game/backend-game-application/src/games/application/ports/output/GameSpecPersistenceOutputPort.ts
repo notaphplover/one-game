@@ -6,9 +6,8 @@ import {
 
 export interface GameSpecPersistenceOutputPort {
   create(gameSpecCreateQuery: GameSpecCreateQuery): Promise<GameSpec>;
-  findOne(
-    gameSpecCreateQuery: GameSpecFindQuery,
-  ): Promise<GameSpec | undefined>;
+  find(gameSpecFindQuery: GameSpecFindQuery): Promise<GameSpec[]>;
+  findOne(gameSpecFindQuery: GameSpecFindQuery): Promise<GameSpec | undefined>;
 }
 
 export const gameSpecPersistenceOutputPortSymbol: symbol = Symbol.for(
