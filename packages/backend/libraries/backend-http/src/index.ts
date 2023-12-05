@@ -34,6 +34,11 @@ import { MiddlewarePipeline } from './http/application/modules/MiddlewarePipelin
 import { SseConsumer } from './http/application/modules/SseConsumer';
 import { SsePublisher } from './http/application/modules/SsePublisher';
 import { SseTeardownExecutor } from './http/application/modules/SseTeardownExecutor';
+import {
+  ParsedValue,
+  RequestQueryParseFailure,
+  RequestService,
+} from './http/application/services/RequestService';
 import { AuthMiddleware } from './user/application/middleware/AuthMiddleware';
 
 export type {
@@ -43,6 +48,7 @@ export type {
   BackendServiceAuth,
   MessageEvent,
   Middleware,
+  ParsedValue,
   Request,
   RequestContextHolder,
   RequestWithBody,
@@ -69,6 +75,8 @@ export {
   MiddlewarePipeline,
   MultipleEntitiesGetResponseBuilder,
   RequestFromFastifyRequestBuilder,
+  RequestQueryParseFailure,
+  RequestService,
   RequestWithBodyFromFastifyRequestBuilder,
   requestContextProperty,
   SingleEntityDeleteResponseBuilder,
