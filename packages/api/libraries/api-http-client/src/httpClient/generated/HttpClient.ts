@@ -145,6 +145,29 @@ export class HttpClient {
       undefined,
     );
   }
+  public async getGamesSpecs(
+    headers: {
+      [key: string]: string;
+    },
+    query: {
+      [key: string]: string | string[];
+      gameId?: string | string[];
+      page?: string | string[];
+      pageSize?: string | string[];
+    },
+  ): Promise<
+    | Response<Record<string, string>, apiModels.GameSpecV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v1/games/specs',
+      headers,
+      query,
+      undefined,
+      undefined,
+    );
+  }
   public async createGameSlot(
     headers: {
       [key: string]: string;
