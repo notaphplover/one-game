@@ -41,6 +41,8 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      tags:
+        - Auth
 
   /v1/games:
     post:
@@ -78,6 +80,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
 
   /v1/games/mine:
     get:
@@ -123,6 +127,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
 
   /v1/games/{gameId}:
     get:
@@ -162,6 +168,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
     patch:
       summary: Update a game
       operationId: updateGame
@@ -204,8 +212,10 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
 
-  /v1/games/{gameId}/spec:
+  /v1/games/{gameId}/specs:
     get:
       summary: Get a game spec
       operationId: getGameGameIdSpec
@@ -243,6 +253,53 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
+
+  /v1/games/specs:
+    get:
+      summary: Get a game spec
+      operationId: getGamesSpecs
+      parameters:
+        - in: query
+          name: gameId
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          style: form
+          description: Game id
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+          description: pagination number
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            type: number
+          description: pagination size
+      responses:
+        '200':
+          description: Game specs found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/games/game-spec-array.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - bearerAuth: []
+      tags:
+        - Game
 
   /v1/games/{gameId}/slots:
     post:
@@ -293,6 +350,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
 
   /v1/games/{gameId}/slots/{gameSlotIndex}/cards:
     get:
@@ -338,6 +397,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - Game
 
   /v1/users:
     post:
@@ -368,6 +429,8 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security: []
+      tags:
+        - User
 
   /v1/users/email/{email}/code:
     delete:
@@ -382,6 +445,8 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      tags:
+        - User
     post:
       summary: Create user code
       operationId: createUserByEmailCode
@@ -394,6 +459,8 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      tags:
+        - User
 
   /v1/users/me:
     delete:
@@ -410,6 +477,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - User
 
     get:
       summary: Get current user
@@ -435,6 +504,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - User
     patch:
       summary: Update user me
       operationId: updateUserMe
@@ -464,6 +535,8 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - User
 
   /v1/users/{userId}:
     get:
@@ -497,3 +570,13 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
+      tags:
+        - User
+
+tags:
+  - name: Auth
+    description: Authorization management operations
+  - name: Game
+    description: Game management operations
+  - name: User
+    description: User management operations
