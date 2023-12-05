@@ -244,6 +244,51 @@ paths:
       security:
         - bearerAuth: []
 
+  /v1/games/specs:
+    get:
+      summary: Get a game spec
+      operationId: getGamesSpecs
+      parameters:
+        - in: query
+          name: gameId
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          style: form
+          description: Game id
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+          description: pagination number
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            type: number
+          description: pagination size
+      responses:
+        '200':
+          description: Game specs found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/games/game-spec-array.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - bearerAuth: []
+      tags:
+        - Game
+
   /v1/games/{gameId}/slots:
     post:
       summary: Create a game slot
