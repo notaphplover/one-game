@@ -18,7 +18,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 @Controller(
   `v1/games/:${GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam}`,
 )
-export class GetGameV1GameIdGameSpecHttpRequestNestController extends HttpNestFastifyController<Request> {
+export class GetGamesV1GameIdSpecHttpRequestNestController extends HttpNestFastifyController<Request> {
   constructor(
     @Inject(RequestFromFastifyRequestBuilder)
     requestBuilder: Builder<Request, [FastifyRequest]>,
@@ -43,7 +43,7 @@ export class GetGameV1GameIdGameSpecHttpRequestNestController extends HttpNestFa
     );
   }
 
-  @Get(`spec`)
+  @Get('specs')
   public override async handle(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,

@@ -138,7 +138,7 @@ export class HttpClient {
   > {
     return this.#axiosHttpClient.callEndpoint(
       'GET',
-      '/v1/games/{gameId}/spec',
+      '/v1/games/{gameId}/specs',
       headers,
       undefined,
       url,
