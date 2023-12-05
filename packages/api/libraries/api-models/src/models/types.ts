@@ -38,6 +38,7 @@ export type TypesV1 =
   | GameMessageEventV1
   | GameOptionsV1
   | GameSlotV1
+  | GameSpecArrayV1
   | GameSpecV1
   | GameUpdatedMessageEventV1
   | GameV1
@@ -72,6 +73,8 @@ export type GameSlotV1 =
   | ActiveGameSlotV1
   | FinishedGameSlotV1
   | NonStartedGameSlotV1;
+export type GameSpecArrayV1 = GameSpecArrayV11 & GameSpecArrayV12;
+export type GameSpecArrayV12 = unknown[];
 
 export interface CodeAuthCreateQueryV1 {
   code: string;
@@ -191,6 +194,11 @@ export interface GameIdPlayCardsQueryV1 {
 export interface GameUpdatedMessageEventV1 {
   game: GameV1;
   kind: 'game-updated';
+}
+export interface GameSpecArrayV11 {
+  cardSpecs: GameCardSpecV1[];
+  gameSlotsAmount: number;
+  options: GameOptionsV1;
 }
 export interface GameSpecV1 {
   cardSpecs: GameCardSpecV1[];
