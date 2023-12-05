@@ -1,5 +1,5 @@
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import {
   STATUS_GAME_FULFILLED,
   STATUS_GAME_REJECTED,
@@ -17,10 +17,16 @@ jest.mock('react-redux', () => {
 jest.mock('../../common/http/services/HttpService');
 
 describe(useGetGames.name, () => {
+  let statusGameFixture;
+  let pageFixture;
+  let pageSizeFixture;
   let errorMessageFixture;
   let tokenFixture;
 
   beforeAll(() => {
+    statusGameFixture = null;
+    pageFixture = 1;
+    pageSizeFixture = 1;
     tokenFixture = null;
     errorMessageFixture = null;
   });
@@ -29,9 +35,13 @@ describe(useGetGames.name, () => {
     let result;
     let status;
     let gameList;
+    let numPage;
     let errorMessage;
 
     beforeAll(async () => {
+      statusGameFixture = 'nonStarted';
+      pageSizeFixture = 3;
+
       tokenFixture = 'jwt token fixture';
 
       useSelector.mockImplementation(() => ({
@@ -45,9 +55,22 @@ describe(useGetGames.name, () => {
           {
             id: 'id',
             name: 'name',
-            spec: {},
             state: {
-              status: 'nonStarted',
+              status: statusGameFixture,
+            },
+          },
+          {
+            id: 'id2',
+            name: 'name2',
+            state: {
+              status: statusGameFixture,
+            },
+          },
+          {
+            id: 'id3',
+            name: 'name3',
+            state: {
+              status: statusGameFixture,
             },
           },
         ],
@@ -55,12 +78,15 @@ describe(useGetGames.name, () => {
       });
 
       await act(() => {
-        result = renderHook(() => useGetGames()).result;
+        result = renderHook(() =>
+          useGetGames(statusGameFixture, pageFixture, pageSizeFixture),
+        ).result;
       });
 
       status = result.current.status;
       gameList = result.current.gameList;
       errorMessage = result.current.errorMessage;
+      numPage = result.current.numPage;
     });
 
     afterAll(() => {
@@ -81,14 +107,31 @@ describe(useGetGames.name, () => {
       expect(errorMessage).toBeNull();
     });
 
+    it('should return a page number', () => {
+      expect(numPage).toEqual(pageFixture);
+    });
+
     it('should return a list of games', () => {
       expect(gameList).toEqual([
         {
           id: 'id',
           name: 'name',
-          spec: {},
           state: {
-            status: 'nonStarted',
+            status: statusGameFixture,
+          },
+        },
+        {
+          id: 'id2',
+          name: 'name2',
+          state: {
+            status: statusGameFixture,
+          },
+        },
+        {
+          id: 'id3',
+          name: 'name3',
+          state: {
+            status: statusGameFixture,
           },
         },
       ]);
@@ -103,7 +146,6 @@ describe(useGetGames.name, () => {
 
     beforeAll(async () => {
       tokenFixture = 'jwt token fixture';
-      errorMessageFixture = 'error fixture';
 
       useSelector.mockImplementation(() => ({
         token: tokenFixture,
@@ -121,7 +163,9 @@ describe(useGetGames.name, () => {
       });
 
       await act(() => {
-        result = renderHook(() => useGetGames()).result;
+        result = renderHook(() =>
+          useGetGames(statusGameFixture, pageFixture, pageSizeFixture),
+        ).result;
       });
 
       status = result.current.status;
