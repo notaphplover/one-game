@@ -6,10 +6,10 @@ import { JoinInnerOutlined, Share } from '@mui/icons-material';
  * @param {string} statusGame
  * @returns {string}
  */
-function getBoxNonStartedClassName(statusGame) {
-  let layoutBoxClassNames = [];
-  if (statusGame === 'nonStarted') {
-    layoutBoxClassNames.push('hide-button-active-game');
+function getClassNameHiddenJoinButton(statusGame) {
+  let layoutBoxClassNames = ['hide-button-active-game'];
+  if (statusGame === 'active') {
+    layoutBoxClassNames.pop();
   }
 
   return layoutBoxClassNames.join(' ');
@@ -19,10 +19,10 @@ function getBoxNonStartedClassName(statusGame) {
  * @param {string} statusGame
  * @returns {string}
  */
-function getBoxActiveClassName(statusGame) {
-  let layoutBoxClassNames = [];
-  if (statusGame === 'active') {
-    layoutBoxClassNames.push('hide-button-pending-game');
+function getClassNameHiddenShareButton(statusGame) {
+  let layoutBoxClassNames = ['hide-button-pending-game'];
+  if (statusGame === 'nonStarted') {
+    layoutBoxClassNames.pop();
   }
 
   return layoutBoxClassNames.join(' ');
@@ -34,7 +34,7 @@ export const GameList = ({ typeGame, game }) => {
       <Typography variant="h5" className="game-list-text" component="h5">
         {game.name === undefined ? '--' : game.name}
       </Typography>
-      <Box component="div" className={getBoxActiveClassName(typeGame)}>
+      <Box component="div" className={getClassNameHiddenShareButton(typeGame)}>
         <Link component={RouterLink} to="/">
           <Button
             type="button"
@@ -46,7 +46,7 @@ export const GameList = ({ typeGame, game }) => {
           </Button>
         </Link>
       </Box>
-      <Box component="div" className={getBoxNonStartedClassName(typeGame)}>
+      <Box component="div" className={getClassNameHiddenJoinButton(typeGame)}>
         <Link component={RouterLink} to="/">
           <Button
             type="button"
