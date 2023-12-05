@@ -205,7 +205,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /v1/games/{gameId}/spec:
+  /v1/games/{gameId}/specs:
     get:
       summary: Get a game spec
       operationId: getGameGameIdSpec
