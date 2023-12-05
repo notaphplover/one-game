@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/game-spec-array.json",
+  "title": "GameSpecArrayV1",
+  "type": "array",
+  "$ref": "https://onegame.schemas/api/v1/games/game-spec.json"
+}
