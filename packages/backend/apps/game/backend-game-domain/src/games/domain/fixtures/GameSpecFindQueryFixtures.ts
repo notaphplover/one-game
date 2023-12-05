@@ -22,4 +22,16 @@ export class GameSpecFindQueryFixtures {
       gameIds: ['game-id-fixture-1', 'game-id-fixture-2'],
     };
   }
+
+  public static get withLimit(): GameSpecFindQuery {
+    return {
+      limit: 10,
+    };
+  }
+
+  public static get withOffset(): GameSpecFindQuery {
+    return {
+      offset: 10,
+    };
+  }
 }

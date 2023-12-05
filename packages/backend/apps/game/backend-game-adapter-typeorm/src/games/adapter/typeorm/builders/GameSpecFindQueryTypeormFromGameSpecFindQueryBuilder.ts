@@ -1,7 +1,13 @@
-import { Builder } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
-import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import {
+  InstanceChecker,
+  ObjectLiteral,
+  QueryBuilder,
+  SelectQueryBuilder,
+  WhereExpressionBuilder,
+} from 'typeorm';
 
 import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameSpecDb } from '../models/GameSpecDb';
@@ -37,7 +43,7 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
           );
         } else {
           queryBuilder.andWhere(
-            `${gameSpecPropertiesPrefix}game IN (:${GameSpecDb.name}games)`,
+            `${gameSpecPropertiesPrefix}game IN (:...${GameSpecDb.name}games)`,
             {
               [`${GameSpecDb.name}games`]: gameSpecFindQuery.gameIds,
             },
@@ -46,7 +52,28 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
       }
     }
 
+    if (gameSpecFindQuery.limit !== undefined) {
+      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
+      queryBuilder = queryBuilder.limit(gameSpecFindQuery.limit);
+    }
+
+    if (gameSpecFindQuery.offset !== undefined) {
+      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
+      queryBuilder = queryBuilder.offset(gameSpecFindQuery.offset);
+    }
+
     return queryBuilder;
+  }
+
+  #assertSelectQueryBuilderIsUsedForSelectFilters(
+    queryBuilder: QueryBuilder<ObjectLiteral>,
+  ): asserts queryBuilder is SelectQueryBuilder<ObjectLiteral> {
+    if (!InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Error trying to filter a game spec in a non search context`,
+      );
+    }
   }
 
   #isArrayWithOneElement<T>(array: T[]): array is [T] {
