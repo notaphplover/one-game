@@ -8,7 +8,7 @@ import {
   Request,
   RequestService,
   requestContextProperty,
-  RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
@@ -21,6 +21,7 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
 
   beforeAll(() => {
     requestServiceMock = {
+      composeErrorMessages: jest.fn(),
       tryParseIntegerQuery: jest.fn(),
       tryParseStringQuery: jest.fn(),
     } as Partial<jest.Mocked<RequestService>> as jest.Mocked<RequestService>;
@@ -94,22 +95,39 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
       });
 
       describe('when called, and requestService returns left', () => {
+        let errorFixture: string;
+
         let result: unknown;
 
         beforeAll(async () => {
+          errorFixture = 'error-fixture';
+
+          requestServiceMock.composeErrorMessages.mockReturnValueOnce([
+            errorFixture,
+          ]);
+
           requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
             isRight: false,
-            value: RequestQueryParseFailure.invalidValue,
+            value: {
+              errors: [],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
           });
 
           requestServiceMock.tryParseIntegerQuery
             .mockReturnValueOnce({
               isRight: false,
-              value: RequestQueryParseFailure.invalidValue,
+              value: {
+                errors: [],
+                kind: RequestQueryParseFailureKind.invalidValue,
+              },
             })
             .mockReturnValueOnce({
               isRight: false,
-              value: RequestQueryParseFailure.invalidValue,
+              value: {
+                errors: [],
+                kind: RequestQueryParseFailureKind.invalidValue,
+              },
             });
 
           try {
@@ -126,7 +144,7 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
         it('should throw an AppError', () => {
           const expectedErrorProperties: Partial<AppError> = {
             kind: AppErrorKind.contractViolation,
-            message: 'Invalid query params',
+            message: expect.stringContaining(errorFixture) as unknown as string,
           };
 
           expect(result).toBeInstanceOf(AppError);

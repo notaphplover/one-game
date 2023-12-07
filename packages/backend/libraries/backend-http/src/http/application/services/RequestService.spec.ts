@@ -6,6 +6,7 @@ import { Request } from '../models/Request';
 import {
   NumericRequestQueryParseOptions,
   RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
   RequestQueryParseOptions,
   RequestService,
 } from './RequestService';
@@ -85,7 +86,10 @@ describe(RequestService.name, () => {
         it('should return a Left with the default value', () => {
           const expected: Left<RequestQueryParseFailure> = {
             isRight: false,
-            value: RequestQueryParseFailure.notFound,
+            value: {
+              errors: ['Expecting value, but none found'],
+              kind: RequestQueryParseFailureKind.notFound,
+            },
           };
 
           expect(result).toStrictEqual(expected);
@@ -168,7 +172,10 @@ describe(RequestService.name, () => {
         it('should return a Left with the default value', () => {
           const expected: Left<RequestQueryParseFailure> = {
             isRight: false,
-            value: RequestQueryParseFailure.invalidValue,
+            value: {
+              errors: ['Expected a single value, multiple ones were found'],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
           };
 
           expect(result).toStrictEqual(expected);
@@ -207,7 +214,7 @@ describe(RequestService.name, () => {
           );
         });
 
-        it('should return a Left with the default value', () => {
+        it('should return a Right with the parsed value', () => {
           const expected: Right<string[]> = {
             isRight: true,
             value: [queryValueFixture],
@@ -248,7 +255,7 @@ describe(RequestService.name, () => {
           );
         });
 
-        it('should return a Right with the default value', () => {
+        it('should return a Right with the parsed value', () => {
           const expected: Right<string | string[]> = {
             isRight: true,
             value: queryValueFixture,
@@ -295,7 +302,12 @@ describe(RequestService.name, () => {
         it('should return a Left with invalid value', () => {
           const expected: Left<RequestQueryParseFailure> = {
             isRight: false,
-            value: RequestQueryParseFailure.invalidValue,
+            value: {
+              errors: [
+                'Expecting a numeric value, non numeric one was found instead',
+              ],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
           };
 
           expect(result).toStrictEqual(expected);
@@ -380,7 +392,12 @@ describe(RequestService.name, () => {
         it('should return a Left with invalid value', () => {
           const expected: Left<RequestQueryParseFailure> = {
             isRight: false,
-            value: RequestQueryParseFailure.invalidValue,
+            value: {
+              errors: [
+                `Expected value to be less or equal ${requestQueryParseOptionsFixture.max}`,
+              ],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
           };
 
           expect(result).toStrictEqual(expected);
@@ -423,7 +440,12 @@ describe(RequestService.name, () => {
         it('should return a Left with invalid value', () => {
           const expected: Left<RequestQueryParseFailure> = {
             isRight: false,
-            value: RequestQueryParseFailure.invalidValue,
+            value: {
+              errors: [
+                `Expected value to be greater or equal ${requestQueryParseOptionsFixture.min}`,
+              ],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
           };
 
           expect(result).toStrictEqual(expected);
@@ -509,7 +531,10 @@ describe(RequestService.name, () => {
         it('should return a Left with invalid value', () => {
           const expected: Left<RequestQueryParseFailure> = {
             isRight: false,
-            value: RequestQueryParseFailure.invalidValue,
+            value: {
+              errors: ['Expected value to be integer'],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
           };
 
           expect(result).toStrictEqual(expected);
