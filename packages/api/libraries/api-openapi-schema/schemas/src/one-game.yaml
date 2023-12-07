@@ -98,12 +98,15 @@ paths:
           name: page
           required: false
           schema:
+            minimum: 1
             type: number
           description: pagination number
         - in: query
           name: pageSize
           required: false
           schema:
+            maximum: 50
+            minimum: 1
             type: number
           description: pagination size
       responses:
@@ -275,12 +278,15 @@ paths:
           name: page
           required: false
           schema:
+            minimum: 1
             type: number
           description: pagination number
         - in: query
           name: pageSize
           required: false
           schema:
+            maximum: 50
+            minimum: 1
             type: number
           description: pagination size
       responses:
