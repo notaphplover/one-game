@@ -2,6 +2,7 @@ import { models as apiModels } from '@cornie-js/api-models';
 import {
   AppError,
   AppErrorKind,
+  Either,
   Handler,
   Writable,
 } from '@cornie-js/backend-common';
@@ -14,9 +15,12 @@ import {
   AuthKind,
   AuthRequestContextHolder,
   Request,
+  RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
+  RequestService,
   requestContextProperty,
 } from '@cornie-js/backend-http';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 const GAME_V1_STATE_STATUS_TO_GAME_STATUS_MAP: {
   [TKey in apiModels.GameV1['state']['status']]: GameStatus;
@@ -40,84 +44,62 @@ export class GetGameV1MineRequestParamHandler
   public static pageSizeQueryParam: string = 'pageSize';
   public static statusQueryParam: string = 'status';
 
+  readonly #requestService: RequestService;
+
+  constructor(@Inject(RequestService) requestService: RequestService) {
+    this.#requestService = requestService;
+  }
+
   public async handle(
     request: Request & AuthRequestContextHolder,
   ): Promise<[GameFindQuery]> {
-    const gameFindQuery: Writable<GameFindQuery> = {};
+    const parsedPage: Either<RequestQueryParseFailure, number> =
+      this.#getParsedPage(request);
+    const parsedPageSize: Either<RequestQueryParseFailure, number> =
+      this.#getParsedPageSize(request);
+    const parsedStatus: Either<
+      RequestQueryParseFailure,
+      GameStatus | undefined
+    > = this.#getParsedStatus(request);
 
-    const page: number = this.#parsePage(request);
-    const pageSize: number = this.#parsePageSize(request);
+    if (parsedPage.isRight && parsedPageSize.isRight && parsedStatus.isRight) {
+      const gameFindQuery: Writable<GameFindQuery> = {
+        limit: parsedPageSize.value,
+        offset: parsedPageSize.value * (parsedPage.value - 1),
+      };
 
-    gameFindQuery.limit = pageSize;
-    gameFindQuery.offset = pageSize * (page - 1);
+      if (parsedStatus.value !== undefined) {
+        gameFindQuery.status = parsedStatus.value;
+      }
 
-    const gameStatus: GameStatus | undefined = this.#parseStatus(request);
+      const userId: string = this.#parseUserId(request);
 
-    if (gameStatus !== undefined) {
-      gameFindQuery.status = gameStatus;
+      gameFindQuery.gameSlotFindQuery = {
+        userId,
+      };
+
+      return [gameFindQuery];
     }
 
-    const userId: string = this.#parseUserId(request);
+    const resultsAndParams: [
+      Either<RequestQueryParseFailure, unknown>,
+      string,
+    ][] = [
+      [parsedPage, GetGameV1MineRequestParamHandler.pageQueryParam],
+      [parsedPageSize, GetGameV1MineRequestParamHandler.pageSizeQueryParam],
+      [parsedStatus, GetGameV1MineRequestParamHandler.statusQueryParam],
+    ];
 
-    gameFindQuery.gameSlotFindQuery = {
-      userId,
-    };
+    const errors: string[] =
+      this.#requestService.composeErrorMessages(resultsAndParams);
 
-    return [gameFindQuery];
+    throw new AppError(
+      AppErrorKind.contractViolation,
+      `Invalid query params:\n\n${errors.join('\n')}`,
+    );
   }
 
-  #parsePage(request: Request): number {
-    const page: number =
-      this.#tryGetIntegerRequestQueryOrDefault(
-        request,
-        GetGameV1MineRequestParamHandler.pageQueryParam,
-      ) ?? DEFAULT_PAGE_VALUE;
-
-    if (page < MIN_PAGE_VALUE) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expecting "${GetGameV1MineRequestParamHandler.pageQueryParam}" query to be at least ${MIN_PAGE_VALUE}`,
-      );
-    }
-
-    return page;
-  }
-
-  #parsePageSize(request: Request): number {
-    const pageSize: number =
-      this.#tryGetIntegerRequestQueryOrDefault(
-        request,
-        GetGameV1MineRequestParamHandler.pageSizeQueryParam,
-      ) ?? DEFAULT_PAGE_SIZE_VALUE;
-
-    if (pageSize < MIN_PAGE_SIZE_VALUE) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expecting "${GetGameV1MineRequestParamHandler.pageSizeQueryParam}" query to be at least ${MIN_PAGE_SIZE_VALUE}`,
-      );
-    }
-
-    if (pageSize > MAX_PAGE_SIZE_VALUE) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expecting "${GetGameV1MineRequestParamHandler.pageSizeQueryParam}" query to be at most ${MAX_PAGE_SIZE_VALUE}`,
-      );
-    }
-
-    return pageSize;
-  }
-
-  #parseStatus(request: Request): GameStatus | undefined {
-    const gameStatusStringified: string | undefined =
-      this.#tryGetStringRequestQueryOrDefault(
-        request,
-        GetGameV1MineRequestParamHandler.statusQueryParam,
-      );
-
-    if (gameStatusStringified === undefined) {
-      return undefined;
-    }
-
+  #buildStatus(gameStatusStringified: string): GameStatus {
     const gameStatusOrUndefined: GameStatus | undefined =
       GAME_V1_STATE_STATUS_TO_GAME_STATUS_MAP[gameStatusStringified];
 
@@ -139,6 +121,53 @@ export class GetGameV1MineRequestParamHandler
     return gameStatusOrUndefined;
   }
 
+  #getParsedPage(request: Request): Either<RequestQueryParseFailure, number> {
+    return this.#requestService.tryParseIntegerQuery(request, {
+      default: DEFAULT_PAGE_VALUE,
+      isMultiple: false,
+      min: MIN_PAGE_VALUE,
+      name: GetGameV1MineRequestParamHandler.pageQueryParam,
+    });
+  }
+
+  #getParsedPageSize(
+    request: Request,
+  ): Either<RequestQueryParseFailure, number> {
+    return this.#requestService.tryParseIntegerQuery(request, {
+      default: DEFAULT_PAGE_SIZE_VALUE,
+      isMultiple: false,
+      max: MAX_PAGE_SIZE_VALUE,
+      min: MIN_PAGE_SIZE_VALUE,
+      name: GetGameV1MineRequestParamHandler.pageQueryParam,
+    });
+  }
+
+  #getParsedStatus(
+    request: Request,
+  ): Either<RequestQueryParseFailure, GameStatus | undefined> {
+    const parsedStatus: Either<RequestQueryParseFailure, string> =
+      this.#requestService.tryParseStringQuery(request, {
+        isMultiple: false,
+        name: GetGameV1MineRequestParamHandler.statusQueryParam,
+      });
+
+    if (parsedStatus.isRight) {
+      return {
+        isRight: true,
+        value: this.#buildStatus(parsedStatus.value),
+      };
+    }
+
+    if (parsedStatus.value.kind === RequestQueryParseFailureKind.notFound) {
+      return {
+        isRight: true,
+        value: undefined,
+      };
+    }
+
+    return parsedStatus;
+  }
+
   #parseUserId(request: AuthRequestContextHolder): string {
     const auth: Auth = request[requestContextProperty].auth;
 
@@ -150,65 +179,5 @@ export class GetGameV1MineRequestParamHandler
     }
 
     return auth.user.id;
-  }
-
-  #tryGetIntegerRequestQueryOrDefault(
-    request: Request,
-    name: string,
-  ): number | undefined {
-    const queryValue: number | undefined =
-      this.#tryGetNumberRequestQueryOrDefault(request, name);
-
-    if (queryValue === undefined) {
-      return undefined;
-    }
-
-    if (!Number.isInteger(queryValue)) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expecting "${name}" query to be a single integer value`,
-      );
-    }
-
-    return queryValue;
-  }
-
-  #tryGetNumberRequestQueryOrDefault(
-    request: Request,
-    name: string,
-  ): number | undefined {
-    const queryValue: string | undefined =
-      this.#tryGetStringRequestQueryOrDefault(request, name);
-
-    if (queryValue === undefined) {
-      return undefined;
-    }
-
-    const numericQueryValue: number = parseFloat(queryValue);
-
-    if (Number.isNaN(numericQueryValue)) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expecting "${name}" query to be a single numeric value`,
-      );
-    }
-
-    return numericQueryValue;
-  }
-
-  #tryGetStringRequestQueryOrDefault(
-    request: Request,
-    name: string,
-  ): string | undefined {
-    const queryValue: string | string[] | undefined = request.query[name];
-
-    if (Array.isArray(queryValue)) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expected "${name}" query to be a single value`,
-      );
-    }
-
-    return queryValue;
   }
 }

@@ -41,26 +41,11 @@ export class GetGamesV1SpecsRequestParamHandler
     request: Request & AuthRequestContextHolder,
   ): Promise<[GameSpecFindQuery]> {
     const parsedGameIds: Either<RequestQueryParseFailure, string[]> =
-      this.#requestService.tryParseStringQuery(request, {
-        default: [],
-        isMultiple: true,
-        name: GetGamesV1SpecsRequestParamHandler.gameIdQuery,
-      });
+      this.#getParsedGameIds(request);
     const parsedPage: Either<RequestQueryParseFailure, number> =
-      this.#requestService.tryParseIntegerQuery(request, {
-        default: DEFAULT_PAGE_VALUE,
-        isMultiple: false,
-        min: MIN_PAGE_VALUE,
-        name: GetGamesV1SpecsRequestParamHandler.pageQueryParam,
-      });
+      this.#getParsedPage(request);
     const parsedPageSize: Either<RequestQueryParseFailure, number> =
-      this.#requestService.tryParseIntegerQuery(request, {
-        default: DEFAULT_PAGE_SIZE_VALUE,
-        isMultiple: false,
-        max: MAX_PAGE_SIZE_VALUE,
-        min: MIN_PAGE_SIZE_VALUE,
-        name: GetGamesV1SpecsRequestParamHandler.pageQueryParam,
-      });
+      this.#getParsedPageSize(request);
 
     if (parsedPage.isRight && parsedPageSize.isRight && parsedGameIds.isRight) {
       const gameSpecFindQuery: Writable<GameSpecFindQuery> = {
@@ -68,22 +53,69 @@ export class GetGamesV1SpecsRequestParamHandler
         offset: parsedPageSize.value * (parsedPage.value - 1),
       };
 
-      if (parsedGameIds.value.length === 0) {
-        const auth: Auth = request[requestContextProperty].auth;
+      this.#assertValidGameIds(request, parsedGameIds.value);
 
-        if (auth.kind === AuthKind.user) {
-          throw new AppError(
-            AppErrorKind.invalidCredentials,
-            'Unable to fetch games specs. User credential based requests require at least a game id as query parameters',
-          );
-        }
-      } else {
-        gameSpecFindQuery.gameIds = parsedGameIds.value;
-      }
+      gameSpecFindQuery.gameIds = parsedGameIds.value;
 
       return [gameSpecFindQuery];
     }
 
-    throw new AppError(AppErrorKind.contractViolation, 'Invalid query params');
+    const errors: string[] = this.#requestService.composeErrorMessages([
+      [parsedGameIds, GetGamesV1SpecsRequestParamHandler.gameIdQuery],
+      [parsedPage, GetGamesV1SpecsRequestParamHandler.pageQueryParam],
+      [parsedPageSize, GetGamesV1SpecsRequestParamHandler.pageSizeQueryParam],
+    ]);
+
+    throw new AppError(
+      AppErrorKind.contractViolation,
+      `Invalid query params:\n\n${errors.join('\n')}`,
+    );
+  }
+
+  #assertValidGameIds(
+    request: Request & AuthRequestContextHolder,
+    gameIds: string[],
+  ): void {
+    if (gameIds.length === 0) {
+      const auth: Auth = request[requestContextProperty].auth;
+
+      if (auth.kind === AuthKind.user) {
+        throw new AppError(
+          AppErrorKind.invalidCredentials,
+          'Unable to fetch games specs. User credential based requests require at least a game id as query parameters',
+        );
+      }
+    }
+  }
+
+  #getParsedGameIds(
+    request: Request,
+  ): Either<RequestQueryParseFailure, string[]> {
+    return this.#requestService.tryParseStringQuery(request, {
+      default: [],
+      isMultiple: true,
+      name: GetGamesV1SpecsRequestParamHandler.gameIdQuery,
+    });
+  }
+
+  #getParsedPage(request: Request): Either<RequestQueryParseFailure, number> {
+    return this.#requestService.tryParseIntegerQuery(request, {
+      default: DEFAULT_PAGE_VALUE,
+      isMultiple: false,
+      min: MIN_PAGE_VALUE,
+      name: GetGamesV1SpecsRequestParamHandler.pageQueryParam,
+    });
+  }
+
+  #getParsedPageSize(
+    request: Request,
+  ): Either<RequestQueryParseFailure, number> {
+    return this.#requestService.tryParseIntegerQuery(request, {
+      default: DEFAULT_PAGE_SIZE_VALUE,
+      isMultiple: false,
+      max: MAX_PAGE_SIZE_VALUE,
+      min: MIN_PAGE_SIZE_VALUE,
+      name: GetGamesV1SpecsRequestParamHandler.pageQueryParam,
+    });
   }
 }

@@ -37,6 +37,7 @@ import { SseTeardownExecutor } from './http/application/modules/SseTeardownExecu
 import {
   ParsedValue,
   RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
   RequestService,
 } from './http/application/services/RequestService';
 import { AuthMiddleware } from './user/application/middleware/AuthMiddleware';
@@ -51,6 +52,7 @@ export type {
   ParsedValue,
   Request,
   RequestContextHolder,
+  RequestQueryParseFailure,
   RequestWithBody,
   Response,
   ResponseWithBody,
@@ -75,7 +77,7 @@ export {
   MiddlewarePipeline,
   MultipleEntitiesGetResponseBuilder,
   RequestFromFastifyRequestBuilder,
-  RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
   RequestService,
   RequestWithBodyFromFastifyRequestBuilder,
   requestContextProperty,
