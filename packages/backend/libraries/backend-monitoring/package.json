@@ -34,7 +34,7 @@
     "pprof-format": "2.0.7",
     "rimraf": "5.0.5",
     "ts-jest": "29.1.1",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "typescript": "5.3.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
