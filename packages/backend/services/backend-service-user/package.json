@@ -20,7 +20,7 @@
     "@cornie-js/backend-user-application": "workspace:*",
     "fastify": "4.24.3",
     "glob": "10.3.10",
-    "reflect-metadata": "0.1.13",
+    "reflect-metadata": "0.1.14",
     "rxjs": "7.8.1",
     "typeorm": "0.3.17"
   },
@@ -41,7 +41,7 @@
     "prettier": "3.1.0",
     "rimraf": "5.0.5",
     "ts-jest": "29.1.1",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "typescript": "5.3.3"
   },
   "engines": {
