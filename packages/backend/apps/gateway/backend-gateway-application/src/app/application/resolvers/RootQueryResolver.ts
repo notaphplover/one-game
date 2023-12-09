@@ -1,35 +1,35 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { GameQueryResolver } from '../../../games/application/resolvers/GameQueryResolver';
 import { UserQueryResolver } from '../../../users/application/resolvers/UserQueryResolver';
 
 type ResolverFnReturnType<TResult, TArgs> = ReturnType<
-  graphqlModels.ResolverFn<TResult, graphqlModels.RootQuery, Request, TArgs>
+  graphqlModels.ResolverFn<TResult, graphqlModels.RootQuery, Context, TArgs>
 >;
 
 @Injectable()
 export class RootQueryResolver
-  implements graphqlModels.RootQueryResolvers<Request, graphqlModels.RootQuery>
+  implements graphqlModels.RootQueryResolvers<Context, graphqlModels.RootQuery>
 {
   readonly #gameQueryResolver: CanonicalResolver<
-    graphqlModels.GameQueryResolvers<Request>
+    graphqlModels.GameQueryResolvers<Context>
   >;
   readonly #userQueryResolver: CanonicalResolver<
-    graphqlModels.UserQueryResolvers<Request>
+    graphqlModels.UserQueryResolvers<Context>
   >;
 
   constructor(
     @Inject(GameQueryResolver)
     gameQueryResolver: CanonicalResolver<
-      graphqlModels.GameQueryResolvers<Request>
+      graphqlModels.GameQueryResolvers<Context>
     >,
     @Inject(UserQueryResolver)
     userQueryResolver: CanonicalResolver<
-      graphqlModels.UserQueryResolvers<Request>
+      graphqlModels.UserQueryResolvers<Context>
     >,
   ) {
     this.#gameQueryResolver = gameQueryResolver;
@@ -39,39 +39,39 @@ export class RootQueryResolver
   public async gameById(
     parent: graphqlModels.RootQuery,
     args: graphqlModels.GameQueryGameByIdArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.Game | null> {
-    return this.#gameQueryResolver.gameById(parent, args, request, info);
+    return this.#gameQueryResolver.gameById(parent, args, context, info);
   }
 
   public myGames(
     parent: graphqlModels.RootQuery,
     args: Partial<graphqlModels.RootQueryMyGamesArgs>,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
   ): ResolverFnReturnType<
     Array<graphqlModels.ResolversTypes['Game']>,
     Partial<graphqlModels.RootQueryMyGamesArgs>
   > {
-    return this.#gameQueryResolver.myGames(parent, args, request, info);
+    return this.#gameQueryResolver.myGames(parent, args, context, info);
   }
 
   public async userById(
     parent: graphqlModels.RootQuery,
     args: graphqlModels.UserQueryUserByIdArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.User | null> {
-    return this.#userQueryResolver.userById(parent, args, request, info);
+    return this.#userQueryResolver.userById(parent, args, context, info);
   }
 
   public async userMe(
     parent: graphqlModels.RootQuery,
     args: Record<string, unknown>,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
   ): Promise<graphqlModels.User> {
-    return this.#userQueryResolver.userMe(parent, args, request, info);
+    return this.#userQueryResolver.userMe(parent, args, context, info);
   }
 }
