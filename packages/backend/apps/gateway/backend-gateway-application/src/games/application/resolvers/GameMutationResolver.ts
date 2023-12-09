@@ -3,15 +3,15 @@ import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { GameGraphQlFromGameV1Builder } from '../builders/GameGraphQlFromGameV1Builder';
 
 @Injectable()
 export class GameMutationResolver
-  implements CanonicalResolver<graphqlModels.GameMutationResolvers<Request>>
+  implements CanonicalResolver<graphqlModels.GameMutationResolvers<Context>>
 {
   readonly #gameGraphQlFromGameV1Builder: Builder<
     graphqlModels.Game,
@@ -34,7 +34,7 @@ export class GameMutationResolver
   public async createGame(
     _: unknown,
     args: graphqlModels.GameMutationCreateGameArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.Game> {
     const gameCreateQuery: apiModels.GameCreateQueryV1 = {
       gameSlotsAmount: args.gameCreateInput.gameSlotsAmount,
@@ -48,7 +48,10 @@ export class GameMutationResolver
     }
 
     const httpResponse: Awaited<ReturnType<HttpClient['createGame']>> =
-      await this.#httpClient.createGame(request.headers, gameCreateQuery);
+      await this.#httpClient.createGame(
+        context.request.headers,
+        gameCreateQuery,
+      );
 
     switch (httpResponse.statusCode) {
       case 200:
@@ -74,7 +77,7 @@ export class GameMutationResolver
   public async passGameTurn(
     _: unknown,
     args: graphqlModels.GameMutationPassGameTurnArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.Game | null> {
     const gamePassTurnQueryV1: apiModels.GameIdPassTurnQueryV1 = {
       kind: 'passTurn',
@@ -82,7 +85,7 @@ export class GameMutationResolver
     };
 
     return this.#handleUpdateGameV1(
-      request.headers,
+      context.request.headers,
       args.gameId,
       gamePassTurnQueryV1,
     );
@@ -91,7 +94,7 @@ export class GameMutationResolver
   public async playGameCards(
     _: unknown,
     args: graphqlModels.GameMutationPlayGameCardsArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.Game | null> {
     const gamePlayCardsQueryV1: apiModels.GameIdPlayCardsQueryV1 = {
       cardIndexes: args.gamePlayCardsInput.cardIndexes,
@@ -104,7 +107,7 @@ export class GameMutationResolver
     }
 
     return this.#handleUpdateGameV1(
-      request.headers,
+      context.request.headers,
       args.gameId,
       gamePlayCardsQueryV1,
     );
