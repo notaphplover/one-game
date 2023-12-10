@@ -24,6 +24,7 @@ jest.mock('typeorm', () => {
   };
 });
 
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
 import { GameSpecFindQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import { InstanceChecker, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
@@ -44,6 +45,7 @@ describe(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.name, () => {
 
     beforeAll(() => {
       queryBuilderMock = {
+        addOrderBy: jest.fn().mockReturnThis(),
         andWhere: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         offset: jest.fn().mockReturnThis(),
@@ -184,6 +186,10 @@ describe(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.name, () => {
 
         afterAll(() => {
           jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
         });
 
         it('should call queryBuilder.limit()', () => {
@@ -222,12 +228,109 @@ describe(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.name, () => {
 
         afterAll(() => {
           jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
         });
 
         it('should call queryBuilder.offset()', () => {
           expect(queryBuilderMock.offset).toHaveBeenCalledTimes(1);
           expect(queryBuilderMock.offset).toHaveBeenCalledWith(
             gameSpecFindQueryFixture.offset,
+          );
+        });
+
+        it('should return QueryBuilder', () => {
+          expect(result).toBe(queryBuilderMock);
+        });
+      });
+    });
+
+    describe('having a GameSpecFindQuery with no game ids and game ids sort options', () => {
+      let gameSpecFindQueryFixture: GameSpecFindQuery;
+
+      beforeAll(() => {
+        gameSpecFindQueryFixture =
+          GameSpecFindQueryFixtures.withGameIdsSortOptions;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          try {
+            gameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.build(
+              gameSpecFindQueryFixture,
+              queryBuilderMock,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message: expect.stringContaining(
+              'Unable to sort game specs by ids',
+            ) as unknown as string,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a GameSpecFindQuery with multiple game ids and game ids sort options', () => {
+      let gameSpecFindQueryFixture: GameSpecFindQuery;
+
+      beforeAll(() => {
+        gameSpecFindQueryFixture =
+          GameSpecFindQueryFixtures.withGameIdsWithLenghtTwoAndGameIdsSortOptions;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result = gameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.build(
+            gameSpecFindQueryFixture,
+            queryBuilderMock,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should call queryBuilder.addOrderBy()', () => {
+          expect(queryBuilderMock.addOrderBy).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.addOrderBy).toHaveBeenCalledWith(
+            expect.any(String),
           );
         });
 
