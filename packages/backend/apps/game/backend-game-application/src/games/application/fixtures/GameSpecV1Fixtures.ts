@@ -7,6 +7,7 @@ export class GameSpecV1Fixtures {
   public static get any(): apiModels.GameSpecV1 {
     return {
       cardSpecs: [GameCardSpecV1Fixtures.any],
+      gameId: '6fbcdb6c-b03c-4754-94c1-9f664f036cde',
       gameSlotsAmount: 1,
       options: GameOptionsV1Fixtures.any,
     };

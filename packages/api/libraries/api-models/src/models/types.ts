@@ -197,6 +197,7 @@ export interface GameUpdatedMessageEventV1 {
 }
 export interface GameSpecV1 {
   cardSpecs: GameCardSpecV1[];
+  gameId: string;
   gameSlotsAmount: number;
   options: GameOptionsV1;
 }
