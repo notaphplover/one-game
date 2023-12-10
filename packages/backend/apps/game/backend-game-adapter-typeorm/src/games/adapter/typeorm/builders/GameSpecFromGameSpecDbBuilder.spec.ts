@@ -65,6 +65,7 @@ describe(GameSpecFromGameSpecDbBuilder.name, () => {
       it('should return a GameSpec', () => {
         const expected: GameSpec = {
           cards: gameCardSpecArrayFixture,
+          gameId: gameSpecDbFixture.gameId,
           gameSlotsAmount: gameSpecDbFixture.gameSlotsAmount,
           options: {
             chainDraw2Draw2Cards: gameSpecDbFixture.chainDraw2Draw2Cards,

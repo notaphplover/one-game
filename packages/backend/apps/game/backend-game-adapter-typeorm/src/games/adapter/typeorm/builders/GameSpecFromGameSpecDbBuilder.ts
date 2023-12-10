@@ -30,6 +30,7 @@ export class GameSpecFromGameSpecDbBuilder
       cards: this.#gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build(
         gameSpecDb.cardsSpec,
       ),
+      gameId: gameSpecDb.gameId,
       gameSlotsAmount: gameSpecDb.gameSlotsAmount,
       options: {
         chainDraw2Draw2Cards: gameSpecDb.chainDraw2Draw2Cards,
