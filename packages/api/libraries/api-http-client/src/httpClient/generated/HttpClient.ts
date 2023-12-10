@@ -156,7 +156,7 @@ export class HttpClient {
       pageSize?: string | string[];
     },
   ): Promise<
-    | Response<Record<string, string>, apiModels.GameSpecV1, 200>
+    | Response<Record<string, string>, apiModels.GameSpecArrayV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
     return this.#axiosHttpClient.callEndpoint(
