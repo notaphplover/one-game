@@ -34,6 +34,7 @@ export enum ApiSchemaId {
   GameOptionsV1 = 'https://onegame.schemas/api/v1/games/game-options.json',
   GameSlotV1 = 'https://onegame.schemas/api/v1/games/game-slot.json',
   GameSpecArrayV1 = 'https://onegame.schemas/api/v1/games/game-spec-array.json',
+  GameSpecSortOptionV1 = 'https://onegame.schemas/api/v1/games/game-spec-sort-option.json',
   GameSpecV1 = 'https://onegame.schemas/api/v1/games/game-spec.json',
   GameUpdatedMessageEventV1 = 'https://onegame.schemas/api/v1/games/game-updated-message-event.json',
   GameV1 = 'https://onegame.schemas/api/v1/games/game.json',
