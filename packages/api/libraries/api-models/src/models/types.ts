@@ -40,6 +40,7 @@ export type TypesV1 =
   | GameSlotV1
   | GameSpecArrayV1
   | GameSpecV1
+  | GameSpecSortOptionV1
   | GameUpdatedMessageEventV1
   | GameV1
   | NonStartedGameSlotV1
@@ -75,6 +76,7 @@ export type GameSlotV1 =
   | NonStartedGameSlotV1;
 export type GameSpecArrayV1 =
   'https://onegame.schemas/api/v1/games/game-spec.json'[];
+export type GameSpecSortOptionV1 = 'gameIds';
 
 export interface CodeAuthCreateQueryV1 {
   code: string;

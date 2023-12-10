@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/games/game-spec-sort-option.json",
+  "title": "GameSpecSortOptionV1",
+  "type": "string",
+  "enum": [
+    "gameIds"
+  ]
+}
