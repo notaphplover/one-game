@@ -1,5 +1,8 @@
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
+import {
+  GameSpecFindQuery,
+  GameSpecFindQuerySortOption,
+} from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 import {
   InstanceChecker,
@@ -30,6 +33,51 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
       GameSpecDb,
     );
 
+    this.#processGameIds(
+      gameSpecFindQuery,
+      gameSpecPropertiesPrefix,
+      queryBuilder,
+    );
+
+    if (gameSpecFindQuery.limit !== undefined) {
+      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
+      queryBuilder = queryBuilder.limit(gameSpecFindQuery.limit);
+    }
+
+    if (gameSpecFindQuery.offset !== undefined) {
+      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
+      queryBuilder = queryBuilder.offset(gameSpecFindQuery.offset);
+    }
+
+    this.#processSort(
+      gameSpecFindQuery,
+      gameSpecPropertiesPrefix,
+      queryBuilder,
+    );
+
+    return queryBuilder;
+  }
+
+  #assertSelectQueryBuilderIsUsedForSelectFilters(
+    queryBuilder: QueryBuilder<ObjectLiteral>,
+  ): asserts queryBuilder is SelectQueryBuilder<ObjectLiteral> {
+    if (!InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Error trying to filter a game spec in a non search context`,
+      );
+    }
+  }
+
+  #isArrayWithOneElement<T>(array: T[]): array is [T] {
+    return array.length === 1;
+  }
+
+  #processGameIds(
+    gameSpecFindQuery: GameSpecFindQuery,
+    gameSpecPropertiesPrefix: string,
+    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+  ): void {
     if (gameSpecFindQuery.gameIds !== undefined) {
       if (gameSpecFindQuery.gameIds.length > 0) {
         if (this.#isArrayWithOneElement(gameSpecFindQuery.gameIds)) {
@@ -51,32 +99,35 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
         }
       }
     }
-
-    if (gameSpecFindQuery.limit !== undefined) {
-      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
-      queryBuilder = queryBuilder.limit(gameSpecFindQuery.limit);
-    }
-
-    if (gameSpecFindQuery.offset !== undefined) {
-      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
-      queryBuilder = queryBuilder.offset(gameSpecFindQuery.offset);
-    }
-
-    return queryBuilder;
   }
 
-  #assertSelectQueryBuilderIsUsedForSelectFilters(
-    queryBuilder: QueryBuilder<ObjectLiteral>,
-  ): asserts queryBuilder is SelectQueryBuilder<ObjectLiteral> {
-    if (!InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        `Error trying to filter a game spec in a non search context`,
-      );
-    }
-  }
+  #processSort(
+    gameSpecFindQuery: GameSpecFindQuery,
+    gameSpecPropertiesPrefix: string,
+    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+  ): void {
+    if (gameSpecFindQuery.sort !== undefined) {
+      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
 
-  #isArrayWithOneElement<T>(array: T[]): array is [T] {
-    return array.length === 1;
+      switch (gameSpecFindQuery.sort) {
+        case GameSpecFindQuerySortOption.gameIds:
+          if (gameSpecFindQuery.gameIds === undefined) {
+            throw new AppError(
+              AppErrorKind.unprocessableOperation,
+              'Unable to sort game specs by ids. Reason: game id list was not provided',
+            );
+          }
+
+          if (gameSpecFindQuery.gameIds.length > 1) {
+            /*
+             * TODO: Consider extracting this to support different dbs.
+             * The query builder has a datasource with options with a discriminator good enough to detect the current db.
+             */
+            queryBuilder = queryBuilder.addOrderBy(
+              `array_position(ARRAY[:...${GameSpecDb.name}games], ${gameSpecPropertiesPrefix}game)`,
+            );
+          }
+      }
+    }
   }
 }
