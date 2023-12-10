@@ -45,6 +45,7 @@ describe(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.name, () => {
 
     beforeAll(() => {
       queryBuilderMock = {
+        addOrderBy: jest.fn().mockReturnThis(),
         andWhere: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         offset: jest.fn().mockReturnThis(),
