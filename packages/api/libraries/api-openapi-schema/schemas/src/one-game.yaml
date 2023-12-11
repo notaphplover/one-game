@@ -289,6 +289,11 @@ paths:
             minimum: 1
             type: number
           description: pagination size
+        - in: query
+          name: sort
+          required: false
+          schema:
+            $ref: https://onegame.schemas/api/v1/games/game-spec-sort-option.json
       responses:
         '200':
           description: Game specs found

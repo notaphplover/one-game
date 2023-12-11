@@ -154,6 +154,7 @@ export class HttpClient {
       gameId?: string | string[];
       page?: string | string[];
       pageSize?: string | string[];
+      sort?: string | string[];
     },
   ): Promise<
     | Response<Record<string, string>, apiModels.GameSpecArrayV1, 200>
