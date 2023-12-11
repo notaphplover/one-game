@@ -1,7 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
+import { models as apiModels } from '@cornie-js/api-models';
+import {
+  ApiJsonSchemasValidationProvider,
+  Validator,
+} from '@cornie-js/backend-api-validators';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import {
+  GameSpecFindQuery,
+  GameSpecFindQuerySortOption,
+} from '@cornie-js/backend-game-domain/games';
 import {
   AuthKind,
   AuthRequestContextHolder,
@@ -15,6 +23,13 @@ import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV
 import { GetGamesV1SpecsRequestParamHandler } from './GetGamesV1SpecsRequestParamHandler';
 
 describe(GetGamesV1SpecsRequestParamHandler.name, () => {
+  let apiJsonSchemasValidationProviderMock: jest.Mocked<ApiJsonSchemasValidationProvider>;
+  let gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock: jest.Mocked<
+    Builder<GameSpecFindQuerySortOption, [apiModels.GameSpecSortOptionV1]>
+  >;
+  let gameSpecSortOptionValidatorMock: jest.Mocked<
+    Validator<apiModels.GameSpecSortOptionV1>
+  >;
   let requestServiceMock: jest.Mocked<RequestService>;
 
   let getGamesV1SpecsRequestParamHandler: GetGamesV1SpecsRequestParamHandler;
@@ -26,7 +41,25 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
       tryParseStringQuery: jest.fn(),
     } as Partial<jest.Mocked<RequestService>> as jest.Mocked<RequestService>;
 
+    gameSpecSortOptionValidatorMock = {
+      validate: jest.fn() as unknown,
+    } as Partial<
+      jest.Mocked<Validator<apiModels.GameSpecSortOptionV1>>
+    > as jest.Mocked<Validator<apiModels.GameSpecSortOptionV1>>;
+
+    apiJsonSchemasValidationProviderMock = {
+      provide: jest.fn().mockReturnValueOnce(gameSpecSortOptionValidatorMock),
+    } as Partial<
+      jest.Mocked<ApiJsonSchemasValidationProvider>
+    > as jest.Mocked<ApiJsonSchemasValidationProvider>;
+
+    gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock = {
+      build: jest.fn(),
+    };
+
     getGamesV1SpecsRequestParamHandler = new GetGamesV1SpecsRequestParamHandler(
+      apiJsonSchemasValidationProviderMock,
+      gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock,
       requestServiceMock,
     );
   });
@@ -48,10 +81,13 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
         };
       });
 
-      describe('when called, and requestService returns game ids, page and pageSize', () => {
+      describe('when called, and requestService returns game ids, page pageSize and sort', () => {
         let gameIdsFixture: string[];
         let pageFixture: number;
         let pageSizeFixture: number;
+        let sortOptionV1Fixture: apiModels.GameSpecSortOptionV1;
+
+        let gameSpecFindQuerySortOptionFixture: GameSpecFindQuerySortOption;
 
         let result: unknown;
 
@@ -59,11 +95,20 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
           pageFixture = 1;
           pageSizeFixture = 10;
           gameIdsFixture = ['game-id-fixture'];
+          sortOptionV1Fixture = 'gameIds';
 
-          requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
-            isRight: true,
-            value: gameIdsFixture,
-          });
+          gameSpecFindQuerySortOptionFixture =
+            GameSpecFindQuerySortOption.gameIds;
+
+          requestServiceMock.tryParseStringQuery
+            .mockReturnValueOnce({
+              isRight: true,
+              value: gameIdsFixture,
+            })
+            .mockReturnValueOnce({
+              isRight: true,
+              value: sortOptionV1Fixture,
+            });
 
           requestServiceMock.tryParseIntegerQuery
             .mockReturnValueOnce({
@@ -75,6 +120,12 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
               value: pageSizeFixture,
             });
 
+          gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock.build.mockReturnValueOnce(
+            gameSpecFindQuerySortOptionFixture,
+          );
+
+          gameSpecSortOptionValidatorMock.validate.mockReturnValueOnce(true);
+
           result =
             await getGamesV1SpecsRequestParamHandler.handle(requestFixture);
         });
@@ -83,11 +134,30 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
           jest.clearAllMocks();
         });
 
+        it('should call gameSpecSortOptionValidator.validate()', () => {
+          expect(
+            gameSpecSortOptionValidatorMock.validate,
+          ).toHaveBeenCalledTimes(1);
+          expect(gameSpecSortOptionValidatorMock.validate).toHaveBeenCalledWith(
+            sortOptionV1Fixture,
+          );
+        });
+
+        it('should call gameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder.build()', () => {
+          expect(
+            gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock.build,
+          ).toHaveBeenCalledWith(sortOptionV1Fixture);
+        });
+
         it('should return [GameSpecFindQuery] with an array with gameId', () => {
           const expectedGameSpecFindQuery: GameSpecFindQuery = {
             gameIds: gameIdsFixture,
             limit: 10,
             offset: 0,
+            sort: gameSpecFindQuerySortOptionFixture,
           };
 
           expect(result).toStrictEqual([expectedGameSpecFindQuery]);
@@ -106,13 +176,21 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
             errorFixture,
           ]);
 
-          requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
-            isRight: false,
-            value: {
-              errors: [],
-              kind: RequestQueryParseFailureKind.invalidValue,
-            },
-          });
+          requestServiceMock.tryParseStringQuery
+            .mockReturnValueOnce({
+              isRight: false,
+              value: {
+                errors: [],
+                kind: RequestQueryParseFailureKind.invalidValue,
+              },
+            })
+            .mockReturnValueOnce({
+              isRight: false,
+              value: {
+                errors: [],
+                kind: RequestQueryParseFailureKind.invalidValue,
+              },
+            });
 
           requestServiceMock.tryParseIntegerQuery
             .mockReturnValueOnce({
@@ -184,10 +262,18 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
           pageSizeFixture = 10;
           gameIdsFixture = [];
 
-          requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
-            isRight: true,
-            value: gameIdsFixture,
-          });
+          requestServiceMock.tryParseStringQuery
+            .mockReturnValueOnce({
+              isRight: true,
+              value: gameIdsFixture,
+            })
+            .mockReturnValueOnce({
+              isRight: false,
+              value: {
+                errors: [],
+                kind: RequestQueryParseFailureKind.notFound,
+              },
+            });
 
           requestServiceMock.tryParseIntegerQuery
             .mockReturnValueOnce({
