@@ -1,21 +1,33 @@
+import { SchemaId, models as apiModels } from '@cornie-js/api-models';
+import {
+  ApiJsonSchemasValidationProvider,
+  Validator,
+} from '@cornie-js/backend-api-validators';
 import {
   AppError,
   AppErrorKind,
+  Builder,
   Either,
   Handler,
   Writable,
 } from '@cornie-js/backend-common';
-import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
+import {
+  GameSpecFindQuery,
+  GameSpecFindQuerySortOption,
+} from '@cornie-js/backend-game-domain/games';
 import {
   Auth,
   AuthKind,
   AuthRequestContextHolder,
   Request,
   RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
   RequestService,
   requestContextProperty,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
+
+import { GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder } from '../builders/GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder';
 
 const DEFAULT_PAGE_VALUE: number = 1;
 const DEFAULT_PAGE_SIZE_VALUE: number = 10;
@@ -30,10 +42,29 @@ export class GetGamesV1SpecsRequestParamHandler
   public static gameIdQuery: string = 'gameId';
   public static pageQueryParam: string = 'page';
   public static pageSizeQueryParam: string = 'pageSize';
+  public static sortQueryParam: string = 'sort';
 
+  readonly #gameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder: Builder<
+    GameSpecFindQuerySortOption,
+    [apiModels.GameSpecSortOptionV1]
+  >;
+  readonly #gameSpecSortOptionValidator: Validator<apiModels.GameSpecSortOptionV1>;
   readonly #requestService: RequestService;
 
-  constructor(@Inject(RequestService) requestService: RequestService) {
+  constructor(
+    @Inject(ApiJsonSchemasValidationProvider)
+    apiJsonSchemasValidationProvider: ApiJsonSchemasValidationProvider,
+    @Inject(GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder)
+    gameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder: Builder<
+      GameSpecFindQuerySortOption,
+      [apiModels.GameSpecSortOptionV1]
+    >,
+    @Inject(RequestService) requestService: RequestService,
+  ) {
+    this.#gameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder =
+      gameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder;
+    this.#gameSpecSortOptionValidator =
+      apiJsonSchemasValidationProvider.provide(SchemaId.GameSpecSortOptionV1);
     this.#requestService = requestService;
   }
 
@@ -46,24 +77,32 @@ export class GetGamesV1SpecsRequestParamHandler
       this.#getParsedPage(request);
     const parsedPageSize: Either<RequestQueryParseFailure, number> =
       this.#getParsedPageSize(request);
+    const parsedSortOption: Either<
+      RequestQueryParseFailure,
+      apiModels.GameSpecSortOptionV1 | undefined
+    > = this.#getParsedSortOption(request);
 
-    if (parsedPage.isRight && parsedPageSize.isRight && parsedGameIds.isRight) {
-      const gameSpecFindQuery: Writable<GameSpecFindQuery> = {
-        limit: parsedPageSize.value,
-        offset: parsedPageSize.value * (parsedPage.value - 1),
-      };
-
+    if (
+      parsedPage.isRight &&
+      parsedPageSize.isRight &&
+      parsedGameIds.isRight &&
+      parsedSortOption.isRight
+    ) {
       this.#assertValidGameIds(request, parsedGameIds.value);
 
-      gameSpecFindQuery.gameIds = parsedGameIds.value;
-
-      return [gameSpecFindQuery];
+      return this.#buildGameSpecFindQuery(
+        parsedGameIds.value,
+        parsedPage.value,
+        parsedPageSize.value,
+        parsedSortOption.value,
+      );
     }
 
     const errors: string[] = this.#requestService.composeErrorMessages([
       [parsedGameIds, GetGamesV1SpecsRequestParamHandler.gameIdQuery],
       [parsedPage, GetGamesV1SpecsRequestParamHandler.pageQueryParam],
       [parsedPageSize, GetGamesV1SpecsRequestParamHandler.pageSizeQueryParam],
+      [parsedSortOption, GetGamesV1SpecsRequestParamHandler.sortQueryParam],
     ]);
 
     throw new AppError(
@@ -86,6 +125,29 @@ export class GetGamesV1SpecsRequestParamHandler
         );
       }
     }
+  }
+
+  #buildGameSpecFindQuery(
+    gameIds: string[],
+    page: number,
+    pageSize: number,
+    sort: apiModels.GameSpecSortOptionV1 | undefined,
+  ): [GameSpecFindQuery] {
+    const gameSpecFindQuery: Writable<GameSpecFindQuery> = {
+      limit: pageSize,
+      offset: pageSize * (page - 1),
+    };
+
+    if (sort !== undefined) {
+      gameSpecFindQuery.sort =
+        this.#gameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder.build(
+          sort,
+        );
+    }
+
+    gameSpecFindQuery.gameIds = gameIds;
+
+    return [gameSpecFindQuery];
   }
 
   #getParsedGameIds(
@@ -115,7 +177,51 @@ export class GetGamesV1SpecsRequestParamHandler
       isMultiple: false,
       max: MAX_PAGE_SIZE_VALUE,
       min: MIN_PAGE_SIZE_VALUE,
-      name: GetGamesV1SpecsRequestParamHandler.pageQueryParam,
+      name: GetGamesV1SpecsRequestParamHandler.pageSizeQueryParam,
     });
+  }
+
+  #getParsedSortOption(
+    request: Request,
+  ): Either<
+    RequestQueryParseFailure,
+    apiModels.GameSpecSortOptionV1 | undefined
+  > {
+    const parsedGameSpecSortOptions: Either<RequestQueryParseFailure, string> =
+      this.#requestService.tryParseStringQuery(request, {
+        isMultiple: false,
+        name: GetGamesV1SpecsRequestParamHandler.sortQueryParam,
+      });
+
+    if (
+      !parsedGameSpecSortOptions.isRight &&
+      parsedGameSpecSortOptions.value.kind ===
+        RequestQueryParseFailureKind.notFound
+    ) {
+      return {
+        isRight: true,
+        value: undefined,
+      };
+    }
+
+    if (
+      parsedGameSpecSortOptions.isRight &&
+      !this.#gameSpecSortOptionValidator.validate(
+        parsedGameSpecSortOptions.value,
+      )
+    ) {
+      return {
+        isRight: false,
+        value: {
+          errors: [this.#gameSpecSortOptionValidator.errors ?? 'Invalid value'],
+          kind: RequestQueryParseFailureKind.invalidValue,
+        },
+      };
+    }
+
+    return parsedGameSpecSortOptions as Either<
+      RequestQueryParseFailure,
+      apiModels.GameSpecSortOptionV1
+    >;
   }
 }
