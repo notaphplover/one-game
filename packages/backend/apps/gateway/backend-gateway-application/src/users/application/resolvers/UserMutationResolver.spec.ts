@@ -53,7 +53,7 @@ describe(UserMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createUser.mockResolvedValueOnce({
           body: userV1,
@@ -116,7 +116,7 @@ describe(UserMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createUser.mockResolvedValueOnce({
           body: errorV1,

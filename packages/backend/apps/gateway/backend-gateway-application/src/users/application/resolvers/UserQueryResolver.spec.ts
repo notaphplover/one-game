@@ -44,7 +44,7 @@ describe(UserQueryResolver.name, () => {
         };
         contextFixture = {
           request: { headers: {}, query: {}, urlParameters: {} },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -104,7 +104,7 @@ describe(UserQueryResolver.name, () => {
         };
         contextFixture = {
           request: { headers: {}, query: {}, urlParameters: {} },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -174,7 +174,7 @@ describe(UserQueryResolver.name, () => {
         };
         contextFixture = {
           request: { headers: {}, query: {}, urlParameters: {} },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -232,7 +232,7 @@ describe(UserQueryResolver.name, () => {
         argsFixture = {};
         contextFixture = {
           request: { headers: {}, query: {}, urlParameters: {} },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -287,7 +287,7 @@ describe(UserQueryResolver.name, () => {
         argsFixture = {};
         contextFixture = {
           request: { headers: {}, query: {}, urlParameters: {} },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -352,7 +352,7 @@ describe(UserQueryResolver.name, () => {
         argsFixture = {};
         contextFixture = {
           request: { headers: {}, query: {}, urlParameters: {} },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {

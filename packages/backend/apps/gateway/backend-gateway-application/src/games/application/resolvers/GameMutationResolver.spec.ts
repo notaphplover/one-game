@@ -72,7 +72,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createGame.mockResolvedValueOnce({
           body: gameV1Fixture,
@@ -146,7 +146,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createGame.mockResolvedValueOnce({
           body: errorV1,
@@ -232,7 +232,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: gameV1Fixture,
@@ -307,7 +307,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -383,7 +383,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -472,7 +472,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: gameV1Fixture,
@@ -550,7 +550,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -629,7 +629,7 @@ describe(GameMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
