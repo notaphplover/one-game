@@ -47,7 +47,7 @@ describe(AuthMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createAuth.mockResolvedValueOnce({
           body: authV1,
@@ -106,7 +106,7 @@ describe(AuthMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createAuth.mockResolvedValueOnce({
           body: errorV1,
@@ -187,7 +187,7 @@ describe(AuthMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createAuth.mockResolvedValueOnce({
           body: authV1,
@@ -248,7 +248,7 @@ describe(AuthMutationResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createAuth.mockResolvedValueOnce({
           body: errorV1,

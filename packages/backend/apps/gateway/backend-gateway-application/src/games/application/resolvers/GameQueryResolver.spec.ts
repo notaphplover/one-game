@@ -60,7 +60,7 @@ describe(GameQueryResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: Symbol() as unknown as apiModels.GameV1,
@@ -129,7 +129,7 @@ describe(GameQueryResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -203,7 +203,7 @@ describe(GameQueryResolver.name, () => {
             query: {},
             urlParameters: {},
           },
-        };
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -252,7 +252,7 @@ describe(GameQueryResolver.name, () => {
           query: {},
           urlParameters: {},
         },
-      };
+      } as Partial<Context> as Context;
     });
 
     describe('having GameQueryMyGamesArgs with page', () => {
