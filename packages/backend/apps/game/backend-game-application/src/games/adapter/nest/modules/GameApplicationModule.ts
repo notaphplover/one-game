@@ -42,6 +42,7 @@ export class GameApplicationModule {
         GameEventsManagementInputPort,
         GameManagementInputPort,
         GameSlotManagementInputPort,
+        GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder,
         GameSpecManagementInputPort,
       ],
       global: false,
