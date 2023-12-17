@@ -47,7 +47,7 @@ export class RootMutationResolver
     args: graphqlModels.AuthMutationCreateAuthByCodeArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Auth> {
+  ): Promise<Partial<graphqlModels.Auth>> {
     return this.#authMutationResolver.createAuthByCode(
       parent,
       args,
@@ -61,7 +61,7 @@ export class RootMutationResolver
     args: graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Auth> {
+  ): Promise<Partial<graphqlModels.Auth>> {
     return this.#authMutationResolver.createAuthByCredentials(
       parent,
       args,
@@ -75,7 +75,7 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationCreateGameArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game> {
+  ): Promise<Partial<graphqlModels.Game>> {
     return this.#gameMutationResolver.createGame(parent, args, context, info);
   }
 
@@ -84,7 +84,7 @@ export class RootMutationResolver
     args: graphqlModels.UserMutationCreateUserArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.User> {
+  ): Promise<Partial<graphqlModels.User>> {
     return this.#userMutationResolver.createUser(parent, args, context, info);
   }
 
@@ -93,7 +93,7 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationPassGameTurnArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     return this.#gameMutationResolver.passGameTurn(parent, args, context, info);
   }
 
@@ -102,7 +102,7 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationPlayGameCardsArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     return this.#gameMutationResolver.playGameCards(
       parent,
       args,
@@ -116,7 +116,7 @@ export class RootMutationResolver
     args: graphqlModels.UserMutationUpdateUserMeArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.User> {
+  ): Promise<Partial<graphqlModels.User>> {
     return this.#userMutationResolver.updateUserMe(parent, args, context, info);
   }
 }

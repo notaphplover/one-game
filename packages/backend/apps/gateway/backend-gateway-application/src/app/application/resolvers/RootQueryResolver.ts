@@ -41,7 +41,7 @@ export class RootQueryResolver
     args: graphqlModels.GameQueryGameByIdArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game | null>> {
     return this.#gameQueryResolver.gameById(parent, args, context, info);
   }
 
@@ -62,7 +62,7 @@ export class RootQueryResolver
     args: graphqlModels.UserQueryUserByIdArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.User | null> {
+  ): Promise<Partial<graphqlModels.User> | null> {
     return this.#userQueryResolver.userById(parent, args, context, info);
   }
 
@@ -71,7 +71,7 @@ export class RootQueryResolver
     args: Record<string, unknown>,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.User> {
+  ): Promise<Partial<graphqlModels.User>> {
     return this.#userQueryResolver.userMe(parent, args, context, info);
   }
 }
