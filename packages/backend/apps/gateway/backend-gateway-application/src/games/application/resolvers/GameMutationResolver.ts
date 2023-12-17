@@ -14,7 +14,7 @@ export class GameMutationResolver
   implements CanonicalResolver<graphqlModels.GameMutationResolvers<Context>>
 {
   readonly #gameGraphQlFromGameV1Builder: Builder<
-    graphqlModels.Game,
+    Partial<graphqlModels.Game>,
     [apiModels.GameV1]
   >;
   readonly #httpClient: HttpClient;
@@ -22,7 +22,7 @@ export class GameMutationResolver
   constructor(
     @Inject(GameGraphQlFromGameV1Builder)
     gameGraphQlFromGameV1Builder: Builder<
-      graphqlModels.Game,
+      Partial<graphqlModels.Game>,
       [apiModels.GameV1]
     >,
     @Inject(HttpClient) httpClient: HttpClient,
@@ -35,7 +35,7 @@ export class GameMutationResolver
     _: unknown,
     args: graphqlModels.GameMutationCreateGameArgs,
     context: Context,
-  ): Promise<graphqlModels.Game> {
+  ): Promise<Partial<graphqlModels.Game>> {
     const gameCreateQuery: apiModels.GameCreateQueryV1 = {
       gameSlotsAmount: args.gameCreateInput.gameSlotsAmount,
       options: {
@@ -78,7 +78,7 @@ export class GameMutationResolver
     _: unknown,
     args: graphqlModels.GameMutationPassGameTurnArgs,
     context: Context,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     const gamePassTurnQueryV1: apiModels.GameIdPassTurnQueryV1 = {
       kind: 'passTurn',
       slotIndex: args.gamePassTurnInput.slotIndex,
@@ -95,7 +95,7 @@ export class GameMutationResolver
     _: unknown,
     args: graphqlModels.GameMutationPlayGameCardsArgs,
     context: Context,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     const gamePlayCardsQueryV1: apiModels.GameIdPlayCardsQueryV1 = {
       cardIndexes: args.gamePlayCardsInput.cardIndexes,
       kind: 'playCards',
@@ -122,7 +122,7 @@ export class GameMutationResolver
     headers: Record<string, string>,
     gameId: string,
     gameUpdateQueryV1: apiModels.GameIdUpdateQueryV1,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     const httpResponse: Awaited<ReturnType<HttpClient['updateGame']>> =
       await this.#httpClient.updateGame(
         headers,

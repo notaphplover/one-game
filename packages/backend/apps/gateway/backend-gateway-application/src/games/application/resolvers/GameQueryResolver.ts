@@ -21,7 +21,7 @@ export class GameQueryResolver
   implements CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>
 {
   readonly #gameGraphQlFromGameV1Builder: Builder<
-    graphqlModels.Game,
+    Partial<graphqlModels.Game>,
     [apiModels.GameV1]
   >;
   readonly #httpClient: HttpClient;
@@ -29,7 +29,7 @@ export class GameQueryResolver
   constructor(
     @Inject(GameGraphQlFromGameV1Builder)
     gameGraphQlFromGameV1Builder: Builder<
-      graphqlModels.Game,
+      Partial<graphqlModels.Game>,
       [apiModels.GameV1]
     >,
     @Inject(HttpClient) httpClient: HttpClient,
@@ -42,7 +42,7 @@ export class GameQueryResolver
     _: unknown,
     args: graphqlModels.GameQueryGameByIdArgs,
     context: Context,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     const httpResponse: Awaited<ReturnType<HttpClient['getGame']>> =
       await this.#httpClient.getGame(context.request.headers, {
         gameId: args.id,
@@ -70,7 +70,7 @@ export class GameQueryResolver
     _: unknown,
     args: Partial<graphqlModels.GameQueryMyGamesArgs>,
     context: Context,
-  ): Promise<graphqlModels.Game[]> {
+  ): Promise<Partial<graphqlModels.Game>[]> {
     const httpResponse: Awaited<ReturnType<HttpClient['getGamesMine']>> =
       await this.#httpClient.getGamesMine(
         context.request.headers,
