@@ -64,6 +64,11 @@ export class BatchedGetSpecByGameIdHandler extends BatchedGetByIdHandler<
         return httpResponse.body;
       case 401:
         throw new AppError(
+          AppErrorKind.missingCredentials,
+          httpResponse.body.description,
+        );
+      case 403:
+        throw new AppError(
           AppErrorKind.invalidCredentials,
           httpResponse.body.description,
         );

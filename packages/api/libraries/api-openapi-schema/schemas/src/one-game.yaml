@@ -307,6 +307,12 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
         - bearerAuth: []
       tags:
