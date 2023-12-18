@@ -9,7 +9,7 @@
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-gateway-env": "workspace:*",
-    "@nestjs/common": "10.2.10",
+    "@nestjs/common": "10.3.0",
     "dataloader": "2.2.2",
     "graphql": "16.8.1"
   },
