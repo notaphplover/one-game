@@ -4,7 +4,11 @@
  * DO NOT MODIFY IT BY HAND. Instead, modify the source graphql file,
  * and run the generation script to regenerate this file.
  */
-import { GraphQLResolveInfo } from 'graphql';
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+} from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -36,6 +40,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  Void: { input: any; output: any };
 };
 
 export type ActiveGame = {
@@ -272,6 +277,7 @@ export type RootMutation = AuthMutation &
     createAuthByCredentials: Auth;
     createGame: Game;
     createUser: User;
+    deleteUserMe: Maybe<Scalars['Void']['output']>;
     passGameTurn: Maybe<Game>;
     playGameCards: Maybe<Game>;
     updateUserMe: User;
@@ -351,6 +357,7 @@ export type UserCreateInput = {
 
 export type UserMutation = {
   createUser: User;
+  deleteUserMe: Maybe<Scalars['Void']['output']>;
   updateUserMe: User;
 };
 
@@ -615,6 +622,7 @@ export type ResolversTypes = ResolversObject<{
     ResolversInterfaceTypes<ResolversTypes>['UserQuery']
   >;
   UserUpdateInput: UserUpdateInput;
+  Void: ResolverTypeWrapper<Scalars['Void']['output']>;
   WildCard: ResolverTypeWrapper<WildCard>;
   WildCardKind: WildCardKind;
   WildDraw4Card: ResolverTypeWrapper<WildDraw4Card>;
@@ -667,6 +675,7 @@ export type ResolversParentTypes = ResolversObject<{
   UserMutation: ResolversInterfaceTypes<ResolversParentTypes>['UserMutation'];
   UserQuery: ResolversInterfaceTypes<ResolversParentTypes>['UserQuery'];
   UserUpdateInput: UserUpdateInput;
+  Void: Scalars['Void']['output'];
   WildCard: WildCard;
   WildDraw4Card: WildDraw4Card;
 }>;
@@ -1053,6 +1062,11 @@ export type RootMutationResolvers<
     ContextType,
     RequireFields<RootMutationCreateUserArgs, 'userCreateInput'>
   >;
+  deleteUserMe: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType
+  >;
   passGameTurn: Resolver<
     Maybe<ResolversTypes['Game']>,
     ParentType,
@@ -1135,6 +1149,11 @@ export type UserMutationResolvers<
     ContextType,
     RequireFields<UserMutationCreateUserArgs, 'userCreateInput'>
   >;
+  deleteUserMe: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType
+  >;
   updateUserMe: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -1157,6 +1176,11 @@ export type UserQueryResolvers<
   >;
   userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 }>;
+
+export interface VoidScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void';
+}
 
 export type WildCardResolvers<
   ContextType = any,
@@ -1204,6 +1228,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   User: UserResolvers<ContextType>;
   UserMutation: UserMutationResolvers<ContextType>;
   UserQuery: UserQueryResolvers<ContextType>;
+  Void: GraphQLScalarType;
   WildCard: WildCardResolvers<ContextType>;
   WildDraw4Card: WildDraw4CardResolvers<ContextType>;
 }>;

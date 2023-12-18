@@ -45,6 +45,7 @@ function buildTestTuples(): [
     CanonicalResolver<graphqlModels.UserMutationResolvers<Context>>
   > = {
     createUser: jest.fn(),
+    deleteUserMe: jest.fn(),
     updateUserMe: jest.fn(),
   } as Partial<
     jest.Mocked<CanonicalResolver<graphqlModels.UserMutationResolvers<Context>>>
@@ -78,6 +79,11 @@ function buildTestTuples(): [
       'createUser',
       rootMutationResolver.createUser.bind(rootMutationResolver),
       userMutationMock.createUser as jest.Mock,
+    ],
+    [
+      'deleteUserMe',
+      rootMutationResolver.deleteUserMe.bind(rootMutationResolver),
+      userMutationMock.deleteUserMe as jest.Mock,
     ],
     [
       'passGameTurn',

@@ -1,5 +1,7 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { Inject, Injectable } from '@nestjs/common';
+import { GraphQLScalarType } from 'graphql';
+import { GraphQLVoid } from 'graphql-scalars';
 
 import { Context } from '../../../foundation/graphql/application/models/Context';
 import { ActiveGameResolver } from '../../../games/application/resolvers/ActiveGameResolver';
@@ -23,6 +25,8 @@ export class ApplicationResolver implements Partial<graphqlModels.Resolvers> {
   public readonly RootMutation: graphqlModels.RootMutationResolvers<Context>;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   public readonly RootQuery: graphqlModels.RootQueryResolvers<Context>;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  public readonly Void: GraphQLScalarType;
 
   constructor(
     @Inject(ActiveGameResolver)
@@ -44,5 +48,6 @@ export class ApplicationResolver implements Partial<graphqlModels.Resolvers> {
     this.NonStartedGame = nonStartedGameResolverResolver;
     this.RootMutation = rootMutationResolver;
     this.RootQuery = rootQueryResolver;
+    this.Void = GraphQLVoid;
   }
 }

@@ -1,8 +1,10 @@
 #import User from './User.graphql'
 #import UserCreateInput from './UserCreateInput.graphql'
 #import UserUpdateInput from './UserUpdateInput.graphql'
+#import Void from '../common/Void.graphql'
 
 interface UserMutation {
   createUser(userCreateInput: UserCreateInput!): User!
+  deleteUserMe: Void
   updateUserMe(userUpdateInput: UserUpdateInput!): User!
 }
