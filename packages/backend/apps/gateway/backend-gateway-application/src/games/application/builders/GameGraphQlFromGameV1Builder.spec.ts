@@ -33,7 +33,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         });
 
         it('should return a GraphQL game', () => {
-          const expected: graphqlModels.ActiveGame = {
+          const expected: Omit<graphqlModels.ActiveGame, 'spec'> = {
             id: activeGameV1Fixture.id,
             name: null,
             state: activeGameV1Fixture.state,
@@ -65,7 +65,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         });
 
         it('should return a GraphQL game', () => {
-          const expected: graphqlModels.ActiveGame = {
+          const expected: Omit<graphqlModels.ActiveGame, 'spec'> = {
             id: activeGameV1Fixture.id,
             name: activeGameV1Fixture.name as string,
             state: activeGameV1Fixture.state,
@@ -96,7 +96,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         });
 
         it('should return a GraphQL game', () => {
-          const expected: graphqlModels.FinishedGame = {
+          const expected: Omit<graphqlModels.FinishedGame, 'spec'> = {
             id: finishedGameV1Fixture.id,
             name: null,
             state: finishedGameV1Fixture.state,
@@ -127,7 +127,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         });
 
         it('should return a GraphQL game', () => {
-          const expected: graphqlModels.FinishedGame = {
+          const expected: Omit<graphqlModels.FinishedGame, 'spec'> = {
             id: finishedGameV1Fixture.id,
             name: null,
             state: finishedGameV1Fixture.state,
@@ -158,7 +158,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         });
 
         it('should return a GraphQL game', () => {
-          const expected: graphqlModels.NonStartedGame = {
+          const expected: Omit<graphqlModels.NonStartedGame, 'spec'> = {
             id: nonStartedGameV1Fixture.id,
             name: null,
             state: nonStartedGameV1Fixture.state,
@@ -189,7 +189,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
         });
 
         it('should return a GraphQL game', () => {
-          const expected: graphqlModels.NonStartedGame = {
+          const expected: Omit<graphqlModels.NonStartedGame, 'spec'> = {
             id: nonStartedGameV1Fixture.id,
             name: null,
             state: nonStartedGameV1Fixture.state,

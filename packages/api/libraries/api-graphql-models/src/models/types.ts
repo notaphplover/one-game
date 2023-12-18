@@ -42,6 +42,7 @@ export type ActiveGame = {
   __typename?: 'ActiveGame';
   id: Scalars['ID']['output'];
   name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
   state: ActiveGameState;
 };
 
@@ -120,6 +121,7 @@ export type FinishedGame = {
   __typename?: 'FinishedGame';
   id: Scalars['ID']['output'];
   name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
   state: FinishedGameState;
 };
 
@@ -219,7 +221,7 @@ export type GameQueryMyGamesArgs = {
 
 export type GameSpec = {
   __typename?: 'GameSpec';
-  cardSpecs: Array<Maybe<GameCardSpec>>;
+  cardSpecs: Array<GameCardSpec>;
   gameSlotsAmount: Scalars['Int']['output'];
   options: GameOptions;
 };
@@ -228,6 +230,7 @@ export type NonStartedGame = {
   __typename?: 'NonStartedGame';
   id: Scalars['ID']['output'];
   name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
   state: NonStartedGameState;
 };
 
@@ -675,6 +678,7 @@ export type ActiveGameResolvers<
 > = ResolversObject<{
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
   state: Resolver<ResolversTypes['ActiveGameState'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -791,6 +795,7 @@ export type FinishedGameResolvers<
 > = ResolversObject<{
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
   state: Resolver<ResolversTypes['FinishedGameState'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -943,7 +948,7 @@ export type GameSpecResolvers<
     ResolversParentTypes['GameSpec'] = ResolversParentTypes['GameSpec'],
 > = ResolversObject<{
   cardSpecs: Resolver<
-    Array<Maybe<ResolversTypes['GameCardSpec']>>,
+    Array<ResolversTypes['GameCardSpec']>,
     ParentType,
     ContextType
   >;
@@ -959,6 +964,7 @@ export type NonStartedGameResolvers<
 > = ResolversObject<{
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
   state: Resolver<
     ResolversTypes['NonStartedGameState'],
     ParentType,
