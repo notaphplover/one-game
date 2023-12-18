@@ -35,7 +35,7 @@ div.cornie-card div.cornie-card-text {
   align-self: start;
   color: var(--cg-bkg-primary-light);
   cursor: default;
-  font-family: 'Gochi Hand';
+  font-family: variables.$cornie_font;
   font-weight: bold;
   font-size: variables.$font-sm;
   letter-spacing: 0.3rem;

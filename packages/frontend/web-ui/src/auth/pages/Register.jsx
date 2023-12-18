@@ -80,21 +80,11 @@ export const Register = () => {
       >
         <Grid item sx={{ mb: 2 }}>
           <Typography
-            className="contrast-text-hover"
+            className="logo-cornie-text"
             variant="h4"
             noWrap
             component="a"
             href="/"
-            sx={{
-              ml: 3,
-              mr: 5,
-              fontFamily: 'Gochi Hand',
-              fontWeight: 'bold',
-              fontSize: 50,
-              letterSpacing: '.3rem',
-              textDecoration: 'none',
-              color: 'primary.dark',
-            }}
           >
             CORNIE
           </Typography>

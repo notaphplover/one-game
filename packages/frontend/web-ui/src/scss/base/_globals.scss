@@ -76,7 +76,27 @@ img {
   grid-template-rows: 1fr auto;
 }
 
-a.contrast-text-hover:hover {
+a.logo-cornie-navbar-text {
+  font-family: v.$cornie_font;
+  font-weight: bold;
+  letter-spacing: 0.3rem;
+  font-size: v.$font-sm;
+  color: var(--cg-text-primary);
+}
+
+a.logo-cornie-navbar-text:hover {
+  color: var(--cg-bkg-secondary-light);
+}
+
+a.logo-cornie-text {
+  font-family: v.$cornie_font;
+  font-weight: bold;
+  letter-spacing: 0.3rem;
+  font-size: v.$font-lg;
+  color: var(--cg-bkg-primary-dark);
+}
+
+a.logo-cornie-text:hover {
   color: var(--cg-text-primary);
 }
 
