@@ -15,7 +15,7 @@ services:
       - "9411:9411"    # zipkin
 
   pyroscope:
-    image: grafana/pyroscope:1.2.0
+    image: grafana/pyroscope:1.2.1
     command:
       - --config.file=/etc/pyroscope.yaml
     volumes:
@@ -24,7 +24,7 @@ services:
       - "4040:4040"
 
   prometheus:
-    image: prom/prometheus:v2.48.0
+    image: prom/prometheus:v2.48.1
     command:
       - --config.file=/etc/prometheus.yaml
       - --web.enable-remote-write-receiver

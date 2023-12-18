@@ -1,4 +1,5 @@
 import * as axios from 'axios';
+import qs from 'qs';
 
 import { Response } from '../models/Response';
 
@@ -8,6 +9,8 @@ export class AxiosHttpClient {
   constructor(baseUrl: string) {
     this.#axiosClient = axios.default.create({
       baseURL: baseUrl,
+      paramsSerializer: (params: Record<string, unknown>): string =>
+        qs.stringify(params, { indices: false }),
     });
   }
 

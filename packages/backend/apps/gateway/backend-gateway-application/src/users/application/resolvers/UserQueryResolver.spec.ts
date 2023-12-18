@@ -4,9 +4,9 @@ import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient, Response } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { UserQueryResolver } from './UserQueryResolver';
 
 describe(UserQueryResolver.name, () => {
@@ -27,7 +27,7 @@ describe(UserQueryResolver.name, () => {
     describe('when called, and httpClient.getUser() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.UserQueryUserByIdArgs;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -42,11 +42,9 @@ describe(UserQueryResolver.name, () => {
         argsFixture = {
           id: 'user-id',
         };
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: { headers: {}, query: {}, urlParameters: {} },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -63,7 +61,7 @@ describe(UserQueryResolver.name, () => {
         result = await userQueryResolver.userById(
           firstArgFixture,
           argsFixture,
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -74,7 +72,7 @@ describe(UserQueryResolver.name, () => {
       it('should call httpClient.getUser()', () => {
         expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getUser).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             userId: argsFixture.id,
           },
@@ -89,7 +87,7 @@ describe(UserQueryResolver.name, () => {
     describe('when called, and httpClient.getUser() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.UserQueryUserByIdArgs;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -104,11 +102,9 @@ describe(UserQueryResolver.name, () => {
         argsFixture = {
           id: 'user-id',
         };
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: { headers: {}, query: {}, urlParameters: {} },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -124,7 +120,7 @@ describe(UserQueryResolver.name, () => {
           await userQueryResolver.userById(
             firstArgFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         } catch (error: unknown) {
           result = error;
@@ -138,7 +134,7 @@ describe(UserQueryResolver.name, () => {
       it('should call httpClient.getUser()', () => {
         expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getUser).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             userId: argsFixture.id,
           },
@@ -161,7 +157,7 @@ describe(UserQueryResolver.name, () => {
     describe('when called, and httpClient.getUser() returns a Response with status code 404', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.UserQueryUserByIdArgs;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -176,11 +172,9 @@ describe(UserQueryResolver.name, () => {
         argsFixture = {
           id: 'user-id',
         };
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: { headers: {}, query: {}, urlParameters: {} },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -195,7 +189,7 @@ describe(UserQueryResolver.name, () => {
         result = await userQueryResolver.userById(
           firstArgFixture,
           argsFixture,
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -206,7 +200,7 @@ describe(UserQueryResolver.name, () => {
       it('should call httpClient.getUser()', () => {
         expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getUser).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             userId: argsFixture.id,
           },
@@ -223,7 +217,7 @@ describe(UserQueryResolver.name, () => {
     describe('when called, and httpClient.getUserMe() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
       let argsFixture: Record<string, string>;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -236,11 +230,9 @@ describe(UserQueryResolver.name, () => {
       beforeAll(async () => {
         firstArgFixture = Symbol();
         argsFixture = {};
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: { headers: {}, query: {}, urlParameters: {} },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -257,7 +249,7 @@ describe(UserQueryResolver.name, () => {
         result = await userQueryResolver.userMe(
           firstArgFixture,
           argsFixture,
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -268,7 +260,7 @@ describe(UserQueryResolver.name, () => {
       it('should call httpClient.getUserMe()', () => {
         expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
         );
       });
 
@@ -280,7 +272,7 @@ describe(UserQueryResolver.name, () => {
     describe('when called, and httpClient.getUserMe() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
       let argsFixture: Record<string, string>;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -293,11 +285,9 @@ describe(UserQueryResolver.name, () => {
       beforeAll(async () => {
         firstArgFixture = Symbol();
         argsFixture = {};
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: { headers: {}, query: {}, urlParameters: {} },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -313,7 +303,7 @@ describe(UserQueryResolver.name, () => {
           await userQueryResolver.userMe(
             firstArgFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         } catch (error: unknown) {
           result = error;
@@ -327,7 +317,7 @@ describe(UserQueryResolver.name, () => {
       it('should call httpClient.getUserMe()', () => {
         expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
         );
       });
 
@@ -347,7 +337,7 @@ describe(UserQueryResolver.name, () => {
     describe('when called, and httpClient.getUserMe() returns a Response with status code 403', () => {
       let firstArgFixture: unknown;
       let argsFixture: Record<string, string>;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -360,11 +350,9 @@ describe(UserQueryResolver.name, () => {
       beforeAll(async () => {
         firstArgFixture = Symbol();
         argsFixture = {};
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: { headers: {}, query: {}, urlParameters: {} },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -380,7 +368,7 @@ describe(UserQueryResolver.name, () => {
           await userQueryResolver.userMe(
             firstArgFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         } catch (error: unknown) {
           result = error;
@@ -394,7 +382,7 @@ describe(UserQueryResolver.name, () => {
       it('should call httpClient.getUserMe()', () => {
         expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
         );
       });
 

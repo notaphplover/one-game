@@ -1,15 +1,15 @@
 import { ApolloServer } from '@apollo/server';
-import { Request } from '@cornie-js/backend-http';
+import { Context } from '@cornie-js/backend-gateway-application';
 import { ConsoleLogger, LoggerService } from '@nestjs/common';
 
-export function registerSignalHandlers(server: ApolloServer<Request>): void {
+export function registerSignalHandlers(server: ApolloServer<Context>): void {
   const logger: LoggerService = new ConsoleLogger();
 
   registerExitSignalHandlers(server, logger, ['SIGINT', 'SIGTERM']);
 }
 
 async function closeServerGracefully(
-  server: ApolloServer<Request>,
+  server: ApolloServer<Context>,
   logger: LoggerService,
 ): Promise<void> {
   logger.log('Closing signal received.');
@@ -21,7 +21,7 @@ async function closeServerGracefully(
 }
 
 function exitSignalHandler(
-  server: ApolloServer<Request>,
+  server: ApolloServer<Context>,
   logger: LoggerService,
 ): () => void {
   return () => {
@@ -30,7 +30,7 @@ function exitSignalHandler(
 }
 
 function registerExitSignalHandlers(
-  server: ApolloServer<Request>,
+  server: ApolloServer<Context>,
   logger: LoggerService,
   signals: NodeJS.Signals[],
 ): void {

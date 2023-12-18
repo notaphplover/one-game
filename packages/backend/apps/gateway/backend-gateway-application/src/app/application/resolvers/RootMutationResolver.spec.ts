@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { Request } from '@cornie-js/backend-http';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { RootMutationResolver } from './RootMutationResolver';
 
 function buildTestTuples(): [
@@ -12,44 +12,44 @@ function buildTestTuples(): [
   graphqlModels.ResolverFn<
     unknown,
     graphqlModels.RootMutation,
-    Request,
+    Context,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any
   >,
   jest.Mock,
 ][] {
   const authMutationMock: jest.Mocked<
-    CanonicalResolver<graphqlModels.AuthMutationResolvers<Request>>
+    CanonicalResolver<graphqlModels.AuthMutationResolvers<Context>>
   > = {
     createAuthByCode: jest.fn(),
     createAuthByCredentials: jest.fn(),
   } as Partial<
-    jest.Mocked<CanonicalResolver<graphqlModels.AuthMutationResolvers<Request>>>
+    jest.Mocked<CanonicalResolver<graphqlModels.AuthMutationResolvers<Context>>>
   > as jest.Mocked<
-    CanonicalResolver<graphqlModels.AuthMutationResolvers<Request>>
+    CanonicalResolver<graphqlModels.AuthMutationResolvers<Context>>
   >;
 
   const gameMutationMock: jest.Mocked<
-    CanonicalResolver<graphqlModels.GameMutationResolvers<Request>>
+    CanonicalResolver<graphqlModels.GameMutationResolvers<Context>>
   > = {
     createGame: jest.fn(),
     passGameTurn: jest.fn(),
     playGameCards: jest.fn(),
   } as Partial<
-    jest.Mocked<CanonicalResolver<graphqlModels.GameMutationResolvers<Request>>>
+    jest.Mocked<CanonicalResolver<graphqlModels.GameMutationResolvers<Context>>>
   > as jest.Mocked<
-    CanonicalResolver<graphqlModels.GameMutationResolvers<Request>>
+    CanonicalResolver<graphqlModels.GameMutationResolvers<Context>>
   >;
 
   const userMutationMock: jest.Mocked<
-    CanonicalResolver<graphqlModels.UserMutationResolvers<Request>>
+    CanonicalResolver<graphqlModels.UserMutationResolvers<Context>>
   > = {
     createUser: jest.fn(),
     updateUserMe: jest.fn(),
   } as Partial<
-    jest.Mocked<CanonicalResolver<graphqlModels.UserMutationResolvers<Request>>>
+    jest.Mocked<CanonicalResolver<graphqlModels.UserMutationResolvers<Context>>>
   > as jest.Mocked<
-    CanonicalResolver<graphqlModels.UserMutationResolvers<Request>>
+    CanonicalResolver<graphqlModels.UserMutationResolvers<Context>>
   >;
 
   const rootMutationResolver: RootMutationResolver = new RootMutationResolver(
@@ -104,7 +104,7 @@ describe(RootMutationResolver.name, () => {
       graphqlModels.ResolverFn<
         unknown,
         graphqlModels.RootMutation,
-        Request,
+        Context,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         any
       >,
@@ -117,7 +117,7 @@ describe(RootMutationResolver.name, () => {
       resolver: graphqlModels.ResolverFn<
         unknown,
         graphqlModels.RootMutation,
-        Request,
+        Context,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         any
       >,
@@ -126,7 +126,7 @@ describe(RootMutationResolver.name, () => {
       describe('when called', () => {
         let parentFixture: graphqlModels.RootMutation;
         let argsFixture: unknown;
-        let requestFixture: Request;
+        let contextFixture: Context;
         let infoFixture: GraphQLResolveInfo;
 
         let resolverResultFixture: unknown;
@@ -136,7 +136,7 @@ describe(RootMutationResolver.name, () => {
         beforeAll(async () => {
           parentFixture = Symbol() as unknown as graphqlModels.RootMutation;
           argsFixture = Symbol();
-          requestFixture = Symbol() as unknown as Request;
+          contextFixture = Symbol() as unknown as Context;
           infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
           resolverResultFixture = Symbol();
@@ -148,7 +148,7 @@ describe(RootMutationResolver.name, () => {
           result = await resolver(
             parentFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
             infoFixture,
           );
         });
@@ -162,7 +162,7 @@ describe(RootMutationResolver.name, () => {
           expect(resolverMock).toHaveBeenCalledWith(
             parentFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
             infoFixture,
           );
         });

@@ -1,5 +1,12 @@
 {
   "eslint.workingDirectories": [
-    { "pattern": "./packages/*" }
+    { "pattern": "./packages/api/libraries/*" },
+    { "pattern": "./packages/api/tools/*" },
+    { "pattern": "./packages/backend/apps/*/*" },
+    { "pattern": "./packages/backend/libraries/*" },
+    { "pattern": "./packages/backend/services/*" },
+    { "pattern": "./packages/backend/tools/*" },
+    { "pattern": "./packages/frontend/*" },
+    { "pattern": "./packages/tools/*" }
   ]
 }

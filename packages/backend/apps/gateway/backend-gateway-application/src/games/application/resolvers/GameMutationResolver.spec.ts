@@ -4,9 +4,9 @@ import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { GameMutationResolver } from './GameMutationResolver';
 
 describe(GameMutationResolver.name, () => {
@@ -56,7 +56,7 @@ describe(GameMutationResolver.name, () => {
       let gameV1Fixture: apiModels.NonStartedGameV1;
       let gameGraphQlFixture: graphqlModels.Game;
 
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -64,13 +64,15 @@ describe(GameMutationResolver.name, () => {
         gameV1Fixture = Symbol() as unknown as apiModels.NonStartedGameV1;
         gameGraphQlFixture = Symbol() as unknown as graphqlModels.Game;
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createGame.mockResolvedValueOnce({
           body: gameV1Fixture,
@@ -91,7 +93,7 @@ describe(GameMutationResolver.name, () => {
               options: optionsFixture,
             },
           },
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -108,7 +110,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.createGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.createGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           expectedBody,
         );
       });
@@ -127,7 +129,7 @@ describe(GameMutationResolver.name, () => {
 
     describe('when called, and httpClient.createGame() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -136,13 +138,15 @@ describe(GameMutationResolver.name, () => {
           description: 'error description fixture',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createGame.mockResolvedValueOnce({
           body: errorV1,
@@ -160,7 +164,7 @@ describe(GameMutationResolver.name, () => {
                 options: optionsFixture,
               },
             },
-            requestFixture,
+            contextFixture,
           );
         } catch (error) {
           result = error;
@@ -180,7 +184,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.createGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.createGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           expectedBody,
         );
       });
@@ -212,7 +216,7 @@ describe(GameMutationResolver.name, () => {
       let gameV1Fixture: apiModels.NonStartedGameV1;
       let gameGraphQlFixture: graphqlModels.Game;
 
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -220,13 +224,15 @@ describe(GameMutationResolver.name, () => {
         gameV1Fixture = Symbol() as unknown as apiModels.NonStartedGameV1;
         gameGraphQlFixture = Symbol() as unknown as graphqlModels.Game;
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: gameV1Fixture,
@@ -246,7 +252,7 @@ describe(GameMutationResolver.name, () => {
               slotIndex: slotIndexFixture,
             },
           },
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -262,7 +268,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.updateGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: gameIdFixture,
           },
@@ -284,7 +290,7 @@ describe(GameMutationResolver.name, () => {
 
     describe('when called, and httpClient.updateGame() returns an UNAUTHORIZED response', () => {
       let errorV1: apiModels.ErrorV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -293,13 +299,15 @@ describe(GameMutationResolver.name, () => {
           description: 'error description fixture',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -316,7 +324,7 @@ describe(GameMutationResolver.name, () => {
                 slotIndex: slotIndexFixture,
               },
             },
-            requestFixture,
+            contextFixture,
           );
         } catch (error) {
           result = error;
@@ -335,7 +343,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.updateGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: gameIdFixture,
           },
@@ -358,7 +366,7 @@ describe(GameMutationResolver.name, () => {
 
     describe('when called, and httpClient.updateGame() returns an FORBIDDEN response', () => {
       let errorV1: apiModels.ErrorV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -367,13 +375,15 @@ describe(GameMutationResolver.name, () => {
           description: 'error description fixture',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -390,7 +400,7 @@ describe(GameMutationResolver.name, () => {
                 slotIndex: slotIndexFixture,
               },
             },
-            requestFixture,
+            contextFixture,
           );
         } catch (error) {
           result = error;
@@ -409,7 +419,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.updateGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: gameIdFixture,
           },
@@ -446,7 +456,7 @@ describe(GameMutationResolver.name, () => {
       let gameV1Fixture: apiModels.NonStartedGameV1;
       let gameGraphQlFixture: graphqlModels.Game;
 
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -454,13 +464,15 @@ describe(GameMutationResolver.name, () => {
         gameV1Fixture = Symbol() as unknown as apiModels.NonStartedGameV1;
         gameGraphQlFixture = Symbol() as unknown as graphqlModels.Game;
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: gameV1Fixture,
@@ -482,7 +494,7 @@ describe(GameMutationResolver.name, () => {
               slotIndex: slotIndexFixture,
             },
           },
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -499,7 +511,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.updateGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: gameIdFixture,
           },
@@ -521,7 +533,7 @@ describe(GameMutationResolver.name, () => {
 
     describe('when called, and httpClient.updateGame() returns an UNAUTHORIZED response', () => {
       let errorV1: apiModels.ErrorV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -530,13 +542,15 @@ describe(GameMutationResolver.name, () => {
           description: 'error description fixture',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -555,7 +569,7 @@ describe(GameMutationResolver.name, () => {
                 slotIndex: slotIndexFixture,
               },
             },
-            requestFixture,
+            contextFixture,
           );
         } catch (error) {
           result = error;
@@ -575,7 +589,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.updateGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: gameIdFixture,
           },
@@ -598,7 +612,7 @@ describe(GameMutationResolver.name, () => {
 
     describe('when called, and httpClient.updateGame() returns an FORBIDDEN response', () => {
       let errorV1: apiModels.ErrorV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -607,13 +621,15 @@ describe(GameMutationResolver.name, () => {
           description: 'error description fixture',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.updateGame.mockResolvedValueOnce({
           body: errorV1,
@@ -632,7 +648,7 @@ describe(GameMutationResolver.name, () => {
                 slotIndex: slotIndexFixture,
               },
             },
-            requestFixture,
+            contextFixture,
           );
         } catch (error) {
           result = error;
@@ -652,7 +668,7 @@ describe(GameMutationResolver.name, () => {
 
         expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.updateGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: gameIdFixture,
           },

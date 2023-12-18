@@ -40,6 +40,7 @@ async function generateAllModels(destinationPath: string): Promise<void> {
         config: {
           avoidOptionals: true,
           enumsAsTypes: true,
+          resolverTypeWrapperSignature: 'Partial<T> | Promise<Partial<T>>',
           useIndexSignature: true,
         },
         plugins: ['typescript', 'typescript-resolvers'],

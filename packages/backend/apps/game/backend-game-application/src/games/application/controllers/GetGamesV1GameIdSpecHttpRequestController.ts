@@ -12,11 +12,11 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { GetGameV1GameIdRequestParamHandler } from '../handlers/GetGameV1GameIdRequestParamHandler';
+import { GetGamesV1GameIdRequestParamHandler } from '../handlers/GetGamesV1GameIdRequestParamHandler';
 import { GameSpecManagementInputPort } from '../ports/input/GameSpecManagementInputPort';
 
 @Injectable()
-export class GetGameV1GameIdGameSpecHttpRequestController extends HttpRequestController<
+export class GetGamesV1GameIdSpecHttpRequestController extends HttpRequestController<
   Request,
   [string],
   apiModels.GameSpecV1 | undefined
@@ -24,7 +24,7 @@ export class GetGameV1GameIdGameSpecHttpRequestController extends HttpRequestCon
   readonly #gameSpecManagementInputPort: GameSpecManagementInputPort;
 
   constructor(
-    @Inject(GetGameV1GameIdRequestParamHandler)
+    @Inject(GetGamesV1GameIdRequestParamHandler)
     requestParamHandler: Handler<[Request], [string]>,
     @Inject(SingleEntityGetResponseBuilder)
     responseBuilder: Builder<

@@ -1,3 +1,8 @@
+import { GameSpecFindQuerySortOption } from './GameSpecFindQuerySortOption';
+
 export interface GameSpecFindQuery {
-  gameIds?: string[];
+  readonly limit?: number;
+  readonly gameIds?: string[];
+  readonly offset?: number;
+  readonly sort?: GameSpecFindQuerySortOption;
 }

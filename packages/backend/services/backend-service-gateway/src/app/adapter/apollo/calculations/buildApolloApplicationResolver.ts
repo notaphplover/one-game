@@ -1,7 +1,9 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { Builder } from '@cornie-js/backend-common';
-import { ApplicationResolver } from '@cornie-js/backend-gateway-application';
-import { Request } from '@cornie-js/backend-http';
+import {
+  ApplicationResolver,
+  Context,
+} from '@cornie-js/backend-gateway-application';
 import { GraphQLError, GraphQLResolveInfo } from 'graphql';
 
 export function buildApolloApplicationResolver(
@@ -74,8 +76,8 @@ export function buildApolloApplicationResolver(
 
 function getResolverFunction<TParent, TResult, TArgs>(
   self: unknown,
-  resolver: graphqlModels.Resolver<TResult, TParent, Request, TArgs>,
-): graphqlModels.ResolverFn<TResult, TParent, Request, TArgs> {
+  resolver: graphqlModels.Resolver<TResult, TParent, Context, TArgs>,
+): graphqlModels.ResolverFn<TResult, TParent, Context, TArgs> {
   if (typeof resolver === 'function') {
     return resolver.bind(self);
   } else {
@@ -86,12 +88,12 @@ function getResolverFunction<TParent, TResult, TArgs>(
 function buildApolloResolver<TParent, TResult, TArgs>(
   self: unknown,
   graphQlErrorFromErrorBuilder: Builder<GraphQLError, [unknown]>,
-  resolver: graphqlModels.Resolver<TResult, TParent, Request, TArgs>,
-): graphqlModels.ResolverFn<TResult, TParent, Request, TArgs> {
+  resolver: graphqlModels.Resolver<TResult, TParent, Context, TArgs>,
+): graphqlModels.ResolverFn<TResult, TParent, Context, TArgs> {
   return async (
     parent: TParent,
     args: TArgs,
-    context: Request,
+    context: Context,
     info: GraphQLResolveInfo,
   ): Promise<TResult> => {
     try {

@@ -89,6 +89,7 @@ describe(GameSpecV1FromGameSpecBuilder.name, () => {
       it('should return a GameSpecV1', () => {
         const expected: apiModels.GameSpecV1 = {
           cardSpecs: [gameCardSpecV1Fixture],
+          gameId: gameSpecFixture.gameId,
           gameSlotsAmount: gameSpecFixture.gameSlotsAmount,
           options: gameOptionsFixture,
         };

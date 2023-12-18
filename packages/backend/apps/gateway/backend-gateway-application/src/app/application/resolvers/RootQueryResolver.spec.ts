@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { Request } from '@cornie-js/backend-http';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { RootQueryResolver } from './RootQueryResolver';
 
 function buildTestTuples(): [
@@ -12,32 +12,32 @@ function buildTestTuples(): [
   graphqlModels.ResolverFn<
     unknown,
     graphqlModels.RootQuery,
-    Request,
+    Context,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any
   >,
   jest.Mock,
 ][] {
   const gameQueryResolverMock: jest.Mocked<
-    CanonicalResolver<graphqlModels.GameQueryResolvers<Request>>
+    CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>
   > = {
     gameById: jest.fn(),
     myGames: jest.fn(),
   } as Partial<
-    jest.Mocked<CanonicalResolver<graphqlModels.GameQueryResolvers<Request>>>
+    jest.Mocked<CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>>
   > as jest.Mocked<
-    CanonicalResolver<graphqlModels.GameQueryResolvers<Request>>
+    CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>
   >;
 
   const userQueryResolverMock: jest.Mocked<
-    CanonicalResolver<graphqlModels.UserQueryResolvers<Request>>
+    CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>
   > = {
     userById: jest.fn(),
     userMe: jest.fn(),
   } as Partial<
-    jest.Mocked<CanonicalResolver<graphqlModels.UserQueryResolvers<Request>>>
+    jest.Mocked<CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>>
   > as jest.Mocked<
-    CanonicalResolver<graphqlModels.UserQueryResolvers<Request>>
+    CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>
   >;
 
   const rootQueryResolver: RootQueryResolver = new RootQueryResolver(
@@ -76,7 +76,7 @@ describe(RootQueryResolver.name, () => {
       graphqlModels.ResolverFn<
         unknown,
         graphqlModels.RootQuery,
-        Request,
+        Context,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         any
       >,
@@ -89,7 +89,7 @@ describe(RootQueryResolver.name, () => {
       resolver: graphqlModels.ResolverFn<
         unknown,
         graphqlModels.RootQuery,
-        Request,
+        Context,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         any
       >,
@@ -98,7 +98,7 @@ describe(RootQueryResolver.name, () => {
       describe('when called', () => {
         let parentFixture: graphqlModels.RootQuery;
         let argsFixture: unknown;
-        let requestFixture: Request;
+        let contextFixture: Context;
         let infoFixture: GraphQLResolveInfo;
 
         let resolverResultFixture: unknown;
@@ -108,7 +108,7 @@ describe(RootQueryResolver.name, () => {
         beforeAll(async () => {
           parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
           argsFixture = Symbol();
-          requestFixture = Symbol() as unknown as Request;
+          contextFixture = Symbol() as unknown as Context;
           infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
           resolverResultFixture = Symbol();
@@ -120,7 +120,7 @@ describe(RootQueryResolver.name, () => {
           result = await resolver(
             parentFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
             infoFixture,
           );
         });
@@ -134,7 +134,7 @@ describe(RootQueryResolver.name, () => {
           expect(resolverMock).toHaveBeenCalledWith(
             parentFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
             infoFixture,
           );
         });
