@@ -36,6 +36,11 @@ export function buildApolloApplicationResolver(
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootMutation.createUser,
       ),
+      deleteUserMe: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.deleteUserMe,
+      ),
       passGameTurn: buildApolloResolver(
         applicationResolver.RootMutation,
         graphQlErrorFromErrorBuilder,
@@ -74,6 +79,7 @@ export function buildApolloApplicationResolver(
         applicationResolver.RootQuery.userMe,
       ),
     },
+    Void: applicationResolver.Void,
   };
 }
 

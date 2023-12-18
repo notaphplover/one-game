@@ -88,6 +88,20 @@ export class RootMutationResolver
     return this.#userMutationResolver.createUser(parent, args, context, info);
   }
 
+  public async deleteUserMe(
+    parent: graphqlModels.RootMutation,
+    _args: Record<string, unknown>,
+    context: Context,
+    info: GraphQLResolveInfo,
+  ): Promise<Partial<unknown> | null> {
+    return this.#userMutationResolver.deleteUserMe(
+      parent,
+      _args,
+      context,
+      info,
+    );
+  }
+
   public async passGameTurn(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.GameMutationPassGameTurnArgs,
