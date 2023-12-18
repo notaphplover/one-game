@@ -5,9 +5,9 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GameGraphQlFromGameV1Builder
-  implements Builder<graphqlModels.Game, [apiModels.GameV1]>
+  implements Builder<Omit<graphqlModels.Game, 'spec'>, [apiModels.GameV1]>
 {
-  public build(gameV1: apiModels.GameV1): graphqlModels.Game {
+  public build(gameV1: apiModels.GameV1): Omit<graphqlModels.Game, 'spec'> {
     switch (gameV1.state.status) {
       case 'active':
         return this.#buildActiveGame(gameV1 as apiModels.ActiveGameV1);
@@ -19,8 +19,10 @@ export class GameGraphQlFromGameV1Builder
     }
   }
 
-  #buildActiveGame(gameV1: apiModels.ActiveGameV1): graphqlModels.ActiveGame {
-    const activeGame: graphqlModels.ActiveGame = {
+  #buildActiveGame(
+    gameV1: apiModels.ActiveGameV1,
+  ): Omit<graphqlModels.ActiveGame, 'spec'> {
+    const activeGame: Omit<graphqlModels.ActiveGame, 'spec'> = {
       id: gameV1.id,
       name: gameV1.name ?? null,
       state: gameV1.state,
@@ -31,8 +33,8 @@ export class GameGraphQlFromGameV1Builder
 
   #buildFinishedGame(
     gameV1: apiModels.FinishedGameV1,
-  ): graphqlModels.FinishedGame {
-    const finishedGame: graphqlModels.FinishedGame = {
+  ): Omit<graphqlModels.FinishedGame, 'spec'> {
+    const finishedGame: Omit<graphqlModels.FinishedGame, 'spec'> = {
       id: gameV1.id,
       name: gameV1.name ?? null,
       state: gameV1.state,
@@ -43,8 +45,8 @@ export class GameGraphQlFromGameV1Builder
 
   #buildNonStartedGame(
     gameV1: apiModels.NonStartedGameV1,
-  ): graphqlModels.NonStartedGame {
-    const nonStartedGame: graphqlModels.NonStartedGame = {
+  ): Omit<graphqlModels.NonStartedGame, 'spec'> {
+    const nonStartedGame: Omit<graphqlModels.NonStartedGame, 'spec'> = {
       id: gameV1.id,
       name: gameV1.name ?? null,
       state: gameV1.state,

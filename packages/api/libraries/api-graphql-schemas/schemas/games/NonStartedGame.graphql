@@ -4,5 +4,6 @@
 type NonStartedGame {
   id: ID!
   name: String
+  spec: GameSpec!
   state: NonStartedGameState!
 }

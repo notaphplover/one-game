@@ -4,5 +4,6 @@
 type FinishedGame {
   id: ID!
   name: String
+  spec: GameSpec!
   state: FinishedGameState!
 }

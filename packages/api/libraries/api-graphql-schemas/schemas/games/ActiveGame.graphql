@@ -1,7 +1,9 @@
 #import ActiveGameState from './ActiveGameState.graphql'
+#import GameSpec from './GameSpec.graphql'
 
 type ActiveGame {
   id: ID!
   name: String
+  spec: GameSpec!
   state: ActiveGameState!
 }

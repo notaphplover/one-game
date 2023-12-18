@@ -2,7 +2,7 @@
 #import GameOptions from './GameOptions.graphql'
 
 type GameSpec {
-  cardSpecs: [GameCardSpec]!
+  cardSpecs: [GameCardSpec!]!
   gameSlotsAmount: Int!
   options: GameOptions!
 }
