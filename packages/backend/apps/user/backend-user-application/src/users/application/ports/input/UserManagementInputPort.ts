@@ -3,7 +3,13 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { Builder, BuilderAsync, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  BuilderAsync,
+  Handler,
+} from '@cornie-js/backend-common';
 import {
   User,
   UserCreateQuery,
@@ -22,11 +28,13 @@ import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
 } from '../output/UserPersistenceOutputPort';
+import { UserCodeManagementInputPort } from './UserCodeManagementInputPort';
 
 @Injectable()
 export class UserManagementInputPort {
   readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
   readonly #updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>;
+  readonly #userCodeManagementInputPort: UserCodeManagementInputPort;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, UuidContext]
@@ -44,6 +52,8 @@ export class UserManagementInputPort {
     createUserUseCaseHandler: Handler<[UserCreateQuery], User>,
     @Inject(UpdateUserUseCaseHandler)
     updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>,
+    @Inject(UserCodeManagementInputPort)
+    userCodeManagementInputPort: UserCodeManagementInputPort,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
     userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
       UserCreateQuery,
@@ -63,6 +73,7 @@ export class UserManagementInputPort {
   ) {
     this.#createUserUseCaseHandler = createUserUseCaseHandler;
     this.#updateUserUseCaseHandler = updateUserUseCaseHandler;
+    this.#userCodeManagementInputPort = userCodeManagementInputPort;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
@@ -95,6 +106,14 @@ export class UserManagementInputPort {
       id,
     };
 
+    const userOrUndefined: User | undefined =
+      await this.#userPersistenceOutputPort.findOne(userFindQuery);
+
+    if (userOrUndefined === undefined) {
+      throw new AppError(AppErrorKind.entityNotFound, `User "${id}" not found`);
+    }
+
+    await this.#userCodeManagementInputPort.deleteFromUser(userOrUndefined);
     await this.#userPersistenceOutputPort.delete(userFindQuery);
   }
 
