@@ -3,11 +3,28 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
+export type GameGraphQlFromGameV1BuilderType = Builder<
+  Partial<graphqlModels.NonStartedGame>,
+  [apiModels.NonStartedGameV1]
+> &
+  Builder<Partial<graphqlModels.ActiveGame>, [apiModels.ActiveGameV1]> &
+  Builder<Partial<graphqlModels.FinishedGame>, [apiModels.FinishedGameV1]> &
+  Builder<Partial<graphqlModels.Game>, [apiModels.GameV1]>;
+
 @Injectable()
 export class GameGraphQlFromGameV1Builder
-  implements Builder<Omit<graphqlModels.Game, 'spec'>, [apiModels.GameV1]>
+  implements GameGraphQlFromGameV1BuilderType
 {
-  public build(gameV1: apiModels.GameV1): Omit<graphqlModels.Game, 'spec'> {
+  public build(
+    gameV1: apiModels.NonStartedGameV1,
+  ): Partial<graphqlModels.NonStartedGame>;
+  public build(
+    gameV1: apiModels.ActiveGameV1,
+  ): Partial<graphqlModels.ActiveGame>;
+  public build(
+    gameV1: apiModels.FinishedGameV1,
+  ): Partial<graphqlModels.FinishedGame>;
+  public build(gameV1: apiModels.GameV1): Partial<graphqlModels.Game> {
     switch (gameV1.state.status) {
       case 'active':
         return this.#buildActiveGame(gameV1 as apiModels.ActiveGameV1);
