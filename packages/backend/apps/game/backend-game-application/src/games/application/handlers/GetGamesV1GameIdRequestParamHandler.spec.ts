@@ -3,14 +3,14 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 
-import { GetGameV1GameIdRequestParamHandler } from './GetGameV1GameIdRequestParamHandler';
+import { GetGamesV1GameIdRequestParamHandler } from './GetGamesV1GameIdRequestParamHandler';
 
-describe(GetGameV1GameIdRequestParamHandler.name, () => {
-  let getGameV1GameIdRequestParamHandler: GetGameV1GameIdRequestParamHandler;
+describe(GetGamesV1GameIdRequestParamHandler.name, () => {
+  let getGamesV1GameIdRequestParamHandler: GetGamesV1GameIdRequestParamHandler;
 
   beforeAll(() => {
-    getGameV1GameIdRequestParamHandler =
-      new GetGameV1GameIdRequestParamHandler();
+    getGamesV1GameIdRequestParamHandler =
+      new GetGamesV1GameIdRequestParamHandler();
   });
 
   describe('.handle()', () => {
@@ -24,7 +24,7 @@ describe(GetGameV1GameIdRequestParamHandler.name, () => {
           headers: {},
           query: {},
           urlParameters: {
-            [GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam]:
+            [GetGamesV1GameIdRequestParamHandler.getGameV1GameIdRequestParam]:
               gameIdFixture,
           },
         };
@@ -35,7 +35,7 @@ describe(GetGameV1GameIdRequestParamHandler.name, () => {
 
         beforeAll(async () => {
           result =
-            await getGameV1GameIdRequestParamHandler.handle(requestFixture);
+            await getGamesV1GameIdRequestParamHandler.handle(requestFixture);
         });
 
         it('should return a string', () => {
@@ -60,7 +60,7 @@ describe(GetGameV1GameIdRequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await getGameV1GameIdRequestParamHandler.handle(requestFixture);
+            await getGamesV1GameIdRequestParamHandler.handle(requestFixture);
           } catch (error) {
             result = error;
           }

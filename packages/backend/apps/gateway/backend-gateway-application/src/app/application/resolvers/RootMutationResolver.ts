@@ -1,40 +1,40 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { AuthMutationResolver } from '../../../auth/application/resolvers/AuthMutationResolver';
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { GameMutationResolver } from '../../../games/application/resolvers/GameMutationResolver';
 import { UserMutationResolver } from '../../../users/application/resolvers/UserMutationResolver';
 
 @Injectable()
 export class RootMutationResolver
   implements
-    graphqlModels.RootMutationResolvers<Request, graphqlModels.RootMutation>
+    graphqlModels.RootMutationResolvers<Context, graphqlModels.RootMutation>
 {
   readonly #authMutationResolver: CanonicalResolver<
-    graphqlModels.AuthMutationResolvers<Request>
+    graphqlModels.AuthMutationResolvers<Context>
   >;
   readonly #gameMutationResolver: CanonicalResolver<
-    graphqlModels.GameMutationResolvers<Request>
+    graphqlModels.GameMutationResolvers<Context>
   >;
   readonly #userMutationResolver: CanonicalResolver<
-    graphqlModels.UserMutationResolvers<Request>
+    graphqlModels.UserMutationResolvers<Context>
   >;
 
   constructor(
     @Inject(AuthMutationResolver)
     authMutationResolver: CanonicalResolver<
-      graphqlModels.AuthMutationResolvers<Request>
+      graphqlModels.AuthMutationResolvers<Context>
     >,
     @Inject(GameMutationResolver)
     gameMutationResolver: CanonicalResolver<
-      graphqlModels.GameMutationResolvers<Request>
+      graphqlModels.GameMutationResolvers<Context>
     >,
     @Inject(UserMutationResolver)
     userMutationResolver: CanonicalResolver<
-      graphqlModels.UserMutationResolvers<Request>
+      graphqlModels.UserMutationResolvers<Context>
     >,
   ) {
     this.#authMutationResolver = authMutationResolver;
@@ -45,13 +45,13 @@ export class RootMutationResolver
   public async createAuthByCode(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.AuthMutationCreateAuthByCodeArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Auth> {
+  ): Promise<Partial<graphqlModels.Auth>> {
     return this.#authMutationResolver.createAuthByCode(
       parent,
       args,
-      request,
+      context,
       info,
     );
   }
@@ -59,13 +59,13 @@ export class RootMutationResolver
   public async createAuthByCredentials(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Auth> {
+  ): Promise<Partial<graphqlModels.Auth>> {
     return this.#authMutationResolver.createAuthByCredentials(
       parent,
       args,
-      request,
+      context,
       info,
     );
   }
@@ -73,40 +73,68 @@ export class RootMutationResolver
   public async createGame(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.GameMutationCreateGameArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game> {
-    return this.#gameMutationResolver.createGame(parent, args, request, info);
+  ): Promise<Partial<graphqlModels.NonStartedGame>> {
+    return this.#gameMutationResolver.createGame(parent, args, context, info);
+  }
+
+  public async createGameSlot(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.GameMutationCreateGameSlotArgs,
+    context: Context,
+    info: GraphQLResolveInfo,
+  ): Promise<Partial<graphqlModels.NonStartedGameSlot>> {
+    return this.#gameMutationResolver.createGameSlot(
+      parent,
+      args,
+      context,
+      info,
+    );
   }
 
   public async createUser(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.UserMutationCreateUserArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.User> {
-    return this.#userMutationResolver.createUser(parent, args, request, info);
+  ): Promise<Partial<graphqlModels.User>> {
+    return this.#userMutationResolver.createUser(parent, args, context, info);
+  }
+
+  public async deleteUserMe(
+    parent: graphqlModels.RootMutation,
+    _args: Record<string, unknown>,
+    context: Context,
+    info: GraphQLResolveInfo,
+  ): Promise<Partial<unknown> | null> {
+    return this.#userMutationResolver.deleteUserMe(
+      parent,
+      _args,
+      context,
+      info,
+    );
   }
 
   public async passGameTurn(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.GameMutationPassGameTurnArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game | null> {
-    return this.#gameMutationResolver.passGameTurn(parent, args, request, info);
+  ): Promise<Partial<graphqlModels.Game> | null> {
+    return this.#gameMutationResolver.passGameTurn(parent, args, context, info);
   }
 
   public async playGameCards(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.GameMutationPlayGameCardsArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.Game | null> {
+  ): Promise<Partial<graphqlModels.Game> | null> {
     return this.#gameMutationResolver.playGameCards(
       parent,
       args,
-      request,
+      context,
       info,
     );
   }
@@ -114,9 +142,9 @@ export class RootMutationResolver
   public async updateUserMe(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.UserMutationUpdateUserMeArgs,
-    request: Request,
+    context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<graphqlModels.User> {
-    return this.#userMutationResolver.updateUserMe(parent, args, request, info);
+  ): Promise<Partial<graphqlModels.User>> {
+    return this.#userMutationResolver.updateUserMe(parent, args, context, info);
   }
 }

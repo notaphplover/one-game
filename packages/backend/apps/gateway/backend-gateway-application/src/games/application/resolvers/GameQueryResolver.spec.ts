@@ -4,9 +4,9 @@ import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient, Response } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { GameQueryResolver } from './GameQueryResolver';
 
 describe(GameQueryResolver.name, () => {
@@ -37,7 +37,7 @@ describe(GameQueryResolver.name, () => {
     describe('when called, and httpClient.getGame() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.GameQueryGameByIdArgs;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -54,11 +54,13 @@ describe(GameQueryResolver.name, () => {
         argsFixture = {
           id: 'game-id',
         };
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: {
+            headers: {},
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: Symbol() as unknown as apiModels.GameV1,
@@ -73,7 +75,7 @@ describe(GameQueryResolver.name, () => {
         result = await gameQueryResolver.gameById(
           firstArgFixture,
           argsFixture,
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -84,7 +86,7 @@ describe(GameQueryResolver.name, () => {
       it('should call httpClient.getGame()', () => {
         expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: argsFixture.id,
           },
@@ -106,7 +108,7 @@ describe(GameQueryResolver.name, () => {
     describe('when called, and httpClient.getGame() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.GameQueryGameByIdArgs;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -121,11 +123,13 @@ describe(GameQueryResolver.name, () => {
         argsFixture = {
           id: 'game-id',
         };
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: {
+            headers: {},
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -141,7 +145,7 @@ describe(GameQueryResolver.name, () => {
           await gameQueryResolver.gameById(
             firstArgFixture,
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         } catch (error: unknown) {
           result = error;
@@ -155,7 +159,7 @@ describe(GameQueryResolver.name, () => {
       it('should call httpClient.getGame()', () => {
         expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: argsFixture.id,
           },
@@ -178,7 +182,7 @@ describe(GameQueryResolver.name, () => {
     describe('when called, and httpClient.getGame() returns a Response with status code 404', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.GameQueryGameByIdArgs;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let responseFixture: Response<
         Record<string, string>,
@@ -193,11 +197,13 @@ describe(GameQueryResolver.name, () => {
         argsFixture = {
           id: 'game-id',
         };
-        requestFixture = {
-          headers: {},
-          query: {},
-          urlParameters: {},
-        };
+        contextFixture = {
+          request: {
+            headers: {},
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
 
         responseFixture = {
           body: {
@@ -212,7 +218,7 @@ describe(GameQueryResolver.name, () => {
         result = await gameQueryResolver.gameById(
           firstArgFixture,
           argsFixture,
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -223,7 +229,7 @@ describe(GameQueryResolver.name, () => {
       it('should call httpClient.getGame()', () => {
         expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
         expect(httpClientMock.getGame).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           {
             gameId: argsFixture.id,
           },
@@ -237,14 +243,16 @@ describe(GameQueryResolver.name, () => {
   });
 
   describe('.myGames', () => {
-    let requestFixture: Request;
+    let contextFixture: Context;
 
     beforeAll(() => {
-      requestFixture = {
-        headers: {},
-        query: {},
-        urlParameters: {},
-      };
+      contextFixture = {
+        request: {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        },
+      } as Partial<Context> as Context;
     });
 
     describe('having GameQueryMyGamesArgs with page', () => {
@@ -284,7 +292,7 @@ describe(GameQueryResolver.name, () => {
           result = await gameQueryResolver.myGames(
             Symbol(),
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         });
 
@@ -295,7 +303,7 @@ describe(GameQueryResolver.name, () => {
         it('should call httpClient.getGamesMine()', () => {
           expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
           expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
-            requestFixture.headers,
+            contextFixture.request.headers,
             {
               page: (argsFixture.findMyGamesInput?.page as number).toString(),
             },
@@ -354,7 +362,7 @@ describe(GameQueryResolver.name, () => {
           result = await gameQueryResolver.myGames(
             Symbol(),
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         });
 
@@ -365,7 +373,7 @@ describe(GameQueryResolver.name, () => {
         it('should call httpClient.getGamesMine()', () => {
           expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
           expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
-            requestFixture.headers,
+            contextFixture.request.headers,
             {
               pageSize: (
                 argsFixture.findMyGamesInput?.pageSize as number
@@ -426,7 +434,7 @@ describe(GameQueryResolver.name, () => {
           result = await gameQueryResolver.myGames(
             Symbol(),
             argsFixture,
-            requestFixture,
+            contextFixture,
           );
         });
 
@@ -437,7 +445,7 @@ describe(GameQueryResolver.name, () => {
         it('should call httpClient.getGamesMine()', () => {
           expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
           expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
-            requestFixture.headers,
+            contextFixture.request.headers,
             {
               status: argsFixture.findMyGamesInput?.status,
             },
@@ -500,7 +508,7 @@ describe(GameQueryResolver.name, () => {
             await gameQueryResolver.myGames(
               Symbol(),
               argsFixture,
-              requestFixture,
+              contextFixture,
             );
           } catch (error: unknown) {
             result = error;
@@ -514,7 +522,7 @@ describe(GameQueryResolver.name, () => {
         it('should call httpClient.getGamesMine()', () => {
           expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
           expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
-            requestFixture.headers,
+            contextFixture.request.headers,
             {
               page: (argsFixture.findMyGamesInput?.page as number).toString(),
               pageSize: (

@@ -3,9 +3,9 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { HttpStatus } from '@nestjs/common';
 
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { UserMutationResolver } from './UserMutationResolver';
 
 describe(UserMutationResolver.name, () => {
@@ -16,6 +16,7 @@ describe(UserMutationResolver.name, () => {
   beforeAll(() => {
     httpClientMock = {
       createUser: jest.fn(),
+      deleteUserMe: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     userMutationResolver = new UserMutationResolver(httpClientMock);
@@ -34,7 +35,7 @@ describe(UserMutationResolver.name, () => {
 
     describe('when called, and httpClient.createUser() returns an OK response', () => {
       let userV1: apiModels.UserV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -45,13 +46,15 @@ describe(UserMutationResolver.name, () => {
           name: 'name',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createUser.mockResolvedValueOnce({
           body: userV1,
@@ -68,7 +71,7 @@ describe(UserMutationResolver.name, () => {
               password: passwordFixture,
             },
           },
-          requestFixture,
+          contextFixture,
         );
       });
 
@@ -85,7 +88,7 @@ describe(UserMutationResolver.name, () => {
 
         expect(httpClientMock.createUser).toHaveBeenCalledTimes(1);
         expect(httpClientMock.createUser).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           expectedBody,
         );
       });
@@ -97,7 +100,7 @@ describe(UserMutationResolver.name, () => {
 
     describe('when called, and httpClient.createUser() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
-      let requestFixture: Request;
+      let contextFixture: Context;
 
       let result: unknown;
 
@@ -106,13 +109,15 @@ describe(UserMutationResolver.name, () => {
           description: 'error description fixture',
         };
 
-        requestFixture = {
-          headers: {
-            foo: 'bar',
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
           },
-          query: {},
-          urlParameters: {},
-        };
+        } as Partial<Context> as Context;
 
         httpClientMock.createUser.mockResolvedValueOnce({
           body: errorV1,
@@ -130,7 +135,7 @@ describe(UserMutationResolver.name, () => {
                 password: passwordFixture,
               },
             },
-            requestFixture,
+            contextFixture,
           );
         } catch (error) {
           result = error;
@@ -150,7 +155,7 @@ describe(UserMutationResolver.name, () => {
 
         expect(httpClientMock.createUser).toHaveBeenCalledTimes(1);
         expect(httpClientMock.createUser).toHaveBeenCalledWith(
-          requestFixture.headers,
+          contextFixture.request.headers,
           expectedBody,
         );
       });
@@ -158,6 +163,115 @@ describe(UserMutationResolver.name, () => {
       it('should throw an AppError', () => {
         const expectedErrorProperties: Partial<AppError> = {
           kind: AppErrorKind.contractViolation,
+          message: errorV1.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+  });
+
+  describe('.deleteUserMe', () => {
+    describe('when called, and httpClient.deleteUserMe() returns an OK response', () => {
+      let contextFixture: Context;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
+
+        httpClientMock.deleteUserMe.mockResolvedValueOnce({
+          body: undefined,
+          headers: {},
+          statusCode: HttpStatus.OK,
+        });
+
+        result = await userMutationResolver.deleteUserMe(
+          undefined,
+          undefined,
+          contextFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.deleteUserMe()', () => {
+        expect(httpClientMock.deleteUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.deleteUserMe).toHaveBeenCalledWith(
+          contextFixture.request.headers,
+        );
+      });
+
+      it('should return null', () => {
+        expect(result).toBeNull();
+      });
+    });
+
+    describe('when called, and httpClient.deleteUserMe() returns an UNAUTHORIZED response', () => {
+      let errorV1: apiModels.ErrorV1;
+      let contextFixture: Context;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        errorV1 = {
+          description: 'error description fixture',
+        };
+
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
+
+        httpClientMock.deleteUserMe.mockResolvedValueOnce({
+          body: errorV1,
+          headers: {},
+          statusCode: HttpStatus.UNAUTHORIZED,
+        });
+
+        try {
+          await userMutationResolver.deleteUserMe(
+            undefined,
+            undefined,
+            contextFixture,
+          );
+        } catch (error) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.deleteUserMe()', () => {
+        expect(httpClientMock.deleteUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.deleteUserMe).toHaveBeenCalledWith(
+          contextFixture.request.headers,
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.missingCredentials,
           message: errorV1.description,
         };
 

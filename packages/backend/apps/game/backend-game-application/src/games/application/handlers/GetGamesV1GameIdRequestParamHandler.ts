@@ -3,7 +3,7 @@ import { Request } from '@cornie-js/backend-http';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class GetGameV1GameIdRequestParamHandler
+export class GetGamesV1GameIdRequestParamHandler
   implements Handler<[Request], [string]>
 {
   public static getGameV1GameIdRequestParam: string = 'gameId';
@@ -11,7 +11,7 @@ export class GetGameV1GameIdRequestParamHandler
   public async handle(request: Request): Promise<[string]> {
     const gameId: string | undefined =
       request.urlParameters[
-        GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam
+        GetGamesV1GameIdRequestParamHandler.getGameV1GameIdRequestParam
       ];
 
     if (gameId === undefined) {

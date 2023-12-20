@@ -1,0 +1,4 @@
+input GameSlotCreateInput {
+  gameId: ID!
+  userId: ID!
+}

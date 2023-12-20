@@ -47,6 +47,7 @@ export class GameSpecV1FromGameSpecBuilder
       cardSpecs: gameSpec.cards.map((gameCardSpec: GameCardSpec) =>
         this.#gameCardSpecV1FromGameCardSpecBuilder.build(gameCardSpec),
       ),
+      gameId: gameSpec.gameId,
       gameSlotsAmount: gameSpec.gameSlotsAmount,
       options: this.#gameOptionsV1FromGameOptionsBuilder.build(
         gameSpec.options,
