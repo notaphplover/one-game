@@ -11,7 +11,7 @@ jobs:
     name: Run E2E tests.
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/actions/setup
+      - uses: ./.github/actions/setup
 
       - name: Set proxy certificates
         run: mkdir ssl && openssl req -x509 -newkey rsa:4096 -keyout ssl/localhost.key.pem -out ssl/localhost.cert.pem -sha256 -days 3650 -nodes -subj "/CN=Dev proxy certificate"
