@@ -1,9 +1,9 @@
 import { ApolloServer } from '@apollo/server';
+import { Context } from '@cornie-js/backend-gateway-application';
 import {
   Environment,
   EnvironmentService,
 } from '@cornie-js/backend-gateway-env';
-import { Request } from '@cornie-js/backend-http';
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyInstance } from 'fastify';
@@ -25,7 +25,7 @@ async function bootstrap(): Promise<void> {
 
   const fastifyServer: FastifyInstance = await buildFastifyServer(env);
 
-  const apolloServer: ApolloServer<Request> = await buildApolloServer(
+  const apolloServer: ApolloServer<Context> = await buildApolloServer(
     fastifyServer,
     nestApplicationContext,
   );

@@ -4,10 +4,10 @@ import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { GameGraphQlFromGameV1Builder } from '../builders/GameGraphQlFromGameV1Builder';
 
 interface GetGamesMineQueryArgs extends Record<string, string | string[]> {
@@ -18,10 +18,10 @@ interface GetGamesMineQueryArgs extends Record<string, string | string[]> {
 
 @Injectable()
 export class GameQueryResolver
-  implements CanonicalResolver<graphqlModels.GameQueryResolvers<Request>>
+  implements CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>
 {
   readonly #gameGraphQlFromGameV1Builder: Builder<
-    graphqlModels.Game,
+    Partial<graphqlModels.Game>,
     [apiModels.GameV1]
   >;
   readonly #httpClient: HttpClient;
@@ -29,7 +29,7 @@ export class GameQueryResolver
   constructor(
     @Inject(GameGraphQlFromGameV1Builder)
     gameGraphQlFromGameV1Builder: Builder<
-      graphqlModels.Game,
+      Partial<graphqlModels.Game>,
       [apiModels.GameV1]
     >,
     @Inject(HttpClient) httpClient: HttpClient,
@@ -41,10 +41,10 @@ export class GameQueryResolver
   public async gameById(
     _: unknown,
     args: graphqlModels.GameQueryGameByIdArgs,
-    request: Request,
-  ): Promise<graphqlModels.Game | null> {
+    context: Context,
+  ): Promise<Partial<graphqlModels.Game> | null> {
     const httpResponse: Awaited<ReturnType<HttpClient['getGame']>> =
-      await this.#httpClient.getGame(request.headers, {
+      await this.#httpClient.getGame(context.request.headers, {
         gameId: args.id,
       });
 
@@ -69,11 +69,11 @@ export class GameQueryResolver
   public async myGames(
     _: unknown,
     args: Partial<graphqlModels.GameQueryMyGamesArgs>,
-    request: Request,
-  ): Promise<graphqlModels.Game[]> {
+    context: Context,
+  ): Promise<Partial<graphqlModels.Game>[]> {
     const httpResponse: Awaited<ReturnType<HttpClient['getGamesMine']>> =
       await this.#httpClient.getGamesMine(
-        request.headers,
+        context.request.headers,
         this.#buildGetGamesMineQuery(args),
       );
 

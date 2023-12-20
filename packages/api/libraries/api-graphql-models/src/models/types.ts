@@ -4,7 +4,11 @@
  * DO NOT MODIFY IT BY HAND. Instead, modify the source graphql file,
  * and run the generation script to regenerate this file.
  */
-import { GraphQLResolveInfo } from 'graphql';
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+} from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -36,12 +40,14 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  Void: { input: any; output: any };
 };
 
 export type ActiveGame = {
   __typename?: 'ActiveGame';
   id: Scalars['ID']['output'];
   name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
   state: ActiveGameState;
 };
 
@@ -120,6 +126,7 @@ export type FinishedGame = {
   __typename?: 'FinishedGame';
   id: Scalars['ID']['output'];
   name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
   state: FinishedGameState;
 };
 
@@ -164,13 +171,18 @@ export type GameCreateInputOptions = {
 export type GameDirection = 'antiClockwise' | 'clockwise';
 
 export type GameMutation = {
-  createGame: Game;
+  createGame: NonStartedGame;
+  createGameSlot: NonStartedGameSlot;
   passGameTurn: Maybe<Game>;
   playGameCards: Maybe<Game>;
 };
 
 export type GameMutationCreateGameArgs = {
   gameCreateInput: GameCreateInput;
+};
+
+export type GameMutationCreateGameSlotArgs = {
+  gameSlotCreateInput: GameSlotCreateInput;
 };
 
 export type GameMutationPassGameTurnArgs = {
@@ -217,9 +229,14 @@ export type GameQueryMyGamesArgs = {
   findMyGamesInput: InputMaybe<FindMyGamesInput>;
 };
 
+export type GameSlotCreateInput = {
+  gameId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+};
+
 export type GameSpec = {
   __typename?: 'GameSpec';
-  cardSpecs: Array<Maybe<GameCardSpec>>;
+  cardSpecs: Array<GameCardSpec>;
   gameSlotsAmount: Scalars['Int']['output'];
   options: GameOptions;
 };
@@ -228,6 +245,7 @@ export type NonStartedGame = {
   __typename?: 'NonStartedGame';
   id: Scalars['ID']['output'];
   name: Maybe<Scalars['String']['output']>;
+  spec: GameSpec;
   state: NonStartedGameState;
 };
 
@@ -267,8 +285,10 @@ export type RootMutation = AuthMutation &
     __typename?: 'RootMutation';
     createAuthByCode: Auth;
     createAuthByCredentials: Auth;
-    createGame: Game;
+    createGame: NonStartedGame;
+    createGameSlot: NonStartedGameSlot;
     createUser: User;
+    deleteUserMe: Maybe<Scalars['Void']['output']>;
     passGameTurn: Maybe<Game>;
     playGameCards: Maybe<Game>;
     updateUserMe: User;
@@ -284,6 +304,10 @@ export type RootMutationCreateAuthByCredentialsArgs = {
 
 export type RootMutationCreateGameArgs = {
   gameCreateInput: GameCreateInput;
+};
+
+export type RootMutationCreateGameSlotArgs = {
+  gameSlotCreateInput: GameSlotCreateInput;
 };
 
 export type RootMutationCreateUserArgs = {
@@ -348,6 +372,7 @@ export type UserCreateInput = {
 
 export type UserMutation = {
   createUser: User;
+  deleteUserMe: Maybe<Scalars['Void']['output']>;
   updateUserMe: User;
 };
 
@@ -390,7 +415,7 @@ export type WildDraw4CardKind = 'wildDraw4';
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Partial<T> | Promise<Partial<T>>;
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -511,19 +536,11 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
   ResolversObject<{
-    AuthMutation: Omit<
-      RootMutation,
-      'createGame' | 'passGameTurn' | 'playGameCards'
-    > & {
-      createGame: RefType['Game'];
+    AuthMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
       passGameTurn: Maybe<RefType['Game']>;
       playGameCards: Maybe<RefType['Game']>;
     };
-    GameMutation: Omit<
-      RootMutation,
-      'createGame' | 'passGameTurn' | 'playGameCards'
-    > & {
-      createGame: RefType['Game'];
+    GameMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
       passGameTurn: Maybe<RefType['Game']>;
       playGameCards: Maybe<RefType['Game']>;
     };
@@ -531,11 +548,7 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
       gameById: Maybe<RefType['Game']>;
       myGames: Array<RefType['Game']>;
     };
-    UserMutation: Omit<
-      RootMutation,
-      'createGame' | 'passGameTurn' | 'playGameCards'
-    > & {
-      createGame: RefType['Game'];
+    UserMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
       passGameTurn: Maybe<RefType['Game']>;
       playGameCards: Maybe<RefType['Game']>;
     };
@@ -587,6 +600,7 @@ export type ResolversTypes = ResolversObject<{
   GameQuery: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['GameQuery']
   >;
+  GameSlotCreateInput: GameSlotCreateInput;
   GameSpec: ResolverTypeWrapper<GameSpec>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -612,6 +626,7 @@ export type ResolversTypes = ResolversObject<{
     ResolversInterfaceTypes<ResolversTypes>['UserQuery']
   >;
   UserUpdateInput: UserUpdateInput;
+  Void: ResolverTypeWrapper<Scalars['Void']['output']>;
   WildCard: ResolverTypeWrapper<WildCard>;
   WildCardKind: WildCardKind;
   WildDraw4Card: ResolverTypeWrapper<WildDraw4Card>;
@@ -647,6 +662,7 @@ export type ResolversParentTypes = ResolversObject<{
   GamePassTurnInput: GamePassTurnInput;
   GamePlayCardsInput: GamePlayCardsInput;
   GameQuery: ResolversInterfaceTypes<ResolversParentTypes>['GameQuery'];
+  GameSlotCreateInput: GameSlotCreateInput;
   GameSpec: GameSpec;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -664,6 +680,7 @@ export type ResolversParentTypes = ResolversObject<{
   UserMutation: ResolversInterfaceTypes<ResolversParentTypes>['UserMutation'];
   UserQuery: ResolversInterfaceTypes<ResolversParentTypes>['UserQuery'];
   UserUpdateInput: UserUpdateInput;
+  Void: Scalars['Void']['output'];
   WildCard: WildCard;
   WildDraw4Card: WildDraw4Card;
 }>;
@@ -675,6 +692,7 @@ export type ActiveGameResolvers<
 > = ResolversObject<{
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
   state: Resolver<ResolversTypes['ActiveGameState'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -791,6 +809,7 @@ export type FinishedGameResolvers<
 > = ResolversObject<{
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
   state: Resolver<ResolversTypes['FinishedGameState'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -852,10 +871,16 @@ export type GameMutationResolvers<
 > = ResolversObject<{
   __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
   createGame: Resolver<
-    ResolversTypes['Game'],
+    ResolversTypes['NonStartedGame'],
     ParentType,
     ContextType,
     RequireFields<GameMutationCreateGameArgs, 'gameCreateInput'>
+  >;
+  createGameSlot: Resolver<
+    ResolversTypes['NonStartedGameSlot'],
+    ParentType,
+    ContextType,
+    RequireFields<GameMutationCreateGameSlotArgs, 'gameSlotCreateInput'>
   >;
   passGameTurn: Resolver<
     Maybe<ResolversTypes['Game']>,
@@ -943,7 +968,7 @@ export type GameSpecResolvers<
     ResolversParentTypes['GameSpec'] = ResolversParentTypes['GameSpec'],
 > = ResolversObject<{
   cardSpecs: Resolver<
-    Array<Maybe<ResolversTypes['GameCardSpec']>>,
+    Array<ResolversTypes['GameCardSpec']>,
     ParentType,
     ContextType
   >;
@@ -959,6 +984,7 @@ export type NonStartedGameResolvers<
 > = ResolversObject<{
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  spec: Resolver<ResolversTypes['GameSpec'], ParentType, ContextType>;
   state: Resolver<
     ResolversTypes['NonStartedGameState'],
     ParentType,
@@ -1036,16 +1062,27 @@ export type RootMutationResolvers<
     >
   >;
   createGame: Resolver<
-    ResolversTypes['Game'],
+    ResolversTypes['NonStartedGame'],
     ParentType,
     ContextType,
     RequireFields<RootMutationCreateGameArgs, 'gameCreateInput'>
+  >;
+  createGameSlot: Resolver<
+    ResolversTypes['NonStartedGameSlot'],
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationCreateGameSlotArgs, 'gameSlotCreateInput'>
   >;
   createUser: Resolver<
     ResolversTypes['User'],
     ParentType,
     ContextType,
     RequireFields<RootMutationCreateUserArgs, 'userCreateInput'>
+  >;
+  deleteUserMe: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType
   >;
   passGameTurn: Resolver<
     Maybe<ResolversTypes['Game']>,
@@ -1129,6 +1166,11 @@ export type UserMutationResolvers<
     ContextType,
     RequireFields<UserMutationCreateUserArgs, 'userCreateInput'>
   >;
+  deleteUserMe: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType
+  >;
   updateUserMe: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -1151,6 +1193,11 @@ export type UserQueryResolvers<
   >;
   userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 }>;
+
+export interface VoidScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void';
+}
 
 export type WildCardResolvers<
   ContextType = any,
@@ -1198,6 +1245,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   User: UserResolvers<ContextType>;
   UserMutation: UserMutationResolvers<ContextType>;
   UserQuery: UserQueryResolvers<ContextType>;
+  Void: GraphQLScalarType;
   WildCard: WildCardResolvers<ContextType>;
   WildDraw4Card: WildDraw4CardResolvers<ContextType>;
 }>;

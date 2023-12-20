@@ -2,14 +2,14 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 
 @Injectable()
 export class AuthMutationResolver
-  implements CanonicalResolver<graphqlModels.AuthMutationResolvers<Request>>
+  implements CanonicalResolver<graphqlModels.AuthMutationResolvers<Context>>
 {
   readonly #httpClient: HttpClient;
 
@@ -20,10 +20,10 @@ export class AuthMutationResolver
   public async createAuthByCode(
     _: unknown,
     args: graphqlModels.AuthMutationCreateAuthByCodeArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.Auth> {
     const httpResponse: Awaited<ReturnType<HttpClient['createAuth']>> =
-      await this.#httpClient.createAuth(request.headers, {
+      await this.#httpClient.createAuth(context.request.headers, {
         code: args.codeAuthCreateInput.code,
       });
 
@@ -42,10 +42,10 @@ export class AuthMutationResolver
   public async createAuthByCredentials(
     _: unknown,
     args: graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.Auth> {
     const httpResponse: Awaited<ReturnType<HttpClient['createAuth']>> =
-      await this.#httpClient.createAuth(request.headers, {
+      await this.#httpClient.createAuth(context.request.headers, {
         email: args.emailPasswordAuthCreateInput.email,
         password: args.emailPasswordAuthCreateInput.password,
       });

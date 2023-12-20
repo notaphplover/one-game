@@ -76,7 +76,8 @@ describe(GameService.name, () => {
           },
         };
 
-        gameSpecFixture = GameSpecFixtures.withCardsOneWithAmount120;
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
@@ -165,7 +166,8 @@ describe(GameService.name, () => {
       beforeAll(() => {
         const baseFixture: ActiveGame =
           ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
-        gameSpecFixture = GameSpecFixtures.withCardsOneWithAmount120;
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
 
         gameFixture = {
           ...baseFixture,
@@ -265,7 +267,8 @@ describe(GameService.name, () => {
       beforeAll(() => {
         const baseFixture: ActiveGame =
           ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
-        gameSpecFixture = GameSpecFixtures.withCardsOneWithAmount120;
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
 
         gameFixture = {
           ...baseFixture,
