@@ -3,27 +3,29 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
 
 import { Context } from '../../../foundation/graphql/application/models/Context';
+import { GameGraphQlFromGameV1BuilderType } from '../builders/GameGraphQlFromGameV1Builder';
 import { GameMutationResolver } from './GameMutationResolver';
 
 describe(GameMutationResolver.name, () => {
   let httpClientMock: jest.Mocked<HttpClient>;
 
   let gameMutationResolver: GameMutationResolver;
-  let gameGraphQlFromGameV1BuilderMock: jest.Mocked<
-    Builder<graphqlModels.Game, [apiModels.GameV1]>
-  >;
+  let gameGraphQlFromGameV1BuilderMock: jest.Mocked<GameGraphQlFromGameV1BuilderType>;
 
   beforeAll(() => {
     gameGraphQlFromGameV1BuilderMock = {
       build: jest.fn(),
-    };
+    } as Partial<
+      jest.Mocked<GameGraphQlFromGameV1BuilderType>
+    > as jest.Mocked<GameGraphQlFromGameV1BuilderType>;
 
     httpClientMock = {
       createGame: jest.fn(),
+      createGameSlot: jest.fn(),
       updateGame: jest.fn(),
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
@@ -201,6 +203,163 @@ describe(GameMutationResolver.name, () => {
         );
       });
     });
+  });
+
+  describe('.createGameSlot', () => {
+    let gameIdFixture: string;
+    let userIdFixture: string;
+
+    beforeAll(() => {
+      gameIdFixture = 'game-fixture';
+      userIdFixture = 'user-id';
+    });
+
+    describe('when called, and httpClient.createGameSlot() returns an OK response', () => {
+      let gameSlotV1Fixture: apiModels.NonStartedGameSlotV1;
+
+      let contextFixture: Context;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameSlotV1Fixture =
+          Symbol() as unknown as apiModels.NonStartedGameSlotV1;
+
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
+
+        httpClientMock.createGameSlot.mockResolvedValueOnce({
+          body: gameSlotV1Fixture,
+          headers: {},
+          statusCode: HttpStatus.OK,
+        });
+
+        result = await gameMutationResolver.createGameSlot(
+          undefined,
+          {
+            gameSlotCreateInput: {
+              gameId: gameIdFixture,
+              userId: userIdFixture,
+            },
+          },
+          contextFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.createGameSlot()', () => {
+        const expectedBody: apiModels.GameIdSlotCreateQueryV1 = {
+          userId: userIdFixture,
+        };
+
+        expect(httpClientMock.createGameSlot).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.createGameSlot).toHaveBeenCalledWith(
+          contextFixture.request.headers,
+          {
+            gameId: gameIdFixture,
+          },
+          expectedBody,
+        );
+      });
+
+      it('should return GraphQl GameSlot', () => {
+        expect(result).toBe(gameSlotV1Fixture);
+      });
+    });
+
+    describe.each<[400 | 401 | 403 | 409 | 422, AppErrorKind]>([
+      [HttpStatus.BAD_REQUEST, AppErrorKind.contractViolation],
+      [HttpStatus.UNAUTHORIZED, AppErrorKind.missingCredentials],
+      [HttpStatus.FORBIDDEN, AppErrorKind.invalidCredentials],
+      [HttpStatus.CONFLICT, AppErrorKind.entityConflict],
+      [HttpStatus.UNPROCESSABLE_ENTITY, AppErrorKind.unprocessableOperation],
+    ])(
+      'when called, and httpClient.createGameSlot() returns a %s response',
+      (httpStatus: 400 | 401 | 403 | 409 | 422, appErrorKind: AppErrorKind) => {
+        let errorV1: apiModels.ErrorV1;
+        let contextFixture: Context;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          errorV1 = {
+            description: 'error description fixture',
+          };
+
+          contextFixture = {
+            request: {
+              headers: {
+                foo: 'bar',
+              },
+              query: {},
+              urlParameters: {},
+            },
+          } as Partial<Context> as Context;
+
+          httpClientMock.createGameSlot.mockResolvedValueOnce({
+            body: errorV1,
+            headers: {},
+            statusCode: httpStatus,
+          });
+
+          try {
+            await gameMutationResolver.createGameSlot(
+              undefined,
+              {
+                gameSlotCreateInput: {
+                  gameId: gameIdFixture,
+                  userId: userIdFixture,
+                },
+              },
+              contextFixture,
+            );
+          } catch (error) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call httpClient.createGameSlot()', () => {
+          const expectedBody: apiModels.GameIdSlotCreateQueryV1 = {
+            userId: userIdFixture,
+          };
+
+          expect(httpClientMock.createGameSlot).toHaveBeenCalledTimes(1);
+          expect(httpClientMock.createGameSlot).toHaveBeenCalledWith(
+            contextFixture.request.headers,
+            {
+              gameId: gameIdFixture,
+            },
+            expectedBody,
+          );
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: appErrorKind,
+            message: errorV1.description,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      },
+    );
   });
 
   describe('.passGameTurn', () => {

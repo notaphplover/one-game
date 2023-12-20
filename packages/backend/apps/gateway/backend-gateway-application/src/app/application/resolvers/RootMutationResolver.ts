@@ -75,8 +75,22 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationCreateGameArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<Partial<graphqlModels.Game>> {
+  ): Promise<Partial<graphqlModels.NonStartedGame>> {
     return this.#gameMutationResolver.createGame(parent, args, context, info);
+  }
+
+  public async createGameSlot(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.GameMutationCreateGameSlotArgs,
+    context: Context,
+    info: GraphQLResolveInfo,
+  ): Promise<Partial<graphqlModels.NonStartedGameSlot>> {
+    return this.#gameMutationResolver.createGameSlot(
+      parent,
+      args,
+      context,
+      info,
+    );
   }
 
   public async createUser(
