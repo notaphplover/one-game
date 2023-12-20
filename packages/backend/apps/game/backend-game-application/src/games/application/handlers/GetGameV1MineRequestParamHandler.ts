@@ -138,7 +138,7 @@ export class GetGameV1MineRequestParamHandler
       isMultiple: false,
       max: MAX_PAGE_SIZE_VALUE,
       min: MIN_PAGE_SIZE_VALUE,
-      name: GetGameV1MineRequestParamHandler.pageQueryParam,
+      name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
     });
   }
 
