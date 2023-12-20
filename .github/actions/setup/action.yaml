@@ -4,10 +4,6 @@ description: Reusable action to setup node and install packages
 runs:
   using: "composite"
   steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Install Node.js
       uses: actions/setup-node@v4

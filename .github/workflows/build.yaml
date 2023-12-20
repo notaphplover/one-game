@@ -17,6 +17,12 @@ jobs:
       affectedPackages: ${{ steps.get-affected-packages.outputs.packages }}
     if: "!(github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == false)"
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: ./.github/actions/setup
 
       - name: Get affected packages
@@ -52,6 +58,12 @@ jobs:
       matrix:
         package: ${{fromJSON(needs.build.outputs.affectedPackages)}}
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: ./.github/actions/setup
 
       - name: Get current git commit hash
