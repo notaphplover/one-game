@@ -46,6 +46,25 @@ export class UserMutationResolver
     }
   }
 
+  public async deleteUserMe(
+    _: unknown,
+    _args: unknown,
+    context: Context,
+  ): Promise<null> {
+    const httpResponse: Awaited<ReturnType<HttpClient['deleteUserMe']>> =
+      await this.#httpClient.deleteUserMe(context.request.headers);
+
+    switch (httpResponse.statusCode) {
+      case 200:
+        return null;
+      case 401:
+        throw new AppError(
+          AppErrorKind.missingCredentials,
+          httpResponse.body.description,
+        );
+    }
+  }
+
   public async updateUserMe(
     _: unknown,
     args: graphqlModels.UserMutationUpdateUserMeArgs,
@@ -62,12 +81,12 @@ export class UserMutationResolver
         return httpResponse.body;
       case 401:
         throw new AppError(
-          AppErrorKind.invalidCredentials,
+          AppErrorKind.missingCredentials,
           httpResponse.body.description,
         );
       case 403:
         throw new AppError(
-          AppErrorKind.missingCredentials,
+          AppErrorKind.invalidCredentials,
           httpResponse.body.description,
         );
     }

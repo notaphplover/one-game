@@ -11,7 +11,10 @@ export function buildApolloApplicationResolver(
   graphQlErrorFromErrorBuilder: Builder<GraphQLError, [unknown]>,
 ): ApplicationResolver {
   return {
+    ActiveGame: applicationResolver.ActiveGame,
+    FinishedGame: applicationResolver.FinishedGame,
     Game: applicationResolver.Game,
+    NonStartedGame: applicationResolver.NonStartedGame,
     RootMutation: {
       createAuthByCode: buildApolloResolver(
         applicationResolver.RootMutation,
@@ -32,6 +35,11 @@ export function buildApolloApplicationResolver(
         applicationResolver.RootMutation,
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootMutation.createUser,
+      ),
+      deleteUserMe: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.deleteUserMe,
       ),
       passGameTurn: buildApolloResolver(
         applicationResolver.RootMutation,
@@ -71,6 +79,7 @@ export function buildApolloApplicationResolver(
         applicationResolver.RootQuery.userMe,
       ),
     },
+    Void: applicationResolver.Void,
   };
 }
 

@@ -14,12 +14,14 @@
 #import User from './users/User.graphql'
 #import UserCreateInput from './users/UserCreateInput.graphql'
 #import UserUpdateInput from './users/UserUpdateInput.graphql'
+#import Void from './common/Void.graphql'
 
 type RootMutation implements AuthMutation & GameMutation & UserMutation {
   createAuthByCode(codeAuthCreateInput: CodeAuthCreateInput!): Auth!
   createAuthByCredentials(emailPasswordAuthCreateInput: EmailPasswordAuthCreateInput!): Auth!
   createGame(gameCreateInput: GameCreateInput!): Game!
   createUser(userCreateInput: UserCreateInput!): User!
+  deleteUserMe: Void
   passGameTurn(gameId: ID!, gamePassTurnInput: GamePassTurnInput!): Game
   playGameCards(gameId: ID!, gamePlayCardsInput: GamePlayCardsInput!): Game
   updateUserMe(userUpdateInput: UserUpdateInput!): User!

@@ -1,6 +1,12 @@
 import { ApolloServer } from '@apollo/server';
 import { fastifyApolloHandler } from '@as-integrations/fastify';
-import { Context } from '@cornie-js/backend-gateway-application';
+import { models as graphqlModels } from '@cornie-js/api-graphql-models';
+import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  Context,
+  ContextImplementation,
+} from '@cornie-js/backend-gateway-application';
+import { batchedGetSpecByGameIdHandlerBuilderSymbol } from '@cornie-js/backend-gateway-application/games';
 import {
   Request,
   RequestFromFastifyRequestBuilder,
@@ -18,6 +24,11 @@ export function registerFastifyApolloHandler(
   const requestFromFastifyRequestBuilder: RequestFromFastifyRequestBuilder =
     nestApplicationContext.get(RequestFromFastifyRequestBuilder);
 
+  const gameSpecByGameIdHandlerBuilder: Builder<
+    Handler<[string], graphqlModels.GameSpec | undefined>,
+    [Request]
+  > = nestApplicationContext.get(batchedGetSpecByGameIdHandlerBuilderSymbol);
+
   fastifyServer.post(
     '/',
     fastifyApolloHandler(apolloServer, {
@@ -32,9 +43,10 @@ export function registerFastifyApolloHandler(
           }
         }
 
-        return {
+        return new ContextImplementation(
           request,
-        };
+          gameSpecByGameIdHandlerBuilder,
+        );
       },
     }),
   );
