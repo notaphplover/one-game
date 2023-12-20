@@ -9,6 +9,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: 20
+      shell: bash
 
     - uses: pnpm/action-setup@v2
       name: Install pnpm
@@ -16,11 +17,13 @@ runs:
       with:
         version: 8
         run_install: false
+      shell: bash
 
     - name: Get pnpm store directory
       id: pnpm-cache
       run: |
         echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+      shell: bash
 
     - uses: actions/cache@v3
       name: Setup pnpm cache
@@ -29,6 +32,8 @@ runs:
         key: pnpm-store-${{ hashFiles('**/package.json') }}
         restore-keys: |
           pnpm-store-
+      shell: bash
       
     - name: Install dependencies
       run: pnpm install
+      shell: bash
