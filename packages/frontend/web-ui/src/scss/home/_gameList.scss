@@ -1,6 +1,6 @@
 @use '../base/variables' as variables;
 
-.game-list {
+.game-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,13 +12,13 @@
   padding: 1rem;
 }
 
-.game-list .game-list-text {
+.game-list-item .game-list-item-text {
   color: var(--cg-text-primary);
   text-align: center;
   font-size: variables.$font-sm;
 }
 
-.game-list .game-list-button {
+.game-list-item .game-list-item-button {
   background-color: var(--cg-bkg-primary-dark);
   border: 1px solid var(--cg-bkg-secondary-light);
   font-weight: bold;
@@ -27,7 +27,7 @@
   box-shadow: 0 4px 8px 0 rgba(223, 192, 252, 0.5);
 }
 
-.game-list .game-list-button:hover {
+.game-list-item .game-list-item-button:hover {
   background-color: var(--cg-bkg-secondary-main);
   font-weight: bold;
   color: var(--cg-btn-third-txt);

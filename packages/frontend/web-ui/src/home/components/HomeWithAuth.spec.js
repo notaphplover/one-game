@@ -10,7 +10,7 @@ import { HomeWithAuth } from './HomeWithAuth';
 
 jest.mock('../hooks/useGetGames');
 
-const NOT_EXISTS_PENDING_GAMES = 'No pending games found.';
+const NOT_EXISTS_GAMES = 'No games found.';
 
 describe(HomeWithAuth.name, () => {
   let statusFixture;
@@ -52,7 +52,7 @@ describe(HomeWithAuth.name, () => {
     });
 
     it('should show a sentence with not exists pending games', () => {
-      expect(pendingGameTextWhite).toEqual(NOT_EXISTS_PENDING_GAMES);
+      expect(pendingGameTextWhite).toEqual(NOT_EXISTS_GAMES);
     });
   });
 
@@ -82,7 +82,9 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const pendingGameText = result.container.querySelector('.game-list-text');
+      const pendingGameText = result.container.querySelector(
+        '.game-list-item-text',
+      );
 
       pendingGameName = pendingGameText.childNodes[0].nodeValue;
     });
@@ -123,7 +125,9 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const activeGameText = result.container.querySelector('.game-list-text');
+      const activeGameText = result.container.querySelector(
+        '.game-list-item-text',
+      );
 
       activeGameName = activeGameText.childNodes[0].nodeValue;
     });
@@ -173,11 +177,15 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const pendingGameText = result.container.querySelector('.game-list-text');
+      const pendingGameText = result.container.querySelector(
+        '.game-list-item-text',
+      );
 
       pendingGameName = pendingGameText.childNodes[0].nodeValue;
 
-      const activeGameText = result.container.querySelector('.game-list-text');
+      const activeGameText = result.container.querySelector(
+        '.game-list-item-text',
+      );
 
       activeGameName = activeGameText.childNodes[0].nodeValue;
     });
@@ -226,7 +234,7 @@ describe(HomeWithAuth.name, () => {
     });
 
     it('should show a sentence with not exists pending games', () => {
-      expect(pendingGameTextWhite).toEqual(NOT_EXISTS_PENDING_GAMES);
+      expect(pendingGameTextWhite).toEqual(NOT_EXISTS_GAMES);
     });
   });
 });

@@ -5,13 +5,15 @@ import { CornieLayout } from '../../common/layout/CornieLayout';
 import { GameList } from '../../game/components/GameList';
 import { STATUS_GAME_FULFILLED, useGetGames } from '../hooks/useGetGames';
 import GamesIcon from '@mui/icons-material/Games';
-import ArrowForwardIosOutlined from '@mui/icons-material/ArrowForwardIosOutlined';
-import ArrowBackIosNewOutlined from '@mui/icons-material/ArrowBackIosNewOutlined';
+import {
+  ArrowBackIosNewOutlined,
+  ArrowForwardIosOutlined,
+} from '@mui/icons-material';
 
 const GAME_STATUS_NON_STARTED = 'nonStarted';
 const GAME_STATUS_ACTIVE = 'active';
-const PAGE_SIZE = 5;
-const ONE_PAGE = 1;
+export const PAGE_SIZE = 3;
+export const ONE_PAGE = 1;
 
 export const HomeWithAuth = () => {
   const [pageNumberNonStarted, setPageNumberNonStarted] = useState(1);
@@ -30,6 +32,7 @@ export const HomeWithAuth = () => {
 
   const onNextPageNonStarted = (event) => {
     event.preventDefault();
+
     if (
       statusNonStarted === STATUS_GAME_FULFILLED &&
       gameListNonStarted.length >= PAGE_SIZE
@@ -57,7 +60,7 @@ export const HomeWithAuth = () => {
       gameListActive.length >= PAGE_SIZE
     ) {
       setPageNumberActive(pageNumberActive + ONE_PAGE);
-      setNumPageActive(pageNumberNonStarted);
+      setNumPageActive(pageNumberActive);
     }
   };
 
@@ -65,7 +68,7 @@ export const HomeWithAuth = () => {
     event.preventDefault();
     if (statusActive === STATUS_GAME_FULFILLED && pageNumberActive > ONE_PAGE) {
       setPageNumberActive(pageNumberActive - ONE_PAGE);
-      setNumPageActive(pageNumberNonStarted);
+      setNumPageActive(pageNumberActive);
     }
   };
 
@@ -95,24 +98,10 @@ export const HomeWithAuth = () => {
               Pending Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              {statusNonStarted === STATUS_GAME_FULFILLED &&
-              gameListNonStarted.length > 0 ? (
-                gameListNonStarted.map((game) => (
-                  <GameList
-                    key={game.id}
-                    typeGame={GAME_STATUS_NON_STARTED}
-                    game={game}
-                  />
-                ))
-              ) : (
-                <Typography
-                  variant="h5"
-                  className="home-auth-text-white"
-                  component="h5"
-                >
-                  No pending games found.
-                </Typography>
-              )}
+              <GameList
+                status={statusNonStarted}
+                gameList={gameListNonStarted}
+              />
               <Box component="div" className="home-auth-pagination">
                 <Button
                   type="button"
@@ -136,24 +125,7 @@ export const HomeWithAuth = () => {
               Active Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              {statusActive === STATUS_GAME_FULFILLED &&
-              gameListActive.length > 0 ? (
-                gameListActive.map((game) => (
-                  <GameList
-                    key={game.id}
-                    typeGame={GAME_STATUS_ACTIVE}
-                    game={game}
-                  />
-                ))
-              ) : (
-                <Typography
-                  variant="h5"
-                  className="home-auth-text-white"
-                  component="h5"
-                >
-                  No active games found.
-                </Typography>
-              )}
+              <GameList status={statusActive} gameList={gameListActive} />
               <Box component="div" className="home-auth-pagination">
                 <Button
                   type="button"
