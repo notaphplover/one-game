@@ -8,6 +8,7 @@ import {
 import {
   AuthKind,
   AuthRequestContextHolder,
+  NumericRequestQueryParseOptions,
   Request,
   RequestQueryParseFailure,
   RequestQueryParseFailureKind,
@@ -94,18 +95,29 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
       });
 
       it('should call requestService.tryParseIntegerQuery()', () => {
+        const firstCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+        };
+        const secondCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+        };
+
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
           2,
         );
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
           1,
           requestFixture,
-          expect.any(Object),
+          expect.objectContaining(firstCallExpectedProperties),
         );
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
           2,
           requestFixture,
-          expect.any(Object),
+          expect.objectContaining(secondCallExpectedProperties),
         );
       });
 
@@ -172,18 +184,29 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
       });
 
       it('should call requestService.tryParseIntegerQuery()', () => {
+        const firstCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+        };
+        const secondCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+        };
+
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
           2,
         );
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
           1,
           requestFixture,
-          expect.any(Object),
+          expect.objectContaining(firstCallExpectedProperties),
         );
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
           2,
           requestFixture,
-          expect.any(Object),
+          expect.objectContaining(secondCallExpectedProperties),
         );
       });
 
@@ -245,18 +268,29 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
       });
 
       it('should call requestService.tryParseIntegerQuery()', () => {
+        const firstCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+        };
+        const secondCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+        };
+
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
           2,
         );
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
           1,
           requestFixture,
-          expect.any(Object),
+          expect.objectContaining(firstCallExpectedProperties),
         );
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
           2,
           requestFixture,
-          expect.any(Object),
+          expect.objectContaining(secondCallExpectedProperties),
         );
       });
 

@@ -20,10 +20,10 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.1.1",
+    "react-redux": "^9.0.0",
     "react-router-dom": "6"
   },
   "devDependencies": {
@@ -34,8 +34,8 @@
     "@jest/globals": "29.7.0",
     "@jest/types": "29.6.3",
     "@testing-library/react": "^14.0.0",
-    "@types/react": "^18.2.5",
-    "@types/react-dom": "^18.2.4",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.0",
     "babel-jest": "29.7.0",
     "babel-preset-vite": "^1.1.0",

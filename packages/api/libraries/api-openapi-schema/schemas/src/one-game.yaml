@@ -341,6 +341,12 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/games/game-slot.json'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
         '401':
           description: Unauthorized
           content:

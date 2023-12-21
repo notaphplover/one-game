@@ -35,6 +35,7 @@ import { SseConsumer } from './http/application/modules/SseConsumer';
 import { SsePublisher } from './http/application/modules/SsePublisher';
 import { SseTeardownExecutor } from './http/application/modules/SseTeardownExecutor';
 import {
+  NumericRequestQueryParseOptions,
   ParsedValue,
   RequestQueryParseFailure,
   RequestQueryParseFailureKind,
@@ -49,6 +50,7 @@ export type {
   BackendServiceAuth,
   MessageEvent,
   Middleware,
+  NumericRequestQueryParseOptions,
   ParsedValue,
   Request,
   RequestContextHolder,

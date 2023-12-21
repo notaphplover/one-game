@@ -33,6 +33,7 @@ function buildTestTuples(): [
     CanonicalResolver<graphqlModels.GameMutationResolvers<Context>>
   > = {
     createGame: jest.fn(),
+    createGameSlot: jest.fn(),
     passGameTurn: jest.fn(),
     playGameCards: jest.fn(),
   } as Partial<
@@ -74,6 +75,11 @@ function buildTestTuples(): [
       'createGame',
       rootMutationResolver.createGame.bind(rootMutationResolver),
       gameMutationMock.createGame as jest.Mock,
+    ],
+    [
+      'createGameSlot',
+      rootMutationResolver.createGameSlot.bind(rootMutationResolver),
+      gameMutationMock.createGameSlot as jest.Mock,
     ],
     [
       'createUser',
