@@ -5,7 +5,7 @@ jest.mock('../handlers/BatchedGetSpecByGameIdHandler');
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { Request } from '@cornie-js/backend-http';
 
 import { BatchedGetSpecByGameIdHandler } from '../handlers/BatchedGetSpecByGameIdHandler';

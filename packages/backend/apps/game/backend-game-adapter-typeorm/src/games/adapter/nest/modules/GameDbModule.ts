@@ -12,22 +12,22 @@ import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModul
 import { GamePersistenceTypeOrmAdapter } from '../../typeorm/adapters/GamePersistenceTypeOrmAdapter';
 import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSlotPersistenceTypeOrmAdapter';
 import { GameSpecPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSpecPersistenceTypeOrmAdapter';
+import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from '../../typeorm/builders/GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
 import { GameCardSpecArrayFromGameCardSpecArrayDbBuilder } from '../../typeorm/builders/GameCardSpecArrayFromGameCardSpecArrayDbBuilder';
+import { GameDirectionDbFromGameDirectionBuilder } from '../../typeorm/builders/GameDirectionDbFromGameDirectionBuilder';
+import { GameDirectionFromGameDirectionDbBuilder } from '../../typeorm/builders/GameDirectionFromGameDirectionDbBuilder';
 import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from '../../typeorm/builders/GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder';
 import { GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder } from '../../typeorm/builders/GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder';
 import { GameSpecFromGameSpecDbBuilder } from '../../typeorm/builders/GameSpecFromGameSpecDbBuilder';
-import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../../typeorm/converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
+import { GameStatusDbFromGameStatusBuilder } from '../../typeorm/builders/GameStatusDbFromGameStatusBuilder';
 import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
 import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
-import { GameDirectionDbToGameDirectionConverter } from '../../typeorm/converters/GameDirectionDbToGameDirectionConverter';
-import { GameDirectionToGameDirectionDbConverter } from '../../typeorm/converters/GameDirectionToGameDirectionDbConverter';
 import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
 import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
 import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
 import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
 import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
 import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
-import { GameStatusToGameStatusDbConverter } from '../../typeorm/converters/GameStatusToGameStatusDbConverter';
 import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
 import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
@@ -63,12 +63,12 @@ export class GameDbModule {
         CreateGameTypeOrmService,
         FindGameTypeOrmService,
         FindGameSpecTypeOrmService,
-        GameCardSpecArrayToGameCardSpecArrayDbConverter,
+        GameCardSpecArrayDbFromGameCardSpecArrayBuilder,
         GameCardSpecArrayFromGameCardSpecArrayDbBuilder,
         GameCreateQueryToGameCreateQueryTypeOrmConverter,
         GameDbToGameConverter,
-        GameDirectionDbToGameDirectionConverter,
-        GameDirectionToGameDirectionDbConverter,
+        GameDirectionFromGameDirectionDbBuilder,
+        GameDirectionDbFromGameDirectionBuilder,
         GameFindQueryToGameFindQueryTypeOrmConverter,
         {
           provide: gamePersistenceOutputPortSymbol,
@@ -84,7 +84,7 @@ export class GameDbModule {
           provide: gameSpecPersistenceOutputPortSymbol,
           useClass: GameSpecPersistenceTypeOrmAdapter,
         },
-        GameStatusToGameStatusDbConverter,
+        GameStatusDbFromGameStatusBuilder,
         GameUpdateQueryToGameFindQueryTypeOrmConverter,
         GameUpdateQueryToGameSetQueryTypeOrmConverter,
         GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter,

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   GameCardSpec,
@@ -21,14 +21,14 @@ import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from './GameUpdateQuery
 describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
   let cardColorDbBuilderMock: jest.Mocked<Builder<CardColorDb, [CardColor]>>;
   let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
-  let gameCardSpecArrayToGameCardSpecArrayDbConverterMock: jest.Mocked<
-    Converter<GameCardSpec[], string>
+  let gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock: jest.Mocked<
+    Builder<string, [GameCardSpec[]]>
   >;
-  let gameDirectionToGameDirectionDbConverterMock: jest.Mocked<
-    Converter<GameDirection, GameDirectionDb>
+  let gameDirectionDbFromGameDirectionBuilderMock: jest.Mocked<
+    Builder<GameDirectionDb, [GameDirection]>
   >;
-  let gameStatusToGameStatusDbConverterMock: jest.Mocked<
-    Converter<GameStatus, GameStatusDb>
+  let gameStatusDbFromGameStatusBuilderMock: jest.Mocked<
+    Builder<GameStatusDb, [GameStatus]>
   >;
 
   let gameUpdateQueryToGameSetQueryTypeOrmConverter: GameUpdateQueryToGameSetQueryTypeOrmConverter;
@@ -40,23 +40,23 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
     cardDbBuilderMock = {
       build: jest.fn(),
     };
-    gameCardSpecArrayToGameCardSpecArrayDbConverterMock = {
-      convert: jest.fn(),
+    gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock = {
+      build: jest.fn(),
     };
-    gameDirectionToGameDirectionDbConverterMock = {
-      convert: jest.fn(),
+    gameDirectionDbFromGameDirectionBuilderMock = {
+      build: jest.fn(),
     };
-    gameStatusToGameStatusDbConverterMock = {
-      convert: jest.fn(),
+    gameStatusDbFromGameStatusBuilderMock = {
+      build: jest.fn(),
     };
 
     gameUpdateQueryToGameSetQueryTypeOrmConverter =
       new GameUpdateQueryToGameSetQueryTypeOrmConverter(
         cardColorDbBuilderMock,
         cardDbBuilderMock,
-        gameCardSpecArrayToGameCardSpecArrayDbConverterMock,
-        gameDirectionToGameDirectionDbConverterMock,
-        gameStatusToGameStatusDbConverterMock,
+        gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock,
+        gameDirectionDbFromGameDirectionBuilderMock,
+        gameStatusDbFromGameStatusBuilderMock,
       );
   });
 
@@ -117,7 +117,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
 
         beforeAll(() => {
           gameDirectionDbFixture = GameDirectionDb.antiClockwise;
-          gameDirectionToGameDirectionDbConverterMock.convert.mockReturnValueOnce(
+          gameDirectionDbFromGameDirectionBuilderMock.build.mockReturnValueOnce(
             gameDirectionDbFixture,
           );
 
@@ -130,12 +130,12 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameDirectionToGameDirectionDbConverter.convert()', () => {
+        it('should call gameDirectionToGameDirectionDbConverter.build()', () => {
           expect(
-            gameDirectionToGameDirectionDbConverterMock.convert,
+            gameDirectionDbFromGameDirectionBuilderMock.build,
           ).toHaveBeenCalledTimes(1);
           expect(
-            gameDirectionToGameDirectionDbConverterMock.convert,
+            gameDirectionDbFromGameDirectionBuilderMock.build,
           ).toHaveBeenCalledWith(gameUpdateQueryFixture.currentDirection);
         });
 
@@ -232,7 +232,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
 
         beforeAll(() => {
           gameSpecCardsDbStringifiedFixture = 'deck-fixture';
-          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+          gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build.mockReturnValueOnce(
             gameSpecCardsDbStringifiedFixture,
           );
 
@@ -245,12 +245,12 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+        it('should call gameCardSpecArrayDbFromGameCardSpecArrayBuilder.build()', () => {
           expect(
-            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+            gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledTimes(1);
           expect(
-            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+            gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledWith(gameUpdateQueryFixture.deck);
         });
 
@@ -279,7 +279,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
 
         beforeAll(() => {
           gameSpecCardsDbStringifiedFixture = 'discard-pile-fixture';
-          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+          gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build.mockReturnValueOnce(
             gameSpecCardsDbStringifiedFixture,
           );
 
@@ -292,12 +292,12 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.build()', () => {
           expect(
-            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+            gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledTimes(1);
           expect(
-            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+            gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledWith(gameUpdateQueryFixture.discardPile);
         });
 
@@ -360,7 +360,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         beforeAll(() => {
           gameStatusDbFixture = GameStatusDb.active;
 
-          gameStatusToGameStatusDbConverterMock.convert.mockReturnValueOnce(
+          gameStatusDbFromGameStatusBuilderMock.build.mockReturnValueOnce(
             gameStatusDbFixture,
           );
 

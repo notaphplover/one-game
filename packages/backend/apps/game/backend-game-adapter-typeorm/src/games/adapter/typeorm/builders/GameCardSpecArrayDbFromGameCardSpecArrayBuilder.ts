@@ -1,4 +1,4 @@
-import { Builder, Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import { GameCardSpec } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -8,8 +8,8 @@ import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameCardSpecDb } from '../models/GameCardSpecDb';
 
 @Injectable()
-export class GameCardSpecArrayToGameCardSpecArrayDbConverter
-  implements Converter<GameCardSpec[], string>
+export class GameCardSpecArrayDbFromGameCardSpecArrayBuilder
+  implements Builder<string, [GameCardSpec[]]>
 {
   readonly #cardDbBuilder: Builder<CardDb, [Card]>;
 
@@ -20,7 +20,7 @@ export class GameCardSpecArrayToGameCardSpecArrayDbConverter
     this.#cardDbBuilder = cardDbBuilder;
   }
 
-  public convert(gameCardSpecArray: GameCardSpec[]): string {
+  public build(gameCardSpecArray: GameCardSpec[]): string {
     return JSON.stringify(this.#buildCardSpecsDb(gameCardSpecArray));
   }
 

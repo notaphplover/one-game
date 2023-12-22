@@ -1,4 +1,4 @@
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { GameStatus } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 
@@ -13,10 +13,10 @@ const GAME_STATUS_TO_GAME_STATUS_DB_MAP: {
 };
 
 @Injectable()
-export class GameStatusToGameStatusDbConverter
-  implements Converter<GameStatus, GameStatusDb>
+export class GameStatusDbFromGameStatusBuilder
+  implements Builder<GameStatusDb, [GameStatus]>
 {
-  public convert(gameStatus: GameStatus): GameStatusDb {
+  public build(gameStatus: GameStatus): GameStatusDb {
     return GAME_STATUS_TO_GAME_STATUS_DB_MAP[gameStatus];
   }
 }

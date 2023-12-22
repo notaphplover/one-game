@@ -3,16 +3,16 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { GameStatus } from '@cornie-js/backend-game-domain/games';
 
 import { GameStatusDb } from '../models/GameStatusDb';
-import { GameStatusToGameStatusDbConverter } from './GameStatusToGameStatusDbConverter';
+import { GameStatusDbFromGameStatusBuilder } from './GameStatusDbFromGameStatusBuilder';
 
-describe(GameStatusToGameStatusDbConverter.name, () => {
-  let gameStatusToGameStatusDbConverter: GameStatusToGameStatusDbConverter;
+describe(GameStatusDbFromGameStatusBuilder.name, () => {
+  let gameStatusDbFromGameStatusBuilder: GameStatusDbFromGameStatusBuilder;
 
   beforeAll(() => {
-    gameStatusToGameStatusDbConverter = new GameStatusToGameStatusDbConverter();
+    gameStatusDbFromGameStatusBuilder = new GameStatusDbFromGameStatusBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a GameStatus active', () => {
       let gameStatusFixture: GameStatus;
 
@@ -24,7 +24,7 @@ describe(GameStatusToGameStatusDbConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameStatusToGameStatusDbConverter.convert(gameStatusFixture);
+          result = gameStatusDbFromGameStatusBuilder.build(gameStatusFixture);
         });
 
         it('should return GameStatusDb active', () => {
@@ -44,7 +44,7 @@ describe(GameStatusToGameStatusDbConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameStatusToGameStatusDbConverter.convert(gameStatusFixture);
+          result = gameStatusDbFromGameStatusBuilder.build(gameStatusFixture);
         });
 
         it('should return GameStatusDb finished', () => {
@@ -63,7 +63,7 @@ describe(GameStatusToGameStatusDbConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameStatusToGameStatusDbConverter.convert(gameStatusFixture);
+          result = gameStatusDbFromGameStatusBuilder.build(gameStatusFixture);
         });
 
         it('should return GameStatusDb nonStarted', () => {
