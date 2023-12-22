@@ -13,12 +13,12 @@ import { CardColorDbBuilder } from '../../../../cards/adapter/typeorm/builders/C
 import { CardDbBuilder } from '../../../../cards/adapter/typeorm/builders/CardDbBuilder';
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
+import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from '../builders/GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
+import { GameDirectionDbFromGameDirectionBuilder } from '../builders/GameDirectionDbFromGameDirectionBuilder';
+import { GameStatusDbFromGameStatusBuilder } from '../builders/GameStatusDbFromGameStatusBuilder';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameStatusDb } from '../models/GameStatusDb';
-import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from './GameCardSpecArrayToGameCardSpecArrayDbConverter';
-import { GameDirectionToGameDirectionDbConverter } from './GameDirectionToGameDirectionDbConverter';
-import { GameStatusToGameStatusDbConverter } from './GameStatusToGameStatusDbConverter';
 
 @Injectable()
 export class GameUpdateQueryToGameSetQueryTypeOrmConverter
@@ -26,17 +26,17 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
 {
   readonly #cardColorDbBuilder: Builder<CardColorDb, [CardColor]>;
   readonly #cardDbBuilder: Builder<CardDb, [Card]>;
-  readonly #gameCardSpecArrayToGameCardSpecArrayDbConverter: Converter<
-    GameCardSpec[],
-    string
+  readonly #gameCardSpecArrayDbFromGameCardSpecArrayBuilder: Builder<
+    string,
+    [GameCardSpec[]]
   >;
-  readonly #gameDirectionToGameDirectionDbConverter: Converter<
-    GameDirection,
-    GameDirectionDb
+  readonly #gameDirectionDbFromGameDirectionBuilder: Builder<
+    GameDirectionDb,
+    [GameDirection]
   >;
-  readonly #gameStatusToGameStatusDbConverter: Converter<
-    GameStatus,
-    GameStatusDb
+  readonly #gameStatusDbFromGameStatusBuilder: Builder<
+    GameStatusDb,
+    [GameStatus]
   >;
 
   constructor(
@@ -44,26 +44,26 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
     cardColorDbBuilder: Builder<CardColorDb, [CardColor]>,
     @Inject(CardDbBuilder)
     cardDbBuilder: Builder<CardDb, [Card]>,
-    @Inject(GameCardSpecArrayToGameCardSpecArrayDbConverter)
-    gameCardSpecArrayToGameCardSpecArrayDbConverter: Converter<
-      GameCardSpec[],
-      string
+    @Inject(GameCardSpecArrayDbFromGameCardSpecArrayBuilder)
+    gameCardSpecArrayDbFromGameCardSpecArrayBuilder: Builder<
+      string,
+      [GameCardSpec[]]
     >,
-    @Inject(GameDirectionToGameDirectionDbConverter)
-    gameDirectionToGameDirectionDbConverter: Converter<
-      GameDirection,
-      GameDirectionDb
+    @Inject(GameDirectionDbFromGameDirectionBuilder)
+    gameDirectionDbFromGameDirectionBuilder: Builder<
+      GameDirectionDb,
+      [GameDirection]
     >,
-    @Inject(GameStatusToGameStatusDbConverter)
-    gameStatusToGameStatusDbConverter: Converter<GameStatus, GameStatusDb>,
+    @Inject(GameStatusDbFromGameStatusBuilder)
+    gameStatusDbFromGameStatusBuilder: Builder<GameStatusDb, [GameStatus]>,
   ) {
     this.#cardColorDbBuilder = cardColorDbBuilder;
     this.#cardDbBuilder = cardDbBuilder;
-    this.#gameCardSpecArrayToGameCardSpecArrayDbConverter =
-      gameCardSpecArrayToGameCardSpecArrayDbConverter;
-    this.#gameDirectionToGameDirectionDbConverter =
-      gameDirectionToGameDirectionDbConverter;
-    this.#gameStatusToGameStatusDbConverter = gameStatusToGameStatusDbConverter;
+    this.#gameCardSpecArrayDbFromGameCardSpecArrayBuilder =
+      gameCardSpecArrayDbFromGameCardSpecArrayBuilder;
+    this.#gameDirectionDbFromGameDirectionBuilder =
+      gameDirectionDbFromGameDirectionBuilder;
+    this.#gameStatusDbFromGameStatusBuilder = gameStatusDbFromGameStatusBuilder;
   }
 
   public convert(
@@ -73,7 +73,7 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
 
     if (gameUpdateQuery.status !== undefined) {
       gameSetQueryTypeOrm.status =
-        this.#gameStatusToGameStatusDbConverter.convert(gameUpdateQuery.status);
+        this.#gameStatusDbFromGameStatusBuilder.build(gameUpdateQuery.status);
     }
 
     if (gameUpdateQuery.currentCard !== undefined) {
@@ -91,7 +91,7 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
 
     if (gameUpdateQuery.currentDirection !== undefined) {
       gameSetQueryTypeOrm.currentDirection =
-        this.#gameDirectionToGameDirectionDbConverter.convert(
+        this.#gameDirectionDbFromGameDirectionBuilder.build(
           gameUpdateQuery.currentDirection,
         );
     }
@@ -108,14 +108,14 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
 
     if (gameUpdateQuery.deck !== undefined) {
       gameSetQueryTypeOrm.deck =
-        this.#gameCardSpecArrayToGameCardSpecArrayDbConverter.convert(
+        this.#gameCardSpecArrayDbFromGameCardSpecArrayBuilder.build(
           gameUpdateQuery.deck,
         );
     }
 
     if (gameUpdateQuery.discardPile !== undefined) {
       gameSetQueryTypeOrm.discardPile =
-        this.#gameCardSpecArrayToGameCardSpecArrayDbConverter.convert(
+        this.#gameCardSpecArrayDbFromGameCardSpecArrayBuilder.build(
           gameUpdateQuery.discardPile,
         );
     }

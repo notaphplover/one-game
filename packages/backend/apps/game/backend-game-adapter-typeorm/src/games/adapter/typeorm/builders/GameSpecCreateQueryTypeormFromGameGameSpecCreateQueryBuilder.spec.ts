@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import {
   GameCardSpec,
   GameSpecCreateQuery,
@@ -14,20 +14,20 @@ import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from './
 describe(
   GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder.name,
   () => {
-    let gameCardSpecArrayToGameCardSpecArrayDbConverterMock: jest.Mocked<
-      Converter<GameCardSpec[], string>
+    let gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock: jest.Mocked<
+      Builder<string, [GameCardSpec[]]>
     >;
 
     let gameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder: GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder;
 
     beforeAll(() => {
-      gameCardSpecArrayToGameCardSpecArrayDbConverterMock = {
-        convert: jest.fn(),
+      gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock = {
+        build: jest.fn(),
       };
 
       gameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder =
         new GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder(
-          gameCardSpecArrayToGameCardSpecArrayDbConverterMock,
+          gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock,
         );
     });
 
@@ -46,7 +46,7 @@ describe(
         beforeAll(() => {
           cardSpecsStringifiedFixture = 'cards-fixture';
 
-          gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert.mockReturnValueOnce(
+          gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build.mockReturnValueOnce(
             cardSpecsStringifiedFixture,
           );
 
@@ -60,12 +60,12 @@ describe(
           jest.clearAllMocks();
         });
 
-        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.convert()', () => {
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.build()', () => {
           expect(
-            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+            gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledTimes(1);
           expect(
-            gameCardSpecArrayToGameCardSpecArrayDbConverterMock.convert,
+            gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledWith(gameSpecCreateQueryFixture.cards);
         });
 

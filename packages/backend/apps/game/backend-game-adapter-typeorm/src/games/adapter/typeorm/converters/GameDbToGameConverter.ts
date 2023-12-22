@@ -24,11 +24,11 @@ import { CardColorBuilder } from '../../../../cards/adapter/typeorm/builders/Car
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameCardSpecArrayFromGameCardSpecArrayDbBuilder } from '../builders/GameCardSpecArrayFromGameCardSpecArrayDbBuilder';
+import { GameDirectionFromGameDirectionDbBuilder } from '../builders/GameDirectionFromGameDirectionDbBuilder';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameStatusDb } from '../models/GameStatusDb';
-import { GameDirectionDbToGameDirectionConverter } from './GameDirectionDbToGameDirectionConverter';
 import { GameSlotDbToGameSlotConverter } from './GameSlotDbToGameSlotConverter';
 
 @Injectable()
@@ -39,9 +39,9 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     GameCardSpec[],
     [string]
   >;
-  readonly #gameDirectionDbToGameDirectionConverter: Converter<
-    GameDirectionDb,
-    GameDirection
+  readonly #gameDirectionFromGameDirectionDbBuilder: Builder<
+    GameDirection,
+    [GameDirectionDb]
   >;
   readonly #gameSlotDbToGameSlotConverter: Converter<
     GameSlotDb,
@@ -58,10 +58,10 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       GameCardSpec[],
       [string]
     >,
-    @Inject(GameDirectionDbToGameDirectionConverter)
-    gameDirectionDbToGameDirectionConverter: Converter<
-      GameDirectionDb,
-      GameDirection
+    @Inject(GameDirectionFromGameDirectionDbBuilder)
+    gameDirectionFromGameDirectionDbBuilder: Builder<
+      GameDirection,
+      [GameDirectionDb]
     >,
     @Inject(GameSlotDbToGameSlotConverter)
     gameSlotDbToGameSlotConverter: Converter<
@@ -73,8 +73,8 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     this.#cardColorBuilder = cardColorBuilder;
     this.#gameCardSpecArrayFromGameCardSpecArrayDbBuilder =
       gameCardSpecArrayFromGameCardSpecArrayDbBuilder;
-    this.#gameDirectionDbToGameDirectionConverter =
-      gameDirectionDbToGameDirectionConverter;
+    this.#gameDirectionFromGameDirectionDbBuilder =
+      gameDirectionFromGameDirectionDbBuilder;
     this.#gameSlotDbToGameSlotConverter = gameSlotDbToGameSlotConverter;
   }
 
@@ -136,7 +136,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       state: {
         currentCard: this.#cardBuilder.build(gameDb.currentCard),
         currentColor: this.#cardColorBuilder.build(gameDb.currentColor),
-        currentDirection: this.#gameDirectionDbToGameDirectionConverter.convert(
+        currentDirection: this.#gameDirectionFromGameDirectionDbBuilder.build(
           gameDb.currentDirection,
         ),
         currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
