@@ -18,7 +18,7 @@
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-monitoring": "workspace:*",
-    "fastify": "4.25.1",
+    "fastify": "4.25.2",
     "glob": "10.3.10",
     "reflect-metadata": "0.2.1",
     "rxjs": "7.8.1"
