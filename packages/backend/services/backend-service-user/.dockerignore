@@ -1,0 +1,7 @@
+.env
+.git
+.gitignore
+.turbo
+lib
+node_modules
+tmp
