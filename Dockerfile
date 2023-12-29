@@ -28,19 +28,19 @@ RUN pnpm run build --filter=backend-service-gateway
 RUN pnpm deploy --filter=backend-service-gateway --prod /prod/backend-service-gateway
 COPY ./.npmrc /prod/backend-service-gateway
 
-FROM backendserviceuserbuild AS backendserviceuser
+FROM base AS backendserviceuser
 COPY --from=backendserviceuserbuild /prod/backend-service-user /prod/backend-service-user
 WORKDIR /prod/backend-service-user
 EXPOSE 3001
 CMD [ "pnpm", "serve" ]
 
-FROM backendservicegamebuild AS backendservicegame
+FROM base AS backendservicegame
 COPY --from=backendservicegamebuild /prod/backend-service-game /prod/backend-service-game
 WORKDIR /prod/backend-service-game
 EXPOSE 3002
 CMD [ "pnpm", "serve" ]
 
-FROM backendservicegatewaybuild AS backendservicegateway
+FROM base AS backendservicegateway
 COPY --from=backendservicegatewaybuild /prod/backend-service-gateway /prod/backend-service-gateway
 WORKDIR /prod/backend-service-gateway
 EXPOSE 3002
