@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import dotenv from 'dotenv';
 
 export abstract class DotEnvLoader<TEnv> {
@@ -17,7 +19,11 @@ export abstract class DotEnvLoader<TEnv> {
     this.#load();
   }
 
-  #load(): TEnv {
+  #fetchEnv(): Record<string, string | undefined> {
+    if (!this._shouldParseEnvFile()) {
+      return process.env;
+    }
+
     const result: dotenv.DotenvConfigOutput = dotenv.config({
       path: this.#path,
     });
@@ -30,12 +36,18 @@ export abstract class DotEnvLoader<TEnv> {
       }
     }
 
-    const env: TEnv = this._parseEnv(result.parsed);
+    return result.parsed;
+  }
+
+  #load(): TEnv {
+    const env: TEnv = this._parseEnv(this.#fetchEnv());
 
     this.#env = env;
 
     return env;
   }
 
-  protected abstract _parseEnv(env: Record<string, string>): TEnv;
+  protected abstract _parseEnv(env: Record<string, string | undefined>): TEnv;
+
+  protected abstract _shouldParseEnvFile(): boolean;
 }
