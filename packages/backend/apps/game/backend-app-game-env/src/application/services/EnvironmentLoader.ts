@@ -67,4 +67,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
         rawEnvironment.ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS,
     };
   }
+
+  protected override _shouldParseEnvFile(): boolean {
+    return process.env['ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED'] !== 'false';
+  }
 }

@@ -10,6 +10,10 @@ class DotEnvLoaderTest extends DotEnvLoader<Record<string, unknown>> {
   protected _parseEnv(env: Record<string, string>): Record<string, unknown> {
     return { FOO: env['ENV_INT_TEST_FOO'] };
   }
+
+  protected override _shouldParseEnvFile(): boolean {
+    return true;
+  }
 }
 
 describe(DotEnvLoader.name, () => {
