@@ -5,9 +5,20 @@ import {
   OptionalFactoryDependency,
   Type,
 } from '@nestjs/common';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import {
+  TypeOrmModuleAsyncOptions,
+  TypeOrmModuleOptions,
+} from '@nestjs/typeorm';
 
 export interface DbModuleOptions {
+  /*
+   * Due to the poor design of the Nest core (https://docs.nestjs.com/faq/common-errors#cannot-resolve-dependency-error)
+   * a single package should be providing dynamic module builders so there's no chance
+   * of having a dependency hell issue. Since this package is designed to be used by other ones,
+   * the current approach is requiring a dynamic module builder, which should be provided by the
+   * bootstrap package.
+   */
+  builder: (options: TypeOrmModuleAsyncOptions) => DynamicModule;
   imports?: (
     | DynamicModule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
