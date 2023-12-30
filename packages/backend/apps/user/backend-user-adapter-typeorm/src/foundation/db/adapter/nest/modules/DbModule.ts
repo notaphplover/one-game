@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import {
-  TypeOrmModule,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
@@ -30,7 +29,7 @@ export class DbModule {
 
     return {
       global: false,
-      imports: [TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions)],
+      imports: [options.builder(typeOrmModuleAsyncOptions)],
       module: DbModule,
     };
   }
