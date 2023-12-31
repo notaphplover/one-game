@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, Link as RouterLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -7,32 +7,41 @@ import {
   Typography,
   Box,
   Container,
-  Grid,
   Menu,
   MenuItem,
   Button,
 } from '@mui/material';
 import { VideogameAssetRounded } from '@mui/icons-material';
 
-const pages = ['ABOUT US', 'REGISTER', 'LOGIN'];
+enum PageName {
+  aboutUs = 'ABOUT US',
+  login = 'LOGIN',
+  register = 'REGISTER',
+}
 
-export const Navbar = () => {
-  const [anchorNav, setAnchorNav] = useState(null);
+const PAGE_NAME_TO_PAGE_SLUG_MAP: { [TPage in PageName]: string } = {
+  [PageName.aboutUs]: '/about',
+  [PageName.login]: '/auth/login',
+  [PageName.register]: '/auth/register',
+};
 
-  const handleOpenNavMenu = (event) => {
+function getSlug(page: PageName): string {
+  return PAGE_NAME_TO_PAGE_SLUG_MAP[page];
+}
+
+export const Navbar = (): React.JSX.Element => {
+  const [anchorNav, setAnchorNav] = useState<(EventTarget & Element) | null>(
+    null,
+  );
+
+  const handleOpenNavMenu: React.MouseEventHandler = (
+    event: React.MouseEvent,
+  ) => {
     setAnchorNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorNav(null);
-  };
-
-  const directTo = (page) => {
-    return page === 'REGISTER'
-      ? '/auth/register'
-      : page === 'LOGIN'
-        ? '/auth/login'
-        : '/about';
   };
 
   return (
@@ -70,17 +79,13 @@ export const Navbar = () => {
                 display: { xs: 'flex', md: 'none' },
               }}
             >
-              {pages.map((page) => (
+              {Object.values(PageName).map((page: PageName) => (
                 <MenuItem
                   className="navbar-menu-item"
                   key={page}
                   onClick={handleCloseNavMenu}
                 >
-                  <Link
-                    className="navbar_link"
-                    component={RouterLink}
-                    to={directTo(page)}
-                  >
+                  <Link className="navbar_link" to={getSlug(page)}>
                     {page}
                   </Link>
                 </MenuItem>
@@ -111,10 +116,10 @@ export const Navbar = () => {
             justifyContent="flex-end"
             sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
           >
-            {pages.map((page) => (
+            {Object.values(PageName).map((page: PageName) => (
               <Button
                 component="a"
-                href={directTo(page)}
+                href={getSlug(page)}
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
