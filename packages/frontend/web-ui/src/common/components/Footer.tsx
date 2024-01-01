@@ -1,6 +1,7 @@
-import { Box, Grid, Slider } from '@mui/material';
+import { Grid } from '@mui/material';
+import React from 'react';
 
-export const Footer = () => {
+export const Footer = (): React.JSX.Element => {
   return (
     <Grid
       container
@@ -10,9 +11,7 @@ export const Footer = () => {
       <Grid
         item
         sx={{
-          width: '80%',
           padding: 4,
-          borderRadius: 2,
         }}
       ></Grid>
     </Grid>

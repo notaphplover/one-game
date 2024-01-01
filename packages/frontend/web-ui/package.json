@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "pnpm run typecheck && vite build",
     "format": "prettier --write ./src/**/*.{css,js,jsx,scss}",
     "preview": "vite preview",
     "test": "jest",
     "test:js": "pnpm run test",
     "test:uncommitted": "pnpm run test --changedSince=HEAD",
     "test:unit:js": "pnpm run test:js",
-    "test:watch": "pnpm run test --watchAll"
+    "test:watch": "pnpm run test --watchAll",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@cornie-js/api-http-client": "workspace:*",
@@ -43,6 +44,7 @@
     "jest-environment-jsdom": "29.7.0",
     "prettier": "3.1.1",
     "sass": "^1.66.1",
+    "typescript": "5.3.3",
     "vite": "^5.0.0"
   }
 }
