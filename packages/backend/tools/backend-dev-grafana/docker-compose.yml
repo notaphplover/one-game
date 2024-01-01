@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:2.3.1
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
