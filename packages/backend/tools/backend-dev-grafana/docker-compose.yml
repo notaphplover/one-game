@@ -37,7 +37,9 @@ services:
   grafana:
     image: grafana/grafana-enterprise:10.2.3
     volumes:
+      - ./config/grafana-dashboards:/etc/dashboards
       - ./config/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./config/grafana-dashboards-provider.yaml:/etc/grafana/provisioning/dashboards/grafana-dashboards-provider.yaml
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
