@@ -20,6 +20,7 @@ export class DbModule {
     };
 
     if (options.imports !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       typeOrmModuleAsyncOptions.imports = options.imports;
     }
 
