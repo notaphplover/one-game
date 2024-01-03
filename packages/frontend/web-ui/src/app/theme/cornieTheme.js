@@ -24,7 +24,17 @@ export const cornieTheme = createTheme({
       defaultProps: {
         style: {
           borderColor: corniePalette.secondary.light,
-          borderStyle: 'dotted',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      defaultProps: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '&:hover ': {
+              borderColor: corniePalette.secondary.light,
+            },
+          },
         },
       },
     },

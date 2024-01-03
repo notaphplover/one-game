@@ -112,16 +112,17 @@ export const Login = () => {
             <form>
               <Grid
                 container
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: 'Orchid',
-                    },
-                  },
-                }}
+                // sx={{
+                //   '& .MuiOutlinedInput-root': {
+                //     '&:hover fieldset': {
+                //       borderColor: 'Orchid',
+                //     },
+                //   },
+                // }}
               >
                 <Grid item xs={12} sx={{ mt: 2 }}>
                   <TextField
+                    className="form-fieldset-border-color"
                     autoFocus
                     aria-label="form-login-email"
                     disabled={isTextFieldDisabled()}
@@ -136,7 +137,12 @@ export const Login = () => {
                     helperText={formValidation.email}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ mt: 2 }}>
+                <Grid
+                  className="form-fieldset-border-color"
+                  item
+                  xs={12}
+                  sx={{ mt: 2 }}
+                >
                   <TextField
                     aria-label="form-login-password"
                     disabled={isTextFieldDisabled()}
