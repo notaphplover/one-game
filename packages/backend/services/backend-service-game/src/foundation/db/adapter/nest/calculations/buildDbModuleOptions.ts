@@ -4,8 +4,12 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export function buildDbModuleOptions(): DbModuleOptions {
   return {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    builder: TypeOrmModule.forRootAsync,
+    builders: {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      feature: TypeOrmModule.forFeature,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      root: TypeOrmModule.forRootAsync,
+    },
     imports: [EnvModule],
     inject: [EnvironmentService],
     useFactory: (
