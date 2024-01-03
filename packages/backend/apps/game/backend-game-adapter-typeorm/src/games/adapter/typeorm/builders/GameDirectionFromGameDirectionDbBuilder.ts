@@ -1,4 +1,4 @@
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { GameDirection } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 
@@ -12,10 +12,10 @@ const GAME_DIRECTION_DB_TO_GAME_DIRECTION_MAP: {
 };
 
 @Injectable()
-export class GameDirectionDbToGameDirectionConverter
-  implements Converter<GameDirectionDb, GameDirection>
+export class GameDirectionFromGameDirectionDbBuilder
+  implements Builder<GameDirection, [GameDirectionDb]>
 {
-  public convert(gameDirectionDb: GameDirectionDb): GameDirection {
+  public build(gameDirectionDb: GameDirectionDb): GameDirection {
     return GAME_DIRECTION_DB_TO_GAME_DIRECTION_MAP[gameDirectionDb];
   }
 }

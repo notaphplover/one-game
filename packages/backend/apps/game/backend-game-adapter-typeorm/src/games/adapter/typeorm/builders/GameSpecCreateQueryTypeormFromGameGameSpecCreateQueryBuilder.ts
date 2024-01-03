@@ -1,4 +1,4 @@
-import { Builder, Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import {
   GameCardSpec,
   GameSpecCreateQuery,
@@ -6,34 +6,34 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
 
-import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from '../converters/GameCardSpecArrayToGameCardSpecArrayDbConverter';
 import { GameSpecDb } from '../models/GameSpecDb';
+import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from './GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
 
 @Injectable()
 export class GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder
   implements Builder<DeepPartial<GameSpecDb>, [GameSpecCreateQuery]>
 {
-  readonly #gameCardSpecArrayToGameCardSpecArrayDbConverter: Converter<
-    GameCardSpec[],
-    string
+  readonly #gameCardSpecArrayDbFromGameCardSpecArrayBuilder: Builder<
+    string,
+    [GameCardSpec[]]
   >;
 
   constructor(
-    @Inject(GameCardSpecArrayToGameCardSpecArrayDbConverter)
-    gameCardSpecArrayToGameCardSpecArrayDbConverter: Converter<
-      GameCardSpec[],
-      string
+    @Inject(GameCardSpecArrayDbFromGameCardSpecArrayBuilder)
+    gameCardSpecArrayDbFromGameCardSpecArrayBuilder: Builder<
+      string,
+      [GameCardSpec[]]
     >,
   ) {
-    this.#gameCardSpecArrayToGameCardSpecArrayDbConverter =
-      gameCardSpecArrayToGameCardSpecArrayDbConverter;
+    this.#gameCardSpecArrayDbFromGameCardSpecArrayBuilder =
+      gameCardSpecArrayDbFromGameCardSpecArrayBuilder;
   }
 
   public build(
     gameSpecCreateQuery: GameSpecCreateQuery,
   ): DeepPartial<GameSpecDb> {
     const gameCardsStringified: string =
-      this.#gameCardSpecArrayToGameCardSpecArrayDbConverter.convert(
+      this.#gameCardSpecArrayDbFromGameCardSpecArrayBuilder.build(
         gameSpecCreateQuery.cards,
       );
 

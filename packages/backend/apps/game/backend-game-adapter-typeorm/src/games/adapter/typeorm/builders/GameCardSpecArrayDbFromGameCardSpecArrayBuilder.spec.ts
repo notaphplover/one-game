@@ -7,12 +7,12 @@ import { GameCardSpecFixtures } from '@cornie-js/backend-game-domain/games/fixtu
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameCardSpecDb } from '../models/GameCardSpecDb';
-import { GameCardSpecArrayToGameCardSpecArrayDbConverter } from './GameCardSpecArrayToGameCardSpecArrayDbConverter';
+import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from './GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
 
-describe(GameCardSpecArrayToGameCardSpecArrayDbConverter.name, () => {
+describe(GameCardSpecArrayDbFromGameCardSpecArrayBuilder.name, () => {
   let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
 
-  let gameCardSpecArrayToGameCardSpecArrayDbConverter: GameCardSpecArrayToGameCardSpecArrayDbConverter;
+  let gameCardSpecArrayToGameCardSpecArrayDbConverter: GameCardSpecArrayDbFromGameCardSpecArrayBuilder;
 
   beforeAll(() => {
     cardDbBuilderMock = {
@@ -20,10 +20,10 @@ describe(GameCardSpecArrayToGameCardSpecArrayDbConverter.name, () => {
     };
 
     gameCardSpecArrayToGameCardSpecArrayDbConverter =
-      new GameCardSpecArrayToGameCardSpecArrayDbConverter(cardDbBuilderMock);
+      new GameCardSpecArrayDbFromGameCardSpecArrayBuilder(cardDbBuilderMock);
   });
 
-  describe('convert()', () => {
+  describe('build()', () => {
     let gameCardSpecFixture: GameCardSpec;
 
     beforeAll(() => {
@@ -39,7 +39,7 @@ describe(GameCardSpecArrayToGameCardSpecArrayDbConverter.name, () => {
 
         cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
 
-        result = gameCardSpecArrayToGameCardSpecArrayDbConverter.convert([
+        result = gameCardSpecArrayToGameCardSpecArrayDbConverter.build([
           gameCardSpecFixture,
         ]);
       });

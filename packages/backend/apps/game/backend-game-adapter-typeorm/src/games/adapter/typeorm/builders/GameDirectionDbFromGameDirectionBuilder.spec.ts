@@ -3,17 +3,17 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { GameDirection } from '@cornie-js/backend-game-domain/games';
 
 import { GameDirectionDb } from '../models/GameDirectionDb';
-import { GameDirectionToGameDirectionDbConverter } from './GameDirectionToGameDirectionDbConverter';
+import { GameDirectionDbFromGameDirectionBuilder } from './GameDirectionDbFromGameDirectionBuilder';
 
-describe(GameDirectionToGameDirectionDbConverter.name, () => {
-  let gameDirectionToGameDirectionDbConverter: GameDirectionToGameDirectionDbConverter;
+describe(GameDirectionDbFromGameDirectionBuilder.name, () => {
+  let gameDirectionDbFromGameDirectionBuilder: GameDirectionDbFromGameDirectionBuilder;
 
   beforeAll(() => {
-    gameDirectionToGameDirectionDbConverter =
-      new GameDirectionToGameDirectionDbConverter();
+    gameDirectionDbFromGameDirectionBuilder =
+      new GameDirectionDbFromGameDirectionBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe.each<[GameDirection, GameDirectionDb]>([
       [GameDirection.antiClockwise, GameDirectionDb.antiClockwise],
       [GameDirection.clockwise, GameDirectionDb.clockwise],
@@ -25,7 +25,7 @@ describe(GameDirectionToGameDirectionDbConverter.name, () => {
 
           beforeAll(() => {
             result =
-              gameDirectionToGameDirectionDbConverter.convert(gameDirection);
+              gameDirectionDbFromGameDirectionBuilder.build(gameDirection);
           });
 
           it('should return a GameDirectionDb', () => {

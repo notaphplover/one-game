@@ -35,8 +35,8 @@ describe(GameDbToGameConverter.name, () => {
   let gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock: jest.Mocked<
     Builder<GameCardSpec[], [string]>
   >;
-  let gameDirectionDbToGameDirectionConverterMock: jest.Mocked<
-    Converter<GameDirectionDb, GameDirection>
+  let gameDirectionFromGameDirectionDbBuilderMock: jest.Mocked<
+    Builder<GameDirection, [GameDirectionDb]>
   >;
   let gameSlotDbToGameSlotConverterMock: jest.Mocked<
     Converter<GameSlotDb, ActiveGameSlot | NonStartedGameSlot>
@@ -54,8 +54,8 @@ describe(GameDbToGameConverter.name, () => {
     gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock = {
       build: jest.fn(),
     };
-    gameDirectionDbToGameDirectionConverterMock = {
-      convert: jest.fn(),
+    gameDirectionFromGameDirectionDbBuilderMock = {
+      build: jest.fn(),
     };
     gameSlotDbToGameSlotConverterMock = {
       convert: jest.fn(),
@@ -65,7 +65,7 @@ describe(GameDbToGameConverter.name, () => {
       cardBuilderMock,
       cardColorBuilderMock,
       gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock,
-      gameDirectionDbToGameDirectionConverterMock,
+      gameDirectionFromGameDirectionDbBuilderMock,
       gameSlotDbToGameSlotConverterMock,
     );
   });
@@ -276,7 +276,7 @@ describe(GameDbToGameConverter.name, () => {
         gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build
           .mockReturnValueOnce(gameCardSpecArrayFixture)
           .mockReturnValueOnce(gameCardSpecArrayFixture);
-        gameDirectionDbToGameDirectionConverterMock.convert.mockReturnValueOnce(
+        gameDirectionFromGameDirectionDbBuilderMock.build.mockReturnValueOnce(
           gameDirectionFixture,
         );
         gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
