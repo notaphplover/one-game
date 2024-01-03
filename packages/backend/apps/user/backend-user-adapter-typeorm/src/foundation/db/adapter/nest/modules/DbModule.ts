@@ -29,7 +29,7 @@ export class DbModule {
 
     return {
       global: false,
-      imports: [options.builder(typeOrmModuleAsyncOptions)],
+      imports: [options.builders.root(typeOrmModuleAsyncOptions)],
       module: DbModule,
     };
   }

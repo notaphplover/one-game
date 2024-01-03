@@ -38,7 +38,7 @@ export class UserDbModule {
       global: false,
       imports: [
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([UserCodeDb, UserDb]),
+        dbModuleOptions.builders.feature([UserCodeDb, UserDb]),
       ],
       module: UserDbModule,
       providers: [
