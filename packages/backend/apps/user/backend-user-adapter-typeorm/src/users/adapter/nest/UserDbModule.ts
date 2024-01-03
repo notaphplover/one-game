@@ -3,7 +3,6 @@ import {
   userPersistenceOutputPortSymbol,
 } from '@cornie-js/backend-user-application/users';
 import { DynamicModule, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DbModuleOptions } from '../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../foundation/db/adapter/nest/modules/DbModule';
@@ -38,7 +37,7 @@ export class UserDbModule {
       global: false,
       imports: [
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([UserCodeDb, UserDb]),
+        dbModuleOptions.builders.feature([UserCodeDb, UserDb]),
       ],
       module: UserDbModule,
       providers: [

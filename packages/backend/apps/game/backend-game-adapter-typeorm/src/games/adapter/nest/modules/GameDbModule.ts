@@ -4,7 +4,6 @@ import {
   gameSpecPersistenceOutputPortSymbol,
 } from '@cornie-js/backend-game-application/games';
 import { DynamicModule, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CardDbModule } from '../../../../cards/adapter/nest/modules/CardDbModule';
 import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/DbModuleOptions';
@@ -54,7 +53,7 @@ export class GameDbModule {
       imports: [
         CardDbModule,
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([GameDb, GameSlotDb, GameSpecDb]),
+        dbModuleOptions.builders.feature([GameDb, GameSlotDb, GameSpecDb]),
       ],
       module: GameDbModule,
       providers: [
