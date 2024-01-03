@@ -54,7 +54,7 @@ export class GameDbModule {
       imports: [
         CardDbModule,
         DbModule.forRootAsync(dbModuleOptions),
-        TypeOrmModule.forFeature([GameDb, GameSlotDb, GameSpecDb]),
+        dbModuleOptions.builders.feature([GameDb, GameSlotDb, GameSpecDb]),
       ],
       module: GameDbModule,
       providers: [
