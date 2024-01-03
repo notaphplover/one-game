@@ -9,6 +9,7 @@ import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
+import { DataSource, DataSourceOptions, EntitySchema } from 'typeorm';
 
 export interface DbModuleOptions {
   /*
@@ -18,7 +19,14 @@ export interface DbModuleOptions {
    * the current approach is requiring a dynamic module builder, which should be provided by the
    * bootstrap package.
    */
-  builder: (options: TypeOrmModuleAsyncOptions) => DynamicModule;
+  builders: {
+    feature: (
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      entities?: (Function | EntitySchema)[],
+      dataSource?: DataSource | DataSourceOptions | string,
+    ) => DynamicModule;
+    root: (options: TypeOrmModuleAsyncOptions) => DynamicModule;
+  };
   imports?: (
     | DynamicModule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
