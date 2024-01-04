@@ -78,37 +78,31 @@ export const Register = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item sx={{ mb: 2 }}>
-          <Typography
-            className="logo-cornie-text"
-            variant="h4"
-            noWrap
-            component="a"
-            href="/"
-          >
-            CORNIE
-          </Typography>
+        <Grid item>
+          <Box className="logo-cornie-position">
+            <Typography
+              className="logo-cornie-text"
+              variant="h4"
+              noWrap
+              component="a"
+              href="/"
+            >
+              CORNIE
+            </Typography>
+          </Box>
         </Grid>
 
         <Grid item xs={3}>
-          <Box className="box-shadow login-form-grid">
-            <Typography variant="h5" sx={{ mb: 1, paddingBottom: 2 }}>
+          <Box className="box-shadow register-form-grid">
+            <Typography variant="h5" className="register-title-text-position">
               {'Create an account'}
             </Typography>
 
             <form>
-              <Grid
-                container
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: 'Orchid',
-                    },
-                  },
-                }}
-              >
-                <Grid item xs={12} sx={{ mt: 2 }}>
+              <Grid container>
+                <Grid item xs={12}>
                   <TextField
+                    className="form-fieldset-border-color"
                     aria-label="form-register-alias"
                     autoFocus
                     disabled={isTextFieldDisabled()}
@@ -123,8 +117,9 @@ export const Register = () => {
                     helperText={formValidation.name}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ mt: 2 }}>
+                <Grid item xs={12}>
                   <TextField
+                    className="form-fieldset-border-color"
                     aria-label="form-register-email"
                     disabled={isTextFieldDisabled()}
                     label="Email"
@@ -138,8 +133,9 @@ export const Register = () => {
                     helperText={formValidation.email}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ mt: 2 }}>
+                <Grid item xs={12}>
                   <TextField
+                    className="form-fieldset-border-color"
                     aria-label="form-register-password"
                     disabled={isTextFieldDisabled()}
                     label="Password"
@@ -169,8 +165,9 @@ export const Register = () => {
                     helperText={formValidation.password}
                   />
                 </Grid>
-                <Grid item xs={12} sx={{ mt: 2 }}>
+                <Grid item xs={12}>
                   <TextField
+                    className="form-fieldset-border-color"
                     aria-label="form-register-confirm-password"
                     disabled={isTextFieldDisabled()}
                     label="Confirm Password"
@@ -207,11 +204,13 @@ export const Register = () => {
                 container
                 display={backendError !== null ? '' : 'none'}
               >
-                <Grid item xs={12} sx={{ mt: 3 }}>
-                  <Alert severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                    {backendError}
-                  </Alert>
+                <Grid item xs={12}>
+                  <Box className="form-register-error">
+                    <Alert severity="error">
+                      <AlertTitle>Error</AlertTitle>
+                      {backendError}
+                    </Alert>
+                  </Box>
                 </Grid>
               </Grid>
 
@@ -220,58 +219,47 @@ export const Register = () => {
                 container
                 display={formStatus === STATUS_REG_BACKEND_OK ? '' : 'none'}
               >
-                <Grid item xs={12} sx={{ mt: 3 }}>
-                  <Alert severity="success">
-                    <AlertTitle>Success</AlertTitle>
-                    {`User created! We sent an email, please, complete the steps.`}
-                  </Alert>
+                <Grid item xs={12}>
+                  <Box className="form-register-success">
+                    <Alert severity="success">
+                      <AlertTitle>Success</AlertTitle>
+                      {`User created! We sent an email, please, complete the steps.`}
+                    </Alert>
+                  </Box>
                 </Grid>
               </Grid>
 
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  mt: 2,
-                  mb: 2,
-                  '& .Mui-disabled': {
-                    backgroundColor: 'Pink',
-                  },
-                }}
-              >
-                <Grid item xs={12} sm={12}>
-                  <Button
-                    aria-label="form-register-button"
-                    disabled={
-                      formStatus === STATUS_REG_BACKEND_OK ? true : false
-                    }
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    onClick={onSubmit}
-                  >
-                    <Typography textAlign="center">Create</Typography>
-                  </Button>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Box className="register-form-button">
+                    <Button
+                      aria-label="form-register-button"
+                      disabled={
+                        formStatus === STATUS_REG_BACKEND_OK ? true : false
+                      }
+                      type="submit"
+                      variant="contained"
+                      fullWidth
+                      onClick={onSubmit}
+                    >
+                      <Typography textAlign="center">Create</Typography>
+                    </Button>
+                  </Box>
                 </Grid>
 
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="end"
-                  sx={{ mt: 4 }}
-                >
-                  <Typography sx={{ mt: 2, mr: 1 }}>
-                    {' '}
-                    Do you have a Cornie's account?{' '}
-                  </Typography>
-                  <Link
-                    sx={{ mt: 2, mr: 1 }}
-                    component={RouterLink}
-                    color="primary"
-                    to="/auth/login"
-                  >
-                    Sign in
-                  </Link>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item xs={6}>
+                    <Typography>{"Do you have a Cornie's account?"}</Typography>
+                  </Grid>
+                  <Grid item md={12}>
+                    <Link
+                      component={RouterLink}
+                      color="primary"
+                      to="/auth/login"
+                    >
+                      Sign in
+                    </Link>
+                  </Grid>
                 </Grid>
               </Grid>
             </form>
