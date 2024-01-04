@@ -181,7 +181,6 @@ export const Login = () => {
                   <Grid item xs={12}>
                     <Box className="login-form-button">
                       <Button
-                        className="button-"
                         type="submit"
                         variant="contained"
                         fullWidth
