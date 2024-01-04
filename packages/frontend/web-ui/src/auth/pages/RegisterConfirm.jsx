@@ -42,21 +42,23 @@ export const RegisterConfirm = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item sx={{ mb: 2 }}>
-          <Typography
-            className="logo-cornie-text"
-            variant="h4"
-            noWrap
-            component="a"
-            href="/"
-          >
-            CORNIE
-          </Typography>
+        <Grid item>
+          <Box className="logo-cornie-position">
+            <Typography
+              className="logo-cornie-text"
+              variant="h4"
+              noWrap
+              component="a"
+              href="/"
+            >
+              CORNIE
+            </Typography>
+          </Box>
         </Grid>
 
         <Grid item xs={3}>
           <Box className="box-shadow register-form-grid">
-            <Typography variant="h5" sx={{ mb: 1, paddingBottom: 2 }}>
+            <Typography variant="h5" className="register-title-text-position">
               {'Confirm your account user'}
             </Typography>
             <Grid container>
@@ -65,11 +67,13 @@ export const RegisterConfirm = () => {
                 container
                 display={getRegisterConfirmOkDisplay()}
               >
-                <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
-                  <Alert severity="success">
-                    <AlertTitle>Success</AlertTitle>
-                    {'Your account have been created succesfully!'}
-                  </Alert>
+                <Grid item xs={12}>
+                  <Box className="form-register-success">
+                    <Alert severity="success">
+                      <AlertTitle>Success</AlertTitle>
+                      {'Your account have been created succesfully!'}
+                    </Alert>
+                  </Box>
                 </Grid>
               </Grid>
 
@@ -78,11 +82,13 @@ export const RegisterConfirm = () => {
                 container
                 display={getRegisterConfirmErrorDisplay()}
               >
-                <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
-                  <Alert severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                    {errorMessage}
-                  </Alert>
+                <Grid item xs={12}>
+                  <Box className="form-register-error">
+                    <Alert severity="error">
+                      <AlertTitle>Error</AlertTitle>
+                      {errorMessage}
+                    </Alert>
+                  </Box>
                 </Grid>
               </Grid>
 
@@ -92,20 +98,17 @@ export const RegisterConfirm = () => {
                 direction="row"
                 justifyContent="end"
               >
-                <Link
-                  sx={{ mt: 2, mr: 1 }}
-                  component={RouterLink}
-                  color="primary"
-                  to="/"
-                >
-                  <Button
-                    type="button"
-                    className="return-cornie-button"
-                    variant="contained"
-                  >
-                    Return to Cornie
-                  </Button>
-                </Link>
+                <Grid item>
+                  <Link component={RouterLink} color="primary" to="/">
+                    <Button
+                      type="button"
+                      className="return-cornie-button"
+                      variant="contained"
+                    >
+                      Return to Cornie
+                    </Button>
+                  </Link>
+                </Grid>
               </Grid>
             </Grid>
           </Box>
