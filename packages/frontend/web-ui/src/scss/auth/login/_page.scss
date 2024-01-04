@@ -16,7 +16,25 @@
   }
 }
 
+.login-title-text-position {
+  padding-bottom: 1.5rem;
+}
+
+.form-login-error {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.login-form-grid .form-fieldset-border-color {
+  margin-top: 1.5rem;
+}
+
 .login-form-grid .form-fieldset-border-color:hover {
   border-radius: 5px;
   box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
+}
+
+.login-form-button {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }

@@ -94,10 +94,15 @@ a.logo-cornie-text {
   letter-spacing: 0.3rem;
   font-size: v.$font-lg;
   color: var(--cg-bkg-primary-dark);
+  margin: 2rem;
 }
 
 a.logo-cornie-text:hover {
   color: var(--cg-text-primary);
+}
+
+.logo-cornie-position {
+  margin-bottom: 1.5rem;
 }
 
 .page-section-container {

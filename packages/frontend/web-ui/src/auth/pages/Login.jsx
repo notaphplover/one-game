@@ -86,41 +86,33 @@ export const Login = () => {
       <Grid
         className="bkg-layout"
         container
-        spacing={0}
         direction="column"
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item sx={{ mb: 2 }}>
-          <Typography
-            className="logo-cornie-text"
-            variant="h4"
-            noWrap
-            component="a"
-            href="/"
-          >
-            CORNIE
-          </Typography>
+        <Grid item>
+          <Box className="logo-cornie-position">
+            <Typography
+              className="logo-cornie-text"
+              variant="h4"
+              noWrap
+              component="a"
+              href="/"
+            >
+              CORNIE
+            </Typography>
+          </Box>
         </Grid>
 
         <Grid item xs={3}>
           <Box className="box-shadow login-form-grid">
-            <Typography variant="h5" sx={{ mb: 1, paddingBottom: 2 }}>
+            <Typography variant="h5" className="login-title-text-position">
               {"Welcome to Cornie's game"}
             </Typography>
 
             <form>
-              <Grid
-                container
-                // sx={{
-                //   '& .MuiOutlinedInput-root': {
-                //     '&:hover fieldset': {
-                //       borderColor: 'Orchid',
-                //     },
-                //   },
-                // }}
-              >
-                <Grid item xs={12} sx={{ mt: 2 }}>
+              <Grid container>
+                <Grid item xs={12}>
                   <TextField
                     className="form-fieldset-border-color"
                     autoFocus
@@ -137,13 +129,9 @@ export const Login = () => {
                     helperText={formValidation.email}
                   />
                 </Grid>
-                <Grid
-                  className="form-fieldset-border-color"
-                  item
-                  xs={12}
-                  sx={{ mt: 2 }}
-                >
+                <Grid item xs={12}>
                   <TextField
+                    className="form-fieldset-border-color"
                     aria-label="form-login-password"
                     disabled={isTextFieldDisabled()}
                     label="Password"
@@ -179,44 +167,46 @@ export const Login = () => {
                   container
                   display={formStatus === STATUS_LOG_BACKEND_KO ? '' : 'none'}
                 >
-                  <Grid item xs={12} sx={{ mt: 3 }}>
-                    <Alert severity="error">
-                      <AlertTitle>Error</AlertTitle>
-                      {backendError}
-                    </Alert>
+                  <Grid item xs={12}>
+                    <Box className="form-login-error">
+                      <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {backendError}
+                      </Alert>
+                    </Box>
                   </Grid>
                 </Grid>
 
-                <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
+                <Grid container>
                   <Grid item xs={12}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      fullWidth
-                      onClick={onSubmit}
-                    >
-                      <Typography textAlign="center">Login</Typography>
-                    </Button>
+                    <Box className="login-form-button">
+                      <Button
+                        className="button-"
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        onClick={onSubmit}
+                      >
+                        <Typography textAlign="center">Login</Typography>
+                      </Button>
+                    </Box>
                   </Grid>
 
-                  <Grid
-                    container
-                    direction="row"
-                    justifyContent="end"
-                    sx={{ mt: 4 }}
-                  >
-                    <Typography sx={{ mt: 2, mr: 1 }}>
-                      {' '}
-                      {`Don't you have a Cornie's account?`}
-                    </Typography>
-                    <Link
-                      sx={{ mt: 2, mr: 1 }}
-                      component={RouterLink}
-                      color="primary"
-                      to="/auth/register"
-                    >
-                      Sign up
-                    </Link>
+                  <Grid container direction="column" alignItems="center">
+                    <Grid item xs={6}>
+                      <Typography>
+                        {"Don't you have a Cornie's account?"}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={12}>
+                      <Link
+                        component={RouterLink}
+                        color="primary"
+                        to="/auth/register"
+                      >
+                        Sign up
+                      </Link>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
