@@ -5,7 +5,7 @@ import { STATUS_GAME_FULFILLED } from '../../home/hooks/useGetGames';
 export const GameList = ({ status, gameList }) => {
   return (
     <Box component="div">
-      {status === STATUS_GAME_FULFILLED ? (
+      {status === STATUS_GAME_FULFILLED && gameList.length > 0 ? (
         gameList.map((game) => <GameListItem key={game.id} game={game} />)
       ) : (
         <Typography

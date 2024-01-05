@@ -1,140 +1,134 @@
 import { beforeAll, describe, it, expect } from '@jest/globals';
-import { GameList } from './GameList';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
+import { STATUS_GAME_FULFILLED } from '../../home/hooks/useGetGames';
+import { GameList } from './GameList';
 
 describe(GameList.name, () => {
-  let newGame;
-  let newTypeGame;
+  let statusFixture;
+  let gameListFixture;
 
   beforeAll(() => {
-    newGame = {
-      id: 'id fixture',
-      name: 'name fixture',
-    };
-    newTypeGame = 'nonStarted';
+    statusFixture = STATUS_GAME_FULFILLED;
+    gameListFixture = [
+      {
+        id: 'id fixture',
+        name: 'name fixture',
+        state: {
+          status: 'nonStarted',
+        },
+      },
+    ];
   });
 
-  it('should return a Join button className to hide component', () => {
-    expect(1).toEqual(1);
+  describe('when called, and exist a game nonStarted and show this game and Share button', () => {
+    let result;
+    let nameGame;
+    let nameButton;
+
+    beforeAll(() => {
+      result = render(
+        <MemoryRouter>
+          <GameList status={statusFixture} gameList={gameListFixture} />
+        </MemoryRouter>,
+      );
+
+      const gameListItemText = result.container.querySelector(
+        '.game-list-item-text',
+      );
+      nameGame = gameListItemText.childNodes[0].nodeValue;
+
+      const gameListItemButton = result.container.querySelector(
+        '.game-list-item-button',
+      );
+      nameButton = gameListItemButton.childNodes[1].data;
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('should return a name of the game', () => {
+      expect(nameGame).toBe('name fixture');
+    });
+    it('should return a Share button', () => {
+      expect(nameButton).toContain('Share');
+    });
   });
 
-  // describe('when called, and exist a game with status nonStarted and Join button is hide', () => {
-  //   let result;
-  //   let nameNewGame;
-  //   let classNameJoinButton;
+  describe('when called, and exist a game active and show this game and Join button', () => {
+    let result;
+    let nameGame;
+    let nameButton;
 
-  //   beforeAll(() => {
-  //     result = render(
-  //       <MemoryRouter>
-  //         <GameList typeGame={newTypeGame} game={newGame} />
-  //       </MemoryRouter>,
-  //     );
+    beforeAll(() => {
+      gameListFixture = [
+        {
+          id: 'id fixture',
+          name: 'name fixture',
+          state: {
+            status: 'active',
+          },
+        },
+      ];
 
-  //     const textNewGame = result.container.querySelector('.game-list-text');
-  //     nameNewGame = textNewGame.firstChild.data;
+      result = render(
+        <MemoryRouter>
+          <GameList status={statusFixture} gameList={gameListFixture} />
+        </MemoryRouter>,
+      );
 
-  //     const activeGameJoinButton = result.container.querySelector(
-  //       '.hide-button-active-game',
-  //     );
-  //     classNameJoinButton = activeGameJoinButton.className;
-  //   });
+      const gameListItemText = result.container.querySelector(
+        '.game-list-item-text',
+      );
+      nameGame = gameListItemText.childNodes[0].nodeValue;
 
-  //   afterAll(() => {
-  //     jest.clearAllMocks();
-  //     jest.resetAllMocks();
-  //   });
+      const gameListItemButton = result.container.querySelector(
+        '.game-list-item-button',
+      );
+      nameButton = gameListItemButton.childNodes[1].data;
+    });
 
-  //   it('should return a name of the game', () => {
-  //     expect(nameNewGame).toBe('name fixture');
-  //   });
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
 
-  //   it('should return a Join button className to hide component', () => {
-  //     expect(classNameJoinButton).toContain('hide-button-active-game');
-  //   });
-  // });
+    it('should return a name of the game', () => {
+      expect(nameGame).toBe('name fixture');
+    });
+    it('should return a Join button', () => {
+      expect(nameButton).toContain('Join');
+    });
+  });
 
-  // describe('when called, and exist a game with status active and Share button is hide', () => {
-  //   let result;
-  //   let nameNewGame;
-  //   let classNameShareButton;
+  describe('when called, and not exist a game', () => {
+    let result;
+    let nameGame;
 
-  //   beforeAll(() => {
-  //     newTypeGame = 'active';
+    beforeAll(() => {
+      gameListFixture = [];
 
-  //     result = render(
-  //       <MemoryRouter>
-  //         <GameList typeGame={newTypeGame} game={newGame} />
-  //       </MemoryRouter>,
-  //     );
+      result = render(
+        <MemoryRouter>
+          <GameList status={statusFixture} gameList={gameListFixture} />
+        </MemoryRouter>,
+      );
 
-  //     const textNewGame = result.container.querySelector('.game-list-text');
-  //     nameNewGame = textNewGame.firstChild.data;
+      const gameListItemText = result.container.querySelector(
+        '.home-auth-text-white',
+      );
+      nameGame = gameListItemText.childNodes[0].nodeValue;
+    });
 
-  //     const pendingGameShareButton = result.container.querySelector(
-  //       '.hide-button-pending-game',
-  //     );
-  //     classNameShareButton = pendingGameShareButton.className;
-  //   });
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
 
-  //   afterAll(() => {
-  //     jest.clearAllMocks();
-  //     jest.resetAllMocks();
-  //   });
-
-  //   it('should return a name of the game', () => {
-  //     expect(nameNewGame).toBe('name fixture');
-  //   });
-
-  //   it('should return a Share button className to hide component', () => {
-  //     expect(classNameShareButton).toContain('hide-button-pending-game');
-  //   });
-  // });
-
-  // describe('when called, and exist a game without status and Join and Share buttons are hide', () => {
-  //   let result;
-  //   let nameNewGame;
-  //   let classNameJoinButton;
-  //   let classNameShareButton;
-
-  //   beforeAll(() => {
-  //     newTypeGame = null;
-
-  //     result = render(
-  //       <MemoryRouter>
-  //         <GameList typeGame={newTypeGame} game={newGame} />
-  //       </MemoryRouter>,
-  //     );
-
-  //     const textNewGame = result.container.querySelector('.game-list-text');
-  //     nameNewGame = textNewGame.firstChild.data;
-
-  //     const pendingGameShareButton = result.container.querySelector(
-  //       '.hide-button-pending-game',
-  //     );
-  //     classNameShareButton = pendingGameShareButton.className;
-
-  //     const activeGameJoinButton = result.container.querySelector(
-  //       '.hide-button-active-game',
-  //     );
-  //     classNameJoinButton = activeGameJoinButton.className;
-  //   });
-
-  //   afterAll(() => {
-  //     jest.clearAllMocks();
-  //     jest.resetAllMocks();
-  //   });
-
-  //   it('should return a name of the game', () => {
-  //     expect(nameNewGame).toBe('name fixture');
-  //   });
-
-  //   it('should return a Share button className to hide component', () => {
-  //     expect(classNameShareButton).toContain('hide-button-pending-game');
-  //   });
-
-  //   it('should return a Join button className to hide component', () => {
-  //     expect(classNameJoinButton).toContain('hide-button-active-game');
-  //   });
-  // });
+    it('should return no games found sentence', () => {
+      expect(nameGame).toEqual('No games found.');
+    });
+  });
 });
