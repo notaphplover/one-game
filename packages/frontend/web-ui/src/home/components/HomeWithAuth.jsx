@@ -35,7 +35,7 @@ export const HomeWithAuth = () => {
 
     if (
       statusNonStarted === STATUS_GAME_FULFILLED &&
-      gameListNonStarted.length >= PAGE_SIZE
+      gameListNonStarted.length === PAGE_SIZE
     ) {
       setPageNumberNonStarted(pageNumberNonStarted + ONE_PAGE);
       setNumPageNonStarted(pageNumberNonStarted);
@@ -57,7 +57,7 @@ export const HomeWithAuth = () => {
     event.preventDefault();
     if (
       statusActive === STATUS_GAME_FULFILLED &&
-      gameListActive.length >= PAGE_SIZE
+      gameListActive.length === PAGE_SIZE
     ) {
       setPageNumberActive(pageNumberActive + ONE_PAGE);
       setNumPageActive(pageNumberActive);
