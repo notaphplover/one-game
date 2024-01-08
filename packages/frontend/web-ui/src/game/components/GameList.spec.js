@@ -116,9 +116,8 @@ describe(GameList.name, () => {
         </MemoryRouter>,
       );
 
-      const gameListItemText = result.container.querySelector(
-        '.home-auth-text-white',
-      );
+      const gameListItemText =
+        result.container.querySelector('.game-list-text');
       nameGame = gameListItemText.childNodes[0].nodeValue;
     });
 

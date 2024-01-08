@@ -39,9 +39,7 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const pendingGameText = result.container.querySelector(
-        '.home-auth-text-white',
-      );
+      const pendingGameText = result.container.querySelector('.game-list-text');
 
       pendingGameTextWhite = pendingGameText.childNodes[0].nodeValue;
     });
@@ -221,9 +219,7 @@ describe(HomeWithAuth.name, () => {
         </MemoryRouter>,
       );
 
-      const pendingGameText = result.container.querySelector(
-        '.home-auth-text-white',
-      );
+      const pendingGameText = result.container.querySelector('.game-list-text');
 
       pendingGameTextWhite = pendingGameText.childNodes[0].nodeValue;
     });

@@ -8,11 +8,7 @@ export const GameList = ({ status, gameList }) => {
       {status === STATUS_GAME_FULFILLED && gameList.length > 0 ? (
         gameList.map((game) => <GameListItem key={game.id} game={game} />)
       ) : (
-        <Typography
-          variant="h5"
-          className="game-list-text-white"
-          component="h5"
-        >
+        <Typography variant="h5" className="game-list-text" component="h5">
           No games found.
         </Typography>
       )}
