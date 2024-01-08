@@ -94,20 +94,11 @@ export const Navbar = (): React.JSX.Element => {
           </Box>
 
           <Typography
+            className="logo-cornie-navbar-text"
             variant="h6"
             noWrap
             component="a"
             href="/"
-            sx={{
-              ml: 3,
-              mr: 5,
-              fontFamily: 'Gochi Hand',
-              fontWeight: 'bold',
-              fontSize: 25,
-              letterSpacing: '.3rem',
-              color: 'primary.white',
-              textDecoration: 'none',
-            }}
           >
             CORNIE
           </Typography>

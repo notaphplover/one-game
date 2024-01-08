@@ -38,7 +38,7 @@
 }
 
 .home-cards-grid .home-cards-grid-element div.cornie-card {
-  box-shadow: 2px 4px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 4px 2px 1px var(--cg-bkg-border-card);
 }
 
 @media (min-width: variables.$sm) {
