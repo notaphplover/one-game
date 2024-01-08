@@ -19,6 +19,7 @@ function getLayoutBoxClassName(params: CornieLayoutParams): string {
 
 interface CornieLayoutParams {
   children: React.JSX.Element[];
+  id?: string;
   withFooter?: boolean;
   withNavBar?: boolean;
 }
@@ -28,7 +29,11 @@ export const CornieLayout = (params: CornieLayoutParams): React.JSX.Element => {
   const footer = params.withFooter ? <Footer /> : undefined;
 
   return (
-    <Box className={getLayoutBoxClassName(params)}>
+    <Box
+      component="div"
+      className={getLayoutBoxClassName(params)}
+      id={params.id}
+    >
       {navbar}
 
       <article>{params.children}</article>
