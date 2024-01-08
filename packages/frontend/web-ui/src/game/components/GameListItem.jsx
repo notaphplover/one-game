@@ -21,7 +21,7 @@ export const GameListItem = ({ game }) => {
             </Button>
           </Link>
         </Box>
-      ) : (
+      ) : game.state.status === 'active' ? (
         <Box component="div">
           <Link component={RouterLink} to="/">
             <Button
@@ -34,6 +34,8 @@ export const GameListItem = ({ game }) => {
             </Button>
           </Link>
         </Box>
+      ) : (
+        <Box component="div"></Box>
       )}
     </Box>
   );

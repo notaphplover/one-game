@@ -106,7 +106,7 @@ export const Login = () => {
 
         <Grid item xs={3}>
           <Box className="box-shadow login-form-grid">
-            <Typography variant="h5" className="login-title-text-position">
+            <Typography variant="h5" className="login-form-title">
               {"Welcome to Cornie's game"}
             </Typography>
 
@@ -114,7 +114,7 @@ export const Login = () => {
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-fieldset-border-color"
+                    className="form-text-fieldset"
                     autoFocus
                     aria-label="form-login-email"
                     disabled={isTextFieldDisabled()}
@@ -131,7 +131,7 @@ export const Login = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-fieldset-border-color"
+                    className="form-text-fieldset"
                     aria-label="form-login-password"
                     disabled={isTextFieldDisabled()}
                     label="Password"

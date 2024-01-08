@@ -64,8 +64,8 @@
   border-radius: 10px;
   font-weight: bold;
   box-shadow:
-    0 4px 8px 0 rgba(68, 2, 131, 0.5),
-    0 6px 20px 0 rgba(68, 2, 131, 0.5);
+    0 4px 8px 0 var(--cg-bkg-secondary-dark),
+    0 6px 20px 0 var(--cg-bkg-secondary-dark);
 }
 
 .home-auth-button-container .home-auth-button-new-game:hover {
@@ -76,10 +76,10 @@
 .home-auth-container-games {
   border: 1px solid var(--cg-bkg-primary-dark);
   border-radius: 10px;
-  box-shadow:
-    0 4px 8px 0 rgba(68, 2, 131, 0.5),
-    0 6px 20px 0 rgba(68, 2, 131, 0.5);
   background-color: var(--cg-bkg-primary-dark);
+  box-shadow:
+    0 4px 8px 0 var(--cg-bkg-secondary-dark),
+    0 6px 20px 0 var(--cg-bkg-secondary-dark);
 }
 
 @media (min-width: variables.$sm) {
@@ -99,8 +99,8 @@
   background-color: var(--cg-bkg-primary-main);
   border: 1px solid var(--cg-bkg-secondary-light);
   box-shadow:
-    0 2px 6px 0 rgba(223, 192, 252, 0.5),
-    0 2px 6px 0 rgba(202, 159, 241, 0.5);
+    0 2px 6px 0 var(--cg-bkg-secondary-main),
+    0 2px 6px 0 var(--cg-bkg-secondary-main);
 }
 
 .home-auth-pagination .home-auth-pagination-button:hover {

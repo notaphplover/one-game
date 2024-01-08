@@ -16,7 +16,7 @@
   }
 }
 
-.register-title-text-position {
+.register-form-title {
   padding-bottom: 1.5rem;
 }
 
@@ -30,11 +30,11 @@
   text-align: left;
 }
 
-.register-form-grid .form-fieldset-border-color {
+.register-form-grid .form-text-fieldset {
   margin-top: 1.5rem;
 }
 
-.register-form-grid .form-fieldset-border-color:hover {
+.register-form-grid .form-text-fieldset:hover {
   border-radius: 5px;
   box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
 }

@@ -58,7 +58,7 @@ export const RegisterConfirm = () => {
 
         <Grid item xs={3}>
           <Box className="box-shadow register-form-grid">
-            <Typography variant="h5" className="register-title-text-position">
+            <Typography variant="h5" className="register-form-title">
               {'Confirm your account user'}
             </Typography>
             <Grid container>

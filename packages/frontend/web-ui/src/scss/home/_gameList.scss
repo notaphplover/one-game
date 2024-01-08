@@ -1,5 +1,12 @@
 @use '../base/variables' as variables;
 
+.game-list-text-white {
+  color: var(--cg-text-primary);
+  padding: 2rem 1rem;
+  text-align: left;
+  font-size: variables.$font-sm;
+}
+
 .game-list-item {
   display: flex;
   justify-content: space-between;
@@ -7,7 +14,7 @@
   background-color: var(--cg-bkg-primary-light);
   border: 2px solid var(--cg-bkg-secondary-light);
   border-radius: 10px;
-  box-shadow: 0 2px 4px 0 rgba(68, 2, 131, 0.5);
+  box-shadow: 0 2px 4px 0 var(--cg-bkg-secondary-dark);
   margin: 0.5rem;
   padding: 1rem;
 }
@@ -24,7 +31,7 @@
   font-weight: bold;
   height: 2.5rem;
   width: 7rem;
-  box-shadow: 0 4px 8px 0 rgba(223, 192, 252, 0.5);
+  box-shadow: 0 4px 8px 0 var(--cg-text-primary);
 }
 
 .game-list-item .game-list-item-button:hover {

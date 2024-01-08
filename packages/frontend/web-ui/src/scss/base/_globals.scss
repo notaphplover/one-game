@@ -11,6 +11,7 @@
   --cg-bkg-secondary-dark: #a359b0; /* theme.palette.secondary.dark */
   --cg-btn-second-txt: gray;
   --cg-btn-third-txt: black;
+  --cg-bkg-border-card: rgba(0, 0, 0, 0.2);
 }
 
 html {
@@ -57,7 +58,7 @@ img {
 }
 
 .box-shadow {
-  box-shadow: 0px 5px 5px rgba(68, 2, 131, 0.5);
+  box-shadow: 0px 5px 5px var(--cg-bkg-secondary-dark);
 }
 
 .bkg-layout {

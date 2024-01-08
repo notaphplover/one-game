@@ -94,7 +94,7 @@ export const Register = () => {
 
         <Grid item xs={3}>
           <Box className="box-shadow register-form-grid">
-            <Typography variant="h5" className="register-title-text-position">
+            <Typography variant="h5" className="register-form-title">
               {'Create an account'}
             </Typography>
 
@@ -102,7 +102,7 @@ export const Register = () => {
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-fieldset-border-color"
+                    className="form-text-fieldset"
                     aria-label="form-register-alias"
                     autoFocus
                     disabled={isTextFieldDisabled()}
@@ -119,7 +119,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-fieldset-border-color"
+                    className="form-text-fieldset"
                     aria-label="form-register-email"
                     disabled={isTextFieldDisabled()}
                     label="Email"
@@ -135,7 +135,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-fieldset-border-color"
+                    className="form-text-fieldset"
                     aria-label="form-register-password"
                     disabled={isTextFieldDisabled()}
                     label="Password"
@@ -167,7 +167,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-fieldset-border-color"
+                    className="form-text-fieldset"
                     aria-label="form-register-confirm-password"
                     disabled={isTextFieldDisabled()}
                     label="Confirm Password"

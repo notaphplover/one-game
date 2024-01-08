@@ -10,7 +10,7 @@ export const GameList = ({ status, gameList }) => {
       ) : (
         <Typography
           variant="h5"
-          className="home-auth-text-white"
+          className="game-list-text-white"
           component="h5"
         >
           No games found.
