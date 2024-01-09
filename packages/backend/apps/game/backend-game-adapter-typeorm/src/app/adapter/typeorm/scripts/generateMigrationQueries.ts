@@ -6,9 +6,8 @@ import { provideTypeOrmDataSource } from './provideTypeOrmDatasource';
 export async function generateMigrationQueries(
   dataSourceOptions: DataSourceOptions,
 ): Promise<void> {
-  const datasource: DataSource = await provideTypeOrmDataSource(
-    dataSourceOptions,
-  );
+  const datasource: DataSource =
+    await provideTypeOrmDataSource(dataSourceOptions);
 
   datasource.setOptions({
     dropSchema: false,

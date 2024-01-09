@@ -115,9 +115,8 @@ describe(PatchUserV1MeRequestParamHandler.name, () => {
             [userMeUpdateQueryV1Fixture],
           );
 
-          result = await patchUserV1MeRequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await patchUserV1MeRequestParamHandler.handle(requestFixture);
         });
 
         afterAll(() => {

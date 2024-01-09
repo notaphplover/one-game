@@ -22,9 +22,8 @@ export class PostUserV1EmailCodeRequestParamHandler
   }
 
   public async handle(request: Request): Promise<[apiModels.UserV1]> {
-    const userV1: apiModels.UserV1 = await this._getUserByRequestOrThrow(
-      request,
-    );
+    const userV1: apiModels.UserV1 =
+      await this._getUserByRequestOrThrow(request);
 
     return [userV1];
   }

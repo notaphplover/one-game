@@ -5,9 +5,8 @@ import { getMaildevServerEmailsToUser } from './getMaildevServerEmailsToUser';
 export async function deleteMaildevServerEmailsToAddress(
   emailAddress: string,
 ): Promise<MaildevMail[]> {
-  const addressEmails: MaildevMail[] = await getMaildevServerEmailsToUser(
-    emailAddress,
-  );
+  const addressEmails: MaildevMail[] =
+    await getMaildevServerEmailsToUser(emailAddress);
 
   await Promise.all(
     addressEmails.map(async (addressEmail: MaildevMail) =>

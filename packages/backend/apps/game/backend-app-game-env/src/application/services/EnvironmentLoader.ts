@@ -39,7 +39,6 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       ONE_JS_GAME_SERVICE_PORT: port(),
       ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST: host(),
       ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT: port(),
-      ONE_JS_GAME_SERVICE_SEED_DUMMY: bool(),
       ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS: json(),
     });
 
@@ -64,9 +63,12 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       port: rawEnvironment.ONE_JS_GAME_SERVICE_PORT,
       pubSubRedisHost: rawEnvironment.ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST,
       pubSubRedisPort: rawEnvironment.ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT,
-      seedDummyData: rawEnvironment.ONE_JS_GAME_SERVICE_SEED_DUMMY,
       typeOrmDatasourceOptions:
         rawEnvironment.ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS,
     };
+  }
+
+  protected override _shouldParseEnvFile(): boolean {
+    return process.env['ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED'] !== 'false';
   }
 }

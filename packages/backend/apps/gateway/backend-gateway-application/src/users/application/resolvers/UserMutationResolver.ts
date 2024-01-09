@@ -3,12 +3,14 @@ import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
+
+import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 
 @Injectable()
 export class UserMutationResolver
-  implements graphqlModels.UserMutationResolvers<Request>
+  implements CanonicalResolver<graphqlModels.UserMutationResolvers<Context>>
 {
   readonly #httpClient: HttpClient;
 
@@ -19,10 +21,10 @@ export class UserMutationResolver
   public async createUser(
     _: unknown,
     args: graphqlModels.UserMutationCreateUserArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.User> {
     const httpResponse: Awaited<ReturnType<HttpClient['createUser']>> =
-      await this.#httpClient.createUser(request.headers, {
+      await this.#httpClient.createUser(context.request.headers, {
         email: args.userCreateInput.email,
         name: args.userCreateInput.name,
         password: args.userCreateInput.password,
@@ -44,14 +46,33 @@ export class UserMutationResolver
     }
   }
 
+  public async deleteUserMe(
+    _: unknown,
+    _args: unknown,
+    context: Context,
+  ): Promise<null> {
+    const httpResponse: Awaited<ReturnType<HttpClient['deleteUserMe']>> =
+      await this.#httpClient.deleteUserMe(context.request.headers);
+
+    switch (httpResponse.statusCode) {
+      case 200:
+        return null;
+      case 401:
+        throw new AppError(
+          AppErrorKind.missingCredentials,
+          httpResponse.body.description,
+        );
+    }
+  }
+
   public async updateUserMe(
     _: unknown,
     args: graphqlModels.UserMutationUpdateUserMeArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.User> {
     const httpResponse: Awaited<ReturnType<HttpClient['updateUserMe']>> =
       await this.#httpClient.updateUserMe(
-        request.headers,
+        context.request.headers,
         this.#buildUserMeUpdateQueryV1(args),
       );
 
@@ -60,12 +81,12 @@ export class UserMutationResolver
         return httpResponse.body;
       case 401:
         throw new AppError(
-          AppErrorKind.invalidCredentials,
+          AppErrorKind.missingCredentials,
           httpResponse.body.description,
         );
       case 403:
         throw new AppError(
-          AppErrorKind.missingCredentials,
+          AppErrorKind.invalidCredentials,
           httpResponse.body.description,
         );
     }

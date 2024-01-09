@@ -26,8 +26,8 @@
     },
     "@cornie-js/api-models#build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts", "!src/models/ApiSchemaId.ts.ts", "!src/models/types.ts"],
-      "outputs": ["lib/**", "src/models/ApiSchemaId.ts.ts", "src/models/types.ts"]
+      "inputs": ["src/**/*.ts", "!src/models/ApiSchemaId.ts", "!src/models/types.ts"],
+      "outputs": ["lib/**", "src/models/ApiSchemaId.ts", "src/models/types.ts"]
     },
     "@cornie-js/api-graphql-models#build": {
       "dependsOn": ["^build"],
@@ -36,7 +36,7 @@
     },
     "@cornie-js/web-ui#build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.{cjs,css,js,jsx,scss}", "vite.config.js"],
+      "inputs": ["src/**/*.{cjs,css,js,jsx,scss,ts,tsx}", "vite.config.js", "tsconfig.json"],
       "outputs": ["src/**/*.{cjs,css,js,jsx}", "vite.config.js"]
     },
     "@cornie-js/web-ui#format": {
@@ -65,6 +65,10 @@
     "serve": {
       "cache": false,
       "dependsOn": ["build"],
+      "persistent": true
+    },
+    "serve:docker": {
+      "cache": false,
       "persistent": true
     },
     "start:e2e": {

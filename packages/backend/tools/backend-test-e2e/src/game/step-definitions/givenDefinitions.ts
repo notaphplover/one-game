@@ -135,6 +135,35 @@ export function givenCreateGameSlotRequestForPlayerWithUserCredentials(
   );
 }
 
+export function givenGetGameSpecRequestForGameWithUserCredentials(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  userAlias?: string,
+): void {
+  const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const authParameter: AuthV1Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+  const gameV1Parameter: GameV1Parameter =
+    getGameOrFail.bind(this)(processedGameAlias);
+
+  const requestParameters: Parameters<HttpClient['getGameGameIdSpec']> = [
+    {
+      authorization: `Bearer ${authParameter.auth.jwt}`,
+    },
+    {
+      gameId: gameV1Parameter.game.id,
+    },
+  ];
+
+  setRequestParameters.bind(this)(
+    'getGameGameIdSpec',
+    processedGameAlias,
+    requestParameters,
+  );
+}
+
 export async function givenGameForPlayersWithUserCredentials(
   this: OneGameApiWorld,
   gameSlotsAmount: number,
@@ -385,6 +414,16 @@ Given<OneGameApiWorld>(
     givenCreateGameSlotRequestForPlayerWithUserCredentials.bind(this)(
       undefined,
       requestAlias,
+      userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a get game spec request for the game with {string} credentials',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenGetGameSpecRequestForGameWithUserCredentials.bind(this)(
+      defaultAlias,
       userAlias,
     );
   },

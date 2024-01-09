@@ -1,17 +1,13 @@
-import { GameOptionsCreateQueryFixtures } from '.';
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { GameCreateQuery } from '../query/GameCreateQuery';
+import { GameSpecCreateQueryFixtures } from './GameSpecCreateQueryFixtures';
 
 export class GameCreateQueryFixtures {
   public static get any(): GameCreateQuery {
     const fixture: GameCreateQuery = {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       name: undefined,
-      spec: {
-        cards: [],
-        gameSlotsAmount: 2,
-        options: GameOptionsCreateQueryFixtures.any,
-      },
+      spec: GameSpecCreateQueryFixtures.any,
     };
 
     return fixture;

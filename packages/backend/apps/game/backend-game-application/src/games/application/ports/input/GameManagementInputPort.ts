@@ -169,6 +169,7 @@ export class GameManagementInputPort {
   #createGameCreationQueryContext(): GameCreateQueryContext {
     return {
       gameOptionsId: this.#uuidProviderOutputPort.generateV4(),
+      gameSpecId: this.#uuidProviderOutputPort.generateV4(),
       uuid: this.#uuidProviderOutputPort.generateV4(),
     };
   }

@@ -4,7 +4,11 @@
  * DO NOT MODIFY IT BY HAND. Instead, modify the source graphql file,
  * and run the generation script to regenerate this file.
  */
-import { GraphQLResolveInfo } from 'graphql';
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+} from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -36,6 +40,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  Void: { input: any; output: any };
 };
 
 export type ActiveGame = {
@@ -166,25 +171,74 @@ export type GameCreateInputOptions = {
 export type GameDirection = 'antiClockwise' | 'clockwise';
 
 export type GameMutation = {
-  createGame: Game;
+  createGame: NonStartedGame;
+  createGameSlot: NonStartedGameSlot;
+  passGameTurn: Maybe<Game>;
+  playGameCards: Maybe<Game>;
 };
 
 export type GameMutationCreateGameArgs = {
   gameCreateInput: GameCreateInput;
 };
 
+export type GameMutationCreateGameSlotArgs = {
+  gameSlotCreateInput: GameSlotCreateInput;
+};
+
+export type GameMutationPassGameTurnArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePassTurnInput: GamePassTurnInput;
+};
+
+export type GameMutationPlayGameCardsArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePlayCardsInput: GamePlayCardsInput;
+};
+
+export type GameOptions = {
+  __typename?: 'GameOptions';
+  chainDraw2Draw2Cards: Scalars['Boolean']['output'];
+  chainDraw2Draw4Cards: Scalars['Boolean']['output'];
+  chainDraw4Draw2Cards: Scalars['Boolean']['output'];
+  chainDraw4Draw4Cards: Scalars['Boolean']['output'];
+  playCardIsMandatory: Scalars['Boolean']['output'];
+  playMultipleSameCards: Scalars['Boolean']['output'];
+  playWildDraw4IfNoOtherAlternative: Scalars['Boolean']['output'];
+};
+
+export type GamePassTurnInput = {
+  slotIndex: Scalars['Int']['input'];
+};
+
+export type GamePlayCardsInput = {
+  cardIndexes: Array<Scalars['Int']['input']>;
+  colorChoice: InputMaybe<CardColor>;
+  slotIndex: Scalars['Int']['input'];
+};
+
 export type GameQuery = {
+  gameById: Maybe<Game>;
   myGames: Array<Game>;
+};
+
+export type GameQueryGameByIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type GameQueryMyGamesArgs = {
   findMyGamesInput: InputMaybe<FindMyGamesInput>;
 };
 
+export type GameSlotCreateInput = {
+  gameId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+};
+
 export type GameSpec = {
   __typename?: 'GameSpec';
-  cardSpecs: Array<Maybe<GameCardSpec>>;
+  cardSpecs: Array<GameCardSpec>;
   gameSlotsAmount: Scalars['Int']['output'];
+  options: GameOptions;
 };
 
 export type NonStartedGame = {
@@ -231,8 +285,12 @@ export type RootMutation = AuthMutation &
     __typename?: 'RootMutation';
     createAuthByCode: Auth;
     createAuthByCredentials: Auth;
-    createGame: Game;
+    createGame: NonStartedGame;
+    createGameSlot: NonStartedGameSlot;
     createUser: User;
+    deleteUserMe: Maybe<Scalars['Void']['output']>;
+    passGameTurn: Maybe<Game>;
+    playGameCards: Maybe<Game>;
     updateUserMe: User;
   };
 
@@ -248,8 +306,22 @@ export type RootMutationCreateGameArgs = {
   gameCreateInput: GameCreateInput;
 };
 
+export type RootMutationCreateGameSlotArgs = {
+  gameSlotCreateInput: GameSlotCreateInput;
+};
+
 export type RootMutationCreateUserArgs = {
   userCreateInput: UserCreateInput;
+};
+
+export type RootMutationPassGameTurnArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePassTurnInput: GamePassTurnInput;
+};
+
+export type RootMutationPlayGameCardsArgs = {
+  gameId: Scalars['ID']['input'];
+  gamePlayCardsInput: GamePlayCardsInput;
 };
 
 export type RootMutationUpdateUserMeArgs = {
@@ -259,10 +331,15 @@ export type RootMutationUpdateUserMeArgs = {
 export type RootQuery = GameQuery &
   UserQuery & {
     __typename?: 'RootQuery';
+    gameById: Maybe<Game>;
     myGames: Array<Game>;
     userById: Maybe<User>;
     userMe: User;
   };
+
+export type RootQueryGameByIdArgs = {
+  id: Scalars['ID']['input'];
+};
 
 export type RootQueryMyGamesArgs = {
   findMyGamesInput: InputMaybe<FindMyGamesInput>;
@@ -295,6 +372,7 @@ export type UserCreateInput = {
 
 export type UserMutation = {
   createUser: User;
+  deleteUserMe: Maybe<Scalars['Void']['output']>;
   updateUserMe: User;
 };
 
@@ -337,7 +415,7 @@ export type WildDraw4CardKind = 'wildDraw4';
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
+export type ResolverTypeWrapper<T> = Partial<T> | Promise<Partial<T>>;
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -458,17 +536,26 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
   ResolversObject<{
-    AuthMutation: Omit<RootMutation, 'createGame'> & {
-      createGame: RefType['Game'];
+    AuthMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
+      passGameTurn: Maybe<RefType['Game']>;
+      playGameCards: Maybe<RefType['Game']>;
     };
-    GameMutation: Omit<RootMutation, 'createGame'> & {
-      createGame: RefType['Game'];
+    GameMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
+      passGameTurn: Maybe<RefType['Game']>;
+      playGameCards: Maybe<RefType['Game']>;
     };
-    GameQuery: Omit<RootQuery, 'myGames'> & { myGames: Array<RefType['Game']> };
-    UserMutation: Omit<RootMutation, 'createGame'> & {
-      createGame: RefType['Game'];
+    GameQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
+      gameById: Maybe<RefType['Game']>;
+      myGames: Array<RefType['Game']>;
     };
-    UserQuery: Omit<RootQuery, 'myGames'> & { myGames: Array<RefType['Game']> };
+    UserMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
+      passGameTurn: Maybe<RefType['Game']>;
+      playGameCards: Maybe<RefType['Game']>;
+    };
+    UserQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
+      gameById: Maybe<RefType['Game']>;
+      myGames: Array<RefType['Game']>;
+    };
   }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -507,9 +594,13 @@ export type ResolversTypes = ResolversObject<{
   GameMutation: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['GameMutation']
   >;
+  GameOptions: ResolverTypeWrapper<GameOptions>;
+  GamePassTurnInput: GamePassTurnInput;
+  GamePlayCardsInput: GamePlayCardsInput;
   GameQuery: ResolverTypeWrapper<
     ResolversInterfaceTypes<ResolversTypes>['GameQuery']
   >;
+  GameSlotCreateInput: GameSlotCreateInput;
   GameSpec: ResolverTypeWrapper<GameSpec>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -535,6 +626,7 @@ export type ResolversTypes = ResolversObject<{
     ResolversInterfaceTypes<ResolversTypes>['UserQuery']
   >;
   UserUpdateInput: UserUpdateInput;
+  Void: ResolverTypeWrapper<Scalars['Void']['output']>;
   WildCard: ResolverTypeWrapper<WildCard>;
   WildCardKind: WildCardKind;
   WildDraw4Card: ResolverTypeWrapper<WildDraw4Card>;
@@ -566,7 +658,11 @@ export type ResolversParentTypes = ResolversObject<{
   GameCreateInput: GameCreateInput;
   GameCreateInputOptions: GameCreateInputOptions;
   GameMutation: ResolversInterfaceTypes<ResolversParentTypes>['GameMutation'];
+  GameOptions: GameOptions;
+  GamePassTurnInput: GamePassTurnInput;
+  GamePlayCardsInput: GamePlayCardsInput;
   GameQuery: ResolversInterfaceTypes<ResolversParentTypes>['GameQuery'];
+  GameSlotCreateInput: GameSlotCreateInput;
   GameSpec: GameSpec;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -584,6 +680,7 @@ export type ResolversParentTypes = ResolversObject<{
   UserMutation: ResolversInterfaceTypes<ResolversParentTypes>['UserMutation'];
   UserQuery: ResolversInterfaceTypes<ResolversParentTypes>['UserQuery'];
   UserUpdateInput: UserUpdateInput;
+  Void: Scalars['Void']['output'];
   WildCard: WildCard;
   WildDraw4Card: WildDraw4Card;
 }>;
@@ -774,11 +871,75 @@ export type GameMutationResolvers<
 > = ResolversObject<{
   __resolveType: TypeResolveFn<'RootMutation', ParentType, ContextType>;
   createGame: Resolver<
-    ResolversTypes['Game'],
+    ResolversTypes['NonStartedGame'],
     ParentType,
     ContextType,
     RequireFields<GameMutationCreateGameArgs, 'gameCreateInput'>
   >;
+  createGameSlot: Resolver<
+    ResolversTypes['NonStartedGameSlot'],
+    ParentType,
+    ContextType,
+    RequireFields<GameMutationCreateGameSlotArgs, 'gameSlotCreateInput'>
+  >;
+  passGameTurn: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<GameMutationPassGameTurnArgs, 'gameId' | 'gamePassTurnInput'>
+  >;
+  playGameCards: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      GameMutationPlayGameCardsArgs,
+      'gameId' | 'gamePlayCardsInput'
+    >
+  >;
+}>;
+
+export type GameOptionsResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['GameOptions'] = ResolversParentTypes['GameOptions'],
+> = ResolversObject<{
+  chainDraw2Draw2Cards: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  chainDraw2Draw4Cards: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  chainDraw4Draw2Cards: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  chainDraw4Draw4Cards: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  playCardIsMandatory: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  playMultipleSameCards: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  playWildDraw4IfNoOtherAlternative: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type GameQueryResolvers<
@@ -787,6 +948,12 @@ export type GameQueryResolvers<
     ResolversParentTypes['GameQuery'] = ResolversParentTypes['GameQuery'],
 > = ResolversObject<{
   __resolveType: TypeResolveFn<'RootQuery', ParentType, ContextType>;
+  gameById: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<GameQueryGameByIdArgs, 'id'>
+  >;
   myGames: Resolver<
     Array<ResolversTypes['Game']>,
     ParentType,
@@ -801,11 +968,12 @@ export type GameSpecResolvers<
     ResolversParentTypes['GameSpec'] = ResolversParentTypes['GameSpec'],
 > = ResolversObject<{
   cardSpecs: Resolver<
-    Array<Maybe<ResolversTypes['GameCardSpec']>>,
+    Array<ResolversTypes['GameCardSpec']>,
     ParentType,
     ContextType
   >;
   gameSlotsAmount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  options: Resolver<ResolversTypes['GameOptions'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -894,16 +1062,42 @@ export type RootMutationResolvers<
     >
   >;
   createGame: Resolver<
-    ResolversTypes['Game'],
+    ResolversTypes['NonStartedGame'],
     ParentType,
     ContextType,
     RequireFields<RootMutationCreateGameArgs, 'gameCreateInput'>
+  >;
+  createGameSlot: Resolver<
+    ResolversTypes['NonStartedGameSlot'],
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationCreateGameSlotArgs, 'gameSlotCreateInput'>
   >;
   createUser: Resolver<
     ResolversTypes['User'],
     ParentType,
     ContextType,
     RequireFields<RootMutationCreateUserArgs, 'userCreateInput'>
+  >;
+  deleteUserMe: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType
+  >;
+  passGameTurn: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<RootMutationPassGameTurnArgs, 'gameId' | 'gamePassTurnInput'>
+  >;
+  playGameCards: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      RootMutationPlayGameCardsArgs,
+      'gameId' | 'gamePlayCardsInput'
+    >
   >;
   updateUserMe: Resolver<
     ResolversTypes['User'],
@@ -918,6 +1112,12 @@ export type RootQueryResolvers<
   ParentType extends
     ResolversParentTypes['RootQuery'] = ResolversParentTypes['RootQuery'],
 > = ResolversObject<{
+  gameById: Resolver<
+    Maybe<ResolversTypes['Game']>,
+    ParentType,
+    ContextType,
+    RequireFields<RootQueryGameByIdArgs, 'id'>
+  >;
   myGames: Resolver<
     Array<ResolversTypes['Game']>,
     ParentType,
@@ -966,6 +1166,11 @@ export type UserMutationResolvers<
     ContextType,
     RequireFields<UserMutationCreateUserArgs, 'userCreateInput'>
   >;
+  deleteUserMe: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType
+  >;
   updateUserMe: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -988,6 +1193,11 @@ export type UserQueryResolvers<
   >;
   userMe: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 }>;
+
+export interface VoidScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void';
+}
 
 export type WildCardResolvers<
   ContextType = any,
@@ -1021,6 +1231,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Game: GameResolvers<ContextType>;
   GameCardSpec: GameCardSpecResolvers<ContextType>;
   GameMutation: GameMutationResolvers<ContextType>;
+  GameOptions: GameOptionsResolvers<ContextType>;
   GameQuery: GameQueryResolvers<ContextType>;
   GameSpec: GameSpecResolvers<ContextType>;
   NonStartedGame: NonStartedGameResolvers<ContextType>;
@@ -1034,6 +1245,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   User: UserResolvers<ContextType>;
   UserMutation: UserMutationResolvers<ContextType>;
   UserQuery: UserQueryResolvers<ContextType>;
+  Void: GraphQLScalarType;
   WildCard: WildCardResolvers<ContextType>;
   WildDraw4Card: WildDraw4CardResolvers<ContextType>;
 }>;

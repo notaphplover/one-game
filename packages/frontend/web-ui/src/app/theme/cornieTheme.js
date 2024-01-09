@@ -21,10 +21,13 @@ export const cornieTheme = createTheme({
   palette: corniePalette,
   components: {
     MuiTextField: {
-      defaultProps: {
-        style: {
-          borderColor: corniePalette.secondary.light,
-          borderStyle: 'dotted',
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root:hover': {
+            '.MuiOutlinedInput-notchedOutline': {
+              borderColor: 'inherit',
+            },
+          },
         },
       },
     },

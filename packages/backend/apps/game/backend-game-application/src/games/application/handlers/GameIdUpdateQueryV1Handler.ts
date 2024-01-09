@@ -4,8 +4,8 @@ import {
   ActiveGame,
   Game,
   GameFindQuery,
-  GameOptions,
-  GameOptionsFindQuery,
+  GameSpec,
+  GameSpecFindQuery,
   GameService,
   GameStatus,
   GameUpdateQuery,
@@ -13,8 +13,8 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
-import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
+import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 
 export abstract class GameIdUpdateQueryV1Handler<
   TQuery extends apiModels.GameIdUpdateQueryV1,
@@ -22,18 +22,18 @@ export abstract class GameIdUpdateQueryV1Handler<
 {
   protected readonly _gamePersistenceOutputPort: GamePersistenceOutputPort;
   protected readonly _gameService: GameService;
-  readonly #gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort;
+  readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
   readonly #gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>;
   readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
 
   constructor(
-    gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort,
+    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     gameService: GameService,
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
   ) {
-    this.#gameOptionsPersistenceOutputPort = gameOptionsPersistenceOutputPort;
+    this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
     this._gamePersistenceOutputPort = gamePersistenceOutputPort;
     this._gameService = gameService;
     this.#gameUpdatedEventHandler = gameUpdatedEventHandler;
@@ -45,16 +45,16 @@ export abstract class GameIdUpdateQueryV1Handler<
     gameIdUpdateQueryV1: TQuery,
     userV1: apiModels.UserV1,
   ): Promise<void> {
-    const [game, gameOptions]: [ActiveGame, GameOptions] =
-      await this.#getActiveGameAndOptionsOrThrow(gameId);
+    const [game, gameSpec]: [ActiveGame, GameSpec] =
+      await this.#getActiveGameAndSpecOrThrow(gameId);
 
     this.#checkRightPlayer(game, gameIdUpdateQueryV1, userV1);
 
-    this._checkUnprocessableOperation(game, gameOptions, gameIdUpdateQueryV1);
+    this._checkUnprocessableOperation(game, gameSpec, gameIdUpdateQueryV1);
 
     const gameUpdateQuery: GameUpdateQuery = this._buildUpdateQuery(
       game,
-      gameOptions,
+      gameSpec,
       gameIdUpdateQueryV1,
     );
 
@@ -86,21 +86,21 @@ export abstract class GameIdUpdateQueryV1Handler<
     }
   }
 
-  async #getActiveGameAndOptionsOrThrow(
+  async #getActiveGameAndSpecOrThrow(
     gameId: string,
-  ): Promise<[ActiveGame, GameOptions]> {
+  ): Promise<[ActiveGame, GameSpec]> {
     const gameFindQuery: GameFindQuery = {
       id: gameId,
     };
 
-    const gameOptionsFindQuery: GameOptionsFindQuery = {
-      gameId,
+    const gameSpecFindQuery: GameSpecFindQuery = {
+      gameIds: [gameId],
     };
 
-    const [game, gameOptions]: [Game | undefined, GameOptions | undefined] =
+    const [game, gameSpec]: [Game | undefined, GameSpec | undefined] =
       await Promise.all([
         this._gamePersistenceOutputPort.findOne(gameFindQuery),
-        this.#gameOptionsPersistenceOutputPort.findOne(gameOptionsFindQuery),
+        this.#gameSpecPersistenceOutputPort.findOne(gameSpecFindQuery),
       ]);
 
     if (game === undefined) {
@@ -110,10 +110,10 @@ export abstract class GameIdUpdateQueryV1Handler<
       );
     }
 
-    if (gameOptions === undefined) {
+    if (gameSpec === undefined) {
       throw new AppError(
         AppErrorKind.unknown,
-        `Expecting game "${gameId}" to have options, none found`,
+        `Expecting game "${gameId}" to have spec, none found`,
       );
     }
 
@@ -124,7 +124,7 @@ export abstract class GameIdUpdateQueryV1Handler<
       );
     }
 
-    return [game, gameOptions];
+    return [game, gameSpec];
   }
 
   #isActiveGame(game: Game): game is ActiveGame {
@@ -133,13 +133,13 @@ export abstract class GameIdUpdateQueryV1Handler<
 
   protected abstract _buildUpdateQuery(
     game: ActiveGame,
-    gameOptions: GameOptions,
+    gameSpec: GameSpec,
     gameIdUpdateQueryV1: TQuery,
   ): GameUpdateQuery;
 
   protected abstract _checkUnprocessableOperation(
     game: ActiveGame,
-    gameOptions: GameOptions,
+    gameSpec: GameSpec,
     gameIdUpdateQueryV1: TQuery,
   ): void;
 }

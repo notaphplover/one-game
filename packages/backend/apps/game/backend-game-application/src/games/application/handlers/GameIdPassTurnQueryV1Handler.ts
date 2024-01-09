@@ -2,7 +2,7 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import {
   ActiveGame,
-  GameOptions,
+  GameSpec,
   GameService,
   GameUpdateQuery,
   PlayerCanPassTurnSpec,
@@ -12,13 +12,13 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
-  GameOptionsPersistenceOutputPort,
-  gameOptionsPersistenceOutputPortSymbol,
-} from '../ports/output/GameOptionsPersistenceOutputPort';
-import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from '../ports/output/GamePersistenceOutputPort';
+import {
+  GameSpecPersistenceOutputPort,
+  gameSpecPersistenceOutputPortSymbol,
+} from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
 import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
@@ -27,8 +27,8 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
   readonly #playerCanPassTurnSpec: PlayerCanPassTurnSpec;
 
   constructor(
-    @Inject(gameOptionsPersistenceOutputPortSymbol)
-    gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort,
+    @Inject(gameSpecPersistenceOutputPortSymbol)
+    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
@@ -41,7 +41,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     playerCanPassTurnSpec: PlayerCanPassTurnSpec,
   ) {
     super(
-      gameOptionsPersistenceOutputPort,
+      gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameService,
       gameUpdatedEventHandler,
@@ -50,19 +50,22 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
   }
 
-  protected override _buildUpdateQuery(game: ActiveGame): GameUpdateQuery {
-    return this._gameService.buildPassTurnGameUpdateQuery(game);
+  protected override _buildUpdateQuery(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+  ): GameUpdateQuery {
+    return this._gameService.buildPassTurnGameUpdateQuery(game, gameSpec);
   }
 
   protected override _checkUnprocessableOperation(
     game: ActiveGame,
-    gameOptions: GameOptions,
+    gameSpec: GameSpec,
     gameIdPassTurnQueryV1: apiModels.GameIdPassTurnQueryV1,
   ): void {
     if (
       !this.#playerCanPassTurnSpec.isSatisfiedBy(
         game,
-        gameOptions,
+        gameSpec.options,
         gameIdPassTurnQueryV1.slotIndex,
       )
     ) {

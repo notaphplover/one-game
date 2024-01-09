@@ -1,232 +1,148 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { Request } from '@cornie-js/backend-http';
 import { GraphQLResolveInfo } from 'graphql';
 
+import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 import { RootQueryResolver } from './RootQueryResolver';
 
+function buildTestTuples(): [
+  string,
+  graphqlModels.ResolverFn<
+    unknown,
+    graphqlModels.RootQuery,
+    Context,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    any
+  >,
+  jest.Mock,
+][] {
+  const gameQueryResolverMock: jest.Mocked<
+    CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>
+  > = {
+    gameById: jest.fn(),
+    myGames: jest.fn(),
+  } as Partial<
+    jest.Mocked<CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>>
+  > as jest.Mocked<
+    CanonicalResolver<graphqlModels.GameQueryResolvers<Context>>
+  >;
+
+  const userQueryResolverMock: jest.Mocked<
+    CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>
+  > = {
+    userById: jest.fn(),
+    userMe: jest.fn(),
+  } as Partial<
+    jest.Mocked<CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>>
+  > as jest.Mocked<
+    CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>
+  >;
+
+  const rootQueryResolver: RootQueryResolver = new RootQueryResolver(
+    gameQueryResolverMock,
+    userQueryResolverMock,
+  );
+
+  return [
+    [
+      'gameById',
+      rootQueryResolver.gameById.bind(rootQueryResolver),
+      gameQueryResolverMock.gameById as jest.Mock,
+    ],
+    [
+      'myGames',
+      rootQueryResolver.myGames.bind(rootQueryResolver),
+      gameQueryResolverMock.myGames as jest.Mock,
+    ],
+    [
+      'userById',
+      rootQueryResolver.userById.bind(rootQueryResolver),
+      userQueryResolverMock.userById as jest.Mock,
+    ],
+    [
+      'userMe',
+      rootQueryResolver.userMe.bind(rootQueryResolver),
+      userQueryResolverMock.userMe as jest.Mock,
+    ],
+  ];
+}
+
 describe(RootQueryResolver.name, () => {
-  let myGamesMock: jest.Mock<
-    graphqlModels.ResolverFn<
-      Array<graphqlModels.ResolversTypes['Game']>,
-      unknown,
-      Request,
-      Partial<graphqlModels.RootQueryMyGamesArgs>
-    >
-  >;
+  describe.each<
+    [
+      string,
+      graphqlModels.ResolverFn<
+        unknown,
+        graphqlModels.RootQuery,
+        Context,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any
+      >,
+      jest.Mock,
+    ]
+  >(buildTestTuples())(
+    '.%s',
+    (
+      _: string,
+      resolver: graphqlModels.ResolverFn<
+        unknown,
+        graphqlModels.RootQuery,
+        Context,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any
+      >,
+      resolverMock: jest.Mock,
+    ) => {
+      describe('when called', () => {
+        let parentFixture: graphqlModels.RootQuery;
+        let argsFixture: unknown;
+        let contextFixture: Context;
+        let infoFixture: GraphQLResolveInfo;
 
-  let gameQueryResolverMock: jest.Mocked<
-    graphqlModels.GameQueryResolvers<Request>
-  >;
+        let resolverResultFixture: unknown;
 
-  let userByIdMock: jest.Mock<
-    graphqlModels.ResolverFn<
-      graphqlModels.Maybe<graphqlModels.ResolversTypes['User']>,
-      unknown,
-      Request,
-      graphqlModels.RequireFields<graphqlModels.UserQueryUserByIdArgs, 'id'>
-    >
-  >;
+        let result: unknown;
 
-  let userMeMock: jest.Mock<
-    graphqlModels.ResolverFn<
-      graphqlModels.Maybe<graphqlModels.ResolversTypes['User']>,
-      unknown,
-      Request,
-      Record<string, unknown>
-    >
-  >;
+        beforeAll(async () => {
+          parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
+          argsFixture = Symbol();
+          contextFixture = Symbol() as unknown as Context;
+          infoFixture = Symbol() as unknown as GraphQLResolveInfo;
 
-  let userQueryResolverMock: jest.Mocked<
-    graphqlModels.UserQueryResolvers<Request>
-  >;
+          resolverResultFixture = Symbol();
 
-  let rootQueryResolver: RootQueryResolver;
+          resolverMock.mockReturnValueOnce(
+            Promise.resolve(resolverResultFixture),
+          );
 
-  beforeAll(() => {
-    myGamesMock = jest.fn();
+          result = await resolver(
+            parentFixture,
+            argsFixture,
+            contextFixture,
+            infoFixture,
+          );
+        });
 
-    gameQueryResolverMock = {
-      myGames: myGamesMock,
-    } as Partial<
-      jest.Mocked<graphqlModels.GameQueryResolvers<Request>>
-    > as jest.Mocked<graphqlModels.GameQueryResolvers<Request>>;
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
-    userByIdMock = jest.fn();
-    userMeMock = jest.fn();
+        it('should call resolverMock()', () => {
+          expect(resolverMock).toHaveBeenCalledTimes(1);
+          expect(resolverMock).toHaveBeenCalledWith(
+            parentFixture,
+            argsFixture,
+            contextFixture,
+            infoFixture,
+          );
+        });
 
-    userQueryResolverMock = {
-      userById: userByIdMock,
-      userMe: userMeMock,
-    } as Partial<
-      jest.Mocked<graphqlModels.UserQueryResolvers<Request>>
-    > as jest.Mocked<graphqlModels.UserQueryResolvers<Request>>;
-
-    rootQueryResolver = new RootQueryResolver(
-      gameQueryResolverMock,
-      userQueryResolverMock,
-    );
-  });
-
-  describe('.myGames', () => {
-    let gameFixture: graphqlModels.Game;
-
-    beforeAll(() => {
-      gameFixture = Symbol() as unknown as graphqlModels.Game;
-    });
-
-    describe('when called', () => {
-      let parentFixture: graphqlModels.RootQuery;
-      let argsFixture: Partial<graphqlModels.RootQueryMyGamesArgs>;
-      let requestFixture: Request;
-      let infoFixture: GraphQLResolveInfo;
-
-      let result: unknown;
-
-      beforeAll(async () => {
-        parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
-        argsFixture = {
-          findMyGamesInput: {
-            page: 1,
-            pageSize: null,
-            status: 'active',
-          },
-        };
-        requestFixture = Symbol() as unknown as Request;
-        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
-
-        myGamesMock.mockReturnValueOnce(Promise.resolve([gameFixture]));
-
-        result = await rootQueryResolver.myGames(
-          parentFixture,
-          argsFixture,
-          requestFixture,
-          infoFixture,
-        );
+        it('should return result', () => {
+          expect(result).toBe(resolverResultFixture);
+        });
       });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gameQueryResolver.myGames()', () => {
-        expect(myGamesMock).toHaveBeenCalledTimes(1);
-        expect(myGamesMock).toHaveBeenCalledWith(
-          parentFixture,
-          argsFixture,
-          requestFixture,
-          infoFixture,
-        );
-      });
-
-      it('should return Game', () => {
-        expect(result).toStrictEqual([gameFixture]);
-      });
-    });
-  });
-
-  describe('.userById', () => {
-    let userFixture: graphqlModels.User;
-
-    beforeAll(() => {
-      userFixture = Symbol() as unknown as graphqlModels.User;
-    });
-
-    describe('when called', () => {
-      let parentFixture: graphqlModels.RootQuery;
-      let argsFixture: graphqlModels.UserQueryUserByIdArgs;
-      let requestFixture: Request;
-      let infoFixture: GraphQLResolveInfo;
-
-      let result: unknown;
-
-      beforeAll(async () => {
-        parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
-        argsFixture = {
-          id: 'id fixture',
-        };
-        requestFixture = Symbol() as unknown as Request;
-        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
-
-        userByIdMock.mockReturnValueOnce(Promise.resolve(userFixture));
-
-        result = await rootQueryResolver.userById(
-          parentFixture,
-          argsFixture,
-          requestFixture,
-          infoFixture,
-        );
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call userQueryResolver.userById()', () => {
-        expect(userByIdMock).toHaveBeenCalledTimes(1);
-        expect(userByIdMock).toHaveBeenCalledWith(
-          parentFixture,
-          argsFixture,
-          requestFixture,
-          infoFixture,
-        );
-      });
-
-      it('should return UserV1', () => {
-        expect(result).toBe(userFixture);
-      });
-    });
-  });
-
-  describe('.userMe', () => {
-    let userFixture: graphqlModels.User;
-
-    beforeAll(() => {
-      userFixture = Symbol() as unknown as graphqlModels.User;
-    });
-
-    describe('when called', () => {
-      let parentFixture: graphqlModels.RootQuery;
-      let argsFixture: Record<string, unknown>;
-      let requestFixture: Request;
-      let infoFixture: GraphQLResolveInfo;
-
-      let result: unknown;
-
-      beforeAll(async () => {
-        parentFixture = Symbol() as unknown as graphqlModels.RootQuery;
-        argsFixture = {};
-        requestFixture = Symbol() as unknown as Request;
-        infoFixture = Symbol() as unknown as GraphQLResolveInfo;
-
-        userMeMock.mockReturnValueOnce(Promise.resolve(userFixture));
-
-        result = await rootQueryResolver.userMe(
-          parentFixture,
-          argsFixture,
-          requestFixture,
-          infoFixture,
-        );
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call userQueryResolver.userMe()', () => {
-        expect(userMeMock).toHaveBeenCalledTimes(1);
-        expect(userMeMock).toHaveBeenCalledWith(
-          parentFixture,
-          argsFixture,
-          requestFixture,
-          infoFixture,
-        );
-      });
-
-      it('should return UserV1', () => {
-        expect(result).toBe(userFixture);
-      });
-    });
-  });
+    },
+  );
 });

@@ -1,9 +1,5 @@
 {
   "author": "Multiple authors",
-  "bin": {
-    "dev-game-db-start": "./bin/start-services.mjs",
-    "dev-game-db-stop": "./bin/stop-services.mjs"
-  },
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
@@ -15,5 +11,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {
+    "close:e2e": "docker compose down",
+    "postserve": "docker compose down",
+    "serve": "docker compose up",
+    "start:e2e": "docker compose up -d"
   }
 }

@@ -1,6 +1,14 @@
 #import Game from './Game.graphql'
 #import GameCreateInput from './GameCreateInput.graphql'
+#import GameSlotCreateInput from './GameSlotCreateInput.graphql'
+#import GamePassTurnInput from './GamePassTurnInput.graphql'
+#import GamePlayCardsInput from './GamePlayCardsInput.graphql'
+#import NonStartedGame from './NonStartedGame.graphql'
+#import NonStartedGameSlot from './NonStartedGameSlot.graphql'
 
 interface GameMutation {
-  createGame(gameCreateInput: GameCreateInput!): Game!
+  createGame(gameCreateInput: GameCreateInput!): NonStartedGame!
+  createGameSlot(gameSlotCreateInput: GameSlotCreateInput!): NonStartedGameSlot!
+  passGameTurn(gameId: ID!, gamePassTurnInput: GamePassTurnInput!): Game
+  playGameCards(gameId: ID!, gamePlayCardsInput: GamePlayCardsInput!): Game
 }

@@ -168,9 +168,8 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
             [gameIdUpdateQueryV1Fixture],
           );
 
-          result = await patchGameGameIdV1RequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await patchGameGameIdV1RequestParamHandler.handle(requestFixture);
         });
 
         afterAll(() => {

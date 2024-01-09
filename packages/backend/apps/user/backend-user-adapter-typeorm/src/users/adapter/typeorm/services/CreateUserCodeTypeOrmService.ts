@@ -1,5 +1,5 @@
-import { Converter } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
 import {
   UserCode,
   UserCodeCreateQuery,
@@ -9,12 +9,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
-import { UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter } from '../converters/UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter';
-import { UserCodeDbToUserCodeConverter } from '../converters/UserCodeDbToUserCodeConverter';
+import { UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder } from '../builders/UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder';
+import { UserCodeFromUserDbCodeBuilder } from '../builders/UserCodeFromUserCodeDbBuilder';
 import { UserCodeDb } from '../models/UserCodeDb';
 
 @Injectable()
-export class CreateUserCodeTypeOrmService extends InsertTypeOrmPostgresService<
+export class CreateUserCodeTypeOrmService extends InsertTypeOrmPostgresServiceV2<
   UserCode,
   UserCodeDb,
   UserCodeCreateQuery
@@ -22,18 +22,18 @@ export class CreateUserCodeTypeOrmService extends InsertTypeOrmPostgresService<
   constructor(
     @InjectRepository(UserCodeDb)
     repository: Repository<UserCodeDb>,
-    @Inject(UserCodeDbToUserCodeConverter)
-    userCodeDbToUserCodeConverter: Converter<UserCodeDb, UserCode>,
-    @Inject(UserCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter)
-    userCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter: Converter<
-      UserCodeCreateQuery,
-      QueryDeepPartialEntity<UserCodeDb>
+    @Inject(UserCodeFromUserDbCodeBuilder)
+    userCodeFromUserDbCodeBuilder: Builder<UserCode, [UserCodeDb]>,
+    @Inject(UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder)
+    userCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder: Builder<
+      QueryDeepPartialEntity<UserCodeDb>,
+      [UserCodeCreateQuery]
     >,
   ) {
     super(
       repository,
-      userCodeDbToUserCodeConverter,
-      userCodeCreateQueryToUserCodeCreateQueryTypeOrmConverter,
+      userCodeFromUserDbCodeBuilder,
+      userCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder,
     );
   }
 }

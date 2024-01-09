@@ -9,7 +9,7 @@ import { CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   CurrentPlayerCanPlayCardsSpec,
-  GameOptions,
+  GameSpec,
   GameService,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
@@ -19,13 +19,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CardColorFromCardColorV1Builder } from '../../../cards/application/builders/CardColorFromCardColorV1Builder';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
-  GameOptionsPersistenceOutputPort,
-  gameOptionsPersistenceOutputPortSymbol,
-} from '../ports/output/GameOptionsPersistenceOutputPort';
-import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from '../ports/output/GamePersistenceOutputPort';
+import {
+  GameSpecPersistenceOutputPort,
+  gameSpecPersistenceOutputPortSymbol,
+} from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
 
 @Injectable()
@@ -37,8 +37,8 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
   readonly #currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec;
 
   constructor(
-    @Inject(gameOptionsPersistenceOutputPortSymbol)
-    gameOptionsPersistenceOutputPort: GameOptionsPersistenceOutputPort,
+    @Inject(gameSpecPersistenceOutputPortSymbol)
+    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
@@ -55,7 +55,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec,
   ) {
     super(
-      gameOptionsPersistenceOutputPort,
+      gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameService,
       gameUpdatedEventHandler,
@@ -68,7 +68,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
 
   protected override _buildUpdateQuery(
     game: ActiveGame,
-    _gameOptions: GameOptions,
+    _gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
   ): GameUpdateQuery {
     return this._gameService.buildPlayCardsGameUpdateQuery(
@@ -81,13 +81,13 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
 
   protected override _checkUnprocessableOperation(
     game: ActiveGame,
-    gameOptions: GameOptions,
+    gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
   ): void {
     if (
       !this.#currentPlayerCanPlayCardsSpec.isSatisfiedBy(
         game,
-        gameOptions,
+        gameSpec.options,
         gameIdUpdateQueryV1.cardIndexes,
       )
     ) {

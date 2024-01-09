@@ -1,5 +1,12 @@
 import { Profile } from 'pprof-format';
 
+export interface ProfileExport {
+  profile: Profile;
+  sampleRate?: number;
+  startedAt: Date;
+  stoppedAt: Date;
+}
+
 export interface ProfileExporter {
-  export(profile: Profile): Promise<void>;
+  export(profileExport: ProfileExport): Promise<void>;
 }

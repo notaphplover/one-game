@@ -32,10 +32,6 @@ export function thenCreateGameResponseShouldContainValidGame(
     body: {
       id: () => undefined,
       name: gameCreateQueryV1.name as string,
-      spec: {
-        cardSpecs: () => undefined,
-        gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
-      },
     },
     headers: {},
     statusCode: HttpStatus.OK,
@@ -92,11 +88,35 @@ export function thenGetGameResponseShouldContainStartedGame(
   expectObjectContaining<ResponseType>(response, {
     body: {
       id: gameV1Parameter.game.id,
-      spec: {
-        cardSpecs: () => undefined,
-        gameSlotsAmount: gameV1Parameter.gameCreateQuery.gameSlotsAmount,
-      },
       state: () => undefined,
+    },
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
+export function thenGetGameSpecResponseShouldContainGameSpec(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  const alias: string = requestAlias ?? defaultAlias;
+
+  const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
+    getRequestParametersOrFail(this, 'createGame', alias);
+
+  type ResponseType = Awaited<ReturnType<HttpClient['getGameGameIdSpec']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'getGameGameIdSpec',
+    alias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    body: {
+      cardSpecs: () => undefined,
+      gameSlotsAmount: gameCreateQueryV1.gameSlotsAmount,
+      options: gameCreateQueryV1.options,
     },
     headers: {},
     statusCode: HttpStatus.OK,
@@ -142,6 +162,13 @@ Then<OneGameApiWorld>(
   'the get game response should contain a started game',
   function (this: OneGameApiWorld): void {
     thenGetGameResponseShouldContainStartedGame.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the get game response should contain the game spec',
+  function (this: OneGameApiWorld): void {
+    thenGetGameSpecResponseShouldContainGameSpec.bind(this)();
   },
 );
 

@@ -9,6 +9,7 @@ import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
 import { ActiveGame } from '../entities/ActiveGame';
 import { NonStartedGame } from '../entities/NonStartedGame';
+import { GameSpecFixtures } from '../fixtures';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameDrawMutationFixtures } from '../fixtures/GameDrawMutationFixtures';
 import { GameInitialDrawsMutationFixtures } from '../fixtures/GameInitialDrawsMutationFixtures';
@@ -19,6 +20,7 @@ import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameDirection } from '../valueObjects/GameDirection';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
 import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
+import { GameSpec } from '../valueObjects/GameSpec';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { GameDrawService } from './GameDrawService';
 import { GameService } from './GameService';
@@ -58,6 +60,7 @@ describe(GameService.name, () => {
   describe('.buildPassTurnGameUpdateQuery', () => {
     describe('having a Game with two players currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 0', () => {
       let gameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
@@ -72,6 +75,9 @@ describe(GameService.name, () => {
             drawCount: 0,
           },
         };
+
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
@@ -85,7 +91,10 @@ describe(GameService.name, () => {
           );
           isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
 
-          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+          result = gameService.buildPassTurnGameUpdateQuery(
+            gameFixture,
+            gameSpecFixture,
+          );
         });
 
         afterAll(() => {
@@ -152,10 +161,13 @@ describe(GameService.name, () => {
 
     describe('having a Game with two players and enough cards and currentTurnCardsPlayed false and currentPlayingSlotIndex 1 and drawCount 2', () => {
       let gameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
           ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
 
         gameFixture = {
           ...baseFixture,
@@ -180,7 +192,10 @@ describe(GameService.name, () => {
             gameDrawMutationFixture,
           );
 
-          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+          result = gameService.buildPassTurnGameUpdateQuery(
+            gameFixture,
+            gameSpecFixture,
+          );
         });
 
         afterAll(() => {
@@ -247,10 +262,13 @@ describe(GameService.name, () => {
 
     describe('having a Game with two players and enough cards and currentTurnCardsPlayed true and currentPlayingSlotIndex 0', () => {
       let gameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
 
       beforeAll(() => {
         const baseFixture: ActiveGame =
           ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
 
         gameFixture = {
           ...baseFixture,
@@ -268,7 +286,10 @@ describe(GameService.name, () => {
         beforeAll(() => {
           isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
 
-          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+          result = gameService.buildPassTurnGameUpdateQuery(
+            gameFixture,
+            gameSpecFixture,
+          );
         });
 
         afterAll(() => {
@@ -306,7 +327,10 @@ describe(GameService.name, () => {
         beforeAll(() => {
           isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
-          result = gameService.buildPassTurnGameUpdateQuery(gameFixture);
+          result = gameService.buildPassTurnGameUpdateQuery(
+            gameFixture,
+            gameSpecFixture,
+          );
         });
 
         afterAll(() => {
@@ -659,9 +683,11 @@ describe(GameService.name, () => {
   describe('.buildStartGameUpdateQuery', () => {
     describe('having a Game', () => {
       let gameFixture: NonStartedGame;
+      let gameSpecFixture: GameSpec;
 
       beforeAll(() => {
-        gameFixture = NonStartedGameFixtures.withGameSlotsAmountOneAndSlotsOne;
+        gameFixture = NonStartedGameFixtures.withGameSlotsOne;
+        gameSpecFixture = GameSpecFixtures.any;
       });
 
       describe('when called', () => {
@@ -676,7 +702,10 @@ describe(GameService.name, () => {
             gameInitialDrawsMutationFixture,
           );
 
-          result = gameService.buildStartGameUpdateQuery(gameFixture);
+          result = gameService.buildStartGameUpdateQuery(
+            gameFixture,
+            gameSpecFixture,
+          );
         });
 
         afterAll(() => {
@@ -689,7 +718,7 @@ describe(GameService.name, () => {
           ).toHaveBeenCalledTimes(1);
           expect(
             gameDrawServiceMock.calculateInitialCardsDrawMutation,
-          ).toHaveBeenCalledWith(gameFixture.spec);
+          ).toHaveBeenCalledWith(gameSpecFixture);
         });
 
         it('should return a GameUpdateQuery', () => {

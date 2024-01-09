@@ -20,6 +20,7 @@ import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtu
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
 import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
+import { UserCodeManagementInputPort } from './UserCodeManagementInputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
@@ -29,6 +30,7 @@ describe(UserManagementInputPort.name, () => {
   let updateUserUseCaseHandlerMock: jest.Mocked<
     Handler<[UserUpdateQuery], User>
   >;
+  let userCodeManagementInputPortMock: jest.Mocked<UserCodeManagementInputPort>;
   let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
     BuilderAsync<UserCreateQuery, [apiModels.UserCreateQueryV1, UuidContext]>
   >;
@@ -48,6 +50,11 @@ describe(UserManagementInputPort.name, () => {
     updateUserUseCaseHandlerMock = {
       handle: jest.fn(),
     };
+    userCodeManagementInputPortMock = {
+      deleteFromUser: jest.fn(),
+    } as Partial<
+      jest.Mocked<UserCodeManagementInputPort>
+    > as jest.Mocked<UserCodeManagementInputPort>;
     userCreateQueryFromUserCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -66,6 +73,7 @@ describe(UserManagementInputPort.name, () => {
     userManagementInputPort = new UserManagementInputPort(
       createUserUseCaseHandlerMock,
       updateUserUseCaseHandlerMock,
+      userCodeManagementInputPortMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
       userUpdateQueryFromUserMeUpdateQueryV1BuilderMock,
@@ -154,10 +162,21 @@ describe(UserManagementInputPort.name, () => {
       idFixture = '83073aec-b81b-4107-97f9-baa46de5dd40';
     });
 
-    describe('when called', () => {
+    describe('when called, and userPersistenceOutputPort.findOne() returns User', () => {
+      let userFixture: User;
+
       let result: unknown;
 
       beforeAll(async () => {
+        userFixture = UserFixtures.any;
+
+        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          userFixture,
+        );
+
+        userCodeManagementInputPortMock.deleteFromUser.mockResolvedValueOnce(
+          undefined,
+        );
         userPersistenceOutputPortMock.delete.mockResolvedValueOnce(undefined);
 
         result = await userManagementInputPort.delete(idFixture);
@@ -165,6 +184,26 @@ describe(UserManagementInputPort.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should call userPersistenceOutputPort.findOne()', () => {
+        const expectedUserFindQuery: UserFindQuery = {
+          id: idFixture,
+        };
+
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedUserFindQuery,
+        );
+      });
+
+      it('should call userCodePersistenceOutputPort.deleteFromUser()', () => {
+        expect(
+          userCodeManagementInputPortMock.deleteFromUser,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          userCodeManagementInputPortMock.deleteFromUser,
+        ).toHaveBeenCalledWith(userFixture);
       });
 
       it('should call userPersistenceOutputPort.delete()', () => {

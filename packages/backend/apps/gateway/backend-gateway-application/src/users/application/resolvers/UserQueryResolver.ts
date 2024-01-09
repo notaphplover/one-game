@@ -3,12 +3,14 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient } from '@cornie-js/api-http-client';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
+
+import { CanonicalResolver } from '../../../foundation/graphql/application/models/CanonicalResolver';
+import { Context } from '../../../foundation/graphql/application/models/Context';
 
 @Injectable()
 export class UserQueryResolver
-  implements graphqlModels.UserQueryResolvers<Request>
+  implements CanonicalResolver<graphqlModels.UserQueryResolvers<Context>>
 {
   readonly #httpClient: HttpClient;
 
@@ -19,10 +21,10 @@ export class UserQueryResolver
   public async userById(
     _: unknown,
     args: graphqlModels.UserQueryUserByIdArgs,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.User | null> {
     const httpResponse: Awaited<ReturnType<HttpClient['getUser']>> =
-      await this.#httpClient.getUser(request.headers, {
+      await this.#httpClient.getUser(context.request.headers, {
         userId: args.id,
       });
 
@@ -42,10 +44,10 @@ export class UserQueryResolver
   public async userMe(
     _: unknown,
     _args: unknown,
-    request: Request,
+    context: Context,
   ): Promise<graphqlModels.User> {
     const httpResponse: Awaited<ReturnType<HttpClient['getUserMe']>> =
-      await this.#httpClient.getUserMe(request.headers);
+      await this.#httpClient.getUserMe(context.request.headers);
 
     switch (httpResponse.statusCode) {
       case 200:

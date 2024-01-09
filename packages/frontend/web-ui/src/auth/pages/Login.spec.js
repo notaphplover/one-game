@@ -10,12 +10,17 @@ import {
   useLoginForm,
 } from '../hooks/useLoginForm';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
+import { useSelector } from 'react-redux';
 
 jest.mock('../hooks/useLoginForm');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: jest.fn(),
+}));
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useSelector: jest.fn(),
 }));
 
 describe(Login.name, () => {
@@ -28,6 +33,8 @@ describe(Login.name, () => {
   let handleMouseDownPasswordMock;
 
   let navigateMock;
+  let tokenFixture;
+  let errorMessageFixture;
 
   beforeAll(() => {
     formFieldsFixture = {
@@ -42,6 +49,9 @@ describe(Login.name, () => {
     handleMouseDownPasswordMock = jest.fn();
 
     navigateMock = jest.fn().mockResolvedValue(undefined);
+
+    tokenFixture = null;
+    errorMessageFixture = null;
   });
 
   describe('when called, on an initial state', () => {
@@ -63,6 +73,11 @@ describe(Login.name, () => {
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
+
+      useSelector.mockImplementation(() => ({
+        token: tokenFixture,
+        errorMessage: errorMessageFixture,
+      }));
 
       render(
         <MemoryRouter>
@@ -122,6 +137,11 @@ describe(Login.name, () => {
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
+      useSelector.mockImplementation(() => ({
+        token: tokenFixture,
+        errorMessage: errorMessageFixture,
+      }));
+
       render(
         <MemoryRouter>
           <Login />
@@ -175,6 +195,11 @@ describe(Login.name, () => {
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
+      useSelector.mockImplementation(() => ({
+        token: tokenFixture,
+        errorMessage: errorMessageFixture,
+      }));
+
       render(
         <MemoryRouter>
           <Login />
@@ -217,6 +242,13 @@ describe(Login.name, () => {
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
+      tokenFixture = 'jwt token fixture';
+
+      useSelector.mockImplementation(() => ({
+        token: tokenFixture,
+        errorMessage: errorMessageFixture,
+      }));
+
       render(
         <MemoryRouter>
           <Login />
@@ -231,6 +263,10 @@ describe(Login.name, () => {
 
     it('should navigate to the next page', () => {
       expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
+    });
+
+    it('should save token in Local Storage', () => {
+      expect(window.localStorage.getItem('token')).toBe(tokenFixture);
     });
   });
 });

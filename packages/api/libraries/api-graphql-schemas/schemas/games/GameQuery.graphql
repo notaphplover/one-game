@@ -2,5 +2,6 @@
 #import FindMyGamesInput from './FindMyGamesInput.graphql'
 
 interface GameQuery {
+  gameById(id: ID!): Game
   myGames(findMyGamesInput: FindMyGamesInput): [Game!]!
 }

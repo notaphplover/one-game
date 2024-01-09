@@ -8,7 +8,6 @@ import {
   FinishedGameSlot,
   Game,
   GameDirection,
-  GameSpec,
   GameStatus,
   NonStartedGame,
   NonStartedGameSlot,
@@ -20,7 +19,6 @@ import { CardV1FromCardBuilder } from '../../../cards/application/builders/CardV
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from './ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { FinishedGameSlotV1FromFinishedGameSlotBuilder } from './FinishedGameSlotV1FromFinishedGameSlotBuilder';
 import { GameDirectionV1FromGameDirectionBuilder } from './GameDirectionV1FromGameDirectionBuilder';
-import { GameSpecV1FromGameSpecBuilder } from './GameSpecV1FromGameSpecBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from './NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 
 @Injectable()
@@ -43,10 +41,6 @@ export class GameV1FromGameBuilder
   readonly #gameDirectionV1FromGameDirectionBuilder: Builder<
     apiModels.GameDirectionV1,
     [GameDirection]
-  >;
-  readonly #gameSpecV1FromGameSpecBuilder: Builder<
-    apiModels.GameSpecV1,
-    [GameSpec]
   >;
 
   readonly #nonStartedGameSlotV1FromNonStartedGameSlotBuilder: Builder<
@@ -77,8 +71,6 @@ export class GameV1FromGameBuilder
       apiModels.GameDirectionV1,
       [GameDirection]
     >,
-    @Inject(GameSpecV1FromGameSpecBuilder)
-    gameSpecV1FromGameSpecBuilder: Builder<apiModels.GameSpecV1, [GameSpec]>,
     @Inject(NonStartedGameSlotV1FromNonStartedGameSlotBuilder)
     nonStartedGameSlotV1FromNonStartedGameSlotBuilder: Builder<
       apiModels.NonStartedGameSlotV1,
@@ -93,7 +85,6 @@ export class GameV1FromGameBuilder
       finishedGameSlotV1FromFinishedGameSlotBuilder;
     this.#gameDirectionV1FromGameDirectionBuilder =
       gameDirectionV1FromGameDirectionBuilder;
-    this.#gameSpecV1FromGameSpecBuilder = gameSpecV1FromGameSpecBuilder;
     this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder =
       nonStartedGameSlotV1FromNonStartedGameSlotBuilder;
   }
@@ -117,7 +108,6 @@ export class GameV1FromGameBuilder
   #buildActiveGameV1(game: ActiveGame): apiModels.ActiveGameV1 {
     const gameV1: apiModels.ActiveGameV1 = {
       id: game.id,
-      spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
       state: {
         currentCard: this.#cardV1FromCardBuilder.build(game.state.currentCard),
         currentColor: this.#cardColorV1FromCardColorBuilder.build(
@@ -146,7 +136,6 @@ export class GameV1FromGameBuilder
   #buildFinishedGameV1(game: FinishedGame): apiModels.FinishedGameV1 {
     const gameV1: apiModels.FinishedGameV1 = {
       id: game.id,
-      spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
       state: {
         slots: game.state.slots.map((gameSlot: FinishedGameSlot) =>
           this.#finishedGameSlotV1FromFinishedGameSlotBuilder.build(gameSlot),
@@ -165,7 +154,6 @@ export class GameV1FromGameBuilder
   #buildNonStartedGameV1(game: NonStartedGame): apiModels.NonStartedGameV1 {
     const gameV1: apiModels.NonStartedGameV1 = {
       id: game.id,
-      spec: this.#gameSpecV1FromGameSpecBuilder.build(game.spec),
       state: {
         slots: game.state.slots.map((gameSlot: NonStartedGameSlot) =>
           this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build(

@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import {
-  TypeOrmModule,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
@@ -21,6 +20,7 @@ export class DbModule {
     };
 
     if (options.imports !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       typeOrmModuleAsyncOptions.imports = options.imports;
     }
 
@@ -30,7 +30,7 @@ export class DbModule {
 
     return {
       global: false,
-      imports: [TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions)],
+      imports: [options.builders.root(typeOrmModuleAsyncOptions)],
       module: DbModule,
     };
   }

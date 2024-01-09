@@ -34,9 +34,8 @@ describe(GetUserV1UserIdRequestParamHandler.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
-          result = await getUserV1UserIdRequestParamHandler.handle(
-            requestFixture,
-          );
+          result =
+            await getUserV1UserIdRequestParamHandler.handle(requestFixture);
         });
 
         it('should return a string', () => {

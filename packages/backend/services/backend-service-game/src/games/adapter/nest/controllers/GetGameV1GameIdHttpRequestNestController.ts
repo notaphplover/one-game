@@ -1,7 +1,7 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   GetGameV1GameIdHttpRequestController,
-  GetGameV1GameIdRequestParamHandler,
+  GetGamesV1GameIdRequestParamHandler,
 } from '@cornie-js/backend-game-application/games';
 import {
   FastifyReplyFromResponseBuilder,
@@ -41,7 +41,7 @@ export class GetGameV1GameIdHttpRequestNestController extends HttpNestFastifyCon
     );
   }
 
-  @Get(`:${GetGameV1GameIdRequestParamHandler.getGameV1GameIdRequestParam}`)
+  @Get(`:${GetGamesV1GameIdRequestParamHandler.getGameV1GameIdRequestParam}`)
   public override async handle(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,

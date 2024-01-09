@@ -30,4 +30,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
         rawEnvironment.ONE_JS_E2E_API_BACKEND_SERVICE_SECRET,
     };
   }
+
+  protected override _shouldParseEnvFile(): boolean {
+    return true;
+  }
 }

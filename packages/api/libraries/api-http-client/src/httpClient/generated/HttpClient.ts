@@ -122,7 +122,7 @@ export class HttpClient {
       body,
     );
   }
-  public async getGameGameIdOptions(
+  public async getGameGameIdSpec(
     headers: {
       [key: string]: string;
     },
@@ -131,17 +131,42 @@ export class HttpClient {
       gameId: string;
     },
   ): Promise<
-    | Response<Record<string, string>, apiModels.GameOptionsV1, 200>
+    | Response<Record<string, string>, apiModels.GameSpecV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
     return this.#axiosHttpClient.callEndpoint(
       'GET',
-      '/v1/games/{gameId}/options',
+      '/v1/games/{gameId}/specs',
       headers,
       undefined,
       url,
+      undefined,
+    );
+  }
+  public async getGamesSpecs(
+    headers: {
+      [key: string]: string;
+    },
+    query: {
+      [key: string]: string | string[];
+      gameId?: string | string[];
+      page?: string | string[];
+      pageSize?: string | string[];
+      sort?: string | string[];
+    },
+  ): Promise<
+    | Response<Record<string, string>, apiModels.GameSpecArrayV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v1/games/specs',
+      headers,
+      query,
+      undefined,
       undefined,
     );
   }
@@ -156,6 +181,7 @@ export class HttpClient {
     body: apiModels.GameIdSlotCreateQueryV1,
   ): Promise<
     | Response<Record<string, string>, apiModels.GameSlotV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>

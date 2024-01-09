@@ -31,4 +31,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       port: rawEnvironment.ONE_JS_GATEWAY_SERVICE_PORT,
     };
   }
+
+  protected override _shouldParseEnvFile(): boolean {
+    return process.env['ONE_JS_GATEWAY_SERVICE_DOT_ENV_ENABLED'] !== 'false';
+  }
 }

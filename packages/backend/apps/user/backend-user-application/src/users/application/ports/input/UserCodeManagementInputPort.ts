@@ -53,8 +53,6 @@ export class UserCodeManagementInputPort {
   }
 
   public async deleteFromUser(user: User): Promise<void> {
-    this.#validateUserCanCreateCodeOrThrow(user);
-
     const userCodeFindQuery: UserCodeFindQuery = {
       userId: user.id,
     };

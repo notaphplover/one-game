@@ -18,6 +18,5 @@ export interface Environment {
   jwtPublicKey: string;
   mailConfig: MailConfig;
   port: number;
-  seedDummyData: boolean;
   typeOrmDatasourceOptions: Record<string, unknown>;
 }

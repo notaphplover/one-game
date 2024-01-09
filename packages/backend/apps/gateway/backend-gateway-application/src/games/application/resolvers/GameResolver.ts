@@ -1,6 +1,7 @@
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { Request } from '@cornie-js/backend-http';
 import { Injectable } from '@nestjs/common';
+
+import { Context } from '../../../foundation/graphql/application/models/Context';
 
 type GameResolvedType = ReturnType<GameResolver['__resolveType']>;
 
@@ -13,7 +14,7 @@ const GAME_STATUS_TO_GAME_RESOLVED_TYPE: {
 };
 
 @Injectable()
-export class GameResolver implements graphqlModels.GameResolvers<Request> {
+export class GameResolver implements graphqlModels.GameResolvers<Context> {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   public __resolveType(
     game: graphqlModels.Game,

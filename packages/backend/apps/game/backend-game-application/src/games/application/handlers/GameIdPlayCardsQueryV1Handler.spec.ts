@@ -12,8 +12,8 @@ import {
   ActiveGame,
   CurrentPlayerCanPlayCardsSpec,
   GameFindQuery,
-  GameOptions,
-  GameOptionsFindQuery,
+  GameSpec,
+  GameSpecFindQuery,
   GameService,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
@@ -21,19 +21,19 @@ import {
 import {
   ActiveGameFixtures,
   ActiveGameSlotFixtures,
-  GameOptionsFixtures,
+  GameSpecFixtures,
   GameUpdateQueryFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdPlayCardsQueryV1Fixtures } from '../fixtures/GameIdPlayCardsQueryV1Fixtures';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
-import { GameOptionsPersistenceOutputPort } from '../ports/output/GameOptionsPersistenceOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
+import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdPlayCardsQueryV1Handler } from './GameIdPlayCardsQueryV1Handler';
 
 describe(GameIdPlayCardsQueryV1Handler.name, () => {
-  let gameOptionsPersistenceOutputPortMock: jest.Mocked<GameOptionsPersistenceOutputPort>;
+  let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
   let gameUpdatedEventHandlerMock: jest.Mocked<
@@ -48,11 +48,11 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
   let gameIdPlayCardsQueryV1Handler: GameIdPlayCardsQueryV1Handler;
 
   beforeAll(() => {
-    gameOptionsPersistenceOutputPortMock = {
+    gameSpecPersistenceOutputPortMock = {
       findOne: jest.fn(),
     } as Partial<
-      jest.Mocked<GameOptionsPersistenceOutputPort>
-    > as jest.Mocked<GameOptionsPersistenceOutputPort>;
+      jest.Mocked<GameSpecPersistenceOutputPort>
+    > as jest.Mocked<GameSpecPersistenceOutputPort>;
     gamePersistenceOutputPortMock = {
       findOne: jest.fn(),
       update: jest.fn(),
@@ -78,7 +78,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     > as jest.Mocked<CurrentPlayerCanPlayCardsSpec>;
 
     gameIdPlayCardsQueryV1Handler = new GameIdPlayCardsQueryV1Handler(
-      gameOptionsPersistenceOutputPortMock,
+      gameSpecPersistenceOutputPortMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
       gameUpdatedEventHandlerMock,
@@ -109,8 +109,8 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       beforeAll(async () => {
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          GameOptionsFixtures.any,
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          GameSpecFixtures.any,
         );
 
         try {
@@ -139,17 +139,17 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
         };
 
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
       });
 
       it('should throw an Error', () => {
@@ -165,14 +165,14 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gameOptionsPersistenceOutputPort.findOne() returns undefined', () => {
+    describe('when called, and gameSpecPersistenceOutputPort.findOne() returns undefined', () => {
       let result: unknown;
 
       beforeAll(async () => {
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           ActiveGameFixtures.any,
         );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           undefined,
         );
 
@@ -202,23 +202,23 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
         };
 
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
       });
 
       it('should throw an Error', () => {
         const expectedErrorProperties: Partial<AppError> = {
           kind: AppErrorKind.unknown,
-          message: `Expecting game "${gameIdFixture}" to have options, none found`,
+          message: `Expecting game "${gameIdFixture}" to have spec, none found`,
         };
 
         expect(result).toBeInstanceOf(AppError);
@@ -241,9 +241,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       userV1Fixture = UserV1Fixtures.any;
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameOptionsPersistenceOutputPort.findOne() returns GameOptions and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
       let activeGameFixture: ActiveGame;
-      let gameOptionsFixture: GameOptions;
+      let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
@@ -265,14 +265,14 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
             ],
           },
         };
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameSpecFixture = GameSpecFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
         );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          gameOptionsFixture,
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
         );
 
         gameServiceMock.buildPlayCardsGameUpdateQuery.mockReturnValueOnce(
@@ -307,17 +307,17 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
         };
 
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
       });
 
       it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
@@ -344,9 +344,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameOptionsPersistenceOutputPort.findOne() returns GameOptions and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPlayCardsSpec.isSatisfiedBy returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPlayCardsSpec.isSatisfiedBy returns false', () => {
       let activeGameFixture: ActiveGame;
-      let gameOptionsFixture: GameOptions;
+      let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
@@ -368,14 +368,14 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
             ],
           },
         };
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameSpecFixture = GameSpecFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
         );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          gameOptionsFixture,
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
         );
 
         gameServiceMock.buildPlayCardsGameUpdateQuery.mockReturnValueOnce(
@@ -414,17 +414,17 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
         };
 
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
       });
 
       it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
@@ -446,7 +446,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           currentPlayerCanPlayCardsSpecMock.isSatisfiedBy,
         ).toHaveBeenCalledWith(
           activeGameFixture,
-          gameOptionsFixture,
+          gameSpecFixture.options,
           gameIdPlayCardsQueryV1Fixture.cardIndexes,
         );
       });
@@ -464,9 +464,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameOptionsPersistenceOutputPort.findOne() returns GameOptions and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPlayCardsSpec.isSatisfiedBy returns true', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPlayCardsSpec.isSatisfiedBy returns true', () => {
       let activeGameFixture: ActiveGame;
-      let gameOptionsFixture: GameOptions;
+      let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
@@ -488,14 +488,14 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
             ],
           },
         };
-        gameOptionsFixture = GameOptionsFixtures.any;
+        gameSpecFixture = GameSpecFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
         );
-        gameOptionsPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          gameOptionsFixture,
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
         );
 
         gameServiceMock.buildPlayCardsGameUpdateQuery.mockReturnValueOnce(
@@ -532,17 +532,17 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameOptionsPersistenceOutputPort.findOne()', () => {
-        const expectedGameOptionsFindQuery: GameOptionsFindQuery = {
-          gameId: gameIdFixture,
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
         };
 
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expectedGameOptionsFindQuery);
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
       });
 
       it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
@@ -564,7 +564,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           currentPlayerCanPlayCardsSpecMock.isSatisfiedBy,
         ).toHaveBeenCalledWith(
           activeGameFixture,
-          gameOptionsFixture,
+          gameSpecFixture.options,
           gameIdPlayCardsQueryV1Fixture.cardIndexes,
         );
       });

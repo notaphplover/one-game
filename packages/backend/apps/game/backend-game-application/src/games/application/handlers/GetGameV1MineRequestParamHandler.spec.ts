@@ -1,6 +1,6 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Left } from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameStatus,
@@ -8,7 +8,12 @@ import {
 import {
   AuthKind,
   AuthRequestContextHolder,
+  NumericRequestQueryParseOptions,
   Request,
+  RequestQueryParseFailure,
+  RequestQueryParseFailureKind,
+  RequestService,
+  UserAuth,
   requestContextProperty,
 } from '@cornie-js/backend-http';
 
@@ -16,280 +21,299 @@ import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV
 import { GetGameV1MineRequestParamHandler } from './GetGameV1MineRequestParamHandler';
 
 describe(GetGameV1MineRequestParamHandler.name, () => {
+  let requestServiceMock: jest.Mocked<RequestService>;
+
   let getGameV1MineRequestParamHandler: GetGameV1MineRequestParamHandler;
 
   beforeAll(() => {
-    getGameV1MineRequestParamHandler = new GetGameV1MineRequestParamHandler();
+    requestServiceMock = {
+      composeErrorMessages: jest.fn(),
+      tryParseIntegerQuery: jest.fn(),
+      tryParseStringQuery: jest.fn(),
+    } as Partial<jest.Mocked<RequestService>> as jest.Mocked<RequestService>;
+
+    getGameV1MineRequestParamHandler = new GetGameV1MineRequestParamHandler(
+      requestServiceMock,
+    );
   });
 
   describe('.handle', () => {
-    describe.each<
-      [string, Request & AuthRequestContextHolder, Partial<AppError>]
-    >([
-      [
-        'with page below minimum value',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.pageQueryParam]: '0',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
+    let requestFixture: Request & AuthRequestContextHolder;
+
+    beforeAll(() => {
+      requestFixture = {
+        headers: {},
+        query: {
+          [GetGameV1MineRequestParamHandler.pageQueryParam]: '0',
         },
-        {
+        [requestContextProperty]: {
+          auth: {
+            kind: AuthKind.user,
+            user: UserV1Fixtures.any,
+          },
+        },
+        urlParameters: {},
+      };
+    });
+
+    describe('when called, and requestService returns a failure', () => {
+      let errorFixture: string;
+      let failureFixture: Left<RequestQueryParseFailure>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        errorFixture = 'error-fixture';
+        failureFixture = {
+          isRight: false,
+          value: {
+            errors: [],
+            kind: RequestQueryParseFailureKind.invalidValue,
+          },
+        };
+
+        requestServiceMock.tryParseIntegerQuery
+          .mockReturnValueOnce(failureFixture)
+          .mockReturnValueOnce(failureFixture);
+        requestServiceMock.tryParseStringQuery.mockReturnValueOnce(
+          failureFixture,
+        );
+
+        requestServiceMock.composeErrorMessages.mockReturnValueOnce([
+          errorFixture,
+        ]);
+
+        try {
+          await getGameV1MineRequestParamHandler.handle(requestFixture);
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call requestService.tryParseIntegerQuery()', () => {
+        const firstCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+        };
+        const secondCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+        };
+
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
+          2,
+        );
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
+          1,
+          requestFixture,
+          expect.objectContaining(firstCallExpectedProperties),
+        );
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
+          2,
+          requestFixture,
+          expect.objectContaining(secondCallExpectedProperties),
+        );
+      });
+
+      it('should call requestService.tryParseStringQuery()', () => {
+        expect(requestServiceMock.tryParseStringQuery).toHaveBeenCalledTimes(1);
+        expect(requestServiceMock.tryParseStringQuery).toHaveBeenCalledWith(
+          requestFixture,
+          expect.any(Object),
+        );
+      });
+
+      it('should call requestService.composeErrorMessages()', () => {
+        expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledWith([
+          [failureFixture, GetGameV1MineRequestParamHandler.pageQueryParam],
+          [failureFixture, GetGameV1MineRequestParamHandler.pageSizeQueryParam],
+          [failureFixture, GetGameV1MineRequestParamHandler.statusQueryParam],
+        ]);
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
           kind: AppErrorKind.contractViolation,
-          message: `Expecting "${GetGameV1MineRequestParamHandler.pageQueryParam}" query to be at least 1`,
-        },
-      ],
-      [
-        'with page size below minimum value',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.pageSizeQueryParam]: '0',
+          message: expect.stringContaining(errorFixture) as unknown as string,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and requestService returns query values', () => {
+      let pageFixture: number;
+      let pageSizeFixture: number;
+      let gameStatusFixture: string;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        pageFixture = 2;
+        pageSizeFixture = 10;
+        gameStatusFixture = 'active';
+
+        requestServiceMock.tryParseIntegerQuery
+          .mockReturnValueOnce({
+            isRight: true,
+            value: pageFixture,
+          })
+          .mockReturnValueOnce({ isRight: true, value: pageSizeFixture });
+        requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
+          isRight: true,
+          value: gameStatusFixture,
+        });
+
+        result = await getGameV1MineRequestParamHandler.handle(requestFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call requestService.tryParseIntegerQuery()', () => {
+        const firstCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+        };
+        const secondCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+        };
+
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
+          2,
+        );
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
+          1,
+          requestFixture,
+          expect.objectContaining(firstCallExpectedProperties),
+        );
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
+          2,
+          requestFixture,
+          expect.objectContaining(secondCallExpectedProperties),
+        );
+      });
+
+      it('should call requestService.tryParseStringQuery()', () => {
+        expect(requestServiceMock.tryParseStringQuery).toHaveBeenCalledTimes(1);
+        expect(requestServiceMock.tryParseStringQuery).toHaveBeenCalledWith(
+          requestFixture,
+          expect.any(Object),
+        );
+      });
+
+      it('should return a [GameFindQuery]', () => {
+        const expected: GameFindQuery = {
+          gameSlotFindQuery: {
+            userId: (requestFixture[requestContextProperty].auth as UserAuth)
+              .user.id,
           },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          kind: AppErrorKind.contractViolation,
-          message: `Expecting "${GetGameV1MineRequestParamHandler.pageSizeQueryParam}" query to be at least 1`,
-        },
-      ],
-      [
-        'with page size above maximum value',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.pageSizeQueryParam]: '51',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          kind: AppErrorKind.contractViolation,
-          message: `Expecting "${GetGameV1MineRequestParamHandler.pageSizeQueryParam}" query to be at most 50`,
-        },
-      ],
-      [
-        'with invalid status',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.statusQueryParam]: 'qwerty',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
+          limit: pageSizeFixture,
+          offset: (pageFixture - 1) * pageSizeFixture,
+          status: GameStatus.active,
+        };
+
+        expect(result).toStrictEqual([expected]);
+      });
+    });
+
+    describe('when called, and requestService returns invalid game status', () => {
+      let pageFixture: number;
+      let pageSizeFixture: number;
+      let gameStatusFixture: string;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        pageFixture = 2;
+        pageSizeFixture = 10;
+        gameStatusFixture = 'invalid-game-status-fixture';
+
+        requestServiceMock.tryParseIntegerQuery
+          .mockReturnValueOnce({
+            isRight: true,
+            value: pageFixture,
+          })
+          .mockReturnValueOnce({ isRight: true, value: pageSizeFixture });
+        requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
+          isRight: true,
+          value: gameStatusFixture,
+        });
+
+        try {
+          await getGameV1MineRequestParamHandler.handle(requestFixture);
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call requestService.tryParseIntegerQuery()', () => {
+        const firstCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+        };
+        const secondCallExpectedProperties: Partial<
+          NumericRequestQueryParseOptions<false>
+        > = {
+          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+        };
+
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
+          2,
+        );
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
+          1,
+          requestFixture,
+          expect.objectContaining(firstCallExpectedProperties),
+        );
+        expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenNthCalledWith(
+          2,
+          requestFixture,
+          expect.objectContaining(secondCallExpectedProperties),
+        );
+      });
+
+      it('should call requestService.tryParseStringQuery()', () => {
+        expect(requestServiceMock.tryParseStringQuery).toHaveBeenCalledTimes(1);
+        expect(requestServiceMock.tryParseStringQuery).toHaveBeenCalledWith(
+          requestFixture,
+          expect.any(Object),
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
           kind: AppErrorKind.contractViolation,
           message: expect.stringContaining(
-            `Expected "${GetGameV1MineRequestParamHandler.statusQueryParam}" query to be one of the following values:`,
+            'query to be one of the following values',
           ) as unknown as string,
-        },
-      ],
-      [
-        'with no user auth',
-        {
-          headers: {},
-          query: {},
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.backendService,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          kind: AppErrorKind.unprocessableOperation,
-          message: 'Unnable to retrieve user from non user credentials',
-        },
-      ],
-    ])(
-      'having a request %s',
-      (
-        _: string,
-        requestFixture: Request & AuthRequestContextHolder,
-        expectedErrorProperties: Partial<AppError>,
-      ) => {
-        describe('when called', () => {
-          let result: unknown;
+        };
 
-          beforeAll(async () => {
-            try {
-              await getGameV1MineRequestParamHandler.handle(requestFixture);
-            } catch (error: unknown) {
-              result = error;
-            }
-          });
-
-          it('should throw an Error', () => {
-            expect(result).toBeInstanceOf(AppError);
-            expect(result).toStrictEqual(
-              expect.objectContaining(expectedErrorProperties),
-            );
-          });
-        });
-      },
-    );
-
-    describe.each<[string, Request & AuthRequestContextHolder, GameFindQuery]>([
-      [
-        'with no query params',
-        {
-          headers: {},
-          query: {},
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          gameSlotFindQuery: {
-            userId: UserV1Fixtures.any.id,
-          },
-          limit: 10,
-          offset: 0,
-        },
-      ],
-      [
-        'with page params',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.pageQueryParam]: '4',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          gameSlotFindQuery: {
-            userId: UserV1Fixtures.any.id,
-          },
-          limit: 10,
-          offset: 30,
-        },
-      ],
-      [
-        'with page size params',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.pageSizeQueryParam]: '20',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          gameSlotFindQuery: {
-            userId: UserV1Fixtures.any.id,
-          },
-          limit: 20,
-          offset: 0,
-        },
-      ],
-      [
-        'with status active params',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.statusQueryParam]: 'active',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          gameSlotFindQuery: {
-            userId: UserV1Fixtures.any.id,
-          },
-          limit: 10,
-          offset: 0,
-          status: GameStatus.active,
-        },
-      ],
-      [
-        'with status nonStarted params',
-        {
-          headers: {},
-          query: {
-            [GetGameV1MineRequestParamHandler.statusQueryParam]: 'nonStarted',
-          },
-          [requestContextProperty]: {
-            auth: {
-              kind: AuthKind.user,
-              user: UserV1Fixtures.any,
-            },
-          },
-          urlParameters: {},
-        },
-        {
-          gameSlotFindQuery: {
-            userId: UserV1Fixtures.any.id,
-          },
-          limit: 10,
-          offset: 0,
-          status: GameStatus.nonStarted,
-        },
-      ],
-    ])(
-      'having a request %s',
-      (
-        _: string,
-        requestFixture: Request & AuthRequestContextHolder,
-        expectedGameFindQuery: GameFindQuery,
-      ) => {
-        describe('when called', () => {
-          let result: unknown;
-
-          beforeAll(async () => {
-            result = await getGameV1MineRequestParamHandler.handle(
-              requestFixture,
-            );
-          });
-
-          it('should return a [GameFindQuery]', () => {
-            expect(result).toStrictEqual([expectedGameFindQuery]);
-          });
-        });
-      },
-    );
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
   });
 });

@@ -140,50 +140,10 @@ describe(UserCodeManagementInputPort.name, () => {
       userFixture = UserFixtures.any;
     });
 
-    describe('when called, and userCanCreateCodeSpec.isSatisfiedBy() returns false', () => {
+    describe('when called', () => {
       let result: unknown;
 
       beforeAll(async () => {
-        userCanCreateCodeSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
-
-        try {
-          await userCodeManagementInputPort.deleteFromUser(userFixture);
-        } catch (error) {
-          result = error;
-        }
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call userCanCreateCodeSpec.isSatisfiedBy()', () => {
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-          userFixture,
-        );
-      });
-
-      it('should throw an Error', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message: 'Unable to perform operation',
-        };
-
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
-
-    describe('when called, and userCanCreateCodeSpec.isSatisfiedBy() returns true', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        userCanCreateCodeSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
-
         userCodePersistenceOutputPortMock.delete.mockResolvedValueOnce(
           undefined,
         );
@@ -193,15 +153,6 @@ describe(UserCodeManagementInputPort.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
-      });
-
-      it('should call userCanCreateCodeSpec.isSatisfiedBy()', () => {
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-          userFixture,
-        );
       });
 
       it('should call userCodePersistenceOutputPort.delete()', () => {
