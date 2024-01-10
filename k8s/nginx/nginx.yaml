@@ -1,0 +1,108 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+  namespace: one-game
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25.3-alpine
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GAME_SERVICE_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nginx-config
+                  key: env.GAME_SERVICE_BASE_URL
+            - name: USER_SERVICE_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nginx-config
+                  key: env.USER_SERVICE_BASE_URL
+          ports:
+            - containerPort: 8000
+              name: http-nginx
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 9090
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+          volumeMounts:
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx-config-volume
+              readOnly: true
+              subPath: nginx.conf
+            - mountPath: /etc/nginx/conf.d/locations.conf
+              name: nginx-config-volume
+              readOnly: true
+              subPath: conf.d/locations.conf
+            - mountPath: /etc/nginx/conf.d/redirect-headers.conf
+              name: nginx-config-volume
+              readOnly: true
+              subPath: conf.d/redirect-headers.conf
+            - mountPath: /etc/nginx/templates
+              name: nginx-config-volume
+              readOnly: true
+              subPath: templates
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
+            items:
+            - key: "nginx.conf"
+              path: "nginx.conf"
+            - key: "conf.d.locations.conf"
+              path: "conf.d/locations.conf"
+            - key: "conf.d.redirect-headers.conf"
+              path: "conf.d/redirect-headers.conf"
+            - key: "templates.http-game-service-game-events-redirection.conf.template"
+              path: "templates/http-game-service-game-events-redirection.conf.template"
+            - key: "templates.http-game-service-game-redirection.conf.template"
+              path: "templates/http-game-service-game-redirection.conf.template"
+            - key: "templates.http-user-service-auth-redirection.conf.template"
+              path: "templates/http-user-service-auth-redirection.conf.template"
+            - key: "templates.http-user-service-user-redirection.conf.template"
+              path: "templates/http-user-service-user-redirection.conf.template"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: one-game
+spec:
+  ports:
+    - port: 8000
+      protocol: TCP
+      targetPort: http-nginx
+  selector:
+    app: nginx

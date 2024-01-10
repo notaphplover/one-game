@@ -9,6 +9,8 @@ kubectl apply \
   -f "$SCRIPT_DIR"/grafana/grafana-dashboards-config.yaml \
   -f "$SCRIPT_DIR"/grafana/grafana-datasources-config.yaml \
   -f "$SCRIPT_DIR"/grafana/grafana.yaml \
+  -f "$SCRIPT_DIR"/nginx/nginx-config.yaml \
+  -f "$SCRIPT_DIR"/nginx/nginx.yaml \
   -f "$SCRIPT_DIR"/prometheus/prometheus-config.yaml \
   -f "$SCRIPT_DIR"/prometheus/prometheus.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/common/rest-api-config.yaml \
