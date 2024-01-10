@@ -25,6 +25,9 @@ spec:
             - containerPort: 3200
               name: http-tempo
               protocol: TCP
+            - containerPort: 4317
+              name: grpc-otlp-tempo
+              protocol: TCP
             - containerPort: 9095
               name: grpc-tempo
               protocol: TCP
@@ -71,6 +74,10 @@ spec:
       port: 3200
       protocol: TCP
       targetPort: http-tempo
+    - name: grpc-otlp-tempo
+      port: 4317
+      protocol: TCP
+      targetPort: grpc-otlp-tempo
     - name: grpc-tempo
       port: 9095
       protocol: TCP
