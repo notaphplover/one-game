@@ -9,6 +9,13 @@ kubectl delete \
   -f "$SCRIPT_DIR"/grafana/grafana.yaml \
   -f "$SCRIPT_DIR"/prometheus/prometheus-config.yaml \
   -f "$SCRIPT_DIR"/prometheus/prometheus.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/common/rest-api-config.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/common/rest-api.secret.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster-auth.secret.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-config.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service.secret.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service.yaml \
   -f "$SCRIPT_DIR"/tempo/tempo-config.yaml \
   -f "$SCRIPT_DIR"/tempo/tempo.yaml
 

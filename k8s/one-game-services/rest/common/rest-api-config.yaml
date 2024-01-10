@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rest-api-config
+  namespace: one-game
+data:
+  api.base-url: http://localhost:8000
+
+  cors-origins: '["*"]'
+
+  jwt.algorithm: RSA256
+  jwt.audience: local.api.onegamejs.com
+  jwt.expiration-ms: '3600000'
+  jwt.issuer: local.api.onegamejs.com

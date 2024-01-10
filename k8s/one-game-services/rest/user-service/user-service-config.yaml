@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: one-game
+data:
+
+  frontent.base-url: https://cornie.game
+
+  grafana.pyroscope-enabled: 'false'
+  grafana.pyroscope-url: http://pyroscope:4040
+  grafana.tracer-enabled: 'false'
+  grafana.tracer-url: http://tempo:4317
+
+  host: '0.0.0.0'
+
+  port: '3001'

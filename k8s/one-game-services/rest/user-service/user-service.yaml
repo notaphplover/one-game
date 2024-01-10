@@ -1,0 +1,182 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rest-service-user
+  name: rest-service-user
+  namespace: one-game
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rest-service-user
+  template:
+    metadata:
+      labels:
+        app: rest-service-user
+    spec:
+      containers:
+      - image: one-game-backend-service-user:latest
+        imagePullPolicy: Never
+        env:
+          - name: ONE_JS_USER_SERVICE_DOT_ENV_ENABLED
+            value: 'false'
+          - name: ONE_JS_USER_SERVICE_JWT_ALGORITHM
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.algorithm
+          - name: ONE_JS_USER_SERVICE_JWT_AUDIENCE
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.audience
+          - name: ONE_JS_USER_SERVICE_JWT_EXPIRATION_MS
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.expiration-ms
+          - name: ONE_JS_USER_SERVICE_JWT_ISSUER
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.issuer
+          - name: ONE_JS_USER_SERVICE_JWT_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: jwt.private
+          - name: ONE_JS_USER_SERVICE_JWT_PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: jwt.public
+          - name: ONE_JS_USER_SERVICE_CORS_ORIGINS
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: cors-origins
+          - name: ONE_JS_USER_SERVICE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: host
+          - name: ONE_JS_USER_SERVICE_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: port
+          - name: ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: typeorm.config
+          - name: ONE_JS_USER_API_BACKEND_SERVICE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: backend.service-secret
+          - name: ONE_JS_USER_API_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: api.base-url
+          - name: ONE_JS_USER_FRONTEND_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: frontent.base-url
+          - name: ONE_JS_USER_SERVICE_MAIL_DEFAULT_ADDRESS
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.default-address
+          - name: ONE_JS_USER_SERVICE_MAIL_HOST
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.host
+          - name: ONE_JS_USER_SERVICE_MAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.password
+          - name: ONE_JS_USER_SERVICE_MAIL_PORT
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.port
+          - name: ONE_JS_USER_SERVICE_MAIL_USER
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.user
+          - name: ONE_JS_USER_SERVICE_MAIL_USE_TLS
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.use-tls
+          - name: ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.pyroscope-enabled
+          - name: ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.pyroscope-url
+          - name: ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.tracer-enabled
+          - name: ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.tracer-url
+        name: rest-service-user
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /v1/ready
+            port: 3001
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          tcpSocket:
+            port: 3001
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 3001
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            memory: "768Mi"
+            cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-service-user
+  namespace: one-game
+spec:
+  ports:
+    - port: 3001
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: rest-service-user
+  sessionAffinity: None
+  type: LoadBalancer
