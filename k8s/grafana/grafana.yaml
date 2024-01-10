@@ -1,0 +1,108 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: one-game
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+  namespace: one-game
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+        - name: grafana
+          image: grafana/grafana-enterprise:10.2.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http-grafana
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /robots.txt
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-pv
+            - mountPath: /etc/grafana/provisioning/dashboards
+              name: grafana-dashboards-config-volume
+            - mountPath: /etc/dashboards
+              name: grafana-dashboards-volume
+            - mountPath: /etc/grafana/provisioning/datasources
+              name: grafana-datasources-config-volume
+      volumes:
+        - name: grafana-pv
+          persistentVolumeClaim:
+            claimName: grafana-pvc
+        - name: grafana-dashboards-config-volume
+          configMap:
+            name: grafana-dashboards-config
+            items:
+            - key: "grafana-dashboards-provider.yaml"
+              path: "grafana-dashboards-provider.yaml"
+        - name: grafana-dashboards-volume
+          configMap:
+            name: grafana-dashboards
+            items:
+        - name: grafana-datasources-config-volume
+          configMap:
+            name: grafana-datasources-config
+            items:
+            - key: "datasources.yaml"
+              path: "datasources.yaml"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: one-game
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: http-grafana
+  selector:
+    app: grafana
+  sessionAffinity: None
+  type: LoadBalancer

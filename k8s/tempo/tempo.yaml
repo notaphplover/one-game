@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tempo
+  name: tempo
+  namespace: one-game
+spec:
+  selector:
+    matchLabels:
+      app: tempo
+  template:
+    metadata:
+      labels:
+        app: tempo
+    spec:
+      containers:
+        - name: tempo
+          image: grafana/tempo:2.3.1
+          args:
+            - "-config.file=/etc/tempo-config/tempo.yaml"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3200
+              name: http-tempo
+              protocol: TCP
+            - containerPort: 4317
+              name: grpc-otlp-tempo
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc-tempo
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: 3200
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3200
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+          volumeMounts:
+            - mountPath: /etc/tempo-config
+              name: tempo-config-volume
+              readOnly: true
+      volumes:
+        - name: tempo-config-volume
+          configMap:
+            name: tempo-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo
+  namespace: one-game
+spec:
+  ports:
+    - name: http-tempo
+      port: 3200
+      protocol: TCP
+      targetPort: http-tempo
+    - name: grpc-otlp-tempo
+      port: 4317
+      protocol: TCP
+      targetPort: grpc-otlp-tempo
+    - name: grpc-tempo
+      port: 9095
+      protocol: TCP
+      targetPort: grpc-tempo
+  selector:
+    app: tempo
