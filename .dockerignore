@@ -2,3 +2,9 @@
 .turbo
 .vscode
 node_modules
+
+**/coverage
+**/.turbo
+**/.env
+**/.git
+**/tmp

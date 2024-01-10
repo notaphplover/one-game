@@ -42,7 +42,7 @@ async function bootstrap() {
 
   const port: number = environment.port;
 
-  await nestApplication.listen(port);
+  await nestApplication.listen(port, environment.host);
 
   logger.log(`Application is running on: ${await nestApplication.getUrl()}`);
 }

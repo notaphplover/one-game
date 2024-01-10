@@ -23,4 +23,4 @@ pnpm exec dotenv -- bash -c 'docker run \
   -e ONE_JS_USER_SERVICE_MAIL_USER="$ONE_JS_USER_SERVICE_MAIL_USER" \
   -e ONE_JS_USER_SERVICE_PORT="$ONE_JS_USER_SERVICE_PORT" \
   -e ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS="$ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS" \
-  --network=host backend-service-user:latest'
+  --network=host one-game-backend-service-user:latest'

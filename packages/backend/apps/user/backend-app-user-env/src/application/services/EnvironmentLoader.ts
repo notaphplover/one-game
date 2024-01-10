@@ -38,6 +38,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_URL: url(),
       ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED: bool(),
       ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL: url(),
+      ONE_JS_USER_SERVICE_HOST: host(),
       ONE_JS_USER_SERVICE_JWT_ALGORITHM: str<JwtAlgorithm>({
         choices: Object.values(JwtAlgorithm),
       }),
@@ -68,6 +69,7 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       grafanaTraceEnabled:
         rawEnvironment.ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED,
       grafanaTraceUrl: rawEnvironment.ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL,
+      host: rawEnvironment.ONE_JS_USER_SERVICE_HOST,
       jwtAlgorithm: rawEnvironment.ONE_JS_USER_SERVICE_JWT_ALGORITHM,
       jwtAudience: rawEnvironment.ONE_JS_USER_SERVICE_JWT_AUDIENCE,
       jwtExpirationMs: rawEnvironment.ONE_JS_USER_SERVICE_JWT_EXPIRATION_MS,
