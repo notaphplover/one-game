@@ -16,7 +16,8 @@ export class AppError extends Error {
 
   public static isAppError(value: unknown): value is AppError {
     return (
-      value != null &&
+      typeof value === 'object' &&
+      value !== null &&
       (value as Record<string | symbol, unknown>)[isAppErrorSymbol] === true
     );
   }
