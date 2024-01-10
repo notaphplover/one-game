@@ -10,6 +10,7 @@ export interface Environment {
   grafanaPyroscopeUrl: string;
   grafanaTraceEnabled: boolean;
   grafanaTraceUrl: string;
+  host: string;
   jwtAlgorithm: JwtAlgorithm;
   jwtAudience: string;
   jwtExpirationMs: number;
