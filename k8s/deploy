@@ -3,3 +3,13 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 kubectl apply -f "$SCRIPT_DIR"/namespace.yaml
+
+kubectl apply \
+  -f "$SCRIPT_DIR"/grafana/grafana-dashboards.yaml \
+  -f "$SCRIPT_DIR"/grafana/grafana-dashboards-config.yaml \
+  -f "$SCRIPT_DIR"/grafana/grafana-datasources-config.yaml \
+  -f "$SCRIPT_DIR"/grafana/grafana.yaml \
+  -f "$SCRIPT_DIR"/prometheus/prometheus-config.yaml \
+  -f "$SCRIPT_DIR"/prometheus/prometheus.yaml \
+  -f "$SCRIPT_DIR"/tempo/tempo-config.yaml \
+  -f "$SCRIPT_DIR"/tempo/tempo.yaml
