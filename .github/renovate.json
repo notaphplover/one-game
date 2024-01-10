@@ -6,11 +6,9 @@
   },
   "extends": ["config:base", ":disableRateLimiting"],
   "ignoreDeps": ["eslint-plugin-import"],
-  "rebaseWhen": "conflicted",
-  "semanticCommits": "enabled",
-  "schedule": [
-    "at any time"
-  ],
+  "kubernetes": {
+    "fileMatch": ["k8s/.+\\.yaml$"]
+  },
   "packageRules": [
     {
       "groupName": "auto merge on patch or minor",
@@ -34,5 +32,10 @@
       "allowedVersions": "^21.0.0",
       "labels": ["docker-update"]
     }
+  ],
+  "rebaseWhen": "conflicted",
+  "semanticCommits": "enabled",
+  "schedule": [
+    "at any time"
   ]
 }
