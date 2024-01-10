@@ -20,4 +20,4 @@ pnpm exec dotenv -- bash -c 'docker run \
   -e ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST="$ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST" \
   -e ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT="$ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT" \
   -e ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS="$ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS" \
-  --network=host backend-service-game:latest'
+  --network=host one-game-backend-service-game:latest'
