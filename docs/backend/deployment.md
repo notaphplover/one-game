@@ -7,10 +7,14 @@ A kubernetes config is provided to deploy all the services.
 - `kubectl` version 1.28 or later.
 - `helm` version 3.10 or later.
 - k8s server should have [redis-operator](https://github.com/OT-CONTAINER-KIT/redis-operator) installed.
+- k8s server should have [nginx-ingress](https://github.com/nginxinc/kubernetes-ingress) installed.
 
 Consider the following script to install them:
 
 ```bash
+
+helm install nginx-release oci://ghcr.io/nginxinc/charts/nginx-ingress --version 1.1.0
+
 helm repo add ot-helm https://ot-container-kit.github.io/helm-charts/
 helm repo add cnpg https://cloudnative-pg.github.io/charts
 
@@ -45,6 +49,22 @@ minikube image load one-game-backend-service-game:latest
 ```
 
 Assuming you want to locally deploy services through minikube, consider `minikube tunnel` to provide external ips to exposed services.
+
+#### Enabling minikube ingress
+
+In order to enable ingress features, consider adding the right addon:
+
+```bash
+minikube addons enable ingress
+```
+
+Last but not least, you should find a way to resolve the expected hosts to your local minikube ip.
+
+The most simple approach might be updating your host file (traditionally at `/etc/hosts`) with a new entry:
+
+```
+<your-minikube-ip>    api.cornie.game
+```
 
 ## Destroying services
 

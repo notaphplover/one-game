@@ -35,6 +35,8 @@
     "build:api:graphql": "pnpm run build:api:rest --filter=backend-service-gateway",
     "close:e2e": "turbo run close:e2e",
     "commit": "commit",
+    "docker:build:game": "docker build . --target backendservicegame --tag one-game-backend-service-game:latest",
+    "docker:build:user": "docker build . --target backendserviceuser --tag one-game-backend-service-user:latest",
     "format": "turbo run format",
     "lint": "turbo run lint",
     "migrations:run": "turbo run migrations:run",
