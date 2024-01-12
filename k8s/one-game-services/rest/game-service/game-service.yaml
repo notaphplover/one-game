@@ -1,0 +1,157 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rest-service-game
+  name: rest-service-game
+  namespace: one-game
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rest-service-game
+  template:
+    metadata:
+      labels:
+        app: rest-service-game
+    spec:
+      containers:
+      - image: one-game-backend-service-game:latest
+        imagePullPolicy: Never
+        env:
+          - name: ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED
+            value: 'false'
+          - name: ONE_JS_GAME_SERVICE_JWT_ALGORITHM
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.algorithm
+          - name: ONE_JS_GAME_SERVICE_JWT_AUDIENCE
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.audience
+          - name: ONE_JS_GAME_SERVICE_JWT_EXPIRATION_MS
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.expiration-ms
+          - name: ONE_JS_GAME_SERVICE_JWT_ISSUER
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.issuer
+          - name: ONE_JS_GAME_SERVICE_JWT_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: jwt.private
+          - name: ONE_JS_GAME_SERVICE_JWT_PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: jwt.public
+          - name: ONE_JS_GAME_SERVICE_CORS_ORIGINS
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: cors-origins
+          - name: ONE_JS_GAME_SERVICE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: host
+          - name: ONE_JS_GAME_SERVICE_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: port
+          - name: ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS
+            valueFrom:
+              secretKeyRef:
+                name: game-service-secret
+                key: typeorm.config
+          - name: ONE_JS_GAME_API_BACKEND_SERVICE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: backend.service-secret
+          - name: ONE_JS_GAME_API_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: api.base-url
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: grafana.pyroscope-enabled
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: grafana.pyroscope-url
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_TRACE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: grafana.tracer-enabled
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_TRACE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: grafana.tracer-url
+          - name: ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: redis.host
+          - name: ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: redis.port
+        name: rest-service-game
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /v1/ready
+            port: 3002
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          tcpSocket:
+            port: 3002
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 3002
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            memory: "768Mi"
+            cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-service-game
+  namespace: one-game
+spec:
+  ports:
+    - port: 3002
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: rest-service-game
+  sessionAffinity: None
+  type: LoadBalancer

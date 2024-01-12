@@ -13,7 +13,10 @@ kubectl delete \
   -f "$SCRIPT_DIR"/one-game-services/rest/common/rest-api.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/db/db-cluster-auth.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/db/db-cluster.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service-config.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/redis-cluster.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster-auth.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-config.yaml \
