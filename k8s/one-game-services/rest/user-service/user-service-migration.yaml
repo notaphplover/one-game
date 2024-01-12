@@ -1,0 +1,134 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rest-service-user-migration
+  namespace: one-game
+spec:
+  template:
+    spec:
+      containers:
+      - name: rest-service-user-migration
+        image: one-game-backend-service-user:latest
+        imagePullPolicy: Never
+        command: ["pnpm",  "migrations:run"]
+        env:
+          - name: ONE_JS_USER_SERVICE_DOT_ENV_ENABLED
+            value: 'false'
+          - name: ONE_JS_USER_SERVICE_JWT_ALGORITHM
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.algorithm
+          - name: ONE_JS_USER_SERVICE_JWT_AUDIENCE
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.audience
+          - name: ONE_JS_USER_SERVICE_JWT_EXPIRATION_MS
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.expiration-ms
+          - name: ONE_JS_USER_SERVICE_JWT_ISSUER
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: jwt.issuer
+          - name: ONE_JS_USER_SERVICE_JWT_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: jwt.private
+          - name: ONE_JS_USER_SERVICE_JWT_PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: jwt.public
+          - name: ONE_JS_USER_SERVICE_CORS_ORIGINS
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: cors-origins
+          - name: ONE_JS_USER_SERVICE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: host
+          - name: ONE_JS_USER_SERVICE_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: port
+          - name: ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: typeorm.config
+          - name: ONE_JS_USER_API_BACKEND_SERVICE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: rest-api-secret
+                key: backend.service-secret
+          - name: ONE_JS_USER_API_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: rest-api-config
+                key: api.base-url
+          - name: ONE_JS_USER_FRONTEND_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: frontent.base-url
+          - name: ONE_JS_USER_SERVICE_MAIL_DEFAULT_ADDRESS
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.default-address
+          - name: ONE_JS_USER_SERVICE_MAIL_HOST
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.host
+          - name: ONE_JS_USER_SERVICE_MAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.password
+          - name: ONE_JS_USER_SERVICE_MAIL_PORT
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.port
+          - name: ONE_JS_USER_SERVICE_MAIL_USER
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.user
+          - name: ONE_JS_USER_SERVICE_MAIL_USE_TLS
+            valueFrom:
+              secretKeyRef:
+                name: user-service-secret
+                key: mail.use-tls
+          - name: ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.pyroscope-enabled
+          - name: ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.pyroscope-url
+          - name: ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.tracer-enabled
+          - name: ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-service-config
+                key: grafana.tracer-url
+      restartPolicy: OnFailure
+  backoffLimit: 4
+  ttlSecondsAfterFinished: 120
