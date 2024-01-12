@@ -1,0 +1,19 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: game-db-cluster
+  namespace: one-game
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+  instances: 3
+  bootstrap:
+    initdb:
+      database: game_service_db
+      owner: one-game-game-user
+      secret:
+        name: game-db-cluster-auth
+  monitoring:
+    enablePodMonitor: true
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 1Gi
