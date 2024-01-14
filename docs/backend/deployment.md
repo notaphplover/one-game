@@ -41,6 +41,13 @@ Just connect to the cluster and run the deploy script:
 
 ### Deploying services locally with minikube
 
+You might need to enale addons to use hpa and ingresses:
+
+```bash
+minikube addons enable ingress
+minikube addons enable metrics-server
+```
+
 You might want to deploy containers using local docker images, such as `one-game-backend-service-user:latest`. Asuming you have build the local [docker image](./docker-images.md), consider importing then through minikube:
 
 ```bash

@@ -21,11 +21,13 @@ kubectl apply \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/redis-cluster.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service-migration.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service-autoscaling.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster-auth.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-config.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-migration.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-autoscaling.yaml \
   -f "$SCRIPT_DIR"/tempo/tempo-config.yaml \
   -f "$SCRIPT_DIR"/tempo/tempo.yaml
