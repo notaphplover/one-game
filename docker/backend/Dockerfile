@@ -43,5 +43,5 @@ CMD [ "pnpm", "serve" ]
 FROM base AS backendservicegateway
 COPY --from=backendservicegatewaybuild /prod/backend-service-gateway /prod/backend-service-gateway
 WORKDIR /prod/backend-service-gateway
-EXPOSE 3002
+EXPOSE 3003
 CMD [ "pnpm", "serve" ]
