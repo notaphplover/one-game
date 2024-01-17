@@ -68,6 +68,7 @@ The most simple approach might be updating your host file (traditionally at `/et
 
 ```
 <your-minikube-ip>    api.cornie.game
+<your-minikube-ip>    cornie.game
 ```
 
 ## Destroying services

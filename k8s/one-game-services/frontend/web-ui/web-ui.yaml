@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend-service-web-ui
+  name: frontend-service-web-ui
+  namespace: one-game
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-service-web-ui
+  template:
+    metadata:
+      labels:
+        app: frontend-service-web-ui
+    spec:
+      containers:
+      - image: one-game-frontend-service-web-ui:latest
+        imagePullPolicy: Never
+        name: frontend-service-web-ui
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          tcpSocket:
+            port: 8002
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 8002
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            memory: "768Mi"
+            cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service-web-ui
+  namespace: one-game
+spec:
+  ports:
+    - port: 8002
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: frontend-service-web-ui
+  sessionAffinity: None
+  type: LoadBalancer
