@@ -4,7 +4,7 @@ metadata:
   name: rest-api-config
   namespace: one-game
 data:
-  api.base-url: http://api.cornie.game:80
+  api.base-url: http://api.cornie.game
 
   cors-origins: '["*"]'
 
