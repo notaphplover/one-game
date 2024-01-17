@@ -1,19 +1,14 @@
 # Docker images
 
-This monorepo contains a `Dockerfile` file to generate docker images for every backend service available.
+This monorepo contains a `docker` folder with dockerfiles to generate docker images for every backend service available.
 
 ## Building docker images
 
-To generate a docker image, use docker to build it. For example, to build a user service docker image, consider the following command:
+To generate a docker image, use the npm `docker:build` scripts provided for this purpose. For example, to build a user service docker image, consider the following command:
 
 ```
-docker build . --target backendserviceuser --tag one-game-backend-service-user:latest
+pnpm run docker:build:user
 ```
-
-The current docker images available are:
-- `backendserviceuser`.
-- `backendservicegame`.
-- `backendservicegateway`.
 
 ## Serving docker containers locally
 

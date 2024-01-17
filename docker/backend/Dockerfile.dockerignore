@@ -1,0 +1,16 @@
+.github
+.husky
+.vscode
+
+config
+docker
+docs
+k8s
+
+**/node_modules
+**/coverage
+**/lib
+**/tmp
+**/.turbo
+**/.env
+**/.git

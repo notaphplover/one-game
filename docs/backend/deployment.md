@@ -7,13 +7,10 @@ A kubernetes config is provided to deploy all the services.
 - `kubectl` version 1.28 or later.
 - `helm` version 3.10 or later.
 - k8s server should have [redis-operator](https://github.com/OT-CONTAINER-KIT/redis-operator) installed.
-- k8s server should have [nginx-ingress](https://github.com/nginxinc/kubernetes-ingress) installed.
 
 Consider the following script to install them:
 
 ```bash
-
-helm install nginx-release oci://ghcr.io/nginxinc/charts/nginx-ingress --version 1.1.0
 
 helm repo add ot-helm https://ot-container-kit.github.io/helm-charts/
 helm repo add cnpg https://cloudnative-pg.github.io/charts
