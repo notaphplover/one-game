@@ -5,6 +5,8 @@ info:
 servers:
   - url: 'http://127.0.0.1:8000'
     description: Local development server
+  - url: 'http://api.cornie.game'
+    description: Production server
 components:
   securitySchemes:
     bearerAuth:

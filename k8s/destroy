@@ -27,6 +27,8 @@ kubectl delete \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-migration.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/user-service-autoscaling.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/frontend/web-ui/web-ui.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/frontend/web-ui/web-ui-autoscaling.yaml \
   -f "$SCRIPT_DIR"/tempo/tempo-config.yaml \
   -f "$SCRIPT_DIR"/tempo/tempo.yaml
 

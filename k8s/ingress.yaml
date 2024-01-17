@@ -40,3 +40,13 @@ spec:
             name: rest-service-user
             port:
               number: 3001
+  - host: cornie.game
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: frontend-service-web-ui
+              port:
+                number: 8002
