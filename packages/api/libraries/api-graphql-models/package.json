@@ -5,8 +5,8 @@
   },
   "description": "Backend api models",
   "devDependencies": {
-    "@cornie-js/api-graphql-schemas": "workspace:*",
-    "@graphql-codegen/cli": "^5.0.0",
+    "@cornie-js/api-graphql-schemas-provider": "workspace:*",
+    "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/plugin-helpers": "5.0.1",
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-resolvers": "4.0.1",
