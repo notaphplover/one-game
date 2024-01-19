@@ -2,14 +2,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { argv } from 'node:process';
 
-import * as prettierConfig from '@cornie-js/backend-prettier-config';
+import { readApiGraphqlSchemas } from '@cornie-js/api-graphql-schemas-provider';
+import prettierConfig from '@cornie-js/backend-prettier-config';
 import { CodegenConfig, executeCodegen } from '@graphql-codegen/cli';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
+import { TypeScriptResolversPluginConfig } from '@graphql-codegen/typescript-resolvers';
 import prettier from 'prettier';
-
-const API_SCHEMAS_PACKAGE: string = '@cornie-js/api-graphql-schemas';
-const API_SCHEMAS_PACKAGE_SCHEMAS_FOLDER: string = 'schemas';
-const GRAPHQL_SCHEMAS_BLOB_SUFFIX: string = '**/*.graphql';
 
 function arrayHasThreeElements<T>(value: T[]): value is [T, T, T, ...T[]] {
   const arrayMinimumLength: number = 3;
@@ -20,15 +19,13 @@ function arrayHasThreeElements<T>(value: T[]): value is [T, T, T, ...T[]] {
 async function generateAllModels(destinationPath: string): Promise<void> {
   await fs.mkdir(path.dirname(destinationPath), { recursive: true });
 
-  const schemasPackagePath: string = path.dirname(
-    require.resolve(path.join(API_SCHEMAS_PACKAGE, 'package.json')),
-  );
-
-  const graphqlSchemasBlob: string = path.join(
-    schemasPackagePath,
-    API_SCHEMAS_PACKAGE_SCHEMAS_FOLDER,
-    GRAPHQL_SCHEMAS_BLOB_SUFFIX,
-  );
+  const plugindConfig: TypeScriptPluginConfig &
+    TypeScriptResolversPluginConfig = {
+    avoidOptionals: true,
+    enumsAsTypes: true,
+    resolverTypeWrapperSignature: 'Partial<T> | Promise<Partial<T>>',
+    useIndexSignature: true,
+  };
 
   /*
    * Consider https://the-guild.dev/graphql/codegen/plugins/typescript/typescript as reference
@@ -37,16 +34,11 @@ async function generateAllModels(destinationPath: string): Promise<void> {
   const config: CodegenConfig = {
     generates: {
       [destinationPath]: {
-        config: {
-          avoidOptionals: true,
-          enumsAsTypes: true,
-          resolverTypeWrapperSignature: 'Partial<T> | Promise<Partial<T>>',
-          useIndexSignature: true,
-        },
+        config: plugindConfig,
         plugins: ['typescript', 'typescript-resolvers'],
       },
     },
-    schema: graphqlSchemasBlob,
+    schema: await readApiGraphqlSchemas(),
   };
 
   const fileOutputs: Types.FileOutput[] = await executeCodegen(config);
