@@ -6,11 +6,12 @@ import { argv } from 'node:process';
 
 import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
 import { readApiJsonSchemas } from '@cornie-js/api-json-schemas-provider';
+import backendPrettierOptions from '@cornie-js/backend-prettier-config';
 import {
   JsonRootSchema202012,
   JsonRootSchema202012Object,
 } from '@cornie-js/json-schema-utils';
-import { compile, Options } from 'json-schema-to-typescript';
+import { compile } from 'json-schema-to-typescript';
 
 import { ResolveApiSchemaHttpReferenceUseCase } from '../jsonSchema/application/useCases/ResolveApiSchemaHttpReferenceUseCase';
 import { SchemasRefParserOptionsBuilder } from '../jsonSchema/infrastructure/bchernyJsonSchemaRefParser/SchemasRefParserOptionsBuilder';
@@ -18,10 +19,6 @@ import { SchemasRefParserOptionsBuilder } from '../jsonSchema/infrastructure/bch
 const ROOT_TYPE_SCHEMA_TS_TYPE_ALIAS: string = 'Types';
 
 const ROOT_TYPE_SCHEMA_ID: string = 'https://onegame.schemas/api/types.json';
-
-const backendPrettierOptions: Options['style'] =
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  require('@cornie-js/backend-prettier-config') as Options['style'];
 
 const apiV1TypesJsonSchemasPromise: Promise<JsonRootSchema202012[]> =
   readApiJsonSchemas();
