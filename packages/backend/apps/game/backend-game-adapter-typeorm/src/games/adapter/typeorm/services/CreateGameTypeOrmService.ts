@@ -1,17 +1,17 @@
-import { Converter } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
 import { Game, GameCreateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
-import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
-import { GameDbToGameConverter } from '../converters/GameDbToGameConverter';
+import { GameCreateQueryTypeOrmFromGameCreateQueryBuilder } from '../builders/GameCreateQueryTypeOrmFromGameCreateQueryBuilder';
+import { GameFromGameDbBuilder } from '../builders/GameFromGameDbBuilder';
 import { GameDb } from '../models/GameDb';
 
 @Injectable()
-export class CreateGameTypeOrmService extends InsertTypeOrmPostgresService<
+export class CreateGameTypeOrmService extends InsertTypeOrmPostgresServiceV2<
   Game,
   GameDb,
   GameCreateQuery
@@ -19,18 +19,18 @@ export class CreateGameTypeOrmService extends InsertTypeOrmPostgresService<
   constructor(
     @InjectRepository(GameDb)
     repository: Repository<GameDb>,
-    @Inject(GameDbToGameConverter)
-    gameDbToGameConverter: Converter<GameDb, Game>,
-    @Inject(GameCreateQueryToGameCreateQueryTypeOrmConverter)
-    gameCreateQueryToGameCreateQueryTypeOrmConverter: Converter<
-      GameCreateQuery,
-      QueryDeepPartialEntity<GameDb>
+    @Inject(GameFromGameDbBuilder)
+    gameFromGameDbBuilder: Builder<Game, [GameDb]>,
+    @Inject(GameCreateQueryTypeOrmFromGameCreateQueryBuilder)
+    gameCreateQueryTypeOrmFromGameCreateQueryBuilder: Builder<
+      QueryDeepPartialEntity<GameDb>,
+      [GameCreateQuery]
     >,
   ) {
     super(
       repository,
-      gameDbToGameConverter,
-      gameCreateQueryToGameCreateQueryTypeOrmConverter,
+      gameFromGameDbBuilder,
+      gameCreateQueryTypeOrmFromGameCreateQueryBuilder,
     );
   }
 }

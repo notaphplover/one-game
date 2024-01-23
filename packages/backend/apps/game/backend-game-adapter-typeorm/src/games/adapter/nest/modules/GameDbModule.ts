@@ -13,22 +13,22 @@ import { GameSlotPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSl
 import { GameSpecPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameSpecPersistenceTypeOrmAdapter';
 import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from '../../typeorm/builders/GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
 import { GameCardSpecArrayFromGameCardSpecArrayDbBuilder } from '../../typeorm/builders/GameCardSpecArrayFromGameCardSpecArrayDbBuilder';
+import { GameCreateQueryTypeOrmFromGameCreateQueryBuilder } from '../../typeorm/builders/GameCreateQueryTypeOrmFromGameCreateQueryBuilder';
 import { GameDirectionDbFromGameDirectionBuilder } from '../../typeorm/builders/GameDirectionDbFromGameDirectionBuilder';
 import { GameDirectionFromGameDirectionDbBuilder } from '../../typeorm/builders/GameDirectionFromGameDirectionDbBuilder';
+import { GameFindQueryTypeOrmFromGameFindQueryBuilder } from '../../typeorm/builders/GameFindQueryTypeOrmFromGameFindQueryBuilder';
+import { GameFindQueryTypeOrmFromGameUpdateQueryBuilder } from '../../typeorm/builders/GameFindQueryTypeOrmFromGameUpdateQueryBuilder';
+import { GameFromGameDbBuilder } from '../../typeorm/builders/GameFromGameDbBuilder';
+import { GameSetQueryTypeOrmFromGameUpdateQueryBuilder } from '../../typeorm/builders/GameSetQueryTypeOrmFromGameUpdateQueryBuilder';
+import { GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder } from '../../typeorm/builders/GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder';
+import { GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder } from '../../typeorm/builders/GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder';
+import { GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder } from '../../typeorm/builders/GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder';
+import { GameSlotFromGameSlotDbBuilder } from '../../typeorm/builders/GameSlotFromGameSlotDbBuilder';
+import { GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder } from '../../typeorm/builders/GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder';
 import { GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder } from '../../typeorm/builders/GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder';
 import { GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder } from '../../typeorm/builders/GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder';
 import { GameSpecFromGameSpecDbBuilder } from '../../typeorm/builders/GameSpecFromGameSpecDbBuilder';
 import { GameStatusDbFromGameStatusBuilder } from '../../typeorm/builders/GameStatusDbFromGameStatusBuilder';
-import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameCreateQueryToGameCreateQueryTypeOrmConverter';
-import { GameDbToGameConverter } from '../../typeorm/converters/GameDbToGameConverter';
-import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameFindQueryToGameFindQueryTypeOrmConverter';
-import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
-import { GameSlotDbToGameSlotConverter } from '../../typeorm/converters/GameSlotDbToGameSlotConverter';
-import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
-import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
-import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from '../../typeorm/converters/GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
-import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameFindQueryTypeOrmConverter';
-import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from '../../typeorm/converters/GameUpdateQueryToGameSetQueryTypeOrmConverter';
 import { GameDb } from '../../typeorm/models/GameDb';
 import { GameSlotDb } from '../../typeorm/models/GameSlotDb';
 import { GameSpecDb } from '../../typeorm/models/GameSpecDb';
@@ -64,18 +64,22 @@ export class GameDbModule {
         FindGameSpecTypeOrmService,
         GameCardSpecArrayDbFromGameCardSpecArrayBuilder,
         GameCardSpecArrayFromGameCardSpecArrayDbBuilder,
-        GameCreateQueryToGameCreateQueryTypeOrmConverter,
-        GameDbToGameConverter,
+        GameCreateQueryTypeOrmFromGameCreateQueryBuilder,
         GameDirectionFromGameDirectionDbBuilder,
         GameDirectionDbFromGameDirectionBuilder,
-        GameFindQueryToGameFindQueryTypeOrmConverter,
+        GameFindQueryTypeOrmFromGameFindQueryBuilder,
+        GameFindQueryTypeOrmFromGameUpdateQueryBuilder,
+        GameFromGameDbBuilder,
         {
           provide: gamePersistenceOutputPortSymbol,
           useClass: GamePersistenceTypeOrmAdapter,
         },
-        GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter,
-        GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
-        GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
+        GameSetQueryTypeOrmFromGameUpdateQueryBuilder,
+        GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder,
+        GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder,
+        GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder,
+        GameSlotFromGameSlotDbBuilder,
+        GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder,
         GameSpecCreateQueryTypeormFromGameGameSpecCreateQueryBuilder,
         GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder,
         GameSpecFromGameSpecDbBuilder,
@@ -84,10 +88,6 @@ export class GameDbModule {
           useClass: GameSpecPersistenceTypeOrmAdapter,
         },
         GameStatusDbFromGameStatusBuilder,
-        GameUpdateQueryToGameFindQueryTypeOrmConverter,
-        GameUpdateQueryToGameSetQueryTypeOrmConverter,
-        GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter,
-        GameSlotDbToGameSlotConverter,
         {
           provide: gameSlotPersistenceOutputPortSymbol,
           useClass: GameSlotPersistenceTypeOrmAdapter,

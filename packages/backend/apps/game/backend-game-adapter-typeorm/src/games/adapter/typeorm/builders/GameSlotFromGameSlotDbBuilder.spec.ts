@@ -11,24 +11,24 @@ import {
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameSlotDbFixtures } from '../fixtures/GameSlotDbFixtures';
 import { GameSlotDb } from '../models/GameSlotDb';
-import { GameSlotDbToGameSlotConverter } from './GameSlotDbToGameSlotConverter';
+import { GameSlotFromGameSlotDbBuilder } from './GameSlotFromGameSlotDbBuilder';
 
-describe(GameSlotDbToGameSlotConverter.name, () => {
+describe(GameSlotFromGameSlotDbBuilder.name, () => {
   let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
 
-  let gameSlotDbToGameSlotConverter: GameSlotDbToGameSlotConverter;
+  let gameSlotFromGameSlotDbBuilder: GameSlotFromGameSlotDbBuilder;
 
   beforeAll(() => {
     cardBuilderMock = {
       build: jest.fn(),
     };
 
-    gameSlotDbToGameSlotConverter = new GameSlotDbToGameSlotConverter(
+    gameSlotFromGameSlotDbBuilder = new GameSlotFromGameSlotDbBuilder(
       cardBuilderMock,
     );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a NonActiveGameSlotDb', () => {
       let nonActiveGameSlotDbFixture: GameSlotDb;
 
@@ -40,7 +40,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameSlotDbToGameSlotConverter.convert(
+          result = gameSlotFromGameSlotDbBuilder.build(
             nonActiveGameSlotDbFixture,
           );
         });
@@ -77,9 +77,7 @@ describe(GameSlotDbToGameSlotConverter.name, () => {
 
           cardBuilderMock.build.mockReturnValueOnce(cardFixture);
 
-          result = gameSlotDbToGameSlotConverter.convert(
-            activeGameSlotDbFixture,
-          );
+          result = gameSlotFromGameSlotDbBuilder.build(activeGameSlotDbFixture);
         });
 
         afterAll(() => {

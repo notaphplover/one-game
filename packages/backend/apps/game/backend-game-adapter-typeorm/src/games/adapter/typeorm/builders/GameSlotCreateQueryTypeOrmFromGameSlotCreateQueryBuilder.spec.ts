@@ -5,14 +5,14 @@ import { GameSlotCreateQueryFixtures } from '@cornie-js/backend-game-domain/game
 import { DeepPartial } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';
-import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from './GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
+import { GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder } from './GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder';
 
-describe(GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter.name, () => {
-  let gameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter: GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter;
+describe(GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder.name, () => {
+  let gameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder: GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder;
 
   beforeAll(() => {
-    gameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter =
-      new GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter();
+    gameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder =
+      new GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder();
   });
 
   describe('having a GameSlotCreateQuery', () => {
@@ -26,10 +26,9 @@ describe(GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter.name, () => {
       let result: unknown;
 
       beforeAll(() => {
-        result =
-          gameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter.convert(
-            gameSlotCreateQueryFixture,
-          );
+        result = gameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder.build(
+          gameSlotCreateQueryFixture,
+        );
       });
 
       it('should return a DeepPartial<GameSlotDb>', () => {

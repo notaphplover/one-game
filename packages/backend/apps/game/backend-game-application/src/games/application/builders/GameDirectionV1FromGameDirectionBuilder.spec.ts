@@ -6,14 +6,14 @@ import { GameDirection } from '@cornie-js/backend-game-domain/games';
 import { GameDirectionV1FromGameDirectionBuilder } from './GameDirectionV1FromGameDirectionBuilder';
 
 describe(GameDirectionV1FromGameDirectionBuilder.name, () => {
-  let gameDirectionToGameDirectionDbConverter: GameDirectionV1FromGameDirectionBuilder;
+  let gameDirectionV1FromGameDirectionBuilder: GameDirectionV1FromGameDirectionBuilder;
 
   beforeAll(() => {
-    gameDirectionToGameDirectionDbConverter =
+    gameDirectionV1FromGameDirectionBuilder =
       new GameDirectionV1FromGameDirectionBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.builder', () => {
     describe.each<[GameDirection, apiModels.GameDirectionV1]>([
       [GameDirection.antiClockwise, 'antiClockwise'],
       [GameDirection.clockwise, 'clockwise'],
@@ -28,7 +28,7 @@ describe(GameDirectionV1FromGameDirectionBuilder.name, () => {
 
           beforeAll(() => {
             result =
-              gameDirectionToGameDirectionDbConverter.build(gameDirection);
+              gameDirectionV1FromGameDirectionBuilder.build(gameDirection);
           });
 
           it('should return a GameDirectionDb', () => {

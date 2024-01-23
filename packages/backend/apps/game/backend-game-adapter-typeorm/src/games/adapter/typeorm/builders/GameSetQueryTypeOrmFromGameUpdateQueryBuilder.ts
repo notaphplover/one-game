@@ -1,4 +1,4 @@
-import { Builder, Converter, Writable } from '@cornie-js/backend-common';
+import { Builder, Writable } from '@cornie-js/backend-common';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   GameCardSpec,
@@ -13,16 +13,16 @@ import { CardColorDbBuilder } from '../../../../cards/adapter/typeorm/builders/C
 import { CardDbBuilder } from '../../../../cards/adapter/typeorm/builders/CardDbBuilder';
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
-import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from '../builders/GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
-import { GameDirectionDbFromGameDirectionBuilder } from '../builders/GameDirectionDbFromGameDirectionBuilder';
-import { GameStatusDbFromGameStatusBuilder } from '../builders/GameStatusDbFromGameStatusBuilder';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameStatusDb } from '../models/GameStatusDb';
+import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from './GameCardSpecArrayDbFromGameCardSpecArrayBuilder';
+import { GameDirectionDbFromGameDirectionBuilder } from './GameDirectionDbFromGameDirectionBuilder';
+import { GameStatusDbFromGameStatusBuilder } from './GameStatusDbFromGameStatusBuilder';
 
 @Injectable()
-export class GameUpdateQueryToGameSetQueryTypeOrmConverter
-  implements Converter<GameUpdateQuery, QueryDeepPartialEntity<GameDb>>
+export class GameSetQueryTypeOrmFromGameUpdateQueryBuilder
+  implements Builder<QueryDeepPartialEntity<GameDb>, [GameUpdateQuery]>
 {
   readonly #cardColorDbBuilder: Builder<CardColorDb, [CardColor]>;
   readonly #cardDbBuilder: Builder<CardDb, [Card]>;
@@ -66,7 +66,7 @@ export class GameUpdateQueryToGameSetQueryTypeOrmConverter
     this.#gameStatusDbFromGameStatusBuilder = gameStatusDbFromGameStatusBuilder;
   }
 
-  public convert(
+  public build(
     gameUpdateQuery: GameUpdateQuery,
   ): QueryDeepPartialEntity<GameDb> {
     const gameSetQueryTypeOrm: Writable<QueryDeepPartialEntity<GameDb>> = {};

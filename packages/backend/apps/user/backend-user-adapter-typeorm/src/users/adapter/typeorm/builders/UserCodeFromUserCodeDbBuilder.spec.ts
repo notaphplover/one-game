@@ -13,7 +13,7 @@ describe(UserCodeFromUserDbCodeBuilder.name, () => {
     userCodeFromUserCodeDbBuilder = new UserCodeFromUserDbCodeBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let userCodeDbFixture: UserCodeDb;
 
     beforeAll(() => {

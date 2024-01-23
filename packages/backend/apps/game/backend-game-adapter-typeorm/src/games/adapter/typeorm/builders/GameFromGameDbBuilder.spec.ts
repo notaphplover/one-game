@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
 import {
@@ -27,9 +27,9 @@ import { GameDbFixtures } from '../fixtures/GameDbFixtures';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDb } from '../models/GameSlotDb';
-import { GameDbToGameConverter } from './GameDbToGameConverter';
+import { GameFromGameDbBuilder } from './GameFromGameDbBuilder';
 
-describe(GameDbToGameConverter.name, () => {
+describe(GameFromGameDbBuilder.name, () => {
   let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
   let cardColorBuilderMock: jest.Mocked<Builder<CardColor, [CardColorDb]>>;
   let gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock: jest.Mocked<
@@ -38,11 +38,14 @@ describe(GameDbToGameConverter.name, () => {
   let gameDirectionFromGameDirectionDbBuilderMock: jest.Mocked<
     Builder<GameDirection, [GameDirectionDb]>
   >;
-  let gameSlotDbToGameSlotConverterMock: jest.Mocked<
-    Converter<GameSlotDb, ActiveGameSlot | NonStartedGameSlot>
+  let gameSlotFromGameSlotDbBuilderMock: jest.Mocked<
+    Builder<
+      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot,
+      [GameSlotDb]
+    >
   >;
 
-  let gameDbToGameConverter: GameDbToGameConverter;
+  let gameFromGameDbBuilder: GameFromGameDbBuilder;
 
   beforeAll(() => {
     cardBuilderMock = {
@@ -57,16 +60,16 @@ describe(GameDbToGameConverter.name, () => {
     gameDirectionFromGameDirectionDbBuilderMock = {
       build: jest.fn(),
     };
-    gameSlotDbToGameSlotConverterMock = {
-      convert: jest.fn(),
+    gameSlotFromGameSlotDbBuilderMock = {
+      build: jest.fn(),
     };
 
-    gameDbToGameConverter = new GameDbToGameConverter(
+    gameFromGameDbBuilder = new GameFromGameDbBuilder(
       cardBuilderMock,
       cardColorBuilderMock,
       gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock,
       gameDirectionFromGameDirectionDbBuilderMock,
-      gameSlotDbToGameSlotConverterMock,
+      gameSlotFromGameSlotDbBuilderMock,
     );
   });
 
@@ -88,27 +91,27 @@ describe(GameDbToGameConverter.name, () => {
         gameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValueOnce(cardFixture);
-        gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
+        gameSlotFromGameSlotDbBuilderMock.build.mockReturnValue(
           gameSlotFixture,
         );
 
-        result = gameDbToGameConverter.convert(gameDbFixture);
+        result = gameFromGameDbBuilder.build(gameDbFixture);
       });
 
       afterAll(() => {
-        gameSlotDbToGameSlotConverterMock.convert.mockReset();
+        gameSlotFromGameSlotDbBuilderMock.build.mockReset();
 
         jest.clearAllMocks();
       });
 
-      it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
-        expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
+      it('should call gameSlotFromGameSlotDbBuilderMock.build()', () => {
+        expect(gameSlotFromGameSlotDbBuilderMock.build).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
         );
 
         for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
           expect(
-            gameSlotDbToGameSlotConverterMock.convert,
+            gameSlotFromGameSlotDbBuilderMock.build,
           ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
         }
       });
@@ -148,27 +151,27 @@ describe(GameDbToGameConverter.name, () => {
         secondGameSlotFixture = NonStartedGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValueOnce(cardFixture);
-        gameSlotDbToGameSlotConverterMock.convert
+        gameSlotFromGameSlotDbBuilderMock.build
           .mockReturnValueOnce(secondGameSlotFixture)
           .mockReturnValueOnce(firstGameSlotFixture);
 
-        result = gameDbToGameConverter.convert(gameDbFixture);
+        result = gameFromGameDbBuilder.build(gameDbFixture);
       });
 
       afterAll(() => {
-        gameSlotDbToGameSlotConverterMock.convert.mockReset();
+        gameSlotFromGameSlotDbBuilderMock.build.mockReset();
 
         jest.clearAllMocks();
       });
 
-      it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
-        expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
+      it('should call gameSlotFromGameSlotDbBuilderMock.build()', () => {
+        expect(gameSlotFromGameSlotDbBuilderMock.build).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
         );
 
         for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
           expect(
-            gameSlotDbToGameSlotConverterMock.convert,
+            gameSlotFromGameSlotDbBuilderMock.build,
           ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
         }
       });
@@ -208,27 +211,27 @@ describe(GameDbToGameConverter.name, () => {
         secondGameSlotFixture = FinishedGameSlotFixtures.withPositionZero;
 
         cardBuilderMock.build.mockReturnValueOnce(cardFixture);
-        gameSlotDbToGameSlotConverterMock.convert
+        gameSlotFromGameSlotDbBuilderMock.build
           .mockReturnValueOnce(secondGameSlotFixture)
           .mockReturnValueOnce(firstGameSlotFixture);
 
-        result = gameDbToGameConverter.convert(gameDbFixture);
+        result = gameFromGameDbBuilder.build(gameDbFixture);
       });
 
       afterAll(() => {
-        gameSlotDbToGameSlotConverterMock.convert.mockReset();
+        gameSlotFromGameSlotDbBuilderMock.build.mockReset();
 
         jest.clearAllMocks();
       });
 
-      it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
-        expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
+      it('should call gameSlotFromGameSlotDbBuilderMock.build()', () => {
+        expect(gameSlotFromGameSlotDbBuilderMock.build).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
         );
 
         for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
           expect(
-            gameSlotDbToGameSlotConverterMock.convert,
+            gameSlotFromGameSlotDbBuilderMock.build,
           ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
         }
       });
@@ -279,29 +282,29 @@ describe(GameDbToGameConverter.name, () => {
         gameDirectionFromGameDirectionDbBuilderMock.build.mockReturnValueOnce(
           gameDirectionFixture,
         );
-        gameSlotDbToGameSlotConverterMock.convert.mockReturnValue(
+        gameSlotFromGameSlotDbBuilderMock.build.mockReturnValue(
           gameSlotFixture,
         );
 
-        result = gameDbToGameConverter.convert(gameDbFixture);
+        result = gameFromGameDbBuilder.build(gameDbFixture);
       });
 
       afterAll(() => {
         cardBuilderMock.build.mockReset();
         cardColorBuilderMock.build.mockReset();
-        gameSlotDbToGameSlotConverterMock.convert.mockReset();
+        gameSlotFromGameSlotDbBuilderMock.build.mockReset();
 
         jest.clearAllMocks();
       });
 
-      it('should call gameSlotDbToGameSlotConverterMock.convert()', () => {
-        expect(gameSlotDbToGameSlotConverterMock.convert).toHaveBeenCalledTimes(
+      it('should call gameSlotFromGameSlotDbBuilderMock.build()', () => {
+        expect(gameSlotFromGameSlotDbBuilderMock.build).toHaveBeenCalledTimes(
           gameDbFixture.gameSlotsDb.length,
         );
 
         for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
           expect(
-            gameSlotDbToGameSlotConverterMock.convert,
+            gameSlotFromGameSlotDbBuilderMock.build,
           ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
         }
       });

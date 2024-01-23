@@ -1,4 +1,4 @@
-import { Builder, Converter, Writable } from '@cornie-js/backend-common';
+import { Builder, Writable } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
@@ -9,8 +9,8 @@ import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter
-  implements Converter<GameSlotUpdateQuery, QueryDeepPartialEntity<GameSlotDb>>
+export class GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder
+  implements Builder<QueryDeepPartialEntity<GameSlotDb>, [GameSlotUpdateQuery]>
 {
   readonly #cardDbBuilder: Builder<CardDb, [Card]>;
 
@@ -21,7 +21,7 @@ export class GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter
     this.#cardDbBuilder = cardDbBuilder;
   }
 
-  public convert(
+  public build(
     gameSlotUpdateQuery: GameSlotUpdateQuery,
   ): QueryDeepPartialEntity<GameSlotDb> {
     const gameSlotSetTypeOrmQuery: Writable<

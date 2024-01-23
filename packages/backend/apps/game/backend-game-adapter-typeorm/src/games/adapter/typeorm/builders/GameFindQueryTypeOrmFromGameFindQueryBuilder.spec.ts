@@ -24,7 +24,7 @@ jest.mock('typeorm', () => {
   };
 });
 
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameSlotFindQuery,
@@ -39,30 +39,29 @@ import {
 } from 'typeorm';
 
 import { GameDb } from '../models/GameDb';
-import { GameFindQueryToGameFindQueryTypeOrmConverter } from './GameFindQueryToGameFindQueryTypeOrmConverter';
+import { GameFindQueryTypeOrmFromGameFindQueryBuilder } from './GameFindQueryTypeOrmFromGameFindQueryBuilder';
 
-describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
-  let gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock: jest.Mocked<
-    Converter<
-      GameSlotFindQuery,
+describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
+  let gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock: jest.Mocked<
+    Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >
   >;
-  let gameFindQueryToGameFindQueryTypeOrmConverter: GameFindQueryToGameFindQueryTypeOrmConverter;
+  let gameFindQueryTypeOrmFromGameFindQueryBuilder: GameFindQueryTypeOrmFromGameFindQueryBuilder;
 
   beforeAll(() => {
-    gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock = {
-      convert: jest.fn(),
+    gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock = {
+      build: jest.fn(),
     };
 
-    gameFindQueryToGameFindQueryTypeOrmConverter =
-      new GameFindQueryToGameFindQueryTypeOrmConverter(
-        gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock,
+    gameFindQueryTypeOrmFromGameFindQueryBuilder =
+      new GameFindQueryTypeOrmFromGameFindQueryBuilder(
+        gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock,
       );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let queryFixture: string;
     let queryBuilderFixture: jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
 
@@ -101,7 +100,7 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
 
-          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
             queryBuilderFixture,
           );
@@ -146,11 +145,11 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
 
-          gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
+          gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build.mockReturnValueOnce(
             queryBuilderFixture,
           );
 
-          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
             queryBuilderFixture,
           );
@@ -164,12 +163,12 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
           ).mockReset();
         });
 
-        it('should call gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert()', () => {
+        it('should call gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build()', () => {
           expect(
-            gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert,
+            gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build,
           ).toHaveBeenCalled();
           expect(
-            gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert,
+            gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build,
           ).toHaveBeenCalledWith(
             gameFindQueryFixture.gameSlotFindQuery,
             queryBuilderFixture,
@@ -197,7 +196,7 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
 
-          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
             queryBuilderFixture,
           );
@@ -239,7 +238,7 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
 
-          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
             queryBuilderFixture,
           );
@@ -282,7 +281,7 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
 
-          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
             queryBuilderFixture,
           );
@@ -328,7 +327,7 @@ describe(GameFindQueryToGameFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
 
-          result = gameFindQueryToGameFindQueryTypeOrmConverter.convert(
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
             queryBuilderFixture,
           );

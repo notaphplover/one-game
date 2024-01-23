@@ -8,25 +8,25 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameSlotDb } from '../models/GameSlotDb';
-import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from './GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
+import { GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder } from './GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder';
 
-describe(GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter.name, () => {
+describe(GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder.name, () => {
   let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
 
-  let gameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter: GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter;
+  let gameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder: GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder;
 
   beforeAll(() => {
     cardDbBuilderMock = {
       build: jest.fn(),
     };
 
-    gameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter =
-      new GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter(
+    gameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder =
+      new GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder(
         cardDbBuilderMock,
       );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a GameSlotUpdateQuery with cards', () => {
       let cardFixture: Card;
       let gameSlotUpdateQueryFixture: GameSlotUpdateQuery;
@@ -47,10 +47,9 @@ describe(GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter.name, () => {
 
           cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
 
-          result =
-            gameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter.convert(
-              gameSlotUpdateQueryFixture,
-            );
+          result = gameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder.build(
+            gameSlotUpdateQueryFixture,
+          );
         });
 
         afterAll(() => {

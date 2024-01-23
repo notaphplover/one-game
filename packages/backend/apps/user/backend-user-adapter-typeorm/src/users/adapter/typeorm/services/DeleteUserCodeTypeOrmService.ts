@@ -17,11 +17,11 @@ export class DeleteUserCodeTypeOrmService extends DeleteTypeOrmServiceV2<
     @InjectRepository(UserCodeDb)
     repository: Repository<UserCodeDb>,
     @Inject(UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder)
-    userCodeFindQueryToUserCodeFindQueryTypeOrmConverter: Builder<
+    userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder: Builder<
       FindManyOptions<UserCodeDb>,
       [UserCodeFindQuery]
     >,
   ) {
-    super(repository, userCodeFindQueryToUserCodeFindQueryTypeOrmConverter);
+    super(repository, userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder);
   }
 }

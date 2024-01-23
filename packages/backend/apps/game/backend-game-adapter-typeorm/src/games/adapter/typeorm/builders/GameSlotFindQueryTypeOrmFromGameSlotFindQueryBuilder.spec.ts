@@ -35,17 +35,17 @@ import {
 } from 'typeorm';
 
 import { GameSlotDb } from '../models/GameSlotDb';
-import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
+import { GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder } from './GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder';
 
-describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
-  let gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter;
+describe(GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.name, () => {
+  let gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder: GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder;
 
   beforeAll(() => {
-    gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter =
-      new GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter();
+    gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder =
+      new GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let queryBuilderMock: jest.Mocked<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
     >;
@@ -73,7 +73,7 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValueOnce(true);
 
-          result = gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
+          result = gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.build(
             gameSlotFindQueryFixture,
             queryBuilderMock,
           );
@@ -114,7 +114,7 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValueOnce(true);
 
-          result = gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
+          result = gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.build(
             gameSlotFindQueryFixture,
             queryBuilderMock,
           );
@@ -155,7 +155,7 @@ describe(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValueOnce(true);
 
-          result = gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
+          result = gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.build(
             gameSlotFindQueryFixture,
             queryBuilderMock,
           );

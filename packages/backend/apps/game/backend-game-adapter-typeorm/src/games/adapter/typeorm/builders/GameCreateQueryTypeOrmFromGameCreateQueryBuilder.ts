@@ -1,4 +1,4 @@
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { GameCreateQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
@@ -7,10 +7,10 @@ import { GameDb } from '../models/GameDb';
 import { GameStatusDb } from '../models/GameStatusDb';
 
 @Injectable()
-export class GameCreateQueryToGameCreateQueryTypeOrmConverter
-  implements Converter<GameCreateQuery, QueryDeepPartialEntity<GameDb>>
+export class GameCreateQueryTypeOrmFromGameCreateQueryBuilder
+  implements Builder<QueryDeepPartialEntity<GameDb>, [GameCreateQuery]>
 {
-  public convert(
+  public build(
     gameCreateQuery: GameCreateQuery,
   ): QueryDeepPartialEntity<GameDb> {
     const discardPileStringified: string = JSON.stringify([]);

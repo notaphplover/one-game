@@ -1,9 +1,4 @@
-import {
-  AppError,
-  AppErrorKind,
-  Builder,
-  Converter,
-} from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGameSlot,
@@ -17,11 +12,11 @@ import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class GameSlotDbToGameSlotConverter
+export class GameSlotFromGameSlotDbBuilder
   implements
-    Converter<
-      GameSlotDb,
-      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot
+    Builder<
+      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot,
+      [GameSlotDb]
     >
 {
   readonly #cardBuilder: Builder<Card, [CardDb]>;
@@ -30,13 +25,13 @@ export class GameSlotDbToGameSlotConverter
     this.#cardBuilder = cardBuilder;
   }
 
-  public convert(
+  public build(
     gameSlotDb: GameSlotDb,
   ): ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot {
     if (gameSlotDb.cards === null) {
-      return this.#convertToNonStartedGameSlot(gameSlotDb);
+      return this.#buildNonStartedGameSlot(gameSlotDb);
     } else {
-      return this.#convertToActiveOrFinishedGameSlots(gameSlotDb);
+      return this.#buildActiveOrFinishedGameSlots(gameSlotDb);
     }
   }
 
@@ -53,7 +48,7 @@ export class GameSlotDbToGameSlotConverter
     return jsonCards.map((cardDb: CardDb) => this.#cardBuilder.build(cardDb));
   }
 
-  #convertToActiveOrFinishedGameSlots(
+  #buildActiveOrFinishedGameSlots(
     gameSlotDb: GameSlotDb,
   ): ActiveGameSlot | FinishedGameSlot {
     if (gameSlotDb.userId === null) {
@@ -70,7 +65,7 @@ export class GameSlotDbToGameSlotConverter
     };
   }
 
-  #convertToNonStartedGameSlot(gameSlotDb: GameSlotDb): NonStartedGameSlot {
+  #buildNonStartedGameSlot(gameSlotDb: GameSlotDb): NonStartedGameSlot {
     return {
       position: gameSlotDb.position,
       userId: gameSlotDb.userId,

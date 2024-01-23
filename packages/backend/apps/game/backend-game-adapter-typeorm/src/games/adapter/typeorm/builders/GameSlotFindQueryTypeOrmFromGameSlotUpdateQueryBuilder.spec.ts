@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import {
   GameSlotFindQuery,
   GameSlotUpdateQuery,
@@ -8,31 +8,30 @@ import {
 import { GameSlotUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
+import { GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder } from './GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder';
 
-describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
-  let gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock: jest.Mocked<
-    Converter<
-      GameSlotFindQuery,
+describe(GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder.name, () => {
+  let gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock: jest.Mocked<
+    Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >
   >;
 
-  let gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter: GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter;
+  let gameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder: GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder;
 
   beforeAll(() => {
-    gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock = {
-      convert: jest.fn(),
+    gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock = {
+      build: jest.fn(),
     };
 
-    gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter =
-      new GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter(
-        gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock,
+    gameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder =
+      new GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder(
+        gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock,
       );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let gameSlotUpdateQueryFixture: GameSlotUpdateQuery;
     let queryBuilderFixture: QueryBuilder<ObjectLiteral> &
       WhereExpressionBuilder;
@@ -47,11 +46,11 @@ describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
       let result: unknown;
 
       beforeAll(() => {
-        gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
+        gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build.mockReturnValueOnce(
           queryBuilderFixture,
         );
 
-        result = gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.convert(
+        result = gameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder.build(
           gameSlotUpdateQueryFixture,
           queryBuilderFixture,
         );
@@ -61,12 +60,12 @@ describe(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert()', () => {
+      it('should call gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.build()', () => {
         expect(
-          gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert,
+          gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameSlotFindQueryToGameSlotFindQueryTypeOrmConverterMock.convert,
+          gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build,
         ).toHaveBeenCalledWith(
           gameSlotUpdateQueryFixture.gameSlotFindQuery,
           queryBuilderFixture,

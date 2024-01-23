@@ -1,4 +1,4 @@
-import { AppError, AppErrorKind, Converter } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameSlotFindQuery,
@@ -15,39 +15,36 @@ import {
 import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
 import { GameDb } from '../models/GameDb';
 import { GameSlotDb } from '../models/GameSlotDb';
-import { GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter } from './GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter';
+import { GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder } from './GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder';
 
 @Injectable()
-export class GameFindQueryToGameFindQueryTypeOrmConverter
+export class GameFindQueryTypeOrmFromGameFindQueryBuilder
   extends BaseFindQueryToFindQueryTypeOrmConverter
   implements
-    Converter<
-      GameFindQuery,
+    Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >
 {
-  readonly #gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
-    GameSlotFindQuery,
+  readonly #gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder: Builder<
     QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+    [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
   >;
 
   constructor(
-    @Inject(GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter)
-    gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter: Converter<
-      GameSlotFindQuery,
+    @Inject(GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder)
+    gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder: Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >,
   ) {
     super();
 
-    this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter =
-      gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter;
+    this.#gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder =
+      gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder;
   }
 
-  public convert(
+  public build(
     gameFindQuery: GameFindQuery,
     queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
   ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
@@ -139,7 +136,7 @@ export class GameFindQueryToGameFindQueryTypeOrmConverter
       .from(GameSlotDb, GameSlotDb.name);
 
     subQueryBuilder =
-      this.#gameSlotFindQueryToGameSlotFindQueryTypeOrmConverter.convert(
+      this.#gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.build(
         gameSlotFindQuery,
         subQueryBuilder,
       ) as SelectQueryBuilder<ObjectLiteral>;

@@ -6,17 +6,17 @@ import { DeepPartial } from 'typeorm';
 
 import { GameDb } from '../models/GameDb';
 import { GameStatusDb } from '../models/GameStatusDb';
-import { GameCreateQueryToGameCreateQueryTypeOrmConverter } from './GameCreateQueryToGameCreateQueryTypeOrmConverter';
+import { GameCreateQueryTypeOrmFromGameCreateQueryBuilder } from './GameCreateQueryTypeOrmFromGameCreateQueryBuilder';
 
-describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
-  let gameCreateQueryToGameCreateQueryTypeOrmConverter: GameCreateQueryToGameCreateQueryTypeOrmConverter;
+describe(GameCreateQueryTypeOrmFromGameCreateQueryBuilder.name, () => {
+  let gameCreateQueryTypeOrmFromGameCreateQueryBuilder: GameCreateQueryTypeOrmFromGameCreateQueryBuilder;
 
   beforeAll(() => {
-    gameCreateQueryToGameCreateQueryTypeOrmConverter =
-      new GameCreateQueryToGameCreateQueryTypeOrmConverter();
+    gameCreateQueryTypeOrmFromGameCreateQueryBuilder =
+      new GameCreateQueryTypeOrmFromGameCreateQueryBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a GameCreateQuery with string name', () => {
       let gameCreateQueryFixture: GameCreateQuery;
 
@@ -29,7 +29,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameCreateQueryToGameCreateQueryTypeOrmConverter.convert(
+          result = gameCreateQueryTypeOrmFromGameCreateQueryBuilder.build(
             gameCreateQueryFixture,
           );
         });
@@ -70,7 +70,7 @@ describe(GameCreateQueryToGameCreateQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameCreateQueryToGameCreateQueryTypeOrmConverter.convert(
+          result = gameCreateQueryTypeOrmFromGameCreateQueryBuilder.build(
             gameCreateQueryFixture,
           );
         });

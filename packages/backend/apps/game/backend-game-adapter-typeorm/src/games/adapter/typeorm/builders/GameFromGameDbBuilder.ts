@@ -1,9 +1,4 @@
-import {
-  AppError,
-  AppErrorKind,
-  Builder,
-  Converter,
-} from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
@@ -23,16 +18,16 @@ import { CardBuilder } from '../../../../cards/adapter/typeorm/builders/CardBuil
 import { CardColorBuilder } from '../../../../cards/adapter/typeorm/builders/CardColorBuilder';
 import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
-import { GameCardSpecArrayFromGameCardSpecArrayDbBuilder } from '../builders/GameCardSpecArrayFromGameCardSpecArrayDbBuilder';
-import { GameDirectionFromGameDirectionDbBuilder } from '../builders/GameDirectionFromGameDirectionDbBuilder';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameStatusDb } from '../models/GameStatusDb';
-import { GameSlotDbToGameSlotConverter } from './GameSlotDbToGameSlotConverter';
+import { GameCardSpecArrayFromGameCardSpecArrayDbBuilder } from './GameCardSpecArrayFromGameCardSpecArrayDbBuilder';
+import { GameDirectionFromGameDirectionDbBuilder } from './GameDirectionFromGameDirectionDbBuilder';
+import { GameSlotFromGameSlotDbBuilder } from './GameSlotFromGameSlotDbBuilder';
 
 @Injectable()
-export class GameDbToGameConverter implements Converter<GameDb, Game> {
+export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
   readonly #cardBuilder: Builder<Card, [CardDb]>;
   readonly #cardColorBuilder: Builder<CardColor, [CardColorDb]>;
   readonly #gameCardSpecArrayFromGameCardSpecArrayDbBuilder: Builder<
@@ -43,9 +38,9 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     GameDirection,
     [GameDirectionDb]
   >;
-  readonly #gameSlotDbToGameSlotConverter: Converter<
-    GameSlotDb,
-    ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot
+  readonly #gameSlotFromGameSlotDbBuilder: Builder<
+    ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot,
+    [GameSlotDb]
   >;
 
   constructor(
@@ -63,10 +58,10 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       GameDirection,
       [GameDirectionDb]
     >,
-    @Inject(GameSlotDbToGameSlotConverter)
-    gameSlotDbToGameSlotConverter: Converter<
-      GameSlotDb,
-      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot
+    @Inject(GameSlotFromGameSlotDbBuilder)
+    gameSlotFromGameSlotDbBuilder: Builder<
+      ActiveGameSlot | FinishedGameSlot | NonStartedGameSlot,
+      [GameSlotDb]
     >,
   ) {
     this.#cardBuilder = cardBuilder;
@@ -75,36 +70,39 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
       gameCardSpecArrayFromGameCardSpecArrayDbBuilder;
     this.#gameDirectionFromGameDirectionDbBuilder =
       gameDirectionFromGameDirectionDbBuilder;
-    this.#gameSlotDbToGameSlotConverter = gameSlotDbToGameSlotConverter;
+    this.#gameSlotFromGameSlotDbBuilder = gameSlotFromGameSlotDbBuilder;
   }
 
-  public convert(gameDb: GameDb): Game {
-    const gameSlots: (ActiveGameSlot | NonStartedGameSlot)[] =
-      gameDb.gameSlotsDb
-        .map((gameSlotDb: GameSlotDb) =>
-          this.#gameSlotDbToGameSlotConverter.convert(gameSlotDb),
-        )
-        .sort(
-          (
-            gameSlot1: ActiveGameSlot | NonStartedGameSlot,
-            gameSlot2: ActiveGameSlot | NonStartedGameSlot,
-          ) => gameSlot1.position - gameSlot2.position,
-        );
+  public build(gameDb: GameDb): Game {
+    const gameSlots:
+      | ActiveGameSlot[]
+      | FinishedGameSlot[]
+      | NonStartedGameSlot[] = gameDb.gameSlotsDb
+      .map((gameSlotDb: GameSlotDb) =>
+        this.#gameSlotFromGameSlotDbBuilder.build(gameSlotDb),
+      )
+      .sort(
+        (
+          gameSlot1: ActiveGameSlot | NonStartedGameSlot | NonStartedGameSlot,
+          gameSlot2: ActiveGameSlot | NonStartedGameSlot | NonStartedGameSlot,
+        ) => gameSlot1.position - gameSlot2.position,
+      );
 
     let game: Game;
 
     switch (gameDb.status) {
       case GameStatusDb.active:
-        game = this.#convertActiveGameDb(gameDb, gameSlots as ActiveGameSlot[]);
+        game = this.#buildActiveGameDb(gameDb, gameSlots as ActiveGameSlot[]);
         break;
       case GameStatusDb.nonStarted:
-        game = this.#convertNonStartedGameDb(
+        game = this.#buildNonStartedGameDb(
           gameDb,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           gameSlots as NonStartedGameSlot[],
         );
         break;
       case GameStatusDb.finished:
-        game = this.#convertFinishedGameDb(
+        game = this.#buildFinishedGameDb(
           gameDb,
           gameSlots as FinishedGameSlot[],
         );
@@ -114,10 +112,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     return game;
   }
 
-  #convertActiveGameDb(
-    gameDb: GameDb,
-    gameSlots: ActiveGameSlot[],
-  ): ActiveGame {
+  #buildActiveGameDb(gameDb: GameDb, gameSlots: ActiveGameSlot[]): ActiveGame {
     if (
       gameDb.currentCard === null ||
       gameDb.currentColor === null ||
@@ -155,7 +150,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     };
   }
 
-  #convertFinishedGameDb(
+  #buildFinishedGameDb(
     gameDb: GameDb,
     gameSlots: FinishedGameSlot[],
   ): FinishedGame {
@@ -169,7 +164,7 @@ export class GameDbToGameConverter implements Converter<GameDb, Game> {
     };
   }
 
-  #convertNonStartedGameDb(
+  #buildNonStartedGameDb(
     gameDb: GameDb,
     gameSlots: NonStartedGameSlot[],
   ): NonStartedGame {

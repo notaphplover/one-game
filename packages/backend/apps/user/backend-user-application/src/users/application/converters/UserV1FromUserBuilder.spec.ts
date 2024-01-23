@@ -13,7 +13,7 @@ describe(UserV1FromUserBuilder.name, () => {
     userV1FromUserBuilder = new UserV1FromUserBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let userFixture: User;
 
     beforeAll(() => {

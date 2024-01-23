@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameUpdateQuery,
@@ -8,31 +8,30 @@ import {
 import { GameUpdateQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { GameUpdateQueryToGameFindQueryTypeOrmConverter } from './GameUpdateQueryToGameFindQueryTypeOrmConverter';
+import { GameFindQueryTypeOrmFromGameUpdateQueryBuilder } from './GameFindQueryTypeOrmFromGameUpdateQueryBuilder';
 
-describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
-  let gameFindQueryToGameFindQueryTypeOrmConverterMock: jest.Mocked<
-    Converter<
-      GameFindQuery,
+describe(GameFindQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
+  let gameFindQueryTypeOrmFromGameFindQueryBuilderMock: jest.Mocked<
+    Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >
   >;
 
-  let gameUpdateQueryToGameFindQueryTypeOrmConverter: GameUpdateQueryToGameFindQueryTypeOrmConverter;
+  let gameFindQueryTypeOrmFromGameUpdateQueryBuilder: GameFindQueryTypeOrmFromGameUpdateQueryBuilder;
 
   beforeAll(() => {
-    gameFindQueryToGameFindQueryTypeOrmConverterMock = {
-      convert: jest.fn(),
+    gameFindQueryTypeOrmFromGameFindQueryBuilderMock = {
+      build: jest.fn(),
     };
 
-    gameUpdateQueryToGameFindQueryTypeOrmConverter =
-      new GameUpdateQueryToGameFindQueryTypeOrmConverter(
-        gameFindQueryToGameFindQueryTypeOrmConverterMock,
+    gameFindQueryTypeOrmFromGameUpdateQueryBuilder =
+      new GameFindQueryTypeOrmFromGameUpdateQueryBuilder(
+        gameFindQueryTypeOrmFromGameFindQueryBuilderMock,
       );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let gameUpdateQueryFixture: GameUpdateQuery;
     let queryBuilderFixture: QueryBuilder<ObjectLiteral> &
       WhereExpressionBuilder;
@@ -47,11 +46,11 @@ describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
       let result: unknown;
 
       beforeAll(() => {
-        gameFindQueryToGameFindQueryTypeOrmConverterMock.convert.mockReturnValueOnce(
+        gameFindQueryTypeOrmFromGameFindQueryBuilderMock.build.mockReturnValueOnce(
           queryBuilderFixture,
         );
 
-        result = gameUpdateQueryToGameFindQueryTypeOrmConverter.convert(
+        result = gameFindQueryTypeOrmFromGameUpdateQueryBuilder.build(
           gameUpdateQueryFixture,
           queryBuilderFixture,
         );
@@ -61,12 +60,12 @@ describe(GameUpdateQueryToGameFindQueryTypeOrmConverter.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call gameFindQueryToGameFindQueryTypeOrmConverter.convert()', () => {
+      it('should call gameFindQueryToGameFindQueryTypeOrmConverter.build()', () => {
         expect(
-          gameFindQueryToGameFindQueryTypeOrmConverterMock.convert,
+          gameFindQueryTypeOrmFromGameFindQueryBuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameFindQueryToGameFindQueryTypeOrmConverterMock.convert,
+          gameFindQueryTypeOrmFromGameFindQueryBuilderMock.build,
         ).toHaveBeenCalledWith(
           gameUpdateQueryFixture.gameFindQuery,
           queryBuilderFixture,

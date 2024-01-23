@@ -1,4 +1,4 @@
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { GameSlotFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
@@ -7,16 +7,15 @@ import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class GameSlotFindQueryToGameSlotFindQueryTypeOrmConverter
+export class GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder
   extends BaseFindQueryToFindQueryTypeOrmConverter
   implements
-    Converter<
-      GameSlotFindQuery,
+    Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >
 {
-  public convert(
+  public build(
     gameSlotFindQuery: GameSlotFindQuery,
     queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
   ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {

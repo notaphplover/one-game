@@ -1,4 +1,4 @@
-import { Converter } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { GameSlotCreateQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
@@ -6,10 +6,10 @@ import { DeepPartial } from 'typeorm';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter
-  implements Converter<GameSlotCreateQuery, DeepPartial<GameSlotDb>>
+export class GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder
+  implements Builder<DeepPartial<GameSlotDb>, [GameSlotCreateQuery]>
 {
-  public convert(
+  public build(
     gameSlotCreateQuery: GameSlotCreateQuery,
   ): DeepPartial<GameSlotDb> {
     return {

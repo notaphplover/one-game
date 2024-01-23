@@ -16,9 +16,9 @@ import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameDb } from '../models/GameDb';
 import { GameDirectionDb } from '../models/GameDirectionDb';
 import { GameStatusDb } from '../models/GameStatusDb';
-import { GameUpdateQueryToGameSetQueryTypeOrmConverter } from './GameUpdateQueryToGameSetQueryTypeOrmConverter';
+import { GameSetQueryTypeOrmFromGameUpdateQueryBuilder } from './GameSetQueryTypeOrmFromGameUpdateQueryBuilder';
 
-describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
+describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
   let cardColorDbBuilderMock: jest.Mocked<Builder<CardColorDb, [CardColor]>>;
   let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
   let gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock: jest.Mocked<
@@ -31,7 +31,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
     Builder<GameStatusDb, [GameStatus]>
   >;
 
-  let gameUpdateQueryToGameSetQueryTypeOrmConverter: GameUpdateQueryToGameSetQueryTypeOrmConverter;
+  let gameSetQueryTypeOrmFromGameUpdateQueryBuilder: GameSetQueryTypeOrmFromGameUpdateQueryBuilder;
 
   beforeAll(() => {
     cardColorDbBuilderMock = {
@@ -50,8 +50,8 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
       build: jest.fn(),
     };
 
-    gameUpdateQueryToGameSetQueryTypeOrmConverter =
-      new GameUpdateQueryToGameSetQueryTypeOrmConverter(
+    gameSetQueryTypeOrmFromGameUpdateQueryBuilder =
+      new GameSetQueryTypeOrmFromGameUpdateQueryBuilder(
         cardColorDbBuilderMock,
         cardDbBuilderMock,
         gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock,
@@ -60,7 +60,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
       );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a GameUpdateQuery with currentCard', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 
@@ -76,7 +76,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
           cardDbFixture = 0x0039;
           cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
 
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -121,7 +121,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
             gameDirectionDbFixture,
           );
 
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -163,7 +163,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -197,7 +197,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -236,7 +236,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
             gameSpecCardsDbStringifiedFixture,
           );
 
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -283,7 +283,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
             gameSpecCardsDbStringifiedFixture,
           );
 
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -324,7 +324,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });
@@ -364,7 +364,7 @@ describe(GameUpdateQueryToGameSetQueryTypeOrmConverter.name, () => {
             gameStatusDbFixture,
           );
 
-          result = gameUpdateQueryToGameSetQueryTypeOrmConverter.convert(
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
             gameUpdateQueryFixture,
           );
         });

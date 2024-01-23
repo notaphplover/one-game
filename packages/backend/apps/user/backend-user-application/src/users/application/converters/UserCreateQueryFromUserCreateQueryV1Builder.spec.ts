@@ -24,7 +24,7 @@ describe(UserCreateQueryFromUserCreateQueryV1Builder.name, () => {
       );
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let userCreateQueryV1Fixture: apiModels.UserCreateQueryV1;
     let contextFixture: UuidContext;
 

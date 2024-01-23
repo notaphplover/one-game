@@ -1,5 +1,5 @@
-import { Converter } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
 import {
   ActiveGameSlot,
   GameSlotCreateQuery,
@@ -10,12 +10,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
-import { GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter } from '../converters/GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter';
-import { GameSlotDbToGameSlotConverter } from '../converters/GameSlotDbToGameSlotConverter';
+import { GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder } from '../builders/GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder';
+import { GameSlotFromGameSlotDbBuilder } from '../builders/GameSlotFromGameSlotDbBuilder';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class CreateGameSlotTypeOrmService extends InsertTypeOrmPostgresService<
+export class CreateGameSlotTypeOrmService extends InsertTypeOrmPostgresServiceV2<
   ActiveGameSlot | NonStartedGameSlot,
   GameSlotDb,
   GameSlotCreateQuery
@@ -23,21 +23,21 @@ export class CreateGameSlotTypeOrmService extends InsertTypeOrmPostgresService<
   constructor(
     @InjectRepository(GameSlotDb)
     repository: Repository<GameSlotDb>,
-    @Inject(GameSlotDbToGameSlotConverter)
-    gameSlotDbToGameSlotConverter: Converter<
-      GameSlotDb,
-      ActiveGameSlot | NonStartedGameSlot
+    @Inject(GameSlotFromGameSlotDbBuilder)
+    gameSlotFromGameSlotDbBuilder: Builder<
+      ActiveGameSlot | NonStartedGameSlot,
+      [GameSlotDb]
     >,
-    @Inject(GameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter)
-    gameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter: Converter<
-      GameSlotCreateQuery,
-      QueryDeepPartialEntity<GameSlotDb>
+    @Inject(GameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder)
+    gameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder: Builder<
+      QueryDeepPartialEntity<GameSlotDb>,
+      [GameSlotCreateQuery]
     >,
   ) {
     super(
       repository,
-      gameSlotDbToGameSlotConverter,
-      gameSlotCreateQueryToGameSlotCreateQueryTypeOrmConverter,
+      gameSlotFromGameSlotDbBuilder,
+      gameSlotCreateQueryTypeOrmFromGameSlotCreateQueryBuilder,
     );
   }
 }
