@@ -15,7 +15,7 @@
     "@cornie-js/api-openapi-schema": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
     "@cornie-js/openapi-utils": "workspace:*",
-    "@types/node": "20.11.5",
+    "@types/node": "20.11.6",
     "@types/qs": "6.9.11",
     "@typescript-eslint/eslint-plugin": "6.19.1",
     "@typescript-eslint/parser": "6.19.1",
