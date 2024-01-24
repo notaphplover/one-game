@@ -1,5 +1,5 @@
-import { Converter } from '@cornie-js/backend-common';
-import { FindTypeOrmService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { FindTypeOrmServiceV2 } from '@cornie-js/backend-db';
 import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,12 +10,12 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { GameDbToGameConverter } from '../converters/GameDbToGameConverter';
-import { GameFindQueryToGameFindQueryTypeOrmConverter } from '../converters/GameFindQueryToGameFindQueryTypeOrmConverter';
+import { GameFindQueryTypeOrmFromGameFindQueryBuilder } from '../builders/GameFindQueryTypeOrmFromGameFindQueryBuilder';
+import { GameFromGameDbBuilder } from '../builders/GameFromGameDbBuilder';
 import { GameDb } from '../models/GameDb';
 
 @Injectable()
-export class FindGameTypeOrmService extends FindTypeOrmService<
+export class FindGameTypeOrmService extends FindTypeOrmServiceV2<
   Game,
   GameDb,
   GameFindQuery
@@ -23,19 +23,18 @@ export class FindGameTypeOrmService extends FindTypeOrmService<
   constructor(
     @InjectRepository(GameDb)
     repository: Repository<GameDb>,
-    @Inject(GameDbToGameConverter)
-    gameDbToGameConverter: Converter<GameDb, Game>,
-    @Inject(GameFindQueryToGameFindQueryTypeOrmConverter)
-    gameFindQueryToGameFindQueryTypeOrmConverter: Converter<
-      GameFindQuery,
+    @Inject(GameFromGameDbBuilder)
+    gameFromGameDbBuilder: Builder<Game, [GameDb]>,
+    @Inject(GameFindQueryTypeOrmFromGameFindQueryBuilder)
+    gameFindQueryTypeOrmFromGameFindQueryBuilder: Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [GameFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
     >,
   ) {
     super(
       repository,
-      gameDbToGameConverter,
-      gameFindQueryToGameFindQueryTypeOrmConverter,
+      gameFromGameDbBuilder,
+      gameFindQueryTypeOrmFromGameFindQueryBuilder,
     );
   }
 }

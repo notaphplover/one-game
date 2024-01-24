@@ -54,7 +54,7 @@ export class InsertTypeOrmServiceV2<
       await this.#setQueryTypeOrmFromSetQueryBuilder.build(query);
 
     const singleInsertQueryTypeOrm: QueryDeepPartialEntity<TModelDb> =
-      this.#convertToSingleInsertQueryTypeOrm(insertQueryTypeOrm);
+      this.#buildSingleInsertQueryTypeOrm(insertQueryTypeOrm);
 
     const insertResult: InsertResult = await this.#repository.insert(
       singleInsertQueryTypeOrm,
@@ -78,7 +78,7 @@ export class InsertTypeOrmServiceV2<
       await this.#setQueryTypeOrmFromSetQueryBuilder.build(query);
 
     const multipleInsertQueryTypeOrm: QueryDeepPartialEntity<TModelDb>[] =
-      this.#convertToMultipleInsertQueryTypeOrm(insertQueryTypeOrm);
+      this.#buildMultipleInsertQueryTypeOrm(insertQueryTypeOrm);
 
     const insertResult: InsertResult = await this.#repository.insert(
       multipleInsertQueryTypeOrm,
@@ -98,7 +98,7 @@ export class InsertTypeOrmServiceV2<
     return models;
   }
 
-  #convertToMultipleInsertQueryTypeOrm(
+  #buildMultipleInsertQueryTypeOrm(
     typeOrmQuery:
       | QueryDeepPartialEntity<TModelDb>
       | QueryDeepPartialEntity<TModelDb>[],
@@ -114,7 +114,7 @@ export class InsertTypeOrmServiceV2<
     return multipleInsertQueryTypeOrm;
   }
 
-  #convertToSingleInsertQueryTypeOrm(
+  #buildSingleInsertQueryTypeOrm(
     typeOrmQuery:
       | QueryDeepPartialEntity<TModelDb>
       | QueryDeepPartialEntity<TModelDb>[],

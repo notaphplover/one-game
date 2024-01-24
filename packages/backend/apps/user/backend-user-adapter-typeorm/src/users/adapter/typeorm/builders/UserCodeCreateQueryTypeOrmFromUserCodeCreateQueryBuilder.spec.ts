@@ -15,7 +15,7 @@ describe(UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder.name, () => {
       new UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     let userCodeCreateQueryFixture: UserCodeCreateQuery;
 
     beforeAll(() => {

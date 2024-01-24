@@ -42,7 +42,7 @@ export class FindTypeOrmServiceV2<
   }
 
   public async find(query: TQuery): Promise<TModel[]> {
-    const modelsDb: TModelDb[] = await this.innerFind(
+    const modelsDb: TModelDb[] = await this.#innerFind(
       query,
       async (queryBuilder: SelectQueryBuilder<TModelDb>): Promise<TModelDb[]> =>
         queryBuilder.getMany(),
@@ -60,7 +60,7 @@ export class FindTypeOrmServiceV2<
   }
 
   public async findOne(query: TQuery): Promise<TModel | undefined> {
-    const modelDb: TModelDb | undefined = await this.innerFind(
+    const modelDb: TModelDb | undefined = await this.#innerFind(
       query,
       async (
         queryBuilder: SelectQueryBuilder<TModelDb>,
@@ -70,7 +70,7 @@ export class FindTypeOrmServiceV2<
         findConditions: FindManyOptions<TModelDb>,
       ): Promise<TModelDb | undefined> =>
         (await this.#repository.findOne(
-          this.convertToFindOneOptions(findConditions),
+          this.#buildFindOneOptions(findConditions),
         )) ?? undefined,
     );
 
@@ -85,13 +85,13 @@ export class FindTypeOrmServiceV2<
     return model;
   }
 
-  private convertToFindOneOptions(
+  #buildFindOneOptions(
     findManyOptions: FindManyOptions<TModelDb>,
   ): FindOneOptions<TModelDb> {
     return findManyOptions;
   }
 
-  private async innerFind<TOutputDb extends undefined | TModelDb | TModelDb[]>(
+  async #innerFind<TOutputDb extends undefined | TModelDb | TModelDb[]>(
     query: TQuery,
     findByQueryBuilder: (
       queryBuilder: SelectQueryBuilder<TModelDb>,

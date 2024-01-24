@@ -12,14 +12,14 @@ import { GameCardSpecArrayDbFromGameCardSpecArrayBuilder } from './GameCardSpecA
 describe(GameCardSpecArrayDbFromGameCardSpecArrayBuilder.name, () => {
   let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
 
-  let gameCardSpecArrayToGameCardSpecArrayDbConverter: GameCardSpecArrayDbFromGameCardSpecArrayBuilder;
+  let gameCardSpecArrayDbFromGameCardSpecArrayBuilder: GameCardSpecArrayDbFromGameCardSpecArrayBuilder;
 
   beforeAll(() => {
     cardDbBuilderMock = {
       build: jest.fn(),
     };
 
-    gameCardSpecArrayToGameCardSpecArrayDbConverter =
+    gameCardSpecArrayDbFromGameCardSpecArrayBuilder =
       new GameCardSpecArrayDbFromGameCardSpecArrayBuilder(cardDbBuilderMock);
   });
 
@@ -39,7 +39,7 @@ describe(GameCardSpecArrayDbFromGameCardSpecArrayBuilder.name, () => {
 
         cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
 
-        result = gameCardSpecArrayToGameCardSpecArrayDbConverter.build([
+        result = gameCardSpecArrayDbFromGameCardSpecArrayBuilder.build([
           gameCardSpecFixture,
         ]);
       });

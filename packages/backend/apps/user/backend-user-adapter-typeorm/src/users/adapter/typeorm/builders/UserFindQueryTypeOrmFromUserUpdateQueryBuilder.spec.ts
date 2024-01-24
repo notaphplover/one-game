@@ -16,14 +16,14 @@ describe(UserFindQueryTypeOrmFromUserUpdateQueryBuilder.name, () => {
     Builder<FindManyOptions<UserDb>, [UserFindQuery]>
   >;
 
-  let userUpdateQueryToUserFindQueryTypeOrmConverter: UserFindQueryTypeOrmFromUserUpdateQueryBuilder;
+  let userFindQueryTypeOrmFromUserUpdateQueryBuilder: UserFindQueryTypeOrmFromUserUpdateQueryBuilder;
 
   beforeAll(() => {
     userFindQueryTypeOrmFromUserFindQueryBuilderMock = {
       build: jest.fn(),
     };
 
-    userUpdateQueryToUserFindQueryTypeOrmConverter =
+    userFindQueryTypeOrmFromUserUpdateQueryBuilder =
       new UserFindQueryTypeOrmFromUserUpdateQueryBuilder(
         userFindQueryTypeOrmFromUserFindQueryBuilderMock,
       );
@@ -48,7 +48,7 @@ describe(UserFindQueryTypeOrmFromUserUpdateQueryBuilder.name, () => {
           userFindTypeOrmOptionsFixture,
         );
 
-        result = userUpdateQueryToUserFindQueryTypeOrmConverter.build(
+        result = userFindQueryTypeOrmFromUserUpdateQueryBuilder.build(
           userUpdateQueryFixture,
         );
       });

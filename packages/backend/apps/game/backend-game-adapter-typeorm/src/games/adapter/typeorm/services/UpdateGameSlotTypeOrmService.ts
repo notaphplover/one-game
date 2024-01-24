@@ -1,5 +1,5 @@
-import { Converter } from '@cornie-js/backend-common';
-import { UpdateTypeOrmService } from '@cornie-js/backend-db';
+import { Builder } from '@cornie-js/backend-common';
+import { UpdateTypeOrmServiceV2 } from '@cornie-js/backend-db';
 import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,34 +11,36 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
-import { GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter } from '../converters/GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter';
-import { GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter } from '../converters/GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter';
+import { GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder } from '../builders/GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder';
+import { GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder } from '../builders/GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class UpdateGameSlotTypeOrmService extends UpdateTypeOrmService<
+export class UpdateGameSlotTypeOrmService extends UpdateTypeOrmServiceV2<
   GameSlotDb,
   GameSlotUpdateQuery
 > {
   constructor(
     @InjectRepository(GameSlotDb)
     repository: Repository<GameSlotDb>,
-    @Inject(GameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter)
-    gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter: Converter<
-      GameSlotUpdateQuery,
+    @Inject(GameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder)
+    gameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder: Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder
+      [
+        GameSlotUpdateQuery,
+        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      ]
     >,
-    @Inject(GameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter)
-    gameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter: Converter<
-      GameSlotUpdateQuery,
-      QueryDeepPartialEntity<GameSlotDb>
+    @Inject(GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder)
+    gameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder: Builder<
+      QueryDeepPartialEntity<GameSlotDb>,
+      [GameSlotUpdateQuery]
     >,
   ) {
     super(
       repository,
-      gameSlotUpdateQueryToGameSlotFindQueryTypeOrmConverter,
-      gameSlotUpdateQueryToGameSlotSetQueryTypeOrmConverter,
+      gameSlotFindQueryTypeOrmFromGameSlotUpdateQueryBuilder,
+      gameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder,
     );
   }
 }

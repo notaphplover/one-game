@@ -122,7 +122,7 @@ describe(UserManagementInputPort.name, () => {
         expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
       });
 
-      it('should call userCreateQueryConverterFromUserCreateQueryV1Builder.build()', () => {
+      it('should call userCreateQueryFromUserCreateQueryV1Builder.build()', () => {
         const expectedContext: UuidContext = {
           uuid: uuidFixture,
         };

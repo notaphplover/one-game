@@ -7,9 +7,9 @@ import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/Has
 import { StringModule } from '../../../../foundation/string/adapter/nest/StringModule';
 import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builders/UserCodeCreateQueryFromUserBuilder';
-import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/converters/UserCreateQueryFromUserCreateQueryV1Builder';
-import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
-import { UserV1FromUserBuilder } from '../../../application/converters/UserV1FromUserBuilder';
+import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/builders/UserCreateQueryFromUserCreateQueryV1Builder';
+import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/builders/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
+import { UserV1FromUserBuilder } from '../../../application/builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
 import { UpdateUserUseCaseHandler } from '../../../application/handlers/UpdateUserUseCaseHandler';
 import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';

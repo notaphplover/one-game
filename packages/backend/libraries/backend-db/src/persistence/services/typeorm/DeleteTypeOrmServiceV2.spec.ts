@@ -65,7 +65,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
   });
 
   describe('.delete', () => {
-    describe('when called and queryToQueryTypeOrmConverter returns FindManyOptions<ModelTest>', () => {
+    describe('when called and findQueryTypeOrmFromQueryBuilder returns FindManyOptions<ModelTest>', () => {
       let queryFixture: QueryTest;
       let queryTypeOrmFixture: FindManyOptions<ModelTest>;
       let findOptionsWhereFixture: FindOptionsWhere<ModelTest>;
@@ -136,7 +136,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
       });
     });
 
-    describe('when called and queryToQueryTypeOrmConverter returns QueryBuilder<ModelTest>', () => {
+    describe('when called and findQueryTypeOrmFromQueryBuilder returns QueryBuilder<ModelTest>', () => {
       let queryFixture: QueryTest;
 
       beforeAll(async () => {
@@ -171,7 +171,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
         expect(queryBuilderMock.delete).toHaveBeenCalledWith();
       });
 
-      it('should call queryToQueryTypeOrmConverter.build()', () => {
+      it('should call findQueryTypeOrmFromQueryBuilder.build()', () => {
         expect(
           findQueryTypeOrmFromQueryBuilderMock.build,
         ).toHaveBeenCalledTimes(1);

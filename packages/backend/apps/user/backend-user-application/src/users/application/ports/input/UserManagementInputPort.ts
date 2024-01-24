@@ -19,9 +19,9 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
-import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../converters/UserCreateQueryFromUserCreateQueryV1Builder';
-import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../converters/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
-import { UserV1FromUserBuilder } from '../../converters/UserV1FromUserBuilder';
+import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../builders/UserCreateQueryFromUserCreateQueryV1Builder';
+import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../builders/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
+import { UserV1FromUserBuilder } from '../../builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../handlers/CreateUserUseCaseHandler';
 import { UpdateUserUseCaseHandler } from '../../handlers/UpdateUserUseCaseHandler';
 import {

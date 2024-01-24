@@ -8,14 +8,14 @@ import { UserCodeDb } from '../models/UserCodeDb';
 import { UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder } from './UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder';
 
 describe(UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder.name, () => {
-  let userCodeFindQueryToUserCodeFindQueryTypeOrmConverter: UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder;
+  let userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder: UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder;
 
   beforeAll(() => {
-    userCodeFindQueryToUserCodeFindQueryTypeOrmConverter =
+    userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder =
       new UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder();
   });
 
-  describe('.convert', () => {
+  describe('.build', () => {
     describe('having a UserCodeFindQuery with code', () => {
       let userCodeFindQueryFixture: UserCodeFindQuery;
 
@@ -27,7 +27,7 @@ describe(UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = userCodeFindQueryToUserCodeFindQueryTypeOrmConverter.build(
+          result = userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder.build(
             userCodeFindQueryFixture,
           );
         });
@@ -55,7 +55,7 @@ describe(UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder.name, () => {
         let result: unknown;
 
         beforeAll(() => {
-          result = userCodeFindQueryToUserCodeFindQueryTypeOrmConverter.build(
+          result = userCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder.build(
             userCodeFindQueryFixture,
           );
         });

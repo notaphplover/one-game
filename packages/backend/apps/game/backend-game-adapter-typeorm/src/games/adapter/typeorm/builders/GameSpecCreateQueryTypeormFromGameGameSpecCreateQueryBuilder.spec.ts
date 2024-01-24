@@ -60,7 +60,7 @@ describe(
           jest.clearAllMocks();
         });
 
-        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.build()', () => {
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbBuilder.build()', () => {
           expect(
             gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledTimes(1);
