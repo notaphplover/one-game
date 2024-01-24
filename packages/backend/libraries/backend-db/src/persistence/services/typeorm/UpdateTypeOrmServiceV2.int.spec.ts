@@ -167,7 +167,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
         modelTest.foo = 'some foo value';
       });
 
-      describe('when called, and model is on db and queryToFindQueryTypeOrmConverter.convert returns a typeorm find query matching a ModelTest', () => {
+      describe('when called, and model is on db and findQueryTypeOrmFromUpdateQueryBuilderMock.build returns a typeorm find query matching a ModelTest', () => {
         let setQueryTypeOrmFixture: QueryDeepPartialEntity<ModelTest>;
 
         beforeAll(async () => {
@@ -235,7 +235,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
         });
       });
 
-      describe('when called, and model is on db and queryToFindQueryTypeOrmConverter.convert returns a typeorm find query not matching a ModelTest', () => {
+      describe('when called, and model is on db and findQueryTypeOrmFromUpdateQueryBuilderMock.build returns a typeorm find query not matching a ModelTest', () => {
         let setQueryTypeOrmFixture: QueryDeepPartialEntity<ModelTest>;
 
         beforeAll(async () => {

@@ -130,7 +130,7 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameDirectionToGameDirectionDbConverter.build()', () => {
+        it('should call gameDirectionToGameDirectionDbBuilder.build()', () => {
           expect(
             gameDirectionDbFromGameDirectionBuilderMock.build,
           ).toHaveBeenCalledTimes(1);
@@ -292,7 +292,7 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call gameCardSpecArrayToGameCardSpecArrayDbConverter.build()', () => {
+        it('should call gameCardSpecArrayToGameCardSpecArrayDbBuilder.build()', () => {
           expect(
             gameCardSpecArrayDbFromGameCardSpecArrayBuilderMock.build,
           ).toHaveBeenCalledTimes(1);

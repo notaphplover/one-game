@@ -60,7 +60,7 @@ describe(GameFindQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call gameFindQueryToGameFindQueryTypeOrmConverter.build()', () => {
+      it('should call gameFindQueryToGameFindQueryTypeOrmBuilder.build()', () => {
         expect(
           gameFindQueryTypeOrmFromGameFindQueryBuilderMock.build,
         ).toHaveBeenCalledTimes(1);

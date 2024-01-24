@@ -153,7 +153,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
       });
     });
 
-    describe('when called and updateQueryToFindQueryTypeOrmConverter returns QueryBuilder<TModelDb>', () => {
+    describe('when called and findQueryTypeOrmFromUpdateQueryBuilder returns QueryBuilder<TModelDb>', () => {
       let queryFixture: QueryTest;
       let setQueryTypeOrmFixture: QueryDeepPartialEntity<ModelTest>;
 
