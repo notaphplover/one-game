@@ -73,7 +73,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
   });
 
   describe('.update()', () => {
-    describe('when called and updateQueryToFindQueryTypeOrmConverter returns FindManyOptions<TModelDb>', () => {
+    describe('when called and findQueryTypeOrmFromUpdateQueryBuilder returns FindManyOptions<TModelDb>', () => {
       let queryFixture: QueryTest;
       let findQueryTypeOrmFixture: FindManyOptions<ModelTest>;
       let findOptionsWhereFixture: FindOptionsWhere<ModelTest>;

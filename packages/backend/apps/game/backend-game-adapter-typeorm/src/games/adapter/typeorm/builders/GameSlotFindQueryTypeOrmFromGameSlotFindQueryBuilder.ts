@@ -3,12 +3,12 @@ import { GameSlotFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Injectable } from '@nestjs/common';
 import { ObjectLiteral, QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
-import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
+import { BaseFindQueryToFindQueryTypeOrmBuilder } from '../../../../foundation/db/adapter/typeorm/builders/BaseFindQueryToFindQueryTypeOrmBuilder';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
 export class GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder
-  extends BaseFindQueryToFindQueryTypeOrmConverter
+  extends BaseFindQueryToFindQueryTypeOrmBuilder
   implements
     Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,

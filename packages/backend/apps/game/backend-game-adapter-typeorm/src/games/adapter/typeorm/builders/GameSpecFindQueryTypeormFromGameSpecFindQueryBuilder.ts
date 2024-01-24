@@ -12,12 +12,12 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { BaseFindQueryToFindQueryTypeOrmConverter } from '../../../../foundation/db/adapter/typeorm/converters/BaseFindQueryToFindQueryTypeOrmConverter';
+import { BaseFindQueryToFindQueryTypeOrmBuilder } from '../../../../foundation/db/adapter/typeorm/builders/BaseFindQueryToFindQueryTypeOrmBuilder';
 import { GameSpecDb } from '../models/GameSpecDb';
 
 @Injectable()
 export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
-  extends BaseFindQueryToFindQueryTypeOrmConverter
+  extends BaseFindQueryToFindQueryTypeOrmBuilder
   implements
     Builder<
       QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,

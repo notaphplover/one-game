@@ -5,7 +5,7 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-export abstract class BaseFindQueryToFindQueryTypeOrmConverter {
+export abstract class BaseFindQueryToFindQueryTypeOrmBuilder {
   protected _getEntityPrefix(
     queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
     // eslint-disable-next-line @typescript-eslint/ban-types
