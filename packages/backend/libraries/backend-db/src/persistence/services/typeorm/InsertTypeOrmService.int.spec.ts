@@ -17,7 +17,7 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { InsertTypeOrmServiceV2 } from './InsertTypeOrmServiceV2';
+import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
   const modelTestTableName: string = 'model_test';
@@ -97,7 +97,7 @@ interface QueryTest {
   fooValue: string;
 }
 
-describe(InsertTypeOrmServiceV2.name, () => {
+describe(InsertTypeOrmService.name, () => {
   let modelTestTable: Table;
   let datasource: DataSource;
   let queryRunner: QueryRunner;
@@ -113,7 +113,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
     BuilderAsync<ModelTest, [ModelTest]>
   >;
 
-  let insertTypeOrmServiceV2: InsertTypeOrmServiceV2<
+  let insertTypeOrmService: InsertTypeOrmService<
     ModelTest,
     ModelTest,
     QueryTest
@@ -128,7 +128,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
     decorateModelTest(modelTestTable, fooColumnName, idColumnName);
 
     const datasourceOptions: DataSourceOptions = {
-      database: path.resolve('tmp', 'typeorm', 'InsertTypeOrmServiceV2.sqlite'),
+      database: path.resolve('tmp', 'typeorm', 'InsertTypeOrmService.sqlite'),
       entities: [ModelTest],
       logging: false,
       type: 'sqlite',
@@ -150,7 +150,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
       build: jest.fn(),
     };
 
-    insertTypeOrmServiceV2 = new InsertTypeOrmServiceV2<
+    insertTypeOrmService = new InsertTypeOrmService<
       ModelTest,
       ModelTest,
       QueryTest
@@ -194,7 +194,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
           async (modelTest: ModelTest) => modelTest,
         );
 
-        result = await insertTypeOrmServiceV2.insertOne(queryTest);
+        result = await insertTypeOrmService.insertOne(queryTest);
       });
 
       afterAll(() => {

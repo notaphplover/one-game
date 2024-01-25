@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
+import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
 import { User, UserCreateQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,7 @@ import { UserFromUserDbBuilder } from '../builders/UserFromUserDbBuilder';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class CreateUserTypeOrmService extends InsertTypeOrmPostgresServiceV2<
+export class CreateUserTypeOrmService extends InsertTypeOrmPostgresService<
   User,
   UserDb,
   UserCreateQuery

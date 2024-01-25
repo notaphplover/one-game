@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { FindTypeOrmServiceV2 } from '@cornie-js/backend-db';
+import { FindTypeOrmService } from '@cornie-js/backend-db';
 import { User, UserFindQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,7 +10,7 @@ import { UserFromUserDbBuilder } from '../builders/UserFromUserDbBuilder';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class FindUserTypeOrmService extends FindTypeOrmServiceV2<
+export class FindUserTypeOrmService extends FindTypeOrmService<
   User,
   UserDb,
   UserFindQuery

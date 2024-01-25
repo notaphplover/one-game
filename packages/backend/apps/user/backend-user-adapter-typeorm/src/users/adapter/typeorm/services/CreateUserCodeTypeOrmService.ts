@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
+import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
 import {
   UserCode,
   UserCodeCreateQuery,
@@ -14,7 +14,7 @@ import { UserCodeFromUserDbCodeBuilder } from '../builders/UserCodeFromUserCodeD
 import { UserCodeDb } from '../models/UserCodeDb';
 
 @Injectable()
-export class CreateUserCodeTypeOrmService extends InsertTypeOrmPostgresServiceV2<
+export class CreateUserCodeTypeOrmService extends InsertTypeOrmPostgresService<
   UserCode,
   UserCodeDb,
   UserCodeCreateQuery

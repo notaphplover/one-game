@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { DeleteTypeOrmServiceV2 } from '@cornie-js/backend-db';
+import { DeleteTypeOrmService } from '@cornie-js/backend-db';
 import { UserFindQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +9,7 @@ import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../builders/UserFi
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class DeleteUserTypeOrmService extends DeleteTypeOrmServiceV2<
+export class DeleteUserTypeOrmService extends DeleteTypeOrmService<
   UserDb,
   UserFindQuery
 > {

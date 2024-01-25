@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { UpdateTypeOrmServiceV2 } from '@cornie-js/backend-db';
+import { UpdateTypeOrmService } from '@cornie-js/backend-db';
 import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,7 +16,7 @@ import { GameSlotSetQueryTypeOrmFromGameSlotUpdateQueryBuilder } from '../builde
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class UpdateGameSlotTypeOrmService extends UpdateTypeOrmServiceV2<
+export class UpdateGameSlotTypeOrmService extends UpdateTypeOrmService<
   GameSlotDb,
   GameSlotUpdateQuery
 > {

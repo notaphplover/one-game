@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { FindTypeOrmServiceV2 } from '@cornie-js/backend-db';
+import { FindTypeOrmService } from '@cornie-js/backend-db';
 import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +15,7 @@ import { GameFromGameDbBuilder } from '../builders/GameFromGameDbBuilder';
 import { GameDb } from '../models/GameDb';
 
 @Injectable()
-export class FindGameTypeOrmService extends FindTypeOrmServiceV2<
+export class FindGameTypeOrmService extends FindTypeOrmService<
   Game,
   GameDb,
   GameFindQuery

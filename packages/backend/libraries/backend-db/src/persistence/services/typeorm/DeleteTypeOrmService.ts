@@ -12,7 +12,7 @@ import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../../builders
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 
-export class DeleteTypeOrmServiceV2<TModelDb extends ObjectLiteral, TQuery> {
+export class DeleteTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
   readonly #repository: Repository<TModelDb>;
   readonly #findQueryTypeOrmFromQueryBuilder: FindQueryTypeOrmFromQueryBuilder<
     TModelDb,

@@ -1,7 +1,7 @@
 import { Builder } from '@cornie-js/backend-common';
 import {
   FindQueryTypeOrmFromQueryBuilder,
-  UpdateTypeOrmServiceV2,
+  UpdateTypeOrmService,
 } from '@cornie-js/backend-db';
 import { UserUpdateQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { UserUpdateQueryFromUserSetQueryTypeOrmBuilder } from '../builders/UserU
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class UpdateUserTypeOrmService extends UpdateTypeOrmServiceV2<
+export class UpdateUserTypeOrmService extends UpdateTypeOrmService<
   UserDb,
   UserUpdateQuery
 > {

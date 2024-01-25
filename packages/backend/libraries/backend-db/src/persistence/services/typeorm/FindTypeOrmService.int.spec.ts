@@ -21,7 +21,7 @@ import {
 } from 'typeorm';
 
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { FindTypeOrmServiceV2 } from './FindTypeOrmServiceV2';
+import { FindTypeOrmService } from './FindTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
   const modelTestTableName: string = 'model_test';
@@ -101,7 +101,7 @@ interface QueryTest {
   fooValue: string;
 }
 
-describe(FindTypeOrmServiceV2.name, () => {
+describe(FindTypeOrmService.name, () => {
   let modelTestTable: Table;
   let datasource: DataSource;
   let queryRunner: QueryRunner;
@@ -114,11 +114,7 @@ describe(FindTypeOrmServiceV2.name, () => {
     BuilderAsync<ModelTest, [ModelTest]>
   >;
 
-  let findTypeOrmServiceV2: FindTypeOrmServiceV2<
-    ModelTest,
-    ModelTest,
-    QueryTest
-  >;
+  let findTypeOrmService: FindTypeOrmService<ModelTest, ModelTest, QueryTest>;
 
   beforeAll(async () => {
     const fooColumnName: keyof ModelTest = 'foo';
@@ -129,7 +125,7 @@ describe(FindTypeOrmServiceV2.name, () => {
     decorateModelTest(modelTestTable, fooColumnName, idColumnName);
 
     const datasourceOptions: DataSourceOptions = {
-      database: path.resolve('tmp', 'typeorm', 'FindTypeOrmServiceV2.sqlite'),
+      database: path.resolve('tmp', 'typeorm', 'FindTypeOrmService.sqlite'),
       entities: [ModelTest],
       logging: false,
       type: 'sqlite',
@@ -153,7 +149,7 @@ describe(FindTypeOrmServiceV2.name, () => {
       build: jest.fn(),
     };
 
-    findTypeOrmServiceV2 = new FindTypeOrmServiceV2<
+    findTypeOrmService = new FindTypeOrmService<
       ModelTest,
       ModelTest,
       QueryTest
@@ -206,7 +202,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             async (modelTest: ModelTest) => modelTest,
           );
 
-          result = await findTypeOrmServiceV2.findOne(queryTest);
+          result = await findTypeOrmService.findOne(queryTest);
         });
 
         afterAll(() => {
@@ -238,7 +234,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             >
           ).mockResolvedValueOnce(queryTypeOrmFixture);
 
-          result = await findTypeOrmServiceV2.findOne(queryTest);
+          result = await findTypeOrmService.findOne(queryTest);
         });
 
         afterAll(() => {
@@ -283,7 +279,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             async (modelTest: ModelTest) => modelTest,
           );
 
-          result = await findTypeOrmServiceV2.findOne(queryTest);
+          result = await findTypeOrmService.findOne(queryTest);
         });
 
         afterAll(() => {
@@ -328,7 +324,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             async (modelTest: ModelTest) => modelTest,
           );
 
-          result = await findTypeOrmServiceV2.findOne(queryTest);
+          result = await findTypeOrmService.findOne(queryTest);
         });
 
         afterAll(() => {
@@ -366,7 +362,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             async (modelTest: ModelTest) => modelTest,
           );
 
-          result = await findTypeOrmServiceV2.find(queryTest);
+          result = await findTypeOrmService.find(queryTest);
         });
 
         afterAll(() => {
@@ -398,7 +394,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             >
           ).mockResolvedValueOnce(queryTypeOrmFixture);
 
-          result = await findTypeOrmServiceV2.find(queryTest);
+          result = await findTypeOrmService.find(queryTest);
         });
 
         afterAll(() => {
@@ -443,7 +439,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             async (modelTest: ModelTest) => modelTest,
           );
 
-          result = await findTypeOrmServiceV2.find(queryTest);
+          result = await findTypeOrmService.find(queryTest);
         });
 
         afterAll(() => {
@@ -488,7 +484,7 @@ describe(FindTypeOrmServiceV2.name, () => {
             async (modelTest: ModelTest) => modelTest,
           );
 
-          result = await findTypeOrmServiceV2.find(queryTest);
+          result = await findTypeOrmService.find(queryTest);
         });
 
         afterAll(() => {

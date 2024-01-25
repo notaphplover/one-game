@@ -17,7 +17,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
-import { UpdateTypeOrmServiceV2 } from './UpdateTypeOrmServiceV2';
+import { UpdateTypeOrmService } from './UpdateTypeOrmService';
 
 interface ModelTest {
   foo: unknown;
@@ -27,7 +27,7 @@ interface QueryTest {
   bar: unknown;
 }
 
-describe(UpdateTypeOrmServiceV2.name, () => {
+describe(UpdateTypeOrmService.name, () => {
   let queryBuilderMock: jest.Mocked<UpdateQueryBuilder<ModelTest>>;
   let repositoryMock: jest.Mocked<Repository<ModelTest>>;
   let findQueryTypeOrmFromUpdateQueryBuilderMock: jest.Mocked<
@@ -37,7 +37,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
     BuilderAsync<QueryDeepPartialEntity<ModelTest>, [QueryTest]>
   >;
 
-  let updateTypeOrmServiceV2: UpdateTypeOrmServiceV2<ModelTest, QueryTest>;
+  let updateTypeOrmService: UpdateTypeOrmService<ModelTest, QueryTest>;
 
   beforeAll(() => {
     queryBuilderMock = Object.assign(
@@ -65,7 +65,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
       build: jest.fn(),
     };
 
-    updateTypeOrmServiceV2 = new UpdateTypeOrmServiceV2(
+    updateTypeOrmService = new UpdateTypeOrmService(
       repositoryMock,
       findQueryTypeOrmFromUpdateQueryBuilderMock,
       setQueryTypeOrmFromUpdateQueryBuilderMock,
@@ -112,7 +112,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
           >
         ).mockReturnValueOnce(findOptionsWhereFixture);
 
-        await updateTypeOrmServiceV2.update(queryFixture);
+        await updateTypeOrmService.update(queryFixture);
       });
 
       afterAll(() => {
@@ -179,7 +179,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
           setQueryTypeOrmFixture,
         );
 
-        await updateTypeOrmServiceV2.update(queryFixture);
+        await updateTypeOrmService.update(queryFixture);
       });
 
       afterAll(() => {

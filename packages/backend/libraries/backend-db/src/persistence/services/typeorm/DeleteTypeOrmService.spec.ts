@@ -14,7 +14,7 @@ import {
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
-import { DeleteTypeOrmServiceV2 } from './DeleteTypeOrmServiceV2';
+import { DeleteTypeOrmService } from './DeleteTypeOrmService';
 
 interface ModelTest {
   foo: unknown;
@@ -24,7 +24,7 @@ interface QueryTest {
   fooValue: unknown;
 }
 
-describe(DeleteTypeOrmServiceV2.name, () => {
+describe(DeleteTypeOrmService.name, () => {
   let queryBuilderMock: jest.Mocked<
     QueryBuilder<ModelTest> & WhereExpressionBuilder
   >;
@@ -32,7 +32,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
   let findQueryTypeOrmFromQueryBuilderMock: jest.Mocked<
     FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>
   >;
-  let deleteTypeOrmServiceV2: DeleteTypeOrmServiceV2<ModelTest, QueryTest>;
+  let deleteTypeOrmService: DeleteTypeOrmService<ModelTest, QueryTest>;
 
   beforeAll(() => {
     queryBuilderMock = Object.assign(
@@ -58,7 +58,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
       jest.Mocked<FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>>
     > as jest.Mocked<FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>>;
 
-    deleteTypeOrmServiceV2 = new DeleteTypeOrmServiceV2(
+    deleteTypeOrmService = new DeleteTypeOrmService(
       repositoryMock,
       findQueryTypeOrmFromQueryBuilderMock,
     );
@@ -94,7 +94,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
           >
         ).mockReturnValueOnce(findOptionsWhereFixture);
 
-        await deleteTypeOrmServiceV2.delete(queryFixture);
+        await deleteTypeOrmService.delete(queryFixture);
       });
 
       afterAll(() => {
@@ -154,7 +154,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
           >
         ).mockResolvedValueOnce(queryBuilderMock);
 
-        await deleteTypeOrmServiceV2.delete(queryFixture);
+        await deleteTypeOrmService.delete(queryFixture);
       });
 
       afterAll(() => {

@@ -1,13 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../utils/typeorm/isQueryBuilder');
-
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
-import { FindManyOptions, InsertResult, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  InsertQueryBuilder,
+  InsertResult,
+  QueryBuilder,
+  Repository,
+} from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
-import { InsertTypeOrmServiceV2 } from './InsertTypeOrmServiceV2';
+import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 interface ModelTest {
   foo: unknown;
@@ -17,7 +20,8 @@ interface QueryTest {
   bar: unknown;
 }
 
-describe(InsertTypeOrmServiceV2.name, () => {
+describe(InsertTypeOrmService.name, () => {
+  let queryBuilderMock: jest.Mocked<InsertQueryBuilder<ModelTest>>;
   let repositoryMock: jest.Mocked<Repository<ModelTest>>;
   let modelFromModelDbBuilderMock: jest.Mocked<
     Builder<ModelTest, [ModelTest]> | BuilderAsync<ModelTest, [ModelTest]>
@@ -33,16 +37,27 @@ describe(InsertTypeOrmServiceV2.name, () => {
       >
   >;
 
-  let insertTypeOrmServiceV2: InsertTypeOrmServiceV2<
+  let insertTypeOrmService: InsertTypeOrmService<
     ModelTest,
     ModelTest,
     QueryTest
   >;
 
   beforeAll(() => {
+    queryBuilderMock = Object.assign(
+      Object.create(QueryBuilder.prototype) as QueryBuilder<ModelTest>,
+      {
+        execute: jest.fn(),
+        insert: jest.fn().mockReturnThis(),
+        values: jest.fn().mockReturnThis(),
+      } as Partial<jest.Mocked<InsertQueryBuilder<ModelTest>>> as jest.Mocked<
+        InsertQueryBuilder<ModelTest>
+      >,
+    );
+
     repositoryMock = {
+      createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
       find: jest.fn(),
-      insert: jest.fn(),
     } as Partial<jest.Mocked<Repository<ModelTest>>> as jest.Mocked<
       Repository<ModelTest>
     >;
@@ -67,7 +82,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
         >
     >;
 
-    insertTypeOrmServiceV2 = new InsertTypeOrmServiceV2(
+    insertTypeOrmService = new InsertTypeOrmService(
       repositoryMock,
       modelFromModelDbBuilderMock,
       setQueryTypeOrmFromSetQueryBuilderMock,
@@ -96,11 +111,12 @@ describe(InsertTypeOrmServiceV2.name, () => {
           identifiers: [{ id: 'sample-id' }],
         } as Partial<InsertResult> as InsertResult;
 
-        typeOrmQueryFixture = {};
+        typeOrmQueryFixture = {
+          foo: 'bar',
+        };
 
-        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
-        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
+        queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
             BuilderAsync<ModelTest, [ModelTest]>
@@ -116,7 +132,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
           >
         ).build.mockResolvedValueOnce(typeOrmQueryFixture);
 
-        result = await insertTypeOrmServiceV2.insertOne(queryFixture);
+        result = await insertTypeOrmService.insertOne(queryFixture);
       });
 
       afterAll(() => {
@@ -132,9 +148,26 @@ describe(InsertTypeOrmServiceV2.name, () => {
         ).toHaveBeenCalledWith(queryFixture);
       });
 
-      it('should call repositoryMock.insert()', () => {
-        expect(repositoryMock.insert).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.insert).toHaveBeenCalledWith(typeOrmQueryFixture);
+      it('should call repositoryMock.createQueryBuilder()', () => {
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith();
+      });
+
+      it('should call queryBuilderMock.insert()', () => {
+        expect(queryBuilderMock.insert).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.insert).toHaveBeenCalledWith();
+      });
+
+      it('should call queryBuilderMock.values()', () => {
+        expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.values).toHaveBeenCalledWith(
+          typeOrmQueryFixture,
+        );
+      });
+
+      it('should call queryBuilderMock.execute()', () => {
+        expect(queryBuilderMock.execute).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.execute).toHaveBeenCalledWith();
       });
 
       it('should call repositoryMock.find()', () => {
@@ -179,9 +212,8 @@ describe(InsertTypeOrmServiceV2.name, () => {
 
         typeOrmQueryFixture = {};
 
-        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
-        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
+        queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
             BuilderAsync<ModelTest, [ModelTest]>
@@ -197,47 +229,31 @@ describe(InsertTypeOrmServiceV2.name, () => {
           >
         ).build.mockResolvedValueOnce([typeOrmQueryFixture]);
 
-        await insertTypeOrmServiceV2.insertOne(queryFixture);
+        await insertTypeOrmService.insertOne(queryFixture);
       });
 
       afterAll(() => {
         jest.clearAllMocks();
       });
 
-      it('should call repositoryMock.insert()', () => {
-        expect(repositoryMock.insert).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.insert).toHaveBeenCalledWith(typeOrmQueryFixture);
+      it('should call queryBuilderMock.values()', () => {
+        expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.values).toHaveBeenCalledWith(
+          typeOrmQueryFixture,
+        );
       });
     });
 
     describe('when called, and setQueryTypeOrmFromSetQueryBuilder.build() returns a QueryDeepPartialEntity[] with not one element', () => {
-      let modelFixture: ModelTest;
       let queryFixture: QueryTest;
-      let insertResultFixture: InsertResult;
 
       let result: unknown;
 
       beforeAll(async () => {
-        modelFixture = {
-          foo: 'sample-string',
-        };
-
         queryFixture = {
           bar: 'sample',
         };
 
-        insertResultFixture = {
-          identifiers: [{ id: 'sample-id' }],
-        } as Partial<InsertResult> as InsertResult;
-
-        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
-        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
-        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
-        (
-          modelFromModelDbBuilderMock as jest.Mocked<
-            BuilderAsync<ModelTest, [ModelTest]>
-          >
-        ).build.mockResolvedValueOnce(modelFixture);
         (
           setQueryTypeOrmFromSetQueryBuilderMock as jest.Mocked<
             BuilderAsync<
@@ -249,7 +265,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
         ).build.mockResolvedValueOnce([]);
 
         try {
-          await insertTypeOrmServiceV2.insertOne(queryFixture);
+          await insertTypeOrmService.insertOne(queryFixture);
         } catch (error: unknown) {
           result = error;
         }
@@ -297,9 +313,8 @@ describe(InsertTypeOrmServiceV2.name, () => {
 
         typeOrmQueryFixture = [{}];
 
-        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
-        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
+        queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
             BuilderAsync<ModelTest, [ModelTest]>
@@ -315,7 +330,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
           >
         ).build.mockResolvedValueOnce(typeOrmQueryFixture);
 
-        result = await insertTypeOrmServiceV2.insertMany(queryFixture);
+        result = await insertTypeOrmService.insertMany(queryFixture);
       });
 
       afterAll(() => {
@@ -331,9 +346,26 @@ describe(InsertTypeOrmServiceV2.name, () => {
         ).toHaveBeenCalledWith(queryFixture);
       });
 
-      it('should call repositoryMock.insert()', () => {
-        expect(repositoryMock.insert).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.insert).toHaveBeenCalledWith(typeOrmQueryFixture);
+      it('should call repositoryMock.createQueryBuilder()', () => {
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith();
+      });
+
+      it('should call queryBuilderMock.insert()', () => {
+        expect(queryBuilderMock.insert).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.insert).toHaveBeenCalledWith();
+      });
+
+      it('should call queryBuilderMock.values()', () => {
+        expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.values).toHaveBeenCalledWith(
+          typeOrmQueryFixture,
+        );
+      });
+
+      it('should call queryBuilderMock.execute()', () => {
+        expect(queryBuilderMock.execute).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.execute).toHaveBeenCalledWith();
       });
 
       it('should call repositoryMock.find()', () => {
@@ -380,9 +412,8 @@ describe(InsertTypeOrmServiceV2.name, () => {
 
         typeOrmQueryFixture = {};
 
-        (isQueryBuilder as unknown as jest.Mock).mockReturnValueOnce(false);
         repositoryMock.find.mockResolvedValueOnce([modelFixture]);
-        repositoryMock.insert.mockResolvedValueOnce(insertResultFixture);
+        queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
             BuilderAsync<ModelTest, [ModelTest]>
@@ -398,7 +429,7 @@ describe(InsertTypeOrmServiceV2.name, () => {
           >
         ).build.mockResolvedValueOnce(typeOrmQueryFixture);
 
-        result = await insertTypeOrmServiceV2.insertMany(queryFixture);
+        result = await insertTypeOrmService.insertMany(queryFixture);
       });
 
       afterAll(() => {
@@ -415,8 +446,8 @@ describe(InsertTypeOrmServiceV2.name, () => {
       });
 
       it('should call repositoryMock.insert()', () => {
-        expect(repositoryMock.insert).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.insert).toHaveBeenCalledWith([
+        expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.values).toHaveBeenCalledWith([
           typeOrmQueryFixture,
         ]);
       });

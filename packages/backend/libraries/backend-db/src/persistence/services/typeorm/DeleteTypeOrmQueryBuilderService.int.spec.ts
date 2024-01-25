@@ -2,6 +2,7 @@ import path from 'path';
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
   Column,
   ColumnType,
@@ -9,16 +10,17 @@ import {
   DataSourceOptions,
   Entity,
   FindManyOptions,
-  Not,
+  ObjectLiteral,
   PrimaryColumn,
+  QueryBuilder,
   QueryRunner,
   Repository,
   Table,
   TableColumn,
+  WhereExpressionBuilder,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { DeleteTypeOrmServiceV2 } from './DeleteTypeOrmServiceV2';
+import { DeleteTypeOrmQueryBuilderService } from './DeleteTypeOrmQueryBuilderService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
   const modelTestTableName: string = 'model_test';
@@ -98,17 +100,27 @@ interface QueryTest {
   fooValue: string;
 }
 
-describe(DeleteTypeOrmServiceV2.name, () => {
+describe(DeleteTypeOrmQueryBuilderService.name, () => {
   let modelTestTable: Table;
   let datasource: DataSource;
   let queryRunner: QueryRunner;
 
   let modelTestRepository: Repository<ModelTest>;
   let findQueryTypeOrmFromQueryBuilderMock: jest.Mocked<
-    FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>
+    | Builder<
+        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+        [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      >
+    | BuilderAsync<
+        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+        [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      >
   >;
 
-  let deleteTypeOrmServiceV2: DeleteTypeOrmServiceV2<ModelTest, QueryTest>;
+  let deleteTypeOrmQueryBuilderService: DeleteTypeOrmQueryBuilderService<
+    ModelTest,
+    QueryTest
+  >;
 
   beforeAll(async () => {
     const fooColumnName: keyof ModelTest = 'foo';
@@ -119,7 +131,11 @@ describe(DeleteTypeOrmServiceV2.name, () => {
     decorateModelTest(modelTestTable, fooColumnName, idColumnName);
 
     const datasourceOptions: DataSourceOptions = {
-      database: path.resolve('tmp', 'typeorm', 'DeleteTypeOrmServiceV2.sqlite'),
+      database: path.resolve(
+        'tmp',
+        'typeorm',
+        'DeleteTypeOrmQueryBuilderService.sqlite',
+      ),
       entities: [ModelTest],
       logging: false,
       type: 'sqlite',
@@ -137,13 +153,31 @@ describe(DeleteTypeOrmServiceV2.name, () => {
     findQueryTypeOrmFromQueryBuilderMock = {
       build: jest.fn(),
     } as Partial<
-      jest.Mocked<FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>>
-    > as jest.Mocked<FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>>;
+      jest.Mocked<
+        | Builder<
+            QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+            [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+          >
+        | BuilderAsync<
+            QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+            [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+          >
+      >
+    > as jest.Mocked<
+      | Builder<
+          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+          [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        >
+      | BuilderAsync<
+          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+          [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        >
+    >;
 
-    deleteTypeOrmServiceV2 = new DeleteTypeOrmServiceV2<ModelTest, QueryTest>(
-      modelTestRepository,
-      findQueryTypeOrmFromQueryBuilderMock,
-    );
+    deleteTypeOrmQueryBuilderService = new DeleteTypeOrmQueryBuilderService<
+      ModelTest,
+      QueryTest
+    >(modelTestRepository, findQueryTypeOrmFromQueryBuilderMock);
   });
 
   describe('.delete', () => {
@@ -164,19 +198,26 @@ describe(DeleteTypeOrmServiceV2.name, () => {
             fooValue: 'blah',
           };
 
-          const queryTypeOrmFixture: FindManyOptions<ModelTest> = {
-            where: {
-              id: modelTest.id,
-            },
-          };
-
           (
-            findQueryTypeOrmFromQueryBuilderMock.build as jest.Mock<
-              (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
+            findQueryTypeOrmFromQueryBuilderMock as jest.Mocked<
+              Builder<
+                QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+                [
+                  QueryTest,
+                  QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+                ]
+              >
             >
-          ).mockResolvedValueOnce(queryTypeOrmFixture);
+          ).build.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ObjectLiteral> &
+                WhereExpressionBuilder,
+            ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder =>
+              queryBuilder.andWhere(`id = :id`, { [`id`]: modelTest.id }),
+          );
 
-          await deleteTypeOrmServiceV2.delete(queryTest);
+          await deleteTypeOrmQueryBuilderService.delete(queryTest);
         });
 
         afterAll(async () => {
@@ -214,19 +255,26 @@ describe(DeleteTypeOrmServiceV2.name, () => {
             fooValue: 'blah',
           };
 
-          const queryTypeOrmFixture: FindManyOptions<ModelTest> = {
-            where: {
-              id: Not(modelTest.id),
-            },
-          };
-
           (
-            findQueryTypeOrmFromQueryBuilderMock.build as jest.Mock<
-              (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
+            findQueryTypeOrmFromQueryBuilderMock as jest.Mocked<
+              Builder<
+                QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+                [
+                  QueryTest,
+                  QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+                ]
+              >
             >
-          ).mockResolvedValueOnce(queryTypeOrmFixture);
+          ).build.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ObjectLiteral> &
+                WhereExpressionBuilder,
+            ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder =>
+              queryBuilder.andWhere(`id != :id`, { [`id`]: modelTest.id }),
+          );
 
-          await deleteTypeOrmServiceV2.delete(queryTest);
+          await deleteTypeOrmQueryBuilderService.delete(queryTest);
         });
 
         afterAll(async () => {

@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
+import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
 import {
   ActiveGameSlot,
   GameSlotCreateQuery,
@@ -15,7 +15,7 @@ import { GameSlotFromGameSlotDbBuilder } from '../builders/GameSlotFromGameSlotD
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
-export class CreateGameSlotTypeOrmService extends InsertTypeOrmPostgresServiceV2<
+export class CreateGameSlotTypeOrmService extends InsertTypeOrmPostgresService<
   ActiveGameSlot | NonStartedGameSlot,
   GameSlotDb,
   GameSlotCreateQuery
