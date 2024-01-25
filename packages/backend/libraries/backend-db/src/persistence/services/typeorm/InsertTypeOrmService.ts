@@ -4,10 +4,11 @@ import {
   InsertResult,
   ObjectLiteral,
   FindManyOptions,
+  InsertQueryBuilder,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export class InsertTypeOrmServiceV2<
+export class InsertTypeOrmService<
   TModel,
   TModelDb extends ObjectLiteral,
   TQuery,
@@ -48,6 +49,10 @@ export class InsertTypeOrmServiceV2<
   }
 
   public async insertOne(query: TQuery): Promise<TModel> {
+    const insertQueryBuilder: InsertQueryBuilder<TModelDb> = this.#repository
+      .createQueryBuilder()
+      .insert();
+
     const insertQueryTypeOrm:
       | QueryDeepPartialEntity<TModelDb>
       | QueryDeepPartialEntity<TModelDb>[] =
@@ -56,9 +61,9 @@ export class InsertTypeOrmServiceV2<
     const singleInsertQueryTypeOrm: QueryDeepPartialEntity<TModelDb> =
       this.#buildSingleInsertQueryTypeOrm(insertQueryTypeOrm);
 
-    const insertResult: InsertResult = await this.#repository.insert(
-      singleInsertQueryTypeOrm,
-    );
+    const insertResult: InsertResult = await insertQueryBuilder
+      .values(singleInsertQueryTypeOrm)
+      .execute();
 
     const ids: ObjectLiteral[] = insertResult.identifiers;
 
@@ -72,6 +77,10 @@ export class InsertTypeOrmServiceV2<
   }
 
   public async insertMany(query: TQuery): Promise<TModel[]> {
+    const insertQueryBuilder: InsertQueryBuilder<TModelDb> = this.#repository
+      .createQueryBuilder()
+      .insert();
+
     const insertQueryTypeOrm:
       | QueryDeepPartialEntity<TModelDb>
       | QueryDeepPartialEntity<TModelDb>[] =
@@ -80,9 +89,9 @@ export class InsertTypeOrmServiceV2<
     const multipleInsertQueryTypeOrm: QueryDeepPartialEntity<TModelDb>[] =
       this.#buildMultipleInsertQueryTypeOrm(insertQueryTypeOrm);
 
-    const insertResult: InsertResult = await this.#repository.insert(
-      multipleInsertQueryTypeOrm,
-    );
+    const insertResult: InsertResult = await insertQueryBuilder
+      .values(multipleInsertQueryTypeOrm)
+      .execute();
 
     const ids: ObjectLiteral[] = insertResult.identifiers;
 
