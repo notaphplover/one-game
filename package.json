@@ -5,9 +5,9 @@
   },
   "description": "One game",
   "devDependencies": {
-    "@commitlint/cli": "18.5.0",
-    "@commitlint/config-conventional": "18.5.0",
-    "@commitlint/prompt-cli": "18.5.0",
+    "@commitlint/cli": "18.6.0",
+    "@commitlint/config-conventional": "18.6.0",
+    "@commitlint/prompt-cli": "18.6.0",
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
     "@cornie-js/backend-scripts": "workspace:*",
