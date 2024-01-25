@@ -13,7 +13,7 @@ import {
 
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
-import { FindTypeOrmServiceV2 } from './FindTypeOrmService';
+import { FindTypeOrmService } from './FindTypeOrmService';
 
 interface ModelTest {
   foo: string;
@@ -23,7 +23,7 @@ interface QueryTest {
   fooValue: string;
 }
 
-describe(FindTypeOrmServiceV2.name, () => {
+describe(FindTypeOrmService.name, () => {
   let queryBuilderMock: jest.Mocked<SelectQueryBuilder<ModelTest>>;
   let repositoryMock: jest.Mocked<Repository<ModelTest>>;
   let queryTypeOrmFromQueryBuilderMock: jest.Mocked<
@@ -33,11 +33,7 @@ describe(FindTypeOrmServiceV2.name, () => {
     Builder<ModelTest, [ModelTest]> | BuilderAsync<ModelTest, [ModelTest]>
   >;
 
-  let findTypeOrmServiceV2: FindTypeOrmServiceV2<
-    ModelTest,
-    ModelTest,
-    QueryTest
-  >;
+  let findTypeOrmService: FindTypeOrmService<ModelTest, ModelTest, QueryTest>;
 
   beforeAll(() => {
     queryBuilderMock = {
@@ -71,7 +67,7 @@ describe(FindTypeOrmServiceV2.name, () => {
       Builder<ModelTest, [ModelTest]> | BuilderAsync<ModelTest, [ModelTest]>
     >;
 
-    findTypeOrmServiceV2 = new FindTypeOrmServiceV2(
+    findTypeOrmService = new FindTypeOrmService(
       repositoryMock,
       modelFromModelDbBuilderMock,
       queryTypeOrmFromQueryBuilderMock,
@@ -109,7 +105,7 @@ describe(FindTypeOrmServiceV2.name, () => {
         ).mockResolvedValueOnce(queryTypeOrmFixture);
         repositoryMock.find.mockResolvedValueOnce(modelTestFixtures);
 
-        result = await findTypeOrmServiceV2.find(queryTestFixture);
+        result = await findTypeOrmService.find(queryTestFixture);
       });
 
       afterAll(() => {
@@ -165,7 +161,7 @@ describe(FindTypeOrmServiceV2.name, () => {
         ).mockResolvedValueOnce(queryTypeOrmFixture);
         repositoryMock.find.mockResolvedValueOnce(modelTestFixtures);
 
-        await findTypeOrmServiceV2.find(queryTestFixture);
+        await findTypeOrmService.find(queryTestFixture);
       });
 
       afterAll(() => {
@@ -208,7 +204,7 @@ describe(FindTypeOrmServiceV2.name, () => {
         ).mockResolvedValueOnce(queryBuilderMock);
         queryBuilderMock.getMany.mockResolvedValueOnce(modelTestFixtures);
 
-        await findTypeOrmServiceV2.find(queryTestFixture);
+        await findTypeOrmService.find(queryTestFixture);
       });
 
       afterAll(() => {
@@ -244,7 +240,7 @@ describe(FindTypeOrmServiceV2.name, () => {
         ).mockResolvedValueOnce(queryTypeOrmFixture);
         repositoryMock.findOne.mockResolvedValueOnce(modelTestFixture);
 
-        result = await findTypeOrmServiceV2.findOne(queryTestFixture);
+        result = await findTypeOrmService.findOne(queryTestFixture);
       });
 
       afterAll(() => {
@@ -303,7 +299,7 @@ describe(FindTypeOrmServiceV2.name, () => {
         ).mockResolvedValueOnce(queryTypeOrmFixture);
         repositoryMock.findOne.mockResolvedValueOnce(modelTestFixture);
 
-        result = await findTypeOrmServiceV2.findOne(queryTestFixture);
+        result = await findTypeOrmService.findOne(queryTestFixture);
       });
 
       afterAll(() => {
@@ -359,7 +355,7 @@ describe(FindTypeOrmServiceV2.name, () => {
         ).mockResolvedValueOnce(queryBuilderMock);
         queryBuilderMock.getOne.mockResolvedValueOnce(modelTestFixture);
 
-        result = await findTypeOrmServiceV2.findOne(queryTestFixture);
+        result = await findTypeOrmService.findOne(queryTestFixture);
       });
 
       afterAll(() => {
@@ -417,7 +413,7 @@ describe(FindTypeOrmServiceV2.name, () => {
           >
         ).build.mockResolvedValueOnce(modelTestFixture);
 
-        result = await findTypeOrmServiceV2.findOne(queryTestFixture);
+        result = await findTypeOrmService.findOne(queryTestFixture);
       });
 
       afterAll(() => {

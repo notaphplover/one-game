@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { FindTypeOrmServiceV2 } from '@cornie-js/backend-db';
+import { FindTypeOrmService } from '@cornie-js/backend-db';
 import {
   UserCode,
   UserCodeFindQuery,
@@ -13,7 +13,7 @@ import { UserCodeFromUserDbCodeBuilder } from '../builders/UserCodeFromUserCodeD
 import { UserCodeDb } from '../models/UserCodeDb';
 
 @Injectable()
-export class FindUserCodeTypeOrmService extends FindTypeOrmServiceV2<
+export class FindUserCodeTypeOrmService extends FindTypeOrmService<
   UserCode,
   UserCodeDb,
   UserCodeFindQuery

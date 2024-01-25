@@ -12,7 +12,7 @@ import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQue
 import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 
-export class FindTypeOrmServiceV2<
+export class FindTypeOrmService<
   TModel,
   TModelDb extends ObjectLiteral,
   TQuery,
