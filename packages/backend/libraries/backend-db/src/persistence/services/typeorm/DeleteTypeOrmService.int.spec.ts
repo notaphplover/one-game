@@ -18,7 +18,7 @@ import {
 } from 'typeorm';
 
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { DeleteTypeOrmServiceV2 } from './DeleteTypeOrmServiceV2';
+import { DeleteTypeOrmService } from './DeleteTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
   const modelTestTableName: string = 'model_test';
@@ -98,7 +98,7 @@ interface QueryTest {
   fooValue: string;
 }
 
-describe(DeleteTypeOrmServiceV2.name, () => {
+describe(DeleteTypeOrmService.name, () => {
   let modelTestTable: Table;
   let datasource: DataSource;
   let queryRunner: QueryRunner;
@@ -108,7 +108,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
     FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>
   >;
 
-  let deleteTypeOrmServiceV2: DeleteTypeOrmServiceV2<ModelTest, QueryTest>;
+  let deleteTypeOrmService: DeleteTypeOrmService<ModelTest, QueryTest>;
 
   beforeAll(async () => {
     const fooColumnName: keyof ModelTest = 'foo';
@@ -119,7 +119,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
     decorateModelTest(modelTestTable, fooColumnName, idColumnName);
 
     const datasourceOptions: DataSourceOptions = {
-      database: path.resolve('tmp', 'typeorm', 'DeleteTypeOrmServiceV2.sqlite'),
+      database: path.resolve('tmp', 'typeorm', 'DeleteTypeOrmService.sqlite'),
       entities: [ModelTest],
       logging: false,
       type: 'sqlite',
@@ -140,7 +140,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
       jest.Mocked<FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>>
     > as jest.Mocked<FindQueryTypeOrmFromQueryBuilder<ModelTest, QueryTest>>;
 
-    deleteTypeOrmServiceV2 = new DeleteTypeOrmServiceV2<ModelTest, QueryTest>(
+    deleteTypeOrmService = new DeleteTypeOrmService<ModelTest, QueryTest>(
       modelTestRepository,
       findQueryTypeOrmFromQueryBuilderMock,
     );
@@ -176,7 +176,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
             >
           ).mockResolvedValueOnce(queryTypeOrmFixture);
 
-          await deleteTypeOrmServiceV2.delete(queryTest);
+          await deleteTypeOrmService.delete(queryTest);
         });
 
         afterAll(async () => {
@@ -226,7 +226,7 @@ describe(DeleteTypeOrmServiceV2.name, () => {
             >
           ).mockResolvedValueOnce(queryTypeOrmFixture);
 
-          await deleteTypeOrmServiceV2.delete(queryTest);
+          await deleteTypeOrmService.delete(queryTest);
         });
 
         afterAll(async () => {

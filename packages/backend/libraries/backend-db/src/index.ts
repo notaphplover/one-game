@@ -1,6 +1,6 @@
 import { FindQueryTypeOrmFromQueryBuilder } from './persistence/builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
 import { DeleteTypeOrmQueryBuilderService } from './persistence/services/typeorm/DeleteTypeOrmQueryBuilderService';
-import { DeleteTypeOrmServiceV2 } from './persistence/services/typeorm/DeleteTypeOrmServiceV2';
+import { DeleteTypeOrmService } from './persistence/services/typeorm/DeleteTypeOrmService';
 import { FindTypeOrmQueryBuilderService } from './persistence/services/typeorm/FindTypeOrmQueryBuilderService';
 import { FindTypeOrmServiceV2 } from './persistence/services/typeorm/FindTypeOrmServiceV2';
 import { InsertTypeOrmService } from './persistence/services/typeorm/InsertTypeOrmService';
@@ -12,7 +12,7 @@ export type { FindQueryTypeOrmFromQueryBuilder };
 
 export {
   DeleteTypeOrmQueryBuilderService,
-  DeleteTypeOrmServiceV2,
+  DeleteTypeOrmService,
   FindTypeOrmQueryBuilderService,
   FindTypeOrmServiceV2,
   InsertTypeOrmService,
