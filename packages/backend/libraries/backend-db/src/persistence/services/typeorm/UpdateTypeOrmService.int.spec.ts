@@ -20,7 +20,7 @@ import {
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { UpdateTypeOrmServiceV2 } from './UpdateTypeOrmServiceV2';
+import { UpdateTypeOrmService } from './UpdateTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
   const modelTestTableName: string = 'model_test';
@@ -100,7 +100,7 @@ interface QueryTest {
   fooValue: string;
 }
 
-describe(UpdateTypeOrmServiceV2.name, () => {
+describe(UpdateTypeOrmService.name, () => {
   let modelTestTable: Table;
   let datasource: DataSource;
   let queryRunner: QueryRunner;
@@ -113,7 +113,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
     BuilderAsync<QueryDeepPartialEntity<ModelTest>, [QueryTest]>
   >;
 
-  let updateTypeOrmServiceV2: UpdateTypeOrmServiceV2<ModelTest, QueryTest>;
+  let updateTypeOrmService: UpdateTypeOrmService<ModelTest, QueryTest>;
 
   beforeAll(async () => {
     const fooColumnName: keyof ModelTest = 'foo';
@@ -124,7 +124,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
     decorateModelTest(modelTestTable, fooColumnName, idColumnName);
 
     const datasourceOptions: DataSourceOptions = {
-      database: path.resolve('tmp', 'typeorm', 'UpdateTypeOrmServiceV2.sqlite'),
+      database: path.resolve('tmp', 'typeorm', 'UpdateTypeOrmService.sqlite'),
       entities: [ModelTest],
       logging: false,
       type: 'sqlite',
@@ -150,7 +150,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
       build: jest.fn(),
     };
 
-    updateTypeOrmServiceV2 = new UpdateTypeOrmServiceV2<ModelTest, QueryTest>(
+    updateTypeOrmService = new UpdateTypeOrmService<ModelTest, QueryTest>(
       modelTestRepository,
       findQueryTypeOrmFromUpdateQueryBuilderMock,
       setQueryTypeOrmFromUpdateQueryBuilderMock,
@@ -197,7 +197,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
             setQueryTypeOrmFixture,
           );
 
-          await updateTypeOrmServiceV2.update(queryTest);
+          await updateTypeOrmService.update(queryTest);
         });
 
         afterAll(async () => {
@@ -265,7 +265,7 @@ describe(UpdateTypeOrmServiceV2.name, () => {
             setQueryTypeOrmFixture,
           );
 
-          await updateTypeOrmServiceV2.update(queryTest);
+          await updateTypeOrmService.update(queryTest);
         });
 
         afterAll(async () => {

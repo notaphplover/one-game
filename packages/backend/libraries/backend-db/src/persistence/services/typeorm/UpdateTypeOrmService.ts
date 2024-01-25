@@ -13,7 +13,7 @@ import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../../builders
 import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
 
-export class UpdateTypeOrmServiceV2<TModelDb extends ObjectLiteral, TQuery> {
+export class UpdateTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
   readonly #repository: Repository<TModelDb>;
   readonly #findQueryTypeOrmFromUpdateQueryBuilder: FindQueryTypeOrmFromQueryBuilder<
     TModelDb,

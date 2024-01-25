@@ -6,7 +6,7 @@ import { FindTypeOrmServiceV2 } from './persistence/services/typeorm/FindTypeOrm
 import { InsertTypeOrmService } from './persistence/services/typeorm/InsertTypeOrmService';
 import { InsertTypeOrmPostgresService } from './persistence/services/typeorm/postgres/InsertTypeOrmPostgresService';
 import { UpdateTypeOrmQueryBuilderService } from './persistence/services/typeorm/UpdateTypeOrmQueryBuilderService';
-import { UpdateTypeOrmServiceV2 } from './persistence/services/typeorm/UpdateTypeOrmServiceV2';
+import { UpdateTypeOrmService } from './persistence/services/typeorm/UpdateTypeOrmService';
 
 export type { FindQueryTypeOrmFromQueryBuilder };
 
@@ -18,5 +18,5 @@ export {
   InsertTypeOrmService,
   InsertTypeOrmPostgresService,
   UpdateTypeOrmQueryBuilderService,
-  UpdateTypeOrmServiceV2,
+  UpdateTypeOrmService,
 };
