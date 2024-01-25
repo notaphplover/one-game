@@ -21,7 +21,7 @@ import {
 } from 'typeorm';
 
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { FindTypeOrmServiceV2 } from './FindTypeOrmServiceV2';
+import { FindTypeOrmServiceV2 } from './FindTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
   const modelTestTableName: string = 'model_test';

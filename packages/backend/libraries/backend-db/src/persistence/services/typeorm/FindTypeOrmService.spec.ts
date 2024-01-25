@@ -13,7 +13,7 @@ import {
 
 import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
 import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
-import { FindTypeOrmServiceV2 } from './FindTypeOrmServiceV2';
+import { FindTypeOrmServiceV2 } from './FindTypeOrmService';
 
 interface ModelTest {
   foo: string;
