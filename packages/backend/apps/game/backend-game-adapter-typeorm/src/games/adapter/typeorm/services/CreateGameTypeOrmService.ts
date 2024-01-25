@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresServiceV2 } from '@cornie-js/backend-db';
+import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
 import { Game, GameCreateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,7 @@ import { GameFromGameDbBuilder } from '../builders/GameFromGameDbBuilder';
 import { GameDb } from '../models/GameDb';
 
 @Injectable()
-export class CreateGameTypeOrmService extends InsertTypeOrmPostgresServiceV2<
+export class CreateGameTypeOrmService extends InsertTypeOrmPostgresService<
   Game,
   GameDb,
   GameCreateQuery

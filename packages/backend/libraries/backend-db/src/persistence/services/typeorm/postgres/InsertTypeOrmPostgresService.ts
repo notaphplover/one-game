@@ -1,7 +1,7 @@
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { ObjectLiteral, QueryFailedError } from 'typeorm';
 
-import { InsertTypeOrmServiceV2 } from '../InsertTypeOrmServiceV2';
+import { InsertTypeOrmService } from '../InsertTypeOrmService';
 
 const PG_DUPLICATE_KEY_ERROR_CODE: number = 23505;
 
@@ -10,11 +10,11 @@ interface PgDatabaseError extends Record<string, unknown> {
   detail: string | undefined;
 }
 
-export class InsertTypeOrmPostgresServiceV2<
+export class InsertTypeOrmPostgresService<
   TModel,
   TModelDb extends ObjectLiteral,
   TQuery,
-> extends InsertTypeOrmServiceV2<TModel, TModelDb, TQuery> {
+> extends InsertTypeOrmService<TModel, TModelDb, TQuery> {
   public override async insertOne(query: TQuery): Promise<TModel> {
     try {
       return await super.insertOne(query);
