@@ -23,7 +23,7 @@
     "glob": "10.3.10",
     "reflect-metadata": "0.2.1",
     "rxjs": "7.8.1",
-    "typeorm": "0.3.19"
+    "typeorm": "0.3.20"
   },
   "devDependencies": {
     "@cornie-js/process-manager": "workspace:*",
