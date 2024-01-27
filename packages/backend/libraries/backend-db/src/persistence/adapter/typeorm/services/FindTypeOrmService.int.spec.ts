@@ -20,7 +20,7 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
+import { FindQueryTypeOrmFromQueryBuilder } from '../builders/FindQueryTypeOrmFromQueryBuilder';
 import { FindTypeOrmService } from './FindTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {

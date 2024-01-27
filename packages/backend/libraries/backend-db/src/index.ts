@@ -1,12 +1,12 @@
-import { FindQueryTypeOrmFromQueryBuilder } from './persistence/builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { DeleteTypeOrmQueryBuilderService } from './persistence/services/typeorm/DeleteTypeOrmQueryBuilderService';
-import { DeleteTypeOrmService } from './persistence/services/typeorm/DeleteTypeOrmService';
-import { FindTypeOrmQueryBuilderService } from './persistence/services/typeorm/FindTypeOrmQueryBuilderService';
-import { FindTypeOrmService } from './persistence/services/typeorm/FindTypeOrmService';
-import { InsertTypeOrmService } from './persistence/services/typeorm/InsertTypeOrmService';
-import { InsertTypeOrmPostgresService } from './persistence/services/typeorm/postgres/InsertTypeOrmPostgresService';
-import { UpdateTypeOrmQueryBuilderService } from './persistence/services/typeorm/UpdateTypeOrmQueryBuilderService';
-import { UpdateTypeOrmService } from './persistence/services/typeorm/UpdateTypeOrmService';
+import { FindQueryTypeOrmFromQueryBuilder } from './persistence/adapter/typeorm/builders/FindQueryTypeOrmFromQueryBuilder';
+import { DeleteTypeOrmQueryBuilderService } from './persistence/adapter/typeorm/services/DeleteTypeOrmQueryBuilderService';
+import { DeleteTypeOrmService } from './persistence/adapter/typeorm/services/DeleteTypeOrmService';
+import { FindTypeOrmQueryBuilderService } from './persistence/adapter/typeorm/services/FindTypeOrmQueryBuilderService';
+import { FindTypeOrmService } from './persistence/adapter/typeorm/services/FindTypeOrmService';
+import { InsertTypeOrmService } from './persistence/adapter/typeorm/services/InsertTypeOrmService';
+import { InsertTypeOrmPostgresService } from './persistence/adapter/typeorm/services/postgres/InsertTypeOrmPostgresService';
+import { UpdateTypeOrmQueryBuilderService } from './persistence/adapter/typeorm/services/UpdateTypeOrmQueryBuilderService';
+import { UpdateTypeOrmService } from './persistence/adapter/typeorm/services/UpdateTypeOrmService';
 
 export type { FindQueryTypeOrmFromQueryBuilder };
 
