@@ -2,7 +2,7 @@ import { Builder } from '@cornie-js/backend-common';
 import {
   FindQueryTypeOrmFromQueryBuilder,
   UpdateTypeOrmService,
-} from '@cornie-js/backend-db';
+} from '@cornie-js/backend-db/adapter/typeorm';
 import { UserUpdateQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

@@ -19,7 +19,7 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
+import { FindQueryTypeOrmFromQueryBuilder } from '../builders/FindQueryTypeOrmFromQueryBuilder';
 import { UpdateTypeOrmService } from './UpdateTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {

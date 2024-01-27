@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { UpdateTypeOrmService } from '@cornie-js/backend-db';
+import { UpdateTypeOrmService } from '@cornie-js/backend-db/adapter/typeorm';
 import { GameSlotUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

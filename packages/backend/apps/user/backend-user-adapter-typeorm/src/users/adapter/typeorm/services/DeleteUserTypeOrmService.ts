@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { DeleteTypeOrmService } from '@cornie-js/backend-db';
+import { DeleteTypeOrmService } from '@cornie-js/backend-db/adapter/typeorm';
 import { UserFindQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

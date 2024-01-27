@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../utils/typeorm/isQueryBuilder');
+jest.mock('../utils/isQueryBuilder');
 
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
@@ -11,8 +11,8 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
+import { FindQueryTypeOrmFromQueryBuilder } from '../builders/FindQueryTypeOrmFromQueryBuilder';
+import { isQueryBuilder } from '../utils/isQueryBuilder';
 import { FindTypeOrmService } from './FindTypeOrmService';
 
 interface ModelTest {
