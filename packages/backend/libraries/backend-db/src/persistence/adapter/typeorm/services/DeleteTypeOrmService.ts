@@ -7,10 +7,10 @@ import {
   Repository,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
-import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
-import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
+import { FindQueryTypeOrmFromQueryBuilder } from '../builders/FindQueryTypeOrmFromQueryBuilder';
+import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../builders/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
+import { findManyOptionsToFindOptionsWhere } from '../utils/findManyOptionsToFindOptionsWhere';
+import { isQueryBuilder } from '../utils/isQueryBuilder';
 
 export class DeleteTypeOrmService<TModelDb extends ObjectLiteral, TQuery> {
   readonly #repository: Repository<TModelDb>;

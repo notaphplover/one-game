@@ -17,7 +17,7 @@ import {
   TableColumn,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
+import { FindQueryTypeOrmFromQueryBuilder } from '../builders/FindQueryTypeOrmFromQueryBuilder';
 import { DeleteTypeOrmService } from './DeleteTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {

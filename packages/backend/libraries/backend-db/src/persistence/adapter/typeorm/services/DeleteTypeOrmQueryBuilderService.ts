@@ -7,7 +7,7 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
+import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../builders/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
 
 export class DeleteTypeOrmQueryBuilderService<
   TModelDb extends ObjectLiteral,

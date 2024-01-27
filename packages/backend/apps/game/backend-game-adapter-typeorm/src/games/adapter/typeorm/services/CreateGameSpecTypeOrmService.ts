@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db';
+import { InsertTypeOrmPostgresService } from '@cornie-js/backend-db/adapter/typeorm';
 import {
   GameSpec,
   GameSpecCreateQuery,

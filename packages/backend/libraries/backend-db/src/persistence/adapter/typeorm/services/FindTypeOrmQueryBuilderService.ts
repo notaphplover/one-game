@@ -1,18 +1,16 @@
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
   FindManyOptions,
-  FindOneOptions,
   ObjectLiteral,
   QueryBuilder,
   Repository,
   SelectQueryBuilder,
+  WhereExpressionBuilder,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
-import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
+import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../builders/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
 
-export class FindTypeOrmService<
+export class FindTypeOrmQueryBuilderService<
   TModel,
   TModelDb extends ObjectLiteral,
   TQuery,
@@ -21,20 +19,30 @@ export class FindTypeOrmService<
   readonly #modelFromModelDbBuilder:
     | Builder<TModel, [TModelDb]>
     | BuilderAsync<TModel, [TModelDb]>;
-  readonly #findQueryTypeOrmFromQueryBuilder: FindQueryTypeOrmFromQueryBuilder<
-    TModelDb,
-    TQuery
-  >;
+  readonly #findQueryTypeOrmFromQueryBuilder:
+    | Builder<
+        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+        [TQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      >
+    | BuilderAsync<
+        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+        [TQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      >;
 
   constructor(
     repository: Repository<TModelDb>,
     modelFromModelDbBuilder:
       | Builder<TModel, [TModelDb]>
       | BuilderAsync<TModel, [TModelDb]>,
-    findQueryTypeOrmFromQueryBuilder: FindQueryTypeOrmFromQueryBuilder<
-      TModelDb,
-      TQuery
-    >,
+    findQueryTypeOrmFromQueryBuilder:
+      | Builder<
+          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+          [TQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        >
+      | BuilderAsync<
+          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+          [TQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        >,
   ) {
     this.#repository = repository;
     this.#modelFromModelDbBuilder = modelFromModelDbBuilder;
@@ -46,8 +54,6 @@ export class FindTypeOrmService<
       query,
       async (queryBuilder: SelectQueryBuilder<TModelDb>): Promise<TModelDb[]> =>
         queryBuilder.getMany(),
-      async (findManyOptions: FindManyOptions<TModelDb>): Promise<TModelDb[]> =>
-        this.#repository.find(findManyOptions),
     );
 
     const models: TModel[] = await Promise.all(
@@ -66,12 +72,6 @@ export class FindTypeOrmService<
         queryBuilder: SelectQueryBuilder<TModelDb>,
       ): Promise<TModelDb | undefined> =>
         (await queryBuilder.getOne()) ?? undefined,
-      async (
-        findConditions: FindManyOptions<TModelDb>,
-      ): Promise<TModelDb | undefined> =>
-        (await this.#repository.findOne(
-          this.#buildFindOneOptions(findConditions),
-        )) ?? undefined,
     );
 
     let model: TModel | undefined;
@@ -85,19 +85,10 @@ export class FindTypeOrmService<
     return model;
   }
 
-  #buildFindOneOptions(
-    findManyOptions: FindManyOptions<TModelDb>,
-  ): FindOneOptions<TModelDb> {
-    return findManyOptions;
-  }
-
   async #innerFind<TOutputDb extends undefined | TModelDb | TModelDb[]>(
     query: TQuery,
     findByQueryBuilder: (
       queryBuilder: SelectQueryBuilder<TModelDb>,
-    ) => Promise<TOutputDb>,
-    findByFindManyOptions: (
-      findManyOptions: FindManyOptions<TModelDb>,
     ) => Promise<TOutputDb>,
   ): Promise<TOutputDb> {
     const selectQueryBuilder: SelectQueryBuilder<TModelDb> =
@@ -113,16 +104,8 @@ export class FindTypeOrmService<
       >
     ).build(query, selectQueryBuilder);
 
-    let outputDb: TOutputDb;
-
-    if (isQueryBuilder<TModelDb>(findQueryTypeOrmOrQueryBuilder)) {
-      outputDb = await findByQueryBuilder(
-        findQueryTypeOrmOrQueryBuilder as SelectQueryBuilder<TModelDb>,
-      );
-    } else {
-      outputDb = await findByFindManyOptions(findQueryTypeOrmOrQueryBuilder);
-    }
-
-    return outputDb;
+    return findByQueryBuilder(
+      findQueryTypeOrmOrQueryBuilder as SelectQueryBuilder<TModelDb>,
+    );
   }
 }

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../utils/typeorm/findManyOptionsToFindOptionsWhere');
-jest.mock('../../utils/typeorm/isQueryBuilder');
+jest.mock('../utils/findManyOptionsToFindOptionsWhere');
+jest.mock('../utils/isQueryBuilder');
 
 import {
   FindManyOptions,
@@ -11,9 +11,9 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { FindQueryTypeOrmFromQueryBuilder } from '../../builders/typeorm/FindQueryTypeOrmFromQueryBuilder';
-import { findManyOptionsToFindOptionsWhere } from '../../utils/typeorm/findManyOptionsToFindOptionsWhere';
-import { isQueryBuilder } from '../../utils/typeorm/isQueryBuilder';
+import { FindQueryTypeOrmFromQueryBuilder } from '../builders/FindQueryTypeOrmFromQueryBuilder';
+import { findManyOptionsToFindOptionsWhere } from '../utils/findManyOptionsToFindOptionsWhere';
+import { isQueryBuilder } from '../utils/isQueryBuilder';
 import { DeleteTypeOrmService } from './DeleteTypeOrmService';
 
 interface ModelTest {
