@@ -6,6 +6,7 @@ import {
   InsertQueryBuilder,
   InsertResult,
   QueryBuilder,
+  QueryRunner,
   Repository,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -90,9 +91,19 @@ describe(InsertTypeOrmService.name, () => {
   });
 
   describe('.insertOne()', () => {
+    let queryFixture: QueryTest;
+    let queryRunnerFixture: QueryRunner | undefined;
+
+    beforeAll(() => {
+      queryFixture = {
+        bar: 'sample',
+      };
+
+      queryRunnerFixture = Symbol() as unknown as QueryRunner | undefined;
+    });
+
     describe('when called', () => {
       let modelFixture: ModelTest;
-      let queryFixture: QueryTest;
       let insertResultFixture: InsertResult;
       let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>;
 
@@ -101,10 +112,6 @@ describe(InsertTypeOrmService.name, () => {
       beforeAll(async () => {
         modelFixture = {
           foo: 'sample-string',
-        };
-
-        queryFixture = {
-          bar: 'sample',
         };
 
         insertResultFixture = {
@@ -132,7 +139,10 @@ describe(InsertTypeOrmService.name, () => {
           >
         ).build.mockResolvedValueOnce(typeOrmQueryFixture);
 
-        result = await insertTypeOrmService.insertOne(queryFixture);
+        result = await insertTypeOrmService.insertOne(
+          queryFixture,
+          queryRunnerFixture,
+        );
       });
 
       afterAll(() => {
@@ -150,7 +160,10 @@ describe(InsertTypeOrmService.name, () => {
 
       it('should call repositoryMock.createQueryBuilder()', () => {
         expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith();
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+          undefined,
+          queryRunnerFixture,
+        );
       });
 
       it('should call queryBuilderMock.insert()', () => {
@@ -290,9 +303,19 @@ describe(InsertTypeOrmService.name, () => {
   });
 
   describe('.insertMany()', () => {
+    let queryFixture: QueryTest;
+    let queryRunnerFixture: QueryRunner | undefined;
+
+    beforeAll(() => {
+      queryFixture = {
+        bar: 'sample',
+      };
+
+      queryRunnerFixture = Symbol() as unknown as QueryRunner | undefined;
+    });
+
     describe('when called, and setQueryTypeOrmFromSetQueryBuilder.build() returns a QueryDeepPartialEntity[]', () => {
       let modelFixture: ModelTest;
-      let queryFixture: QueryTest;
       let insertResultFixture: InsertResult;
       let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>[];
 
@@ -301,10 +324,6 @@ describe(InsertTypeOrmService.name, () => {
       beforeAll(async () => {
         modelFixture = {
           foo: 'sample-string',
-        };
-
-        queryFixture = {
-          bar: 'sample',
         };
 
         insertResultFixture = {
@@ -330,7 +349,10 @@ describe(InsertTypeOrmService.name, () => {
           >
         ).build.mockResolvedValueOnce(typeOrmQueryFixture);
 
-        result = await insertTypeOrmService.insertMany(queryFixture);
+        result = await insertTypeOrmService.insertMany(
+          queryFixture,
+          queryRunnerFixture,
+        );
       });
 
       afterAll(() => {
@@ -348,7 +370,10 @@ describe(InsertTypeOrmService.name, () => {
 
       it('should call repositoryMock.createQueryBuilder()', () => {
         expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith();
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+          undefined,
+          queryRunnerFixture,
+        );
       });
 
       it('should call queryBuilderMock.insert()', () => {

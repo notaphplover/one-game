@@ -1,5 +1,5 @@
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { ObjectLiteral, QueryFailedError } from 'typeorm';
+import { ObjectLiteral, QueryFailedError, QueryRunner } from 'typeorm';
 
 import { InsertTypeOrmService } from '../InsertTypeOrmService';
 
@@ -15,9 +15,12 @@ export class InsertTypeOrmPostgresService<
   TModelDb extends ObjectLiteral,
   TQuery,
 > extends InsertTypeOrmService<TModel, TModelDb, TQuery> {
-  public override async insertOne(query: TQuery): Promise<TModel> {
+  public override async insertOne(
+    query: TQuery,
+    queryRunner?: QueryRunner | undefined,
+  ): Promise<TModel> {
     try {
-      return await super.insertOne(query);
+      return await super.insertOne(query, queryRunner);
     } catch (error) {
       this.#handleError(error);
     }
