@@ -29,7 +29,8 @@
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "exports": {
-    "./adapter/typeorm": "./lib/persistence/adapter/typeorm/index.js"
+    "./adapter/typeorm": "./lib/persistence/adapter/typeorm/index.js",
+    "./application": "./lib/persistence/application/index.js"
   },
   "name": "@cornie-js/backend-db",
   "publishConfig": {
