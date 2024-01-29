@@ -5,6 +5,7 @@ import {
   ObjectLiteral,
   FindManyOptions,
   InsertQueryBuilder,
+  QueryRunner,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
@@ -48,10 +49,12 @@ export class InsertTypeOrmService<
       setQueryTypeOrmFromSetQueryBuilder;
   }
 
-  public async insertOne(query: TQuery): Promise<TModel> {
-    const insertQueryBuilder: InsertQueryBuilder<TModelDb> = this.#repository
-      .createQueryBuilder()
-      .insert();
+  public async insertOne(
+    query: TQuery,
+    queryRunner?: QueryRunner | undefined,
+  ): Promise<TModel> {
+    const insertQueryBuilder: InsertQueryBuilder<TModelDb> =
+      this.#createInsertQueryBuilder(queryRunner);
 
     const insertQueryTypeOrm:
       | QueryDeepPartialEntity<TModelDb>
@@ -76,10 +79,12 @@ export class InsertTypeOrmService<
     return model;
   }
 
-  public async insertMany(query: TQuery): Promise<TModel[]> {
-    const insertQueryBuilder: InsertQueryBuilder<TModelDb> = this.#repository
-      .createQueryBuilder()
-      .insert();
+  public async insertMany(
+    query: TQuery,
+    queryRunner?: QueryRunner | undefined,
+  ): Promise<TModel[]> {
+    const insertQueryBuilder: InsertQueryBuilder<TModelDb> =
+      this.#createInsertQueryBuilder(queryRunner);
 
     const insertQueryTypeOrm:
       | QueryDeepPartialEntity<TModelDb>
@@ -146,6 +151,12 @@ export class InsertTypeOrmService<
     }
 
     return singleInsertQueryTypeOrm;
+  }
+
+  #createInsertQueryBuilder(
+    queryRunner: QueryRunner | undefined,
+  ): InsertQueryBuilder<TModelDb> {
+    return this.#repository.createQueryBuilder(undefined, queryRunner).insert();
   }
 
   async #findEntitiesByIds(ids: ObjectLiteral[]): Promise<TModelDb[]> {
