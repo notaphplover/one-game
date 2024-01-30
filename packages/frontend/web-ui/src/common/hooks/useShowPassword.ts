@@ -7,7 +7,7 @@ export const useShowPassword = (initial: boolean) => {
     setShowPassword((show: boolean) => !show);
   };
 
-  const handleMouseDownPassword = (event: React.FormEvent<HTMLElement>) => {
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
   };
 
