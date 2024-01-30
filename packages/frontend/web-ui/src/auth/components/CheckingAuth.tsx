@@ -1,6 +1,7 @@
+import React from 'react';
 import { CircularProgress, Grid } from '@mui/material';
 
-export const CheckingAuth = () => {
+export const CheckingAuth = (): React.JSX.Element => {
   return (
     <Grid
       container
