@@ -1,3 +1,4 @@
+import { TransactionContext } from '@cornie-js/backend-db/application';
 import { UserCodePersistenceOutputPort } from '@cornie-js/backend-user-application/users';
 import {
   UserCode,
@@ -33,8 +34,12 @@ export class UserCodePersistenceTypeOrmAdapter
 
   public async create(
     userCodeCreateQuery: UserCodeCreateQuery,
+    transactionContext?: TransactionContext,
   ): Promise<UserCode> {
-    return this.#createUserCodeTypeOrmService.insertOne(userCodeCreateQuery);
+    return this.#createUserCodeTypeOrmService.insertOne(
+      userCodeCreateQuery,
+      transactionContext,
+    );
   }
 
   public async delete(userCodeFindQuery: UserCodeFindQuery): Promise<void> {
