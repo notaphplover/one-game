@@ -1,3 +1,4 @@
+import { TransactionContext } from '@cornie-js/backend-db/application';
 import {
   User,
   UserCreateQuery,
@@ -6,7 +7,10 @@ import {
 } from '@cornie-js/backend-user-domain/users';
 
 export interface UserPersistenceOutputPort {
-  create(userCreateQuery: UserCreateQuery): Promise<User>;
+  create(
+    userCreateQuery: UserCreateQuery,
+    transactionContext?: TransactionContext,
+  ): Promise<User>;
   delete(userFindQuery: UserFindQuery): Promise<void>;
   findOne(userFindQuery: UserFindQuery): Promise<User | undefined>;
   update(userUpdateQuery: UserUpdateQuery): Promise<void>;

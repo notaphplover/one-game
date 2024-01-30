@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { TransactionContext } from '@cornie-js/backend-db/application';
 import {
   User,
   UserCreateQuery,
@@ -63,12 +64,16 @@ describe(UserPersistenceTypeOrmAdapter, () => {
   describe('.create', () => {
     describe('when called', () => {
       let userCreateQueryFixture: UserCreateQuery;
+      let transactionContextFixture: TransactionContext;
+
       let userFixture: User;
 
       let result: unknown;
 
       beforeAll(async () => {
         userCreateQueryFixture = UserCreateQueryFixtures.any;
+        transactionContextFixture = Symbol() as unknown as TransactionContext;
+
         userFixture = Symbol() as unknown as User;
 
         createUserTypeOrmServiceMock.insertOne.mockResolvedValueOnce(
@@ -77,6 +82,7 @@ describe(UserPersistenceTypeOrmAdapter, () => {
 
         result = await userPersistenceTypeOrmAdapter.create(
           userCreateQueryFixture,
+          transactionContextFixture,
         );
       });
 
@@ -84,6 +90,7 @@ describe(UserPersistenceTypeOrmAdapter, () => {
         expect(createUserTypeOrmServiceMock.insertOne).toHaveBeenCalledTimes(1);
         expect(createUserTypeOrmServiceMock.insertOne).toHaveBeenCalledWith(
           userCreateQueryFixture,
+          transactionContextFixture,
         );
       });
 
