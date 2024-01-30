@@ -99,7 +99,7 @@ describe(ActiveGameResolver.name, () => {
 
           try {
             await activeGameResolver.spec(gameFixture, Symbol(), contextMock);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

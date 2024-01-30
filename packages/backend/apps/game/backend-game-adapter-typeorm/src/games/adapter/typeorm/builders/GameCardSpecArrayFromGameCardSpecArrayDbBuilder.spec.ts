@@ -39,7 +39,7 @@ describe(GameCardSpecArrayFromGameCardSpecArrayDbBuilder.name, () => {
             gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build(
               gameCardSpecArrayFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -77,7 +77,7 @@ describe(GameCardSpecArrayFromGameCardSpecArrayDbBuilder.name, () => {
             gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build(
               gameCardSpecArrayFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

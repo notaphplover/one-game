@@ -61,7 +61,7 @@ describe(UserCodeManagementInputPort.name, () => {
 
         try {
           await userCodeManagementInputPort.createFromUser(userFixture);
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

@@ -498,7 +498,7 @@ describe(GameSlotManagementInputPort.name, () => {
               gameFixture,
               gameSlotIndexFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -602,7 +602,7 @@ describe(GameSlotManagementInputPort.name, () => {
               slotIndex,
               userFixture.id,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

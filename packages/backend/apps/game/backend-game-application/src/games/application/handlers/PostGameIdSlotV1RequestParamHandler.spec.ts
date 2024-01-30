@@ -61,7 +61,7 @@ describe(PostGameIdSlotV1RequestParamHandler.name, () => {
         beforeAll(async () => {
           try {
             await postGameIdSlotV1RequestParamHandler.handle(requestFixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

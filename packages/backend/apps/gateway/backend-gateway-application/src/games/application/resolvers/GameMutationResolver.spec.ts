@@ -168,7 +168,7 @@ describe(GameMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -323,7 +323,7 @@ describe(GameMutationResolver.name, () => {
               },
               contextFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -485,7 +485,7 @@ describe(GameMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -561,7 +561,7 @@ describe(GameMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -730,7 +730,7 @@ describe(GameMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -809,7 +809,7 @@ describe(GameMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

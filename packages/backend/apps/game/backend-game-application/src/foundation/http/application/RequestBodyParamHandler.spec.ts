@@ -66,7 +66,7 @@ describe(RequestBodyParamHandler.name, () => {
 
         try {
           await requestBodyParamHandler.handle(requestWithBodyFixture);
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

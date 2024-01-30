@@ -126,7 +126,7 @@ describe(AuthMiddleware.name, () => {
           beforeAll(async () => {
             try {
               await authMiddlewareMock.handle(requestFixture, haltMock);
-            } catch (error) {
+            } catch (error: unknown) {
               result = error;
             }
           });
@@ -279,7 +279,7 @@ describe(AuthMiddleware.name, () => {
 
           try {
             await authMiddlewareMock.handle(requestFixture, haltMock);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

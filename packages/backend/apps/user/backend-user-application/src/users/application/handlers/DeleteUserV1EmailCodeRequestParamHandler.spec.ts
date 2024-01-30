@@ -47,7 +47,7 @@ describe(DeleteUserV1EmailCodeRequestParamHandler.name, () => {
             await deleteUserV1EmailCodeRequestParamHandler.handle(
               requestFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -98,7 +98,7 @@ describe(DeleteUserV1EmailCodeRequestParamHandler.name, () => {
             await deleteUserV1EmailCodeRequestParamHandler.handle(
               requestFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

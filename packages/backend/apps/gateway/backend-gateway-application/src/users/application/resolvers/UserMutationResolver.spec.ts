@@ -137,7 +137,7 @@ describe(UserMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -253,7 +253,7 @@ describe(UserMutationResolver.name, () => {
             undefined,
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

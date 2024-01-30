@@ -119,7 +119,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
             gameIdPlayCardsQueryV1Fixture,
             userV1Fixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -182,7 +182,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
             gameIdPlayCardsQueryV1Fixture,
             userV1Fixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

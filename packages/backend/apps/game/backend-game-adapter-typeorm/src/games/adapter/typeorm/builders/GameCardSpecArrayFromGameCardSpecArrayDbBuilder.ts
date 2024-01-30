@@ -53,7 +53,7 @@ export class GameCardSpecArrayFromGameCardSpecArrayDbBuilder
   #parseJson(gameCardSpecArrayDb: string): unknown {
     try {
       return JSON.parse(gameCardSpecArrayDb);
-    } catch (error) {
+    } catch (error: unknown) {
       throw new AppError(
         AppErrorKind.unknown,
         'Unexpected malformed card spec db entry',

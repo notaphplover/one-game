@@ -96,7 +96,7 @@ describe(RequestWithBodyFromFastifyRequestBuilder.name, () => {
             requestWithBodyFromFastifyRequestBuilder.build(
               fastifyRequestFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
