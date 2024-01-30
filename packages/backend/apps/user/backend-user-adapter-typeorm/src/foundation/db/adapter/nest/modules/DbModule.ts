@@ -1,9 +1,11 @@
+import { transactionContextProvisionOutputPortSymbol } from '@cornie-js/backend-user-application/foundation/db';
 import { DynamicModule, Module } from '@nestjs/common';
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
 
+import { TransactionContextProvisionTypeOrmAdapter } from '../../typeorm/adapters/TransactionContextProvisionTypeOrmAdapter';
 import { DbModuleOptions } from '../models/DbModuleOptions';
 import { typeOrmEntities } from '../models/entities';
 
@@ -32,6 +34,20 @@ export class DbModule {
       global: false,
       imports: [options.builders.root(typeOrmModuleAsyncOptions)],
       module: DbModule,
+    };
+  }
+
+  public static forTransaction(): DynamicModule {
+    return {
+      exports: [transactionContextProvisionOutputPortSymbol],
+      global: false,
+      module: DbModule,
+      providers: [
+        {
+          provide: transactionContextProvisionOutputPortSymbol,
+          useClass: TransactionContextProvisionTypeOrmAdapter,
+        },
+      ],
     };
   }
 }
