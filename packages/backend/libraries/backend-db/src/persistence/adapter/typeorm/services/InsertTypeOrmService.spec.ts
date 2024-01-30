@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../utils/unwrapTypeOrmTransactionContext');
+
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
   FindManyOptions,
@@ -8,9 +10,12 @@ import {
   QueryBuilder,
   QueryRunner,
   Repository,
+  SelectQueryBuilder,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
+import { TransactionContext } from '../../../application/models/TransactionContext';
+import { unwrapTypeOrmTransactionContext } from '../utils/unwrapTypeOrmTransactionContext';
 import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 interface ModelTest {
@@ -22,7 +27,9 @@ interface QueryTest {
 }
 
 describe(InsertTypeOrmService.name, () => {
-  let queryBuilderMock: jest.Mocked<InsertQueryBuilder<ModelTest>>;
+  let queryBuilderMock: jest.Mocked<
+    InsertQueryBuilder<ModelTest> & SelectQueryBuilder<ModelTest>
+  >;
   let repositoryMock: jest.Mocked<Repository<ModelTest>>;
   let modelFromModelDbBuilderMock: jest.Mocked<
     Builder<ModelTest, [ModelTest]> | BuilderAsync<ModelTest, [ModelTest]>
@@ -49,16 +56,21 @@ describe(InsertTypeOrmService.name, () => {
       Object.create(QueryBuilder.prototype) as QueryBuilder<ModelTest>,
       {
         execute: jest.fn(),
+        getMany: jest.fn(),
         insert: jest.fn().mockReturnThis(),
+        setFindOptions: jest.fn().mockReturnThis(),
         values: jest.fn().mockReturnThis(),
-      } as Partial<jest.Mocked<InsertQueryBuilder<ModelTest>>> as jest.Mocked<
-        InsertQueryBuilder<ModelTest>
+      } as Partial<
+        jest.Mocked<
+          InsertQueryBuilder<ModelTest> & SelectQueryBuilder<ModelTest>
+        >
+      > as jest.Mocked<
+        InsertQueryBuilder<ModelTest> & SelectQueryBuilder<ModelTest>
       >,
     );
 
     repositoryMock = {
       createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
-      find: jest.fn(),
     } as Partial<jest.Mocked<Repository<ModelTest>>> as jest.Mocked<
       Repository<ModelTest>
     >;
@@ -92,19 +104,22 @@ describe(InsertTypeOrmService.name, () => {
 
   describe('.insertOne()', () => {
     let queryFixture: QueryTest;
-    let queryRunnerFixture: QueryRunner | undefined;
+    let transactionContextFixture: TransactionContext | undefined;
 
     beforeAll(() => {
       queryFixture = {
         bar: 'sample',
       };
 
-      queryRunnerFixture = Symbol() as unknown as QueryRunner | undefined;
+      transactionContextFixture = Symbol() as unknown as
+        | TransactionContext
+        | undefined;
     });
 
     describe('when called', () => {
       let modelFixture: ModelTest;
       let insertResultFixture: InsertResult;
+      let queryRunnerFixture: QueryRunner;
       let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>;
 
       let result: unknown;
@@ -118,11 +133,18 @@ describe(InsertTypeOrmService.name, () => {
           identifiers: [{ id: 'sample-id' }],
         } as Partial<InsertResult> as InsertResult;
 
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
+
         typeOrmQueryFixture = {
           foo: 'bar',
         };
 
-        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
+        (
+          unwrapTypeOrmTransactionContext as jest.Mock<
+            typeof unwrapTypeOrmTransactionContext
+          >
+        ).mockReturnValueOnce(queryRunnerFixture);
+        queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
         queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
@@ -141,7 +163,7 @@ describe(InsertTypeOrmService.name, () => {
 
         result = await insertTypeOrmService.insertOne(
           queryFixture,
-          queryRunnerFixture,
+          transactionContextFixture,
         );
       });
 
@@ -159,8 +181,14 @@ describe(InsertTypeOrmService.name, () => {
       });
 
       it('should call repositoryMock.createQueryBuilder()', () => {
-        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(2);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenNthCalledWith(
+          1,
+          undefined,
+          queryRunnerFixture,
+        );
+        expect(repositoryMock.createQueryBuilder).toHaveBeenNthCalledWith(
+          2,
           undefined,
           queryRunnerFixture,
         );
@@ -183,13 +211,19 @@ describe(InsertTypeOrmService.name, () => {
         expect(queryBuilderMock.execute).toHaveBeenCalledWith();
       });
 
-      it('should call repositoryMock.find()', () => {
+      it('should call queryBuilder.setFindOptions()', () => {
         const expected: FindManyOptions<ModelTest> = {
+          loadEagerRelations: true,
           where: insertResultFixture.identifiers,
         };
 
-        expect(repositoryMock.find).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.find).toHaveBeenCalledWith(expected);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call queryBuilder.getMany()', () => {
+        expect(queryBuilderMock.getMany).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.getMany).toHaveBeenCalledWith();
       });
 
       it('should call modelFromModelDbBuilder.build()', () => {
@@ -208,6 +242,7 @@ describe(InsertTypeOrmService.name, () => {
       let modelFixture: ModelTest;
       let queryFixture: QueryTest;
       let insertResultFixture: InsertResult;
+      let queryRunnerFixture: QueryRunner;
       let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>;
 
       beforeAll(async () => {
@@ -223,9 +258,16 @@ describe(InsertTypeOrmService.name, () => {
           identifiers: [{ id: 'sample-id' }],
         } as Partial<InsertResult> as InsertResult;
 
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
+
         typeOrmQueryFixture = {};
 
-        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
+        (
+          unwrapTypeOrmTransactionContext as jest.Mock<
+            typeof unwrapTypeOrmTransactionContext
+          >
+        ).mockReturnValueOnce(queryRunnerFixture);
+        queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
         queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
@@ -259,6 +301,7 @@ describe(InsertTypeOrmService.name, () => {
 
     describe('when called, and setQueryTypeOrmFromSetQueryBuilder.build() returns a QueryDeepPartialEntity[] with not one element', () => {
       let queryFixture: QueryTest;
+      let queryRunnerFixture: QueryRunner;
 
       let result: unknown;
 
@@ -266,6 +309,14 @@ describe(InsertTypeOrmService.name, () => {
         queryFixture = {
           bar: 'sample',
         };
+
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
+
+        (
+          unwrapTypeOrmTransactionContext as jest.Mock<
+            typeof unwrapTypeOrmTransactionContext
+          >
+        ).mockReturnValueOnce(queryRunnerFixture);
 
         (
           setQueryTypeOrmFromSetQueryBuilderMock as jest.Mocked<
@@ -304,19 +355,22 @@ describe(InsertTypeOrmService.name, () => {
 
   describe('.insertMany()', () => {
     let queryFixture: QueryTest;
-    let queryRunnerFixture: QueryRunner | undefined;
+    let transactionContextFixture: TransactionContext | undefined;
 
     beforeAll(() => {
       queryFixture = {
         bar: 'sample',
       };
 
-      queryRunnerFixture = Symbol() as unknown as QueryRunner | undefined;
+      transactionContextFixture = Symbol() as unknown as
+        | TransactionContext
+        | undefined;
     });
 
     describe('when called, and setQueryTypeOrmFromSetQueryBuilder.build() returns a QueryDeepPartialEntity[]', () => {
       let modelFixture: ModelTest;
       let insertResultFixture: InsertResult;
+      let queryRunnerFixture: QueryRunner;
       let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>[];
 
       let result: unknown;
@@ -330,9 +384,17 @@ describe(InsertTypeOrmService.name, () => {
           identifiers: [{ id: 'sample-id' }],
         } as Partial<InsertResult> as InsertResult;
 
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
+
         typeOrmQueryFixture = [{}];
 
-        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
+        (
+          unwrapTypeOrmTransactionContext as jest.Mock<
+            typeof unwrapTypeOrmTransactionContext
+          >
+        ).mockReturnValueOnce(queryRunnerFixture);
+
+        queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
         queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
@@ -351,7 +413,7 @@ describe(InsertTypeOrmService.name, () => {
 
         result = await insertTypeOrmService.insertMany(
           queryFixture,
-          queryRunnerFixture,
+          transactionContextFixture,
         );
       });
 
@@ -369,8 +431,14 @@ describe(InsertTypeOrmService.name, () => {
       });
 
       it('should call repositoryMock.createQueryBuilder()', () => {
-        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(2);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenNthCalledWith(
+          1,
+          undefined,
+          queryRunnerFixture,
+        );
+        expect(repositoryMock.createQueryBuilder).toHaveBeenNthCalledWith(
+          2,
           undefined,
           queryRunnerFixture,
         );
@@ -393,13 +461,19 @@ describe(InsertTypeOrmService.name, () => {
         expect(queryBuilderMock.execute).toHaveBeenCalledWith();
       });
 
-      it('should call repositoryMock.find()', () => {
+      it('should call queryBuilder.setFindOptions()', () => {
         const expected: FindManyOptions<ModelTest> = {
+          loadEagerRelations: true,
           where: insertResultFixture.identifiers,
         };
 
-        expect(repositoryMock.find).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.find).toHaveBeenCalledWith(expected);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call queryBuilder.getMany()', () => {
+        expect(queryBuilderMock.getMany).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.getMany).toHaveBeenCalledWith();
       });
 
       it('should call modelFromModelDbBuilder.build()', () => {
@@ -418,6 +492,7 @@ describe(InsertTypeOrmService.name, () => {
       let modelFixture: ModelTest;
       let queryFixture: QueryTest;
       let insertResultFixture: InsertResult;
+      let queryRunnerFixture: QueryRunner;
       let typeOrmQueryFixture: QueryDeepPartialEntity<ModelTest>;
 
       let result: unknown;
@@ -435,9 +510,17 @@ describe(InsertTypeOrmService.name, () => {
           identifiers: [{ id: 'sample-id' }],
         } as Partial<InsertResult> as InsertResult;
 
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
+
         typeOrmQueryFixture = {};
 
-        repositoryMock.find.mockResolvedValueOnce([modelFixture]);
+        (
+          unwrapTypeOrmTransactionContext as jest.Mock<
+            typeof unwrapTypeOrmTransactionContext
+          >
+        ).mockReturnValueOnce(queryRunnerFixture);
+
+        queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
         queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
@@ -477,13 +560,19 @@ describe(InsertTypeOrmService.name, () => {
         ]);
       });
 
-      it('should call repositoryMock.find()', () => {
+      it('should call queryBuilder.setFindOptions()', () => {
         const expected: FindManyOptions<ModelTest> = {
+          loadEagerRelations: true,
           where: insertResultFixture.identifiers,
         };
 
-        expect(repositoryMock.find).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.find).toHaveBeenCalledWith(expected);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call queryBuilder.getMany()', () => {
+        expect(queryBuilderMock.getMany).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.getMany).toHaveBeenCalledWith();
       });
 
       it('should call modelFromModelDbBuilder.build()', () => {
