@@ -1,6 +1,7 @@
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { ObjectLiteral, QueryFailedError, QueryRunner } from 'typeorm';
+import { ObjectLiteral, QueryFailedError } from 'typeorm';
 
+import { TransactionContext } from '../../../../application/models/TransactionContext';
 import { InsertTypeOrmService } from '../InsertTypeOrmService';
 
 const PG_DUPLICATE_KEY_ERROR_CODE: number = 23505;
@@ -17,11 +18,11 @@ export class InsertTypeOrmPostgresService<
 > extends InsertTypeOrmService<TModel, TModelDb, TQuery> {
   public override async insertOne(
     query: TQuery,
-    queryRunner?: QueryRunner | undefined,
+    transactionContext?: TransactionContext | undefined,
   ): Promise<TModel> {
     try {
-      return await super.insertOne(query, queryRunner);
-    } catch (error) {
+      return await super.insertOne(query, transactionContext);
+    } catch (error: unknown) {
       this.#handleError(error);
     }
   }

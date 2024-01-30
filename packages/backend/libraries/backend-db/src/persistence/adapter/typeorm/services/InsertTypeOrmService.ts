@@ -3,11 +3,15 @@ import {
   Repository,
   InsertResult,
   ObjectLiteral,
-  FindManyOptions,
   InsertQueryBuilder,
   QueryRunner,
+  SelectQueryBuilder,
+  FindOptionsWhere,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+
+import { TransactionContext } from '../../../application/models/TransactionContext';
+import { unwrapTypeOrmTransactionContext } from '../utils/unwrapTypeOrmTransactionContext';
 
 export class InsertTypeOrmService<
   TModel,
@@ -51,8 +55,11 @@ export class InsertTypeOrmService<
 
   public async insertOne(
     query: TQuery,
-    queryRunner?: QueryRunner | undefined,
+    transactionContext?: TransactionContext | undefined,
   ): Promise<TModel> {
+    const queryRunner: QueryRunner | undefined =
+      unwrapTypeOrmTransactionContext(transactionContext);
+
     const insertQueryBuilder: InsertQueryBuilder<TModelDb> =
       this.#createInsertQueryBuilder(queryRunner);
 
@@ -70,9 +77,10 @@ export class InsertTypeOrmService<
 
     const ids: ObjectLiteral[] = insertResult.identifiers;
 
-    const [modelDb]: [TModelDb] = (await this.#findEntitiesByIds(ids)) as [
-      TModelDb,
-    ];
+    const [modelDb]: [TModelDb] = (await this.#findEntitiesByIds(
+      ids,
+      queryRunner,
+    )) as [TModelDb];
 
     const model: TModel = await this.#modelFromModelDbBuilder.build(modelDb);
 
@@ -81,8 +89,11 @@ export class InsertTypeOrmService<
 
   public async insertMany(
     query: TQuery,
-    queryRunner?: QueryRunner | undefined,
+    transactionContext?: TransactionContext | undefined,
   ): Promise<TModel[]> {
+    const queryRunner: QueryRunner | undefined =
+      unwrapTypeOrmTransactionContext(transactionContext);
+
     const insertQueryBuilder: InsertQueryBuilder<TModelDb> =
       this.#createInsertQueryBuilder(queryRunner);
 
@@ -100,7 +111,10 @@ export class InsertTypeOrmService<
 
     const ids: ObjectLiteral[] = insertResult.identifiers;
 
-    const modelDbs: TModelDb[] = await this.#findEntitiesByIds(ids);
+    const modelDbs: TModelDb[] = await this.#findEntitiesByIds(
+      ids,
+      queryRunner,
+    );
 
     const models: TModel[] = await Promise.all(
       modelDbs.map(
@@ -159,12 +173,18 @@ export class InsertTypeOrmService<
     return this.#repository.createQueryBuilder(undefined, queryRunner).insert();
   }
 
-  async #findEntitiesByIds(ids: ObjectLiteral[]): Promise<TModelDb[]> {
-    const findManyOptions: FindManyOptions = {
-      where: ids,
-    };
+  async #findEntitiesByIds(
+    ids: ObjectLiteral[],
+    queryRunner: QueryRunner | undefined,
+  ): Promise<TModelDb[]> {
+    const queryBuilder: SelectQueryBuilder<TModelDb> = this.#repository
+      .createQueryBuilder(undefined, queryRunner)
+      .setFindOptions({
+        loadEagerRelations: true,
+        where: ids as FindOptionsWhere<TModelDb>[],
+      });
 
-    const modelDbs: TModelDb[] = await this.#repository.find(findManyOptions);
+    const modelDbs: TModelDb[] = await queryBuilder.getMany();
 
     return modelDbs;
   }

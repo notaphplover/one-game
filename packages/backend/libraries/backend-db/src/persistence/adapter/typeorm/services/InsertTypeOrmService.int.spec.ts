@@ -9,6 +9,7 @@ import {
   DataSource,
   DataSourceOptions,
   Entity,
+  FindManyOptions,
   PrimaryColumn,
   QueryRunner,
   Repository,
@@ -17,6 +18,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
+import { TransactionContext } from '../../../application/models/TransactionContext';
+import { TypeOrmTransactionContext } from '../models/TypeOrmTransactionContext';
 import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
@@ -168,41 +171,142 @@ describe(InsertTypeOrmService.name, () => {
   });
 
   describe('.insertOne', () => {
-    describe('when called', () => {
-      let modelTest: ModelTest;
-      let result: unknown;
+    let queryTestFixture: QueryTest;
+
+    beforeAll(() => {
+      queryTestFixture = {
+        fooValue: 'blah',
+      };
+    });
+
+    describe('having no transaction context', () => {
+      describe('when called', () => {
+        let modelTest: ModelTest;
+        let result: unknown;
+
+        beforeAll(async () => {
+          modelTest = new ModelTest();
+          modelTest.id = '836d2558-0f11-4c63-beb9-e78edba50428';
+          modelTest.foo = 'some foo value';
+
+          const queryTypeOrmFixture: QueryDeepPartialEntity<ModelTest> = {
+            foo: modelTest.foo,
+            id: modelTest.id,
+          };
+
+          setQueryTypeOrmFromSetQueryBuilderMock.build.mockResolvedValueOnce(
+            queryTypeOrmFixture,
+          );
+
+          modelFromModelDbBuilderMock.build.mockImplementationOnce(
+            async (modelTest: ModelTest) => modelTest,
+          );
+
+          result = await insertTypeOrmService.insertOne(queryTestFixture);
+        });
+
+        afterAll(async () => {
+          await modelTestRepository.delete({
+            id: modelTest.id,
+          });
+
+          jest.clearAllMocks();
+        });
+
+        it('should return a model', () => {
+          expect(result).toStrictEqual(modelTest);
+        });
+
+        describe('when called modelTestRepository.findOne() with a typeorm find query matching the ModelTest', () => {
+          let result: unknown;
+
+          beforeAll(async () => {
+            const queryTypeOrmFixture: FindManyOptions<ModelTest> = {
+              where: {
+                id: modelTest.id,
+              },
+            };
+
+            result = await modelTestRepository.findOne(queryTypeOrmFixture);
+          });
+
+          it('should return a model', () => {
+            expect(result).toStrictEqual(modelTest);
+          });
+        });
+      });
+    });
+
+    describe('having a transaction context', () => {
+      let transactionContext: TransactionContext;
 
       beforeAll(async () => {
-        modelTest = new ModelTest();
-        modelTest.id = '836d2558-0f11-4c63-beb9-e78edba50428';
-        modelTest.foo = 'some foo value';
-
-        const queryTest: QueryTest = {
-          fooValue: 'blah',
-        };
-
-        const queryTypeOrmFixture: QueryDeepPartialEntity<ModelTest> = {
-          foo: modelTest.foo,
-          id: modelTest.id,
-        };
-
-        setQueryTypeOrmFromSetQueryBuilderMock.build.mockResolvedValueOnce(
-          queryTypeOrmFixture,
-        );
-
-        modelFromModelDbBuilderMock.build.mockImplementationOnce(
-          async (modelTest: ModelTest) => modelTest,
-        );
-
-        result = await insertTypeOrmService.insertOne(queryTest);
+        transactionContext = await TypeOrmTransactionContext.build(datasource);
       });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+      describe('when called', () => {
+        let modelTest: ModelTest;
+        let result: unknown;
 
-      it('should return a model', () => {
-        expect(result).toStrictEqual(modelTest);
+        beforeAll(async () => {
+          modelTest = new ModelTest();
+          modelTest.id = '836d2558-0f11-4c63-beb9-e78edba50428';
+          modelTest.foo = 'some foo value';
+
+          const queryTypeOrmFixture: QueryDeepPartialEntity<ModelTest> = {
+            foo: modelTest.foo,
+            id: modelTest.id,
+          };
+
+          setQueryTypeOrmFromSetQueryBuilderMock.build.mockResolvedValueOnce(
+            queryTypeOrmFixture,
+          );
+
+          modelFromModelDbBuilderMock.build.mockImplementationOnce(
+            async (modelTest: ModelTest) => modelTest,
+          );
+
+          result = await insertTypeOrmService.insertOne(
+            queryTestFixture,
+            transactionContext,
+          );
+        });
+
+        afterAll(async () => {
+          await modelTestRepository.delete({
+            id: modelTest.id,
+          });
+
+          jest.clearAllMocks();
+        });
+
+        it('should return a model', () => {
+          expect(result).toStrictEqual(modelTest);
+        });
+
+        describe('when transactionContext is disposed', () => {
+          beforeAll(async () => {
+            await transactionContext[Symbol.asyncDispose]();
+          });
+
+          describe('when called modelTestRepository.findOne() with a typeorm find query matching the ModelTest', () => {
+            let result: unknown;
+
+            beforeAll(async () => {
+              const queryTypeOrmFixture: FindManyOptions<ModelTest> = {
+                where: {
+                  id: modelTest.id,
+                },
+              };
+
+              result = await modelTestRepository.findOne(queryTypeOrmFixture);
+            });
+
+            it('should return ModelTest', () => {
+              expect(result).toStrictEqual(modelTest);
+            });
+          });
+        });
       });
     });
   });
