@@ -105,7 +105,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
             gameIdPassTurnQueryV1Fixture,
             userV1Fixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -168,7 +168,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
             gameIdPassTurnQueryV1Fixture,
             userV1Fixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

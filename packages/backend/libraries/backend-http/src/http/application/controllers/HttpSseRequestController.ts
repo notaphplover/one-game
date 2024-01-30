@@ -61,7 +61,7 @@ export abstract class HttpSseRequestController<
         isRight: true,
         value: await this.#handleUseCase(request, publisher),
       };
-    } catch (error) {
+    } catch (error: unknown) {
       return {
         isRight: false,
         value: this.#responseFromErrorBuilder.build(error),

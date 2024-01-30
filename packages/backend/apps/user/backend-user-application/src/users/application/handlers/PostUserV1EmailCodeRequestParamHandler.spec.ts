@@ -43,7 +43,7 @@ describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
         beforeAll(async () => {
           try {
             await postUserV1EmailCodeRequestParamHandler.handle(requestFixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -92,7 +92,7 @@ describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
 
           try {
             await postUserV1EmailCodeRequestParamHandler.handle(requestFixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

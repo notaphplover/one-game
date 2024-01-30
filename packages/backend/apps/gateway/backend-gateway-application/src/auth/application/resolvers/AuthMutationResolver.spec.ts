@@ -124,7 +124,7 @@ describe(AuthMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -267,7 +267,7 @@ describe(AuthMutationResolver.name, () => {
             },
             contextFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

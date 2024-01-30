@@ -72,7 +72,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
           await nonStartedGameFilledEventHandler.handle(
             nonStartedGameFilledEventFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });
@@ -122,7 +122,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
           await nonStartedGameFilledEventHandler.handle(
             nonStartedGameFilledEventFixture,
           );
-        } catch (error) {
+        } catch (error: unknown) {
           result = error;
         }
       });

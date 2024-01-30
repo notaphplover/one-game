@@ -85,7 +85,7 @@ describe(AuthManagementInputPort.name, () => {
 
           try {
             await authManagementInputPort.create(authCreateQueryV1Fixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -221,7 +221,7 @@ describe(AuthManagementInputPort.name, () => {
 
           try {
             await authManagementInputPort.create(authCreateQueryV1Fixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -280,7 +280,7 @@ describe(AuthManagementInputPort.name, () => {
 
           try {
             await authManagementInputPort.create(authCreateQueryV1Fixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -347,7 +347,7 @@ describe(AuthManagementInputPort.name, () => {
 
           try {
             await authManagementInputPort.create(authCreateQueryV1Fixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -402,7 +402,7 @@ describe(AuthManagementInputPort.name, () => {
 
           try {
             await authManagementInputPort.create(authCreateQueryV1Fixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

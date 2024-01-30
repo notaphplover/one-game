@@ -103,7 +103,7 @@ describe(NonStartedGameResolver.name, () => {
               Symbol(),
               contextMock,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

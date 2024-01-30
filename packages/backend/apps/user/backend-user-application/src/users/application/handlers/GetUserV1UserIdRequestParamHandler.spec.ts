@@ -61,7 +61,7 @@ describe(GetUserV1UserIdRequestParamHandler.name, () => {
         beforeAll(async () => {
           try {
             await getUserV1UserIdRequestParamHandler.handle(requestFixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

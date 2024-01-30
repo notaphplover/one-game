@@ -50,7 +50,7 @@ export abstract class HttpRequestController<
         (await this.#handleUseCase(request));
 
       return response;
-    } catch (error) {
+    } catch (error: unknown) {
       return this.#responseFromErrorBuilder.build(error);
     }
   }

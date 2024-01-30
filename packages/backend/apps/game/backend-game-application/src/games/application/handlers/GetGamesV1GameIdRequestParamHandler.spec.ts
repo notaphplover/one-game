@@ -61,7 +61,7 @@ describe(GetGamesV1GameIdRequestParamHandler.name, () => {
         beforeAll(async () => {
           try {
             await getGamesV1GameIdRequestParamHandler.handle(requestFixture);
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });

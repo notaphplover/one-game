@@ -165,7 +165,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             await getGameGameIdSlotSlotIdCardsV1RequestParamHandler.handle(
               requestFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
@@ -216,7 +216,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             await getGameGameIdSlotSlotIdCardsV1RequestParamHandler.handle(
               requestFixture,
             );
-          } catch (error) {
+          } catch (error: unknown) {
             result = error;
           }
         });
