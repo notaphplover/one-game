@@ -1,3 +1,4 @@
+import { TransactionContext } from '@cornie-js/backend-db/application';
 import { GameSpecPersistenceOutputPort } from '@cornie-js/backend-game-application/games';
 import {
   GameSpecCreateQuery,
@@ -28,8 +29,12 @@ export class GameSpecPersistenceTypeOrmAdapter
 
   public async create(
     gameSpecCreateQuery: GameSpecCreateQuery,
+    transactionContext?: TransactionContext,
   ): Promise<GameSpec> {
-    return this.#createGameSpecTypeOrmService.insertOne(gameSpecCreateQuery);
+    return this.#createGameSpecTypeOrmService.insertOne(
+      gameSpecCreateQuery,
+      transactionContext,
+    );
   }
 
   public async find(gameSpecFindQuery: GameSpecFindQuery): Promise<GameSpec[]> {
