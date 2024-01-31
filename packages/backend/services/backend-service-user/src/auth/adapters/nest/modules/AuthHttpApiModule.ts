@@ -1,5 +1,8 @@
 import { MailModule } from '@cornie-js/backend-adapter-nodemailer';
-import { UserDbModule } from '@cornie-js/backend-user-adapter-typeorm';
+import {
+  DbModule,
+  UserDbModule,
+} from '@cornie-js/backend-user-adapter-typeorm';
 import { AuthHttpApiModule as AuthHttpApiApplicationModule } from '@cornie-js/backend-user-application';
 import { Module } from '@nestjs/common';
 
@@ -12,6 +15,7 @@ import { PostAuthV1HttpRequestNestController } from '../controllers/PostAuthV1Ht
   controllers: [PostAuthV1HttpRequestNestController],
   imports: [
     AuthHttpApiApplicationModule.forRootAsync([
+      DbModule.forTransaction(),
       MailModule.forRootAsync(buildMailClientOptions()),
       UserDbModule.forRootAsync(buildDbModuleOptions()),
     ]),
