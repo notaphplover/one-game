@@ -12,6 +12,7 @@
     "@cornie-js/backend-app-jwt": "workspace:*",
     "@cornie-js/backend-app-uuid": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
+    "@cornie-js/backend-db": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-pub-sub": "workspace:*",
