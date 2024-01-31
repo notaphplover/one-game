@@ -34,7 +34,3 @@ runs:
     - name: Install dependencies
       run: pnpm install
       shell: bash
-
-    - name: Disable turborepo telemetry
-      run: pnpm exec turbo telemetry disable
-      shell: bash
