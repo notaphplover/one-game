@@ -40,8 +40,10 @@ export class TypeOrmTransactionContext implements TransactionContext {
   public async [Symbol.asyncDispose](): Promise<void> {
     try {
       await this.#queryRunner.commitTransaction();
-    } catch (_error: unknown) {
+    } catch (error: unknown) {
       await this.#queryRunner.rollbackTransaction();
+
+      throw error;
     } finally {
       await this.#queryRunner.release();
     }
