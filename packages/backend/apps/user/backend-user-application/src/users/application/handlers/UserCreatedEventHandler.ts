@@ -75,9 +75,7 @@ export class UserCreatedEventHandler
   }
 
   public async handle(userCreatedEvent: UserCreatedEvent): Promise<void> {
-    const userCode: UserCode = await this.#createUserCode(
-      userCreatedEvent.user,
-    );
+    const userCode: UserCode = await this.#createUserCode(userCreatedEvent);
 
     const mailDeliveryOptions: MailDeliveryOptions =
       this.#userActivationMailDeliveryOptionsFromUserBuilder.build(
@@ -88,13 +86,16 @@ export class UserCreatedEventHandler
     await this.#mailDeliveryOutputPort.send(mailDeliveryOptions);
   }
 
-  async #createUserCode(user: User): Promise<UserCode> {
+  async #createUserCode(userCreatedEvent: UserCreatedEvent): Promise<UserCode> {
     const userCodeCreateQuery: UserCodeCreateQuery =
-      this.#userCodeCreateQueryFromUserBuilder.build(user, {
+      this.#userCodeCreateQueryFromUserBuilder.build(userCreatedEvent.user, {
         userCode: this.#randomHexStringBuilder.build(USER_CODE_LENGHT),
         uuid: this.#uuidProviderOutputPort.generateV4(),
       });
 
-    return this.#userCodePersistenceOutputPort.create(userCodeCreateQuery);
+    return this.#userCodePersistenceOutputPort.create(
+      userCodeCreateQuery,
+      userCreatedEvent.transactionContext,
+    );
   }
 }
