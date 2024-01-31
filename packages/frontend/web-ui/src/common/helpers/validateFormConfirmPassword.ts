@@ -5,12 +5,13 @@ import { PASSWORD_MIN_LENGTH } from './passwordMinLength';
  * @param {String} password
  * @param {String} confirmPassword
  */
+
 export const validateFormConfirmPassword = (
-  formChecked,
-  password,
-  confirmPassword,
+  formChecked: { confirmPassword: string },
+  password: string,
+  confirmPassword: string,
 ) => {
-  let errorMessages = [];
+  let errorMessages: string[] = [];
 
   if (confirmPassword.length < PASSWORD_MIN_LENGTH) {
     errorMessages.push('Password must be of minimum 6 characters length');
