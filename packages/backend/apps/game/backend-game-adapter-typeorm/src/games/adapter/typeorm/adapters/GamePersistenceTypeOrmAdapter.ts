@@ -1,3 +1,4 @@
+import { TransactionContext } from '@cornie-js/backend-db/application';
 import {
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
@@ -41,8 +42,14 @@ export class GamePersistenceTypeOrmAdapter
     this.#updateGameTypeOrmService = updateGameTypeOrmService;
   }
 
-  public async create(gameCreateQuery: GameCreateQuery): Promise<Game> {
-    return this.#createGameTypeOrmService.insertOne(gameCreateQuery);
+  public async create(
+    gameCreateQuery: GameCreateQuery,
+    transactionContext?: TransactionContext,
+  ): Promise<Game> {
+    return this.#createGameTypeOrmService.insertOne(
+      gameCreateQuery,
+      transactionContext,
+    );
   }
 
   public async find(gameFindQuery: GameFindQuery): Promise<Game[]> {
