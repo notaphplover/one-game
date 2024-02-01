@@ -1,11 +1,29 @@
+import { Environment } from '../models/Environment';
+
 class EnvironmentService {
-  getEnvironment() {
+  readonly #env: Environment;
+
+  constructor() {
+    this.#env = this.#parseEnv();
+  }
+
+  getEnvironment(): Environment {
+    return this.#env;
+  }
+
+  #parseEnv(): Environment {
     const env: ImportMetaEnv = import.meta.env;
 
+    const backendBaseUrl: unknown = env['VITE_BACKEND_BASE_URL'];
+
+    if (typeof backendBaseUrl !== 'string') {
+      throw new Error('Invalid backendBaseUrl found when parsing env');
+    }
+
     return {
-      backendBaseUrl: env['VITE_BACKEND_BASE_URL'],
+      backendBaseUrl: backendBaseUrl,
     };
   }
 }
 
-export const environmentService: EnvironmentService = new EnvironmentService();
+export const environmentService = new EnvironmentService();
