@@ -12,6 +12,7 @@
     "@cornie-js/backend-app-jwt": "workspace:*",
     "@cornie-js/backend-app-uuid": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
+    "@cornie-js/backend-db": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-pub-sub": "workspace:*",
@@ -19,7 +20,7 @@
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@types/node": "20.11.13",
+    "@types/node": "20.11.15",
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
     "eslint": "8.56.0",

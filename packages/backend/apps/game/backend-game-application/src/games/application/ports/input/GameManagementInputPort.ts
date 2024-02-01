@@ -98,13 +98,13 @@ export class GameManagementInputPort {
         this.#createGameCreationQueryContext(),
       );
 
-    const isValidGameCreateQueryResport: Either<string[], undefined> =
+    const isValidGameCreateQueryReport: Either<string[], undefined> =
       this.#isValidGameCreateQuerySpec.isSatisfiedOrReport(gameCreateQuery);
 
-    if (!isValidGameCreateQueryResport.isRight) {
+    if (!isValidGameCreateQueryReport.isRight) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
-        ['Unable to create game', ...isValidGameCreateQueryResport.value].join(
+        ['Unable to create game', ...isValidGameCreateQueryReport.value].join(
           '. ',
         ) + '.',
       );

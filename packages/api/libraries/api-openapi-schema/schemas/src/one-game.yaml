@@ -477,7 +477,7 @@ paths:
       operationId: createUserByEmailCode
       responses:
         '201':
-          description: Game created
+          description: User code created
         '422':
           description: Unprocessable operation
           content:

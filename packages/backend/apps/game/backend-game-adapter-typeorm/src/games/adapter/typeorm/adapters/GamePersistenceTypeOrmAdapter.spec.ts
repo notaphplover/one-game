@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { TransactionContext } from '@cornie-js/backend-db/application';
 import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-game-application/games';
 import {
   Game,
@@ -61,9 +62,11 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
   describe('.create', () => {
     let gameCreateQueryFixture: GameCreateQuery;
+    let transactionContextFixture: TransactionContext;
 
     beforeAll(() => {
       gameCreateQueryFixture = GameCreateQueryFixtures.any;
+      transactionContextFixture = Symbol() as unknown as TransactionContext;
     });
 
     describe('when called', () => {
@@ -80,6 +83,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
         result = await gamePersistenceTypeOrmAdapter.create(
           gameCreateQueryFixture,
+          transactionContextFixture,
         );
       });
 
@@ -91,6 +95,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
         expect(createGameTypeOrmServiceMock.insertOne).toHaveBeenCalledTimes(1);
         expect(createGameTypeOrmServiceMock.insertOne).toHaveBeenCalledWith(
           gameCreateQueryFixture,
+          transactionContextFixture,
         );
       });
 
