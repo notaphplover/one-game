@@ -13,6 +13,7 @@ import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../applicat
 import { UserV1FromUserBuilder } from '../../../application/builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
 import { UpdateUserUseCaseHandler } from '../../../application/handlers/UpdateUserUseCaseHandler';
+import { UserCodeCreatedEventHandler } from '../../../application/handlers/UserCodeCreatedEventHandler';
 import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';
 import { UserUpdatedEventHandler } from '../../../application/handlers/UserUpdatedEventHandler';
 import { UserCodeManagementInputPort } from '../../../application/ports/input/UserCodeManagementInputPort';
@@ -42,6 +43,7 @@ export class UserApplicationModule {
         PasswordResetMailDeliveryOptionsFromUserBuilder,
         UpdateUserUseCaseHandler,
         UserActivationMailDeliveryOptionsFromUserBuilder,
+        UserCodeCreatedEventHandler,
         UserCodeCreateQueryFromUserBuilder,
         UserCodeManagementInputPort,
         UserCreatedEventHandler,
