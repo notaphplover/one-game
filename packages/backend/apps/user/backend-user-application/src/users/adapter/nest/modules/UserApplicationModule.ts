@@ -5,6 +5,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
 import { StringModule } from '../../../../foundation/string/adapter/nest/StringModule';
+import { PasswordResetMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/PasswordResetMailDeliveryOptionsFromUserBuilder';
 import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builders/UserCodeCreateQueryFromUserBuilder';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/builders/UserCreateQueryFromUserCreateQueryV1Builder';
@@ -38,6 +39,7 @@ export class UserApplicationModule {
       module: UserApplicationModule,
       providers: [
         CreateUserUseCaseHandler,
+        PasswordResetMailDeliveryOptionsFromUserBuilder,
         UpdateUserUseCaseHandler,
         UserActivationMailDeliveryOptionsFromUserBuilder,
         UserCodeCreateQueryFromUserBuilder,
