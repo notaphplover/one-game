@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
-import { unwrapTypeOrmTransactionContext } from '../utils/unwrapTypeOrmTransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 
 export class UpdateTypeOrmQueryBuilderService<
   TModelDb extends ObjectLiteral,
@@ -54,10 +54,10 @@ export class UpdateTypeOrmQueryBuilderService<
 
   public async update(
     query: TQuery,
-    transactionContext?: TransactionContext | undefined,
+    transactionWrapper?: TransactionWrapper | undefined,
   ): Promise<void> {
     const updateQueryBuilder: UpdateQueryBuilder<TModelDb> =
-      this.#createQueryBuilder(transactionContext);
+      this.#createQueryBuilder(transactionWrapper);
 
     const findQueryTypeOrmOrQueryBuilder: QueryBuilder<ObjectLiteral> =
       await this.#findQueryTypeOrmFromUpdateQueryBuilder.build(
@@ -74,10 +74,10 @@ export class UpdateTypeOrmQueryBuilderService<
   }
 
   #createQueryBuilder(
-    transactionContext: TransactionContext | undefined,
+    transactionWrapper: TransactionWrapper | undefined,
   ): UpdateQueryBuilder<TModelDb> {
     const queryRunner: QueryRunner | undefined =
-      unwrapTypeOrmTransactionContext(transactionContext);
+      unwrapTypeOrmTransaction(transactionWrapper);
 
     const updateQueryBuilder: UpdateQueryBuilder<TModelDb> = this.#repository
       /*

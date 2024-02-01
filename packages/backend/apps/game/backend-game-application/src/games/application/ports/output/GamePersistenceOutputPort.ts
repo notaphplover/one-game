@@ -1,4 +1,4 @@
-import { TransactionContext } from '@cornie-js/backend-db/application';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   Game,
   GameCreateQuery,
@@ -9,7 +9,7 @@ import {
 export interface GamePersistenceOutputPort {
   create(
     gameCreateQuery: GameCreateQuery,
-    transactionContext?: TransactionContext,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<Game>;
   find(gameFindQuery: GameFindQuery): Promise<Game[]>;
   findOne(gameFindQuery: GameFindQuery): Promise<Game | undefined>;

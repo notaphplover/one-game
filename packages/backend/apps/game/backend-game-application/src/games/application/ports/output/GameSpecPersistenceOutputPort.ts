@@ -1,4 +1,4 @@
-import { TransactionContext } from '@cornie-js/backend-db/application';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   GameSpec,
   GameSpecCreateQuery,
@@ -8,7 +8,7 @@ import {
 export interface GameSpecPersistenceOutputPort {
   create(
     gameSpecCreateQuery: GameSpecCreateQuery,
-    transactionContext?: TransactionContext,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<GameSpec>;
   find(gameSpecFindQuery: GameSpecFindQuery): Promise<GameSpec[]>;
   findOne(gameSpecFindQuery: GameSpecFindQuery): Promise<GameSpec | undefined>;
