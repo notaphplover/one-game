@@ -1,5 +1,5 @@
 import { FindQueryTypeOrmFromQueryBuilder } from './builders/FindQueryTypeOrmFromQueryBuilder';
-import { TypeOrmTransactionContext } from './models/TypeOrmTransactionContext';
+import { TypeOrmTransactionWrapper } from './models/TypeOrmTransactionWrapper';
 import { DeleteTypeOrmQueryBuilderService } from './services/DeleteTypeOrmQueryBuilderService';
 import { DeleteTypeOrmService } from './services/DeleteTypeOrmService';
 import { FindTypeOrmQueryBuilderService } from './services/FindTypeOrmQueryBuilderService';
@@ -18,7 +18,7 @@ export {
   FindTypeOrmService,
   InsertTypeOrmService,
   InsertTypeOrmPostgresService,
-  TypeOrmTransactionContext,
+  TypeOrmTransactionWrapper,
   UpdateTypeOrmQueryBuilderService,
   UpdateTypeOrmService,
 };

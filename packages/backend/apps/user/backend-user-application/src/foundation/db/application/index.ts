@@ -1,8 +1,8 @@
 import {
-  TransactionContextProvisionOutputPort,
-  transactionContextProvisionOutputPortSymbol,
-} from './ports/output/TransactionContextProvisionOutputPort';
+  TransactionProvisionOutputPort,
+  transactionProvisionOutputPortSymbol,
+} from './ports/output/TransactionProvisionOutputPort';
 
-export type { TransactionContextProvisionOutputPort };
+export type { TransactionProvisionOutputPort };
 
-export { transactionContextProvisionOutputPortSymbol };
+export { transactionProvisionOutputPortSymbol };

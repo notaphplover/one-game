@@ -95,7 +95,7 @@ export class UserCreatedEventHandler
 
     return this.#userCodePersistenceOutputPort.create(
       userCodeCreateQuery,
-      userCreatedEvent.transactionContext,
+      userCreatedEvent.transactionWrapper,
     );
   }
 }
