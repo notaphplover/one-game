@@ -20,7 +20,7 @@ import { GameSpecV1FromGameSpecBuilder } from '../../../application/builders/Gam
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
 import { MessageEventFromStringifiedGameMessageEventBuilder } from '../../../application/builders/MessageEventFromStringifiedGameMessageEventBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
-import { GameCreatedEventHandler } from '../../../application/handlers/GameCreatedEventHandler';
+import { CreateGameUseCaseHandler } from '../../../application/handlers/CreateGameUseCaseHandler';
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
 import { GameUpdatedEventHandler } from '../../../application/handlers/GameUpdatedEventHandler';
@@ -50,11 +50,11 @@ export class GameApplicationModule {
       module: GameApplicationModule,
       providers: [
         ActiveGameSlotV1FromActiveGameSlotBuilder,
+        CreateGameUseCaseHandler,
         FinishedGameSlotV1FromFinishedGameSlotBuilder,
         GameCardSpecFromGameCardSpecV1Builder,
         GameCardSpecsFromGameSpecV1Builder,
         GameCardSpecV1FromGameCardSpecBuilder,
-        GameCreatedEventHandler,
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
