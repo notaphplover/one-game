@@ -8,6 +8,7 @@ import { User, UserCode } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { PasswordResetMailDeliveryOptionsFromUserBuilder } from '../builders/PasswordResetMailDeliveryOptionsFromUserBuilder';
+import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreatedEvent } from '../models/UserCodeCreatedEvent';
 
 @Injectable()
@@ -16,6 +17,10 @@ export class UserCodeCreatedEventHandler
 {
   readonly #mailDeliveryOutputPort: MailDeliveryOutputPort;
   readonly #passwordResetMailDeliveryOptionsFromUserBuilder: Builder<
+    MailDeliveryOptions,
+    [User, UserCode]
+  >;
+  readonly #userActivationMailDeliveryOptionsFromUserBuilder: Builder<
     MailDeliveryOptions,
     [User, UserCode]
   >;
@@ -28,20 +33,37 @@ export class UserCodeCreatedEventHandler
       MailDeliveryOptions,
       [User, UserCode]
     >,
+    @Inject(UserActivationMailDeliveryOptionsFromUserBuilder)
+    userActivationMailDeliveryOptionsFromUserBuilder: Builder<
+      MailDeliveryOptions,
+      [User, UserCode]
+    >,
   ) {
     this.#mailDeliveryOutputPort = mailDeliveryOutputPort;
     this.#passwordResetMailDeliveryOptionsFromUserBuilder =
       passwordResetMailDeliveryOptionsFromUserBuilder;
+    this.#userActivationMailDeliveryOptionsFromUserBuilder =
+      userActivationMailDeliveryOptionsFromUserBuilder;
   }
 
   public async handle(
     userCodeCreatedEvent: UserCodeCreatedEvent,
   ): Promise<void> {
-    const mailDeliveryOptions: MailDeliveryOptions =
-      this.#passwordResetMailDeliveryOptionsFromUserBuilder.build(
-        userCodeCreatedEvent.user,
-        userCodeCreatedEvent.userCode,
-      );
+    let mailDeliveryOptions: MailDeliveryOptions;
+
+    if (userCodeCreatedEvent.user.active) {
+      mailDeliveryOptions =
+        this.#passwordResetMailDeliveryOptionsFromUserBuilder.build(
+          userCodeCreatedEvent.user,
+          userCodeCreatedEvent.userCode,
+        );
+    } else {
+      mailDeliveryOptions =
+        this.#userActivationMailDeliveryOptionsFromUserBuilder.build(
+          userCodeCreatedEvent.user,
+          userCodeCreatedEvent.userCode,
+        );
+    }
 
     await this.#mailDeliveryOutputPort.send(mailDeliveryOptions);
   }

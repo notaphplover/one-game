@@ -81,6 +81,13 @@ When<OneGameApiWorld>(
 );
 
 When<OneGameApiWorld>(
+  'the delete user code request is sent',
+  async function (this: OneGameApiWorld): Promise<void> {
+    await whenDeleteUserCodeRequestIsSend.bind(this)();
+  },
+);
+
+When<OneGameApiWorld>(
   'the update own user request for {string} is sent',
   async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
     await whenUpdateUserMeRequestIsSend.bind(this)(requestAlias);

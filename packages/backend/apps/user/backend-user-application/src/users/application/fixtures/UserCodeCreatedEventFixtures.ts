@@ -12,4 +12,18 @@ export class UserCodeCreatedEventFixtures {
       userCode: UserCodeFixtures.any,
     };
   }
+
+  public static get withUserWithActiveFalse(): UserCodeCreatedEvent {
+    return {
+      user: UserFixtures.withActiveFalse,
+      userCode: UserCodeFixtures.any,
+    };
+  }
+
+  public static get withUserWithActiveTrue(): UserCodeCreatedEvent {
+    return {
+      user: UserFixtures.withActiveTrue,
+      userCode: UserCodeFixtures.any,
+    };
+  }
 }
