@@ -36,6 +36,46 @@ function thenCreateUserResponseShouldContainValidUser(
   });
 }
 
+function thenCreateUserCodeResponseShouldBeSuccessful(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  const alias: string = requestAlias ?? defaultAlias;
+
+  type ResponseType = Awaited<ReturnType<HttpClient['createUserByEmailCode']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'createUserByEmailCode',
+    alias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    headers: {},
+    statusCode: HttpStatus.CREATED,
+  });
+}
+
+function thenCreateUserCodeResponseShouldFailDueToConflict(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+): void {
+  const alias: string = requestAlias ?? defaultAlias;
+
+  type ResponseType = Awaited<ReturnType<HttpClient['createUserByEmailCode']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'createUserByEmailCode',
+    alias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    headers: {},
+    statusCode: HttpStatus.CONFLICT,
+  });
+}
+
 function thenDeleteUserMeResponseShouldBeSuccessful(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -87,6 +127,27 @@ Then<OneGameApiWorld>(
   'the create user response should contain a valid user',
   function (): void {
     thenCreateUserResponseShouldContainValidUser.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the create user code response should be successful',
+  function (): void {
+    thenCreateUserCodeResponseShouldBeSuccessful.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the create user code response as {string} should be successful',
+  function (requestAlias: string): void {
+    thenCreateUserCodeResponseShouldBeSuccessful.bind(this)(requestAlias);
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the create user code response as {string} should fail due to a conflict',
+  function (requestAlias: string): void {
+    thenCreateUserCodeResponseShouldFailDueToConflict.bind(this)(requestAlias);
   },
 );
 
