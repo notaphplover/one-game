@@ -1,3 +1,3 @@
-import { TransactionContext } from './models/TransactionContext';
+import { TransactionWrapper } from './models/TransactionWrapper';
 
-export { TransactionContext };
+export { TransactionWrapper };

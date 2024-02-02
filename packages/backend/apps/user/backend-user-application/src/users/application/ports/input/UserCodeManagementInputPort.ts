@@ -2,10 +2,10 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   User,
-  UserCanCreateCodeSpec,
+  UserCode,
   UserCodeCreateQuery,
   UserCodeFindQuery,
 } from '@cornie-js/backend-user-domain/users';
@@ -13,6 +13,8 @@ import { Inject } from '@nestjs/common';
 
 import { RandomHexStringBuilder } from '../../../../foundation/string/application/builders/RandomHexStringBuilder';
 import { USER_CODE_LENGHT } from '../../data/userCodeLength';
+import { UserCodeCreatedEventHandler } from '../../handlers/UserCodeCreatedEventHandler';
+import { UserCodeCreatedEvent } from '../../models/UserCodeCreatedEvent';
 import {
   UserCodePersistenceOutputPort,
   userCodePersistenceOutputPortSymbol,
@@ -20,36 +22,40 @@ import {
 
 export class UserCodeManagementInputPort {
   readonly #randomHexStringBuilder: Builder<string, [number]>;
-  readonly #userCanCreateCodeSpec: UserCanCreateCodeSpec;
+  readonly #userCodeCreatedEventHandler: Handler<[UserCodeCreatedEvent], void>;
   readonly #userCodePersistenceOutputPort: UserCodePersistenceOutputPort;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
     @Inject(RandomHexStringBuilder)
     randomHexStringBuilder: Builder<string, [number]>,
-    @Inject(UserCanCreateCodeSpec)
-    userCanCreateCodeSpec: UserCanCreateCodeSpec,
+    @Inject(UserCodeCreatedEventHandler)
+    userCodeCreatedEventHandler: Handler<[UserCodeCreatedEvent], void>,
     @Inject(userCodePersistenceOutputPortSymbol)
     userCodePersistenceOutputPort: UserCodePersistenceOutputPort,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#randomHexStringBuilder = randomHexStringBuilder;
-    this.#userCanCreateCodeSpec = userCanCreateCodeSpec;
+    this.#userCodeCreatedEventHandler = userCodeCreatedEventHandler;
     this.#userCodePersistenceOutputPort = userCodePersistenceOutputPort;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
   public async createFromUser(user: User): Promise<void> {
-    this.#validateUserCanCreateCodeOrThrow(user);
-
     const userCodeCreateQuery: UserCodeCreateQuery = {
       code: this.#randomHexStringBuilder.build(USER_CODE_LENGHT),
       id: this.#uuidProviderOutputPort.generateV4(),
       userId: user.id,
     };
 
-    await this.#userCodePersistenceOutputPort.create(userCodeCreateQuery);
+    const userCode: UserCode =
+      await this.#userCodePersistenceOutputPort.create(userCodeCreateQuery);
+
+    await this.#userCodeCreatedEventHandler.handle({
+      user,
+      userCode,
+    });
   }
 
   public async deleteFromUser(user: User): Promise<void> {
@@ -58,14 +64,5 @@ export class UserCodeManagementInputPort {
     };
 
     await this.#userCodePersistenceOutputPort.delete(userCodeFindQuery);
-  }
-
-  #validateUserCanCreateCodeOrThrow(user: User): void {
-    if (!this.#userCanCreateCodeSpec.isSatisfiedBy(user)) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        'Unable to perform operation',
-      );
-    }
   }
 }

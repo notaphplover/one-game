@@ -1,5 +1,8 @@
 import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
-import { GameDbModule } from '@cornie-js/backend-game-adapter-typeorm';
+import {
+  DbModule,
+  GameDbModule,
+} from '@cornie-js/backend-game-adapter-typeorm';
 import { GameHttpApiModule as GameHttpApiApplicationModule } from '@cornie-js/backend-game-application';
 import { Module } from '@nestjs/common';
 
@@ -31,6 +34,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
   ],
   imports: [
     GameHttpApiApplicationModule.forRootAsync([
+      DbModule.forTransaction(),
       GameDbModule.forRootAsync(buildDbModuleOptions()),
       GameIoredisModule.forRootAsync(buildIoredisModuleOptions()),
     ]),

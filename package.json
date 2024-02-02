@@ -13,7 +13,7 @@
     "@cornie-js/backend-scripts": "workspace:*",
     "@cornie-js/backend-typescript-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
-    "husky": "9.0.7",
+    "husky": "9.0.10",
     "lint-staged": "15.2.1",
     "turbo": "1.12.2"
   },

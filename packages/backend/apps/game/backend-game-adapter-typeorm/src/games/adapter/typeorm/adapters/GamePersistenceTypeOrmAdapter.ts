@@ -1,4 +1,4 @@
-import { TransactionContext } from '@cornie-js/backend-db/application';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
@@ -44,11 +44,11 @@ export class GamePersistenceTypeOrmAdapter
 
   public async create(
     gameCreateQuery: GameCreateQuery,
-    transactionContext?: TransactionContext,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<Game> {
     return this.#createGameTypeOrmService.insertOne(
       gameCreateQuery,
-      transactionContext,
+      transactionWrapper,
     );
   }
 

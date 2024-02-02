@@ -239,9 +239,15 @@ export class HttpClient {
       body,
     );
   }
-  public async deleteUserByEmailCode(headers: {
-    [key: string]: string;
-  }): Promise<
+  public async deleteUserByEmailCode(
+    headers: {
+      [key: string]: string;
+    },
+    url: {
+      [key: string]: string;
+      email: string;
+    },
+  ): Promise<
     | Response<Record<string, string>, undefined, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
@@ -250,22 +256,28 @@ export class HttpClient {
       '/v1/users/email/{email}/code',
       headers,
       undefined,
-      undefined,
+      url,
       undefined,
     );
   }
-  public async createUserByEmailCode(headers: {
-    [key: string]: string;
-  }): Promise<
+  public async createUserByEmailCode(
+    headers: {
+      [key: string]: string;
+    },
+    url: {
+      [key: string]: string;
+      email: string;
+    },
+  ): Promise<
     | Response<Record<string, string>, undefined, 201>
-    | Response<Record<string, string>, apiModels.ErrorV1, 422>
+    | Response<Record<string, string>, apiModels.ErrorV1, 409>
   > {
     return this.#axiosHttpClient.callEndpoint(
       'POST',
       '/v1/users/email/{email}/code',
       headers,
       undefined,
-      undefined,
+      url,
       undefined,
     );
   }
