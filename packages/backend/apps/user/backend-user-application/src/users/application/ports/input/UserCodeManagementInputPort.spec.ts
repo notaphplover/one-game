@@ -1,21 +1,26 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   User,
-  UserCanCreateCodeSpec,
   UserCode,
   UserCodeFindQuery,
 } from '@cornie-js/backend-user-domain/users';
-import { UserFixtures } from '@cornie-js/backend-user-domain/users/fixtures';
+import {
+  UserCodeFixtures,
+  UserFixtures,
+} from '@cornie-js/backend-user-domain/users/fixtures';
 
+import { UserCodeCreatedEvent } from '../../models/UserCodeCreatedEvent';
 import { UserCodePersistenceOutputPort } from '../output/UserCodePersistenceOutputPort';
 import { UserCodeManagementInputPort } from './UserCodeManagementInputPort';
 
 describe(UserCodeManagementInputPort.name, () => {
   let randomHexStringBuilderMock: jest.Mocked<Builder<string, [number]>>;
-  let userCanCreateCodeSpecMock: jest.Mocked<UserCanCreateCodeSpec>;
+  let userCodeCreatedEventHandlerMock: jest.Mocked<
+    Handler<[UserCodeCreatedEvent], void>
+  >;
   let userCodePersistenceOutputPortMock: jest.Mocked<UserCodePersistenceOutputPort>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
@@ -25,8 +30,8 @@ describe(UserCodeManagementInputPort.name, () => {
     randomHexStringBuilderMock = {
       build: jest.fn(),
     };
-    userCanCreateCodeSpecMock = {
-      isSatisfiedBy: jest.fn(),
+    userCodeCreatedEventHandlerMock = {
+      handle: jest.fn(),
     };
     userCodePersistenceOutputPortMock = {
       create: jest.fn(),
@@ -40,7 +45,7 @@ describe(UserCodeManagementInputPort.name, () => {
 
     userCodeManagementInputPort = new UserCodeManagementInputPort(
       randomHexStringBuilderMock,
-      userCanCreateCodeSpecMock,
+      userCodeCreatedEventHandlerMock,
       userCodePersistenceOutputPortMock,
       uuidProviderOutputPortMock,
     );
@@ -53,45 +58,7 @@ describe(UserCodeManagementInputPort.name, () => {
       userFixture = UserFixtures.any;
     });
 
-    describe('when called, and userCanCreateCodeSpec.isSatisfiedBy() returns false', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        userCanCreateCodeSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
-
-        try {
-          await userCodeManagementInputPort.createFromUser(userFixture);
-        } catch (error: unknown) {
-          result = error;
-        }
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call userCanCreateCodeSpec.isSatisfiedBy()', () => {
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-          userFixture,
-        );
-      });
-
-      it('should throw an Error', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message: 'Unable to perform operation',
-        };
-
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
-
-    describe('when called, and userCanCreateCodeSpec.isSatisfiedBy() returns true', () => {
+    describe('when called', () => {
       let userCodeFixture: UserCode;
       let userCodeStringFixture: string;
       let uuidFixture: string;
@@ -99,10 +66,10 @@ describe(UserCodeManagementInputPort.name, () => {
       let result: unknown;
 
       beforeAll(async () => {
+        userCodeFixture = UserCodeFixtures.any;
         userCodeStringFixture = 'code-fixture';
         uuidFixture = 'uuid-fixture';
 
-        userCanCreateCodeSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
         uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
         randomHexStringBuilderMock.build.mockReturnValueOnce(
           userCodeStringFixture,
@@ -118,12 +85,15 @@ describe(UserCodeManagementInputPort.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call userCanCreateCodeSpec.isSatisfiedBy()', () => {
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(userCanCreateCodeSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
-          userFixture,
+      it('should call userCodeCreatedEventHandler.handle()', () => {
+        const expected: UserCodeCreatedEvent = {
+          user: userFixture,
+          userCode: userCodeFixture,
+        };
+
+        expect(userCodeCreatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(userCodeCreatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expected,
         );
       });
 

@@ -10,6 +10,20 @@ export async function whenCreateUserRequestIsSend(
   await sendRequest.bind(this)('createUser', requestAlias);
 }
 
+export async function whenCreateUserCodeRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string | undefined,
+): Promise<void> {
+  await sendRequest.bind(this)('createUserByEmailCode', requestAlias);
+}
+
+export async function whenDeleteUserCodeRequestIsSend(
+  this: OneGameApiWorld,
+  requestAlias?: string | undefined,
+): Promise<void> {
+  await sendRequest.bind(this)('deleteUserByEmailCode', requestAlias);
+}
+
 export async function whenDeleteUserMeRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -35,6 +49,20 @@ When<OneGameApiWorld>(
   'the create user request is sent',
   async function (this: OneGameApiWorld): Promise<void> {
     await whenCreateUserRequestIsSend.bind(this)();
+  },
+);
+
+When<OneGameApiWorld>(
+  'the create user code request is sent',
+  async function (this: OneGameApiWorld): Promise<void> {
+    await whenCreateUserCodeRequestIsSend.bind(this)();
+  },
+);
+
+When<OneGameApiWorld>(
+  'the create user code request as {string} is sent',
+  async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
+    await whenCreateUserCodeRequestIsSend.bind(this)(requestAlias);
   },
 );
 
