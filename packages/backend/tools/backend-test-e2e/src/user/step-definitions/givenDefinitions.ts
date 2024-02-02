@@ -317,6 +317,13 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
+  'a delete user code request for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenDeleteCodeRequestForUser.bind(this)(userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
   'a user',
   async function (this: OneGameApiWorld): Promise<void> {
     await givenUser.bind(this)();

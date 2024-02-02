@@ -2,7 +2,7 @@ Feature: Create user code
 
   Anyone can create a user code as long as the user does not have an existing code
 
-  Background: Having a user auth
+  Background: Having a user
     Given a user "Bob"
 
     Scenario: Non authenticated user creates a user code
