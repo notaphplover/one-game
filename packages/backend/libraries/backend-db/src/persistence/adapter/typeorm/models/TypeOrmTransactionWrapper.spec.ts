@@ -57,6 +57,7 @@ describe(TypeOrmTransactionWrapper.name, () => {
   describe('.is', () => {
     describe.each<[string, () => Promise<unknown>, boolean]>([
       ['null', async () => null, false],
+      ['undefined', async () => undefined, false],
       ['string', async () => 'string', false],
       ['non TypeOrmTransactionWrapper', async () => ({}), false],
       [

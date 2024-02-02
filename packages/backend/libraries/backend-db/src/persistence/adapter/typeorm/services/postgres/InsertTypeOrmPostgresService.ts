@@ -58,6 +58,7 @@ export class InsertTypeOrmPostgresService<
 
   #isObjectWithCodeError(value: unknown): value is PgDatabaseError {
     return (
+      value !== null &&
       typeof value === 'object' &&
       typeof (value as PgDatabaseError).code === 'string' &&
       (typeof (value as PgDatabaseError).detail === 'string' ||
