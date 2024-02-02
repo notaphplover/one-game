@@ -55,6 +55,7 @@
     "test:integration:js": "turbo test:integration:js",
     "test:js": "turbo run test:js",
     "test:js:coverage": "turbo run test:js:coverage",
+    "test:mutation": "turbo run test:mutation",
     "test:uncommitted": "turbo run test:uncommitted --filter [HEAD]",
     "test:unit:js": "turbo run test:unit:js",
     "test": "turbo run test"
