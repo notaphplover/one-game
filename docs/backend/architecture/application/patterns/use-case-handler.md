@@ -3,7 +3,7 @@
 Sometimes use cases have to be taken care of. Sometimes the same use case is required 
 in multiple flows. In this case, the use case handler can come to the rescue. Use cases
 often requires application logic in addition to business logic, so they belong to the 
-applicatyion layer.
+application layer.
 
 Not every use case implementation must be done on top of a use case handler, only when
 the trade of is beneficial for the project. Simple non reused use cases are probably

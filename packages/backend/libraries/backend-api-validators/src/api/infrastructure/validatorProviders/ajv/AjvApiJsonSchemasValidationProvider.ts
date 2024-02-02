@@ -8,12 +8,6 @@ const jsonSchemasPromise: Promise<JsonRootSchema202012[]> =
 
 export class AjvApiJsonSchemasValidationProvider extends AjvJsonSchemaValidatorProvider {
   constructor() {
-    super(async (): Promise<JsonRootSchema202012[]> => this.#getJsonSchemas());
-  }
-
-  async #getJsonSchemas(): Promise<JsonRootSchema202012[]> {
-    const jsonSchemas: JsonRootSchema202012[] = await jsonSchemasPromise;
-
-    return [...jsonSchemas];
+    super(async (): Promise<JsonRootSchema202012[]> => jsonSchemasPromise);
   }
 }
