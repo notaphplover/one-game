@@ -1,5 +1,6 @@
 {
   "checkers": ["typescript"],
+  "cleanTempDir": "always",
   "coverageAnalysis": "perTest",
   "disableTypeChecks": "src/**/*.ts",
   "jest": {
