@@ -13,6 +13,10 @@ export const STATUS_REG_PENDING_BACKEND = 3;
 export const STATUS_REG_BACKEND_KO = 4;
 export const STATUS_REG_BACKEND_OK = 5;
 
+export const INVALID_CREDENTIALS_REG_ERROR = 'Invalid credentials.';
+export const UNEXPECTED_REG_ERROR =
+  'Ups... Something strange happened. Try again?';
+
 export const useRegisterForm = (initialFormFields = {}) => {
   const [formFields, setFormFields] = useState(initialFormFields);
   const [formStatus, setFormStatus] = useState(STATUS_REG_INITIAL);
@@ -61,11 +65,16 @@ export const useRegisterForm = (initialFormFields = {}) => {
     validateFormName(formValidationValue, formFields.name);
     validateFormEmail(formValidationValue, formFields.email);
     validateFormPassword(formValidationValue, formFields.password);
-    validateFormConfirmPassword(
-      formValidationValue,
+
+    const confirmPasswordValidation = validateFormConfirmPassword(
       formFields.password,
       formFields.confirmPassword,
     );
+
+    if (!confirmPasswordValidation.isRight) {
+      formValidationValue.confirmPassword =
+        confirmPasswordValidation.value.join(' ');
+    }
 
     setFormValidation(formValidationValue);
 
@@ -86,10 +95,10 @@ export const useRegisterForm = (initialFormFields = {}) => {
     if (response.statusCode === 200) {
       setFormStatus(STATUS_REG_BACKEND_OK);
     } else if (response.statusCode === 409) {
-      setBackendError(`The user already exists.`);
+      setBackendError(INVALID_CREDENTIALS_REG_ERROR);
       setFormStatus(STATUS_REG_BACKEND_KO);
     } else {
-      setBackendError(`Ups... Something strange happened. Try again?`);
+      setBackendError(UNEXPECTED_REG_ERROR);
       setFormStatus(STATUS_REG_BACKEND_KO);
     }
   };
