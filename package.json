@@ -13,9 +13,9 @@
     "@cornie-js/backend-scripts": "workspace:*",
     "@cornie-js/backend-typescript-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
-    "husky": "9.0.7",
+    "husky": "9.0.10",
     "lint-staged": "15.2.1",
-    "turbo": "1.12.0"
+    "turbo": "1.12.2"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
@@ -41,7 +41,7 @@
     "format": "turbo run format",
     "lint": "turbo run lint",
     "migrations:run": "turbo run migrations:run",
-    "prepare": "husky install",
+    "prepare": "husky install && turbo telemetry disable",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
     "serve:api:graphql": "pnpm run serve:api:rest --filter=backend-service-gateway",
     "serve:api:rest": "pnpm run serve:api:rest:dependencies --filter=backend-service-user --filter=backend-service-game",
@@ -55,6 +55,7 @@
     "test:integration:js": "turbo test:integration:js",
     "test:js": "turbo run test:js",
     "test:js:coverage": "turbo run test:js:coverage",
+    "test:mutation": "turbo run test:mutation",
     "test:uncommitted": "turbo run test:uncommitted --filter [HEAD]",
     "test:unit:js": "turbo run test:unit:js",
     "test": "turbo run test"

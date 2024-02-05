@@ -1,12 +1,12 @@
 import { DataSource, QueryRunner } from 'typeorm';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
 
 const IS_PROPERTY_SYMBOL: unique symbol = Symbol.for(
-  'IsTypeOrmTransactionContext',
+  'IsTypeOrmTransactionWrapper',
 );
 
-export class TypeOrmTransactionContext implements TransactionContext {
+export class TypeOrmTransactionWrapper implements TransactionWrapper {
   public readonly [IS_PROPERTY_SYMBOL]: true;
   readonly #queryRunner: QueryRunner;
 
@@ -17,27 +17,31 @@ export class TypeOrmTransactionContext implements TransactionContext {
 
   public static async build(
     dataSource: DataSource,
-  ): Promise<TypeOrmTransactionContext> {
+  ): Promise<TypeOrmTransactionWrapper> {
     const queryRunner: QueryRunner = dataSource.createQueryRunner();
 
     await queryRunner.startTransaction();
 
-    return new TypeOrmTransactionContext(queryRunner);
+    return new TypeOrmTransactionWrapper(queryRunner);
   }
 
-  public static is(value: unknown): value is TypeOrmTransactionContext {
+  public static is(value: unknown): value is TypeOrmTransactionWrapper {
     return (
       value !== null &&
       typeof value === 'object' &&
-      (value as Partial<TypeOrmTransactionContext>)[IS_PROPERTY_SYMBOL] === true
+      (value as Partial<TypeOrmTransactionWrapper>)[IS_PROPERTY_SYMBOL] === true
     );
   }
 
-  public unwrap(): QueryRunner {
-    return this.#queryRunner;
+  public async rollback(): Promise<void> {
+    try {
+      await this.#queryRunner.rollbackTransaction();
+    } finally {
+      await this.#queryRunner.release();
+    }
   }
 
-  public async [Symbol.asyncDispose](): Promise<void> {
+  public async tryCommit(): Promise<void> {
     try {
       await this.#queryRunner.commitTransaction();
     } catch (error: unknown) {
@@ -47,5 +51,9 @@ export class TypeOrmTransactionContext implements TransactionContext {
     } finally {
       await this.#queryRunner.release();
     }
+  }
+
+  public unwrap(): QueryRunner {
+    return this.#queryRunner;
   }
 }
