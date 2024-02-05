@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { validateFormName } from '../../common/helpers/validateFormName';
 import { validateFormEmail } from '../../common/helpers/validateFormEmail';
 import { validateFormPassword } from '../../common/helpers/validateFormPassword';
-import { validateFormConfirmPassword } from '../../common/helpers/validateFormConfirmPassword';
+import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 
@@ -66,7 +66,7 @@ export const useRegisterForm = (initialFormFields = {}) => {
     validateFormEmail(formValidationValue, formFields.email);
     validateFormPassword(formValidationValue, formFields.password);
 
-    const confirmPasswordValidation = validateFormConfirmPassword(
+    const confirmPasswordValidation = validateConfirmPassword(
       formFields.password,
       formFields.confirmPassword,
     );

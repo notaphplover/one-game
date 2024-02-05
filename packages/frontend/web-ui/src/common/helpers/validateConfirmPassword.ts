@@ -1,14 +1,16 @@
 import { Either } from '../models/Either';
 import { PASSWORD_MIN_LENGTH } from './passwordMinLength';
 
-export const validateFormConfirmPassword = (
+export const validateConfirmPassword = (
   password: string,
   confirmPassword: string,
 ): Either<string[], undefined> => {
   let errorMessages: string[] = [];
 
   if (confirmPassword.length < PASSWORD_MIN_LENGTH) {
-    errorMessages.push('Password must be of minimum 6 characters length.');
+    errorMessages.push(
+      `Password must be of minimum ${PASSWORD_MIN_LENGTH} characters length.`,
+    );
   }
 
   if (password.trim() !== confirmPassword.trim()) {
