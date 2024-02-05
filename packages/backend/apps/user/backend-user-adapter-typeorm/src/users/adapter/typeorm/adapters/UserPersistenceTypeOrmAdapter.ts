@@ -1,4 +1,4 @@
-import { TransactionContext } from '@cornie-js/backend-db/application';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { UserPersistenceOutputPort } from '@cornie-js/backend-user-application/users';
 import {
   User,
@@ -40,11 +40,11 @@ export class UserPersistenceTypeOrmAdapter
 
   public async create(
     userCreateQuery: UserCreateQuery,
-    transactionContext?: TransactionContext,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<User> {
     return this.#createUserTypeOrmService.insertOne(
       userCreateQuery,
-      transactionContext,
+      transactionWrapper,
     );
   }
 

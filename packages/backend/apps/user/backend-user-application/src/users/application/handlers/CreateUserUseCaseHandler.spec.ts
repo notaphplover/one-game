@@ -5,34 +5,24 @@ import {
   AppErrorKind,
   Handler,
   ReportBasedSpec,
-  Writable,
 } from '@cornie-js/backend-common';
-import { TransactionContext } from '@cornie-js/backend-db/application';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { User, UserCreateQuery } from '@cornie-js/backend-user-domain/users';
 import {
   UserCreateQueryFixtures,
   UserFixtures,
 } from '@cornie-js/backend-user-domain/users/fixtures';
 
-import { TransactionContextProvisionOutputPort } from '../../../foundation/db/application';
+import { TransactionProvisionOutputPort } from '../../../foundation/db/application';
 import { UserCreatedEvent } from '../models/UserCreatedEvent';
 import { UserPersistenceOutputPort } from '../ports/output/UserPersistenceOutputPort';
 import { CreateUserUseCaseHandler } from './CreateUserUseCaseHandler';
-
-/*
- * Ugly workaround until https://github.com/jestjs/jest/issues/14874 is fixed
- */
-
-const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
-
-(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
-  asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
 
 describe(CreateUserUseCaseHandler.name, () => {
   let isValidUserCreateQuerySpecMock: jest.Mocked<
     ReportBasedSpec<[UserCreateQuery], string[]>
   >;
-  let transactionContextProvisionOutputPortMock: jest.Mocked<TransactionContextProvisionOutputPort>;
+  let transactionProvisionOutputPortMock: jest.Mocked<TransactionProvisionOutputPort>;
   let userCreatedEventHandlerMock: jest.Mocked<
     Handler<[UserCreatedEvent], void>
   >;
@@ -45,7 +35,7 @@ describe(CreateUserUseCaseHandler.name, () => {
     isValidUserCreateQuerySpecMock = {
       isSatisfiedOrReport: jest.fn(),
     };
-    transactionContextProvisionOutputPortMock = {
+    transactionProvisionOutputPortMock = {
       provide: jest.fn(),
     };
     userCreatedEventHandlerMock = {
@@ -60,7 +50,7 @@ describe(CreateUserUseCaseHandler.name, () => {
 
     createUserUseCaseHandler = new CreateUserUseCaseHandler(
       isValidUserCreateQuerySpecMock,
-      transactionContextProvisionOutputPortMock,
+      transactionProvisionOutputPortMock,
       userCreatedEventHandlerMock,
       userPersistenceOutputPortMock,
     );
@@ -124,20 +114,25 @@ describe(CreateUserUseCaseHandler.name, () => {
     });
 
     describe('when called, and isValidUserCreateQuerySpecMock.isSatisfiedOrReport() returns Right', () => {
-      let transactionContextMock: TransactionContext;
+      let transactionWrapperMock: TransactionWrapper;
       let userFixture: User;
 
       let result: unknown;
 
       beforeAll(async () => {
-        transactionContextMock = {
-          [Symbol.asyncDispose]: jest.fn(),
-        } as Partial<TransactionContext> as TransactionContext;
+        transactionWrapperMock = {
+          rollback: jest.fn(),
+          tryCommit: jest
+            .fn()
+            .mockImplementationOnce(async (): Promise<void> => undefined),
+        } as Partial<
+          jest.Mocked<TransactionWrapper>
+        > as jest.Mocked<TransactionWrapper>;
 
         userFixture = UserFixtures.any;
 
-        transactionContextProvisionOutputPortMock.provide.mockResolvedValueOnce(
-          transactionContextMock,
+        transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
+          transactionWrapperMock,
         );
         isValidUserCreateQuerySpecMock.isSatisfiedOrReport.mockReturnValueOnce({
           isRight: true,
@@ -162,12 +157,12 @@ describe(CreateUserUseCaseHandler.name, () => {
         ).toHaveBeenCalledWith(userCreateQueryFixture);
       });
 
-      it('should call transactionContextProvisionOutputPort.provide()', () => {
+      it('should call transactionProvisionOutputPort.provide()', () => {
         expect(
-          transactionContextProvisionOutputPortMock.provide,
+          transactionProvisionOutputPortMock.provide,
         ).toHaveBeenCalledTimes(1);
         expect(
-          transactionContextProvisionOutputPortMock.provide,
+          transactionProvisionOutputPortMock.provide,
         ).toHaveBeenCalledWith();
       });
 
@@ -175,13 +170,13 @@ describe(CreateUserUseCaseHandler.name, () => {
         expect(userPersistenceOutputPortMock.create).toHaveBeenCalledTimes(1);
         expect(userPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           userCreateQueryFixture,
-          transactionContextMock,
+          transactionWrapperMock,
         );
       });
 
       it('should call userCreatedEventHandler.handle()', () => {
         const expectedUserCreatedEvent: UserCreatedEvent = {
-          transactionContext: transactionContextMock,
+          transactionWrapper: transactionWrapperMock,
           user: userFixture,
           userCreateQuery: userCreateQueryFixture,
         };
@@ -190,6 +185,11 @@ describe(CreateUserUseCaseHandler.name, () => {
         expect(userCreatedEventHandlerMock.handle).toHaveBeenCalledWith(
           expectedUserCreatedEvent,
         );
+      });
+
+      it('should call transactionWrapper.tryCommit()', () => {
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
       });
 
       it('should return an UserV1', () => {

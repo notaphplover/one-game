@@ -1,15 +1,20 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../utils/unwrapTypeOrmTransaction');
+
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
   ObjectLiteral,
   QueryBuilder,
+  QueryRunner,
   Repository,
   UpdateQueryBuilder,
   WhereExpressionBuilder,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 import { UpdateTypeOrmQueryBuilderService } from './UpdateTypeOrmQueryBuilderService';
 
 interface ModelTest {
@@ -94,19 +99,33 @@ describe(UpdateTypeOrmQueryBuilderService.name, () => {
   });
 
   describe('.update()', () => {
+    let queryFixture: QueryTest;
+    let transactionWrapperFixture: TransactionWrapper | undefined;
+
+    beforeAll(() => {
+      queryFixture = {
+        bar: 'sample',
+      };
+
+      transactionWrapperFixture = Symbol() as unknown as
+        | TransactionWrapper
+        | undefined;
+    });
+
     describe('when called and findQueryTypeOrmFromUpdateQueryBuilder returns QueryBuilder<TModelDb>', () => {
-      let queryFixture: QueryTest;
+      let queryRunnerFixture: QueryRunner;
       let setQueryTypeOrmFixture: QueryDeepPartialEntity<ModelTest>;
 
       beforeAll(async () => {
-        queryFixture = {
-          bar: 'sample',
-        };
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
 
         setQueryTypeOrmFixture = {
           foo: 'sample-string-modified',
         };
 
+        (
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
+        ).mockReturnValueOnce(queryRunnerFixture);
         (
           findQueryTypeOrmFromUpdateQueryBuilderMock.build as jest.Mock<
             (
@@ -119,7 +138,10 @@ describe(UpdateTypeOrmQueryBuilderService.name, () => {
           setQueryTypeOrmFixture,
         );
 
-        await updateTypeOrmService.update(queryFixture);
+        await updateTypeOrmService.update(
+          queryFixture,
+          transactionWrapperFixture,
+        );
       });
 
       afterAll(() => {

@@ -3,12 +3,13 @@ import { describe, expect, jest, it } from '@jest/globals';
 jest.mock('../../common/helpers/validateFormName');
 jest.mock('../../common/helpers/validateFormEmail');
 jest.mock('../../common/helpers/validateFormPassword');
-jest.mock('../../common/helpers/validateFormConfirmPassword');
+jest.mock('../../common/helpers/validateConfirmPassword');
 jest.mock('../../common/http/services/HttpService');
 jest.mock('../../common/http/helpers/buildSerializableResponse');
 
 import { act, renderHook, waitFor } from '@testing-library/react';
 import {
+  INVALID_CREDENTIALS_REG_ERROR,
   STATUS_REG_BACKEND_KO,
   STATUS_REG_BACKEND_OK,
   STATUS_REG_INITIAL,
@@ -17,244 +18,349 @@ import {
 import { validateFormName } from '../../common/helpers/validateFormName';
 import { validateFormEmail } from '../../common/helpers/validateFormEmail';
 import { validateFormPassword } from '../../common/helpers/validateFormPassword';
-import { validateFormConfirmPassword } from '../../common/helpers/validateFormConfirmPassword';
+import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 
 describe(useRegisterForm.name, () => {
-  it('should initialize values', () => {
-    const initialForm = {
+  let initialForm;
+  let nameErrorFixture;
+  let emailErrorFixture;
+  let passwordErrorFixture;
+  let confirmPasswordErrorFixture;
+
+  beforeAll(() => {
+    initialForm = {
       name: 'name',
       email: 'email',
       password: 'password',
       confirmPassword: 'confirm-password',
     };
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
+    nameErrorFixture = 'error-name';
+    emailErrorFixture = 'error-email';
+    passwordErrorFixture = 'error-password';
+    confirmPasswordErrorFixture = 'error-confirmPassword';
 
-    const { formFields, formStatus } = result.current;
-
-    expect(formFields.name).toBe(initialForm.name);
-    expect(formFields.email).toBe(initialForm.email);
-    expect(formFields.password).toBe(initialForm.password);
-    expect(formFields.confirmPassword).toBe(initialForm.confirmPassword);
-    expect(formStatus).toBe(STATUS_REG_INITIAL);
-
-    jest.clearAllMocks();
+    validateConfirmPassword.mockReturnValue({
+      isRight: true,
+      value: undefined,
+    });
   });
 
-  it('should have an invalid name error message', () => {
-    const nameErrorFixture = 'name-error';
-    const initialForm = {
-      name: 'name',
-      email: 'email',
-      password: 'password',
-      confirmPassword: 'confirm-password',
-    };
+  describe('when called, on initialize values', () => {
+    let result;
+    let formFields;
+    let formStatus;
 
-    validateFormName.mockImplementation((formValidationValue) => {
-      formValidationValue.name = nameErrorFixture;
+    beforeAll(() => {
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+
+      formFields = result.current.formFields;
+      formStatus = result.current.formStatus;
     });
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
-    const { notifyFormFieldsFilled } = result.current;
-
-    act(() => {
-      notifyFormFieldsFilled();
+    afterAll(() => {
+      jest.clearAllMocks();
     });
 
-    const { formValidation } = result.current;
+    it('should initialize values on name', () => {
+      expect(formFields.name).toBe(initialForm.name);
+    });
 
-    expect(formValidation).toStrictEqual({ name: nameErrorFixture });
-    expect(validateFormName).toHaveBeenCalledTimes(1);
-    expect(validateFormName).toHaveBeenCalledWith(
-      formValidation,
-      initialForm.name,
-    );
+    it('should initialize values on email', () => {
+      expect(formFields.email).toBe(initialForm.email);
+    });
 
-    jest.clearAllMocks();
-    jest.resetAllMocks();
+    it('should initialize values on password', () => {
+      expect(formFields.password).toBe(initialForm.password);
+    });
+
+    it('should initialize values on confirmPassword', () => {
+      expect(formFields.confirmPassword).toBe(initialForm.confirmPassword);
+    });
+
+    it('should initialize values on formStatus', () => {
+      expect(formStatus).toBe(STATUS_REG_INITIAL);
+    });
   });
 
-  it('should have an invalid email error message', () => {
-    const emailErrorFixture = 'email-error';
-    const initialForm = {
-      name: 'name',
-      email: 'email',
-      password: 'password',
-      confirmPassword: 'confirm-password',
-    };
+  describe('when called, and name input value is not correct', () => {
+    let result;
+    let notifyFormFieldsFilled;
+    let formValidation;
 
-    validateFormEmail.mockImplementation((formValidationValue) => {
-      formValidationValue.email = emailErrorFixture;
+    beforeAll(() => {
+      validateFormName.mockImplementation((formValidationValue) => {
+        formValidationValue.name = nameErrorFixture;
+      });
+
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+      notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
+
+      act(() => {
+        notifyFormFieldsFilled();
+      });
+
+      formValidation = result.current.formValidation;
     });
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
-    const { notifyFormFieldsFilled } = result.current;
-
-    act(() => {
-      notifyFormFieldsFilled();
+    afterAll(() => {
+      jest.clearAllMocks();
+      validateFormName.mockReset();
     });
 
-    const { formValidation } = result.current;
+    it('should have been called validateFormName once', () => {
+      expect(validateFormName).toHaveBeenCalledTimes(1);
+    });
 
-    expect(formValidation).toStrictEqual({ email: emailErrorFixture });
-    expect(validateFormEmail).toHaveBeenCalledTimes(1);
-    expect(validateFormEmail).toHaveBeenCalledWith(
-      formValidation,
-      initialForm.email,
-    );
+    it('should have been called validateFormName with arguments', () => {
+      expect(validateFormName).toHaveBeenCalledWith(
+        formValidation,
+        initialForm.name,
+      );
+    });
 
-    jest.clearAllMocks();
-    jest.resetAllMocks();
+    it('should return an invalid name error message', () => {
+      expect(formValidation).toStrictEqual({ name: nameErrorFixture });
+    });
   });
 
-  it('should have an invalid password error message', () => {
-    const passwordErrorFixture = 'password-error';
-    const initialForm = {
-      name: 'name',
-      email: 'email',
-      password: 'password',
-      confirmPassword: 'confirm-password',
-    };
+  describe('when called, and email input value is not correct', () => {
+    let result;
+    let notifyFormFieldsFilled;
+    let formValidation;
 
-    validateFormPassword.mockImplementation((formValidationValue) => {
-      formValidationValue.password = passwordErrorFixture;
+    beforeAll(() => {
+      validateFormEmail.mockImplementation((formValidationValue) => {
+        formValidationValue.email = emailErrorFixture;
+      });
+
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+      notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
+
+      act(() => {
+        notifyFormFieldsFilled();
+      });
+
+      formValidation = result.current.formValidation;
     });
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
-    const { notifyFormFieldsFilled } = result.current;
-
-    act(() => {
-      notifyFormFieldsFilled();
+    afterAll(() => {
+      jest.clearAllMocks();
+      validateFormEmail.mockReset();
     });
 
-    const { formValidation } = result.current;
+    it('should have been called validateFormEmail once', () => {
+      expect(validateFormEmail).toHaveBeenCalledTimes(1);
+    });
 
-    expect(formValidation).toStrictEqual({ password: passwordErrorFixture });
-    expect(validateFormPassword).toHaveBeenCalledTimes(1);
-    expect(validateFormPassword).toHaveBeenCalledWith(
-      formValidation,
-      initialForm.password,
-    );
+    it('should have been called validateFormEmail with arguments', () => {
+      expect(validateFormEmail).toHaveBeenCalledWith(
+        formValidation,
+        initialForm.email,
+      );
+    });
 
-    jest.clearAllMocks();
-    jest.resetAllMocks();
+    it('should return an invalid email error message', () => {
+      expect(formValidation).toStrictEqual({ email: emailErrorFixture });
+    });
   });
 
-  it('should have an invalid confirm password error message', () => {
-    const confirmPasswordErrorFixture = 'confirmPassword-error';
-    const initialForm = {
-      name: 'name',
-      email: 'email',
-      password: 'password',
-      confirmPassword: 'confirm-password',
-    };
+  describe('when called, and password input value is not correct', () => {
+    let result;
+    let notifyFormFieldsFilled;
+    let formValidation;
 
-    validateFormConfirmPassword.mockImplementation((formValidationValue) => {
-      formValidationValue.confirmPassword = confirmPasswordErrorFixture;
+    beforeAll(() => {
+      validateFormPassword.mockImplementation((formValidationValue) => {
+        formValidationValue.password = passwordErrorFixture;
+      });
+
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+      notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
+
+      act(() => {
+        notifyFormFieldsFilled();
+      });
+
+      formValidation = result.current.formValidation;
     });
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
-    const { notifyFormFieldsFilled } = result.current;
-
-    act(() => {
-      notifyFormFieldsFilled();
+    afterAll(() => {
+      jest.clearAllMocks();
+      validateFormPassword.mockReset();
+      validateConfirmPassword.mockReset();
     });
 
-    const { formValidation } = result.current;
-
-    expect(formValidation).toStrictEqual({
-      confirmPassword: confirmPasswordErrorFixture,
+    it('should have been called validateFormPassword once', () => {
+      expect(validateFormPassword).toHaveBeenCalledTimes(1);
     });
-    expect(validateFormConfirmPassword).toHaveBeenCalledTimes(1);
-    expect(validateFormConfirmPassword).toHaveBeenCalledWith(
-      formValidation,
-      initialForm.password,
-      initialForm.confirmPassword,
-    );
 
-    jest.clearAllMocks();
-    jest.resetAllMocks();
+    it('should have been called validateFormPassword with arguments', () => {
+      expect(validateFormPassword).toHaveBeenCalledWith(
+        formValidation,
+        initialForm.password,
+      );
+    });
+
+    it('should return an invalid password error message', () => {
+      expect(formValidation).toStrictEqual({ password: passwordErrorFixture });
+    });
   });
 
-  it('should call to API with the correct information', async () => {
-    const initialForm = {
-      name: 'Mariote',
-      email: 'mario.te@google.com',
-      password: '123456',
-      confirmPassword: '123456',
-    };
+  describe('when called, and confirm password input value is not correct', () => {
+    let result;
+    let notifyFormFieldsFilled;
+    let formValidation;
 
-    httpClient.createUser.mockImplementation(async (_, body) => ({
-      headers: {},
-      body: {
-        name: body.name,
-        email: body.email,
-        password: body.password,
-      },
-      statusCode: 200,
-    }));
+    beforeAll(() => {
+      validateConfirmPassword.mockReturnValue({
+        isRight: false,
+        value: [confirmPasswordErrorFixture],
+      });
 
-    buildSerializableResponse.mockImplementation((response) => ({
-      body: response.body,
-      statusCode: response.statusCode,
-    }));
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+      notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
-    const { notifyFormFieldsFilled } = result.current;
+      act(() => {
+        notifyFormFieldsFilled();
+      });
 
-    act(() => {
-      notifyFormFieldsFilled();
+      formValidation = result.current.formValidation;
     });
 
-    await waitFor(() => {
-      const { formStatus } = result.current;
+    afterAll(() => {
+      jest.clearAllMocks();
+      validateConfirmPassword.mockReset();
+      validateConfirmPassword.mockReturnValue({
+        isRight: true,
+        value: undefined,
+      });
+    });
 
+    it('should have been called validateFormPassword once', () => {
+      expect(validateConfirmPassword).toHaveBeenCalledTimes(1);
+    });
+
+    it('should have been called validateFormPassword with arguments', () => {
+      expect(validateConfirmPassword).toHaveBeenCalledWith(
+        initialForm.password,
+        initialForm.confirmPassword,
+      );
+    });
+
+    it('should return an invalid confirm password error message', () => {
+      expect(formValidation).toStrictEqual({
+        confirmPassword: confirmPasswordErrorFixture,
+      });
+    });
+  });
+
+  describe('when called, and API returns an OK response', () => {
+    let result;
+    let notifyFormFieldsFilled;
+    let formStatus;
+
+    beforeAll(async () => {
+      initialForm = {
+        name: 'Mariote',
+        email: 'mario.te@google.com',
+        password: '123456',
+        confirmPassword: '123456',
+      };
+
+      httpClient.createUser.mockImplementation(async (_, body) => ({
+        headers: {},
+        body: {
+          name: body.name,
+          email: body.email,
+          password: body.password,
+        },
+        statusCode: 200,
+      }));
+
+      buildSerializableResponse.mockImplementation((response) => ({
+        body: response.body,
+        statusCode: response.statusCode,
+      }));
+
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+      notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
+
+      act(() => {
+        notifyFormFieldsFilled();
+      });
+
+      await waitFor(() => {
+        formStatus = result.current.formStatus;
+        expect(formStatus).toBe(STATUS_REG_BACKEND_OK);
+      });
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return an status backend OK', () => {
       expect(formStatus).toBe(STATUS_REG_BACKEND_OK);
     });
-
-    jest.clearAllMocks();
-    jest.resetAllMocks();
   });
 
-  it('should call to API with wrong information and return an error 409', async () => {
-    const initialForm = {
-      name: 'Mariote',
-      email: 'mario.te@google.com',
-      password: '123456',
-      confirmPassword: '123456',
-    };
+  describe('when called, and API returns a non OK response', () => {
+    let result;
+    let notifyFormFieldsFilled;
+    let formStatus;
+    let backendError;
 
-    httpClient.createUser.mockImplementation(async (_, body) => ({
-      headers: {},
-      body: {
-        name: body.name,
-        email: body.email,
-        password: body.password,
-      },
-      statusCode: 409,
-    }));
+    beforeAll(async () => {
+      initialForm = {
+        name: 'Mariote',
+        email: 'mario.te@google.com',
+        password: '123456',
+        confirmPassword: '123456',
+      };
 
-    buildSerializableResponse.mockImplementation((response) => ({
-      body: response.body,
-      statusCode: response.statusCode,
-    }));
+      httpClient.createUser.mockImplementation(async (_, body) => ({
+        headers: {},
+        body: {
+          name: body.name,
+          email: body.email,
+          password: body.password,
+        },
+        statusCode: 409,
+      }));
 
-    const { result } = renderHook(() => useRegisterForm(initialForm));
-    const { notifyFormFieldsFilled } = result.current;
+      buildSerializableResponse.mockImplementation((response) => ({
+        body: response.body,
+        statusCode: response.statusCode,
+      }));
 
-    act(() => {
-      notifyFormFieldsFilled();
+      result = renderHook(() => useRegisterForm(initialForm)).result;
+      notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
+
+      act(() => {
+        notifyFormFieldsFilled();
+      });
+
+      await waitFor(() => {
+        formStatus = result.current.formStatus;
+        backendError = result.current.backendError;
+        expect(formStatus).toBe(STATUS_REG_BACKEND_KO);
+      });
     });
 
-    await waitFor(() => {
-      const { formStatus } = result.current;
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
 
+    it('should return an status backend KO', () => {
       expect(formStatus).toBe(STATUS_REG_BACKEND_KO);
     });
 
-    jest.clearAllMocks();
-    jest.resetAllMocks();
+    it('should return an error message Invalid Credentials', () => {
+      expect(backendError).toBe(INVALID_CREDENTIALS_REG_ERROR);
+    });
   });
 });

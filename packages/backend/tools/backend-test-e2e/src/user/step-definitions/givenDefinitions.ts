@@ -15,8 +15,10 @@ import { getRequestParametersOrFail } from '../../http/utils/calculations/getReq
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 import { UserV1Parameter } from '../models/UserV1Parameter';
 import { setUser } from '../utils/actions/setUser';
+import { getUserOrFail } from '../utils/calculations/getUserOrFail';
 import {
   whenCreateUserRequestIsSend,
+  whenDeleteUserCodeRequestIsSend,
   whenGetUserMeRequestIsSend,
   whenUpdateUserMeRequestIsSend,
 } from './whenDefinitions';
@@ -50,6 +52,56 @@ export function givenCreateUserRequest(
     {},
     userCreateQueryV1,
   ]);
+}
+
+export function givenCreateCodeRequestForUser(
+  this: OneGameApiWorld,
+  userAlias?: string,
+  requestAlias?: string,
+): void {
+  const procesedUserAlias: string = userAlias ?? defaultAlias;
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  const userParameter: UserV1Parameter =
+    getUserOrFail.bind(this)(procesedUserAlias);
+
+  const requestParameters: Parameters<HttpClient['createUserByEmailCode']> = [
+    {},
+    {
+      email: userParameter.userCreateQuery.email,
+    },
+  ];
+
+  setRequestParameters.bind(this)(
+    'createUserByEmailCode',
+    procesedRequestAlias,
+    requestParameters,
+  );
+}
+
+export function givenDeleteCodeRequestForUser(
+  this: OneGameApiWorld,
+  userAlias?: string,
+  requestAlias?: string,
+): void {
+  const procesedUserAlias: string = userAlias ?? defaultAlias;
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  const userParameter: UserV1Parameter =
+    getUserOrFail.bind(this)(procesedUserAlias);
+
+  const requestParameters: Parameters<HttpClient['deleteUserByEmailCode']> = [
+    {},
+    {
+      email: userParameter.userCreateQuery.email,
+    },
+  ];
+
+  setRequestParameters.bind(this)(
+    'deleteUserByEmailCode',
+    procesedRequestAlias,
+    requestParameters,
+  );
 }
 
 export async function givenUser(
@@ -138,6 +190,10 @@ export async function givenUser(
   };
 
   setUser.bind(this)(processedUserAlias, userParameter);
+
+  givenDeleteCodeRequestForUser.bind(this)(userAlias, requestAlias);
+
+  await whenDeleteUserCodeRequestIsSend.bind(this)(requestAlias);
 }
 
 export function givenDeleteOwnUserRequestFromUser(
@@ -229,6 +285,24 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
+  'a create user code request for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenCreateCodeRequestForUser.bind(this)(userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a create user code request for {string} as {string}',
+  function (
+    this: OneGameApiWorld,
+    userAlias: string,
+    requestAlias: string,
+  ): void {
+    givenCreateCodeRequestForUser.bind(this)(userAlias, requestAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
   'a create user request as {string}',
   function (this: OneGameApiWorld, requestAlias: string): void {
     givenCreateUserRequest.bind(this)(requestAlias);
@@ -239,6 +313,13 @@ Given<OneGameApiWorld>(
   'a delete own user request from {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
     givenDeleteOwnUserRequestFromUser.bind(this)(userAlias, userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a delete user code request for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenDeleteCodeRequestForUser.bind(this)(userAlias);
   },
 );
 
