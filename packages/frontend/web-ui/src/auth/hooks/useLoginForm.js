@@ -61,10 +61,7 @@ export const useLoginForm = (initialFormFields = {}) => {
 
     const formValidationValue = {};
 
-    const emailValidation = validateEmail(
-      formValidationValue,
-      formFields.email,
-    );
+    const emailValidation = validateEmail(formFields.email);
 
     if (!emailValidation.isRight) {
       formValidationValue.email = emailValidation.value;

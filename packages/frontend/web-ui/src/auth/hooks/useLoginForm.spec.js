@@ -92,9 +92,9 @@ describe(useLoginForm.name, () => {
       expect(validateEmail).toHaveBeenCalledTimes(1);
     });
 
-    // it('should have been called validateEmail with arguments', () => {
-    //   expect(validateEmail).toHaveBeenCalledWith(initialForm.email);
-    // });
+    it('should have been called validateEmail with arguments', () => {
+      expect(validateEmail).toHaveBeenCalledWith(initialForm.email);
+    });
 
     it('should return an invalid email error message', () => {
       expect(formValidation).toStrictEqual({ email: emailErrorFixture });
@@ -129,7 +129,6 @@ describe(useLoginForm.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      validateFormPassword.mockReset();
     });
 
     it('should have been called validateFormPassword once', () => {
