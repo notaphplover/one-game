@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-export const ReversedCard = () => {
+export const ReversedCard = (): React.JSX.Element => {
   return (
     <Box component="div" className="cornie-card">
       <Box component="div" className="cornie-card-inner-border">
