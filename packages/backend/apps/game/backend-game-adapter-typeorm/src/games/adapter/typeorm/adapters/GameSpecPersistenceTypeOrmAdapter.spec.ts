@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   GameSpec,
   GameSpecCreateQuery,
@@ -43,9 +44,11 @@ describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
 
   describe('.create', () => {
     let gameSpecCreateQueryFixture: GameSpecCreateQuery;
+    let transactionWrapperFixture: TransactionWrapper;
 
     beforeAll(() => {
       gameSpecCreateQueryFixture = GameSpecCreateQueryFixtures.any;
+      transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
     });
 
     describe('when called', () => {
@@ -62,6 +65,7 @@ describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
 
         result = await gameSpecPersistenceTypeOrmAdapter.create(
           gameSpecCreateQueryFixture,
+          transactionWrapperFixture,
         );
       });
 
@@ -75,6 +79,7 @@ describe(GameSpecPersistenceTypeOrmAdapter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(createGameSpecTypeOrmServiceMock.insertOne).toHaveBeenCalledWith(
           gameSpecCreateQueryFixture,
+          transactionWrapperFixture,
         );
       });
 

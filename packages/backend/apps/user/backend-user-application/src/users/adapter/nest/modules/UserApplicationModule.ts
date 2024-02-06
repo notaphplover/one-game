@@ -5,6 +5,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
 import { StringModule } from '../../../../foundation/string/adapter/nest/StringModule';
+import { PasswordResetMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/PasswordResetMailDeliveryOptionsFromUserBuilder';
 import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builders/UserCodeCreateQueryFromUserBuilder';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/builders/UserCreateQueryFromUserCreateQueryV1Builder';
@@ -12,6 +13,7 @@ import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../applicat
 import { UserV1FromUserBuilder } from '../../../application/builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
 import { UpdateUserUseCaseHandler } from '../../../application/handlers/UpdateUserUseCaseHandler';
+import { UserCodeCreatedEventHandler } from '../../../application/handlers/UserCodeCreatedEventHandler';
 import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';
 import { UserUpdatedEventHandler } from '../../../application/handlers/UserUpdatedEventHandler';
 import { UserCodeManagementInputPort } from '../../../application/ports/input/UserCodeManagementInputPort';
@@ -38,8 +40,10 @@ export class UserApplicationModule {
       module: UserApplicationModule,
       providers: [
         CreateUserUseCaseHandler,
+        PasswordResetMailDeliveryOptionsFromUserBuilder,
         UpdateUserUseCaseHandler,
         UserActivationMailDeliveryOptionsFromUserBuilder,
+        UserCodeCreatedEventHandler,
         UserCodeCreateQueryFromUserBuilder,
         UserCodeManagementInputPort,
         UserCreatedEventHandler,

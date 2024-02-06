@@ -461,6 +461,13 @@ paths:
     delete:
       summary: Delete user code
       operationId: deleteUserByEmailCode
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email of the user whose code is being deleted
       responses:
         '200':
           description: User deleted
@@ -475,11 +482,18 @@ paths:
     post:
       summary: Create user code
       operationId: createUserByEmailCode
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email of the user whose code is being deleted
       responses:
         '201':
-          description: Game created
-        '422':
-          description: Unprocessable operation
+          description: User code created
+        '409':
+          description: Entity conflict. This is likely to happen due to the existence of another code for this user.
           content:
             application/json:
               schema:

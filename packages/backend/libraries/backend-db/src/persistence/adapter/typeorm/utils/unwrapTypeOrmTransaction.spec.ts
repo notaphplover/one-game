@@ -1,21 +1,21 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../models/TypeOrmTransactionContext');
+jest.mock('../models/TypeOrmTransactionWrapper');
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { QueryRunner } from 'typeorm';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
-import { TypeOrmTransactionContext } from '../models/TypeOrmTransactionContext';
-import { unwrapTypeOrmTransactionContext } from './unwrapTypeOrmTransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { TypeOrmTransactionWrapper } from '../models/TypeOrmTransactionWrapper';
+import { unwrapTypeOrmTransaction } from './unwrapTypeOrmTransaction';
 
-describe(unwrapTypeOrmTransactionContext.name, () => {
-  describe('having an undefined TransactionContext', () => {
+describe(unwrapTypeOrmTransaction.name, () => {
+  describe('having an undefined TransactionWrapper', () => {
     describe('when called', () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = unwrapTypeOrmTransactionContext(undefined);
+        result = unwrapTypeOrmTransaction(undefined);
       });
 
       it('should return undefined', () => {
@@ -24,29 +24,29 @@ describe(unwrapTypeOrmTransactionContext.name, () => {
     });
   });
 
-  describe('having a non undefined TransactionContext', () => {
-    let transactionContextMock: jest.Mocked<TransactionContext>;
+  describe('having a non undefined TransactionWrapper', () => {
+    let transactionWrapperMock: jest.Mocked<TransactionWrapper>;
 
     beforeAll(() => {
-      transactionContextMock = {
+      transactionWrapperMock = {
         unwrap: jest.fn(),
       } as Partial<
-        jest.Mocked<TransactionContext>
-      > as jest.Mocked<TransactionContext>;
+        jest.Mocked<TransactionWrapper>
+      > as jest.Mocked<TransactionWrapper>;
     });
 
-    describe('when called, and TypeOrmTransactionContext.is() returns false', () => {
+    describe('when called, and TypeOrmTransactionWrapper.is() returns false', () => {
       let result: unknown;
 
       beforeAll(() => {
         (
-          TypeOrmTransactionContext.is as unknown as jest.Mock<
-            typeof TypeOrmTransactionContext.is
+          TypeOrmTransactionWrapper.is as unknown as jest.Mock<
+            typeof TypeOrmTransactionWrapper.is
           >
         ).mockReturnValueOnce(false);
 
         try {
-          unwrapTypeOrmTransactionContext(transactionContextMock);
+          unwrapTypeOrmTransaction(transactionWrapperMock);
         } catch (error: unknown) {
           result = error;
         }
@@ -69,7 +69,7 @@ describe(unwrapTypeOrmTransactionContext.name, () => {
       });
     });
 
-    describe('when called, and TypeOrmTransactionContext.is() returns true', () => {
+    describe('when called, and TypeOrmTransactionWrapper.is() returns true', () => {
       let queryRunnerFixture: QueryRunner;
       let result: unknown;
 
@@ -77,14 +77,14 @@ describe(unwrapTypeOrmTransactionContext.name, () => {
         queryRunnerFixture = Symbol() as unknown as QueryRunner;
 
         (
-          TypeOrmTransactionContext.is as unknown as jest.Mock<
-            typeof TypeOrmTransactionContext.is
+          TypeOrmTransactionWrapper.is as unknown as jest.Mock<
+            typeof TypeOrmTransactionWrapper.is
           >
         ).mockReturnValueOnce(true);
 
-        transactionContextMock.unwrap.mockReturnValueOnce(queryRunnerFixture);
+        transactionWrapperMock.unwrap.mockReturnValueOnce(queryRunnerFixture);
 
-        result = unwrapTypeOrmTransactionContext(transactionContextMock);
+        result = unwrapTypeOrmTransaction(transactionWrapperMock);
       });
 
       afterAll(() => {

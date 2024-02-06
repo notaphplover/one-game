@@ -1,4 +1,4 @@
-import { TransactionContext } from '@cornie-js/backend-db/application';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   User,
   UserCreateQuery,
@@ -9,7 +9,7 @@ import {
 export interface UserPersistenceOutputPort {
   create(
     userCreateQuery: UserCreateQuery,
-    transactionContext?: TransactionContext,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<User>;
   delete(userFindQuery: UserFindQuery): Promise<void>;
   findOne(userFindQuery: UserFindQuery): Promise<User | undefined>;

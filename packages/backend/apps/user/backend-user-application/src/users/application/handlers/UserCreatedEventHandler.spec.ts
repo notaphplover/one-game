@@ -156,7 +156,7 @@ describe(UserCreatedEventHandler.name, () => {
         );
         expect(userCodePersistenceOutputPortMock.create).toHaveBeenCalledWith(
           userCodeCreateQueryFixture,
-          userCreatedEventFixture.transactionContext,
+          userCreatedEventFixture.transactionWrapper,
         );
       });
 

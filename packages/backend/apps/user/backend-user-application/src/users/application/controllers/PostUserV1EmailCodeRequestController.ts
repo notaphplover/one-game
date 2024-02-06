@@ -44,6 +44,6 @@ export class PostUserV1EmailCodeRequestController extends HttpRequestController<
   }
 
   protected async _handleUseCase(user: User): Promise<undefined> {
-    await this.#userCodeManagementInputPort.deleteFromUser(user);
+    await this.#userCodeManagementInputPort.createFromUser(user);
   }
 }

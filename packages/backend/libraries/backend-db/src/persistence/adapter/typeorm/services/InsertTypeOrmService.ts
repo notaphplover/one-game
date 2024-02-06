@@ -10,8 +10,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
-import { unwrapTypeOrmTransactionContext } from '../utils/unwrapTypeOrmTransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 
 export class InsertTypeOrmService<
   TModel,
@@ -55,10 +55,10 @@ export class InsertTypeOrmService<
 
   public async insertOne(
     query: TQuery,
-    transactionContext?: TransactionContext | undefined,
+    transactionWrapper?: TransactionWrapper | undefined,
   ): Promise<TModel> {
     const queryRunner: QueryRunner | undefined =
-      unwrapTypeOrmTransactionContext(transactionContext);
+      unwrapTypeOrmTransaction(transactionWrapper);
 
     const insertQueryBuilder: InsertQueryBuilder<TModelDb> =
       this.#createInsertQueryBuilder(queryRunner);
@@ -89,10 +89,10 @@ export class InsertTypeOrmService<
 
   public async insertMany(
     query: TQuery,
-    transactionContext?: TransactionContext | undefined,
+    transactionWrapper?: TransactionWrapper | undefined,
   ): Promise<TModel[]> {
     const queryRunner: QueryRunner | undefined =
-      unwrapTypeOrmTransactionContext(transactionContext);
+      unwrapTypeOrmTransaction(transactionWrapper);
 
     const insertQueryBuilder: InsertQueryBuilder<TModelDb> =
       this.#createInsertQueryBuilder(queryRunner);

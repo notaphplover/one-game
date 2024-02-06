@@ -1,20 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Writable } from '@cornie-js/backend-common';
 import { DataSource, QueryRunner } from 'typeorm';
 
-/*
- * Ugly workaround until https://github.com/jestjs/jest/issues/14874 is fixed
- */
+import { TypeOrmTransactionWrapper } from './TypeOrmTransactionWrapper';
 
-const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
-
-(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
-  asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
-
-import { TypeOrmTransactionContext } from './TypeOrmTransactionContext';
-
-describe(TypeOrmTransactionContext.name, () => {
+describe(TypeOrmTransactionWrapper.name, () => {
   let queryRunnerMock: jest.Mocked<QueryRunner>;
   let datasourceMock: jest.Mocked<DataSource>;
 
@@ -41,7 +31,7 @@ describe(TypeOrmTransactionContext.name, () => {
       let result: unknown;
 
       beforeAll(async () => {
-        result = await TypeOrmTransactionContext.build(datasourceMock);
+        result = await TypeOrmTransactionWrapper.build(datasourceMock);
       });
 
       afterAll(() => {
@@ -58,8 +48,8 @@ describe(TypeOrmTransactionContext.name, () => {
         expect(queryRunnerMock.startTransaction).toHaveBeenCalledWith();
       });
 
-      it('should return TypeOrmTransactionContext', () => {
-        expect(result).toBeInstanceOf(TypeOrmTransactionContext);
+      it('should return TypeOrmTransactionWrapper', () => {
+        expect(result).toBeInstanceOf(TypeOrmTransactionWrapper);
       });
     });
   });
@@ -67,11 +57,12 @@ describe(TypeOrmTransactionContext.name, () => {
   describe('.is', () => {
     describe.each<[string, () => Promise<unknown>, boolean]>([
       ['null', async () => null, false],
+      ['undefined', async () => undefined, false],
       ['string', async () => 'string', false],
-      ['non TypeOrmTransactionContext', async () => ({}), false],
+      ['non TypeOrmTransactionWrapper', async () => ({}), false],
       [
-        'TypeOrmTransactionContext',
-        async () => TypeOrmTransactionContext.build(datasourceMock),
+        'TypeOrmTransactionWrapper',
+        async () => TypeOrmTransactionWrapper.build(datasourceMock),
         true,
       ],
     ])(
@@ -85,7 +76,7 @@ describe(TypeOrmTransactionContext.name, () => {
           let result: unknown;
 
           beforeAll(async () => {
-            result = TypeOrmTransactionContext.is(await getValue());
+            result = TypeOrmTransactionWrapper.is(await getValue());
           });
 
           afterAll(() => {
@@ -101,18 +92,18 @@ describe(TypeOrmTransactionContext.name, () => {
   });
 
   describe('.unwrap', () => {
-    let typeOrmTransactionContext: TypeOrmTransactionContext;
+    let typeOrmTransactionWrapper: TypeOrmTransactionWrapper;
 
     beforeAll(async () => {
-      typeOrmTransactionContext =
-        await TypeOrmTransactionContext.build(datasourceMock);
+      typeOrmTransactionWrapper =
+        await TypeOrmTransactionWrapper.build(datasourceMock);
     });
 
     describe('when called', () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = typeOrmTransactionContext.unwrap();
+        result = typeOrmTransactionWrapper.unwrap();
       });
 
       afterAll(() => {
@@ -125,12 +116,89 @@ describe(TypeOrmTransactionContext.name, () => {
     });
   });
 
-  describe('.[Symbol.asyncDispose]', () => {
-    let typeOrmTransactionContext: TypeOrmTransactionContext;
+  describe('.rollback', () => {
+    let typeOrmTransactionWrapper: TypeOrmTransactionWrapper;
 
     beforeAll(async () => {
-      typeOrmTransactionContext =
-        await TypeOrmTransactionContext.build(datasourceMock);
+      typeOrmTransactionWrapper =
+        await TypeOrmTransactionWrapper.build(datasourceMock);
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        queryRunnerMock.rollbackTransaction.mockImplementationOnce(
+          async (): Promise<void> => undefined,
+        );
+
+        result = await typeOrmTransactionWrapper.rollback();
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call queryRunner.rollbackTransaction()', () => {
+        expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledWith();
+      });
+
+      it('should call queryRunner.release()', () => {
+        expect(queryRunnerMock.release).toHaveBeenCalledTimes(1);
+        expect(queryRunnerMock.release).toHaveBeenCalledWith();
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when called, and queryRunner.rollbackTransaction() throws an error', () => {
+      let errorFixture: unknown;
+      let result: unknown;
+
+      beforeAll(async () => {
+        errorFixture = new Error();
+        queryRunnerMock.rollbackTransaction.mockImplementationOnce(
+          async (): Promise<void> => {
+            throw errorFixture;
+          },
+        );
+
+        try {
+          await typeOrmTransactionWrapper.rollback();
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call queryRunner.rollbackTransaction()', () => {
+        expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledTimes(1);
+        expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledWith();
+      });
+
+      it('should call queryRunner.release()', () => {
+        expect(queryRunnerMock.release).toHaveBeenCalledTimes(1);
+        expect(queryRunnerMock.release).toHaveBeenCalledWith();
+      });
+
+      it('should throw an Error', () => {
+        expect(result).toBe(errorFixture);
+      });
+    });
+  });
+
+  describe('.tryCommit', () => {
+    let typeOrmTransactionWrapper: TypeOrmTransactionWrapper;
+
+    beforeAll(async () => {
+      typeOrmTransactionWrapper =
+        await TypeOrmTransactionWrapper.build(datasourceMock);
     });
 
     describe('when called', () => {
@@ -141,7 +209,7 @@ describe(TypeOrmTransactionContext.name, () => {
           async (): Promise<void> => undefined,
         );
 
-        result = await typeOrmTransactionContext[Symbol.asyncDispose]();
+        result = await typeOrmTransactionWrapper.tryCommit();
       });
 
       afterAll(() => {
@@ -180,7 +248,7 @@ describe(TypeOrmTransactionContext.name, () => {
         );
 
         try {
-          await typeOrmTransactionContext[Symbol.asyncDispose]();
+          await typeOrmTransactionWrapper.tryCommit();
         } catch (error: unknown) {
           result = error;
         }

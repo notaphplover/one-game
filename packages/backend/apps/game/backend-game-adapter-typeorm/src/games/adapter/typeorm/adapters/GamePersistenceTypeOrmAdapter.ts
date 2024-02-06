@@ -1,3 +1,4 @@
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
@@ -41,8 +42,14 @@ export class GamePersistenceTypeOrmAdapter
     this.#updateGameTypeOrmService = updateGameTypeOrmService;
   }
 
-  public async create(gameCreateQuery: GameCreateQuery): Promise<Game> {
-    return this.#createGameTypeOrmService.insertOne(gameCreateQuery);
+  public async create(
+    gameCreateQuery: GameCreateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<Game> {
+    return this.#createGameTypeOrmService.insertOne(
+      gameCreateQuery,
+      transactionWrapper,
+    );
   }
 
   public async find(gameFindQuery: GameFindQuery): Promise<Game[]> {

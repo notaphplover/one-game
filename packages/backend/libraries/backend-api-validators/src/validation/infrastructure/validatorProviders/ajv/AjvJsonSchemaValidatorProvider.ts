@@ -37,12 +37,9 @@ export class AjvJsonSchemaValidatorProvider<TId extends string = string> {
 
     this.#validateJsonSchemas(jsonSchemas);
 
-    const jsonSchemaObjects: JsonRootSchema202012Object[] =
-      jsonSchemas as JsonRootSchema202012Object[];
-
     this.#registerInitializeCall();
 
-    this.#initializeValidatorMap(jsonSchemaObjects);
+    this.#initializeValidatorMap(jsonSchemas);
   }
 
   #buildValidator(ajvValidateFn: ValidateFunction): Validator<unknown> {
@@ -106,7 +103,9 @@ ${JSON.stringify(jsonSchema)}`,
     }
   }
 
-  #validateJsonSchemas(jsonSchemas: JsonRootSchema202012[]): void {
+  #validateJsonSchemas(
+    jsonSchemas: JsonRootSchema202012[],
+  ): asserts jsonSchemas is JsonRootSchema202012Object[] {
     for (const jsonSchema of jsonSchemas) {
       this.#throwOnNonJsonSchemaWith$Id(jsonSchema);
     }
