@@ -56,6 +56,31 @@ describe(IoredisSubscriber.name, () => {
     jest.clearAllMocks();
   });
 
+  describe('.constructor', () => {
+    describe('when redisClientMock.on is called', () => {
+      beforeAll(() => {
+        jest.clearAllMocks();
+
+        new IoredisSubscriberMock<unknown>(
+          redisClientMock,
+          handleMessageFromChannelMock,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call redisClient.on()', () => {
+        expect(redisClientMock.on).toHaveBeenCalledTimes(1);
+        expect(redisClientMock.on).toHaveBeenCalledWith(
+          'message',
+          expect.any(Function),
+        );
+      });
+    });
+  });
+
   describe('.subscribe', () => {
     describe('when called', () => {
       let channelFixture: string;
