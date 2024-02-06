@@ -18,8 +18,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
-import { TypeOrmTransactionContext } from '../models/TypeOrmTransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { TypeOrmTransactionWrapper } from '../models/TypeOrmTransactionWrapper';
 import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 function getModelTestTable(fooColumnName: string, idColumnName: string): Table {
@@ -238,10 +238,10 @@ describe(InsertTypeOrmService.name, () => {
     });
 
     describe('having a transaction context', () => {
-      let transactionContext: TransactionContext;
+      let transactionWrapper: TransactionWrapper;
 
       beforeAll(async () => {
-        transactionContext = await TypeOrmTransactionContext.build(datasource);
+        transactionWrapper = await TypeOrmTransactionWrapper.build(datasource);
       });
 
       describe('when called', () => {
@@ -268,7 +268,7 @@ describe(InsertTypeOrmService.name, () => {
 
           result = await insertTypeOrmService.insertOne(
             queryTestFixture,
-            transactionContext,
+            transactionWrapper,
           );
         });
 
@@ -284,9 +284,9 @@ describe(InsertTypeOrmService.name, () => {
           expect(result).toStrictEqual(modelTest);
         });
 
-        describe('when transactionContext is disposed', () => {
+        describe('when transactionWrapper is committed', () => {
           beforeAll(async () => {
-            await transactionContext[Symbol.asyncDispose]();
+            await transactionWrapper.tryCommit();
           });
 
           describe('when called modelTestRepository.findOne() with a typeorm find query matching the ModelTest', () => {

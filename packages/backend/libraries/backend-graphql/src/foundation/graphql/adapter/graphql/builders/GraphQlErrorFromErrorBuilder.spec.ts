@@ -23,53 +23,89 @@ describe(GraphQlErrorFromErrorBuilder.name, () => {
   });
 
   describe('.build', () => {
-    let appErrorFixture: AppError;
-    let statusCodeFixture: number;
+    describe.each<[unknown]>([[undefined], [null], [{}]])(
+      'having a non AppError',
+      (errorFixture: unknown) => {
+        describe('when called', () => {
+          let result: unknown;
 
-    beforeAll(() => {
-      appErrorFixture = new AppError(AppErrorKind.contractViolation);
-      statusCodeFixture = HttpStatus.ACCEPTED;
-    });
+          beforeAll(() => {
+            result = graphQlErrorFromAppErrorBuilder.build(errorFixture);
+          });
 
-    describe('when called', () => {
-      let result: unknown;
+          afterAll(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should return a GraphQLError', () => {
+            const expectedProperties: Partial<GraphQLError> = {
+              extensions: {
+                http: {
+                  status: HttpStatus.INTERNAL_SERVER_ERROR,
+                },
+              },
+            };
+
+            expect(result).toBeInstanceOf(GraphQLError);
+            expect(result).toStrictEqual(
+              expect.objectContaining(expectedProperties),
+            );
+          });
+        });
+      },
+    );
+
+    describe('having an AppError', () => {
+      let appErrorFixture: AppError;
 
       beforeAll(() => {
-        httpStatusCodeFromErrorBuilderMock.build.mockReturnValueOnce(
-          statusCodeFixture,
-        );
-
-        result = graphQlErrorFromAppErrorBuilder.build(appErrorFixture);
+        appErrorFixture = new AppError(AppErrorKind.contractViolation);
       });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+      describe('when called', () => {
+        let statusCodeFixture: number;
 
-      it('should call httpStatusCodeFromErrorBuilder.build()', () => {
-        expect(httpStatusCodeFromErrorBuilderMock.build).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(httpStatusCodeFromErrorBuilderMock.build).toHaveBeenCalledWith(
-          appErrorFixture,
-        );
-      });
+        let result: unknown;
 
-      it('should return a GraphQLError', () => {
-        const expectedProperties: Partial<GraphQLError> = {
-          extensions: {
-            code: 'API_ERROR',
-            http: {
-              status: statusCodeFixture,
+        beforeAll(() => {
+          statusCodeFixture = HttpStatus.ACCEPTED;
+
+          httpStatusCodeFromErrorBuilderMock.build.mockReturnValueOnce(
+            statusCodeFixture,
+          );
+
+          result = graphQlErrorFromAppErrorBuilder.build(appErrorFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call httpStatusCodeFromErrorBuilder.build()', () => {
+          expect(
+            httpStatusCodeFromErrorBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(httpStatusCodeFromErrorBuilderMock.build).toHaveBeenCalledWith(
+            appErrorFixture,
+          );
+        });
+
+        it('should return a GraphQLError', () => {
+          const expectedProperties: Partial<GraphQLError> = {
+            extensions: {
+              code: 'API_ERROR',
+              http: {
+                status: statusCodeFixture,
+              },
             },
-          },
-          message: appErrorFixture.message,
-        };
+            message: appErrorFixture.message,
+          };
 
-        expect(result).toBeInstanceOf(GraphQLError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedProperties),
-        );
+          expect(result).toBeInstanceOf(GraphQLError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
       });
     });
   });

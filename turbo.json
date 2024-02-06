@@ -101,6 +101,11 @@
       "inputs": ["dist/**", "lib/**"],
       "outputs": ["coverage/**"]
     },
+    "test:mutation": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts"],
+      "outputs": ["reports/**"]
+    },
     "test:uncommitted": {
       "inputs": ["src/**/*.ts"],
       "outputs": []
