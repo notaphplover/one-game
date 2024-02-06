@@ -18,7 +18,7 @@ function getLayoutBoxClassName(params: CornieLayoutParams): string {
 }
 
 interface CornieLayoutParams {
-  children: React.JSX.Element[];
+  children: React.JSX.Element | React.JSX.Element[];
   id?: string;
   withFooter?: boolean;
   withNavBar?: boolean;
