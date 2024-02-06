@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { validateFormName } from '../../common/helpers/validateFormName';
-import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateEmail } from '../../common/helpers/validateEmail';
 import { validateFormPassword } from '../../common/helpers/validateFormPassword';
 import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
@@ -63,7 +63,13 @@ export const useRegisterForm = (initialFormFields = {}) => {
     const formValidationValue = {};
 
     validateFormName(formValidationValue, formFields.name);
-    validateFormEmail(formValidationValue, formFields.email);
+
+    const emailValidation = validateEmail(formFields.email);
+
+    if (!emailValidation.isRight) {
+      formValidationValue.email = emailValidation.value;
+    }
+
     validateFormPassword(formValidationValue, formFields.password);
 
     const confirmPasswordValidation = validateConfirmPassword(
