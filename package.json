@@ -11,6 +11,7 @@
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
     "@cornie-js/backend-scripts": "workspace:*",
+    "@cornie-js/backend-stryker-config": "workspace:*",
     "@cornie-js/backend-typescript-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "9.0.10",
