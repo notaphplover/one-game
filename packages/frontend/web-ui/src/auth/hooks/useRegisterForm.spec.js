@@ -2,7 +2,7 @@ import { describe, expect, jest, it } from '@jest/globals';
 
 jest.mock('../../common/helpers/validateFormName');
 jest.mock('../../common/helpers/validateFormEmail');
-jest.mock('../../common/helpers/validateFormPassword');
+jest.mock('../../common/helpers/validatePassword');
 jest.mock('../../common/helpers/validateConfirmPassword');
 jest.mock('../../common/http/services/HttpService');
 jest.mock('../../common/http/helpers/buildSerializableResponse');
@@ -17,7 +17,7 @@ import {
 } from './useRegisterForm';
 import { validateFormName } from '../../common/helpers/validateFormName';
 import { validateFormEmail } from '../../common/helpers/validateFormEmail';
-import { validateFormPassword } from '../../common/helpers/validateFormPassword';
+import { validatePassword } from '../../common/helpers/validatePassword';
 import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
@@ -41,11 +41,6 @@ describe(useRegisterForm.name, () => {
     emailErrorFixture = 'error-email';
     passwordErrorFixture = 'error-password';
     confirmPasswordErrorFixture = 'error-confirmPassword';
-
-    validateConfirmPassword.mockReturnValue({
-      isRight: true,
-      value: undefined,
-    });
   });
 
   describe('when called, on initialize values', () => {
@@ -95,6 +90,16 @@ describe(useRegisterForm.name, () => {
         formValidationValue.name = nameErrorFixture;
       });
 
+      validatePassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validateConfirmPassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       result = renderHook(() => useRegisterForm(initialForm)).result;
       notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
 
@@ -136,6 +141,16 @@ describe(useRegisterForm.name, () => {
         formValidationValue.email = emailErrorFixture;
       });
 
+      validatePassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validateConfirmPassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       result = renderHook(() => useRegisterForm(initialForm)).result;
       notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
 
@@ -173,8 +188,14 @@ describe(useRegisterForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
-      validateFormPassword.mockImplementation((formValidationValue) => {
-        formValidationValue.password = passwordErrorFixture;
+      validatePassword.mockReturnValueOnce({
+        isRight: false,
+        value: passwordErrorFixture,
+      });
+
+      validateConfirmPassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
       });
 
       result = renderHook(() => useRegisterForm(initialForm)).result;
@@ -189,19 +210,14 @@ describe(useRegisterForm.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      validateFormPassword.mockReset();
-      validateConfirmPassword.mockReset();
     });
 
-    it('should have been called validateFormPassword once', () => {
-      expect(validateFormPassword).toHaveBeenCalledTimes(1);
+    it('should have been called validatePassword once', () => {
+      expect(validatePassword).toHaveBeenCalledTimes(1);
     });
 
-    it('should have been called validateFormPassword with arguments', () => {
-      expect(validateFormPassword).toHaveBeenCalledWith(
-        formValidation,
-        initialForm.password,
-      );
+    it('should have been called validatePassword with arguments', () => {
+      expect(validatePassword).toHaveBeenCalledWith(initialForm.password);
     });
 
     it('should return an invalid password error message', () => {
@@ -215,7 +231,12 @@ describe(useRegisterForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
-      validateConfirmPassword.mockReturnValue({
+      validatePassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validateConfirmPassword.mockReturnValueOnce({
         isRight: false,
         value: [confirmPasswordErrorFixture],
       });
@@ -232,11 +253,6 @@ describe(useRegisterForm.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      validateConfirmPassword.mockReset();
-      validateConfirmPassword.mockReturnValue({
-        isRight: true,
-        value: undefined,
-      });
     });
 
     it('should have been called validateFormPassword once', () => {
@@ -269,6 +285,16 @@ describe(useRegisterForm.name, () => {
         password: '123456',
         confirmPassword: '123456',
       };
+
+      validatePassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validateConfirmPassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
 
       httpClient.createUser.mockImplementation(async (_, body) => ({
         headers: {},
@@ -320,6 +346,16 @@ describe(useRegisterForm.name, () => {
         password: '123456',
         confirmPassword: '123456',
       };
+
+      validatePassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validateConfirmPassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
 
       httpClient.createUser.mockImplementation(async (_, body) => ({
         headers: {},
