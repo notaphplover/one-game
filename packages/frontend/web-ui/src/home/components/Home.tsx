@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { ReversedCard } from '../../game/components/ReversedCard';
 
-export const Home = () => {
+export const Home = (): React.JSX.Element => {
   return (
     <CornieLayout id="home-page" withFooter withNavBar>
       <Grid container>
