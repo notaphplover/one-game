@@ -958,7 +958,7 @@ export type GameQueryResolvers<
     Array<ResolversTypes['Game']>,
     ParentType,
     ContextType,
-    Partial<GameQueryMyGamesArgs>
+    GameQueryMyGamesArgs
   >;
 }>;
 
@@ -1122,7 +1122,7 @@ export type RootQueryResolvers<
     Array<ResolversTypes['Game']>,
     ParentType,
     ContextType,
-    Partial<RootQueryMyGamesArgs>
+    RootQueryMyGamesArgs
   >;
   userById: Resolver<
     Maybe<ResolversTypes['User']>,

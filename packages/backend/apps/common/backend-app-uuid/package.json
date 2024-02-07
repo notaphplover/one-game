@@ -5,7 +5,7 @@
   },
   "description": "Backend app jwt",
   "dependencies": {
-    "@nestjs/common": "10.3.1"
+    "@nestjs/common": "10.3.2"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",

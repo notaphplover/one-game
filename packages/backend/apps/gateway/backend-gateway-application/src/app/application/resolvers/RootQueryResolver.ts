@@ -47,7 +47,7 @@ export class RootQueryResolver
 
   public myGames(
     parent: graphqlModels.RootQuery,
-    args: Partial<graphqlModels.RootQueryMyGamesArgs>,
+    args: graphqlModels.RootQueryMyGamesArgs,
     context: Context,
     info: GraphQLResolveInfo,
   ): ResolverFnReturnType<
