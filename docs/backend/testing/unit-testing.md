@@ -220,8 +220,8 @@ describe(Foo.name, () => {
       });
 
       it('should call bar.getUndesirableName()', () => {
-        expect(fooMock).toHavBeenCalledTimes(1);
-        expect(fooMock).toHavBeenCalledWith(nameFixture);
+        expect(barMock.getUnderisableName).toHavBeenCalledTimes(1);
+        expect(barMock.getUnderisableName).toHavBeenCalledWith(nameFixture);
       });
     });
 
