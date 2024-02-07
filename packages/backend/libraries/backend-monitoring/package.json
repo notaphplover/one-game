@@ -6,7 +6,7 @@
   "description": "Prometheus client library for one-game-js services",
   "dependencies": {
     "@datadog/pprof": "5.0.0",
-    "@opentelemetry/auto-instrumentations-node": "0.41.0",
+    "@opentelemetry/auto-instrumentations-node": "0.41.1",
     "@opentelemetry/exporter-metrics-otlp-grpc": "0.48.0",
     "@opentelemetry/exporter-trace-otlp-grpc": "0.48.0",
     "@opentelemetry/resource-detector-container": "0.3.6",

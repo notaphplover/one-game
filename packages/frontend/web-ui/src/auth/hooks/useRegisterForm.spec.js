@@ -1,6 +1,6 @@
 import { describe, expect, jest, it } from '@jest/globals';
 
-jest.mock('../../common/helpers/validateFormName');
+jest.mock('../../common/helpers/validateName');
 jest.mock('../../common/helpers/validateEmail');
 jest.mock('../../common/helpers/validatePassword');
 jest.mock('../../common/helpers/validateConfirmPassword');
@@ -15,7 +15,7 @@ import {
   STATUS_REG_INITIAL,
   useRegisterForm,
 } from './useRegisterForm';
-import { validateFormName } from '../../common/helpers/validateFormName';
+import { validateName } from '../../common/helpers/validateName';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
@@ -86,8 +86,9 @@ describe(useRegisterForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
-      validateFormName.mockImplementation((formValidationValue) => {
-        formValidationValue.name = nameErrorFixture;
+      validateName.mockReturnValueOnce({
+        isRight: false,
+        value: nameErrorFixture,
       });
 
       validateEmail.mockReturnValueOnce({
@@ -117,18 +118,14 @@ describe(useRegisterForm.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      validateFormName.mockReset();
     });
 
-    it('should have been called validateFormName once', () => {
-      expect(validateFormName).toHaveBeenCalledTimes(1);
+    it('should have been called validateName once', () => {
+      expect(validateName).toHaveBeenCalledTimes(1);
     });
 
-    it('should have been called validateFormName with arguments', () => {
-      expect(validateFormName).toHaveBeenCalledWith(
-        formValidation,
-        initialForm.name,
-      );
+    it('should have been called validateName with arguments', () => {
+      expect(validateName).toHaveBeenCalledWith(initialForm.name);
     });
 
     it('should return an invalid name error message', () => {
@@ -142,6 +139,11 @@ describe(useRegisterForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
+      validateName.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       validateEmail.mockReturnValueOnce({
         isRight: false,
         value: emailErrorFixture,
@@ -190,6 +192,11 @@ describe(useRegisterForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
+      validateName.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       validateEmail.mockReturnValueOnce({
         isRight: true,
         value: undefined,
@@ -238,6 +245,11 @@ describe(useRegisterForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
+      validateName.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       validateEmail.mockReturnValueOnce({
         isRight: true,
         value: undefined,
@@ -297,6 +309,11 @@ describe(useRegisterForm.name, () => {
         password: '123456',
         confirmPassword: '123456',
       };
+
+      validateName.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
 
       validateEmail.mockReturnValueOnce({
         isRight: true,
@@ -363,6 +380,11 @@ describe(useRegisterForm.name, () => {
         password: '123456',
         confirmPassword: '123456',
       };
+
+      validateName.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
 
       validateEmail.mockReturnValueOnce({
         isRight: true,
