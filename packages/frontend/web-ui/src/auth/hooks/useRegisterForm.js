@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { validateFormName } from '../../common/helpers/validateFormName';
+import { validateName } from '../../common/helpers/validateName';
 import { validateFormEmail } from '../../common/helpers/validateFormEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
@@ -62,7 +62,12 @@ export const useRegisterForm = (initialFormFields = {}) => {
 
     const formValidationValue = {};
 
-    validateFormName(formValidationValue, formFields.name);
+    const nameValidation = validateName(formFields.name);
+
+    if (!nameValidation.isRight) {
+      formValidationValue.name = nameValidation.value;
+    }
+
     validateFormEmail(formValidationValue, formFields.email);
 
     const passwordValidation = validatePassword(formFields.password);
