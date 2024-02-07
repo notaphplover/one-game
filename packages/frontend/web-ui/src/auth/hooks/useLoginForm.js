@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { validateEmail } from '../../common/helpers/validateEmail';
-import { validateFormPassword } from '../../common/helpers/validateFormPassword';
+import { validatePassword } from '../../common/helpers/validatePassword';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 
 export const STATUS_LOG_INITIAL = 0;
@@ -67,7 +67,11 @@ export const useLoginForm = (initialFormFields = {}) => {
       formValidationValue.email = emailValidation.value;
     }
 
-    validateFormPassword(formValidationValue, formFields.password);
+    const passwordValidation = validatePassword(formFields.password);
+
+    if (!passwordValidation.isRight) {
+      formValidationValue.password = passwordValidation.value;
+    }
 
     setFormValidation(formValidationValue);
 

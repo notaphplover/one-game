@@ -8,11 +8,11 @@ import {
   useLoginForm,
 } from './useLoginForm';
 import { validateEmail } from '../../common/helpers/validateEmail';
-import { validateFormPassword } from '../../common/helpers/validateFormPassword';
+import { validatePassword } from '../../common/helpers/validatePassword';
 import { useDispatch } from 'react-redux';
 
 jest.mock('../../common/helpers/validateEmail');
-jest.mock('../../common/helpers/validateFormPassword');
+jest.mock('../../common/helpers/validatePassword');
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
 }));
@@ -73,6 +73,11 @@ describe(useLoginForm.name, () => {
         value: emailErrorFixture,
       });
 
+      validatePassword.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       result = renderHook(() => useLoginForm(initialForm)).result;
 
       notifyFormFieldsFilled = result.current.notifyFormFieldsFilled;
@@ -112,8 +117,9 @@ describe(useLoginForm.name, () => {
         value: undefined,
       });
 
-      validateFormPassword.mockImplementationOnce((formValidationValue) => {
-        formValidationValue.password = passwordErrorFixture;
+      validatePassword.mockReturnValueOnce({
+        isRight: false,
+        value: passwordErrorFixture,
       });
 
       result = renderHook(() => useLoginForm(initialForm)).result;
@@ -132,13 +138,10 @@ describe(useLoginForm.name, () => {
     });
 
     it('should have been called validateFormPassword once', () => {
-      expect(validateFormPassword).toHaveBeenCalledTimes(1);
+      expect(validatePassword).toHaveBeenCalledTimes(1);
     });
     it('should have been called validateFormPassword with arguments', () => {
-      expect(validateFormPassword).toHaveBeenCalledWith(
-        formValidation,
-        initialForm.password,
-      );
+      expect(validatePassword).toHaveBeenCalledWith(initialForm.password);
     });
     it('should return an invalid password error message', () => {
       expect(formValidation).toStrictEqual({ password: passwordErrorFixture });
@@ -152,6 +155,11 @@ describe(useLoginForm.name, () => {
 
     beforeAll(async () => {
       validateEmail.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validatePassword.mockReturnValueOnce({
         isRight: true,
         value: undefined,
       });
@@ -198,6 +206,11 @@ describe(useLoginForm.name, () => {
 
     beforeAll(async () => {
       validateEmail.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
+      validatePassword.mockReturnValueOnce({
         isRight: true,
         value: undefined,
       });
