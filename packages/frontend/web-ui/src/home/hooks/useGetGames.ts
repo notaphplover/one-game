@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { httpClient } from '../../common/http/services/HttpService';
 
-const STATUS_GAME_IDLE = 'idle';
-const STATUS_GAME_PENDING = 'pending';
-export const STATUS_GAME_FULFILLED = 'fulfilled';
-export const STATUS_GAME_REJECTED = 'rejected';
+const STATUS_GAME_IDLE: string = 'idle';
+const STATUS_GAME_PENDING: string = 'pending';
+export const STATUS_GAME_FULFILLED: string = 'fulfilled';
+export const STATUS_GAME_REJECTED: string = 'rejected';
 
-const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error!';
+const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error!';
 
-export const useGetGames = (statusGame, page, pageSize) => {
-  const [errorMessage, setErrorMessage] = useState(null);
+export const useGetGames = (statusGame: string, page: any, pageSize: any) => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [gameList, setGameList] = useState({});
-  const [numPage, setNumPage] = useState(page);
-  const [status, setStatus] = useState(STATUS_GAME_IDLE);
-  const { token } = useSelector((state) => state.auth);
+  const [numPage, setNumPage] = useState<number>(page);
+  const [status, setStatus] = useState<string>(STATUS_GAME_IDLE);
+  const { token } = useSelector((state: any) => state.auth);
 
   let resultGameStatus;
 
@@ -29,8 +29,8 @@ export const useGetGames = (statusGame, page, pageSize) => {
             resultGameStatus = await getGamesByStatus();
             setStatus(STATUS_GAME_FULFILLED);
             setGameList(resultGameStatus);
-          } catch (err) {
-            setErrorMessage(err);
+          } catch (err: unknown) {
+            setErrorMessage(err as string);
             setStatus(STATUS_GAME_REJECTED);
           }
           break;
@@ -58,7 +58,7 @@ export const useGetGames = (statusGame, page, pageSize) => {
     }
   };
 
-  const pageCounter = (numPage) => {
+  const pageCounter = (numPage: number) => {
     if (status === STATUS_GAME_FULFILLED) {
       setNumPage(numPage);
       setStatus(STATUS_GAME_IDLE);
