@@ -17,7 +17,7 @@
     "rxjs": "7.8.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "8.4.0",
+    "@faker-js/faker": "8.4.1",
     "@types/node": "20.11.16",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
