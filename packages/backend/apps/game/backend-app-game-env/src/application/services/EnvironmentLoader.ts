@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import { EnvLoader } from '@cornie-js/backend-env';
 import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 import { Injectable } from '@nestjs/common';
@@ -6,14 +8,18 @@ import { cleanEnv, json, port, str, num, url, bool, host } from 'envalid';
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';
 
-const DOT_ENV_PATH: string =
-  process.env['ONE_JS_GAME_SERVICE_DOT_ENV_PATH'] ?? '.env';
+const DEFAULT_DOT_ENV_PATH: string = '.env';
+const DOT_ENV_PATH_ENV_VAR: string = 'ONE_JS_GAME_SERVICE_DOT_ENV_PATH';
+const DOT_ENV_ENABLED_ENV_VAR: string = 'ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED';
 
 @Injectable()
 export class EnvironmentLoader extends EnvLoader<Environment> {
   public static build(): EnvironmentLoader {
+    const dotEnvPath: string =
+      process.env[DOT_ENV_PATH_ENV_VAR] ?? DEFAULT_DOT_ENV_PATH;
+
     const environmentLoader: EnvironmentLoader = new EnvironmentLoader(
-      DOT_ENV_PATH,
+      dotEnvPath,
     );
 
     return environmentLoader;
@@ -71,6 +77,6 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
   }
 
   protected override _shouldParseEnvFile(): boolean {
-    return process.env['ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED'] !== 'false';
+    return process.env[DOT_ENV_ENABLED_ENV_VAR] !== 'false';
   }
 }
