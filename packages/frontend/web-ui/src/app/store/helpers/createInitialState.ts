@@ -1,11 +1,12 @@
+import { InitialStateToken } from './models/InitialStateToken';
 import {
   STATUS_AUTH_AUTHENTICATED,
   STATUS_AUTH_NOT_AUTHENTICATED,
 } from '../data/authSliceStatus';
 
-export const createInitialState = () => {
-  const token = window.localStorage.getItem('token');
-  let status;
+export const createInitialState = (): InitialStateToken => {
+  const token: string | null = window.localStorage.getItem('token');
+  let status: string;
 
   if (token === null) {
     status = STATUS_AUTH_NOT_AUTHENTICATED;
