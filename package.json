@@ -42,7 +42,7 @@
     "format": "turbo run format",
     "lint": "turbo run lint",
     "migrations:run": "turbo run migrations:run",
-    "prepare": "husky install && turbo telemetry disable",
+    "prepare": "husky && turbo telemetry disable",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
     "serve:api:graphql": "pnpm run serve:api:rest --filter=backend-service-gateway",
     "serve:api:rest": "pnpm run serve:api:rest:dependencies --filter=backend-service-user --filter=backend-service-game",

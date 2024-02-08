@@ -22,7 +22,7 @@ class IoredisSubscriberMock<
     this.#handleMessageFromChannelMock = handleMessageFromChannelMock;
   }
 
-  protected override async handleMessageFromChannel(
+  protected override async _handleMessageFromChannel(
     channel: string,
     message: string,
   ): Promise<void> {
@@ -36,8 +36,6 @@ describe(IoredisSubscriber.name, () => {
   >;
   let redisClientMock: jest.Mocked<Redis>;
 
-  let ioredisSubscriber: IoredisSubscriber<unknown>;
-
   beforeAll(() => {
     handleMessageFromChannelMock = jest.fn();
     redisClientMock = {
@@ -45,11 +43,6 @@ describe(IoredisSubscriber.name, () => {
       subscribe: jest.fn() as unknown,
       unsubscribe: jest.fn() as unknown,
     } as Partial<jest.Mocked<Redis>> as jest.Mocked<Redis>;
-
-    ioredisSubscriber = new IoredisSubscriberMock<unknown>(
-      redisClientMock,
-      handleMessageFromChannelMock,
-    );
   });
 
   afterAll(() => {
@@ -86,11 +79,57 @@ describe(IoredisSubscriber.name, () => {
       let channelFixture: string;
       let contextFixture: unknown;
 
+      let ioredisSubscriber: IoredisSubscriber<unknown>;
+
       let result: unknown;
 
       beforeAll(async () => {
         channelFixture = 'channel fixture';
         contextFixture = Symbol();
+
+        ioredisSubscriber = new IoredisSubscriberMock<unknown>(
+          redisClientMock,
+          handleMessageFromChannelMock,
+        );
+
+        result = await ioredisSubscriber.subscribe(
+          channelFixture,
+          contextFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call redisClient.subscribe()', () => {
+        expect(redisClientMock.subscribe).toHaveBeenCalledTimes(1);
+        expect(redisClientMock.subscribe).toHaveBeenCalledWith(channelFixture);
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when called twice', () => {
+      let channelFixture: string;
+      let contextFixture: unknown;
+
+      let ioredisSubscriber: IoredisSubscriber<unknown>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        channelFixture = 'channel fixture';
+        contextFixture = Symbol();
+
+        ioredisSubscriber = new IoredisSubscriberMock<unknown>(
+          redisClientMock,
+          handleMessageFromChannelMock,
+        );
+
+        await ioredisSubscriber.subscribe(channelFixture, contextFixture);
 
         result = await ioredisSubscriber.subscribe(
           channelFixture,
@@ -117,10 +156,90 @@ describe(IoredisSubscriber.name, () => {
     describe('when called', () => {
       let channelFixture: string;
 
+      let ioredisSubscriber: IoredisSubscriber<unknown>;
+
       let result: unknown;
 
       beforeAll(async () => {
         channelFixture = 'channel fixture';
+
+        ioredisSubscriber = new IoredisSubscriberMock<unknown>(
+          redisClientMock,
+          handleMessageFromChannelMock,
+        );
+
+        result = await ioredisSubscriber.unsubscribe(channelFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call redisClient.unsubscribe()', () => {
+        expect(redisClientMock.unsubscribe).not.toHaveBeenCalled();
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when called, after ioredisSubscriber.subscribe() is called', () => {
+      let channelFixture: string;
+      let contextFixture: unknown;
+
+      let ioredisSubscriber: IoredisSubscriber<unknown>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        channelFixture = 'channel fixture';
+        contextFixture = Symbol();
+
+        ioredisSubscriber = new IoredisSubscriberMock<unknown>(
+          redisClientMock,
+          handleMessageFromChannelMock,
+        );
+
+        await ioredisSubscriber.subscribe(channelFixture, contextFixture);
+        result = await ioredisSubscriber.unsubscribe(channelFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call redisClient.unsubscribe()', () => {
+        expect(redisClientMock.unsubscribe).toHaveBeenCalledTimes(1);
+        expect(redisClientMock.unsubscribe).toHaveBeenCalledWith(
+          channelFixture,
+        );
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when called twice, after ioredisSubscriber.subscribe() is called', () => {
+      let channelFixture: string;
+      let contextFixture: unknown;
+
+      let ioredisSubscriber: IoredisSubscriber<unknown>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        channelFixture = 'channel fixture';
+        contextFixture = Symbol();
+
+        ioredisSubscriber = new IoredisSubscriberMock<unknown>(
+          redisClientMock,
+          handleMessageFromChannelMock,
+        );
+
+        await ioredisSubscriber.subscribe(channelFixture, contextFixture);
+        await ioredisSubscriber.unsubscribe(channelFixture);
 
         result = await ioredisSubscriber.unsubscribe(channelFixture);
       });
