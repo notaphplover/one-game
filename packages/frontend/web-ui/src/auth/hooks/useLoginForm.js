@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 
@@ -61,7 +61,11 @@ export const useLoginForm = (initialFormFields = {}) => {
 
     const formValidationValue = {};
 
-    validateFormEmail(formValidationValue, formFields.email);
+    const emailValidation = validateEmail(formFields.email);
+
+    if (!emailValidation.isRight) {
+      formValidationValue.email = emailValidation.value;
+    }
 
     const passwordValidation = validatePassword(formFields.password);
 
