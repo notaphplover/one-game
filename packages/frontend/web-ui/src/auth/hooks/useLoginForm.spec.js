@@ -7,11 +7,11 @@ import {
   INVALID_CREDENTIALS_ERROR,
   useLoginForm,
 } from './useLoginForm';
-import { validateFormEmail } from '../../common/helpers/validateFormEmail';
+import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { useDispatch } from 'react-redux';
 
-jest.mock('../../common/helpers/validateFormEmail');
+jest.mock('../../common/helpers/validateEmail');
 jest.mock('../../common/helpers/validatePassword');
 jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
@@ -68,8 +68,9 @@ describe(useLoginForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
-      validateFormEmail.mockImplementation((formValidationValue) => {
-        formValidationValue.email = emailErrorFixture;
+      validateEmail.mockReturnValueOnce({
+        isRight: false,
+        value: emailErrorFixture,
       });
 
       validatePassword.mockReturnValueOnce({
@@ -90,18 +91,16 @@ describe(useLoginForm.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      validateFormEmail.mockReset();
     });
 
-    it('should have been called validateFormEmail once', () => {
-      expect(validateFormEmail).toHaveBeenCalledTimes(1);
+    it('should have been called validateEmail once', () => {
+      expect(validateEmail).toHaveBeenCalledTimes(1);
     });
-    it('should have been called validateFormEmail with arguments', () => {
-      expect(validateFormEmail).toHaveBeenCalledWith(
-        formValidation,
-        initialForm.email,
-      );
+
+    it('should have been called validateEmail with arguments', () => {
+      expect(validateEmail).toHaveBeenCalledWith(initialForm.email);
     });
+
     it('should return an invalid email error message', () => {
       expect(formValidation).toStrictEqual({ email: emailErrorFixture });
     });
@@ -113,6 +112,11 @@ describe(useLoginForm.name, () => {
     let formValidation;
 
     beforeAll(() => {
+      validateEmail.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
+      });
+
       validatePassword.mockReturnValueOnce({
         isRight: false,
         value: passwordErrorFixture,
@@ -150,16 +154,21 @@ describe(useLoginForm.name, () => {
     let formStatus;
 
     beforeAll(async () => {
-      dispatchMock = jest.fn().mockResolvedValue({
-        payload: {
-          body: { jwt: 'jwt-fixture' },
-          statusCode: 200,
-        },
+      validateEmail.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
       });
 
       validatePassword.mockReturnValueOnce({
         isRight: true,
         value: undefined,
+      });
+
+      dispatchMock = jest.fn().mockResolvedValue({
+        payload: {
+          body: { jwt: 'jwt-fixture' },
+          statusCode: 200,
+        },
       });
 
       useDispatch.mockReturnValue(dispatchMock);
@@ -196,16 +205,21 @@ describe(useLoginForm.name, () => {
     let backendError;
 
     beforeAll(async () => {
-      dispatchMock = jest.fn().mockResolvedValue({
-        payload: {
-          body: { jwt: null },
-          statusCode: 401,
-        },
+      validateEmail.mockReturnValueOnce({
+        isRight: true,
+        value: undefined,
       });
 
       validatePassword.mockReturnValueOnce({
         isRight: true,
         value: undefined,
+      });
+
+      dispatchMock = jest.fn().mockResolvedValue({
+        payload: {
+          body: { jwt: null },
+          statusCode: 401,
+        },
       });
 
       useDispatch.mockReturnValue(dispatchMock);
