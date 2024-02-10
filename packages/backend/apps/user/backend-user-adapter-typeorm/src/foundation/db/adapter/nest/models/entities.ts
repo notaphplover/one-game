@@ -1,4 +1,4 @@
-import { RefreshTokenDb } from '../../../../../users/adapter/typeorm/models/RefreshTokenDb';
+import { RefreshTokenDb } from '../../../../../tokens/adapter/typeorm/models/RefreshTokenDb';
 import { UserCodeDb } from '../../../../../users/adapter/typeorm/models/UserCodeDb';
 import { UserDb } from '../../../../../users/adapter/typeorm/models/UserDb';
 

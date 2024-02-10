@@ -21,7 +21,7 @@ export class RefreshTokenDb {
     type: 'smallint',
     width: 1,
   })
-  public readonly active!: boolean | null;
+  public readonly active!: boolean;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   public readonly createdAt!: Date;
