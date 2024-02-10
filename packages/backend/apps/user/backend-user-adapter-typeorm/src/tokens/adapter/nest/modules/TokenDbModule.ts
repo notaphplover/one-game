@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
+import { RefreshTokenFromRefreshTokenDbBuilder } from '../../typeorm/builders/RefreshTokenFromRefreshTokenDbBuilder';
 import { RefreshTokenDb } from '../../typeorm/models/RefreshTokenDb';
 
 @Module({})
@@ -15,7 +16,7 @@ export class TokenDbModule {
         dbModuleOptions.builders.feature([RefreshTokenDb]),
       ],
       module: TokenDbModule,
-      providers: [],
+      providers: [RefreshTokenFromRefreshTokenDbBuilder],
     };
   }
 }
