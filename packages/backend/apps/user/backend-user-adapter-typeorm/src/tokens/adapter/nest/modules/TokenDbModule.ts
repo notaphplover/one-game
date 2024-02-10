@@ -5,6 +5,7 @@ import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModul
 import { RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder } from '../../typeorm/builders/RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder';
 import { RefreshTokenFromRefreshTokenDbBuilder } from '../../typeorm/builders/RefreshTokenFromRefreshTokenDbBuilder';
 import { RefreshTokenDb } from '../../typeorm/models/RefreshTokenDb';
+import { CreateRefreshTokenTypeOrmService } from '../../typeorm/services/CreateRefreshTokenTypeOrmService';
 
 @Module({})
 export class TokenDbModule {
@@ -18,6 +19,7 @@ export class TokenDbModule {
       ],
       module: TokenDbModule,
       providers: [
+        CreateRefreshTokenTypeOrmService,
         RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder,
         RefreshTokenFromRefreshTokenDbBuilder,
       ],
