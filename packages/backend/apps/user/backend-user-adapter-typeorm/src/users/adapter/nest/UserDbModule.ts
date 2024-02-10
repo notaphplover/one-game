@@ -16,6 +16,7 @@ import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../typeorm/builder
 import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from '../typeorm/builders/UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
 import { UserFromUserDbBuilder } from '../typeorm/builders/UserFromUserDbBuilder';
 import { UserUpdateQueryFromUserSetQueryTypeOrmBuilder } from '../typeorm/builders/UserUpdateQueryFromUserSetQueryTypeOrmBuilder';
+import { RefreshTokenDb } from '../typeorm/models/RefreshTokenDb';
 import { UserCodeDb } from '../typeorm/models/UserCodeDb';
 import { UserDb } from '../typeorm/models/UserDb';
 import { CreateUserCodeTypeOrmService } from '../typeorm/services/CreateUserCodeTypeOrmService';
@@ -37,7 +38,7 @@ export class UserDbModule {
       global: false,
       imports: [
         DbModule.forRootAsync(dbModuleOptions),
-        dbModuleOptions.builders.feature([UserCodeDb, UserDb]),
+        dbModuleOptions.builders.feature([RefreshTokenDb, UserCodeDb, UserDb]),
       ],
       module: UserDbModule,
       providers: [
