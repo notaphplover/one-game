@@ -15,22 +15,24 @@ describe(RefreshTokenFromRefreshTokenDbBuilder.name, () => {
   });
 
   describe('.build', () => {
-    let refreshTokenDb: RefreshTokenDb;
+    let refreshTokenDbFixture: RefreshTokenDb;
 
     beforeAll(() => {
-      refreshTokenDb = RefreshTokenDbFixtures.any;
+      refreshTokenDbFixture = RefreshTokenDbFixtures.any;
     });
 
     describe('when called', () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = refreshTokenFromRefreshTokenDbBuilder.build(refreshTokenDb);
+        result = refreshTokenFromRefreshTokenDbBuilder.build(
+          refreshTokenDbFixture,
+        );
       });
 
       it('should return RefreshToken', () => {
         const expected: RefreshToken = {
-          token: refreshTokenDb.token,
+          token: refreshTokenDbFixture.token,
         };
 
         expect(result).toStrictEqual(expected);
