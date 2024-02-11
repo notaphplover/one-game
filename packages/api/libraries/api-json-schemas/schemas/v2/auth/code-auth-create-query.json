@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v2/auth/code-auth-create-query.json",
+  "title": "CodeAuthCreateQueryV2",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "kind": {
+      "const": "code",
+      "type": "string"
+    }
+  },
+  "required": ["code", "kind"]
+}
