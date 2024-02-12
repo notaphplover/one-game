@@ -19,7 +19,7 @@
     "@cornie-js/backend-monitoring": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-user-application": "workspace:*",
-    "fastify": "4.26.0",
+    "fastify": "4.26.1",
     "glob": "10.3.10",
     "reflect-metadata": "0.2.1",
     "rxjs": "7.8.1",
