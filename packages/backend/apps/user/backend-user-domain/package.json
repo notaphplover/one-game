@@ -6,7 +6,7 @@
   "description": "Backend user domain package",
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
-    "@nestjs/common": "10.3.2"
+    "@nestjs/common": "10.3.3"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
@@ -27,6 +27,8 @@
   },
   "exports": {
     ".": "./lib/index.js",
+    "./tokens": "./lib/tokens/domain/index.js",
+    "./tokens/fixtures": "./lib/tokens/domain/fixtures/index.js",
     "./users": "./lib/users/domain/index.js",
     "./users/fixtures": "./lib/users/domain/fixtures/index.js"
   },

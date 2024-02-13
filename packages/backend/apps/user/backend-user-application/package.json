@@ -15,7 +15,7 @@
     "@cornie-js/backend-db": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-user-domain": "workspace:*",
-    "@nestjs/common": "10.3.2",
+    "@nestjs/common": "10.3.3",
     "bcrypt": "5.1.1"
   },
   "devDependencies": {
@@ -40,6 +40,7 @@
     ".": "./lib/index.js",
     "./auth": "./lib/auth/application/index.js",
     "./foundation/db": "./lib/foundation/db/application/index.js",
+    "./tokens": "./lib/tokens/application/index.js",
     "./users": "./lib/users/application/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
