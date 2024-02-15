@@ -4,7 +4,6 @@
   "title": "AuthCreateQueryV2",
   "anyOf": [
     { "$ref": "https://onegame.schemas/api/v2/auth/code-auth-create-query.json" },
-    { "$ref": "https://onegame.schemas/api/v2/auth/login-auth-create-query.json" },
-    { "$ref": "https://onegame.schemas/api/v2/auth/refresh-auth-create-query.json" }
+    { "$ref": "https://onegame.schemas/api/v2/auth/login-auth-create-query.json" }
   ]
 }

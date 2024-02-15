@@ -46,7 +46,6 @@ export enum ApiSchemaId {
   NonStartedGameStateV1 = 'https://onegame.schemas/api/v1/games/non-started-game-state.json',
   NonStartedGameV1 = 'https://onegame.schemas/api/v1/games/non-started-game.json',
   NormalCardV1 = 'https://onegame.schemas/api/v1/cards/normal-card.json',
-  RefreshAuthCreateQueryV2 = 'https://onegame.schemas/api/v2/auth/refresh-auth-create-query.json',
   ReverseCardV1 = 'https://onegame.schemas/api/v1/cards/reverse-card.json',
   SkipCardV1 = 'https://onegame.schemas/api/v1/cards/skip-card.json',
   Types = 'https://onegame.schemas/api/types.json',
