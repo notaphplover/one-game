@@ -80,12 +80,8 @@ export type TypesV2 =
   | AuthCreateQueryV2
   | AuthV2
   | CodeAuthCreateQueryV2
-  | LoginAuthCreateQueryV2
-  | RefreshAuthCreateQueryV2;
-export type AuthCreateQueryV2 =
-  | CodeAuthCreateQueryV2
-  | LoginAuthCreateQueryV2
-  | RefreshAuthCreateQueryV2;
+  | LoginAuthCreateQueryV2;
+export type AuthCreateQueryV2 = CodeAuthCreateQueryV2 | LoginAuthCreateQueryV2;
 
 export interface CodeAuthCreateQueryV1 {
   code: string;
@@ -234,10 +230,6 @@ export interface LoginAuthCreateQueryV2 {
   email: string;
   kind: 'login';
   password: string;
-}
-export interface RefreshAuthCreateQueryV2 {
-  kind: 'refresh';
-  refreshToken: string;
 }
 export interface AuthV2 {
   accessToken: string;

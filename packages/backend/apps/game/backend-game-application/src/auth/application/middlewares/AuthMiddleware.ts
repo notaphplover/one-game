@@ -15,7 +15,7 @@ export class AuthMiddleware extends backendHttp.AuthMiddleware<UserJwtPayload> {
     @Inject(EnvironmentService)
     environmentService: EnvironmentService,
     @Inject(JwtService)
-    jwtService: JwtService<UserJwtPayload>,
+    jwtService: JwtService,
     @Inject(UserManagementInputPort)
     userManagementInputPort: UserManagementInputPort,
   ) {
