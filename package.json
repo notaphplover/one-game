@@ -6,7 +6,7 @@
   "description": "One game",
   "devDependencies": {
     "@commitlint/cli": "18.6.1",
-    "@commitlint/config-conventional": "18.6.1",
+    "@commitlint/config-conventional": "18.6.2",
     "@commitlint/prompt-cli": "18.6.1",
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
@@ -16,7 +16,7 @@
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
-    "turbo": "1.12.3"
+    "turbo": "1.12.4"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
