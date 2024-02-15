@@ -357,7 +357,7 @@ export class HttpClient {
     headers: {
       [key: string]: string;
     },
-    body: apiModels.AuthCreateQueryV2,
+    body: apiModels.AuthCreateQueryV2 | undefined,
   ): Promise<
     | Response<Record<string, string>, apiModels.AuthV2, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
