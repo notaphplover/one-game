@@ -353,4 +353,23 @@ export class HttpClient {
       undefined,
     );
   }
+  public async createAuthV2(
+    headers: {
+      [key: string]: string;
+    },
+    body: apiModels.AuthCreateQueryV2,
+  ): Promise<
+    | Response<Record<string, string>, apiModels.AuthV2, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 400>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'POST',
+      '/v2/auth',
+      headers,
+      undefined,
+      undefined,
+      body,
+    );
+  }
 }
