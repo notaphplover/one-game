@@ -21,9 +21,9 @@ export abstract class AuthMiddleware<
 > implements Middleware<Request | RequestWithBody>
 {
   readonly #backendServicesSecret: string;
-  readonly #jwtService: JwtService<TPayload>;
+  readonly #jwtService: JwtService;
 
-  constructor(backendServicesSecret: string, jwtService: JwtService<TPayload>) {
+  constructor(backendServicesSecret: string, jwtService: JwtService) {
     this.#backendServicesSecret = backendServicesSecret;
     this.#jwtService = jwtService;
   }

@@ -24,7 +24,7 @@ class AuthMiddlewareMock extends AuthMiddleware<Record<string, unknown>> {
 
   constructor(
     backendServicesSecret: string,
-    jwtService: JwtService<Record<string, unknown>>,
+    jwtService: JwtService,
     findUserMock: jest.Mock<
       (id: string) => Promise<apiModels.UserV1 | undefined>
     >,
@@ -49,7 +49,7 @@ class AuthMiddlewareMock extends AuthMiddleware<Record<string, unknown>> {
 
 describe(AuthMiddleware.name, () => {
   let backendServicesSecretFixture: string;
-  let jwtServiceMock: jest.Mocked<JwtService<Record<string, unknown>>>;
+  let jwtServiceMock: jest.Mocked<JwtService>;
   let findUserMock: jest.Mock<
     (id: string) => Promise<apiModels.UserV1 | undefined>
   >;
@@ -61,9 +61,7 @@ describe(AuthMiddleware.name, () => {
     backendServicesSecretFixture = 'backend-services-secret-fixture';
     jwtServiceMock = {
       parse: jest.fn(),
-    } as Partial<
-      jest.Mocked<JwtService<Record<string, unknown>>>
-    > as jest.Mocked<JwtService<Record<string, unknown>>>;
+    } as Partial<jest.Mocked<JwtService>> as jest.Mocked<JwtService>;
 
     findUserMock = jest.fn();
 
