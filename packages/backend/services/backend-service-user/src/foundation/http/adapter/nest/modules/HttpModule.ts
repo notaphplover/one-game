@@ -4,6 +4,7 @@ import {
   HttpStatusCodeFromErrorBuilder,
   RequestFromFastifyRequestBuilder,
   RequestWithBodyFromFastifyRequestBuilder,
+  RequestWithOptionalBodyFromFastifyRequestBuilder,
 } from '@cornie-js/backend-http';
 import { Module } from '@nestjs/common';
 
@@ -13,6 +14,7 @@ import { Module } from '@nestjs/common';
     FastifyReplyFromResponseBuilder,
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
+    RequestWithOptionalBodyFromFastifyRequestBuilder,
   ],
   providers: [
     ErrorV1ResponseFromErrorBuilder,
@@ -20,6 +22,7 @@ import { Module } from '@nestjs/common';
     HttpStatusCodeFromErrorBuilder,
     RequestFromFastifyRequestBuilder,
     RequestWithBodyFromFastifyRequestBuilder,
+    RequestWithOptionalBodyFromFastifyRequestBuilder,
   ],
 })
 export class HttpModule {}
