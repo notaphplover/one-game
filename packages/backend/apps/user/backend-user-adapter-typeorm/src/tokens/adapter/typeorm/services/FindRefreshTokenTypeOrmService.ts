@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { FindTypeOrmService } from '@cornie-js/backend-db/adapter/typeorm';
+import { FindTypeOrmQueryBuilderService } from '@cornie-js/backend-db/adapter/typeorm';
 import {
   RefreshToken,
   RefreshTokenFindQuery,
@@ -18,7 +18,7 @@ import { RefreshTokenFromRefreshTokenDbBuilder } from '../builders/RefreshTokenF
 import { RefreshTokenDb } from '../models/RefreshTokenDb';
 
 @Injectable()
-export class FindRefreshTokenTypeOrmService extends FindTypeOrmService<
+export class FindRefreshTokenTypeOrmService extends FindTypeOrmQueryBuilderService<
   RefreshToken,
   RefreshTokenDb,
   RefreshTokenFindQuery
