@@ -52,7 +52,7 @@ function extractJwtPayload(token: string): Record<string, unknown> {
 
 describe(JsonWebTokenService.name, () => {
   let optionsFixture: JwtServiceOptions;
-  let jsonWebTokenService: JsonWebTokenService<Record<string, unknown>>;
+  let jsonWebTokenService: JsonWebTokenService;
 
   beforeAll(() => {
     const privateKeyFixture: string = `-----BEGIN RSA PRIVATE KEY-----

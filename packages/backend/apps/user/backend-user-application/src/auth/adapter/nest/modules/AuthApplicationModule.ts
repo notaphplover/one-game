@@ -1,5 +1,6 @@
 import { JwtModule } from '@cornie-js/backend-app-jwt';
 import { EnvModule } from '@cornie-js/backend-app-user-env';
+import { UuidModule } from '@cornie-js/backend-app-uuid';
 import { UserDomainModule } from '@cornie-js/backend-user-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
@@ -26,6 +27,7 @@ export class AuthApplicationModule {
         JwtModule.forRootAsync(buildJwtModuleOptions()),
         UserDomainModule,
         UserApplicationModule.forRootAsync(userImports),
+        UuidModule,
       ],
       module: AuthApplicationModule,
       providers: [AuthManagementInputPort, AuthMiddleware],

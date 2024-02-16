@@ -14,9 +14,7 @@ export class JwtModule {
         {
           inject: options.inject ?? [],
           provide: JwtService,
-          useFactory: (
-            ...args: unknown[]
-          ): JwtService<Record<string, unknown>> =>
+          useFactory: (...args: unknown[]): JwtService =>
             new JwtService(options.useFactory(...args)),
         },
       ],

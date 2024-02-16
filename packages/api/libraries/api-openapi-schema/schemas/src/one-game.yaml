@@ -24,6 +24,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/auth/auth-create-query.json'
+        required: true
       responses:
         '200':
           description: Authorization token created
@@ -55,6 +56,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/games/game-create-query.json'
+        required: true
       responses:
         '200':
           description: Game created
@@ -190,6 +192,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/games/game-id-update-query.json'
+        required: true
       responses:
         '200':
           description: Game updated
@@ -263,7 +266,7 @@ paths:
 
   /v1/games/specs:
     get:
-      summary: Get a game spec
+      summary: Get game specs
       operationId: getGamesSpecs
       parameters:
         - in: query
@@ -329,6 +332,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/games/game-id-slot-create-query.json'
+        required: true
       parameters:
         - in: path
           name: gameId
@@ -434,6 +438,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/users/user-create-query.json'
+        required: true
       responses:
         '200':
           description: User created
@@ -553,6 +558,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/users/user-me-update-query.json'
+        required: true
       responses:
         '200':
           description: User updated
@@ -611,6 +617,38 @@ paths:
         - bearerAuth: []
       tags:
         - User
+
+  /v2/auth:
+    post:
+      summary: Create an authorization token
+      operationId: createAuthV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://onegame.schemas/api/v2/auth/auth-create-query.json'
+        required: false
+      responses:
+        '200':
+          description: Authorization token created
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v2/auth/auth.json'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      tags:
+        - Auth
 
 tags:
   - name: Auth

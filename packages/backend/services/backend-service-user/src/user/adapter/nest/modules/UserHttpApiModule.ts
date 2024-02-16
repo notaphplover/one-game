@@ -2,6 +2,8 @@ import { MailModule } from '@cornie-js/backend-adapter-nodemailer';
 import {
   UserDbModule,
   DbModule,
+  DbModuleOptions,
+  TokenDbModule,
 } from '@cornie-js/backend-user-adapter-typeorm';
 import { UserHttpApiModule as UserHttpApiApplicationModule } from '@cornie-js/backend-user-application';
 import { Module } from '@nestjs/common';
@@ -16,6 +18,8 @@ import { GetUserV1UserIdHttpRequestNestController } from '../controllers/GetUser
 import { PatchUserV1MeHttpRequestNestController } from '../controllers/PatchUserV1MeHttpRequestNestController';
 import { PostUserV1EmailCodeRequestNestController } from '../controllers/PostUserV1EmailCodeRequestNestController';
 import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1HttpRequestNestController';
+
+const dbModuleOptions: DbModuleOptions = buildDbModuleOptions();
 
 @Module({
   controllers: [
@@ -32,6 +36,7 @@ import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1Ht
     UserHttpApiApplicationModule.forRootAsync([
       DbModule.forTransaction(),
       MailModule.forRootAsync(buildMailClientOptions()),
+      TokenDbModule.forRootAsync(dbModuleOptions),
       UserDbModule.forRootAsync(buildDbModuleOptions()),
     ]),
     HttpModule,
