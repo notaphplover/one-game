@@ -8,6 +8,7 @@ import { RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder } from
 import { RefreshTokenFromRefreshTokenDbBuilder } from '../../typeorm/builders/RefreshTokenFromRefreshTokenDbBuilder';
 import { RefreshTokenDb } from '../../typeorm/models/RefreshTokenDb';
 import { CreateRefreshTokenTypeOrmService } from '../../typeorm/services/CreateRefreshTokenTypeOrmService';
+import { FindRefreshTokenTypeOrmService } from '../../typeorm/services/FindRefreshTokenTypeOrmService';
 
 @Module({})
 export class TokenDbModule {
@@ -22,6 +23,7 @@ export class TokenDbModule {
       module: TokenDbModule,
       providers: [
         CreateRefreshTokenTypeOrmService,
+        FindRefreshTokenTypeOrmService,
         RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder,
         RefreshTokenFromRefreshTokenDbBuilder,
         {

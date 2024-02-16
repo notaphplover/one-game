@@ -46,6 +46,7 @@ describe(AuthManagementInputPort.name, () => {
     } as Partial<jest.Mocked<JwtService>> as jest.Mocked<JwtService>;
     refreshTokenPersistenceOutputPortMock = {
       create: jest.fn(),
+      findOne: jest.fn(),
     };
     userCanCreateAuthSpecMock = {
       isSatisfiedBy: jest.fn(),
