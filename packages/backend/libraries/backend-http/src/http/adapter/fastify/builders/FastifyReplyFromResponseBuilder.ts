@@ -1,9 +1,11 @@
 import { Builder } from '@cornie-js/backend-common';
+import { Injectable } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 
 import { Response } from '../../../application/models/Response';
 import { ResponseWithBody } from '../../../application/models/ResponseWithBody';
 
+@Injectable()
 export class FastifyReplyFromResponseBuilder
   implements
     Builder<FastifyReply, [Response | ResponseWithBody<unknown>, FastifyReply]>
