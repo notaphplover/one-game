@@ -95,13 +95,14 @@ export class AuthManagementInputPort {
       await this.#getUserFromAuthCreateQueryV2(authCreateQueryV2);
 
     const family: string = this.#uuidProviderOutputPort.generateV4();
+    const refreshTokenId: string = this.#uuidProviderOutputPort.generateV4();
 
     const [accessToken, refreshToken]: [string, string] = await Promise.all([
       this.#generateAccessToken(user),
-      this.#generateRefreshToken(family, user),
+      this.#generateRefreshToken(family, refreshTokenId, user),
     ]);
 
-    await this.#persistRefreshToken(family, refreshToken);
+    await this.#persistRefreshToken(family, refreshTokenId, refreshToken);
 
     return {
       accessToken,
@@ -189,9 +190,14 @@ export class AuthManagementInputPort {
     return this.#jwtService.create(userJwtPayload);
   }
 
-  async #generateRefreshToken(familyId: string, user: User): Promise<string> {
+  async #generateRefreshToken(
+    familyId: string,
+    refreshTokenId: string,
+    user: User,
+  ): Promise<string> {
     const userJwtPayload: Partial<RefreshTokenJwtPayload> = {
       familyId: familyId,
+      id: refreshTokenId,
       sub: user.id,
     };
 
@@ -208,12 +214,13 @@ export class AuthManagementInputPort {
 
   async #persistRefreshToken(
     family: string,
+    refreshTokenId: string,
     refreshToken: string,
   ): Promise<void> {
     const refreshTokenCreateQuery: RefreshTokenCreateQuery = {
       active: true,
       family,
-      id: this.#uuidProviderOutputPort.generateV4(),
+      id: refreshTokenId,
       token: refreshToken,
     };
 
