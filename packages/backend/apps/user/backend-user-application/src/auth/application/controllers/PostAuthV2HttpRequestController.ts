@@ -7,6 +7,7 @@ import {
 } from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
+  Request,
   RequestWithBody,
   Response,
   ResponseWithBody,
@@ -20,7 +21,7 @@ import { AuthManagementInputPort } from '../ports/input/AuthManagementInputPort'
 
 @Injectable()
 export class PostAuthV2HttpRequestController extends HttpRequestController<
-  RequestWithBody,
+  Request | RequestWithBody,
   [apiModels.AuthCreateQueryV2 | undefined, Request | RequestWithBody],
   apiModels.AuthV2
 > {
@@ -56,6 +57,7 @@ export class PostAuthV2HttpRequestController extends HttpRequestController<
 
   protected async _handleUseCase(
     authCreateQueryV2: apiModels.AuthCreateQueryV2 | undefined,
+    _request: Request | RequestWithBody,
   ): Promise<apiModels.AuthV2> {
     if (authCreateQueryV2 === undefined) {
       throw new AppError(
