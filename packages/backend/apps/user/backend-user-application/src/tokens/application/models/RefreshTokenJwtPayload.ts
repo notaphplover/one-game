@@ -3,6 +3,7 @@ export interface RefreshTokenJwtPayload
   aud: string;
   familyId: string;
   iat: number;
+  id: string;
   iss: string;
   sub: string;
 }

@@ -697,6 +697,7 @@ describe(AuthManagementInputPort.name, () => {
           });
           expect(jwtServiceMock.create).toHaveBeenNthCalledWith(2, {
             familyId: familyIdFixture,
+            id: refreshTokenIdFixture,
             sub: userFixture.id,
           });
         });
@@ -1066,6 +1067,7 @@ describe(AuthManagementInputPort.name, () => {
           });
           expect(jwtServiceMock.create).toHaveBeenNthCalledWith(2, {
             familyId: familyIdFixture,
+            id: refreshTokenIdFixture,
             sub: userFixture.id,
           });
         });
