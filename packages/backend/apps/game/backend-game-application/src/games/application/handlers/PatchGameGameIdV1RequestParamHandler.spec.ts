@@ -138,6 +138,9 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
       beforeAll(() => {
         gameIdFixture = ActiveGameV1Fixtures.any.id;
         authFixture = {
+          jwtPayload: {
+            [Symbol()]: Symbol(),
+          },
           kind: AuthKind.user,
           user: UserV1Fixtures.any,
         };
