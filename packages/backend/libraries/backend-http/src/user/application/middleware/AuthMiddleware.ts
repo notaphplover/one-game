@@ -4,6 +4,7 @@ import { JwtService } from '@cornie-js/backend-jwt';
 
 import { AuthKind } from '../../../auth/application/models/AuthKind';
 import { AuthRequestContextHolder } from '../../../auth/application/models/AuthRequestContextHolder';
+import { UserAuth } from '../../../auth/application/models/UserAuth';
 import { Request } from '../../../http/application/models/Request';
 import { RequestContextHolder } from '../../../http/application/models/RequestContextHolder';
 import { requestContextProperty } from '../../../http/application/models/requestContextProperty';
@@ -102,9 +103,10 @@ export abstract class AuthMiddleware<
 
     this.#provideContext(request);
 
-    (request as Request & AuthRequestContextHolder)[
+    (request as Request & AuthRequestContextHolder<UserAuth<TPayload>>)[
       requestContextProperty
     ].auth = {
+      jwtPayload,
       kind: AuthKind.user,
       user: userV1OrUndefined,
     };

@@ -43,6 +43,9 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
           query: {},
           [requestContextProperty]: {
             auth: {
+              jwtPayload: {
+                [Symbol()]: Symbol(),
+              },
               kind: AuthKind.user,
               user: userFixture,
             },
@@ -145,6 +148,9 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
           query: {},
           [requestContextProperty]: {
             auth: {
+              jwtPayload: {
+                [Symbol()]: Symbol(),
+              },
               kind: AuthKind.user,
               user: userFixture,
             },
@@ -199,6 +205,9 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
           query: {},
           [requestContextProperty]: {
             auth: {
+              jwtPayload: {
+                [Symbol()]: Symbol(),
+              },
               kind: AuthKind.user,
               user: userFixture,
             },

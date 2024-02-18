@@ -88,6 +88,9 @@ describe(PatchUserV1MeRequestParamHandler.name, () => {
 
       beforeAll(() => {
         authFixture = {
+          jwtPayload: {
+            [Symbol()]: Symbol(),
+          },
           kind: AuthKind.user,
           user: UserV1Fixtures.any,
         };

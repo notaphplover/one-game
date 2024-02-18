@@ -187,7 +187,7 @@ describe(AuthMiddleware.name, () => {
       describe('when called, and userManagementInputPort.findOne() returns a UserV1', () => {
         let requestFixture: Request;
 
-        let jwtPayloadFixture: Record<string, unknown>;
+        let jwtPayloadFixture: Record<string | symbol, unknown>;
         let userIdFixture: string;
         let userV1Fixture: apiModels.UserV1;
 
@@ -238,6 +238,7 @@ describe(AuthMiddleware.name, () => {
 
         it('should place auth in the request', () => {
           const expectedAuth: UserAuth = {
+            jwtPayload: jwtPayloadFixture,
             kind: AuthKind.user,
             user: userV1Fixture,
           };

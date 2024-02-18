@@ -242,6 +242,9 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
           query: {},
           [requestContextProperty]: {
             auth: {
+              jwtPayload: {
+                [Symbol()]: Symbol(),
+              },
               kind: AuthKind.user,
               user: UserV1Fixtures.any,
             },
