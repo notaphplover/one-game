@@ -9,7 +9,11 @@ servers:
     description: Production server
 components:
   securitySchemes:
-    bearerAuth:
+    accessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    refreshToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -83,7 +87,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -133,7 +137,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -174,7 +178,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
     patch:
@@ -219,7 +223,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -260,7 +264,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -319,7 +323,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -378,7 +382,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -425,7 +429,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -520,7 +524,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
 
@@ -547,7 +551,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
     patch:
@@ -579,7 +583,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
 
@@ -614,7 +618,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
 
@@ -647,6 +651,9 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - {}
+        - refreshToken: []
       tags:
         - Auth
 

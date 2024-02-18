@@ -8,6 +8,7 @@ import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/Has
 import { buildJwtModuleOptions } from '../../../../foundation/jwt/adapter/nest/calculations/buildJwtModuleOptions';
 import { UserApplicationModule } from '../../../../users/adapter/nest/modules/UserApplicationModule';
 import { AuthMiddleware } from '../../../application/middlewares/AuthMiddleware';
+import { RefreshTokenAuthMiddleware } from '../../../application/middlewares/RefreshTokenAuthMiddleware';
 import { AuthManagementInputPort } from '../../../application/ports/input/AuthManagementInputPort';
 
 @Module({})
@@ -18,7 +19,11 @@ export class AuthApplicationModule {
     >,
   ): DynamicModule {
     return {
-      exports: [AuthManagementInputPort, AuthMiddleware],
+      exports: [
+        AuthManagementInputPort,
+        AuthMiddleware,
+        RefreshTokenAuthMiddleware,
+      ],
       global: false,
       imports: [
         ...(userImports ?? []),
@@ -30,7 +35,11 @@ export class AuthApplicationModule {
         UuidModule,
       ],
       module: AuthApplicationModule,
-      providers: [AuthManagementInputPort, AuthMiddleware],
+      providers: [
+        AuthManagementInputPort,
+        AuthMiddleware,
+        RefreshTokenAuthMiddleware,
+      ],
     };
   }
 }

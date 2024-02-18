@@ -13,10 +13,12 @@ import {
   ResponseWithBody,
   HttpRequestController,
   SingleEntityPostResponseBuilder,
+  MiddlewarePipeline,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { PostAuthV2RequestParamHandler } from '../handlers/PostAuthV2RequestParamHandler';
+import { RefreshTokenAuthMiddleware } from '../middlewares/RefreshTokenAuthMiddleware';
 import { AuthManagementInputPort } from '../ports/input/AuthManagementInputPort';
 
 @Injectable()
@@ -45,11 +47,14 @@ export class PostAuthV2HttpRequestController extends HttpRequestController<
     >,
     @Inject(AuthManagementInputPort)
     authManagementInputPort: AuthManagementInputPort,
+    @Inject(RefreshTokenAuthMiddleware)
+    refreshTokenAuthMiddleware: RefreshTokenAuthMiddleware,
   ) {
     super(
       requestParamHandler,
       responseBuilder,
       errorV1ResponseFromErrorBuilder,
+      new MiddlewarePipeline([refreshTokenAuthMiddleware]),
     );
 
     this.#authManagementInputPort = authManagementInputPort;
