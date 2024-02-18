@@ -5,10 +5,13 @@ import * as backendHttp from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AccessTokenJwtPayload } from '../../../tokens/application/models/AccessTokenJwtPayload';
+import { RefreshTokenJwtPayload } from '../../../tokens/application/models/RefreshTokenJwtPayload';
 import { UserManagementInputPort } from '../../../users/application/ports/input/UserManagementInputPort';
 
 @Injectable()
-export class AuthMiddleware extends backendHttp.AuthMiddleware<AccessTokenJwtPayload> {
+export class AuthMiddleware extends backendHttp.AuthMiddleware<
+  AccessTokenJwtPayload | RefreshTokenJwtPayload
+> {
   readonly #userManagementInputPort: UserManagementInputPort;
 
   constructor(
@@ -31,7 +34,9 @@ export class AuthMiddleware extends backendHttp.AuthMiddleware<AccessTokenJwtPay
     return this.#userManagementInputPort.findOne(id);
   }
 
-  protected override _getUserId(jwtPayload: AccessTokenJwtPayload): string {
+  protected override _getUserId(
+    jwtPayload: AccessTokenJwtPayload | RefreshTokenJwtPayload,
+  ): string {
     return jwtPayload.sub;
   }
 }
