@@ -5,6 +5,7 @@ import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/D
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
 import { RefreshTokenPersistenceTypeormAdapter } from '../../typeorm/adapters/RefreshTokenPersistenceTypeormAdapter';
 import { RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder } from '../../typeorm/builders/RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder';
+import { RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder } from '../../typeorm/builders/RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder';
 import { RefreshTokenFromRefreshTokenDbBuilder } from '../../typeorm/builders/RefreshTokenFromRefreshTokenDbBuilder';
 import { RefreshTokenDb } from '../../typeorm/models/RefreshTokenDb';
 import { CreateRefreshTokenTypeOrmService } from '../../typeorm/services/CreateRefreshTokenTypeOrmService';
@@ -25,6 +26,7 @@ export class TokenDbModule {
         CreateRefreshTokenTypeOrmService,
         FindRefreshTokenTypeOrmService,
         RefreshTokenCreateQueryTypeOrmFromRefreshTokenCreateQueryBuilder,
+        RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder,
         RefreshTokenFromRefreshTokenDbBuilder,
         {
           provide: refreshTokenPersistenceOutputPortSymbol,
