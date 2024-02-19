@@ -11,7 +11,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
+import { AccessTokenAuthMiddleware } from '../../../auth/application/middlewares/AccessTokenAuthMiddleware';
 import { DeleteUserV1MeRequestParamHandler } from '../handlers/DeleteUserV1MeRequestParamHandler';
 import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 
@@ -33,8 +33,8 @@ export class DeleteUserV1MeHttpRequestController extends HttpRequestController<
       Response | ResponseWithBody<unknown>,
       [unknown]
     >,
-    @Inject(AuthMiddleware)
-    authMiddleware: AuthMiddleware,
+    @Inject(AccessTokenAuthMiddleware)
+    authMiddleware: AccessTokenAuthMiddleware,
     @Inject(UserManagementInputPort)
     userManagementInputPort: UserManagementInputPort,
   ) {

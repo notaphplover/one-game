@@ -7,7 +7,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 import { HashModule } from '../../../../foundation/hash/adapter/nest/modules/HashModule';
 import { buildJwtModuleOptions } from '../../../../foundation/jwt/adapter/nest/calculations/buildJwtModuleOptions';
 import { UserApplicationModule } from '../../../../users/adapter/nest/modules/UserApplicationModule';
-import { AuthMiddleware } from '../../../application/middlewares/AuthMiddleware';
+import { AccessTokenAuthMiddleware } from '../../../application/middlewares/AccessTokenAuthMiddleware';
 import { RefreshTokenAuthMiddleware } from '../../../application/middlewares/RefreshTokenAuthMiddleware';
 import { AuthManagementInputPort } from '../../../application/ports/input/AuthManagementInputPort';
 
@@ -21,7 +21,7 @@ export class AuthApplicationModule {
     return {
       exports: [
         AuthManagementInputPort,
-        AuthMiddleware,
+        AccessTokenAuthMiddleware,
         RefreshTokenAuthMiddleware,
       ],
       global: false,
@@ -37,7 +37,7 @@ export class AuthApplicationModule {
       module: AuthApplicationModule,
       providers: [
         AuthManagementInputPort,
-        AuthMiddleware,
+        AccessTokenAuthMiddleware,
         RefreshTokenAuthMiddleware,
       ],
     };

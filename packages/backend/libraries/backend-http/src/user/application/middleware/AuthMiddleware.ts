@@ -87,7 +87,14 @@ export abstract class AuthMiddleware<
     authBearerToken: string,
     request: Request | RequestWithBody,
   ): Promise<void> {
-    const jwtPayload: TPayload = await this.#jwtService.parse(authBearerToken);
+    const jwtPayload: unknown = await this.#jwtService.parse(authBearerToken);
+
+    if (!this._verifyJwtPayload(jwtPayload)) {
+      throw new AppError(
+        AppErrorKind.invalidCredentials,
+        'Unexpected jwt claims were found when parsing request authorization',
+      );
+    }
 
     const userId: string = this._getUserId(jwtPayload);
 
@@ -117,4 +124,8 @@ export abstract class AuthMiddleware<
   ): Promise<apiModels.UserV1 | undefined>;
 
   protected abstract _getUserId(jwtPayload: TPayload): string;
+
+  protected abstract _verifyJwtPayload(
+    jwtPayload: unknown,
+  ): jwtPayload is TPayload;
 }
