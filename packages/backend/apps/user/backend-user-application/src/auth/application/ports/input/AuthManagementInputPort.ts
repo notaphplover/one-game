@@ -5,7 +5,10 @@ import {
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { RefreshTokenCreateQuery } from '@cornie-js/backend-user-domain/tokens';
+import {
+  RefreshToken,
+  RefreshTokenCreateQuery,
+} from '@cornie-js/backend-user-domain/tokens';
 import {
   User,
   UserCanCreateAuthSpec,
@@ -94,20 +97,33 @@ export class AuthManagementInputPort {
     const user: User =
       await this.#getUserFromAuthCreateQueryV2(authCreateQueryV2);
 
-    const family: string = this.#uuidProviderOutputPort.generateV4();
-    const refreshTokenId: string = this.#uuidProviderOutputPort.generateV4();
+    const familyId: string = this.#uuidProviderOutputPort.generateV4();
 
-    const [accessToken, refreshToken]: [string, string] = await Promise.all([
-      this.#generateAccessToken(user),
-      this.#generateRefreshToken(family, refreshTokenId, user),
+    return this.#createAuthV2(familyId, user);
+  }
+
+  public async createByRefreshTokenV2(
+    refreshTokenJwtPayload: RefreshTokenJwtPayload,
+  ): Promise<apiModels.AuthV2> {
+    const [user, refreshTokenValueObject]: [
+      User | undefined,
+      RefreshToken | undefined,
+    ] = await Promise.all([
+      this.#userPersistenceOuptutPort.findOne({
+        id: refreshTokenJwtPayload.sub,
+      }),
+      this.#refreshTokenPersistenceOutputPort.findOne({
+        id: refreshTokenJwtPayload.id,
+      }),
     ]);
 
-    await this.#persistRefreshToken(family, refreshTokenId, refreshToken);
+    if (user === undefined || refreshTokenValueObject === undefined) {
+      this.#throwInvalidCredentialsError();
+    }
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    const familyId: string = refreshTokenJwtPayload.familyId;
+
+    return this.#createAuthV2(familyId, user);
   }
 
   async #getUserFromAuthCreateQueryV2(
@@ -188,6 +204,22 @@ export class AuthManagementInputPort {
     };
 
     return this.#jwtService.create(userJwtPayload);
+  }
+
+  async #createAuthV2(familyId: string, user: User): Promise<apiModels.AuthV2> {
+    const refreshTokenId: string = this.#uuidProviderOutputPort.generateV4();
+
+    const [accessToken, refreshToken]: [string, string] = await Promise.all([
+      this.#generateAccessToken(user),
+      this.#generateRefreshToken(familyId, refreshTokenId, user),
+    ]);
+
+    await this.#persistRefreshToken(familyId, refreshTokenId, refreshToken);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 
   async #generateRefreshToken(
