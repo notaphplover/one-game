@@ -105,19 +105,21 @@ export class AuthManagementInputPort {
   public async createByRefreshTokenV2(
     refreshTokenJwtPayload: RefreshTokenJwtPayload,
   ): Promise<apiModels.AuthV2> {
-    const [user, refreshTokenValueObject]: [
-      User | undefined,
-      RefreshToken | undefined,
-    ] = await Promise.all([
-      this.#userPersistenceOuptutPort.findOne({
-        id: refreshTokenJwtPayload.sub,
-      }),
-      this.#refreshTokenPersistenceOutputPort.findOne({
-        id: refreshTokenJwtPayload.id,
-      }),
-    ]);
+    const [user, refreshTokenValueObjects]: [User | undefined, RefreshToken[]] =
+      await Promise.all([
+        this.#userPersistenceOuptutPort.findOne({
+          id: refreshTokenJwtPayload.sub,
+        }),
+        this.#refreshTokenPersistenceOutputPort.find({
+          date: {
+            from: new Date(refreshTokenJwtPayload.iat),
+          },
+          familyId: refreshTokenJwtPayload.familyId,
+          limit: 2,
+        }),
+      ]);
 
-    if (user === undefined || refreshTokenValueObject === undefined) {
+    if (user === undefined || refreshTokenValueObjects.length === 0) {
       this.#throwInvalidCredentialsError();
     }
 

@@ -1120,7 +1120,7 @@ describe(AuthManagementInputPort.name, () => {
       };
     });
 
-    describe('when called, and userPersistenceOuptutPort.findOne() returns undefined and refreshTokenPersistenceOutputPort.findOne() returns token', () => {
+    describe('when called, and userPersistenceOuptutPort.findOne() returns undefined and refreshTokenPersistenceOutputPort.find() returns an array with a single token', () => {
       let refreshTokenValueObjectFixture: RefreshToken;
 
       let result: unknown;
@@ -1128,9 +1128,9 @@ describe(AuthManagementInputPort.name, () => {
       beforeAll(async () => {
         refreshTokenValueObjectFixture = RefreshTokenFixtures.any;
 
-        refreshTokenPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+        refreshTokenPersistenceOutputPortMock.find.mockResolvedValueOnce([
           refreshTokenValueObjectFixture,
-        );
+        ]);
         userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
 
         try {
@@ -1146,15 +1146,19 @@ describe(AuthManagementInputPort.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call refreshTokenPersistenceOutputPort.findOne()', () => {
+      it('should call refreshTokenPersistenceOutputPort.find()', () => {
         expect(
-          refreshTokenPersistenceOutputPortMock.findOne,
+          refreshTokenPersistenceOutputPortMock.find,
         ).toHaveBeenCalledTimes(1);
-        expect(
-          refreshTokenPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith({
-          id: refreshTokenJwtPayloadFixture.id,
-        });
+        expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+          {
+            date: {
+              from: new Date(refreshTokenJwtPayloadFixture.iat),
+            },
+            familyId: refreshTokenJwtPayloadFixture.familyId,
+            limit: 2,
+          },
+        );
       });
 
       it('should call userTokenPersistenceOutputPort.findOne()', () => {
@@ -1177,7 +1181,7 @@ describe(AuthManagementInputPort.name, () => {
       });
     });
 
-    describe('when called, and userPersistenceOuptutPort.findOne() returns User and refreshTokenPersistenceOutputPort.findOne() returns undefined', () => {
+    describe('when called, and userPersistenceOuptutPort.findOne() returns User and refreshTokenPersistenceOutputPort.find() returns an empty array', () => {
       let userFixture: User;
 
       let result: unknown;
@@ -1185,9 +1189,7 @@ describe(AuthManagementInputPort.name, () => {
       beforeAll(async () => {
         userFixture = UserFixtures.any;
 
-        refreshTokenPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          undefined,
-        );
+        refreshTokenPersistenceOutputPortMock.find.mockResolvedValueOnce([]);
         userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           userFixture,
         );
@@ -1205,15 +1207,19 @@ describe(AuthManagementInputPort.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call refreshTokenPersistenceOutputPort.findOne()', () => {
+      it('should call refreshTokenPersistenceOutputPort.find()', () => {
         expect(
-          refreshTokenPersistenceOutputPortMock.findOne,
+          refreshTokenPersistenceOutputPortMock.find,
         ).toHaveBeenCalledTimes(1);
-        expect(
-          refreshTokenPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith({
-          id: refreshTokenJwtPayloadFixture.id,
-        });
+        expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+          {
+            date: {
+              from: new Date(refreshTokenJwtPayloadFixture.iat),
+            },
+            familyId: refreshTokenJwtPayloadFixture.familyId,
+            limit: 2,
+          },
+        );
       });
 
       it('should call userTokenPersistenceOutputPort.findOne()', () => {
@@ -1236,7 +1242,7 @@ describe(AuthManagementInputPort.name, () => {
       });
     });
 
-    describe('when called, and userPersistenceOuptutPort.findOne() returns User and refreshTokenPersistenceOutputPort.findOne() returns token', () => {
+    describe('when called, and userPersistenceOuptutPort.findOne() returns User and refreshTokenPersistenceOutputPort.find() returns an array with a single token', () => {
       let accessTokenFixture: string;
       let refreshTokenFixture: string;
       let refreshTokenIdFixture: string;
@@ -1249,9 +1255,9 @@ describe(AuthManagementInputPort.name, () => {
         refreshTokenValueObjectFixture = RefreshTokenFixtures.any;
         userFixture = UserFixtures.any;
 
-        refreshTokenPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+        refreshTokenPersistenceOutputPortMock.find.mockResolvedValueOnce([
           refreshTokenValueObjectFixture,
-        );
+        ]);
         userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           userFixture,
         );
@@ -1273,15 +1279,19 @@ describe(AuthManagementInputPort.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call refreshTokenPersistenceOutputPort.findOne()', () => {
+      it('should call refreshTokenPersistenceOutputPort.find()', () => {
         expect(
-          refreshTokenPersistenceOutputPortMock.findOne,
+          refreshTokenPersistenceOutputPortMock.find,
         ).toHaveBeenCalledTimes(1);
-        expect(
-          refreshTokenPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith({
-          id: refreshTokenJwtPayloadFixture.id,
-        });
+        expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+          {
+            date: {
+              from: new Date(refreshTokenJwtPayloadFixture.iat),
+            },
+            familyId: refreshTokenJwtPayloadFixture.familyId,
+            limit: 2,
+          },
+        );
       });
 
       it('should call userTokenPersistenceOutputPort.findOne()', () => {
