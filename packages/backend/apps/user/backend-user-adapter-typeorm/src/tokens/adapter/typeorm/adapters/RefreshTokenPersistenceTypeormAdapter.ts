@@ -37,6 +37,16 @@ export class RefreshTokenPersistenceTypeormAdapter
     );
   }
 
+  public async find(
+    refreshTokenFindQuery: RefreshTokenFindQuery,
+    transactionWrapper?: TransactionWrapper | undefined,
+  ): Promise<RefreshToken[]> {
+    return this.#findRefreshTokenTypeOrmService.find(
+      refreshTokenFindQuery,
+      transactionWrapper,
+    );
+  }
+
   public async findOne(
     refreshTokenFindQuery: RefreshTokenFindQuery,
     transactionWrapper?: TransactionWrapper | undefined,
