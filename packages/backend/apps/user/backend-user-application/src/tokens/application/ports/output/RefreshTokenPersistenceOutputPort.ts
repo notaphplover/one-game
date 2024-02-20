@@ -15,6 +15,11 @@ export interface RefreshTokenPersistenceOutputPort {
     transactionWrapper?: TransactionWrapper,
   ): Promise<RefreshToken>;
 
+  find(
+    refreshTokenFindQuery: RefreshTokenFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<RefreshToken[]>;
+
   findOne(
     refreshTokenFindQuery: RefreshTokenFindQuery,
     transactionWrapper?: TransactionWrapper,

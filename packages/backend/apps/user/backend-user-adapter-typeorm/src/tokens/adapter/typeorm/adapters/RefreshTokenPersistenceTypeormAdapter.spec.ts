@@ -30,6 +30,7 @@ describe(RefreshTokenPersistenceTypeormAdapter.name, () => {
     > as jest.Mocked<CreateRefreshTokenTypeOrmService>;
 
     findRefreshTokenTypeOrmServiceMock = {
+      find: jest.fn(),
       findOne: jest.fn(),
     } as Partial<
       jest.Mocked<FindRefreshTokenTypeOrmService>
@@ -88,6 +89,54 @@ describe(RefreshTokenPersistenceTypeormAdapter.name, () => {
 
       it('should return RefreshToken', () => {
         expect(result).toBe(refreshTokenFixture);
+      });
+    });
+  });
+
+  describe('.find', () => {
+    let refreshTokenFindQueryFixture: RefreshTokenFindQuery;
+    let transactionWrapperFixture: TransactionWrapper;
+
+    beforeAll(() => {
+      refreshTokenFindQueryFixture = RefreshTokenFindQueryFixtures.any;
+
+      transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
+    });
+
+    describe('when called', () => {
+      let refreshTokenFixtures: RefreshToken[];
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        refreshTokenFixtures = [RefreshTokenFixtures.any];
+
+        findRefreshTokenTypeOrmServiceMock.find.mockResolvedValueOnce(
+          refreshTokenFixtures,
+        );
+
+        result = await refreshTokenPersistenceTypeormAdapter.find(
+          refreshTokenFindQueryFixture,
+          transactionWrapperFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call findRefreshTokenTypeOrmService.find()', () => {
+        expect(findRefreshTokenTypeOrmServiceMock.find).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(findRefreshTokenTypeOrmServiceMock.find).toHaveBeenCalledWith(
+          refreshTokenFindQueryFixture,
+          transactionWrapperFixture,
+        );
+      });
+
+      it('should return RefreshToken', () => {
+        expect(result).toBe(refreshTokenFixtures);
       });
     });
   });
