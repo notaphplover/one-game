@@ -9,11 +9,12 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { RefreshTokenJwtPayload } from '../../../tokens/application/models/RefreshTokenJwtPayload';
 import { UserManagementInputPort } from '../../../users/application/ports/input/UserManagementInputPort';
 import { AuthMiddleware } from './AuthMiddleware';
 
 @Injectable()
-export class RefreshTokenAuthMiddleware extends AuthMiddleware {
+export class RefreshTokenAuthMiddleware extends AuthMiddleware<RefreshTokenJwtPayload> {
   constructor(
     @Inject(EnvironmentService)
     environmentService: EnvironmentService,
@@ -36,5 +37,21 @@ export class RefreshTokenAuthMiddleware extends AuthMiddleware {
         throw error;
       }
     }
+  }
+
+  protected override _verifyJwtPayload(
+    jwtPayload: unknown,
+  ): jwtPayload is RefreshTokenJwtPayload {
+    return (
+      jwtPayload !== null &&
+      typeof jwtPayload === 'object' &&
+      typeof (jwtPayload as Partial<RefreshTokenJwtPayload>).aud === 'string' &&
+      typeof (jwtPayload as Partial<RefreshTokenJwtPayload>).familyId ===
+        'string' &&
+      typeof (jwtPayload as Partial<RefreshTokenJwtPayload>).iat === 'number' &&
+      typeof (jwtPayload as Partial<RefreshTokenJwtPayload>).id === 'string' &&
+      typeof (jwtPayload as Partial<RefreshTokenJwtPayload>).iss === 'string' &&
+      typeof (jwtPayload as Partial<RefreshTokenJwtPayload>).sub === 'string'
+    );
   }
 }

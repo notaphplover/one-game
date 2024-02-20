@@ -17,6 +17,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { RefreshTokenJwtPayload } from '../../../tokens/application/models/RefreshTokenJwtPayload';
 import { PostAuthV2RequestParamHandler } from '../handlers/PostAuthV2RequestParamHandler';
 import { RefreshTokenAuthMiddleware } from '../middlewares/RefreshTokenAuthMiddleware';
 import { AuthManagementInputPort } from '../ports/input/AuthManagementInputPort';
@@ -24,7 +25,7 @@ import { AuthManagementInputPort } from '../ports/input/AuthManagementInputPort'
 @Injectable()
 export class PostAuthV2HttpRequestController extends HttpRequestController<
   Request | RequestWithBody,
-  [apiModels.AuthCreateQueryV2 | undefined, Request | RequestWithBody],
+  [apiModels.AuthCreateQueryV2 | undefined, RefreshTokenJwtPayload | undefined],
   apiModels.AuthV2
 > {
   readonly #authManagementInputPort: AuthManagementInputPort;
@@ -33,7 +34,10 @@ export class PostAuthV2HttpRequestController extends HttpRequestController<
     @Inject(PostAuthV2RequestParamHandler)
     requestParamHandler: Handler<
       [Request | RequestWithBody],
-      [apiModels.AuthCreateQueryV2 | undefined, Request | RequestWithBody]
+      [
+        apiModels.AuthCreateQueryV2 | undefined,
+        RefreshTokenJwtPayload | undefined,
+      ]
     >,
     @Inject(SingleEntityPostResponseBuilder)
     responseBuilder: Builder<
@@ -62,15 +66,21 @@ export class PostAuthV2HttpRequestController extends HttpRequestController<
 
   protected async _handleUseCase(
     authCreateQueryV2: apiModels.AuthCreateQueryV2 | undefined,
-    _request: Request | RequestWithBody,
+    refreshTokenJwtPayload: RefreshTokenJwtPayload | undefined,
   ): Promise<apiModels.AuthV2> {
     if (authCreateQueryV2 === undefined) {
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        'Expecting a JSON body',
-      );
+      if (refreshTokenJwtPayload === undefined) {
+        throw new AppError(
+          AppErrorKind.contractViolation,
+          'Expecting a JSON body or refresh token jwt credentials',
+        );
+      } else {
+        return this.#authManagementInputPort.createByRefreshTokenV2(
+          refreshTokenJwtPayload,
+        );
+      }
+    } else {
+      return this.#authManagementInputPort.createByQueryV2(authCreateQueryV2);
     }
-
-    return this.#authManagementInputPort.createByQueryV2(authCreateQueryV2);
   }
 }
