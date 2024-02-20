@@ -48,6 +48,9 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
         },
         [requestContextProperty]: {
           auth: {
+            jwtPayload: {
+              [Symbol()]: Symbol(),
+            },
             kind: AuthKind.user,
             user: UserV1Fixtures.any,
           },

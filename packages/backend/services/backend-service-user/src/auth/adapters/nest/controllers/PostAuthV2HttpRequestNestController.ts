@@ -1,25 +1,28 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
-  RequestWithBodyFromFastifyRequestBuilder,
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
+  Request,
   RequestWithBody,
   Response,
   ResponseWithBody,
   ErrorV1ResponseFromErrorBuilder,
+  RequestWithOptionalBodyFromFastifyRequestBuilder,
 } from '@cornie-js/backend-http';
 import { PostAuthV2HttpRequestController } from '@cornie-js/backend-user-application/auth';
 import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 @Controller('v2/auth')
-export class PostAuthV2HttpRequestNestController extends HttpNestFastifyController<RequestWithBody> {
+export class PostAuthV2HttpRequestNestController extends HttpNestFastifyController<
+  Request | RequestWithBody
+> {
   constructor(
-    @Inject(RequestWithBodyFromFastifyRequestBuilder)
-    requestBuilder: Builder<RequestWithBody, [FastifyRequest]>,
+    @Inject(RequestWithOptionalBodyFromFastifyRequestBuilder)
+    requestBuilder: Builder<Request | RequestWithBody, [FastifyRequest]>,
     @Inject(PostAuthV2HttpRequestController)
     requestController: Handler<
-      [RequestWithBody],
+      [Request | RequestWithBody],
       Response | ResponseWithBody<unknown>
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)

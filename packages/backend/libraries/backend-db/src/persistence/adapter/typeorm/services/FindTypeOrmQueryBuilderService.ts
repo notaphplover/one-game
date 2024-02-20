@@ -3,12 +3,15 @@ import {
   FindManyOptions,
   ObjectLiteral,
   QueryBuilder,
+  QueryRunner,
   Repository,
   SelectQueryBuilder,
   WhereExpressionBuilder,
 } from 'typeorm';
 
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
 import { FindQueryTypeOrmFromQueryWithQueryBuilderBuilder } from '../builders/FindQueryTypeOrmFromQueryWithQueryBuilderBuilder';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 
 export class FindTypeOrmQueryBuilderService<
   TModel,
@@ -49,11 +52,15 @@ export class FindTypeOrmQueryBuilderService<
     this.#findQueryTypeOrmFromQueryBuilder = findQueryTypeOrmFromQueryBuilder;
   }
 
-  public async find(query: TQuery): Promise<TModel[]> {
+  public async find(
+    query: TQuery,
+    transactionWrapper?: TransactionWrapper | undefined,
+  ): Promise<TModel[]> {
     const modelsDb: TModelDb[] = await this.#innerFind(
       query,
       async (queryBuilder: SelectQueryBuilder<TModelDb>): Promise<TModelDb[]> =>
         queryBuilder.getMany(),
+      transactionWrapper,
     );
 
     const models: TModel[] = await Promise.all(
@@ -65,13 +72,17 @@ export class FindTypeOrmQueryBuilderService<
     return models;
   }
 
-  public async findOne(query: TQuery): Promise<TModel | undefined> {
+  public async findOne(
+    query: TQuery,
+    transactionWrapper?: TransactionWrapper | undefined,
+  ): Promise<TModel | undefined> {
     const modelDb: TModelDb | undefined = await this.#innerFind(
       query,
       async (
         queryBuilder: SelectQueryBuilder<TModelDb>,
       ): Promise<TModelDb | undefined> =>
         (await queryBuilder.getOne()) ?? undefined,
+      transactionWrapper,
     );
 
     let model: TModel | undefined;
@@ -88,9 +99,16 @@ export class FindTypeOrmQueryBuilderService<
     findByQueryBuilder: (
       queryBuilder: SelectQueryBuilder<TModelDb>,
     ) => Promise<TOutputDb>,
+    transactionWrapper: TransactionWrapper | undefined,
   ): Promise<TOutputDb> {
+    const queryRunner: QueryRunner | undefined =
+      unwrapTypeOrmTransaction(transactionWrapper);
+
     const selectQueryBuilder: SelectQueryBuilder<TModelDb> =
-      this.#repository.createQueryBuilder(this.#repository.metadata.name);
+      this.#repository.createQueryBuilder(
+        this.#repository.metadata.name,
+        queryRunner,
+      );
 
     const findQueryTypeOrmOrQueryBuilder:
       | FindManyOptions<TModelDb>

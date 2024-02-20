@@ -1,9 +1,7 @@
-export interface RefreshTokenJwtPayload
+export interface AccessTokenJwtPayload
   extends Record<string | symbol, unknown> {
   aud: string;
-  familyId: string;
   iat: number;
-  id: string;
   iss: string;
   sub: string;
 }

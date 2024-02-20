@@ -3,22 +3,28 @@ import { RefreshTokenPersistenceOutputPort } from '@cornie-js/backend-user-appli
 import {
   RefreshTokenCreateQuery,
   RefreshToken,
+  RefreshTokenFindQuery,
 } from '@cornie-js/backend-user-domain/tokens';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateRefreshTokenTypeOrmService } from '../services/CreateRefreshTokenTypeOrmService';
+import { FindRefreshTokenTypeOrmService } from '../services/FindRefreshTokenTypeOrmService';
 
 @Injectable()
 export class RefreshTokenPersistenceTypeormAdapter
   implements RefreshTokenPersistenceOutputPort
 {
   readonly #createRefreshTokenTypeOrmService: CreateRefreshTokenTypeOrmService;
+  readonly #findRefreshTokenTypeOrmService: FindRefreshTokenTypeOrmService;
 
   constructor(
     @Inject(CreateRefreshTokenTypeOrmService)
     createRefreshTokenTypeOrmService: CreateRefreshTokenTypeOrmService,
+    @Inject(FindRefreshTokenTypeOrmService)
+    findRefreshTokenTypeOrmService: FindRefreshTokenTypeOrmService,
   ) {
     this.#createRefreshTokenTypeOrmService = createRefreshTokenTypeOrmService;
+    this.#findRefreshTokenTypeOrmService = findRefreshTokenTypeOrmService;
   }
 
   public async create(
@@ -27,6 +33,16 @@ export class RefreshTokenPersistenceTypeormAdapter
   ): Promise<RefreshToken> {
     return this.#createRefreshTokenTypeOrmService.insertOne(
       refreshTokenCreateQuery,
+      transactionWrapper,
+    );
+  }
+
+  public async findOne(
+    refreshTokenFindQuery: RefreshTokenFindQuery,
+    transactionWrapper?: TransactionWrapper | undefined,
+  ): Promise<RefreshToken | undefined> {
+    return this.#findRefreshTokenTypeOrmService.findOne(
+      refreshTokenFindQuery,
       transactionWrapper,
     );
   }

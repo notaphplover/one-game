@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { FindTypeOrmService } from '@cornie-js/backend-db/adapter/typeorm';
+import { FindTypeOrmQueryBuilderService } from '@cornie-js/backend-db/adapter/typeorm';
 import {
   GameSpec,
   GameSpecFindQuery,
@@ -18,7 +18,7 @@ import { GameSpecFromGameSpecDbBuilder } from '../builders/GameSpecFromGameSpecD
 import { GameSpecDb } from '../models/GameSpecDb';
 
 @Injectable()
-export class FindGameSpecTypeOrmService extends FindTypeOrmService<
+export class FindGameSpecTypeOrmService extends FindTypeOrmQueryBuilderService<
   GameSpec,
   GameSpecDb,
   GameSpecFindQuery
