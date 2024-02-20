@@ -4,11 +4,13 @@ import {
   RefreshTokenCreateQuery,
   RefreshToken,
   RefreshTokenFindQuery,
+  RefreshTokenUpdateQuery,
 } from '@cornie-js/backend-user-domain/tokens';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateRefreshTokenTypeOrmService } from '../services/CreateRefreshTokenTypeOrmService';
 import { FindRefreshTokenTypeOrmService } from '../services/FindRefreshTokenTypeOrmService';
+import { UpdateRefreshTokenTypeOrmService } from '../services/UpdateRefreshTokenTypeOrmService';
 
 @Injectable()
 export class RefreshTokenPersistenceTypeormAdapter
@@ -16,15 +18,19 @@ export class RefreshTokenPersistenceTypeormAdapter
 {
   readonly #createRefreshTokenTypeOrmService: CreateRefreshTokenTypeOrmService;
   readonly #findRefreshTokenTypeOrmService: FindRefreshTokenTypeOrmService;
+  readonly #updateRefreshTokenTypeOrmService: UpdateRefreshTokenTypeOrmService;
 
   constructor(
     @Inject(CreateRefreshTokenTypeOrmService)
     createRefreshTokenTypeOrmService: CreateRefreshTokenTypeOrmService,
     @Inject(FindRefreshTokenTypeOrmService)
     findRefreshTokenTypeOrmService: FindRefreshTokenTypeOrmService,
+    @Inject(UpdateRefreshTokenTypeOrmService)
+    updateRefreshTokenTypeOrmService: UpdateRefreshTokenTypeOrmService,
   ) {
     this.#createRefreshTokenTypeOrmService = createRefreshTokenTypeOrmService;
     this.#findRefreshTokenTypeOrmService = findRefreshTokenTypeOrmService;
+    this.#updateRefreshTokenTypeOrmService = updateRefreshTokenTypeOrmService;
   }
 
   public async create(
@@ -53,6 +59,16 @@ export class RefreshTokenPersistenceTypeormAdapter
   ): Promise<RefreshToken | undefined> {
     return this.#findRefreshTokenTypeOrmService.findOne(
       refreshTokenFindQuery,
+      transactionWrapper,
+    );
+  }
+
+  public async update(
+    refreshTokenUpdateQuery: RefreshTokenUpdateQuery,
+    transactionWrapper?: TransactionWrapper | undefined,
+  ): Promise<void> {
+    return this.#updateRefreshTokenTypeOrmService.update(
+      refreshTokenUpdateQuery,
       transactionWrapper,
     );
   }

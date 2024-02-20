@@ -5,20 +5,24 @@ import {
   RefreshToken,
   RefreshTokenCreateQuery,
   RefreshTokenFindQuery,
+  RefreshTokenUpdateQuery,
 } from '@cornie-js/backend-user-domain/tokens';
 import {
   RefreshTokenCreateQueryFixtures,
   RefreshTokenFindQueryFixtures,
   RefreshTokenFixtures,
+  RefreshTokenUpdateQueryFixtures,
 } from '@cornie-js/backend-user-domain/tokens/fixtures';
 
 import { CreateRefreshTokenTypeOrmService } from '../services/CreateRefreshTokenTypeOrmService';
 import { FindRefreshTokenTypeOrmService } from '../services/FindRefreshTokenTypeOrmService';
+import { UpdateRefreshTokenTypeOrmService } from '../services/UpdateRefreshTokenTypeOrmService';
 import { RefreshTokenPersistenceTypeormAdapter } from './RefreshTokenPersistenceTypeormAdapter';
 
 describe(RefreshTokenPersistenceTypeormAdapter.name, () => {
   let createRefreshTokenTypeOrmServiceMock: jest.Mocked<CreateRefreshTokenTypeOrmService>;
   let findRefreshTokenTypeOrmServiceMock: jest.Mocked<FindRefreshTokenTypeOrmService>;
+  let updateRefreshTokenTypeOrmServiceMock: jest.Mocked<UpdateRefreshTokenTypeOrmService>;
 
   let refreshTokenPersistenceTypeormAdapter: RefreshTokenPersistenceTypeormAdapter;
 
@@ -36,10 +40,17 @@ describe(RefreshTokenPersistenceTypeormAdapter.name, () => {
       jest.Mocked<FindRefreshTokenTypeOrmService>
     > as jest.Mocked<FindRefreshTokenTypeOrmService>;
 
+    updateRefreshTokenTypeOrmServiceMock = {
+      update: jest.fn(),
+    } as Partial<
+      jest.Mocked<UpdateRefreshTokenTypeOrmService>
+    > as jest.Mocked<UpdateRefreshTokenTypeOrmService>;
+
     refreshTokenPersistenceTypeormAdapter =
       new RefreshTokenPersistenceTypeormAdapter(
         createRefreshTokenTypeOrmServiceMock,
         findRefreshTokenTypeOrmServiceMock,
+        updateRefreshTokenTypeOrmServiceMock,
       );
   });
 
@@ -185,6 +196,52 @@ describe(RefreshTokenPersistenceTypeormAdapter.name, () => {
 
       it('should return RefreshToken', () => {
         expect(result).toBe(refreshTokenFixture);
+      });
+    });
+  });
+
+  describe('.update', () => {
+    let refreshTokenUpdateQueryFixture: RefreshTokenUpdateQuery;
+    let transactionWrapperFixture: TransactionWrapper;
+
+    beforeAll(() => {
+      refreshTokenUpdateQueryFixture = RefreshTokenUpdateQueryFixtures.any;
+
+      transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        updateRefreshTokenTypeOrmServiceMock.update.mockResolvedValueOnce(
+          undefined,
+        );
+
+        result = await refreshTokenPersistenceTypeormAdapter.update(
+          refreshTokenUpdateQueryFixture,
+          transactionWrapperFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call updateRefreshTokenTypeOrmService.update()', () => {
+        expect(
+          updateRefreshTokenTypeOrmServiceMock.update,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          updateRefreshTokenTypeOrmServiceMock.update,
+        ).toHaveBeenCalledWith(
+          refreshTokenUpdateQueryFixture,
+          transactionWrapperFixture,
+        );
+      });
+
+      it('should return udnefined', () => {
+        expect(result).toBeUndefined();
       });
     });
   });

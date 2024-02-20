@@ -53,6 +53,7 @@ describe(AuthManagementInputPort.name, () => {
       create: jest.fn(),
       find: jest.fn(),
       findOne: jest.fn(),
+      update: jest.fn(),
     };
     userCanCreateAuthSpecMock = {
       isSatisfiedBy: jest.fn(),
