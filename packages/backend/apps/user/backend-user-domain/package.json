@@ -27,6 +27,7 @@
   },
   "exports": {
     ".": "./lib/index.js",
+    "./foundation/domain": "./lib/foundation/domain/index.js",
     "./tokens": "./lib/tokens/domain/index.js",
     "./tokens/fixtures": "./lib/tokens/domain/fixtures/index.js",
     "./users": "./lib/users/domain/index.js",
