@@ -8,6 +8,7 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   RefreshToken,
   RefreshTokenCreateQuery,
+  RefreshTokenFindQuery,
 } from '@cornie-js/backend-user-domain/tokens';
 import {
   User,
@@ -105,27 +106,75 @@ export class AuthManagementInputPort {
   public async createByRefreshTokenV2(
     refreshTokenJwtPayload: RefreshTokenJwtPayload,
   ): Promise<apiModels.AuthV2> {
-    const [user, refreshTokenValueObjects]: [User | undefined, RefreshToken[]] =
-      await Promise.all([
-        this.#userPersistenceOuptutPort.findOne({
-          id: refreshTokenJwtPayload.sub,
-        }),
-        this.#refreshTokenPersistenceOutputPort.find({
-          date: {
-            from: new Date(refreshTokenJwtPayload.iat),
-          },
-          familyId: refreshTokenJwtPayload.familyId,
-          limit: 2,
-        }),
-      ]);
-
-    if (user === undefined || refreshTokenValueObjects.length === 0) {
-      this.#throwInvalidCredentialsError();
-    }
+    const user: User = await this.#getUserFromRefreshTokenJtwPayload(
+      refreshTokenJwtPayload,
+    );
 
     const familyId: string = refreshTokenJwtPayload.familyId;
 
     return this.#createAuthV2(familyId, user);
+  }
+
+  async #banFamilyRefreshTokens(
+    refreshTokenJwtPayload: RefreshTokenJwtPayload,
+  ): Promise<void> {
+    const thisAndNewerFamilyTokensFindQuery: RefreshTokenFindQuery =
+      this.#buildGetThisAndNewerFamilyTokensFindQuery(refreshTokenJwtPayload);
+
+    await this.#refreshTokenPersistenceOutputPort.update({
+      active: false,
+      findQuery: thisAndNewerFamilyTokensFindQuery,
+    });
+  }
+
+  #buildGetThisAndNewerFamilyTokensFindQuery(
+    refreshTokenJwtPayload: RefreshTokenJwtPayload,
+  ): RefreshTokenFindQuery {
+    return {
+      active: true,
+      date: {
+        from: new Date(refreshTokenJwtPayload.iat),
+      },
+      familyId: refreshTokenJwtPayload.familyId,
+    };
+  }
+
+  async #createAuthV2(familyId: string, user: User): Promise<apiModels.AuthV2> {
+    const refreshTokenId: string = this.#uuidProviderOutputPort.generateV4();
+
+    const [accessToken, refreshToken]: [string, string] = await Promise.all([
+      this.#generateAccessToken(user),
+      this.#generateRefreshToken(familyId, refreshTokenId, user),
+    ]);
+
+    await this.#persistRefreshToken(familyId, refreshTokenId, refreshToken);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async #generateAccessToken(user: User): Promise<string> {
+    const userJwtPayload: Partial<AccessTokenJwtPayload> = {
+      sub: user.id,
+    };
+
+    return this.#jwtService.create(userJwtPayload);
+  }
+
+  async #generateRefreshToken(
+    familyId: string,
+    refreshTokenId: string,
+    user: User,
+  ): Promise<string> {
+    const userJwtPayload: Partial<RefreshTokenJwtPayload> = {
+      familyId: familyId,
+      id: refreshTokenId,
+      sub: user.id,
+    };
+
+    return this.#jwtService.create(userJwtPayload);
   }
 
   async #getUserFromAuthCreateQueryV2(
@@ -200,42 +249,40 @@ export class AuthManagementInputPort {
     return userOrUndefined;
   }
 
-  async #generateAccessToken(user: User): Promise<string> {
-    const userJwtPayload: Partial<AccessTokenJwtPayload> = {
-      sub: user.id,
-    };
+  async #getUserAndNewerRefreshTokensFromRefreshTokenJtwPayload(
+    refreshTokenJwtPayload: RefreshTokenJwtPayload,
+  ): Promise<[User | undefined, RefreshToken[]]> {
+    const thisAndNewerFamilyTokensFindQuery: RefreshTokenFindQuery =
+      this.#buildGetThisAndNewerFamilyTokensFindQuery(refreshTokenJwtPayload);
 
-    return this.#jwtService.create(userJwtPayload);
-  }
-
-  async #createAuthV2(familyId: string, user: User): Promise<apiModels.AuthV2> {
-    const refreshTokenId: string = this.#uuidProviderOutputPort.generateV4();
-
-    const [accessToken, refreshToken]: [string, string] = await Promise.all([
-      this.#generateAccessToken(user),
-      this.#generateRefreshToken(familyId, refreshTokenId, user),
+    return Promise.all([
+      this.#userPersistenceOuptutPort.findOne({
+        id: refreshTokenJwtPayload.sub,
+      }),
+      this.#refreshTokenPersistenceOutputPort.find({
+        ...thisAndNewerFamilyTokensFindQuery,
+        limit: 2,
+      }),
     ]);
-
-    await this.#persistRefreshToken(familyId, refreshTokenId, refreshToken);
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
 
-  async #generateRefreshToken(
-    familyId: string,
-    refreshTokenId: string,
-    user: User,
-  ): Promise<string> {
-    const userJwtPayload: Partial<RefreshTokenJwtPayload> = {
-      familyId: familyId,
-      id: refreshTokenId,
-      sub: user.id,
-    };
+  async #getUserFromRefreshTokenJtwPayload(
+    refreshTokenJwtPayload: RefreshTokenJwtPayload,
+  ): Promise<User> {
+    const [user, refreshTokenValueObjects]: [User | undefined, RefreshToken[]] =
+      await this.#getUserAndNewerRefreshTokensFromRefreshTokenJtwPayload(
+        refreshTokenJwtPayload,
+      );
 
-    return this.#jwtService.create(userJwtPayload);
+    if (user === undefined || refreshTokenValueObjects.length !== 1) {
+      if (refreshTokenValueObjects.length !== 0) {
+        await this.#banFamilyRefreshTokens(refreshTokenJwtPayload);
+      }
+
+      this.#throwInvalidCredentialsError();
+    }
+
+    return user;
   }
 
   #isCodeAuthCreateQueryV1(

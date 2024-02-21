@@ -7,6 +7,8 @@ import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import {
   RefreshToken,
   RefreshTokenCreateQuery,
+  RefreshTokenFindQuery,
+  RefreshTokenUpdateQuery,
 } from '@cornie-js/backend-user-domain/tokens';
 import { RefreshTokenFixtures } from '@cornie-js/backend-user-domain/tokens/fixtures';
 import {
@@ -1148,17 +1150,20 @@ describe(AuthManagementInputPort.name, () => {
       });
 
       it('should call refreshTokenPersistenceOutputPort.find()', () => {
+        const expected: RefreshTokenFindQuery = {
+          active: true,
+          date: {
+            from: new Date(refreshTokenJwtPayloadFixture.iat),
+          },
+          familyId: refreshTokenJwtPayloadFixture.familyId,
+          limit: 2,
+        };
+
         expect(
           refreshTokenPersistenceOutputPortMock.find,
         ).toHaveBeenCalledTimes(1);
         expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
-          {
-            date: {
-              from: new Date(refreshTokenJwtPayloadFixture.iat),
-            },
-            familyId: refreshTokenJwtPayloadFixture.familyId,
-            limit: 2,
-          },
+          expected,
         );
       });
 
@@ -1209,17 +1214,20 @@ describe(AuthManagementInputPort.name, () => {
       });
 
       it('should call refreshTokenPersistenceOutputPort.find()', () => {
+        const expected: RefreshTokenFindQuery = {
+          active: true,
+          date: {
+            from: new Date(refreshTokenJwtPayloadFixture.iat),
+          },
+          familyId: refreshTokenJwtPayloadFixture.familyId,
+          limit: 2,
+        };
+
         expect(
           refreshTokenPersistenceOutputPortMock.find,
         ).toHaveBeenCalledTimes(1);
         expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
-          {
-            date: {
-              from: new Date(refreshTokenJwtPayloadFixture.iat),
-            },
-            familyId: refreshTokenJwtPayloadFixture.familyId,
-            limit: 2,
-          },
+          expected,
         );
       });
 
@@ -1281,17 +1289,20 @@ describe(AuthManagementInputPort.name, () => {
       });
 
       it('should call refreshTokenPersistenceOutputPort.find()', () => {
+        const expected: RefreshTokenFindQuery = {
+          active: true,
+          date: {
+            from: new Date(refreshTokenJwtPayloadFixture.iat),
+          },
+          familyId: refreshTokenJwtPayloadFixture.familyId,
+          limit: 2,
+        };
+
         expect(
           refreshTokenPersistenceOutputPortMock.find,
         ).toHaveBeenCalledTimes(1);
         expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
-          {
-            date: {
-              from: new Date(refreshTokenJwtPayloadFixture.iat),
-            },
-            familyId: refreshTokenJwtPayloadFixture.familyId,
-            limit: 2,
-          },
+          expected,
         );
       });
 
@@ -1300,6 +1311,12 @@ describe(AuthManagementInputPort.name, () => {
         expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith({
           id: refreshTokenJwtPayloadFixture.sub,
         });
+      });
+
+      it('should not call refreshTokenPersistenceOutputPort.update()', () => {
+        expect(
+          refreshTokenPersistenceOutputPortMock.update,
+        ).not.toHaveBeenCalled();
       });
 
       it('should call uuidProviderOutputPort.generateV4', () => {
@@ -1342,6 +1359,95 @@ describe(AuthManagementInputPort.name, () => {
         };
 
         expect(result).toStrictEqual(expected);
+      });
+    });
+
+    describe('when called, and userPersistenceOuptutPort.findOne() returns User and refreshTokenPersistenceOutputPort.find() returns an array with more than one token', () => {
+      let refreshTokenValueObjectFixture: RefreshToken;
+      let userFixture: User;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        refreshTokenValueObjectFixture = RefreshTokenFixtures.any;
+        userFixture = UserFixtures.any;
+
+        refreshTokenPersistenceOutputPortMock.find.mockResolvedValueOnce([
+          refreshTokenValueObjectFixture,
+          refreshTokenValueObjectFixture,
+        ]);
+        userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          userFixture,
+        );
+
+        try {
+          await authManagementInputPort.createByRefreshTokenV2(
+            refreshTokenJwtPayloadFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call refreshTokenPersistenceOutputPort.find()', () => {
+        const expected: RefreshTokenFindQuery = {
+          active: true,
+          date: {
+            from: new Date(refreshTokenJwtPayloadFixture.iat),
+          },
+          familyId: refreshTokenJwtPayloadFixture.familyId,
+          limit: 2,
+        };
+
+        expect(
+          refreshTokenPersistenceOutputPortMock.find,
+        ).toHaveBeenCalledTimes(1);
+        expect(refreshTokenPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should call userTokenPersistenceOutputPort.findOne()', () => {
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith({
+          id: refreshTokenJwtPayloadFixture.sub,
+        });
+      });
+
+      it('should call refreshTokenPersistenceOutputPort.update()', () => {
+        const expected: RefreshTokenUpdateQuery = {
+          active: false,
+          findQuery: {
+            active: true,
+            date: {
+              from: new Date(refreshTokenJwtPayloadFixture.iat),
+            },
+            familyId: refreshTokenJwtPayloadFixture.familyId,
+          },
+        };
+
+        expect(
+          refreshTokenPersistenceOutputPortMock.update,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          refreshTokenPersistenceOutputPortMock.update,
+        ).toHaveBeenCalledWith(expected);
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProprerties: Partial<AppError> = {
+          kind: AppErrorKind.missingCredentials,
+          message: 'Invalid credentials',
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProprerties),
+        );
       });
     });
   });
