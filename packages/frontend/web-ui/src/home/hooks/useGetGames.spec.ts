@@ -17,7 +17,7 @@ import {
 } from '@testing-library/react';
 import { UNEXPECTED_ERROR_MESSAGE, useGetGames } from './useGetGames';
 import { UseGetGamesResult } from '../models/UseGetGamesResult';
-import { useSelector } from 'react-redux';
+import { UseSelector, useSelector } from 'react-redux';
 import { httpClient } from '../../common/http/services/HttpService';
 
 describe(useGetGames.name, () => {
@@ -65,10 +65,14 @@ describe(useGetGames.name, () => {
 
       tokenFixture = 'jwt token fixture';
 
-      (useSelector as jest.Mock<typeof useSelector>).mockImplementation(() => ({
+      (
+        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
+          typeof useSelector
+        >
+      ).mockImplementation((() => ({
         token: tokenFixture,
         errorMessage: null,
-      }));
+      })) as Partial<UseSelector<unknown>> as UseSelector<unknown>);
 
       (
         httpClient.getGamesMine as jest.Mock<typeof httpClient.getGamesMine>
@@ -94,6 +98,12 @@ describe(useGetGames.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+
+      (
+        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
+          typeof useSelector
+        >
+      ).mockReset();
     });
 
     it('should call useSelector() ', () => {
@@ -119,10 +129,14 @@ describe(useGetGames.name, () => {
 
       tokenFixture = 'jwt token fixture';
 
-      (useSelector as jest.Mock<typeof useSelector>).mockImplementation(() => ({
+      (
+        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
+          typeof useSelector
+        >
+      ).mockImplementation((() => ({
         token: tokenFixture,
         errorMessage: null,
-      }));
+      })) as Partial<UseSelector<unknown>> as UseSelector<unknown>);
 
       (
         httpClient.getGamesMine as jest.Mock<typeof httpClient.getGamesMine>
@@ -148,6 +162,12 @@ describe(useGetGames.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+
+      (
+        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
+          typeof useSelector
+        >
+      ).mockReset();
     });
 
     it('should call useSelector() ', () => {
