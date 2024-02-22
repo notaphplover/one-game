@@ -1,75 +1,109 @@
+import { models as apiModels } from '@cornie-js/api-models';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { httpClient } from '../../common/http/services/HttpService';
+import { Either, Left, Right } from '../../common/models/Either';
+import { UseGetGamesState } from '../models/UseGetGamesState';
+import {
+  UseGetGamesParams,
+  UseGetGamesResult,
+} from '../models/UseGetGamesResult';
 
-const STATUS_GAME_IDLE: string = 'idle';
-const STATUS_GAME_PENDING: string = 'pending';
 export const STATUS_GAME_FULFILLED: string = 'fulfilled';
 export const STATUS_GAME_REJECTED: string = 'rejected';
 
-const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error!';
+export const UNEXPECTED_ERROR_MESSAGE: string =
+  'Unexpected error when fetching user games';
 
-export const useGetGames = (statusGame: string, page: any, pageSize: any) => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [gameList, setGameList] = useState({});
-  const [numPage, setNumPage] = useState<number>(page);
-  const [status, setStatus] = useState<string>(STATUS_GAME_IDLE);
+interface GetGamesHttpQuery {
+  [key: string]: string | string[];
+  status?: string;
+  page?: string;
+  pageSize?: string;
+}
+
+export const useGetGames = (pageSize: number): UseGetGamesResult => {
+  const [result, setResult] = useState<Either<
+    string,
+    apiModels.GameArrayV1
+  > | null>(null);
+  const [params, setParams] = useState<UseGetGamesParams | null>(null);
+  const [status, setStatus] = useState<UseGetGamesState>(UseGetGamesState.idle);
   const { token } = useSelector((state: any) => state.auth);
-
-  let resultGameStatus;
 
   useEffect(() => {
     void (async () => {
       switch (status) {
-        case STATUS_GAME_IDLE:
-          setStatus(STATUS_GAME_PENDING);
-          break;
-        case STATUS_GAME_PENDING:
+        case UseGetGamesState.pending:
           try {
-            resultGameStatus = await getGamesByStatus();
-            setStatus(STATUS_GAME_FULFILLED);
-            setGameList(resultGameStatus);
+            const gamesResult: apiModels.GameArrayV1 = await getGames();
+            const resultOk: Right<apiModels.GameArrayV1> = {
+              isRight: true,
+              value: gamesResult,
+            };
+            setResult(resultOk);
           } catch (err: unknown) {
-            setErrorMessage(err as string);
-            setStatus(STATUS_GAME_REJECTED);
+            const isResultKo: Left<string> = {
+              isRight: false,
+              value: UNEXPECTED_ERROR_MESSAGE,
+            };
+            setResult(isResultKo);
+          } finally {
+            setStatus(UseGetGamesState.idle);
           }
           break;
       }
     })();
   }, [status, token]);
 
-  const getGamesByStatus = async () => {
+  const buildHttpQuery = (
+    params: UseGetGamesParams | null,
+  ): GetGamesHttpQuery => {
+    if (params === null) {
+      throw new Error('Unexpected missing params');
+    }
+
+    const httpParams: {
+      status?: string;
+      page?: string;
+      pageSize?: string;
+    } = {
+      page: params.pageNumber.toString(),
+      pageSize: pageSize.toString(),
+    };
+
+    if (params.status !== null) {
+      httpParams.status = params.status;
+    }
+
+    return httpParams;
+  };
+
+  const getGames = async () => {
     const response = await httpClient.getGamesMine(
       {
         authorization: `Bearer ${token}`,
       },
-      {
-        status: statusGame,
-        page,
-        pageSize,
-      },
+      buildHttpQuery(params),
     );
 
     switch (response.statusCode) {
       case 200:
         return response.body;
       default:
-        throw new Error('Unexpected error when fetching user games');
+        throw new Error(UNEXPECTED_ERROR_MESSAGE);
     }
   };
 
-  const pageCounter = (numPage: number) => {
-    if (status === STATUS_GAME_FULFILLED) {
-      setNumPage(numPage);
-      setStatus(STATUS_GAME_IDLE);
+  const call = (params: UseGetGamesParams): void => {
+    if (status === UseGetGamesState.idle) {
+      setParams(params);
+      setStatus(UseGetGamesState.pending);
     }
   };
 
   return {
-    errorMessage,
-    gameList,
-    setNumPage: pageCounter,
-    numPage,
-    status,
+    call,
+    result,
   };
 };
