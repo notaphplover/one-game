@@ -52,51 +52,136 @@ describe(
         > as jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
       });
 
-      describe('having a RefreshTokenFindQuery with id', () => {
-        let refreshTokenFindQueryFixture: RefreshTokenFindQuery;
-
-        beforeAll(() => {
-          refreshTokenFindQueryFixture = RefreshTokenFindQueryFixtures.withId;
-        });
-
-        describe('when called', () => {
-          let result: unknown;
-
-          beforeAll(() => {
-            (
-              InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
-            ).mockReturnValue(true);
-
-            result =
-              refreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder.build(
-                refreshTokenFindQueryFixture,
-                queryBuilderFixture,
-              );
-          });
-
-          afterAll(() => {
-            jest.clearAllMocks();
-
-            (
-              InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
-            ).mockReset();
-          });
-
-          it('should call queryBuilder.andWhere()', () => {
-            expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
-            expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+      describe.each<
+        [
+          string,
+          RefreshTokenFindQuery,
+          (
+            refreshTokenFindQuery: RefreshTokenFindQuery,
+          ) => [string, ObjectLiteral][],
+        ]
+      >([
+        [
+          'with active',
+          RefreshTokenFindQueryFixtures.withActive,
+          (refreshTokenFindQuery: RefreshTokenFindQuery) => [
+            [
+              `${RefreshTokenDb.name}.active = :${RefreshTokenDb.name}active`,
+              {
+                [`${RefreshTokenDb.name}active`]: refreshTokenFindQuery.active,
+              },
+            ],
+          ],
+        ],
+        [
+          'with date from',
+          RefreshTokenFindQueryFixtures.withDateFrom,
+          (refreshTokenFindQuery: RefreshTokenFindQuery) => [
+            [
+              `${RefreshTokenDb.name}.dateFrom >= :${RefreshTokenDb.name}dateFrom`,
+              {
+                [`${RefreshTokenDb.name}dateFrom`]:
+                  refreshTokenFindQuery.date?.from,
+              },
+            ],
+          ],
+        ],
+        [
+          'with date to',
+          RefreshTokenFindQueryFixtures.withDateTo,
+          (refreshTokenFindQuery: RefreshTokenFindQuery) => [
+            [
+              `${RefreshTokenDb.name}.dateTo < :${RefreshTokenDb.name}dateTo`,
+              {
+                [`${RefreshTokenDb.name}dateTo`]:
+                  refreshTokenFindQuery.date?.to,
+              },
+            ],
+          ],
+        ],
+        [
+          'with family id',
+          RefreshTokenFindQueryFixtures.withFamilyId,
+          (refreshTokenFindQuery: RefreshTokenFindQuery) => [
+            [
+              `${RefreshTokenDb.name}.familyId = :${RefreshTokenDb.name}familyId`,
+              {
+                [`${RefreshTokenDb.name}familyId`]:
+                  refreshTokenFindQuery.familyId,
+              },
+            ],
+          ],
+        ],
+        [
+          'with id',
+          RefreshTokenFindQueryFixtures.withId,
+          (refreshTokenFindQuery: RefreshTokenFindQuery) => [
+            [
               `${RefreshTokenDb.name}.id = :${RefreshTokenDb.name}id`,
               {
-                [`${RefreshTokenDb.name}id`]: refreshTokenFindQueryFixture.id,
+                [`${RefreshTokenDb.name}id`]: refreshTokenFindQuery.id,
               },
+            ],
+          ],
+        ],
+      ])(
+        'having a RefreshTokenFindQuery %s',
+        (
+          _: string,
+          refreshTokenFindQueryFixture: RefreshTokenFindQuery,
+          andWhereExpectationsBuilder: (
+            refreshTokenFindQuery: RefreshTokenFindQuery,
+          ) => [string, ObjectLiteral][],
+        ) => {
+          let andWhereExpectations: [string, ObjectLiteral][];
+
+          beforeAll(() => {
+            andWhereExpectations = andWhereExpectationsBuilder(
+              refreshTokenFindQueryFixture,
             );
           });
 
-          it('should return a QueryBuilder', () => {
-            expect(result).toBe(queryBuilderFixture);
+          describe('when called', () => {
+            let result: unknown;
+
+            beforeAll(() => {
+              (
+                InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+              ).mockReturnValue(true);
+
+              result =
+                refreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder.build(
+                  refreshTokenFindQueryFixture,
+                  queryBuilderFixture,
+                );
+            });
+
+            afterAll(() => {
+              jest.clearAllMocks();
+
+              (
+                InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+              ).mockReset();
+            });
+
+            it('should call queryBuilder.andWhere()', () => {
+              expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
+              andWhereExpectations.map(
+                ([query, parameters]: [string, ObjectLiteral]) => {
+                  expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+                    query,
+                    parameters,
+                  );
+                },
+              );
+            });
+
+            it('should return a QueryBuilder', () => {
+              expect(result).toBe(queryBuilderFixture);
+            });
           });
-        });
-      });
+        },
+      );
     });
   },
 );

@@ -3,6 +3,7 @@ import {
   RefreshToken,
   RefreshTokenCreateQuery,
   RefreshTokenFindQuery,
+  RefreshTokenUpdateQuery,
 } from '@cornie-js/backend-user-domain/tokens';
 
 export const refreshTokenPersistenceOutputPortSymbol: symbol = Symbol.for(
@@ -15,8 +16,18 @@ export interface RefreshTokenPersistenceOutputPort {
     transactionWrapper?: TransactionWrapper,
   ): Promise<RefreshToken>;
 
+  find(
+    refreshTokenFindQuery: RefreshTokenFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<RefreshToken[]>;
+
   findOne(
     refreshTokenFindQuery: RefreshTokenFindQuery,
     transactionWrapper?: TransactionWrapper,
   ): Promise<RefreshToken | undefined>;
+
+  update(
+    refreshTokenUpdateQuery: RefreshTokenUpdateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<void>;
 }
