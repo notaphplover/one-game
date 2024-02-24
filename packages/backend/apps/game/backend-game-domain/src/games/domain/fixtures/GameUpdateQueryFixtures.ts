@@ -113,4 +113,13 @@ export class GameUpdateQueryFixtures {
 
     return fixture;
   }
+
+  public static get withTurn(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      turn: 1,
+    };
+
+    return fixture;
+  }
 }

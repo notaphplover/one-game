@@ -74,7 +74,7 @@ export class GameDb {
     type: 'smallint',
     width: 4,
   })
-  public drawCount!: number | null;
+  public readonly drawCount!: number | null;
 
   @PrimaryColumn({
     length: 36,
@@ -122,4 +122,11 @@ export class GameDb {
     width: 2,
   })
   public readonly status!: GameStatusDb;
+
+  @Column({
+    name: 'turn',
+    nullable: true,
+    type: 'smallint',
+  })
+  public readonly turn!: number | null;
 }

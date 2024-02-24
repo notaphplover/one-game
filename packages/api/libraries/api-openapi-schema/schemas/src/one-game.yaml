@@ -21,6 +21,7 @@ components:
 paths:
   /v1/auth:
     post:
+      deprecated: true
       summary: Create an authorization token
       operationId: createAuth
       requestBody:
@@ -629,6 +630,18 @@ paths:
       requestBody:
         content:
           application/json:
+            examples:
+              authByCode:
+                summary: User code
+                value:
+                  code: 0077df18851946fb67e552b83f34d58283548c38c4c5f144e6b655280b773528
+                  kind: code
+              authByLogin:
+                summary: User credentials
+                value:
+                  email: mail@example.com
+                  kind: login
+                  password: sample-password
             schema:
               $ref: 'https://onegame.schemas/api/v2/auth/auth-create-query.json'
         required: false
