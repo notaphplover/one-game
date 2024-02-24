@@ -152,6 +152,7 @@ describe(GameService.name, () => {
                 },
               },
             ],
+            turn: gameFixture.state.turn + 1,
           };
 
           expect(result).toStrictEqual(expectedGameUpdateQuery);
@@ -253,6 +254,7 @@ describe(GameService.name, () => {
                 },
               },
             ],
+            turn: gameFixture.state.turn + 1,
           };
 
           expect(result).toStrictEqual(expectedGameUpdateQuery);
@@ -315,6 +317,7 @@ describe(GameService.name, () => {
                   gameFixture.state.currentPlayingSlotIndex,
               },
             },
+            turn: gameFixture.state.turn + 1,
           };
 
           expect(result).toStrictEqual(expectedGameUpdateQuery);
@@ -357,6 +360,7 @@ describe(GameService.name, () => {
               },
             },
             status: GameStatus.finished,
+            turn: gameFixture.state.turn + 1,
           };
 
           expect(result).toStrictEqual(expectedGameUpdateQuery);
@@ -743,6 +747,7 @@ describe(GameService.name, () => {
               },
             ],
             status: GameStatus.active,
+            turn: 1,
           };
 
           expect(result).toStrictEqual(

@@ -26,6 +26,7 @@ import { GameDrawService } from './GameDrawService';
 const MIN_CARDS_TO_DRAW: number = 1;
 
 const UNO_ORIGINAL_ACTION_CARDS_PER_COLOR: number = 2;
+const UNO_ORIGINAL_FIRST_TURN: number = 1;
 const UNO_ORIGINAL_NUMBERS_AMOUNT: number = 10;
 const UNO_ORIGINAL_NUMBERED_NON_ZERO_CARDS_PER_COLOR: number = 2;
 const UNO_ORIGINAL_NUMBERED_ZERO_CARDS_PER_COLOR: number = 1;
@@ -66,6 +67,7 @@ export class GameService {
           currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
         },
       },
+      turn: game.state.turn + 1,
     };
 
     if (this.#isGameFinishedSpec.isSatisfiedBy(game)) {
@@ -165,6 +167,7 @@ export class GameService {
       },
       gameSlotUpdateQueries,
       status: GameStatus.active,
+      turn: UNO_ORIGINAL_FIRST_TURN,
     };
 
     return gameUpdateQuery;

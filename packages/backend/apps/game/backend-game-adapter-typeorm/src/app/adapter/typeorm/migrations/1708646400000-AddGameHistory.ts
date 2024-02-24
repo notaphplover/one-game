@@ -19,6 +19,7 @@ export class AddGameHistory1708646400000 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "GameInitialSnapshot" ("current_card" bit(16) NOT NULL, "current_color" bit(16) NOT NULL, "current_direction" character varying(32) NOT NULL, "current_playing_slot" smallint NOT NULL, "deck" json NOT NULL, "draw_count" smallint NOT NULL, "id" character varying(36) NOT NULL, "game_id" character varying(36) NOT NULL, CONSTRAINT "PK_79de72d7a2e49d332bd7ad3ec41" PRIMARY KEY ("id"))`,
     );
+    await queryRunner.query(`ALTER TABLE "Game" ADD "turn" smallint`);
     await queryRunner.query(
       `ALTER TABLE "GameAction" ADD CONSTRAINT "FK_4ccd5dc231685b49a5355edaa46" FOREIGN KEY ("game_id") REFERENCES "Game"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
@@ -40,6 +41,7 @@ export class AddGameHistory1708646400000 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "GameAction" DROP CONSTRAINT "FK_4ccd5dc231685b49a5355edaa46"`,
     );
+    await queryRunner.query(`ALTER TABLE "Game" DROP COLUMN "turn"`);
     await queryRunner.query(`DROP TABLE "GameInitialSnapshot"`);
     await queryRunner.query(`DROP TABLE "GameInitialSnapshotSlot"`);
     await queryRunner.query(
