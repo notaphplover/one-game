@@ -43,7 +43,8 @@
     "./cards/fixtures": "./lib/cards/application/fixtures/index.js",
     "./foundation/db": "./lib/foundation/db/application/index.js",
     "./games": "./lib/games/application/index.js",
-    "./games/fixtures": "./lib/games/application/fixtures/index.js"
+    "./games/fixtures": "./lib/games/application/fixtures/index.js",
+    "./gameSnapshots": "./lib/gameSnapshots/application/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",

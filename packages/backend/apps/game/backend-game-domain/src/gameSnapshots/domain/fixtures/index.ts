@@ -1,3 +1,7 @@
 import { GameInitialSnapshotSlotCreateQueryFixtures } from './GameInitialSnapshotSlotCreateQueryFixtures';
+import { GameInitialSnapshotSlotFixtures } from './GameInitialSnapshotSlotFixtures';
 
-export { GameInitialSnapshotSlotCreateQueryFixtures };
+export {
+  GameInitialSnapshotSlotCreateQueryFixtures,
+  GameInitialSnapshotSlotFixtures,
+};
