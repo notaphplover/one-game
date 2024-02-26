@@ -1,10 +1,10 @@
-import { InitialStateToken } from './models/InitialStateToken';
+import { AuthState } from './models/AuthState';
 import {
   STATUS_AUTH_AUTHENTICATED,
   STATUS_AUTH_NOT_AUTHENTICATED,
 } from '../data/authSliceStatus';
 
-export const createInitialState = (): InitialStateToken => {
+export const createInitialState = (): AuthState => {
   const token: string | null = window.localStorage.getItem('token');
   let status: string;
 

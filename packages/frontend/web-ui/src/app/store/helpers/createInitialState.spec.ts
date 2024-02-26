@@ -1,13 +1,13 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { createInitialState } from './createInitialState';
-import { InitialStateToken } from './models/InitialStateToken';
+import { AuthState } from './models/AuthState';
 import {
   STATUS_AUTH_AUTHENTICATED,
   STATUS_AUTH_NOT_AUTHENTICATED,
 } from '../data/authSliceStatus';
 
 describe(createInitialState.name, () => {
-  let getItemSpy: any;
+  let getItemSpy: jest.SpiedFunction<any>;
 
   beforeAll(() => {
     getItemSpy = jest.spyOn(
@@ -25,7 +25,7 @@ describe(createInitialState.name, () => {
   });
 
   describe('when called, localStorage.getItem() returns null', () => {
-    let result: InitialStateToken;
+    let result: AuthState;
 
     beforeAll(() => {
       result = createInitialState();
@@ -51,7 +51,7 @@ describe(createInitialState.name, () => {
 
   describe('when called, localStorage.getItem() returns string', () => {
     let tokenFixture: string;
-    let result: InitialStateToken;
+    let result: AuthState;
 
     beforeAll(() => {
       tokenFixture = 'token-fixture';
