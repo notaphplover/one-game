@@ -7,8 +7,7 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CardBuilder } from '../../../../cards/adapter/typeorm/builders/CardBuilder';
-import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
+import { CardArrayFromCardDbStringifiedArrayBuilder } from '../../../../cards/adapter/typeorm/builders/CardArrayFromCardDbStringifiedArrayBuilder';
 import { GameSlotDb } from '../models/GameSlotDb';
 
 @Injectable()
@@ -19,10 +18,17 @@ export class GameSlotFromGameSlotDbBuilder
       [GameSlotDb]
     >
 {
-  readonly #cardBuilder: Builder<Card, [CardDb]>;
+  readonly #cardArrayFromCardDbStringifiedArrayBuilder: Builder<
+    Card[],
+    [string]
+  >;
 
-  constructor(@Inject(CardBuilder) cardBuilder: Builder<Card, [CardDb]>) {
-    this.#cardBuilder = cardBuilder;
+  constructor(
+    @Inject(CardArrayFromCardDbStringifiedArrayBuilder)
+    cardArrayFromCardDbStringifiedArrayBuilder: Builder<Card[], [string]>,
+  ) {
+    this.#cardArrayFromCardDbStringifiedArrayBuilder =
+      cardArrayFromCardDbStringifiedArrayBuilder;
   }
 
   public build(
@@ -33,19 +39,6 @@ export class GameSlotFromGameSlotDbBuilder
     } else {
       return this.#buildActiveOrFinishedGameSlots(gameSlotDb);
     }
-  }
-
-  #buildCards(stringifiedCards: string): Card[] {
-    const jsonCards: unknown = this.#parseCards(stringifiedCards);
-
-    if (!this.#isNumberArray(jsonCards)) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected active game slot cards JSON value',
-      );
-    }
-
-    return jsonCards.map((cardDb: CardDb) => this.#cardBuilder.build(cardDb));
   }
 
   #buildActiveOrFinishedGameSlots(
@@ -59,7 +52,9 @@ export class GameSlotFromGameSlotDbBuilder
     }
 
     return {
-      cards: this.#buildCards(gameSlotDb.cards as string),
+      cards: this.#cardArrayFromCardDbStringifiedArrayBuilder.build(
+        gameSlotDb.cards as string,
+      ),
       position: gameSlotDb.position,
       userId: gameSlotDb.userId,
     };
@@ -70,27 +65,5 @@ export class GameSlotFromGameSlotDbBuilder
       position: gameSlotDb.position,
       userId: gameSlotDb.userId,
     };
-  }
-
-  #isNumberArray(value: unknown): value is number[] {
-    return (
-      Array.isArray(value) &&
-      value.every((element: unknown) => typeof element === 'number')
-    );
-  }
-
-  #parseCards(stringifiedCards: string): unknown {
-    try {
-      return JSON.parse(stringifiedCards);
-    } catch (error: unknown) {
-      if (AppError.isAppError(error)) {
-        throw error;
-      } else {
-        throw new AppError(
-          AppErrorKind.unknown,
-          'Unexpected error parsing active game slot cards JSON',
-        );
-      }
-    }
   }
 }
