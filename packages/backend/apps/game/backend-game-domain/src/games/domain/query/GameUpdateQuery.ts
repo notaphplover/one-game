@@ -19,4 +19,5 @@ export interface GameUpdateQuery {
   drawCount?: number;
   gameSlotUpdateQueries?: GameSlotUpdateQuery[];
   status?: GameStatus;
+  turn?: number;
 }

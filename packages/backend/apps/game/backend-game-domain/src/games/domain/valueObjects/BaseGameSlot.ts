@@ -1,4 +1,4 @@
 export interface BaseGameSlot {
-  position: number;
-  userId: string;
+  readonly position: number;
+  readonly userId: string;
 }

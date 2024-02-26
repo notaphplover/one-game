@@ -63,10 +63,10 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<
     await super.unsubscribe(channel);
   }
 
-  protected override async handleMessageFromChannel(
+  protected override _handleMessageFromChannel(
     channel: string,
     message: string,
-  ): Promise<void> {
+  ): void {
     const gameId: string = this.#getGameId(channel);
 
     this.#broadcastGameEvent(gameId, message);

@@ -235,8 +235,14 @@ ${JSON.stringify(operation.requestBody)}
       }
 
       if (applicationJsonMediaContent.schema !== undefined) {
+        const isRequired: boolean = requestBody.required ?? false;
+
         parameterDeclarations.push(
-          this.#buildBodyParameter(options, applicationJsonMediaContent.schema),
+          this.#buildBodyParameter(
+            options,
+            applicationJsonMediaContent.schema,
+            isRequired,
+          ),
         );
       }
     }
@@ -281,14 +287,25 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
   #buildBodyParameter(
     options: HttpClientMethodsOptions,
     requestBodySchema: JsonSchema202012,
+    isRequired: boolean,
   ): ts.ParameterDeclaration {
+    const typeNode: ts.TypeNode = this.#buildNodeTypeFromSchema(
+      options,
+      requestBodySchema,
+    );
+
     const parameterDeclaration: ts.ParameterDeclaration =
       ts.factory.createParameterDeclaration(
         undefined,
         undefined,
         ts.factory.createIdentifier(BODY_PARAMETER_NAME),
         undefined,
-        this.#buildNodeTypeFromSchema(options, requestBodySchema),
+        isRequired
+          ? typeNode
+          : ts.factory.createUnionTypeNode([
+              typeNode,
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.UndefinedKeyword),
+            ]),
         undefined,
       );
 

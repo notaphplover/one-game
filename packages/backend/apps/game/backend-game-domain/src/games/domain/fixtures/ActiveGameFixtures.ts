@@ -28,6 +28,7 @@ export class ActiveGameFixtures {
         drawCount: 0,
         slots: [ActiveGameSlotFixtures.withPositionZero],
         status: GameStatus.active,
+        turn: 1,
       },
     };
   }

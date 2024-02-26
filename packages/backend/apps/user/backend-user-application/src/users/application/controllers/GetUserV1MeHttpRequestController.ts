@@ -11,7 +11,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
+import { AccessTokenAuthMiddleware } from '../../../auth/application/middlewares/AccessTokenAuthMiddleware';
 import { GetUserV1MeRequestParamHandler } from '../handlers/GetUserV1MeRequestParamHandler';
 
 @Injectable()
@@ -30,8 +30,8 @@ export class GetUserV1MeHttpRequestController extends HttpRequestController<
       Response | ResponseWithBody<unknown>,
       [unknown]
     >,
-    @Inject(AuthMiddleware)
-    authMiddleware: AuthMiddleware,
+    @Inject(AccessTokenAuthMiddleware)
+    authMiddleware: AccessTokenAuthMiddleware,
   ) {
     super(
       requestParamHandler,

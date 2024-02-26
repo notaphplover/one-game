@@ -13,7 +13,7 @@ RUN pnpm run build --filter=web-ui
 RUN mkdir -p /prod/web-ui
 RUN cp -r ./packages/frontend/web-ui/dist /prod/web-ui
 
-FROM nginx:1.25.3-alpine as frontendservicewebui
+FROM nginx:1.25.4-alpine as frontendservicewebui
 
 COPY ./docker/frontend/nginx/nginx.conf /etc/nginx/nginx.conf
 

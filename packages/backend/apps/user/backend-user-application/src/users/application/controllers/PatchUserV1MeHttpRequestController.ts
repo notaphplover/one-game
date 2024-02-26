@@ -12,7 +12,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
+import { AccessTokenAuthMiddleware } from '../../../auth/application/middlewares/AccessTokenAuthMiddleware';
 import { PatchUserV1MeRequestParamHandler } from '../handlers/PatchUserV1MeRequestParamHandler';
 import { UserManagementInputPort } from '../ports/input/UserManagementInputPort';
 
@@ -37,8 +37,8 @@ export class PatchUserV1MeHttpRequestController extends HttpRequestController<
       Response | ResponseWithBody<unknown>,
       [unknown]
     >,
-    @Inject(AuthMiddleware)
-    authMiddleware: AuthMiddleware,
+    @Inject(AccessTokenAuthMiddleware)
+    authMiddleware: AccessTokenAuthMiddleware,
     @Inject(UserManagementInputPort)
     userManagementInputPort: UserManagementInputPort,
   ) {

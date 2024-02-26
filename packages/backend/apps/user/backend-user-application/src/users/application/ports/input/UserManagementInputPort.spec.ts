@@ -5,6 +5,7 @@ import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { Builder, BuilderAsync, Handler } from '@cornie-js/backend-common';
 import {
   User,
+  UserCodeFindQuery,
   UserCreateQuery,
   UserFindQuery,
   UserUpdateQuery,
@@ -19,8 +20,8 @@ import { UuidContext } from '../../../../foundation/common/application/models/Uu
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserV1Fixtures } from '../../fixtures/UserV1Fixtures';
+import { UserCodePersistenceOutputPort } from '../output/UserCodePersistenceOutputPort';
 import { UserPersistenceOutputPort } from '../output/UserPersistenceOutputPort';
-import { UserCodeManagementInputPort } from './UserCodeManagementInputPort';
 import { UserManagementInputPort } from './UserManagementInputPort';
 
 describe(UserManagementInputPort.name, () => {
@@ -30,7 +31,7 @@ describe(UserManagementInputPort.name, () => {
   let updateUserUseCaseHandlerMock: jest.Mocked<
     Handler<[UserUpdateQuery], User>
   >;
-  let userCodeManagementInputPortMock: jest.Mocked<UserCodeManagementInputPort>;
+  let userCodePersistenceOutputPortMock: jest.Mocked<UserCodePersistenceOutputPort>;
   let userCreateQueryFromUserCreateQueryV1BuilderMock: jest.Mocked<
     BuilderAsync<UserCreateQuery, [apiModels.UserCreateQueryV1, UuidContext]>
   >;
@@ -50,11 +51,11 @@ describe(UserManagementInputPort.name, () => {
     updateUserUseCaseHandlerMock = {
       handle: jest.fn(),
     };
-    userCodeManagementInputPortMock = {
-      deleteFromUser: jest.fn(),
+    userCodePersistenceOutputPortMock = {
+      delete: jest.fn(),
     } as Partial<
-      jest.Mocked<UserCodeManagementInputPort>
-    > as jest.Mocked<UserCodeManagementInputPort>;
+      jest.Mocked<UserCodePersistenceOutputPort>
+    > as jest.Mocked<UserCodePersistenceOutputPort>;
     userCreateQueryFromUserCreateQueryV1BuilderMock = {
       build: jest.fn(),
     };
@@ -73,7 +74,7 @@ describe(UserManagementInputPort.name, () => {
     userManagementInputPort = new UserManagementInputPort(
       createUserUseCaseHandlerMock,
       updateUserUseCaseHandlerMock,
-      userCodeManagementInputPortMock,
+      userCodePersistenceOutputPortMock,
       userCreateQueryFromUserCreateQueryV1BuilderMock,
       userPersistenceOutputPortMock,
       userUpdateQueryFromUserMeUpdateQueryV1BuilderMock,
@@ -174,7 +175,7 @@ describe(UserManagementInputPort.name, () => {
           userFixture,
         );
 
-        userCodeManagementInputPortMock.deleteFromUser.mockResolvedValueOnce(
+        userCodePersistenceOutputPortMock.delete.mockResolvedValueOnce(
           undefined,
         );
         userPersistenceOutputPortMock.delete.mockResolvedValueOnce(undefined);
@@ -197,13 +198,16 @@ describe(UserManagementInputPort.name, () => {
         );
       });
 
-      it('should call userCodePersistenceOutputPort.deleteFromUser()', () => {
-        expect(
-          userCodeManagementInputPortMock.deleteFromUser,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          userCodeManagementInputPortMock.deleteFromUser,
-        ).toHaveBeenCalledWith(userFixture);
+      it('should call userCodePersistenceOutputPort.delete()', () => {
+        const expected: UserCodeFindQuery = {
+          userId: userFixture.id,
+        };
+        expect(userCodePersistenceOutputPortMock.delete).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(userCodePersistenceOutputPortMock.delete).toHaveBeenCalledWith(
+          expected,
+        );
       });
 
       it('should call userPersistenceOutputPort.delete()', () => {

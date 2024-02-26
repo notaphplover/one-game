@@ -5,7 +5,7 @@
  * and run the generation script to regenerate this file.
  */
 
-export type Types = TypesV1;
+export type Types = TypesV1 | TypesV2;
 export type TypesV1 =
   | AuthCreateQueryV1
   | AuthV1
@@ -76,6 +76,12 @@ export type GameSlotV1 =
   | NonStartedGameSlotV1;
 export type GameSpecArrayV1 = GameSpecV1[];
 export type GameSpecSortOptionV1 = 'gameIds';
+export type TypesV2 =
+  | AuthCreateQueryV2
+  | AuthV2
+  | CodeAuthCreateQueryV2
+  | LoginAuthCreateQueryV2;
+export type AuthCreateQueryV2 = CodeAuthCreateQueryV2 | LoginAuthCreateQueryV2;
 
 export interface CodeAuthCreateQueryV1 {
   code: string;
@@ -215,4 +221,17 @@ export interface UserV1 {
   active: boolean;
   id: string;
   name: string;
+}
+export interface CodeAuthCreateQueryV2 {
+  code: string;
+  kind: 'code';
+}
+export interface LoginAuthCreateQueryV2 {
+  email: string;
+  kind: 'login';
+  password: string;
+}
+export interface AuthV2 {
+  accessToken: string;
+  refreshToken: string;
 }

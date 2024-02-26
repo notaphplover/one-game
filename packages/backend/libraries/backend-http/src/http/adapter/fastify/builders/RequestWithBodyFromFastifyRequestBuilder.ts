@@ -1,9 +1,11 @@
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { Injectable } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
 
 import { RequestWithBody } from '../../../application/models/RequestWithBody';
 import { RequestFromFastifyRequestBuilder } from './RequestFromFastifyRequestBuilder';
 
+@Injectable()
 export class RequestWithBodyFromFastifyRequestBuilder
   extends RequestFromFastifyRequestBuilder
   implements Builder<RequestWithBody, [FastifyRequest]>

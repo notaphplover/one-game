@@ -76,9 +76,7 @@ export class FindTypeOrmService<
 
     let model: TModel | undefined;
 
-    if (modelDb === undefined) {
-      model = undefined;
-    } else {
+    if (modelDb !== undefined) {
       model = await this.#modelFromModelDbBuilder.build(modelDb);
     }
 

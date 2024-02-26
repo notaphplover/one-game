@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { validateFormName } from '../../common/helpers/validateFormName';
-import { validateFormEmail } from '../../common/helpers/validateFormEmail';
-import { validateFormPassword } from '../../common/helpers/validateFormPassword';
-import { validateFormConfirmPassword } from '../../common/helpers/validateFormConfirmPassword';
+import { validateName } from '../../common/helpers/validateName';
+import { validateEmail } from '../../common/helpers/validateEmail';
+import { validatePassword } from '../../common/helpers/validatePassword';
+import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
 import { httpClient } from '../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 
@@ -12,6 +12,10 @@ export const STATUS_REG_VALIDATION_KO = 2;
 export const STATUS_REG_PENDING_BACKEND = 3;
 export const STATUS_REG_BACKEND_KO = 4;
 export const STATUS_REG_BACKEND_OK = 5;
+
+export const INVALID_CREDENTIALS_REG_ERROR = 'Invalid credentials.';
+export const UNEXPECTED_REG_ERROR =
+  'Ups... Something strange happened. Try again?';
 
 export const useRegisterForm = (initialFormFields = {}) => {
   const [formFields, setFormFields] = useState(initialFormFields);
@@ -58,14 +62,33 @@ export const useRegisterForm = (initialFormFields = {}) => {
 
     const formValidationValue = {};
 
-    validateFormName(formValidationValue, formFields.name);
-    validateFormEmail(formValidationValue, formFields.email);
-    validateFormPassword(formValidationValue, formFields.password);
-    validateFormConfirmPassword(
-      formValidationValue,
+    const nameValidation = validateName(formFields.name);
+
+    if (!nameValidation.isRight) {
+      formValidationValue.name = nameValidation.value;
+    }
+
+    const emailValidation = validateEmail(formFields.email);
+
+    if (!emailValidation.isRight) {
+      formValidationValue.email = emailValidation.value;
+    }
+
+    const passwordValidation = validatePassword(formFields.password);
+
+    if (!passwordValidation.isRight) {
+      formValidationValue.password = passwordValidation.value;
+    }
+
+    const confirmPasswordValidation = validateConfirmPassword(
       formFields.password,
       formFields.confirmPassword,
     );
+
+    if (!confirmPasswordValidation.isRight) {
+      formValidationValue.confirmPassword =
+        confirmPasswordValidation.value.join(' ');
+    }
 
     setFormValidation(formValidationValue);
 
@@ -86,10 +109,10 @@ export const useRegisterForm = (initialFormFields = {}) => {
     if (response.statusCode === 200) {
       setFormStatus(STATUS_REG_BACKEND_OK);
     } else if (response.statusCode === 409) {
-      setBackendError(`The user already exists.`);
+      setBackendError(INVALID_CREDENTIALS_REG_ERROR);
       setFormStatus(STATUS_REG_BACKEND_KO);
     } else {
-      setBackendError(`Ups... Something strange happened. Try again?`);
+      setBackendError(UNEXPECTED_REG_ERROR);
       setFormStatus(STATUS_REG_BACKEND_KO);
     }
   };

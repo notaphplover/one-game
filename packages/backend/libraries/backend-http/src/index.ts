@@ -9,6 +9,7 @@ import { FastifyReplySseConsumerFromFastifyReplyBuilder } from './http/adapter/f
 import { FastifySseReplyFromResponseBuilder } from './http/adapter/fastify/builders/FastifySseReplyFromResponseBuilder';
 import { RequestFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestFromFastifyRequestBuilder';
 import { RequestWithBodyFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestWithBodyFromFastifyRequestBuilder';
+import { RequestWithOptionalBodyFromFastifyRequestBuilder } from './http/adapter/fastify/builders/RequestWithOptionalBodyFromFastifyRequestBuilder';
 import { HttpNestFastifyController } from './http/adapter/nest/controllers/HttpNestFastifyController';
 import { HttpNestFastifySseController } from './http/adapter/nest/controllers/HttpNestFastifySseController';
 import { ErrorV1ResponseFromErrorBuilder } from './http/application/builders/ErrorV1ResponseFromErrorBuilder';
@@ -82,6 +83,7 @@ export {
   RequestQueryParseFailureKind,
   RequestService,
   RequestWithBodyFromFastifyRequestBuilder,
+  RequestWithOptionalBodyFromFastifyRequestBuilder,
   requestContextProperty,
   SingleEntityDeleteResponseBuilder,
   SingleEntityGetResponseBuilder,

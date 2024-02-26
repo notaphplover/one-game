@@ -124,6 +124,10 @@ export class GameSetQueryTypeOrmFromGameUpdateQueryBuilder
       gameSetQueryTypeOrm.drawCount = gameUpdateQuery.drawCount;
     }
 
+    if (gameUpdateQuery.turn !== undefined) {
+      gameSetQueryTypeOrm.turn = gameUpdateQuery.turn;
+    }
+
     return gameSetQueryTypeOrm;
   }
 }

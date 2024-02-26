@@ -1,0 +1,2 @@
+proxy_http_version 1.1;
+proxy_pass ${USER_SERVICE_BASE_URL}/v2/auth;

@@ -9,7 +9,11 @@ servers:
     description: Production server
 components:
   securitySchemes:
-    bearerAuth:
+    accessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    refreshToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -17,6 +21,7 @@ components:
 paths:
   /v1/auth:
     post:
+      deprecated: true
       summary: Create an authorization token
       operationId: createAuth
       requestBody:
@@ -24,6 +29,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/auth/auth-create-query.json'
+        required: true
       responses:
         '200':
           description: Authorization token created
@@ -55,6 +61,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/games/game-create-query.json'
+        required: true
       responses:
         '200':
           description: Game created
@@ -81,7 +88,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -131,7 +138,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -172,7 +179,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
     patch:
@@ -190,6 +197,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/games/game-id-update-query.json'
+        required: true
       responses:
         '200':
           description: Game updated
@@ -216,7 +224,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -257,13 +265,13 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
   /v1/games/specs:
     get:
-      summary: Get a game spec
+      summary: Get game specs
       operationId: getGamesSpecs
       parameters:
         - in: query
@@ -316,7 +324,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -329,6 +337,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/games/game-id-slot-create-query.json'
+        required: true
       parameters:
         - in: path
           name: gameId
@@ -374,7 +383,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -421,7 +430,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - Game
 
@@ -434,6 +443,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/users/user-create-query.json'
+        required: true
       responses:
         '200':
           description: User created
@@ -461,6 +471,13 @@ paths:
     delete:
       summary: Delete user code
       operationId: deleteUserByEmailCode
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email of the user whose code is being deleted
       responses:
         '200':
           description: User deleted
@@ -475,11 +492,18 @@ paths:
     post:
       summary: Create user code
       operationId: createUserByEmailCode
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: Email of the user whose code is being deleted
       responses:
         '201':
           description: User code created
-        '422':
-          description: Unprocessable operation
+        '409':
+          description: Entity conflict. This is likely to happen due to the existence of another code for this user.
           content:
             application/json:
               schema:
@@ -501,7 +525,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
 
@@ -528,7 +552,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
     patch:
@@ -539,6 +563,7 @@ paths:
           application/json:
             schema:
               $ref: 'https://onegame.schemas/api/v1/users/user-me-update-query.json'
+        required: true
       responses:
         '200':
           description: User updated
@@ -559,7 +584,7 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
 
@@ -594,9 +619,56 @@ paths:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       security:
-        - bearerAuth: []
+        - accessToken: []
       tags:
         - User
+
+  /v2/auth:
+    post:
+      summary: Create an authorization token
+      operationId: createAuthV2
+      requestBody:
+        content:
+          application/json:
+            examples:
+              authByCode:
+                summary: User code
+                value:
+                  code: 0077df18851946fb67e552b83f34d58283548c38c4c5f144e6b655280b773528
+                  kind: code
+              authByLogin:
+                summary: User credentials
+                value:
+                  email: mail@example.com
+                  kind: login
+                  password: sample-password
+            schema:
+              $ref: 'https://onegame.schemas/api/v2/auth/auth-create-query.json'
+        required: false
+      responses:
+        '200':
+          description: Authorization token created
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v2/auth/auth.json'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - {}
+        - refreshToken: []
+      tags:
+        - Auth
 
 tags:
   - name: Auth

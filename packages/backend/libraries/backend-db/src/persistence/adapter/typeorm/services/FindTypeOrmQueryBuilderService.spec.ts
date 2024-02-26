@@ -1,14 +1,19 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../utils/unwrapTypeOrmTransaction');
+
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
   ObjectLiteral,
   QueryBuilder,
+  QueryRunner,
   Repository,
   SelectQueryBuilder,
   WhereExpressionBuilder,
 } from 'typeorm';
 
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 import { FindTypeOrmQueryBuilderService } from './FindTypeOrmQueryBuilderService';
 
 interface ModelTest {
@@ -100,20 +105,36 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
   });
 
   describe('.find()', () => {
-    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb>', () => {
-      let queryTestFixture: QueryTest;
+    let queryTestFixture: QueryTest;
+    let transactionWrapperFixture: TransactionWrapper | undefined;
+
+    beforeAll(() => {
+      queryTestFixture = {
+        fooValue: 'bar',
+      };
+
+      transactionWrapperFixture = Symbol() as unknown as
+        | TransactionWrapper
+        | undefined;
+    });
+
+    describe('when called', () => {
       let modelTestFixture: ModelTest;
       let modelTestFixtures: ModelTest[];
+      let queryRunnerFixture: QueryRunner;
+
+      let result: unknown[];
 
       beforeAll(async () => {
         modelTestFixture = {
           foo: 'bar',
         };
         modelTestFixtures = [modelTestFixture];
-        queryTestFixture = {
-          fooValue: 'bar',
-        };
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
 
+        (
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
+        ).mockReturnValueOnce(queryRunnerFixture);
         (
           modelFromModelDbBuilderMock as jest.Mocked<
             BuilderAsync<ModelTest, [ModelTest]>
@@ -129,32 +150,83 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
         ).mockResolvedValueOnce(queryBuilderMock);
         queryBuilderMock.getMany.mockResolvedValueOnce(modelTestFixtures);
 
-        await findTypeOrmQueryBuilderService.find(queryTestFixture);
+        result = await findTypeOrmQueryBuilderService.find(
+          queryTestFixture,
+          transactionWrapperFixture,
+        );
       });
 
       afterAll(() => {
         jest.clearAllMocks();
       });
 
+      it('should call unwrapTypeOrmTransaction()', () => {
+        expect(unwrapTypeOrmTransaction).toHaveBeenCalledTimes(1);
+        expect(unwrapTypeOrmTransaction).toHaveBeenCalledWith(
+          transactionWrapperFixture,
+        );
+      });
+
+      it('should call repository.createQueryBuilder()', () => {
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+          repositoryMock.metadata.name,
+          queryRunnerFixture,
+        );
+      });
+
+      it('should call findQueryTypeOrmFromQueryBuilder.build()', () => {
+        expect(queryTypeOrmFromQueryBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(queryTypeOrmFromQueryBuilderMock.build).toHaveBeenCalledWith(
+          queryTestFixture,
+          queryBuilderMock,
+        );
+      });
+
       it('should call queryBuilder.getMany()', () => {
         expect(queryBuilderMock.getMany).toHaveBeenCalledTimes(1);
         expect(queryBuilderMock.getMany).toHaveBeenCalledWith();
+      });
+
+      it('should call modelFromModelDbBuilder.build()', () => {
+        expect(modelFromModelDbBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(modelFromModelDbBuilderMock.build).toHaveBeenCalledWith(
+          modelTestFixture,
+        );
+      });
+
+      it('should return ModelTest[]', () => {
+        expect(result).toStrictEqual([modelTestFixture]);
       });
     });
   });
 
   describe('.findOne()', () => {
-    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb> and repository.findOne() returns null', () => {
-      let queryTestFixture: QueryTest;
+    let queryTestFixture: QueryTest;
+    let transactionWrapperFixture: TransactionWrapper | undefined;
+
+    beforeAll(() => {
+      queryTestFixture = {
+        fooValue: 'bar',
+      };
+
+      transactionWrapperFixture = Symbol() as unknown as
+        | TransactionWrapper
+        | undefined;
+    });
+
+    describe('when called and repository.findOne() returns null', () => {
       let modelTestFixture: null;
+      let queryRunnerFixture: QueryRunner;
       let result: unknown;
 
       beforeAll(async () => {
         modelTestFixture = null;
-        queryTestFixture = {
-          fooValue: 'bar',
-        };
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
 
+        (
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
+        ).mockReturnValueOnce(queryRunnerFixture);
         (
           queryTypeOrmFromQueryBuilderMock.build as jest.Mock<
             (
@@ -165,11 +237,29 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
         ).mockResolvedValueOnce(queryBuilderMock);
         queryBuilderMock.getOne.mockResolvedValueOnce(modelTestFixture);
 
-        result = await findTypeOrmQueryBuilderService.findOne(queryTestFixture);
+        result = await findTypeOrmQueryBuilderService.findOne(
+          queryTestFixture,
+          transactionWrapperFixture,
+        );
       });
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should call unwrapTypeOrmTransaction()', () => {
+        expect(unwrapTypeOrmTransaction).toHaveBeenCalledTimes(1);
+        expect(unwrapTypeOrmTransaction).toHaveBeenCalledWith(
+          transactionWrapperFixture,
+        );
+      });
+
+      it('should call repository.createQueryBuilder()', () => {
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+          repositoryMock.metadata.name,
+          queryRunnerFixture,
+        );
       });
 
       it('should call queryTypeOrmFromQueryBuilder.build()', () => {
@@ -194,19 +284,20 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
       });
     });
 
-    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb> and repository.findOne() returns a TModelDb', () => {
-      let queryTestFixture: QueryTest;
+    describe('when called and repository.findOne() returns a TModelDb', () => {
       let modelTestFixture: ModelTest;
+      let queryRunnerFixture: QueryRunner;
       let result: unknown;
 
       beforeAll(async () => {
         modelTestFixture = {
           foo: 'bar',
         };
-        queryTestFixture = {
-          fooValue: 'bar',
-        };
+        queryRunnerFixture = Symbol() as unknown as QueryRunner;
 
+        (
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
+        ).mockReturnValueOnce(queryRunnerFixture);
         (
           queryTypeOrmFromQueryBuilderMock.build as jest.Mock<
             (
@@ -222,11 +313,29 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
           >
         ).build.mockResolvedValueOnce(modelTestFixture);
 
-        result = await findTypeOrmQueryBuilderService.findOne(queryTestFixture);
+        result = await findTypeOrmQueryBuilderService.findOne(
+          queryTestFixture,
+          transactionWrapperFixture,
+        );
       });
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should call unwrapTypeOrmTransaction()', () => {
+        expect(unwrapTypeOrmTransaction).toHaveBeenCalledTimes(1);
+        expect(unwrapTypeOrmTransaction).toHaveBeenCalledWith(
+          transactionWrapperFixture,
+        );
+      });
+
+      it('should call repository.createQueryBuilder()', () => {
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledTimes(1);
+        expect(repositoryMock.createQueryBuilder).toHaveBeenCalledWith(
+          repositoryMock.metadata.name,
+          queryRunnerFixture,
+        );
       });
 
       it('should call queryTypeOrmFromQueryBuilder.build()', () => {

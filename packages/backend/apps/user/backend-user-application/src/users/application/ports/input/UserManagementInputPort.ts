@@ -25,16 +25,19 @@ import { UserV1FromUserBuilder } from '../../builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../handlers/CreateUserUseCaseHandler';
 import { UpdateUserUseCaseHandler } from '../../handlers/UpdateUserUseCaseHandler';
 import {
+  UserCodePersistenceOutputPort,
+  userCodePersistenceOutputPortSymbol,
+} from '../output/UserCodePersistenceOutputPort';
+import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
 } from '../output/UserPersistenceOutputPort';
-import { UserCodeManagementInputPort } from './UserCodeManagementInputPort';
 
 @Injectable()
 export class UserManagementInputPort {
   readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
   readonly #updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>;
-  readonly #userCodeManagementInputPort: UserCodeManagementInputPort;
+  readonly #userCodePersistenceOutputPort: UserCodePersistenceOutputPort;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
     UserCreateQuery,
     [apiModels.UserCreateQueryV1, UuidContext]
@@ -52,8 +55,8 @@ export class UserManagementInputPort {
     createUserUseCaseHandler: Handler<[UserCreateQuery], User>,
     @Inject(UpdateUserUseCaseHandler)
     updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>,
-    @Inject(UserCodeManagementInputPort)
-    userCodeManagementInputPort: UserCodeManagementInputPort,
+    @Inject(userCodePersistenceOutputPortSymbol)
+    userCodePersistenceOutputPort: UserCodePersistenceOutputPort,
     @Inject(UserCreateQueryFromUserCreateQueryV1Builder)
     userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
       UserCreateQuery,
@@ -73,7 +76,7 @@ export class UserManagementInputPort {
   ) {
     this.#createUserUseCaseHandler = createUserUseCaseHandler;
     this.#updateUserUseCaseHandler = updateUserUseCaseHandler;
-    this.#userCodeManagementInputPort = userCodeManagementInputPort;
+    this.#userCodePersistenceOutputPort = userCodePersistenceOutputPort;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
       userCreateQueryFromUserCreateQueryV1Builder;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
@@ -113,7 +116,10 @@ export class UserManagementInputPort {
       throw new AppError(AppErrorKind.entityNotFound, `User "${id}" not found`);
     }
 
-    await this.#userCodeManagementInputPort.deleteFromUser(userOrUndefined);
+    await this.#userCodePersistenceOutputPort.delete({
+      userId: userOrUndefined.id,
+    });
+
     await this.#userPersistenceOutputPort.delete(userFindQuery);
   }
 

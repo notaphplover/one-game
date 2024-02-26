@@ -21,19 +21,26 @@ class AuthMiddlewareMock extends AuthMiddleware<Record<string, unknown>> {
   readonly #getUserIdMock: jest.Mock<
     (jwtPayload: Record<string, unknown>) => string
   >;
+  readonly #verifyJwtPayloadMock: jest.Mock<
+    (jwtPayload: unknown) => jwtPayload is Record<string, unknown>
+  >;
 
   constructor(
     backendServicesSecret: string,
-    jwtService: JwtService<Record<string, unknown>>,
+    jwtService: JwtService,
     findUserMock: jest.Mock<
       (id: string) => Promise<apiModels.UserV1 | undefined>
     >,
     getUserIdMock: jest.Mock<(jwtPayload: Record<string, unknown>) => string>,
+    verifyJwtPayloadMock: jest.Mock<
+      (jwtPayload: unknown) => jwtPayload is Record<string, unknown>
+    >,
   ) {
     super(backendServicesSecret, jwtService);
 
     this.#findUserMock = findUserMock;
     this.#getUserIdMock = getUserIdMock;
+    this.#verifyJwtPayloadMock = verifyJwtPayloadMock;
   }
 
   protected override async _findUser(
@@ -45,15 +52,24 @@ class AuthMiddlewareMock extends AuthMiddleware<Record<string, unknown>> {
   protected override _getUserId(jwtPayload: Record<string, unknown>): string {
     return this.#getUserIdMock(jwtPayload);
   }
+
+  protected override _verifyJwtPayload(
+    jwtPayload: unknown,
+  ): jwtPayload is Record<string, unknown> {
+    return this.#verifyJwtPayloadMock(jwtPayload);
+  }
 }
 
 describe(AuthMiddleware.name, () => {
   let backendServicesSecretFixture: string;
-  let jwtServiceMock: jest.Mocked<JwtService<Record<string, unknown>>>;
+  let jwtServiceMock: jest.Mocked<JwtService>;
   let findUserMock: jest.Mock<
     (id: string) => Promise<apiModels.UserV1 | undefined>
   >;
   let getUserIdMock: jest.Mock<(jwtPayload: Record<string, unknown>) => string>;
+  let verifyJwtPayloadMock: jest.Mock<
+    (jwtPayload: unknown) => jwtPayload is Record<string, unknown>
+  >;
 
   let authMiddlewareMock: AuthMiddlewareMock;
 
@@ -61,19 +77,18 @@ describe(AuthMiddleware.name, () => {
     backendServicesSecretFixture = 'backend-services-secret-fixture';
     jwtServiceMock = {
       parse: jest.fn(),
-    } as Partial<
-      jest.Mocked<JwtService<Record<string, unknown>>>
-    > as jest.Mocked<JwtService<Record<string, unknown>>>;
+    } as Partial<jest.Mocked<JwtService>> as jest.Mocked<JwtService>;
 
     findUserMock = jest.fn();
-
     getUserIdMock = jest.fn();
+    verifyJwtPayloadMock = jest.fn();
 
     authMiddlewareMock = new AuthMiddlewareMock(
       backendServicesSecretFixture,
       jwtServiceMock,
       findUserMock,
       getUserIdMock,
+      verifyJwtPayloadMock,
     );
   });
 
@@ -186,10 +201,65 @@ describe(AuthMiddleware.name, () => {
         jwtFixture = 'token';
       });
 
-      describe('when called, and userManagementInputPort.findOne() returns a UserV1', () => {
+      describe('when called, and verifyJwtPayload() returns false', () => {
         let requestFixture: Request;
 
-        let jwtPayloadFixture: Record<string, unknown>;
+        let jwtPayloadFixture: Record<string | symbol, unknown>;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          requestFixture = {
+            headers: {
+              authorization: `Bearer ${jwtFixture}`,
+            },
+            query: {},
+            urlParameters: {},
+          };
+
+          jwtPayloadFixture = { [Symbol()]: Symbol() };
+
+          jwtServiceMock.parse.mockResolvedValueOnce(jwtPayloadFixture);
+          verifyJwtPayloadMock.mockReturnValueOnce(true);
+
+          try {
+            await authMiddlewareMock.handle(requestFixture, haltMock);
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call jwtService.parse()', () => {
+          expect(jwtServiceMock.parse).toHaveBeenCalledTimes(1);
+          expect(jwtServiceMock.parse).toHaveBeenCalledWith(jwtFixture);
+        });
+
+        it('should call verifyJwtPayload()', () => {
+          expect(verifyJwtPayloadMock).toHaveBeenCalledTimes(1);
+          expect(verifyJwtPayloadMock).toHaveBeenCalledWith(jwtPayloadFixture);
+        });
+
+        it('should throw an Error', () => {
+          const errorProperties: Partial<AppError> = {
+            kind: AppErrorKind.invalidCredentials,
+            message: 'No user was found matching current credentials',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(errorProperties),
+          );
+        });
+      });
+
+      describe('when called, and verifyJwtPayload() returns true and userManagementInputPort.findOne() returns a UserV1', () => {
+        let requestFixture: Request;
+
+        let jwtPayloadFixture: Record<string | symbol, unknown>;
         let userIdFixture: string;
         let userV1Fixture: apiModels.UserV1;
 
@@ -213,6 +283,7 @@ describe(AuthMiddleware.name, () => {
           };
 
           jwtServiceMock.parse.mockResolvedValueOnce(jwtPayloadFixture);
+          verifyJwtPayloadMock.mockReturnValueOnce(true);
           getUserIdMock.mockReturnValueOnce(userIdFixture);
           findUserMock.mockResolvedValueOnce(userV1Fixture);
 
@@ -228,6 +299,11 @@ describe(AuthMiddleware.name, () => {
           expect(jwtServiceMock.parse).toHaveBeenCalledWith(jwtFixture);
         });
 
+        it('should call verifyJwtPayload()', () => {
+          expect(verifyJwtPayloadMock).toHaveBeenCalledTimes(1);
+          expect(verifyJwtPayloadMock).toHaveBeenCalledWith(jwtPayloadFixture);
+        });
+
         it('should call getUserId()', () => {
           expect(getUserIdMock).toHaveBeenCalledTimes(1);
           expect(getUserIdMock).toHaveBeenCalledWith(jwtPayloadFixture);
@@ -240,6 +316,7 @@ describe(AuthMiddleware.name, () => {
 
         it('should place auth in the request', () => {
           const expectedAuth: UserAuth = {
+            jwtPayload: jwtPayloadFixture,
             kind: AuthKind.user,
             user: userV1Fixture,
           };
@@ -252,7 +329,7 @@ describe(AuthMiddleware.name, () => {
         });
       });
 
-      describe('when called, and userManagementInputPort.findOne() returns undefined', () => {
+      describe('when called, and verifyJwtPayload() returns true and userManagementInputPort.findOne() returns undefined', () => {
         let result: unknown;
 
         let requestFixture: Request;
@@ -274,6 +351,7 @@ describe(AuthMiddleware.name, () => {
           userIdFixture = 'idFixture';
 
           jwtServiceMock.parse.mockResolvedValueOnce(jwtPayloadFixture);
+          verifyJwtPayloadMock.mockReturnValueOnce(true);
           getUserIdMock.mockReturnValueOnce(userIdFixture);
           findUserMock.mockResolvedValueOnce(undefined);
 
@@ -291,6 +369,11 @@ describe(AuthMiddleware.name, () => {
         it('should call jwtService.parse()', () => {
           expect(jwtServiceMock.parse).toHaveBeenCalledTimes(1);
           expect(jwtServiceMock.parse).toHaveBeenCalledWith(jwtFixture);
+        });
+
+        it('should call verifyJwtPayload()', () => {
+          expect(verifyJwtPayloadMock).toHaveBeenCalledTimes(1);
+          expect(verifyJwtPayloadMock).toHaveBeenCalledWith(jwtPayloadFixture);
         });
 
         it('should call getUserId()', () => {

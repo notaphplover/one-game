@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../utils/unwrapTypeOrmTransactionContext');
+jest.mock('../utils/unwrapTypeOrmTransaction');
 
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
@@ -13,8 +13,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
-import { unwrapTypeOrmTransactionContext } from '../utils/unwrapTypeOrmTransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 import { UpdateTypeOrmQueryBuilderService } from './UpdateTypeOrmQueryBuilderService';
 
 interface ModelTest {
@@ -100,15 +100,15 @@ describe(UpdateTypeOrmQueryBuilderService.name, () => {
 
   describe('.update()', () => {
     let queryFixture: QueryTest;
-    let transactionContextFixture: TransactionContext | undefined;
+    let transactionWrapperFixture: TransactionWrapper | undefined;
 
     beforeAll(() => {
       queryFixture = {
         bar: 'sample',
       };
 
-      transactionContextFixture = Symbol() as unknown as
-        | TransactionContext
+      transactionWrapperFixture = Symbol() as unknown as
+        | TransactionWrapper
         | undefined;
     });
 
@@ -124,9 +124,7 @@ describe(UpdateTypeOrmQueryBuilderService.name, () => {
         };
 
         (
-          unwrapTypeOrmTransactionContext as jest.Mock<
-            typeof unwrapTypeOrmTransactionContext
-          >
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
         ).mockReturnValueOnce(queryRunnerFixture);
         (
           findQueryTypeOrmFromUpdateQueryBuilderMock.build as jest.Mock<
@@ -142,7 +140,7 @@ describe(UpdateTypeOrmQueryBuilderService.name, () => {
 
         await updateTypeOrmService.update(
           queryFixture,
-          transactionContextFixture,
+          transactionWrapperFixture,
         );
       });
 

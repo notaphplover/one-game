@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../utils/unwrapTypeOrmTransactionContext');
+jest.mock('../utils/unwrapTypeOrmTransaction');
 
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
@@ -14,8 +14,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { TransactionContext } from '../../../application/models/TransactionContext';
-import { unwrapTypeOrmTransactionContext } from '../utils/unwrapTypeOrmTransactionContext';
+import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
+import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 import { InsertTypeOrmService } from './InsertTypeOrmService';
 
 interface ModelTest {
@@ -104,15 +104,15 @@ describe(InsertTypeOrmService.name, () => {
 
   describe('.insertOne()', () => {
     let queryFixture: QueryTest;
-    let transactionContextFixture: TransactionContext | undefined;
+    let transactionWrapperFixture: TransactionWrapper | undefined;
 
     beforeAll(() => {
       queryFixture = {
         bar: 'sample',
       };
 
-      transactionContextFixture = Symbol() as unknown as
-        | TransactionContext
+      transactionWrapperFixture = Symbol() as unknown as
+        | TransactionWrapper
         | undefined;
     });
 
@@ -140,9 +140,7 @@ describe(InsertTypeOrmService.name, () => {
         };
 
         (
-          unwrapTypeOrmTransactionContext as jest.Mock<
-            typeof unwrapTypeOrmTransactionContext
-          >
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
         ).mockReturnValueOnce(queryRunnerFixture);
         queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
         queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
@@ -163,7 +161,7 @@ describe(InsertTypeOrmService.name, () => {
 
         result = await insertTypeOrmService.insertOne(
           queryFixture,
-          transactionContextFixture,
+          transactionWrapperFixture,
         );
       });
 
@@ -263,9 +261,7 @@ describe(InsertTypeOrmService.name, () => {
         typeOrmQueryFixture = {};
 
         (
-          unwrapTypeOrmTransactionContext as jest.Mock<
-            typeof unwrapTypeOrmTransactionContext
-          >
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
         ).mockReturnValueOnce(queryRunnerFixture);
         queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
         queryBuilderMock.execute.mockResolvedValueOnce(insertResultFixture);
@@ -313,9 +309,7 @@ describe(InsertTypeOrmService.name, () => {
         queryRunnerFixture = Symbol() as unknown as QueryRunner;
 
         (
-          unwrapTypeOrmTransactionContext as jest.Mock<
-            typeof unwrapTypeOrmTransactionContext
-          >
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
         ).mockReturnValueOnce(queryRunnerFixture);
 
         (
@@ -355,15 +349,15 @@ describe(InsertTypeOrmService.name, () => {
 
   describe('.insertMany()', () => {
     let queryFixture: QueryTest;
-    let transactionContextFixture: TransactionContext | undefined;
+    let transactionWrapperFixture: TransactionWrapper | undefined;
 
     beforeAll(() => {
       queryFixture = {
         bar: 'sample',
       };
 
-      transactionContextFixture = Symbol() as unknown as
-        | TransactionContext
+      transactionWrapperFixture = Symbol() as unknown as
+        | TransactionWrapper
         | undefined;
     });
 
@@ -389,9 +383,7 @@ describe(InsertTypeOrmService.name, () => {
         typeOrmQueryFixture = [{}];
 
         (
-          unwrapTypeOrmTransactionContext as jest.Mock<
-            typeof unwrapTypeOrmTransactionContext
-          >
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
         ).mockReturnValueOnce(queryRunnerFixture);
 
         queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);
@@ -413,7 +405,7 @@ describe(InsertTypeOrmService.name, () => {
 
         result = await insertTypeOrmService.insertMany(
           queryFixture,
-          transactionContextFixture,
+          transactionWrapperFixture,
         );
       });
 
@@ -515,9 +507,7 @@ describe(InsertTypeOrmService.name, () => {
         typeOrmQueryFixture = {};
 
         (
-          unwrapTypeOrmTransactionContext as jest.Mock<
-            typeof unwrapTypeOrmTransactionContext
-          >
+          unwrapTypeOrmTransaction as jest.Mock<typeof unwrapTypeOrmTransaction>
         ).mockReturnValueOnce(queryRunnerFixture);
 
         queryBuilderMock.getMany.mockResolvedValueOnce([modelFixture]);

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { JwtServiceOptions } from '../../../application/models/JwtServiceOptions';
 import { convertToJsonwebtokenAlgorithm } from '../converters/convertToJsonwebtokenAlgorithm';
 
-export class JsonWebTokenService<TToken extends Record<string, unknown>> {
+export class JsonWebTokenService {
   readonly #privateKey: string;
   readonly #publicKey: string;
   readonly #signOptions: jwt.SignOptions;
@@ -33,7 +33,9 @@ export class JsonWebTokenService<TToken extends Record<string, unknown>> {
     };
   }
 
-  public async create(payload: TToken): Promise<string> {
+  public async create<TToken extends Record<string, unknown>>(
+    payload: TToken,
+  ): Promise<string> {
     try {
       return await this.#promisifyJwtSign(payload);
     } catch (error: unknown) {
@@ -41,7 +43,7 @@ export class JsonWebTokenService<TToken extends Record<string, unknown>> {
     }
   }
 
-  public async parse(jwtToken: string): Promise<TToken> {
+  public async parse<TToken>(jwtToken: string): Promise<TToken> {
     try {
       return await this.#promisifyJwtVerify(jwtToken);
     } catch (error: unknown) {
@@ -59,7 +61,9 @@ export class JsonWebTokenService<TToken extends Record<string, unknown>> {
     }
   }
 
-  async #promisifyJwtSign(payload: TToken): Promise<string> {
+  async #promisifyJwtSign<TToken extends Record<string, unknown>>(
+    payload: TToken,
+  ): Promise<string> {
     return new Promise(
       (
         resolve: (value: string) => void,
@@ -81,7 +85,7 @@ export class JsonWebTokenService<TToken extends Record<string, unknown>> {
     );
   }
 
-  async #promisifyJwtVerify(jwtToken: string): Promise<TToken> {
+  async #promisifyJwtVerify<TToken>(jwtToken: string): Promise<TToken> {
     return new Promise(
       (
         resolve: (value: TToken) => void,
