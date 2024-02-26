@@ -349,6 +349,7 @@ describe(GameFromGameDbBuilder.name, () => {
             drawCount: gameDbFixture.drawCount as number,
             slots: [gameSlotFixture],
             status: GameStatus.active,
+            turn: gameDbFixture.turn as number,
           },
         };
 

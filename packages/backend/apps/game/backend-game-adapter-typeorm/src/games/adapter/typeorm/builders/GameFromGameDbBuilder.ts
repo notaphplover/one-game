@@ -120,7 +120,8 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
       gameDb.currentPlayingSlotIndex === null ||
       gameDb.currentTurnCardsPlayed === null ||
       gameDb.deck === null ||
-      gameDb.drawCount === null
+      gameDb.drawCount === null ||
+      gameDb.turn === null
     ) {
       throw new AppError(AppErrorKind.unknown, 'Unexpected card spec db entry');
     }
@@ -146,6 +147,7 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
         drawCount: gameDb.drawCount,
         slots: gameSlots,
         status: GameStatus.active,
+        turn: gameDb.turn,
       },
     };
   }
