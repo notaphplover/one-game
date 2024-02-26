@@ -1,4 +1,9 @@
 import { GameInitialSnapshot } from './entities/GameInitialSnapshot';
 import { GameInitialSnapshotSlot } from './entities/GameInitialSnapshotSlot';
+import { GameInitialSnapshotSlotCreateQuery } from './query/GameInitialSnapshotSlotCreateQuery';
 
-export type { GameInitialSnapshot, GameInitialSnapshotSlot };
+export type {
+  GameInitialSnapshot,
+  GameInitialSnapshotSlotCreateQuery,
+  GameInitialSnapshotSlot,
+};

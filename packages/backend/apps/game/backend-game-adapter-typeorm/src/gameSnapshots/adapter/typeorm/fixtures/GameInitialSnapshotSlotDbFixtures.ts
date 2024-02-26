@@ -12,7 +12,8 @@ export class GameInitialSnapshotSlotDbFixtures {
     gameInitialSnapshotSlotDb.id = 'ea7ea510-6588-4c1e-a58f-fed69c60c4a1';
     gameInitialSnapshotSlotDb.gameInitialSnapshot =
       null as unknown as GameInitialSnapshotDb;
-    gameInitialSnapshotSlotDb.gameInitialSnapshotId = '';
+    gameInitialSnapshotSlotDb.gameInitialSnapshotId =
+      '83073aec-b81b-4107-97f9-baa46de5dd41';
     gameInitialSnapshotSlotDb.position = 0;
     gameInitialSnapshotSlotDb.userId = '83073aec-b81b-4107-97f9-baa46de5dd40';
 
