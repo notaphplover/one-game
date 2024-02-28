@@ -44,7 +44,7 @@
       "inputs": ["src/**/*.{cjs,js,jsx}"]
     },
     "@cornie-js/web-ui#test:uncommitted": {
-      "inputs": ["src/**/*.js"],
+      "inputs": ["src/**/*.{js,jsx,ts,tsx}"],
       "outputs": []
     },
     "close:e2e": {

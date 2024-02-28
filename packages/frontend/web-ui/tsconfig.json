@@ -6,7 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "dom"],
     "module": "ES2022",
     "moduleResolution": "Bundler",
     "noEmit": true,
