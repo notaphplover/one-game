@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   GameInitialSnapshotSlot,
   GameInitialSnapshotSlotCreateQuery,
@@ -10,12 +11,12 @@ import {
 } from '@cornie-js/backend-game-domain/gameSnapshots/fixtures';
 
 import { CreateGameInitialSnapshotSlotTypeOrmService } from '../services/CreateGameInitialSnapshotSlotTypeOrmService';
-import { GameInitialSnapshotPersistenceTypeOrmAdapter } from './GameInitialSnapshotPersistenceTypeOrmAdapter';
+import { GameInitialSnapshotSlotPersistenceTypeOrmAdapter } from './GameInitialSnapshotSlotPersistenceTypeOrmAdapter';
 
-describe(GameInitialSnapshotPersistenceTypeOrmAdapter.name, () => {
+describe(GameInitialSnapshotSlotPersistenceTypeOrmAdapter.name, () => {
   let createGameInitialSnapshotSlotTypeOrmServiceMock: jest.Mocked<CreateGameInitialSnapshotSlotTypeOrmService>;
 
-  let gameInitialSnapshotPersistenceTypeOrmAdapter: GameInitialSnapshotPersistenceTypeOrmAdapter;
+  let gameInitialSnapshotPersistenceTypeOrmAdapter: GameInitialSnapshotSlotPersistenceTypeOrmAdapter;
 
   beforeAll(() => {
     createGameInitialSnapshotSlotTypeOrmServiceMock = {
@@ -25,17 +26,19 @@ describe(GameInitialSnapshotPersistenceTypeOrmAdapter.name, () => {
     > as jest.Mocked<CreateGameInitialSnapshotSlotTypeOrmService>;
 
     gameInitialSnapshotPersistenceTypeOrmAdapter =
-      new GameInitialSnapshotPersistenceTypeOrmAdapter(
+      new GameInitialSnapshotSlotPersistenceTypeOrmAdapter(
         createGameInitialSnapshotSlotTypeOrmServiceMock,
       );
   });
 
   describe('.build', () => {
     let gameInitialSnapshotSlotCreateQueryFixture: GameInitialSnapshotSlotCreateQuery;
+    let transactionWrapperFixture: TransactionWrapper;
 
     beforeAll(() => {
       gameInitialSnapshotSlotCreateQueryFixture =
         GameInitialSnapshotSlotCreateQueryFixtures.any;
+      transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
     });
 
     describe('when called', () => {
@@ -52,6 +55,7 @@ describe(GameInitialSnapshotPersistenceTypeOrmAdapter.name, () => {
 
         result = await gameInitialSnapshotPersistenceTypeOrmAdapter.create(
           gameInitialSnapshotSlotCreateQueryFixture,
+          transactionWrapperFixture,
         );
       });
 
@@ -65,7 +69,10 @@ describe(GameInitialSnapshotPersistenceTypeOrmAdapter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           createGameInitialSnapshotSlotTypeOrmServiceMock.insertOne,
-        ).toHaveBeenCalledWith(gameInitialSnapshotSlotCreateQueryFixture);
+        ).toHaveBeenCalledWith(
+          gameInitialSnapshotSlotCreateQueryFixture,
+          transactionWrapperFixture,
+        );
       });
 
       it('should return GameInitialSnapshotSlot', () => {

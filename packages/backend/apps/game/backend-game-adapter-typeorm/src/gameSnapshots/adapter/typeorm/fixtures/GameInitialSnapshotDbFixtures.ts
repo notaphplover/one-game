@@ -23,4 +23,13 @@ export class GameInitialSnapshotDbFixtures {
 
     return fixture;
   }
+
+  public static get withGameSlotsOne(): GameInitialSnapshotDb {
+    const fixture: Writable<GameInitialSnapshotDb> =
+      GameInitialSnapshotDbFixtures.any;
+
+    fixture.gameSlotsDb = [GameInitialSnapshotSlotDbFixtures.any];
+
+    return fixture;
+  }
 }

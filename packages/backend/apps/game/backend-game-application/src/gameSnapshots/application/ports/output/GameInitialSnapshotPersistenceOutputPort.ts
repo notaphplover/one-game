@@ -1,6 +1,7 @@
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
-  GameInitialSnapshotSlot,
-  GameInitialSnapshotSlotCreateQuery,
+  GameInitialSnapshot,
+  GameInitialSnapshotCreateQuery,
 } from '@cornie-js/backend-game-domain/gameSnapshots';
 
 export const gameInitialSnapshotPersistenceOutputPortSymbol: symbol =
@@ -8,6 +9,7 @@ export const gameInitialSnapshotPersistenceOutputPortSymbol: symbol =
 
 export interface GameInitialSnapshotPersistenceOutputPort {
   create(
-    gameInitialSnapshotSlotCreateQuery: GameInitialSnapshotSlotCreateQuery,
-  ): Promise<GameInitialSnapshotSlot>;
+    gameInitialSnapshotSlotCreateQuery: GameInitialSnapshotCreateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<GameInitialSnapshot>;
 }
