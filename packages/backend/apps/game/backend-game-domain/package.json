@@ -13,9 +13,9 @@
     "@stryker-mutator/core": "8.2.6",
     "@stryker-mutator/jest-runner": "8.2.6",
     "@stryker-mutator/typescript-checker": "8.2.6",
-    "@types/node": "20.11.20",
-    "@typescript-eslint/eslint-plugin": "7.0.2",
-    "@typescript-eslint/parser": "7.0.2",
+    "@types/node": "20.11.22",
+    "@typescript-eslint/eslint-plugin": "7.1.0",
+    "@typescript-eslint/parser": "7.1.0",
     "eslint": "8.57.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
@@ -33,7 +33,9 @@
     "./cards": "./lib/cards/domain/index.js",
     "./cards/fixtures": "./lib/cards/domain/fixtures/index.js",
     "./games": "./lib/games/domain/index.js",
-    "./games/fixtures": "./lib/games/domain/fixtures/index.js"
+    "./games/fixtures": "./lib/games/domain/fixtures/index.js",
+    "./gameSnapshots": "./lib/gameSnapshots/domain/index.js",
+    "./gameSnapshots/fixtures": "./lib/gameSnapshots/domain/fixtures/index.js"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",

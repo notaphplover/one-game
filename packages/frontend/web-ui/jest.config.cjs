@@ -4,6 +4,6 @@ module.exports = {
   rootDir: '.',
   roots: ['<rootDir>'],
   testEnvironment: 'jest-environment-jsdom',
-  testMatch: ['<rootDir>/src/**/*.spec.{js,jsx}'],
+  testMatch: ['<rootDir>/src/**/*.spec.{js,jsx,ts,tsx}'],
   transform: { '\\.[jt]sx?$': 'babel-jest' },
 };
