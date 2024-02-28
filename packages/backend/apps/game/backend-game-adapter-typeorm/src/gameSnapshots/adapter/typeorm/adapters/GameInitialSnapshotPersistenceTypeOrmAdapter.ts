@@ -1,30 +1,31 @@
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { GameInitialSnapshotPersistenceOutputPort } from '@cornie-js/backend-game-application/gameSnapshots';
 import {
-  GameInitialSnapshotSlotCreateQuery,
-  GameInitialSnapshotSlot,
+  GameInitialSnapshotCreateQuery,
+  GameInitialSnapshot,
 } from '@cornie-js/backend-game-domain/gameSnapshots';
-import { Injectable } from '@nestjs/common';
 
-import { CreateGameInitialSnapshotSlotTypeOrmService } from '../services/CreateGameInitialSnapshotSlotTypeOrmService';
+import { CreateGameInitialSnapshotTypeOrmService } from '../services/CreateGameInitialSnapshotTypeOrmService';
 
-@Injectable()
 export class GameInitialSnapshotPersistenceTypeOrmAdapter
   implements GameInitialSnapshotPersistenceOutputPort
 {
-  readonly #createGameInitialSnapshotSlotTypeOrmService: CreateGameInitialSnapshotSlotTypeOrmService;
+  readonly #createGameInitialSnapshotTypeOrmService: CreateGameInitialSnapshotTypeOrmService;
 
   constructor(
-    createGameInitialSnapshotSlotTypeOrmService: CreateGameInitialSnapshotSlotTypeOrmService,
+    createGameInitialSnapshotTypeOrmService: CreateGameInitialSnapshotTypeOrmService,
   ) {
-    this.#createGameInitialSnapshotSlotTypeOrmService =
-      createGameInitialSnapshotSlotTypeOrmService;
+    this.#createGameInitialSnapshotTypeOrmService =
+      createGameInitialSnapshotTypeOrmService;
   }
 
   public async create(
-    gameInitialSnapshotSlotCreateQuery: GameInitialSnapshotSlotCreateQuery,
-  ): Promise<GameInitialSnapshotSlot> {
-    return this.#createGameInitialSnapshotSlotTypeOrmService.insertOne(
+    gameInitialSnapshotSlotCreateQuery: GameInitialSnapshotCreateQuery,
+    transactionWrapper?: TransactionWrapper | undefined,
+  ): Promise<GameInitialSnapshot> {
+    return this.#createGameInitialSnapshotTypeOrmService.insertOne(
       gameInitialSnapshotSlotCreateQuery,
+      transactionWrapper,
     );
   }
 }
