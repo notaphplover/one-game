@@ -7,7 +7,7 @@ import {
 } from '../data/authSliceStatus';
 
 describe(createInitialState.name, () => {
-  let getItemSpy: jest.SpiedFunction<any>;
+  let getItemSpy: jest.SpiedFunction<typeof window.localStorage.getItem>;
 
   beforeAll(() => {
     getItemSpy = jest.spyOn(
