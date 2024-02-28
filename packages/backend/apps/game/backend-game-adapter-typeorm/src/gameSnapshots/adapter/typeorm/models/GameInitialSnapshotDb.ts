@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 
 import { BinaryToNumberTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/BinaryToNumberTransformer';
-import { GameDb } from './GameDb';
-import { GameDirectionDb } from './GameDirectionDb';
+import { GameDb } from '../../../../games/adapter/typeorm/models/GameDb';
+import { GameDirectionDb } from '../../../../games/adapter/typeorm/models/GameDirectionDb';
 import { GameInitialSnapshotSlotDb } from './GameInitialSnapshotSlotDb';
 
 @Entity({

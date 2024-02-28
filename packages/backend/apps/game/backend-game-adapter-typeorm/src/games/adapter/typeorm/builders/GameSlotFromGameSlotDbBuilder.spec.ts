@@ -8,23 +8,24 @@ import {
   NonStartedGameSlot,
 } from '@cornie-js/backend-game-domain/games';
 
-import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
 import { GameSlotDbFixtures } from '../fixtures/GameSlotDbFixtures';
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameSlotFromGameSlotDbBuilder } from './GameSlotFromGameSlotDbBuilder';
 
 describe(GameSlotFromGameSlotDbBuilder.name, () => {
-  let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
+  let cardArrayFromCardDbStringifiedArrayBuilderMock: jest.Mocked<
+    Builder<Card[], [string]>
+  >;
 
   let gameSlotFromGameSlotDbBuilder: GameSlotFromGameSlotDbBuilder;
 
   beforeAll(() => {
-    cardBuilderMock = {
+    cardArrayFromCardDbStringifiedArrayBuilderMock = {
       build: jest.fn(),
     };
 
     gameSlotFromGameSlotDbBuilder = new GameSlotFromGameSlotDbBuilder(
-      cardBuilderMock,
+      cardArrayFromCardDbStringifiedArrayBuilderMock,
     );
   });
 
@@ -68,14 +69,16 @@ describe(GameSlotFromGameSlotDbBuilder.name, () => {
       });
 
       describe('when called', () => {
-        let cardFixture: Card;
+        let cardsFixture: Card[];
 
         let result: unknown;
 
         beforeAll(() => {
-          cardFixture = CardFixtures.any;
+          cardsFixture = [CardFixtures.any];
 
-          cardBuilderMock.build.mockReturnValueOnce(cardFixture);
+          cardArrayFromCardDbStringifiedArrayBuilderMock.build.mockReturnValueOnce(
+            cardsFixture,
+          );
 
           result = gameSlotFromGameSlotDbBuilder.build(activeGameSlotDbFixture);
         });
@@ -84,16 +87,18 @@ describe(GameSlotFromGameSlotDbBuilder.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call cardBuilder.build()', () => {
-          expect(cardBuilderMock.build).toHaveBeenCalledTimes(1);
-          expect(cardBuilderMock.build).toHaveBeenCalledWith(
-            expect.any(Number),
-          );
+        it('should call cardArrayFromCardDbStringifiedArrayBuilder.build()', () => {
+          expect(
+            cardArrayFromCardDbStringifiedArrayBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            cardArrayFromCardDbStringifiedArrayBuilderMock.build,
+          ).toHaveBeenCalledWith(activeGameSlotDbFixture.cards);
         });
 
         it('should return a GameSlot', () => {
           const expected: ActiveGameSlot = {
-            cards: [cardFixture],
+            cards: cardsFixture,
             position: activeGameSlotDbFixture.position,
             userId: activeGameSlotDbFixture.userId,
           };
