@@ -58,26 +58,20 @@ export class CreateUserUseCaseHandler
     const transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
-    try {
-      const user: User = await this.#userPersistenceOutputPort.create(
-        userCreateQuery,
-        transactionWrapper,
-      );
+    const user: User = await this.#userPersistenceOutputPort.create(
+      userCreateQuery,
+      transactionWrapper,
+    );
 
-      await this.#userCreatedEventHandler.handle({
-        transactionWrapper,
-        user,
-        userCreateQuery,
-      });
+    await this.#userCreatedEventHandler.handle({
+      transactionWrapper,
+      user,
+      userCreateQuery,
+    });
 
-      await transactionWrapper.tryCommit();
+    await transactionWrapper.tryCommit();
 
-      return user;
-    } catch (error: unknown) {
-      await transactionWrapper.rollback();
-
-      throw error;
-    }
+    return user;
   }
 
   #validate(userCreateQuery: UserCreateQuery): void {

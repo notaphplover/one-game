@@ -9,6 +9,7 @@ import {
   Handler,
   Spec,
 } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
@@ -29,6 +30,7 @@ import {
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { CardV1Fixtures } from '../../../../cards/application/fixtures/CardV1Fixtures';
+import { TransactionProvisionOutputPort } from '../../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { UserV1Fixtures } from '../../../../users/application/fixtures/models/UserV1Fixtures';
 import { NonStartedGameSlotV1Fixtures } from '../../fixtures/NonStartedGameSlotV1Fixtures';
 import { GameSlotCreateQueryContext } from '../../models/GameSlotCreateQueryContext';
@@ -57,6 +59,7 @@ describe(GameSlotManagementInputPort.name, () => {
   let nonStartedGameFilledEventHandlerMock: jest.Mocked<
     Handler<[NonStartedGameFilledEvent], void>
   >;
+  let transactionProvisionOutputPortMock: jest.Mocked<TransactionProvisionOutputPort>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
   let gameSlotManagementInputPort: GameSlotManagementInputPort;
@@ -89,6 +92,9 @@ describe(GameSlotManagementInputPort.name, () => {
     nonStartedGameFilledEventHandlerMock = {
       handle: jest.fn(),
     };
+    transactionProvisionOutputPortMock = {
+      provide: jest.fn(),
+    };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
     };
@@ -102,6 +108,7 @@ describe(GameSlotManagementInputPort.name, () => {
       gameSlotPersistenceOutputPortMock,
       gameSpecPersistenceOutputPortMock,
       nonStartedGameFilledEventHandlerMock,
+      transactionProvisionOutputPortMock,
       uuidProviderOutputPortMock,
     );
   });
@@ -121,6 +128,7 @@ describe(GameSlotManagementInputPort.name, () => {
       let gameSlotCreateQueryFixture: GameSlotCreateQuery;
       let gameSlotFixture: ActiveGameSlot | NonStartedGameSlot;
       let gameSlotV1Fixture: apiModels.GameSlotV1;
+      let transactionWrapperMock: jest.Mocked<TransactionWrapper>;
       let uuidFixture: string;
 
       let result: unknown;
@@ -129,6 +137,11 @@ describe(GameSlotManagementInputPort.name, () => {
         gameSlotCreateQueryFixture = GameSlotCreateQueryFixtures.any;
         gameSlotFixture = NonStartedGameSlotFixtures.any;
         gameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
+        transactionWrapperMock = {
+          tryCommit: jest.fn(),
+        } as Partial<
+          jest.Mocked<TransactionWrapper>
+        > as jest.Mocked<TransactionWrapper>;
         uuidFixture = 'uuid-fixture';
 
         gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy.mockReturnValueOnce(
@@ -148,6 +161,9 @@ describe(GameSlotManagementInputPort.name, () => {
         );
         gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           gameSpecFixture,
+        );
+        transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
+          transactionWrapperMock,
         );
         uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
 
@@ -208,6 +224,7 @@ describe(GameSlotManagementInputPort.name, () => {
         );
         expect(gameSlotPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           gameSlotCreateQueryFixture,
+          transactionWrapperMock,
         );
       });
 
@@ -224,6 +241,11 @@ describe(GameSlotManagementInputPort.name, () => {
         expect(
           nonStartedGameFilledEventHandlerMock.handle,
         ).not.toHaveBeenCalled();
+      });
+
+      it('should call transactionWrapper.tryCommit()', () => {
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
       });
 
       it('should call gameSlotV1FromGameSlotBuilder.build()', () => {
@@ -244,6 +266,7 @@ describe(GameSlotManagementInputPort.name, () => {
       let gameSlotCreateQueryFixture: GameSlotCreateQuery;
       let gameSlotFixture: ActiveGameSlot | NonStartedGameSlot;
       let gameSlotV1Fixture: apiModels.GameSlotV1;
+      let transactionWrapperMock: jest.Mocked<TransactionWrapper>;
       let uuidFixture: string;
 
       let result: unknown;
@@ -252,6 +275,11 @@ describe(GameSlotManagementInputPort.name, () => {
         gameSlotCreateQueryFixture = GameSlotCreateQueryFixtures.any;
         gameSlotFixture = NonStartedGameSlotFixtures.any;
         gameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
+        transactionWrapperMock = {
+          tryCommit: jest.fn(),
+        } as Partial<
+          jest.Mocked<TransactionWrapper>
+        > as jest.Mocked<TransactionWrapper>;
         uuidFixture = 'uuid-fixture';
 
         gameCanHoldMoreGameSlotsSpecMock.isSatisfiedBy.mockReturnValueOnce(
@@ -275,6 +303,9 @@ describe(GameSlotManagementInputPort.name, () => {
         nonStartedGameFilledEventHandlerMock.handle.mockResolvedValueOnce(
           undefined,
         );
+        transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
+          transactionWrapperMock,
+        );
         uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
 
         result = await gameSlotManagementInputPort.create(
@@ -334,6 +365,7 @@ describe(GameSlotManagementInputPort.name, () => {
         );
         expect(gameSlotPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           gameSlotCreateQueryFixture,
+          transactionWrapperMock,
         );
       });
 
@@ -356,7 +388,12 @@ describe(GameSlotManagementInputPort.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           nonStartedGameFilledEventHandlerMock.handle,
-        ).toHaveBeenCalledWith(expected);
+        ).toHaveBeenCalledWith(expected, transactionWrapperMock);
+      });
+
+      it('should call transactionWrapper.tryCommit()', () => {
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
       });
 
       it('should call gameSlotV1FromGameSlotBuilder.build()', () => {

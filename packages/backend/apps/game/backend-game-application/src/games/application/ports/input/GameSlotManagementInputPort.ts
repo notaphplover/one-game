@@ -10,6 +10,7 @@ import {
   Handler,
   Spec,
 } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
@@ -27,6 +28,10 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { CardV1FromCardBuilder } from '../../../../cards/application/builders/CardV1FromCardBuilder';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
+import {
+  TransactionProvisionOutputPort,
+  transactionProvisionOutputPortSymbol,
+} from '../../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../builders/GameSlotCreateQueryFromGameSlotCreateQueryV1Builder';
 import { GameSlotV1FromGameSlotBuilder } from '../../builders/GameSlotV1FromGameSlotBuilder';
 import { NonStartedGameFilledEventHandler } from '../../handlers/NonStartedGameFilledEventHandler';
@@ -57,9 +62,10 @@ export class GameSlotManagementInputPort {
   readonly #gameSlotPersistenceOutputPort: GameSlotPersistenceOutputPort;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
   readonly #nonStartedGameFilledEventHandler: Handler<
-    [NonStartedGameFilledEvent],
+    [NonStartedGameFilledEvent, TransactionWrapper],
     void
   >;
+  readonly #transactionProvisionOutputPort: TransactionProvisionOutputPort;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
@@ -88,6 +94,8 @@ export class GameSlotManagementInputPort {
       [NonStartedGameFilledEvent],
       void
     >,
+    @Inject(transactionProvisionOutputPortSymbol)
+    transactionProvisionOutputPort: TransactionProvisionOutputPort,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
@@ -101,6 +109,7 @@ export class GameSlotManagementInputPort {
     this.#gameSlotPersistenceOutputPort = gameSlotPersistenceOutputPort;
     this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
     this.#nonStartedGameFilledEventHandler = nonStartedGameFilledEventHandler;
+    this.#transactionProvisionOutputPort = transactionProvisionOutputPort;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
@@ -123,10 +132,22 @@ export class GameSlotManagementInputPort {
         this.#createGameSlotCreationQueryContext(game),
       );
 
-    const gameSlot: ActiveGameSlot | NonStartedGameSlot =
-      await this.#gameSlotPersistenceOutputPort.create(gameSlotCreateQuery);
+    const transactionWrapper: TransactionWrapper =
+      await this.#transactionProvisionOutputPort.provide();
 
-    await this.#handleNonStartedGameFilledEvent(game, gameSpec);
+    const gameSlot: ActiveGameSlot | NonStartedGameSlot =
+      await this.#gameSlotPersistenceOutputPort.create(
+        gameSlotCreateQuery,
+        transactionWrapper,
+      );
+
+    await this.#handleNonStartedGameFilledEvent(
+      game,
+      gameSpec,
+      transactionWrapper,
+    );
+
+    await transactionWrapper.tryCommit();
 
     return this.#gameSlotV1FromGameSlotBuilder.build(gameSlot);
   }
@@ -203,6 +224,7 @@ export class GameSlotManagementInputPort {
   async #handleNonStartedGameFilledEvent(
     gameBeforeSlotCreation: Game,
     gameSpec: GameSpec,
+    transactionWrapper: TransactionWrapper,
   ): Promise<void> {
     if (
       this.#gameCanHoldOnlyOneMoreGameSlotSpec.isSatisfiedBy(
@@ -220,6 +242,7 @@ export class GameSlotManagementInputPort {
 
       await this.#nonStartedGameFilledEventHandler.handle(
         nonStartedGameFilledEvent,
+        transactionWrapper,
       );
     }
   }

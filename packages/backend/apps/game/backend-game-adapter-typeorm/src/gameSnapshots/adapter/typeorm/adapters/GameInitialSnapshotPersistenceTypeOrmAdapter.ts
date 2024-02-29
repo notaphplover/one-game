@@ -4,15 +4,18 @@ import {
   GameInitialSnapshotCreateQuery,
   GameInitialSnapshot,
 } from '@cornie-js/backend-game-domain/gameSnapshots';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateGameInitialSnapshotTypeOrmService } from '../services/CreateGameInitialSnapshotTypeOrmService';
 
+@Injectable()
 export class GameInitialSnapshotPersistenceTypeOrmAdapter
   implements GameInitialSnapshotPersistenceOutputPort
 {
   readonly #createGameInitialSnapshotTypeOrmService: CreateGameInitialSnapshotTypeOrmService;
 
   constructor(
+    @Inject(CreateGameInitialSnapshotTypeOrmService)
     createGameInitialSnapshotTypeOrmService: CreateGameInitialSnapshotTypeOrmService,
   ) {
     this.#createGameInitialSnapshotTypeOrmService =

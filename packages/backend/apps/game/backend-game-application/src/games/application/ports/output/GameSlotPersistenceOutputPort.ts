@@ -1,3 +1,4 @@
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGameSlot,
   GameSlotCreateQuery,
@@ -8,8 +9,12 @@ import {
 export interface GameSlotPersistenceOutputPort {
   create(
     gameSlotCreateQuery: GameSlotCreateQuery,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<ActiveGameSlot | NonStartedGameSlot>;
-  update(gameSlotUpdateQuery: GameSlotUpdateQuery): Promise<void>;
+  update(
+    gameSlotUpdateQuery: GameSlotUpdateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<void>;
 }
 
 export const gameSlotPersistenceOutputPortSymbol: symbol = Symbol.for(
