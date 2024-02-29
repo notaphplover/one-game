@@ -92,25 +92,19 @@ export class CreateGameUseCaseHandler
     const transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
-    try {
-      const game: Game = await this.#gamePersistenceOutputPort.create(
-        gameCreateQuery,
-        transactionWrapper,
-      );
+    const game: Game = await this.#gamePersistenceOutputPort.create(
+      gameCreateQuery,
+      transactionWrapper,
+    );
 
-      await this.#gameSpecPersistenceOutputPort.create(
-        gameCreateQuery.spec,
-        transactionWrapper,
-      );
+    await this.#gameSpecPersistenceOutputPort.create(
+      gameCreateQuery.spec,
+      transactionWrapper,
+    );
 
-      await transactionWrapper.tryCommit();
+    await transactionWrapper.tryCommit();
 
-      return this.#gameV1FromGameBuilder.build(game);
-    } catch (error: unknown) {
-      await transactionWrapper.rollback();
-
-      throw error;
-    }
+    return this.#gameV1FromGameBuilder.build(game);
   }
 
   #createGameCreationQueryContext(): GameCreateQueryContext {

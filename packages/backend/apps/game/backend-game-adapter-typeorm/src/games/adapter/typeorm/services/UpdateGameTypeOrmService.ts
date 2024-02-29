@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { UpdateTypeOrmService } from '@cornie-js/backend-db/adapter/typeorm';
+import { UpdateTypeOrmQueryBuilderService } from '@cornie-js/backend-db/adapter/typeorm';
 import { GameUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,7 +16,7 @@ import { GameSetQueryTypeOrmFromGameUpdateQueryBuilder } from '../builders/GameS
 import { GameDb } from '../models/GameDb';
 
 @Injectable()
-export class UpdateGameTypeOrmService extends UpdateTypeOrmService<
+export class UpdateGameTypeOrmService extends UpdateTypeOrmQueryBuilderService<
   GameDb,
   GameUpdateQuery
 > {

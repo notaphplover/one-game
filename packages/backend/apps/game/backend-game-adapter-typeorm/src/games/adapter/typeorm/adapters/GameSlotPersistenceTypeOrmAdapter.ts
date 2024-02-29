@@ -1,3 +1,4 @@
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { GameSlotPersistenceOutputPort } from '@cornie-js/backend-game-application/games';
 import {
   ActiveGameSlot,
@@ -29,11 +30,21 @@ export class GameSlotPersistenceTypeOrmAdapter
 
   public async create(
     gameSlotCreateQuery: GameSlotCreateQuery,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<ActiveGameSlot | NonStartedGameSlot> {
-    return this.#createGameSlotTypeOrmService.insertOne(gameSlotCreateQuery);
+    return this.#createGameSlotTypeOrmService.insertOne(
+      gameSlotCreateQuery,
+      transactionWrapper,
+    );
   }
 
-  public async update(gameSlotUpdateQuery: GameSlotUpdateQuery): Promise<void> {
-    await this.#updateGameSlotTypeOrmService.update(gameSlotUpdateQuery);
+  public async update(
+    gameSlotUpdateQuery: GameSlotUpdateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<void> {
+    await this.#updateGameSlotTypeOrmService.update(
+      gameSlotUpdateQuery,
+      transactionWrapper,
+    );
   }
 }

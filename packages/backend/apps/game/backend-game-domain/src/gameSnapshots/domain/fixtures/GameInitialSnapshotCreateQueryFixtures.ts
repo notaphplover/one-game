@@ -19,4 +19,11 @@ export class GameInitialSnapshotCreateQueryFixtures {
       id: 'c86b6e87-f33f-422f-9477-265400d87c0a',
     };
   }
+
+  public static get withGameSlotCreateQueriesOne(): GameInitialSnapshotCreateQuery {
+    return {
+      ...GameInitialSnapshotCreateQueryFixtures.any,
+      gameSlotCreateQueries: [GameInitialSnapshotSlotCreateQueryFixtures.any],
+    };
+  }
 }
