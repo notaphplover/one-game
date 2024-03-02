@@ -8,6 +8,8 @@ export function initializeWorld(
 ): void {
   this.entities = {
     auth: new Map(),
+    cardArrays: new Map(),
+    gameOptions: new Map(),
     games: new Map(),
     users: new Map(),
   };
