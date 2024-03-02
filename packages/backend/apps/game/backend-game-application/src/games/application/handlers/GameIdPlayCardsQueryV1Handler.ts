@@ -27,6 +27,7 @@ import {
   gameSpecPersistenceOutputPortSymbol,
 } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
+import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
 @Injectable()
 export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPlayCardsQueryV1> {
@@ -43,6 +44,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
     gameService: GameService,
+    @Inject(GameUpdatedEventHandler)
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
