@@ -48,6 +48,7 @@ export async function setActiveGameCards(
         },
       }),
     ),
+    skipCount: 0,
   };
 
   const colorProperty: keyof ColoredCard = 'color';

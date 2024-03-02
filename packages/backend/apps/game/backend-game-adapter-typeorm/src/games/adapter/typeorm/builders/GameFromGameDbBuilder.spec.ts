@@ -347,6 +347,7 @@ describe(GameFromGameDbBuilder.name, () => {
             deck: gameCardSpecArrayFixture,
             discardPile: gameCardSpecArrayFixture,
             drawCount: gameDbFixture.drawCount as number,
+            skipCount: gameDbFixture.skipCount as number,
             slots: [gameSlotFixture],
             status: GameStatus.active,
             turn: gameDbFixture.turn as number,

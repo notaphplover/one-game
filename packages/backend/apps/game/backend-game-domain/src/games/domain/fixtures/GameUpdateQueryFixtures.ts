@@ -105,6 +105,15 @@ export class GameUpdateQueryFixtures {
     };
   }
 
+  public static get withSkipCount(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      skipCount: 0,
+    };
+
+    return fixture;
+  }
+
   public static get withStatusActive(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       ...GameUpdateQueryFixtures.any,
