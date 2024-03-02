@@ -166,6 +166,7 @@ export class GameService {
         id: game.id,
       },
       gameSlotUpdateQueries,
+      skipCount: 0,
       status: GameStatus.active,
       turn: UNO_ORIGINAL_FIRST_TURN,
     };

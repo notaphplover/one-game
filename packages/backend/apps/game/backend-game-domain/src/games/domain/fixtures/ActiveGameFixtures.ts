@@ -26,6 +26,7 @@ export class ActiveGameFixtures {
         deck: [],
         discardPile: [],
         drawCount: 0,
+        skipCount: 0,
         slots: [ActiveGameSlotFixtures.withPositionZero],
         status: GameStatus.active,
         turn: 1,

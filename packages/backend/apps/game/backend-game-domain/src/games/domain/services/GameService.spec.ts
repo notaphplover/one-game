@@ -746,6 +746,7 @@ describe(GameService.name, () => {
                 },
               },
             ],
+            skipCount: 0,
             status: GameStatus.active,
             turn: 1,
           };
