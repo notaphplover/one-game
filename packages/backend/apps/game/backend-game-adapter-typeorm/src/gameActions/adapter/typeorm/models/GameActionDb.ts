@@ -8,7 +8,7 @@ import {
   RelationId,
 } from 'typeorm';
 
-import { GameDb } from './GameDb';
+import { GameDb } from '../../../../games/adapter/typeorm/models/GameDb';
 
 @Entity({
   name: 'GameAction',
