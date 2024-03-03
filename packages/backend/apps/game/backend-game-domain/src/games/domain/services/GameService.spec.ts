@@ -73,6 +73,7 @@ describe(GameService.name, () => {
             currentPlayingSlotIndex: 1,
             currentTurnCardsPlayed: false,
             drawCount: 0,
+            skipCount: 0,
           },
         };
 
@@ -152,6 +153,7 @@ describe(GameService.name, () => {
                 },
               },
             ],
+            skipCount: 0,
             turn: gameFixture.state.turn + 1,
           };
 
@@ -177,6 +179,7 @@ describe(GameService.name, () => {
             currentPlayingSlotIndex: 1,
             currentTurnCardsPlayed: false,
             drawCount: 2,
+            skipCount: 0,
           },
         };
       });
@@ -254,6 +257,7 @@ describe(GameService.name, () => {
                 },
               },
             ],
+            skipCount: 0,
             turn: gameFixture.state.turn + 1,
           };
 
@@ -278,6 +282,8 @@ describe(GameService.name, () => {
             ...baseFixture.state,
             currentPlayingSlotIndex: 0,
             currentTurnCardsPlayed: true,
+            drawCount: 0,
+            skipCount: 0,
           },
         };
       });
@@ -309,7 +315,6 @@ describe(GameService.name, () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentPlayingSlotIndex: 1,
             currentTurnCardsPlayed: false,
-            drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
               state: {
@@ -317,6 +322,7 @@ describe(GameService.name, () => {
                   gameFixture.state.currentPlayingSlotIndex,
               },
             },
+            skipCount: 0,
             turn: gameFixture.state.turn + 1,
           };
 
@@ -351,7 +357,6 @@ describe(GameService.name, () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentPlayingSlotIndex: 1,
             currentTurnCardsPlayed: false,
-            drawCount: 0,
             gameFindQuery: {
               id: gameFixture.id,
               state: {
@@ -359,7 +364,74 @@ describe(GameService.name, () => {
                   gameFixture.state.currentPlayingSlotIndex,
               },
             },
+            skipCount: 0,
             status: GameStatus.finished,
+            turn: gameFixture.state.turn + 1,
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having a Game with two players currentTurnCardsPlayed true and currentPlayingSlotIndex 1 and skipCount 1', () => {
+      let gameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
+
+      beforeAll(() => {
+        const baseFixture: ActiveGame =
+          ActiveGameFixtures.withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120;
+
+        gameFixture = {
+          ...baseFixture,
+          state: {
+            ...baseFixture.state,
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: true,
+            drawCount: 0,
+            skipCount: 1,
+          },
+        };
+
+        gameSpecFixture =
+          GameSpecFixtures.withCardsOneWithAmount120AndGameSlotsAmountTwo;
+      });
+
+      describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          isGameFinishedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
+          result = gameService.buildPassTurnGameUpdateQuery(
+            gameFixture,
+            gameSpecFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call isGameFinishedSpec.isSatisfiedBy()', () => {
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(1);
+          expect(isGameFinishedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            gameFixture,
+          );
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentPlayingSlotIndex: 1,
+            currentTurnCardsPlayed: false,
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            skipCount: 0,
             turn: gameFixture.state.turn + 1,
           };
 
@@ -488,6 +560,13 @@ describe(GameService.name, () => {
         });
 
         it('should return a GameUpdateQuery', () => {
+          const expectedCards: Card[] = (
+            gameFixture.state.slots[0] as ActiveGameSlot
+          ).cards.filter(
+            (_: Card, index: number): boolean =>
+              !cardIndexesFixture.includes(index),
+          );
+
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentCard: expect.any(Object) as unknown as Card,
             currentColor: cardFixture.color,
@@ -507,7 +586,7 @@ describe(GameService.name, () => {
             },
             gameSlotUpdateQueries: [
               {
-                cards: expect.any(Array) as unknown as Card[],
+                cards: expectedCards,
                 gameSlotFindQuery: {
                   gameId: gameFixture.id,
                   position: slotIndexFixture,
@@ -605,6 +684,13 @@ describe(GameService.name, () => {
         });
 
         it('should return a GameUpdateQuery', () => {
+          const expectedCards: Card[] = (
+            gameFixture.state.slots[0] as ActiveGameSlot
+          ).cards.filter(
+            (_: Card, index: number): boolean =>
+              !cardIndexesFixture.includes(index),
+          );
+
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentCard: expect.any(Object) as unknown as Card,
             currentColor: colorChoiceFixture,
@@ -624,7 +710,7 @@ describe(GameService.name, () => {
             },
             gameSlotUpdateQueries: [
               {
-                cards: expect.any(Array) as unknown as Card[],
+                cards: expectedCards,
                 gameSlotFindQuery: {
                   gameId: gameFixture.id,
                   position: slotIndexFixture,

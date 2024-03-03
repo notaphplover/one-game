@@ -6,7 +6,7 @@ import { Card } from '../../../cards/domain/valueObjects/Card';
 import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
 import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
-import { SkipCard } from '../../../cards/domain/valueObjects/SkipCard';
+import { ReverseCard } from '../../../cards/domain/valueObjects/ReverseCard';
 import { ActiveGame } from '../entities/ActiveGame';
 import { Game } from '../entities/Game';
 import { NonStartedGame } from '../entities/NonStartedGame';
@@ -24,6 +24,9 @@ import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
 import { GameDrawService } from './GameDrawService';
 
 const MIN_CARDS_TO_DRAW: number = 1;
+const DRAW_CARDS_TO_DRAW: number = 2;
+const SKIP_TURNS_TO_SKIP: number = 1;
+const WILD_DRAW_4_CARDS_TO_DRAW: number = 4;
 
 const UNO_ORIGINAL_ACTION_CARDS_PER_COLOR: number = 2;
 const UNO_ORIGINAL_FIRST_TURN: number = 1;
@@ -60,13 +63,13 @@ export class GameService {
     const gameUpdateQuery: GameUpdateQuery = {
       currentPlayingSlotIndex: this.#getNextTurnPlayerIndex(game, gameSpec),
       currentTurnCardsPlayed: false,
-      drawCount: 0,
       gameFindQuery: {
         id: game.id,
         state: {
           currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
         },
       },
+      skipCount: 0,
       turn: game.state.turn + 1,
     };
 
@@ -110,8 +113,8 @@ export class GameService {
       },
       gameSlotUpdateQueries: [
         {
-          cards: gameSlot.cards.filter((_: Card, index: number): boolean =>
-            cardIndexes.includes(index),
+          cards: gameSlot.cards.filter(
+            (_: Card, index: number): boolean => !cardIndexes.includes(index),
           ),
           gameSlotFindQuery: {
             gameId: game.id,
@@ -127,10 +130,23 @@ export class GameService {
       colorChoice,
     );
 
+    this.#setPlayCardsGameUpdateQueryDrawCount(
+      game,
+      gameUpdateQuery,
+      nextCurrentCard,
+      cardIndexes.length,
+    );
+
     this.#setPlayCardsGameUpdateQueryDirection(
       game,
       gameUpdateQuery,
       nextCurrentCard,
+    );
+
+    this.#setPlayCardsGameUpdateQuerySkipCount(
+      gameUpdateQuery,
+      nextCurrentCard,
+      cardIndexes.length,
     );
 
     return gameUpdateQuery;
@@ -307,6 +323,7 @@ export class GameService {
     );
 
     gameUpdateQuery.deck = drawMutation.deck;
+    gameUpdateQuery.drawCount = 0;
     gameUpdateQuery.gameSlotUpdateQueries = [
       {
         cards: [...playerSlot.cards, ...drawMutation.cards],
@@ -344,12 +361,31 @@ export class GameService {
     }
   }
 
+  #setPlayCardsGameUpdateQueryDrawCount(
+    game: ActiveGame,
+    gameUpdateQuery: GameUpdateQuery,
+    nextCurrentCard: Card,
+    cardsAmount: number,
+  ): void {
+    switch (nextCurrentCard.kind) {
+      case CardKind.draw:
+        gameUpdateQuery.drawCount =
+          game.state.drawCount + DRAW_CARDS_TO_DRAW * cardsAmount;
+        break;
+      case CardKind.wildDraw4:
+        gameUpdateQuery.drawCount =
+          game.state.drawCount + WILD_DRAW_4_CARDS_TO_DRAW * cardsAmount;
+        break;
+      default:
+    }
+  }
+
   #setPlayCardsGameUpdateQueryDirection(
     game: ActiveGame,
     gameUpdateQuery: GameUpdateQuery,
     nextCurrentCard: Card,
   ): void {
-    if (this.#isSkip(nextCurrentCard)) {
+    if (this.#isReverse(nextCurrentCard)) {
       gameUpdateQuery.currentDirection = this.#getReverseDirection(
         game.state.currentDirection,
       );
@@ -381,6 +417,19 @@ export class GameService {
     }
 
     return nextCurrentCards as [Card, ...Card[]];
+  }
+
+  #setPlayCardsGameUpdateQuerySkipCount(
+    gameUpdateQuery: GameUpdateQuery,
+    nextCurrentCard: Card,
+    cardsAmount: number,
+  ): void {
+    switch (nextCurrentCard.kind) {
+      case CardKind.skip:
+        gameUpdateQuery.skipCount = SKIP_TURNS_TO_SKIP * cardsAmount;
+        break;
+      default:
+    }
   }
 
   #getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
@@ -433,16 +482,18 @@ export class GameService {
     let nextTurnPlayerIndex: number;
 
     if (direction === GameDirection.antiClockwise) {
-      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex - 1;
+      nextTurnPlayerIndex =
+        game.state.currentPlayingSlotIndex - (1 + game.state.skipCount);
 
       if (nextTurnPlayerIndex < 0) {
-        nextTurnPlayerIndex = players - 1;
+        nextTurnPlayerIndex = (nextTurnPlayerIndex % players) + players;
       }
     } else {
-      nextTurnPlayerIndex = game.state.currentPlayingSlotIndex + 1;
+      nextTurnPlayerIndex =
+        game.state.currentPlayingSlotIndex + (1 + game.state.skipCount);
 
       if (nextTurnPlayerIndex === players) {
-        nextTurnPlayerIndex = 0;
+        nextTurnPlayerIndex = nextTurnPlayerIndex % players;
       }
     }
 
@@ -471,7 +522,7 @@ export class GameService {
     return (card as ColoredCard).color !== undefined;
   }
 
-  #isSkip(card: Card): card is SkipCard {
-    return card.kind === CardKind.skip;
+  #isReverse(card: Card): card is ReverseCard {
+    return card.kind === CardKind.reverse;
   }
 }
