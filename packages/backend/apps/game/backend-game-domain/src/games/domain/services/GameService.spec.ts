@@ -600,6 +600,158 @@ describe(GameService.name, () => {
       });
     });
 
+    describe('having an existing slotIndex and existing cardIndexes targeting a draw card and no color choice', () => {
+      let cardFixture: Card & ColoredCard;
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.drawBlueCard;
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called, and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValue(false);
+
+          result = gameService.buildPlayCardsGameUpdateQuery(
+            gameFixture,
+            cardIndexesFixture,
+            slotIndexFixture,
+            undefined,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReset();
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedCards: Card[] = (
+            gameFixture.state.slots[0] as ActiveGameSlot
+          ).cards.filter(
+            (_: Card, index: number): boolean =>
+              !cardIndexesFixture.includes(index),
+          );
+
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentCard: expect.any(Object) as unknown as Card,
+            currentColor: cardFixture.color,
+            discardPile: [
+              ...gameFixture.state.discardPile,
+              {
+                amount: 1,
+                card: cardFixture,
+              },
+            ],
+            drawCount: gameFixture.state.drawCount + 2,
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: expectedCards,
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: slotIndexFixture,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes targeting a skip card and no color choice', () => {
+      let cardFixture: Card & ColoredCard;
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.skipBlueCard;
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+      });
+
+      describe('when called, and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValue(false);
+
+          result = gameService.buildPlayCardsGameUpdateQuery(
+            gameFixture,
+            cardIndexesFixture,
+            slotIndexFixture,
+            undefined,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReset();
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedCards: Card[] = (
+            gameFixture.state.slots[0] as ActiveGameSlot
+          ).cards.filter(
+            (_: Card, index: number): boolean =>
+              !cardIndexesFixture.includes(index),
+          );
+
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentCard: expect.any(Object) as unknown as Card,
+            currentColor: cardFixture.color,
+            discardPile: [
+              ...gameFixture.state.discardPile,
+              {
+                amount: 1,
+                card: cardFixture,
+              },
+            ],
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: expectedCards,
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: slotIndexFixture,
+                },
+              },
+            ],
+            skipCount: 1,
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
     describe('having an existing slotIndex and existing cardIndexes targeting a colored card and color choice', () => {
       let cardFixture: Card & ColoredCard;
       let gameFixture: ActiveGame;
@@ -701,6 +853,84 @@ describe(GameService.name, () => {
                 card: cardFixture,
               },
             ],
+            gameFindQuery: {
+              id: gameFixture.id,
+              state: {
+                currentPlayingSlotIndex:
+                  gameFixture.state.currentPlayingSlotIndex,
+              },
+            },
+            gameSlotUpdateQueries: [
+              {
+                cards: expectedCards,
+                gameSlotFindQuery: {
+                  gameId: gameFixture.id,
+                  position: slotIndexFixture,
+                },
+              },
+            ],
+          };
+
+          expect(result).toStrictEqual(expectedGameUpdateQuery);
+        });
+      });
+    });
+
+    describe('having an existing slotIndex and existing cardIndexes targeting a wild draw 4 card and color choice', () => {
+      let cardFixture: Card;
+      let gameFixture: ActiveGame;
+      let cardIndexesFixture: number[];
+      let slotIndexFixture: number;
+      let colorChoiceFixture: CardColor;
+
+      beforeAll(() => {
+        cardFixture = CardFixtures.wildDraw4Card;
+        gameFixture = ActiveGameFixtures.withSlotsOne;
+        (gameFixture.state.slots[0] as ActiveGameSlot).cards[0] = cardFixture;
+        cardIndexesFixture = [0];
+        slotIndexFixture = 0;
+        colorChoiceFixture = CardColor.green;
+      });
+
+      describe('when called, and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValue(false);
+
+          result = gameService.buildPlayCardsGameUpdateQuery(
+            gameFixture,
+            cardIndexesFixture,
+            slotIndexFixture,
+            colorChoiceFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          areCardsEqualsSpecMock.isSatisfiedBy.mockReset();
+        });
+
+        it('should return a GameUpdateQuery', () => {
+          const expectedCards: Card[] = (
+            gameFixture.state.slots[0] as ActiveGameSlot
+          ).cards.filter(
+            (_: Card, index: number): boolean =>
+              !cardIndexesFixture.includes(index),
+          );
+
+          const expectedGameUpdateQuery: GameUpdateQuery = {
+            currentCard: expect.any(Object) as unknown as Card,
+            currentColor: colorChoiceFixture,
+            discardPile: [
+              ...gameFixture.state.discardPile,
+              {
+                amount: 1,
+                card: cardFixture,
+              },
+            ],
+            drawCount: gameFixture.state.drawCount + 4,
             gameFindQuery: {
               id: gameFixture.id,
               state: {
