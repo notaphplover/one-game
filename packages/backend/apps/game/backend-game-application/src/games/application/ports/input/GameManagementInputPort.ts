@@ -96,6 +96,11 @@ export class GameManagementInputPort {
     userV1: apiModels.UserV1,
   ): Promise<apiModels.GameV1> {
     switch (gameIdUpdateQueryV1.kind) {
+      case 'drawCards':
+        throw new AppError(
+          AppErrorKind.unprocessableOperation,
+          'This operation is not currently supported. "passTurn" operations will automatically handle card draws until this operation is supported.',
+        );
       case 'passTurn':
         await this.#gameIdPassTurnQueryV1Handler.handle(
           id,

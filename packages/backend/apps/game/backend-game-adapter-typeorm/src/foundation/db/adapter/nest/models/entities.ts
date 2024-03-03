@@ -1,4 +1,4 @@
-import { GameActionDb } from '../../../../../games/adapter/typeorm/models/GameActionDb';
+import { GameActionDb } from '../../../../../gameActions/adapter/typeorm/models/GameActionDb';
 import { GameDb } from '../../../../../games/adapter/typeorm/models/GameDb';
 import { GameSlotDb } from '../../../../../games/adapter/typeorm/models/GameSlotDb';
 import { GameSpecDb } from '../../../../../games/adapter/typeorm/models/GameSpecDb';
