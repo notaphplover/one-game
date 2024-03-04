@@ -128,6 +128,10 @@ export class GameSetQueryTypeOrmFromGameUpdateQueryBuilder
       gameSetQueryTypeOrm.turn = gameUpdateQuery.turn;
     }
 
+    if (gameUpdateQuery.skipCount !== undefined) {
+      gameSetQueryTypeOrm.skipCount = gameUpdateQuery.skipCount;
+    }
+
     return gameSetQueryTypeOrm;
   }
 }

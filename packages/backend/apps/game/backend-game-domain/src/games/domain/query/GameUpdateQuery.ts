@@ -18,6 +18,7 @@ export interface GameUpdateQuery {
   discardPile?: GameCardSpec[];
   drawCount?: number;
   gameSlotUpdateQueries?: GameSlotUpdateQuery[];
+  skipCount?: number;
   status?: GameStatus;
   turn?: number;
 }

@@ -107,9 +107,11 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
   describe('.find', () => {
     let gameFindQueryFixture: GameFindQuery;
+    let transactionWrapperFixture: TransactionWrapper;
 
     beforeAll(() => {
       gameFindQueryFixture = GameFindQueryFixtures.any;
+      transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
     });
 
     describe('when called', () => {
@@ -122,7 +124,10 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
         findGameTypeOrmServiceMock.find.mockResolvedValueOnce([gameFixture]);
 
-        result = await gamePersistenceTypeOrmAdapter.find(gameFindQueryFixture);
+        result = await gamePersistenceTypeOrmAdapter.find(
+          gameFindQueryFixture,
+          transactionWrapperFixture,
+        );
       });
 
       afterAll(() => {
@@ -133,6 +138,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
         expect(findGameTypeOrmServiceMock.find).toHaveBeenCalledTimes(1);
         expect(findGameTypeOrmServiceMock.find).toHaveBeenCalledWith(
           gameFindQueryFixture,
+          transactionWrapperFixture,
         );
       });
 
@@ -144,9 +150,11 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
   describe('.findOne', () => {
     let gameFindQueryFixture: GameFindQuery;
+    let transactionWrapperFixture: TransactionWrapper;
 
     beforeAll(() => {
       gameFindQueryFixture = GameFindQueryFixtures.any;
+      transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
     });
 
     describe('when called', () => {
@@ -159,8 +167,10 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
         findGameTypeOrmServiceMock.findOne.mockResolvedValueOnce(gameFixture);
 
-        result =
-          await gamePersistenceTypeOrmAdapter.findOne(gameFindQueryFixture);
+        result = await gamePersistenceTypeOrmAdapter.findOne(
+          gameFindQueryFixture,
+          transactionWrapperFixture,
+        );
       });
 
       afterAll(() => {
@@ -171,6 +181,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
         expect(findGameTypeOrmServiceMock.findOne).toHaveBeenCalledTimes(1);
         expect(findGameTypeOrmServiceMock.findOne).toHaveBeenCalledWith(
           gameFindQueryFixture,
+          transactionWrapperFixture,
         );
       });
 
@@ -183,10 +194,12 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
   describe('.update', () => {
     describe('having a GameUpdateQuery with no gameSlotUpdateQueries', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
+      let transactionWrapperFixture: TransactionWrapper;
 
       beforeAll(() => {
         gameUpdateQueryFixture =
           GameUpdateQueryFixtures.withNoGameSlotUpdateQueries;
+        transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
       });
 
       describe('when called', () => {
@@ -197,6 +210,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
           result = await gamePersistenceTypeOrmAdapter.update(
             gameUpdateQueryFixture,
+            transactionWrapperFixture,
           );
         });
 
@@ -214,6 +228,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
           expect(updateGameTypeOrmServiceMock.update).toHaveBeenCalledTimes(1);
           expect(updateGameTypeOrmServiceMock.update).toHaveBeenCalledWith(
             gameUpdateQueryFixture,
+            transactionWrapperFixture,
           );
         });
 
@@ -225,6 +240,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
     describe('having a GameUpdateQuery with gameSlotUpdateQueries', () => {
       let gameSlotUpdateQueryFixture: GameSlotUpdateQuery;
+      let transactionWrapperFixture: TransactionWrapper;
 
       let gameUpdateQueryFixture: GameUpdateQuery;
 
@@ -234,6 +250,8 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
         [gameSlotUpdateQueryFixture] =
           gameUpdateQueryFixture.gameSlotUpdateQueries as [GameSlotUpdateQuery];
+
+        transactionWrapperFixture = Symbol() as unknown as TransactionWrapper;
       });
 
       describe('when called', () => {
@@ -248,6 +266,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
 
           result = await gamePersistenceTypeOrmAdapter.update(
             gameUpdateQueryFixture,
+            transactionWrapperFixture,
           );
         });
 
@@ -261,6 +280,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
           ).toHaveBeenCalledTimes(1);
           expect(gameSlotPersistenceOutputPortMock.update).toHaveBeenCalledWith(
             gameSlotUpdateQueryFixture,
+            transactionWrapperFixture,
           );
         });
 
@@ -268,6 +288,7 @@ describe(GamePersistenceTypeOrmAdapter.name, () => {
           expect(updateGameTypeOrmServiceMock.update).toHaveBeenCalledTimes(1);
           expect(updateGameTypeOrmServiceMock.update).toHaveBeenCalledWith(
             gameUpdateQueryFixture,
+            transactionWrapperFixture,
           );
         });
 

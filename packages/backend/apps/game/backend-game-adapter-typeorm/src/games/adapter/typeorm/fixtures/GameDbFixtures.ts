@@ -83,6 +83,7 @@ export class GameDbFixtures {
     fixture.gameSlotsDb = [GameSlotDbFixtures.activeWithOneCard];
     fixture.gameSpecDb = GameSpecDbFixtures.any;
     fixture.id = '6fbcdb6c-b03c-4754-94c1-9f664f036cde';
+    fixture.skipCount = 0;
     fixture.status = GameStatusDb.active;
     fixture.turn = 1;
 

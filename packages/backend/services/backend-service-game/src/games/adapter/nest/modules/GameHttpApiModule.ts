@@ -2,6 +2,7 @@ import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
 import {
   DbModule,
   GameDbModule,
+  GameSnapshotDbModule,
 } from '@cornie-js/backend-game-adapter-typeorm';
 import { GameHttpApiModule as GameHttpApiApplicationModule } from '@cornie-js/backend-game-application';
 import { Module } from '@nestjs/common';
@@ -37,6 +38,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
       DbModule.forTransaction(),
       GameDbModule.forRootAsync(buildDbModuleOptions()),
       GameIoredisModule.forRootAsync(buildIoredisModuleOptions()),
+      GameSnapshotDbModule.forRootAsync(buildDbModuleOptions()),
     ]),
     HttpModule,
   ],

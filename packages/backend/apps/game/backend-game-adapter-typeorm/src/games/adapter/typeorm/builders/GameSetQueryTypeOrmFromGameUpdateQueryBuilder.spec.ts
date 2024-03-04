@@ -345,6 +345,38 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
       });
     });
 
+    describe('having a GameUpdateQuery with skipCount', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.withSkipCount;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            skipCount: gameUpdateQueryFixture.skipCount as number,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
     describe('having a GameUpdateQuery with status', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 

@@ -48,6 +48,10 @@ export class GameDbModule {
         gamePersistenceOutputPortSymbol,
         gameSlotPersistenceOutputPortSymbol,
         gameSpecPersistenceOutputPortSymbol,
+        GameCardSpecArrayDbFromGameCardSpecArrayBuilder,
+        GameCardSpecArrayFromGameCardSpecArrayDbBuilder,
+        GameDirectionDbFromGameDirectionBuilder,
+        GameDirectionFromGameDirectionDbBuilder,
       ],
       global: false,
       imports: [

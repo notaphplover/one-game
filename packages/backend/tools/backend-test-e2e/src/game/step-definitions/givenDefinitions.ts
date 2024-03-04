@@ -5,6 +5,9 @@ import { HttpStatus } from '@nestjs/common';
 
 import { AuthV1Parameter } from '../../auth/models/AuthV1Parameter';
 import { getAuthOrFail } from '../../auth/utils/calculations/getAuthOrFail';
+import { CardArrayV1Parameter } from '../../card/models/CardArrayV1Parameter';
+import { CardV1Parameter } from '../../card/models/CardV1Parameter';
+import { getCardArrayOrFail } from '../../card/utils/calculations/getCardArrayOrFail';
 import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { setRequestParameters } from '../../http/utils/actions/setRequestParameters';
@@ -12,8 +15,12 @@ import { getRequestParametersOrFail } from '../../http/utils/calculations/getReq
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 import { UserV1Parameter } from '../../user/models/UserV1Parameter';
 import { getUserOrFail } from '../../user/utils/calculations/getUserOrFail';
+import { GameOptionsV1Parameter } from '../models/GameOptionsV1Parameter';
 import { GameV1Parameter } from '../models/GameV1Parameter';
+import { setActiveGameCards } from '../utils/actions/setActiveGameCards';
 import { setGame } from '../utils/actions/setGame';
+import { setGameOptions } from '../utils/actions/setGameOptions';
+import { getGameOptionsOrFail } from '../utils/calculations/getGameOptionsOrFail';
 import { getGameOrFail } from '../utils/calculations/getGameOrFail';
 import {
   whenCreateGameRequestIsSend,
@@ -133,6 +140,18 @@ export function givenCreateGameSlotRequestForPlayerWithUserCredentials(
     processedRequestAlias,
     requestParameters,
   );
+}
+
+export function givenGameOptions(
+  this: OneGameApiWorld,
+  gameOptions: apiModels.GameOptionsV1,
+  gameSpecAlias?: string,
+): void {
+  const processedGameSpecAlias: string = gameSpecAlias ?? defaultAlias;
+
+  setGameOptions.bind(this)(processedGameSpecAlias, {
+    options: gameOptions,
+  });
 }
 
 export function givenGetGameSpecRequestForGameWithUserCredentials(
@@ -257,6 +276,63 @@ export function givenGamePassTurnQueryRequestForGame(
   );
 }
 
+export function givenGamePlayCardsQueryRequestForGame(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  requestAlias?: string,
+  userAlias?: string,
+  colorChoice?: apiModels.CardColorV1,
+): void {
+  const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const gameV1Parameter: GameV1Parameter =
+    getGameOrFail.bind(this)(processedGameAlias);
+
+  const authV1Parameter: AuthV1Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+
+  const userV1Parameter: UserV1Parameter =
+    getUserOrFail.bind(this)(processedUserAlias);
+
+  const slotIndex: number = gameV1Parameter.game.state.slots.findIndex(
+    (slot: apiModels.GameSlotV1) => slot.userId === userV1Parameter.user.id,
+  );
+
+  if (slotIndex === INDEX_NOT_FOUND_RESULT) {
+    throw new Error(
+      `Expecting a slow owned by "${processedUserAlias}", none found`,
+    );
+  }
+
+  const updateGameV1RequestBody: apiModels.GameIdPlayCardsQueryV1 = {
+    cardIndexes: [0],
+    kind: 'playCards',
+    slotIndex: slotIndex,
+  };
+
+  if (colorChoice !== undefined) {
+    updateGameV1RequestBody.colorChoice = colorChoice;
+  }
+
+  const updateGameV1Request: Parameters<HttpClient['updateGame']> = [
+    {
+      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+    },
+    {
+      gameId: gameV1Parameter.game.id,
+    },
+    updateGameV1RequestBody,
+  ];
+
+  setRequestParameters.bind(this)(
+    'updateGame',
+    processedRequestAlias,
+    updateGameV1Request,
+  );
+}
+
 export async function givenStartedGameForPlayersWithUserCredentials(
   this: OneGameApiWorld,
   playerAliases: string[],
@@ -282,6 +358,38 @@ export async function givenStartedGameForPlayersWithUserCredentials(
   }
 
   await updateGameParameter.bind(this)(gameAlias, userAlias);
+}
+
+export async function givenStartedGameForTwoPlayersWithUserCredentials(
+  this: OneGameApiWorld,
+  cardV1Parameter: CardV1Parameter,
+  firstUserAlias: string,
+  firstUserCardAlias: string,
+  secondUserAlias: string,
+  credentialsAlias: string,
+): Promise<void> {
+  const gameOptionsV1Parameter: GameOptionsV1Parameter =
+    getGameOptionsOrFail.bind(this)(defaultAlias);
+
+  await givenStartedGameForPlayersWithUserCredentials.bind(this)(
+    [firstUserAlias, secondUserAlias],
+    gameOptionsV1Parameter.options,
+    defaultAlias,
+    credentialsAlias,
+  );
+
+  const gameV1Parameter: GameV1Parameter =
+    getGameOrFail.bind(this)(defaultAlias);
+
+  const firstUserV1Parameter: UserV1Parameter =
+    getUserOrFail.bind(this)(firstUserAlias);
+
+  const firstUserCardsV1Parameter: CardArrayV1Parameter =
+    getCardArrayOrFail.bind(this)(firstUserCardAlias);
+
+  await setActiveGameCards(cardV1Parameter, gameV1Parameter, [
+    [firstUserV1Parameter, firstUserCardsV1Parameter],
+  ]);
 }
 
 async function updateGameParameter(
@@ -340,17 +448,6 @@ async function updateGameParameter(
 }
 
 Given<OneGameApiWorld>(
-  'a get game request for game for {string}',
-  function (this: OneGameApiWorld, userAlias: string): void {
-    givenGameFindQueryRequestForGame.bind(this)(
-      undefined,
-      undefined,
-      userAlias,
-    );
-  },
-);
-
-Given<OneGameApiWorld>(
   'a create game request for {int} player(s) with {string} credentials',
   function (
     this: OneGameApiWorld,
@@ -394,6 +491,18 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
+  'a game pass play first card request for game for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenGamePlayCardsQueryRequestForGame.bind(this)(
+      undefined,
+      undefined,
+      userAlias,
+      undefined,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
   'a game slot create query for game for {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
     givenCreateGameSlotRequestForPlayerWithUserCredentials.bind(this)(
@@ -420,11 +529,42 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
+  'a get game request for game for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenGameFindQueryRequestForGame.bind(this)(
+      undefined,
+      undefined,
+      userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
   'a get game spec request for the game with {string} credentials',
   function (this: OneGameApiWorld, userAlias: string): void {
     givenGetGameSpecRequestForGameWithUserCredentials.bind(this)(
       defaultAlias,
       userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a started game with current card {card} for {string} with {string} and {string} created with {string} credentials',
+  async function (
+    this: OneGameApiWorld,
+    cardParameter: CardV1Parameter,
+    firstUserAlias: string,
+    firstUserCardAlias: string,
+    secondUserAlias: string,
+    credentialsAlias: string,
+  ): Promise<void> {
+    await givenStartedGameForTwoPlayersWithUserCredentials.bind(this)(
+      cardParameter,
+      firstUserAlias,
+      firstUserCardAlias,
+      secondUserAlias,
+      credentialsAlias,
     );
   },
 );
@@ -450,5 +590,20 @@ Given<OneGameApiWorld>(
       undefined,
       userAlias,
     );
+  },
+);
+
+Given<OneGameApiWorld>(
+  'game options with non mandatory card play',
+  function (this: OneGameApiWorld): void {
+    givenGameOptions.bind(this)({
+      chainDraw2Draw2Cards: true,
+      chainDraw2Draw4Cards: true,
+      chainDraw4Draw2Cards: true,
+      chainDraw4Draw4Cards: true,
+      playCardIsMandatory: false,
+      playMultipleSameCards: true,
+      playWildDraw4IfNoOtherAlternative: false,
+    });
   },
 );

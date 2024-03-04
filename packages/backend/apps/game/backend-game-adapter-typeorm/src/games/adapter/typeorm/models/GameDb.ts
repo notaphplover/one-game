@@ -117,6 +117,14 @@ export class GameDb {
   public readonly name!: string | null;
 
   @Column({
+    name: 'skip_count',
+    nullable: true,
+    type: 'smallint',
+    width: 4,
+  })
+  public readonly skipCount!: number | null;
+
+  @Column({
     name: 'status',
     type: 'smallint',
     width: 2,

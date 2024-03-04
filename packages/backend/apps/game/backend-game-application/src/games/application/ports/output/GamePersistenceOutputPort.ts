@@ -11,9 +11,18 @@ export interface GamePersistenceOutputPort {
     gameCreateQuery: GameCreateQuery,
     transactionWrapper?: TransactionWrapper,
   ): Promise<Game>;
-  find(gameFindQuery: GameFindQuery): Promise<Game[]>;
-  findOne(gameFindQuery: GameFindQuery): Promise<Game | undefined>;
-  update(gameUpdateQuery: GameUpdateQuery): Promise<void>;
+  find(
+    gameFindQuery: GameFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<Game[]>;
+  findOne(
+    gameFindQuery: GameFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<Game | undefined>;
+  update(
+    gameUpdateQuery: GameUpdateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<void>;
 }
 
 export const gamePersistenceOutputPortSymbol: symbol = Symbol.for(

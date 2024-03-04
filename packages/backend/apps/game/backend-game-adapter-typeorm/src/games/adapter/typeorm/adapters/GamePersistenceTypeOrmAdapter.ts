@@ -52,26 +52,42 @@ export class GamePersistenceTypeOrmAdapter
     );
   }
 
-  public async find(gameFindQuery: GameFindQuery): Promise<Game[]> {
-    return this.#findGameTypeOrmService.find(gameFindQuery);
+  public async find(
+    gameFindQuery: GameFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<Game[]> {
+    return this.#findGameTypeOrmService.find(gameFindQuery, transactionWrapper);
   }
 
   public async findOne(
     gameFindQuery: GameFindQuery,
+    transactionWrapper?: TransactionWrapper,
   ): Promise<Game | undefined> {
-    return this.#findGameTypeOrmService.findOne(gameFindQuery);
+    return this.#findGameTypeOrmService.findOne(
+      gameFindQuery,
+      transactionWrapper,
+    );
   }
 
-  public async update(gameUpdateQuery: GameUpdateQuery): Promise<void> {
+  public async update(
+    gameUpdateQuery: GameUpdateQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<void> {
     if (gameUpdateQuery.gameSlotUpdateQueries !== undefined) {
       await Promise.all(
         gameUpdateQuery.gameSlotUpdateQueries.map(
           async (gameSlotUpdateQuery: GameSlotUpdateQuery) =>
-            this.#gameSlotPersistenceOutputPort.update(gameSlotUpdateQuery),
+            this.#gameSlotPersistenceOutputPort.update(
+              gameSlotUpdateQuery,
+              transactionWrapper,
+            ),
         ),
       );
     }
 
-    await this.#updateGameTypeOrmService.update(gameUpdateQuery);
+    await this.#updateGameTypeOrmService.update(
+      gameUpdateQuery,
+      transactionWrapper,
+    );
   }
 }
