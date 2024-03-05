@@ -184,7 +184,7 @@ export class GameService {
   }
 
   #getInitialDirection(): GameDirection {
-    return GameDirection.antiClockwise;
+    return GameDirection.clockwise;
   }
 
   #getInitialDrawCount(): number {

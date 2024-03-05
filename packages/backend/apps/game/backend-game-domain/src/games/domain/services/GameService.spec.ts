@@ -81,7 +81,7 @@ describe(GameService.name, () => {
           const expectedGameUpdateQueryProperties: Partial<GameUpdateQuery> = {
             currentCard: gameInitialDrawsMutationFixture.currentCard,
             currentColor: expect.any(String) as unknown as CardColor,
-            currentDirection: GameDirection.antiClockwise,
+            currentDirection: GameDirection.clockwise,
             currentPlayingSlotIndex: 0,
             currentTurnCardsPlayed: false,
             deck: gameInitialDrawsMutationFixture.deck,

@@ -78,8 +78,13 @@ describe(PlayerCanPassTurnSpec.name, () => {
       let gameSlotIndexFixture: number;
 
       beforeAll(() => {
-        activeGameFixture =
-          ActiveGameFixtures.withSlotsOneAndCurrentTurnCardsPlayedTrue;
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsPlayed: true,
+          },
+        };
         gameOptionsFixture = GameOptionsFixtures.any;
         gameSlotIndexFixture = 0;
       });

@@ -10,13 +10,6 @@ export class FinishedGameSlotFixtures {
     };
   }
 
-  public static get withPositionOne(): FinishedGameSlot {
-    return {
-      ...FinishedGameSlotFixtures.any,
-      position: 0,
-    };
-  }
-
   public static get withPositionZero(): FinishedGameSlot {
     return {
       ...FinishedGameSlotFixtures.any,
