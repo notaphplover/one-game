@@ -190,6 +190,28 @@ export class GameService {
     return gameUpdateQuery;
   }
 
+  public getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
+  public getGameSlotOrThrow(
+    game: NonStartedGame,
+    index: number,
+  ): NonStartedGameSlot;
+  public getGameSlotOrThrow(
+    game: Game,
+    index: number,
+  ): ActiveGameSlot | NonStartedGameSlot {
+    const gameSlot: ActiveGameSlot | NonStartedGameSlot | undefined =
+      game.state.slots[index];
+
+    if (gameSlot === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        `Expecting a game slot at index "${index}", none found instead.`,
+      );
+    }
+
+    return gameSlot;
+  }
+
   public getInitialCardsSpec(): GameCardSpec[] {
     const [zeroNumber, ...nonZeroNumbers]: [number, ...number[]] = new Array(
       UNO_ORIGINAL_NUMBERS_AMOUNT,
