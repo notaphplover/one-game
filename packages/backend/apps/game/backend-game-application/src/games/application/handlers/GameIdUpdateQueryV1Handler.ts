@@ -6,7 +6,6 @@ import {
   GameFindQuery,
   GameSpec,
   GameSpecFindQuery,
-  GameService,
   GameStatus,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
@@ -21,7 +20,6 @@ export abstract class GameIdUpdateQueryV1Handler<
 > implements Handler<[string, TQuery, apiModels.UserV1], void>
 {
   protected readonly _gamePersistenceOutputPort: GamePersistenceOutputPort;
-  protected readonly _gameService: GameService;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
   readonly #gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>;
   readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
@@ -29,13 +27,11 @@ export abstract class GameIdUpdateQueryV1Handler<
   constructor(
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     gamePersistenceOutputPort: GamePersistenceOutputPort,
-    gameService: GameService,
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
   ) {
     this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
     this._gamePersistenceOutputPort = gamePersistenceOutputPort;
-    this._gameService = gameService;
     this.#gameUpdatedEventHandler = gameUpdatedEventHandler;
     this.#playerCanUpdateGameSpec = playerCanUpdateGameSpec;
   }
