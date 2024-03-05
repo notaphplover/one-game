@@ -34,10 +34,37 @@ export class GameUpdateQueryFixtures {
     return fixture;
   }
 
+  public static get withCurrentTurnCardsDrawn(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      currentTurnCardsDrawn: true,
+    };
+
+    return fixture;
+  }
+
   public static get withCurrentTurnCardsPlayed(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       ...GameUpdateQueryFixtures.any,
       currentTurnCardsPlayed: true,
+    };
+
+    return fixture;
+  }
+
+  public static get currentTurnSingleCardDraw(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      currentTurnSingleCardDraw: CardFixtures.any,
+    };
+
+    return fixture;
+  }
+
+  public static get currentTurnSingleCardDrawNull(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      currentTurnSingleCardDraw: null,
     };
 
     return fixture;

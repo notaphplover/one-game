@@ -101,6 +101,20 @@ export class GameSetQueryTypeOrmFromGameUpdateQueryBuilder
         gameUpdateQuery.currentPlayingSlotIndex;
     }
 
+    if (gameUpdateQuery.currentTurnCardsDrawn !== undefined) {
+      gameSetQueryTypeOrm.currentTurnCardsDrawn =
+        gameUpdateQuery.currentTurnCardsDrawn;
+    }
+
+    if (gameUpdateQuery.currentTurnSingleCardDraw !== undefined) {
+      gameSetQueryTypeOrm.currentTurnSingleCardDraw =
+        gameUpdateQuery.currentTurnSingleCardDraw === null
+          ? null
+          : this.#cardDbBuilder.build(
+              gameUpdateQuery.currentTurnSingleCardDraw,
+            );
+    }
+
     if (gameUpdateQuery.currentTurnCardsPlayed !== undefined) {
       gameSetQueryTypeOrm.currentTurnCardsPlayed =
         gameUpdateQuery.currentTurnCardsPlayed;
