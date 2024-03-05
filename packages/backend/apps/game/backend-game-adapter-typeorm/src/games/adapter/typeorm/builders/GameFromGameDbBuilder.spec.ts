@@ -251,13 +251,14 @@ describe(GameFromGameDbBuilder.name, () => {
     });
   });
 
-  describe('having a started GameDb', () => {
+  describe('having a started GameDb with null currentTurnSingleCardDraw', () => {
     let gameCardSpecArrayFixture: GameCardSpec[];
     let gameDbFixture: GameDb;
 
     beforeAll(() => {
       gameCardSpecArrayFixture = [GameCardSpecFixtures.any];
-      gameDbFixture = GameDbFixtures.withStatusActiveAndGameSlotsOne;
+      gameDbFixture =
+        GameDbFixtures.withStatusActiveAndGameSlotsOneAndCurrentTurnSingleCardDrawNull;
     });
 
     describe('when called', () => {
@@ -342,8 +343,123 @@ describe(GameFromGameDbBuilder.name, () => {
             currentDirection: gameDirectionFixture,
             currentPlayingSlotIndex:
               gameDbFixture.currentPlayingSlotIndex as number,
+            currentTurnCardsDrawn:
+              gameDbFixture.currentTurnCardsDrawn as boolean,
             currentTurnCardsPlayed:
               gameDbFixture.currentTurnCardsPlayed as boolean,
+            currentTurnSingleCardDraw: undefined,
+            deck: gameCardSpecArrayFixture,
+            discardPile: gameCardSpecArrayFixture,
+            drawCount: gameDbFixture.drawCount as number,
+            skipCount: gameDbFixture.skipCount as number,
+            slots: [gameSlotFixture],
+            status: GameStatus.active,
+            turn: gameDbFixture.turn as number,
+          },
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having a started GameDb with currentTurnSingleCardDraw', () => {
+    let gameCardSpecArrayFixture: GameCardSpec[];
+    let gameDbFixture: GameDb;
+
+    beforeAll(() => {
+      gameCardSpecArrayFixture = [GameCardSpecFixtures.any];
+      gameDbFixture =
+        GameDbFixtures.withStatusActiveAndGameSlotsOneAndCurrentTurnSingleCardDraw;
+    });
+
+    describe('when called', () => {
+      let cardColorFixture: CardColor;
+      let cardFixture: Card;
+      let gameDirectionFixture: GameDirection;
+      let gameSlotFixture: ActiveGameSlot;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        cardColorFixture = CardColor.blue;
+        cardFixture = CardFixtures.any;
+        gameDirectionFixture = GameDirection.clockwise;
+        gameSlotFixture = ActiveGameSlotFixtures.withPositionZero;
+
+        cardBuilderMock.build.mockReturnValue(cardFixture);
+        cardColorBuilderMock.build.mockReturnValue(cardColorFixture);
+        gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build
+          .mockReturnValueOnce(gameCardSpecArrayFixture)
+          .mockReturnValueOnce(gameCardSpecArrayFixture);
+        gameDirectionFromGameDirectionDbBuilderMock.build.mockReturnValueOnce(
+          gameDirectionFixture,
+        );
+        gameSlotFromGameSlotDbBuilderMock.build.mockReturnValue(
+          gameSlotFixture,
+        );
+
+        result = gameFromGameDbBuilder.build(gameDbFixture);
+      });
+
+      afterAll(() => {
+        cardBuilderMock.build.mockReset();
+        cardColorBuilderMock.build.mockReset();
+        gameSlotFromGameSlotDbBuilderMock.build.mockReset();
+
+        jest.clearAllMocks();
+      });
+
+      it('should call gameSlotFromGameSlotDbBuilderMock.build()', () => {
+        expect(gameSlotFromGameSlotDbBuilderMock.build).toHaveBeenCalledTimes(
+          gameDbFixture.gameSlotsDb.length,
+        );
+
+        for (const [i, gameSlotDb] of gameDbFixture.gameSlotsDb.entries()) {
+          expect(
+            gameSlotFromGameSlotDbBuilderMock.build,
+          ).toHaveBeenNthCalledWith(i + 1, gameSlotDb);
+        }
+      });
+
+      it('should call cardBuilder.build()', () => {
+        expect(cardBuilderMock.build).toHaveBeenCalled();
+      });
+
+      it('should call cardColorBuilder.build()', () => {
+        expect(cardColorBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(cardColorBuilderMock.build).toHaveBeenCalledWith(
+          gameDbFixture.currentColor,
+        );
+      });
+
+      it('should call gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build()', () => {
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenCalledTimes(2);
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenNthCalledWith(1, gameDbFixture.deck);
+        expect(
+          gameCardSpecArrayFromGameCardSpecArrayDbBuilderMock.build,
+        ).toHaveBeenNthCalledWith(2, gameDbFixture.discardPile);
+      });
+
+      it('should return an ActiveGame', () => {
+        const expected: ActiveGame = {
+          id: gameDbFixture.id,
+          name: gameDbFixture.name,
+          state: {
+            currentCard: cardFixture,
+            currentColor: cardColorFixture,
+            currentDirection: gameDirectionFixture,
+            currentPlayingSlotIndex:
+              gameDbFixture.currentPlayingSlotIndex as number,
+            currentTurnCardsDrawn:
+              gameDbFixture.currentTurnCardsDrawn as boolean,
+            currentTurnCardsPlayed:
+              gameDbFixture.currentTurnCardsPlayed as boolean,
+            currentTurnSingleCardDraw: cardFixture,
             deck: gameCardSpecArrayFixture,
             discardPile: gameCardSpecArrayFixture,
             drawCount: gameDbFixture.drawCount as number,

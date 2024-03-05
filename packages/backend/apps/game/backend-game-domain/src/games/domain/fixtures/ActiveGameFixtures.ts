@@ -22,7 +22,9 @@ export class ActiveGameFixtures {
         currentColor: CardColor.blue,
         currentDirection: GameDirection.antiClockwise,
         currentPlayingSlotIndex: 0,
+        currentTurnCardsDrawn: false,
         currentTurnCardsPlayed: false,
+        currentTurnSingleCardDraw: undefined,
         deck: [],
         discardPile: [],
         drawCount: 0,
@@ -30,6 +32,30 @@ export class ActiveGameFixtures {
         slots: [ActiveGameSlotFixtures.withPositionZero],
         status: GameStatus.active,
         turn: 1,
+      },
+    };
+  }
+
+  public static get withCurrentTurnCardsPlayedFalse(): ActiveGame {
+    const anyFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyFixture,
+      state: {
+        ...anyFixture.state,
+        currentTurnCardsPlayed: false,
+      },
+    };
+  }
+
+  public static get withCurrentTurnCardsPlayedTrue(): ActiveGame {
+    const anyFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyFixture,
+      state: {
+        ...anyFixture.state,
+        currentTurnCardsPlayed: true,
       },
     };
   }
