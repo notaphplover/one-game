@@ -1,12 +1,17 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import {
   ActiveGame,
   GameSpec,
-  GameService,
   GameUpdateQuery,
   PlayerCanPassTurnSpec,
   PlayerCanUpdateGameSpec,
+  GamePassTurnUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -24,15 +29,22 @@ import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
 @Injectable()
 export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPassTurnQueryV1> {
+  readonly #gamePassTurnUpdateQueryFromGameBuilder: Builder<
+    GameUpdateQuery,
+    [ActiveGame, GameSpec]
+  >;
   readonly #playerCanPassTurnSpec: PlayerCanPassTurnSpec;
 
   constructor(
-    @Inject(gameSpecPersistenceOutputPortSymbol)
-    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
+    @Inject(GamePassTurnUpdateQueryFromGameBuilder)
+    gamePassTurnUpdateQueryFromGameBuilder: Builder<
+      GameUpdateQuery,
+      [ActiveGame, GameSpec]
+    >,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
-    @Inject(GameService)
-    gameService: GameService,
+    @Inject(gameSpecPersistenceOutputPortSymbol)
+    gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(GameUpdatedEventHandler)
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
@@ -43,10 +55,12 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     super(
       gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
-      gameService,
       gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
     );
+
+    this.#gamePassTurnUpdateQueryFromGameBuilder =
+      gamePassTurnUpdateQueryFromGameBuilder;
     this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
   }
 
@@ -54,7 +68,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     game: ActiveGame,
     gameSpec: GameSpec,
   ): GameUpdateQuery {
-    return this._gameService.buildPassTurnGameUpdateQuery(game, gameSpec);
+    return this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec);
   }
 
   protected override _checkUnprocessableOperation(
