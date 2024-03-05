@@ -12,6 +12,7 @@ import {
 import { UserV1Fixtures } from '../../../../users/application/fixtures/models/UserV1Fixtures';
 import { ActiveGameV1Fixtures } from '../../fixtures/ActiveGameV1Fixtures';
 import { GameCreateQueryV1Fixtures } from '../../fixtures/GameCreateQueryV1Fixtures';
+import { GameIdDrawCardsQueryV1Fixtures } from '../../fixtures/GameIdDrawCardsQueryV1Fixtures';
 import { GameIdPassTurnQueryV1Fixtures } from '../../fixtures/GameIdPassTurnQueryV1Fixtures';
 import { GameIdPlayCardsQueryV1Fixtures } from '../../fixtures/GameIdPlayCardsQueryV1Fixtures';
 import { NonStartedGameV1Fixtures } from '../../fixtures/NonStartedGameV1Fixtures';
@@ -21,6 +22,9 @@ import { GameManagementInputPort } from './GameManagementInputPort';
 describe(GameManagementInputPort.name, () => {
   let createGameUseCaseHandlerMock: jest.Mocked<
     Handler<[apiModels.GameCreateQueryV1], apiModels.GameV1>
+  >;
+  let gameIdDrawCardsQueryV1HandlerMock: jest.Mocked<
+    Handler<[string, apiModels.GameIdDrawCardsQueryV1, apiModels.UserV1], void>
   >;
   let gameIdPassTurnQueryV1HandlerMock: jest.Mocked<
     Handler<[string, apiModels.GameIdPassTurnQueryV1, apiModels.UserV1], void>
@@ -35,6 +39,9 @@ describe(GameManagementInputPort.name, () => {
 
   beforeAll(() => {
     createGameUseCaseHandlerMock = {
+      handle: jest.fn(),
+    };
+    gameIdDrawCardsQueryV1HandlerMock = {
       handle: jest.fn(),
     };
     gameIdPassTurnQueryV1HandlerMock = {
@@ -55,6 +62,7 @@ describe(GameManagementInputPort.name, () => {
 
     gameManagementInputPort = new GameManagementInputPort(
       createGameUseCaseHandlerMock,
+      gameIdDrawCardsQueryV1HandlerMock,
       gameIdPassTurnQueryV1HandlerMock,
       gameIdPlayCardsQueryV1HandlerMock,
       gameV1FromGameBuilderMock,
@@ -207,6 +215,79 @@ describe(GameManagementInputPort.name, () => {
       beforeAll(() => {
         gameIdFixture = ActiveGameFixtures.any.id;
         userV1Fixture = UserV1Fixtures.any;
+      });
+
+      describe('having a GameIdDrawCardsQueryV1', () => {
+        let gameIdPassTurnQueryV1Fixture: apiModels.GameIdDrawCardsQueryV1;
+
+        beforeAll(() => {
+          gameIdPassTurnQueryV1Fixture = GameIdDrawCardsQueryV1Fixtures.any;
+        });
+
+        describe('when called, and gamePersistenceOutputPort.findOne() returns a Game', () => {
+          let gameFixture: Game;
+          let gameV1Fixture: apiModels.GameV1;
+
+          let result: unknown;
+
+          beforeAll(async () => {
+            gameFixture = ActiveGameFixtures.any;
+            gameV1Fixture = ActiveGameV1Fixtures.any;
+
+            gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+              gameFixture,
+            );
+
+            gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
+
+            result = await gameManagementInputPort.updateOne(
+              gameIdFixture,
+              gameIdPassTurnQueryV1Fixture,
+              userV1Fixture,
+            );
+          });
+
+          afterAll(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should call gameIdPassTurnQueryV1Handler.handle()', () => {
+            expect(
+              gameIdDrawCardsQueryV1HandlerMock.handle,
+            ).toHaveBeenCalledTimes(1);
+            expect(
+              gameIdDrawCardsQueryV1HandlerMock.handle,
+            ).toHaveBeenCalledWith(
+              gameIdFixture,
+              gameIdPassTurnQueryV1Fixture,
+              userV1Fixture,
+            );
+          });
+
+          it('should call gamePersistenceOutputPort.findOne()', () => {
+            const expectedGameFindQuery: GameFindQuery = {
+              id: gameIdFixture,
+            };
+
+            expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+              1,
+            );
+            expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+              expectedGameFindQuery,
+            );
+          });
+
+          it('should call gameV1FromGameBuilderMock.build()', () => {
+            expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledTimes(1);
+            expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledWith(
+              gameFixture,
+            );
+          });
+
+          it('should return a GameV1', () => {
+            expect(result).toBe(gameV1Fixture);
+          });
+        });
       });
 
       describe('having a GameIdPassTurnQueryV1', () => {

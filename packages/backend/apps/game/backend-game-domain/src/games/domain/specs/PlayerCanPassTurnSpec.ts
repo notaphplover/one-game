@@ -1,7 +1,6 @@
 import { AppError, AppErrorKind, Spec } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Card } from '../../../cards/domain/valueObjects/Card';
 import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameOptions } from '../valueObjects/GameOptions';
@@ -35,16 +34,25 @@ export class PlayerCanPassTurnSpec
       );
     }
 
+    if (activeGame.state.currentTurnCardsPlayed) {
+      return true;
+    }
+
+    if (!activeGame.state.currentTurnCardsDrawn) {
+      return false;
+    }
+
     if (
       !gameOptions.playCardIsMandatory ||
-      activeGame.state.currentTurnCardsPlayed
+      activeGame.state.currentTurnSingleCardDraw === undefined
     ) {
       return true;
     }
 
-    return gameSlot.cards.every(
-      (card: Card): boolean =>
-        !this.#cardCanBePlayedSpec.isSatisfiedBy(card, activeGame, gameOptions),
+    return !this.#cardCanBePlayedSpec.isSatisfiedBy(
+      activeGame.state.currentTurnSingleCardDraw,
+      activeGame,
+      gameOptions,
     );
   }
 }

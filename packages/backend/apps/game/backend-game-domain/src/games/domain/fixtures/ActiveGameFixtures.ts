@@ -270,18 +270,6 @@ export class ActiveGameFixtures {
     };
   }
 
-  public static get withSlotsOneAndCurrentTurnCardsPlayedFalse(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
-
-    return {
-      ...anyActiveGameFixture,
-      state: {
-        ...anyActiveGameFixture.state,
-        currentTurnCardsPlayed: false,
-      },
-    };
-  }
-
   public static get withSlotsOneAndCurrentTurnCardsPlayedTrue(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
 

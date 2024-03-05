@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
+import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { GameOptionsFixtures } from '../fixtures/GameOptionsFixtures';
@@ -25,170 +26,290 @@ describe(PlayerCanPassTurnSpec.name, () => {
   });
 
   describe('.isSatisfiedBy', () => {
-    describe('having an active game with one player with cards and currentTurnCardsPlayed false', () => {
+    describe('having an unexisting slot index', () => {
       let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameSlotIndexFixture: number;
 
       beforeAll(() => {
-        activeGameFixture =
-          ActiveGameFixtures.withSlotsOneAndCurrentTurnCardsPlayedFalse;
+        activeGameFixture = ActiveGameFixtures.any;
+        gameOptionsFixture = GameOptionsFixtures.any;
+        gameSlotIndexFixture = -1;
       });
 
-      describe('having an existing gameSlotIndex', () => {
-        let gameSlotIndex: number;
+      describe('when called', () => {
+        let result: unknown;
 
         beforeAll(() => {
-          gameSlotIndex = 0;
-        });
-
-        describe('having a game options with playCardIsMandatory enabled', () => {
-          let gameOptionsFixture: GameOptions;
-
-          beforeAll(() => {
-            gameOptionsFixture =
-              GameOptionsFixtures.withPlayCardIsMandatoryEnabled;
-          });
-
-          describe('when called, and cardCanBePlayedSpec.isSatisfiedBy() returns true', () => {
-            let result: unknown;
-
-            beforeAll(() => {
-              cardCanBePlayedSpecMock.isSatisfiedBy.mockReturnValue(true);
-
-              result = playerCanPassTurnSpec.isSatisfiedBy(
-                activeGameFixture,
-                gameOptionsFixture,
-                gameSlotIndex,
-              );
-            });
-
-            afterAll(() => {
-              jest.clearAllMocks();
-            });
-
-            it('should call cardCanBePlayedSpec.isSatisfiedBy()', () => {
-              expect(cardCanBePlayedSpecMock.isSatisfiedBy).toHaveBeenCalled();
-            });
-
-            it('should return false', () => {
-              expect(result).toBe(false);
-            });
-          });
-        });
-
-        describe('having a game options with playCardIsMandatory disabled', () => {
-          let gameOptionsFixture: GameOptions;
-
-          beforeAll(() => {
-            gameOptionsFixture =
-              GameOptionsFixtures.withPlayCardIsMandatoryDisabled;
-          });
-
-          describe('when called', () => {
-            let result: unknown;
-
-            beforeAll(() => {
-              result = playerCanPassTurnSpec.isSatisfiedBy(
-                activeGameFixture,
-                gameOptionsFixture,
-                gameSlotIndex,
-              );
-            });
-
-            afterAll(() => {
-              jest.clearAllMocks();
-            });
-
-            it('should return true', () => {
-              expect(result).toBe(true);
-            });
-          });
-        });
-      });
-
-      describe('having an unexisting gameSlotIndex', () => {
-        let gameSlotIndex: number;
-
-        beforeAll(() => {
-          gameSlotIndex = Infinity;
-        });
-
-        describe('when called', () => {
-          let gameOptionsFixture: GameOptions;
-
-          let result: unknown;
-
-          beforeAll(() => {
-            gameOptionsFixture = GameOptionsFixtures.any;
-
-            try {
-              playerCanPassTurnSpec.isSatisfiedBy(
-                activeGameFixture,
-                gameOptionsFixture,
-                gameSlotIndex,
-              );
-            } catch (error: unknown) {
-              result = error;
-            }
-          });
-
-          afterAll(() => {
-            jest.clearAllMocks();
-          });
-
-          it('should throw an AppError', () => {
-            const expectedProperties: Partial<AppError> = {
-              kind: AppErrorKind.unknown,
-              message: expect.stringContaining(
-                `Game slot ${gameSlotIndex} not found`,
-              ) as unknown as string,
-            };
-
-            expect(result).toBeInstanceOf(AppError);
-            expect(result).toStrictEqual(
-              expect.objectContaining(expectedProperties),
+          try {
+            playerCanPassTurnSpec.isSatisfiedBy(
+              activeGameFixture,
+              gameOptionsFixture,
+              gameSlotIndexFixture,
             );
-          });
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should throw an AppError', () => {
+          const expectedProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message: expect.stringContaining(
+              `Game slot ${gameSlotIndexFixture} not found`,
+            ) as unknown as string,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
         });
       });
     });
 
-    describe('having an active game with one player with cards and currentTurnCardsPlayed true', () => {
+    describe('having an active game with one player and currentTurnCardsPlayed true', () => {
       let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameSlotIndexFixture: number;
 
       beforeAll(() => {
         activeGameFixture =
           ActiveGameFixtures.withSlotsOneAndCurrentTurnCardsPlayedTrue;
+        gameOptionsFixture = GameOptionsFixtures.any;
+        gameSlotIndexFixture = 0;
       });
 
-      describe('having an existing gameSlotIndex', () => {
-        let gameSlotIndex: number;
+      describe('when called', () => {
+        let result: unknown;
 
         beforeAll(() => {
-          gameSlotIndex = 0;
+          result = playerCanPassTurnSpec.isSatisfiedBy(
+            activeGameFixture,
+            gameOptionsFixture,
+            gameSlotIndexFixture,
+          );
         });
 
-        describe('when called', () => {
-          let gameOptionsFixture: GameOptions;
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
-          let result: unknown;
+        it('should return true', () => {
+          expect(result).toBe(true);
+        });
+      });
+    });
 
-          beforeAll(() => {
-            gameOptionsFixture = GameOptionsFixtures.any;
+    describe('having an active game with one player and currentTurnCardsPlayed false and currentTurnCardsDrawn false', () => {
+      let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameSlotIndexFixture: number;
 
-            result = playerCanPassTurnSpec.isSatisfiedBy(
-              activeGameFixture,
-              gameOptionsFixture,
-              gameSlotIndex,
-            );
-          });
+      beforeAll(() => {
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: false,
+            currentTurnCardsPlayed: false,
+          },
+        };
 
-          afterAll(() => {
-            jest.clearAllMocks();
-          });
+        gameOptionsFixture = GameOptionsFixtures.any;
+        gameSlotIndexFixture = 0;
+      });
 
-          it('should return true', () => {
-            expect(result).toBe(true);
-          });
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = playerCanPassTurnSpec.isSatisfiedBy(
+            activeGameFixture,
+            gameOptionsFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return false', () => {
+          expect(result).toBe(false);
+        });
+      });
+    });
+
+    describe('having an active game with one player and currentTurnCardsPlayed false and currentTurnCardsDrawn true, and game options with playCardIsMandatory false', () => {
+      let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameSlotIndexFixture: number;
+
+      beforeAll(() => {
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: true,
+            currentTurnCardsPlayed: false,
+          },
+        };
+
+        gameOptionsFixture =
+          GameOptionsFixtures.withPlayCardIsMandatoryDisabled;
+        gameSlotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = playerCanPassTurnSpec.isSatisfiedBy(
+            activeGameFixture,
+            gameOptionsFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return true', () => {
+          expect(result).toBe(true);
+        });
+      });
+    });
+
+    describe('having an active game with one player and currentTurnCardsPlayed false and currentTurnCardsDrawn true, and game options with playCardIsMandatory true', () => {
+      let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameSlotIndexFixture: number;
+
+      beforeAll(() => {
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: true,
+            currentTurnCardsPlayed: false,
+            currentTurnSingleCardDraw: undefined,
+          },
+        };
+
+        gameOptionsFixture = GameOptionsFixtures.withPlayCardIsMandatoryEnabled;
+        gameSlotIndexFixture = 0;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = playerCanPassTurnSpec.isSatisfiedBy(
+            activeGameFixture,
+            gameOptionsFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return true', () => {
+          expect(result).toBe(true);
+        });
+      });
+    });
+
+    describe('having an active game with one player and currentTurnCardsPlayed false and currentTurnCardsDrawn true, and game options with playCardIsMandatory true and currentTurnSingleCardDraw', () => {
+      let activeGameFixture: ActiveGame;
+      let gameOptionsFixture: GameOptions;
+      let gameSlotIndexFixture: number;
+
+      beforeAll(() => {
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: true,
+            currentTurnCardsPlayed: false,
+            currentTurnSingleCardDraw: CardFixtures.any,
+          },
+        };
+
+        gameOptionsFixture = GameOptionsFixtures.withPlayCardIsMandatoryEnabled;
+        gameSlotIndexFixture = 0;
+      });
+
+      describe('when called, and cardCanBePlayedSpec.isSatisfiedBy() returns true', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          cardCanBePlayedSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+          result = playerCanPassTurnSpec.isSatisfiedBy(
+            activeGameFixture,
+            gameOptionsFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call cardCanBePlayedSpec.isSatisfiedBy()', () => {
+          expect(cardCanBePlayedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(cardCanBePlayedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            activeGameFixture.state.currentTurnSingleCardDraw,
+            activeGameFixture,
+            gameOptionsFixture,
+          );
+        });
+
+        it('should return false', () => {
+          expect(result).toBe(false);
+        });
+      });
+
+      describe('when called, and cardCanBePlayedSpec.isSatisfiedBy() returns false', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          cardCanBePlayedSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
+          result = playerCanPassTurnSpec.isSatisfiedBy(
+            activeGameFixture,
+            gameOptionsFixture,
+            gameSlotIndexFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call cardCanBePlayedSpec.isSatisfiedBy()', () => {
+          expect(cardCanBePlayedSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(cardCanBePlayedSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+            activeGameFixture.state.currentTurnSingleCardDraw,
+            activeGameFixture,
+            gameOptionsFixture,
+          );
+        });
+
+        it('should return true', () => {
+          expect(result).toBe(true);
         });
       });
     });
