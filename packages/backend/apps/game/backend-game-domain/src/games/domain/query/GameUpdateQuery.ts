@@ -13,6 +13,8 @@ export interface GameUpdateQuery {
   currentColor?: CardColor;
   currentDirection?: GameDirection;
   currentPlayingSlotIndex?: number;
+  currentTurnCardsDrawn?: boolean | null;
+  currentTurnSingleCardDraw?: Card | null;
   currentTurnCardsPlayed?: boolean | null;
   deck?: GameCardSpec[];
   discardPile?: GameCardSpec[];

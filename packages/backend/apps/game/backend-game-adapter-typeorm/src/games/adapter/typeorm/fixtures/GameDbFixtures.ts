@@ -76,7 +76,9 @@ export class GameDbFixtures {
     fixture.currentColor = 32;
     fixture.currentDirection = GameDirectionDb.clockwise;
     fixture.currentPlayingSlotIndex = 0;
+    fixture.currentTurnCardsDrawn = false;
     fixture.currentTurnCardsPlayed = false;
+    fixture.currentTurnSingleCardDraw = null;
     fixture.deck = '[{ "amount": 1, "card": 39 }]';
     fixture.discardPile = '[]';
     fixture.drawCount = 0;
@@ -86,6 +88,24 @@ export class GameDbFixtures {
     fixture.skipCount = 0;
     fixture.status = GameStatusDb.active;
     fixture.turn = 1;
+
+    return fixture;
+  }
+
+  public static get withStatusActiveAndGameSlotsOneAndCurrentTurnSingleCardDraw(): GameDb {
+    const fixture: Writable<GameDb> =
+      GameDbFixtures.withStatusActiveAndGameSlotsOne;
+
+    fixture.currentTurnSingleCardDraw = 39;
+
+    return fixture;
+  }
+
+  public static get withStatusActiveAndGameSlotsOneAndCurrentTurnSingleCardDrawNull(): GameDb {
+    const fixture: Writable<GameDb> =
+      GameDbFixtures.withStatusActiveAndGameSlotsOne;
+
+    fixture.currentTurnSingleCardDraw = null;
 
     return fixture;
   }
