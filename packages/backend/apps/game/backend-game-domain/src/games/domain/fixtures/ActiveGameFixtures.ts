@@ -10,7 +10,6 @@ import { ActiveGame } from '../entities/ActiveGame';
 import { GameDirection } from '../valueObjects/GameDirection';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { ActiveGameSlotFixtures } from './ActiveGameSlotFixtures';
-import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 
 export class ActiveGameFixtures {
   public static get any(): ActiveGame {
@@ -44,18 +43,6 @@ export class ActiveGameFixtures {
       state: {
         ...anyFixture.state,
         currentTurnCardsPlayed: false,
-      },
-    };
-  }
-
-  public static get withCurrentTurnCardsPlayedTrue(): ActiveGame {
-    const anyFixture: ActiveGame = ActiveGameFixtures.any;
-
-    return {
-      ...anyFixture,
-      state: {
-        ...anyFixture.state,
-        currentTurnCardsPlayed: true,
       },
     };
   }
@@ -176,22 +163,6 @@ export class ActiveGameFixtures {
     };
   }
 
-  public static get withGameSlotsAmountTwoAndStateWithDeckWithSpecOneWithAmount120(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
-
-    return {
-      ...anyActiveGameFixture,
-      state: {
-        ...anyActiveGameFixture.state,
-        deck: [GameCardSpecFixtures.withAmount120],
-        slots: [
-          ActiveGameSlotFixtures.withPositionZero,
-          ActiveGameSlotFixtures.withPositionOne,
-        ],
-      },
-    };
-  }
-
   public static get withSlotsOne(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
 
@@ -242,42 +213,6 @@ export class ActiveGameFixtures {
           ActiveGameSlotFixtures.withPositionZero,
           ActiveGameSlotFixtures.withPositionOne,
         ],
-      },
-    };
-  }
-
-  public static get withSlotsOneAndCurrentDirectionAntiClockwise(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
-
-    return {
-      ...anyActiveGameFixture,
-      state: {
-        ...anyActiveGameFixture.state,
-        currentDirection: GameDirection.antiClockwise,
-      },
-    };
-  }
-
-  public static get withSlotsOneAndCurrentDirectionClockwise(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
-
-    return {
-      ...anyActiveGameFixture,
-      state: {
-        ...anyActiveGameFixture.state,
-        currentDirection: GameDirection.clockwise,
-      },
-    };
-  }
-
-  public static get withSlotsOneAndCurrentTurnCardsPlayedTrue(): ActiveGame {
-    const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.withSlotsOne;
-
-    return {
-      ...anyActiveGameFixture,
-      state: {
-        ...anyActiveGameFixture.state,
-        currentTurnCardsPlayed: true,
       },
     };
   }
