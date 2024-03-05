@@ -1,3 +1,6 @@
+import { GameDrawCardsUpdateQueryFromGameBuilder } from './builders/GameDrawCardsUpdateQueryFromGameBuilder';
+import { GamePassTurnUpdateQueryFromGameBuilder } from './builders/GamePassTurnUpdateQueryFromGameBuilder';
+import { GamePlayCardsUpdateQueryFromGameBuilder } from './builders/GamePlayCardsUpdateQueryFromGameBuilder';
 import { ActiveGame } from './entities/ActiveGame';
 import { BaseGame } from './entities/BaseGame';
 import { FinishedGame } from './entities/FinishedGame';
@@ -62,6 +65,9 @@ export {
   GameCanHoldMoreGameSlotsSpec,
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameDirection,
+  GameDrawCardsUpdateQueryFromGameBuilder,
+  GamePassTurnUpdateQueryFromGameBuilder,
+  GamePlayCardsUpdateQueryFromGameBuilder,
   GameService,
   GameSpecFindQuerySortOption,
   GameStatus,

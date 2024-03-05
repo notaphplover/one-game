@@ -14,7 +14,6 @@ import {
   GameFindQuery,
   GameSpec,
   GameSpecFindQuery,
-  GameService,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
@@ -35,7 +34,12 @@ import { GameIdPlayCardsQueryV1Handler } from './GameIdPlayCardsQueryV1Handler';
 describe(GameIdPlayCardsQueryV1Handler.name, () => {
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
-  let gameServiceMock: jest.Mocked<GameService>;
+  let gamePlayCardsUpdateQueryFromGameBuilderMock: jest.Mocked<
+    Builder<
+      GameUpdateQuery,
+      [ActiveGame, number[], number, CardColor | undefined]
+    >
+  >;
   let gameUpdatedEventHandlerMock: jest.Mocked<
     Handler<[GameUpdatedEvent], void>
   >;
@@ -59,9 +63,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     } as Partial<
       jest.Mocked<GamePersistenceOutputPort>
     > as jest.Mocked<GamePersistenceOutputPort>;
-    gameServiceMock = {
-      buildPlayCardsGameUpdateQuery: jest.fn(),
-    } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
+    gamePlayCardsUpdateQueryFromGameBuilderMock = {
+      build: jest.fn(),
+    };
     gameUpdatedEventHandlerMock = {
       handle: jest.fn(),
     };
@@ -80,7 +84,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     gameIdPlayCardsQueryV1Handler = new GameIdPlayCardsQueryV1Handler(
       gameSpecPersistenceOutputPortMock,
       gamePersistenceOutputPortMock,
-      gameServiceMock,
+      gamePlayCardsUpdateQueryFromGameBuilderMock,
       gameUpdatedEventHandlerMock,
       playerCanUpdateGameSpecMock,
       cardColorFromCardColorV1BuilderMock,
@@ -275,7 +279,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameServiceMock.buildPlayCardsGameUpdateQuery.mockReturnValueOnce(
+        gamePlayCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
 
@@ -378,7 +382,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameServiceMock.buildPlayCardsGameUpdateQuery.mockReturnValueOnce(
+        gamePlayCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
 
@@ -498,7 +502,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameServiceMock.buildPlayCardsGameUpdateQuery.mockReturnValueOnce(
+        gamePlayCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
 
@@ -571,10 +575,10 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
       it('should call gameService.buildPlayCardsGameUpdateQuery()', () => {
         expect(
-          gameServiceMock.buildPlayCardsGameUpdateQuery,
+          gamePlayCardsUpdateQueryFromGameBuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameServiceMock.buildPlayCardsGameUpdateQuery,
+          gamePlayCardsUpdateQueryFromGameBuilderMock.build,
         ).toHaveBeenCalledWith(
           activeGameFixture,
           gameIdPlayCardsQueryV1Fixture.cardIndexes,

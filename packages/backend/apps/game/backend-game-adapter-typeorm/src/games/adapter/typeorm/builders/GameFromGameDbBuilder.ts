@@ -118,6 +118,7 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
       gameDb.currentColor === null ||
       gameDb.currentDirection === null ||
       gameDb.currentPlayingSlotIndex === null ||
+      gameDb.currentTurnCardsDrawn === null ||
       gameDb.currentTurnCardsPlayed === null ||
       gameDb.deck === null ||
       gameDb.drawCount === null ||
@@ -137,7 +138,12 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
           gameDb.currentDirection,
         ),
         currentPlayingSlotIndex: gameDb.currentPlayingSlotIndex,
+        currentTurnCardsDrawn: gameDb.currentTurnCardsDrawn,
         currentTurnCardsPlayed: gameDb.currentTurnCardsPlayed,
+        currentTurnSingleCardDraw:
+          gameDb.currentTurnSingleCardDraw === null
+            ? undefined
+            : this.#cardBuilder.build(gameDb.currentTurnSingleCardDraw),
         deck: this.#gameCardSpecArrayFromGameCardSpecArrayDbBuilder.build(
           gameDb.deck,
         ),

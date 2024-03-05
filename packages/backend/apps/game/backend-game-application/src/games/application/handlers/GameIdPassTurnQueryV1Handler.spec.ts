@@ -1,13 +1,17 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import {
   ActiveGame,
   GameFindQuery,
   GameSpec,
   GameSpecFindQuery,
-  GameService,
   GameUpdateQuery,
   PlayerCanPassTurnSpec,
   PlayerCanUpdateGameSpec,
@@ -27,9 +31,11 @@ import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersisten
 import { GameIdPassTurnQueryV1Handler } from './GameIdPassTurnQueryV1Handler';
 
 describe(GameIdPassTurnQueryV1Handler.name, () => {
-  let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
+  let gamePassTurnUpdateQueryFromGameBuilderMock: jest.Mocked<
+    Builder<GameUpdateQuery, [ActiveGame, GameSpec]>
+  >;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
-  let gameServiceMock: jest.Mocked<GameService>;
+  let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gameUpdatedEventHandlerMock: jest.Mocked<
     Handler<[GameUpdatedEvent], void>
   >;
@@ -39,20 +45,20 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
   let gameIdPassTurnQueryV1Handler: GameIdPassTurnQueryV1Handler;
 
   beforeAll(() => {
-    gameSpecPersistenceOutputPortMock = {
-      findOne: jest.fn(),
-    } as Partial<
-      jest.Mocked<GameSpecPersistenceOutputPort>
-    > as jest.Mocked<GameSpecPersistenceOutputPort>;
+    gamePassTurnUpdateQueryFromGameBuilderMock = {
+      build: jest.fn(),
+    };
     gamePersistenceOutputPortMock = {
       findOne: jest.fn(),
       update: jest.fn(),
     } as Partial<
       jest.Mocked<GamePersistenceOutputPort>
     > as jest.Mocked<GamePersistenceOutputPort>;
-    gameServiceMock = {
-      buildPassTurnGameUpdateQuery: jest.fn(),
-    } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
+    gameSpecPersistenceOutputPortMock = {
+      findOne: jest.fn(),
+    } as Partial<
+      jest.Mocked<GameSpecPersistenceOutputPort>
+    > as jest.Mocked<GameSpecPersistenceOutputPort>;
     gameUpdatedEventHandlerMock = {
       handle: jest.fn(),
     };
@@ -66,9 +72,9 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     > as jest.Mocked<PlayerCanPassTurnSpec>;
 
     gameIdPassTurnQueryV1Handler = new GameIdPassTurnQueryV1Handler(
-      gameSpecPersistenceOutputPortMock,
+      gamePassTurnUpdateQueryFromGameBuilderMock,
       gamePersistenceOutputPortMock,
-      gameServiceMock,
+      gameSpecPersistenceOutputPortMock,
       gameUpdatedEventHandlerMock,
       playerCanUpdateGameSpecMock,
       playerCanPassTurnSpecMock,
@@ -261,7 +267,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameServiceMock.buildPassTurnGameUpdateQuery.mockReturnValueOnce(
+        gamePassTurnUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
 
@@ -364,7 +370,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameServiceMock.buildPassTurnGameUpdateQuery.mockReturnValueOnce(
+        gamePassTurnUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
 
@@ -480,7 +486,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameServiceMock.buildPassTurnGameUpdateQuery.mockReturnValueOnce(
+        gamePassTurnUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gameUpdateQueryFixture,
         );
 
@@ -547,12 +553,12 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameService.buildPassTurnGameUpdateQuery()', () => {
+      it('should call gamePassTurnUpdateQueryFromGameBuilder.build()', () => {
         expect(
-          gameServiceMock.buildPassTurnGameUpdateQuery,
+          gamePassTurnUpdateQueryFromGameBuilderMock.build,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameServiceMock.buildPassTurnGameUpdateQuery,
+          gamePassTurnUpdateQueryFromGameBuilderMock.build,
         ).toHaveBeenCalledWith(activeGameFixture, gameSpecFixture);
       });
 

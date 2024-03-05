@@ -27,12 +27,18 @@ describe(PlayerCanDrawCardsSpec.name, () => {
   });
 
   describe('.isSatisfiedBy', () => {
-    describe('having an active game with one player with cards and currentTurnCardsPlayed false', () => {
+    describe('having an active game with one player with cards and currentTurnCardsDrawn false and currentTurnCardsPlayed false', () => {
       let activeGameFixture: ActiveGame;
 
       beforeAll(() => {
-        activeGameFixture =
-          ActiveGameFixtures.withSlotsOneAndCurrentTurnCardsPlayedFalse;
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: false,
+            currentTurnCardsPlayed: false,
+          },
+        };
       });
 
       describe('having an existing gameSlotIndex', () => {
@@ -154,12 +160,65 @@ describe(PlayerCanDrawCardsSpec.name, () => {
       });
     });
 
-    describe('having an active game with one player with cards and currentTurnCardsPlayed true', () => {
+    describe('having an active game with one player with cards and currentTurnCardsDrawn false and currentTurnCardsPlayed true', () => {
       let activeGameFixture: ActiveGame;
 
       beforeAll(() => {
-        activeGameFixture =
-          ActiveGameFixtures.withSlotsOneAndCurrentTurnCardsPlayedTrue;
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: false,
+            currentTurnCardsPlayed: true,
+          },
+        };
+      });
+
+      describe('having an existing gameSlotIndex', () => {
+        let gameSlotIndex: number;
+
+        beforeAll(() => {
+          gameSlotIndex = 0;
+        });
+
+        describe('when called', () => {
+          let gameOptionsFixture: GameOptions;
+
+          let result: unknown;
+
+          beforeAll(() => {
+            gameOptionsFixture = GameOptionsFixtures.any;
+
+            result = playerCanDrawCardsSpec.isSatisfiedBy(
+              activeGameFixture,
+              gameOptionsFixture,
+              gameSlotIndex,
+            );
+          });
+
+          afterAll(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should return false', () => {
+            expect(result).toBe(false);
+          });
+        });
+      });
+    });
+
+    describe('having an active game with one player with cards and currentTurnCardsDrawn true and currentTurnCardsPlayed false', () => {
+      let activeGameFixture: ActiveGame;
+
+      beforeAll(() => {
+        activeGameFixture = {
+          ...ActiveGameFixtures.withSlotsOne,
+          state: {
+            ...ActiveGameFixtures.withSlotsOne.state,
+            currentTurnCardsDrawn: true,
+            currentTurnCardsPlayed: false,
+          },
+        };
       });
 
       describe('having an existing gameSlotIndex', () => {

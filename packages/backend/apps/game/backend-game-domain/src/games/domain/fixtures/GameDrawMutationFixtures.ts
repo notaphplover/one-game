@@ -5,7 +5,7 @@ import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 export class GameDrawMutationFixtures {
   public static get any(): GameDrawMutation {
     return {
-      cards: [CardFixtures.any],
+      cards: [CardFixtures.any, CardFixtures.any],
       deck: [GameCardSpecFixtures.any],
       isDiscardPileEmptied: false,
     };

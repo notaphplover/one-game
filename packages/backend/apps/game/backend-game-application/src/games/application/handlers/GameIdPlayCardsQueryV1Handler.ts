@@ -10,9 +10,9 @@ import {
   ActiveGame,
   CurrentPlayerCanPlayCardsSpec,
   GameSpec,
-  GameService,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
+  GamePlayCardsUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -36,14 +36,21 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     [apiModels.CardColorV1]
   >;
   readonly #currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec;
+  readonly #gamePlayCardsUpdateQueryFromGameBuilder: Builder<
+    GameUpdateQuery,
+    [ActiveGame, number[], number, CardColor | undefined]
+  >;
 
   constructor(
     @Inject(gameSpecPersistenceOutputPortSymbol)
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
-    @Inject(GameService)
-    gameService: GameService,
+    @Inject(GamePlayCardsUpdateQueryFromGameBuilder)
+    gamePlayCardsUpdateQueryFromGameBuilder: Builder<
+      GameUpdateQuery,
+      [ActiveGame, number[], number, CardColor | undefined]
+    >,
     @Inject(GameUpdatedEventHandler)
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
@@ -59,13 +66,14 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     super(
       gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
-      gameService,
       gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
     );
 
     this.#cardColorFromCardColorV1Builder = cardColorFromCardColorV1Builder;
     this.#currentPlayerCanPlayCardsSpec = currentPlayerCanPlayCardsSpec;
+    this.#gamePlayCardsUpdateQueryFromGameBuilder =
+      gamePlayCardsUpdateQueryFromGameBuilder;
   }
 
   protected override _buildUpdateQuery(
@@ -73,7 +81,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     _gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
   ): GameUpdateQuery {
-    return this._gameService.buildPlayCardsGameUpdateQuery(
+    return this.#gamePlayCardsUpdateQueryFromGameBuilder.build(
       game,
       gameIdUpdateQueryV1.cardIndexes,
       gameIdUpdateQueryV1.slotIndex,

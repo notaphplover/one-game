@@ -10,7 +10,9 @@ export interface ActiveGameState {
   readonly currentColor: CardColor;
   readonly currentDirection: GameDirection;
   readonly currentPlayingSlotIndex: number;
+  readonly currentTurnCardsDrawn: boolean;
   readonly currentTurnCardsPlayed: boolean;
+  readonly currentTurnSingleCardDraw: Card | undefined;
   readonly deck: GameCardSpec[];
   readonly discardPile: GameCardSpec[];
   readonly drawCount: number;

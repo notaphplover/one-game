@@ -35,7 +35,10 @@ export class PlayerCanDrawCardsSpec
       );
     }
 
-    if (activeGame.state.currentTurnCardsPlayed) {
+    if (
+      activeGame.state.currentTurnCardsPlayed ||
+      activeGame.state.currentTurnCardsDrawn
+    ) {
       return false;
     }
 

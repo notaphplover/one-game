@@ -79,3 +79,10 @@ When<OneGameApiWorld>(
     await whenUpdateGameRequestIsSend.bind(this)();
   },
 );
+
+When<OneGameApiWorld>(
+  'the update game request {string} is sent',
+  async function (this: OneGameApiWorld, requestAlias: string): Promise<void> {
+    await whenUpdateGameRequestIsSend.bind(this)(requestAlias);
+  },
+);

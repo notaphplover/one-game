@@ -227,8 +227,9 @@ export async function givenGameForPlayersWithUserCredentials(
   setGame.bind(this)(processedGameAlias, gameParameter);
 }
 
-export function givenGamePassTurnQueryRequestForGame(
+export function givenGameUpdateQueryRequestForGame(
   this: OneGameApiWorld,
+  buildGameUpdateQueryV1: (slotIndex: number) => apiModels.GameIdUpdateQueryV1,
   gameAlias?: string,
   requestAlias?: string,
   userAlias?: string,
@@ -263,16 +264,47 @@ export function givenGamePassTurnQueryRequestForGame(
     {
       gameId: gameV1Parameter.game.id,
     },
-    {
-      kind: 'passTurn',
-      slotIndex: slotIndex,
-    },
+    buildGameUpdateQueryV1(slotIndex),
   ];
 
   setRequestParameters.bind(this)(
     'updateGame',
     processedRequestAlias,
     updateGameV1Request,
+  );
+}
+
+export function givenGameDrawCardsQueryRequestForGame(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  requestAlias?: string,
+  userAlias?: string,
+): void {
+  givenGameUpdateQueryRequestForGame.bind(this)(
+    (slotIndex: number) => ({
+      kind: 'drawCards',
+      slotIndex: slotIndex,
+    }),
+    gameAlias,
+    requestAlias,
+    userAlias,
+  );
+}
+
+export function givenGamePassTurnQueryRequestForGame(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  requestAlias?: string,
+  userAlias?: string,
+): void {
+  givenGameUpdateQueryRequestForGame.bind(this)(
+    (slotIndex: number) => ({
+      kind: 'passTurn',
+      slotIndex: slotIndex,
+    }),
+    gameAlias,
+    requestAlias,
+    userAlias,
   );
 }
 
@@ -283,53 +315,23 @@ export function givenGamePlayCardsQueryRequestForGame(
   userAlias?: string,
   colorChoice?: apiModels.CardColorV1,
 ): void {
-  const processedGameAlias: string = gameAlias ?? defaultAlias;
-  const processedRequestAlias: string = requestAlias ?? defaultAlias;
-  const processedUserAlias: string = userAlias ?? defaultAlias;
+  givenGameUpdateQueryRequestForGame.bind(this)(
+    (slotIndex: number) => {
+      const updateGameV1RequestBody: apiModels.GameIdPlayCardsQueryV1 = {
+        cardIndexes: [0],
+        kind: 'playCards',
+        slotIndex: slotIndex,
+      };
 
-  const gameV1Parameter: GameV1Parameter =
-    getGameOrFail.bind(this)(processedGameAlias);
+      if (colorChoice !== undefined) {
+        updateGameV1RequestBody.colorChoice = colorChoice;
+      }
 
-  const authV1Parameter: AuthV1Parameter =
-    getAuthOrFail.bind(this)(processedUserAlias);
-
-  const userV1Parameter: UserV1Parameter =
-    getUserOrFail.bind(this)(processedUserAlias);
-
-  const slotIndex: number = gameV1Parameter.game.state.slots.findIndex(
-    (slot: apiModels.GameSlotV1) => slot.userId === userV1Parameter.user.id,
-  );
-
-  if (slotIndex === INDEX_NOT_FOUND_RESULT) {
-    throw new Error(
-      `Expecting a slow owned by "${processedUserAlias}", none found`,
-    );
-  }
-
-  const updateGameV1RequestBody: apiModels.GameIdPlayCardsQueryV1 = {
-    cardIndexes: [0],
-    kind: 'playCards',
-    slotIndex: slotIndex,
-  };
-
-  if (colorChoice !== undefined) {
-    updateGameV1RequestBody.colorChoice = colorChoice;
-  }
-
-  const updateGameV1Request: Parameters<HttpClient['updateGame']> = [
-    {
-      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      return updateGameV1RequestBody;
     },
-    {
-      gameId: gameV1Parameter.game.id,
-    },
-    updateGameV1RequestBody,
-  ];
-
-  setRequestParameters.bind(this)(
-    'updateGame',
-    processedRequestAlias,
-    updateGameV1Request,
+    gameAlias,
+    requestAlias,
+    userAlias,
   );
 }
 
@@ -458,6 +460,32 @@ Given<OneGameApiWorld>(
       gameSlotsAmount,
       undefined,
       undefined,
+      userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a game draw cards request for game for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenGameDrawCardsQueryRequestForGame.bind(this)(
+      undefined,
+      undefined,
+      userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a game draw cards request {string} for game for {string}',
+  function (
+    this: OneGameApiWorld,
+    requestAlias: string,
+    userAlias: string,
+  ): void {
+    givenGameDrawCardsQueryRequestForGame.bind(this)(
+      undefined,
+      requestAlias,
       userAlias,
     );
   },
