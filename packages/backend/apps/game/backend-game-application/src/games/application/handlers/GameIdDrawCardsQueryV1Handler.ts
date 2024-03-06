@@ -7,11 +7,11 @@ import {
 } from '@cornie-js/backend-common';
 import {
   ActiveGame,
+  GameDrawCardsUpdateQueryFromGameBuilder,
   GameSpec,
   GameUpdateQuery,
-  PlayerCanPassTurnSpec,
+  PlayerCanDrawCardsSpec,
   PlayerCanUpdateGameSpec,
-  GamePassTurnUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -28,18 +28,18 @@ import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
 import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
 @Injectable()
-export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdPassTurnQueryV1> {
-  readonly #gamePassTurnUpdateQueryFromGameBuilder: Builder<
+export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdDrawCardsQueryV1> {
+  readonly #gameDrawCardsUpdateQueryFromGameBuilder: Builder<
     GameUpdateQuery,
-    [ActiveGame, GameSpec]
+    [ActiveGame]
   >;
-  readonly #playerCanPassTurnSpec: PlayerCanPassTurnSpec;
+  readonly #playerCanDrawCardsSpec: PlayerCanDrawCardsSpec;
 
   constructor(
-    @Inject(GamePassTurnUpdateQueryFromGameBuilder)
-    gamePassTurnUpdateQueryFromGameBuilder: Builder<
+    @Inject(GameDrawCardsUpdateQueryFromGameBuilder)
+    gameDrawCardsUpdateQueryFromGameBuilder: Builder<
       GameUpdateQuery,
-      [ActiveGame, GameSpec]
+      [ActiveGame]
     >,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
@@ -49,8 +49,8 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
-    @Inject(PlayerCanPassTurnSpec)
-    playerCanPassTurnSpec: PlayerCanPassTurnSpec,
+    @Inject(PlayerCanDrawCardsSpec)
+    playerCanDrawCardsSpec: PlayerCanDrawCardsSpec,
   ) {
     super(
       gameSpecPersistenceOutputPort,
@@ -59,25 +59,22 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
       playerCanUpdateGameSpec,
     );
 
-    this.#gamePassTurnUpdateQueryFromGameBuilder =
-      gamePassTurnUpdateQueryFromGameBuilder;
-    this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
+    this.#gameDrawCardsUpdateQueryFromGameBuilder =
+      gameDrawCardsUpdateQueryFromGameBuilder;
+    this.#playerCanDrawCardsSpec = playerCanDrawCardsSpec;
   }
 
-  protected override _buildUpdateQuery(
-    game: ActiveGame,
-    gameSpec: GameSpec,
-  ): GameUpdateQuery {
-    return this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec);
+  protected override _buildUpdateQuery(game: ActiveGame): GameUpdateQuery {
+    return this.#gameDrawCardsUpdateQueryFromGameBuilder.build(game);
   }
 
   protected override _checkUnprocessableOperation(
     game: ActiveGame,
     gameSpec: GameSpec,
-    gameIdPassTurnQueryV1: apiModels.GameIdPassTurnQueryV1,
+    gameIdPassTurnQueryV1: apiModels.GameIdDrawCardsQueryV1,
   ): void {
     if (
-      !this.#playerCanPassTurnSpec.isSatisfiedBy(
+      !this.#playerCanDrawCardsSpec.isSatisfiedBy(
         game,
         gameSpec.options,
         gameIdPassTurnQueryV1.slotIndex,

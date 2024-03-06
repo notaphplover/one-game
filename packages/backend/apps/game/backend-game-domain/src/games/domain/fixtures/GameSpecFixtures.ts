@@ -19,14 +19,6 @@ export class GameSpecFixtures {
     };
   }
 
-  public static get withCardsOneWithAmount120AndGameSlotsAmountTwo(): GameSpec {
-    return {
-      ...GameSpecFixtures.any,
-      cards: [GameCardSpecFixtures.withAmount120],
-      gameSlotsAmount: 2,
-    };
-  }
-
   public static get withGameSlotsAmountOne(): GameSpec {
     return {
       ...GameSpecFixtures.any,

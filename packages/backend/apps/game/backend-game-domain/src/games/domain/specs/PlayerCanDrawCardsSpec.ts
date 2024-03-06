@@ -1,13 +1,14 @@
 import { AppError, AppErrorKind, Spec } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { Card } from '../../../cards/domain/valueObjects/Card';
 import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameOptions } from '../valueObjects/GameOptions';
 import { CardCanBePlayedSpec } from './CardCanBePlayedSpec';
 
 @Injectable()
-export class PlayerCanPassTurnSpec
+export class PlayerCanDrawCardsSpec
   implements Spec<[ActiveGame, GameOptions, number]>
 {
   readonly #cardCanBePlayedSpec: CardCanBePlayedSpec;
@@ -34,25 +35,20 @@ export class PlayerCanPassTurnSpec
       );
     }
 
-    if (activeGame.state.currentTurnCardsPlayed) {
-      return true;
-    }
-
-    if (!activeGame.state.currentTurnCardsDrawn) {
+    if (
+      activeGame.state.currentTurnCardsPlayed ||
+      activeGame.state.currentTurnCardsDrawn
+    ) {
       return false;
     }
 
-    if (
-      !gameOptions.playCardIsMandatory ||
-      activeGame.state.currentTurnSingleCardDraw === undefined
-    ) {
+    if (!gameOptions.playCardIsMandatory) {
       return true;
     }
 
-    return !this.#cardCanBePlayedSpec.isSatisfiedBy(
-      activeGame.state.currentTurnSingleCardDraw,
-      activeGame,
-      gameOptions,
+    return gameSlot.cards.every(
+      (card: Card): boolean =>
+        !this.#cardCanBePlayedSpec.isSatisfiedBy(card, activeGame, gameOptions),
     );
   }
 }

@@ -10,6 +10,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
 import { CreateGameUseCaseHandler } from '../../handlers/CreateGameUseCaseHandler';
+import { GameIdDrawCardsQueryV1Handler } from '../../handlers/GameIdDrawCardsQueryV1Handler';
 import { GameIdPassTurnQueryV1Handler } from '../../handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../handlers/GameIdPlayCardsQueryV1Handler';
 import {
@@ -22,6 +23,10 @@ export class GameManagementInputPort {
   readonly #createGameUseCaseHandler: Handler<
     [apiModels.GameCreateQueryV1],
     apiModels.GameV1
+  >;
+  readonly #gameIdDrawCardsQueryV1Handler: Handler<
+    [string, apiModels.GameIdDrawCardsQueryV1, apiModels.UserV1],
+    void
   >;
   readonly #gameIdPassTurnQueryV1Handler: Handler<
     [string, apiModels.GameIdPassTurnQueryV1, apiModels.UserV1],
@@ -40,6 +45,11 @@ export class GameManagementInputPort {
       [apiModels.GameCreateQueryV1],
       apiModels.GameV1
     >,
+    @Inject(GameIdDrawCardsQueryV1Handler)
+    gameIdDrawCardsQueryV1Handler: Handler<
+      [string, apiModels.GameIdDrawCardsQueryV1, apiModels.UserV1],
+      void
+    >,
     @Inject(GameIdPassTurnQueryV1Handler)
     gameIdPassTurnQueryV1Handler: Handler<
       [string, apiModels.GameIdPassTurnQueryV1, apiModels.UserV1],
@@ -56,6 +66,7 @@ export class GameManagementInputPort {
     gamePersistenceOutputPort: GamePersistenceOutputPort,
   ) {
     this.#createGameUseCaseHandler = createGameUseCaseHandler;
+    this.#gameIdDrawCardsQueryV1Handler = gameIdDrawCardsQueryV1Handler;
     this.#gameIdPassTurnQueryV1Handler = gameIdPassTurnQueryV1Handler;
     this.#gameIdPlayCardsQueryV1Handler = gameIdPlayCardsQueryV1Handler;
     this.#gameV1FromGameBuilder = gameV1FromGameBuilder;
@@ -97,10 +108,12 @@ export class GameManagementInputPort {
   ): Promise<apiModels.GameV1> {
     switch (gameIdUpdateQueryV1.kind) {
       case 'drawCards':
-        throw new AppError(
-          AppErrorKind.unprocessableOperation,
-          'This operation is not currently supported. "passTurn" operations will automatically handle card draws until this operation is supported.',
+        await this.#gameIdDrawCardsQueryV1Handler.handle(
+          id,
+          gameIdUpdateQueryV1,
+          userV1,
         );
+        break;
       case 'passTurn':
         await this.#gameIdPassTurnQueryV1Handler.handle(
           id,

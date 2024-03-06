@@ -185,6 +185,40 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
       });
     });
 
+    describe('having a GameUpdateQuery with currentTurnCardsDrawn', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture =
+          GameUpdateQueryFixtures.withCurrentTurnCardsDrawn;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            currentTurnCardsDrawn:
+              gameUpdateQueryFixture.currentTurnCardsDrawn as boolean,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
     describe('having a GameUpdateQuery with currentTurnCardsPlayed', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 
@@ -210,6 +244,89 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
           const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
             currentTurnCardsPlayed:
               gameUpdateQueryFixture.currentTurnCardsPlayed as boolean,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a GameUpdateQuery with currentTurnSingleCardDraw', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture =
+          GameUpdateQueryFixtures.currentTurnSingleCardDraw;
+      });
+
+      describe('when called', () => {
+        let cardDbFixture: CardDb;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          cardDbFixture = 0x0039;
+
+          cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
+
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call cardDbBuilder.build()', () => {
+          expect(cardDbBuilderMock.build).toHaveBeenCalledTimes(1);
+          expect(cardDbBuilderMock.build).toHaveBeenCalledWith(
+            gameUpdateQueryFixture.currentTurnSingleCardDraw,
+          );
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            currentTurnSingleCardDraw: cardDbFixture,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a GameUpdateQuery with currentTurnSingleCardDraw null', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture =
+          GameUpdateQueryFixtures.currentTurnSingleCardDrawNull;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should not call cardDbBuilder.build()', () => {
+          expect(cardDbBuilderMock.build).not.toHaveBeenCalled();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            currentTurnSingleCardDraw: null,
           };
 
           expect(result).toStrictEqual(

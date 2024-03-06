@@ -22,6 +22,7 @@ import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromG
 import { MessageEventFromStringifiedGameMessageEventBuilder } from '../../../application/builders/MessageEventFromStringifiedGameMessageEventBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { CreateGameUseCaseHandler } from '../../../application/handlers/CreateGameUseCaseHandler';
+import { GameIdDrawCardsQueryV1Handler } from '../../../application/handlers/GameIdDrawCardsQueryV1Handler';
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
 import { GameUpdatedEventHandler } from '../../../application/handlers/GameUpdatedEventHandler';
@@ -66,6 +67,7 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
         GameEventsManagementInputPort,
+        GameIdDrawCardsQueryV1Handler,
         GameIdPassTurnQueryV1Handler,
         GameIdPlayCardsQueryV1Handler,
         GameManagementInputPort,

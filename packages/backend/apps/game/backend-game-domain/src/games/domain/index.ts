@@ -1,3 +1,6 @@
+import { GameDrawCardsUpdateQueryFromGameBuilder } from './builders/GameDrawCardsUpdateQueryFromGameBuilder';
+import { GamePassTurnUpdateQueryFromGameBuilder } from './builders/GamePassTurnUpdateQueryFromGameBuilder';
+import { GamePlayCardsUpdateQueryFromGameBuilder } from './builders/GamePlayCardsUpdateQueryFromGameBuilder';
 import { ActiveGame } from './entities/ActiveGame';
 import { BaseGame } from './entities/BaseGame';
 import { FinishedGame } from './entities/FinishedGame';
@@ -20,6 +23,7 @@ import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSp
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { IsGameFinishedSpec } from './specs/IsGameFinishedSpec';
 import { IsValidGameCreateQuerySpec } from './specs/IsValidGameCreateQuerySpec';
+import { PlayerCanDrawCardsSpec } from './specs/PlayerCanDrawCardsSpec';
 import { PlayerCanPassTurnSpec } from './specs/PlayerCanPassTurnSpec';
 import { PlayerCanUpdateGameSpec } from './specs/PlayerCanUpdateGameSpec';
 import { ActiveGameSlot } from './valueObjects/ActiveGameSlot';
@@ -61,11 +65,15 @@ export {
   GameCanHoldMoreGameSlotsSpec,
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameDirection,
+  GameDrawCardsUpdateQueryFromGameBuilder,
+  GamePassTurnUpdateQueryFromGameBuilder,
+  GamePlayCardsUpdateQueryFromGameBuilder,
   GameService,
   GameSpecFindQuerySortOption,
   GameStatus,
   IsGameFinishedSpec,
   IsValidGameCreateQuerySpec,
+  PlayerCanDrawCardsSpec,
   PlayerCanPassTurnSpec,
   CurrentPlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,

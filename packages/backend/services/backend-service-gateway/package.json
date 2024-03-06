@@ -5,7 +5,7 @@
   },
   "description": "Backend GRaphQL gateway service for one-game-js",
   "dependencies": {
-    "@apollo/server": "4.10.0",
+    "@apollo/server": "4.10.1",
     "@as-integrations/fastify": "2.1.1",
     "@cornie-js/api-graphql-models": "workspace:*",
     "@cornie-js/api-graphql-schemas-provider": "workspace:*",
