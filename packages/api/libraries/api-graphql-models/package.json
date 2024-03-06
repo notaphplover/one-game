@@ -21,7 +21,7 @@
     "graphql": "16.8.1",
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
