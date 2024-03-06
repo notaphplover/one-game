@@ -30,6 +30,10 @@ export class CurrentPlayerCanPlayCardsSpec
     gameOptions: GameOptions,
     cardIndexes: number[],
   ): boolean {
+    if (activeGame.state.currentTurnCardsPlayed) {
+      return false;
+    }
+
     if (this.#areRepeated(cardIndexes)) {
       return false;
     }
@@ -48,6 +52,13 @@ export class CurrentPlayerCanPlayCardsSpec
 
     const [card]: [Card, ...Card[]] = cards;
 
+    if (
+      activeGame.state.currentTurnCardsDrawn &&
+      !this.#areValidCardsAfterDraw(activeGame, cards)
+    ) {
+      return false;
+    }
+
     return (
       cards !== undefined &&
       this.#areCardsEqualsSpec.isSatisfiedBy(...cards) &&
@@ -63,6 +74,22 @@ export class CurrentPlayerCanPlayCardsSpec
          * Negative keys are not expected: https://262.ecma-international.org/14.0/#sec-object-type
          */
         numbers[index - 1] === value,
+    );
+  }
+
+  #areValidCardsAfterDraw(
+    activeGame: ActiveGame,
+    cards: [Card, ...Card[]],
+  ): boolean {
+    const [firstCard]: [Card, ...Card[]] = cards;
+
+    return (
+      cards.length === 1 &&
+      activeGame.state.currentTurnSingleCardDraw !== undefined &&
+      this.#areCardsEqualsSpec.isSatisfiedBy(
+        firstCard,
+        activeGame.state.currentTurnSingleCardDraw,
+      )
     );
   }
 
