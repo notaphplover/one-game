@@ -129,7 +129,7 @@ describe('authSlice', () => {
     beforeAll(() => {
       payloadFixture = {
         body: {},
-        statusCode: 422,
+        statusCode: 401,
       };
       stateFixture = {
         status: 'checking',
@@ -150,7 +150,7 @@ describe('authSlice', () => {
         expect(result).toStrictEqual({
           status: 'not-authenticated',
           token: null,
-          errorMessage: 'Unprocessable operation. Try again.',
+          errorMessage: 'Invalid operation, please try again later',
         });
       });
     });
@@ -185,7 +185,7 @@ describe('authSlice', () => {
         expect(result).toStrictEqual({
           status: 'not-authenticated',
           token: null,
-          errorMessage: 'Ups... something strange happened. Try again?',
+          errorMessage: 'An error occurred, please try again later',
         });
       });
     });
@@ -266,7 +266,7 @@ describe('authSlice', () => {
     beforeAll(() => {
       payloadFixture = {
         body: {},
-        statusCode: 422,
+        statusCode: 401,
       };
       stateFixture = {
         status: 'checking',
@@ -287,7 +287,7 @@ describe('authSlice', () => {
         expect(result).toStrictEqual({
           status: 'not-authenticated',
           token: null,
-          errorMessage: 'Unprocessable operation. Try again.',
+          errorMessage: 'Invalid operation, please try again later',
         });
       });
     });
@@ -322,7 +322,7 @@ describe('authSlice', () => {
         expect(result).toStrictEqual({
           status: 'not-authenticated',
           token: null,
-          errorMessage: 'Ups... something strange happened. Try again?',
+          errorMessage: 'An error occurred, please try again later',
         });
       });
     });

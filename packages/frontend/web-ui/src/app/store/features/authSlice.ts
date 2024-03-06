@@ -1,20 +1,30 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createInitialState } from './../helpers/createInitialState';
+import {
+  ActionReducerMapBuilder,
+  PayloadAction,
+  Slice,
+  createSlice,
+} from '@reduxjs/toolkit';
 import { createAuthByCredentials } from '../thunk/createAuthByCredentials';
 import { createAuthByToken } from '../thunk/createAuthByToken';
-import { createInitialState } from '../helpers/createInitialState';
 import {
   STATUS_AUTH_AUTHENTICATED,
   STATUS_AUTH_CHECKING,
   STATUS_AUTH_NOT_AUTHENTICATED,
 } from '../data/authSliceStatus';
+import { AuthState } from '../helpers/models/AuthState';
+import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 
-function createAuthPendingReducer(state) {
+function createAuthPendingReducer(state: AuthState): void {
   state.status = STATUS_AUTH_CHECKING;
   state.token = null;
   state.errorMessage = null;
 }
 
-function createAuthFulfilledReducer(state, action) {
+function createAuthFulfilledReducer(
+  state: AuthState,
+  action: PayloadAction<AuthSerializedResponse>,
+): void {
   state.status = STATUS_AUTH_NOT_AUTHENTICATED;
 
   switch (action.payload.statusCode) {
@@ -22,27 +32,27 @@ function createAuthFulfilledReducer(state, action) {
       state.status = STATUS_AUTH_AUTHENTICATED;
       state.token = action.payload.body.jwt;
       break;
-    case 422:
-      state.errorMessage = 'Unprocessable operation. Try again.';
+    case 400:
+    case 401:
+      state.errorMessage = 'Invalid operation, please try again later';
       break;
     default:
-      state.errorMessage = 'Ups... something strange happened. Try again?';
+      state.errorMessage = 'An error occurred, please try again later';
   }
 }
 
-function createAuthRejectedReducer(state, action) {
+function createAuthRejectedReducer(state: AuthState): void {
   state.status = STATUS_AUTH_NOT_AUTHENTICATED;
-  if (action.payload.statusCode === 422) {
-    state.errorMessage = 'Unprocessable operation. Try again.';
-  } else {
-    state.errorMessage = 'Ups... something strange happened. Try again?';
-  }
+  state.errorMessage = 'An error occurred, please try again later';
 }
 
-export const authSlice = createSlice({
+const initialState: AuthState = createInitialState();
+
+export const authSlice: Slice = createSlice({
   name: 'auth',
-  initialState: createInitialState(),
-  extraReducers(builder) {
+  initialState,
+  reducers: {},
+  extraReducers(builder: ActionReducerMapBuilder<AuthState>) {
     builder
       .addCase(createAuthByToken.pending, createAuthPendingReducer)
       .addCase(createAuthByToken.fulfilled, createAuthFulfilledReducer)
