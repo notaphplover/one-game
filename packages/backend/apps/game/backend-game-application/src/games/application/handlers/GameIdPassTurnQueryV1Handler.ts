@@ -15,6 +15,10 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
+import {
+  TransactionProvisionOutputPort,
+  transactionProvisionOutputPortSymbol,
+} from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
   GamePersistenceOutputPort,
@@ -51,12 +55,15 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(PlayerCanPassTurnSpec)
     playerCanPassTurnSpec: PlayerCanPassTurnSpec,
+    @Inject(transactionProvisionOutputPortSymbol)
+    transactionProvisionOutputPort: TransactionProvisionOutputPort,
   ) {
     super(
       gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
+      transactionProvisionOutputPort,
     );
 
     this.#gamePassTurnUpdateQueryFromGameBuilder =
@@ -64,11 +71,11 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
   }
 
-  protected override _buildUpdateQuery(
+  protected override _buildUpdateQueries(
     game: ActiveGame,
     gameSpec: GameSpec,
-  ): GameUpdateQuery {
-    return this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec);
+  ): GameUpdateQuery[] {
+    return [this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec)];
   }
 
   protected override _checkUnprocessableOperation(

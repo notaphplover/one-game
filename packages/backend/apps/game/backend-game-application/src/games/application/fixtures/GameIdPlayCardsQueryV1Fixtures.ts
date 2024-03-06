@@ -16,13 +16,25 @@ export class GameIdPlayCardsQueryV1Fixtures {
     };
   }
 
-  public static get withNoColorChoice(): apiModels.GameIdPlayCardsQueryV1 {
-    const anyFixture: apiModels.GameIdPlayCardsQueryV1 =
-      GameIdPlayCardsQueryV1Fixtures.any;
+  public static get withColorChoiceAndSlotIndexZero(): apiModels.GameIdPlayCardsQueryV1 {
+    const fixture: apiModels.GameIdPlayCardsQueryV1 = {
+      ...GameIdPlayCardsQueryV1Fixtures.any,
+      colorChoice: 'green',
+      slotIndex: 0,
+    };
 
-    delete anyFixture.colorChoice;
+    return fixture;
+  }
 
-    return anyFixture;
+  public static get withNoColorChoiceAndSlotIndexZero(): apiModels.GameIdPlayCardsQueryV1 {
+    const fixture: apiModels.GameIdPlayCardsQueryV1 = {
+      ...GameIdPlayCardsQueryV1Fixtures.any,
+      slotIndex: 0,
+    };
+
+    delete fixture.colorChoice;
+
+    return fixture;
   }
 
   public static get withSlotIndexZero(): apiModels.GameIdPlayCardsQueryV1 {
