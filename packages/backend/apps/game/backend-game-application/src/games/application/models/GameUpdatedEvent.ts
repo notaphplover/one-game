@@ -1,6 +1,7 @@
-import { Game, GameUpdateQuery } from '@cornie-js/backend-game-domain/games';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
+import { Game } from '@cornie-js/backend-game-domain/games';
 
 export interface GameUpdatedEvent {
   gameBeforeUpdate: Game;
-  gameUpdateQuery: GameUpdateQuery;
+  transactionWrapper: TransactionWrapper;
 }

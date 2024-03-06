@@ -34,9 +34,12 @@ export class GameUpdatedEventHandler
   public async handle(gameUpdatedEvent: GameUpdatedEvent): Promise<void> {
     const gameId: string = gameUpdatedEvent.gameBeforeUpdate.id;
     const game: Game | undefined =
-      await this.#gamePersistenceOutputPort.findOne({
-        id: gameId,
-      });
+      await this.#gamePersistenceOutputPort.findOne(
+        {
+          id: gameId,
+        },
+        gameUpdatedEvent.transactionWrapper,
+      );
 
     if (game === undefined) {
       throw new AppError(AppErrorKind.unknown, `Game "${gameId}" not found`);

@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { ActiveGameFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
-import { GameUpdatedEventFixtures } from '../fixtures/GameUpdatedEventFixtures';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
@@ -40,7 +40,10 @@ describe(GameUpdatedEventHandler.name, () => {
     let gameUpdatedEventFixture: GameUpdatedEvent;
 
     beforeAll(() => {
-      gameUpdatedEventFixture = GameUpdatedEventFixtures.any;
+      gameUpdatedEventFixture = {
+        gameBeforeUpdate: ActiveGameFixtures.any,
+        transactionWrapper: Symbol() as unknown as TransactionWrapper,
+      };
     });
 
     describe('when called, and gamePersistenceOutputPort.findOne() returns undefined', () => {
@@ -68,6 +71,7 @@ describe(GameUpdatedEventHandler.name, () => {
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
           expected,
+          gameUpdatedEventFixture.transactionWrapper,
         );
       });
 
@@ -103,13 +107,14 @@ describe(GameUpdatedEventHandler.name, () => {
       });
 
       it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expected: GameFindQuery = {
+        const expectedGameFindQuery: GameFindQuery = {
           id: gameUpdatedEventFixture.gameBeforeUpdate.id,
         };
 
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expected,
+          expectedGameFindQuery,
+          gameUpdatedEventFixture.transactionWrapper,
         );
       });
 

@@ -7,6 +7,7 @@ import {
   Builder,
   Handler,
 } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
   GameFindQuery,
@@ -23,6 +24,7 @@ import {
   GameUpdateQueryFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
+import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdPassTurnQueryV1Fixtures } from '../fixtures/GameIdPassTurnQueryV1Fixtures';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
@@ -41,6 +43,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
   >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let playerCanPassTurnSpecMock: jest.Mocked<PlayerCanPassTurnSpec>;
+  let transactionProvisionOutputPortMock: jest.Mocked<TransactionProvisionOutputPort>;
 
   let gameIdPassTurnQueryV1Handler: GameIdPassTurnQueryV1Handler;
 
@@ -70,6 +73,9 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     } as Partial<
       jest.Mocked<PlayerCanPassTurnSpec>
     > as jest.Mocked<PlayerCanPassTurnSpec>;
+    transactionProvisionOutputPortMock = {
+      provide: jest.fn(),
+    };
 
     gameIdPassTurnQueryV1Handler = new GameIdPassTurnQueryV1Handler(
       gamePassTurnUpdateQueryFromGameBuilderMock,
@@ -78,6 +84,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       gameUpdatedEventHandlerMock,
       playerCanUpdateGameSpecMock,
       playerCanPassTurnSpecMock,
+      transactionProvisionOutputPortMock,
     );
   });
 
@@ -233,7 +240,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       userV1Fixture = UserV1Fixtures.any;
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
@@ -336,7 +343,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPassTurnSpec.isSatisfiedBy returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
@@ -452,10 +459,11 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPassTurnSpec.isSatisfiedBy returns true', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns true', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
+      let transactionWrapperMock: jest.Mocked<TransactionWrapper>;
 
       let result: unknown;
 
@@ -478,6 +486,11 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         };
         gameSpecFixture = GameSpecFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+        transactionWrapperMock = {
+          tryCommit: jest.fn(),
+        } as Partial<
+          jest.Mocked<TransactionWrapper>
+        > as jest.Mocked<TransactionWrapper>;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
@@ -493,6 +506,10 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
         playerCanPassTurnSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
+          transactionWrapperMock,
+        );
 
         gameUpdatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
 
@@ -562,23 +579,38 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         ).toHaveBeenCalledWith(activeGameFixture, gameSpecFixture);
       });
 
+      it('should call transactionProvisionOutputPort.provide()', () => {
+        expect(
+          transactionProvisionOutputPortMock.provide,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          transactionProvisionOutputPortMock.provide,
+        ).toHaveBeenCalledWith();
+      });
+
       it('should call gamePersistenceOutputPort.update()', () => {
         expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
         expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
           gameUpdateQueryFixture,
+          transactionWrapperMock,
         );
       });
 
       it('should call gameUpdatedEventHandler.handle()', () => {
         const expectedGameUpdatedEvent: GameUpdatedEvent = {
           gameBeforeUpdate: activeGameFixture,
-          gameUpdateQuery: gameUpdateQueryFixture,
+          transactionWrapper: transactionWrapperMock,
         };
 
         expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
         expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledWith(
           expectedGameUpdatedEvent,
         );
+      });
+
+      it('should call transactionWrapper.tryCommit()', () => {
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
       });
 
       it('should return undefined', () => {

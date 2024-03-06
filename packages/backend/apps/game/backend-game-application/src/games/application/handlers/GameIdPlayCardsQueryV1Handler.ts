@@ -5,18 +5,23 @@ import {
   Builder,
   Handler,
 } from '@cornie-js/backend-common';
-import { CardColor } from '@cornie-js/backend-game-domain/cards';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   CurrentPlayerCanPlayCardsSpec,
+  GameCardsEffectUpdateQueryFromGameBuilder,
+  GamePlayCardsUpdateQueryFromGameBuilder,
   GameSpec,
   GameUpdateQuery,
   PlayerCanUpdateGameSpec,
-  GamePlayCardsUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardColorFromCardColorV1Builder } from '../../../cards/application/builders/CardColorFromCardColorV1Builder';
+import {
+  TransactionProvisionOutputPort,
+  transactionProvisionOutputPortSymbol,
+} from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
   GamePersistenceOutputPort,
@@ -36,12 +41,21 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     [apiModels.CardColorV1]
   >;
   readonly #currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec;
+  readonly #gameCardsEffectUpdateQueryFromGameBuilder: Builder<
+    GameUpdateQuery,
+    [ActiveGame, Card, number, CardColor | undefined]
+  >;
   readonly #gamePlayCardsUpdateQueryFromGameBuilder: Builder<
     GameUpdateQuery,
-    [ActiveGame, number[], number, CardColor | undefined]
+    [ActiveGame, number[], number]
   >;
 
   constructor(
+    @Inject(GameCardsEffectUpdateQueryFromGameBuilder)
+    gameCardsEffectUpdateQueryFromGameBuilder: Builder<
+      GameUpdateQuery,
+      [ActiveGame, Card, number, CardColor | undefined]
+    >,
     @Inject(gameSpecPersistenceOutputPortSymbol)
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
@@ -49,7 +63,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     @Inject(GamePlayCardsUpdateQueryFromGameBuilder)
     gamePlayCardsUpdateQueryFromGameBuilder: Builder<
       GameUpdateQuery,
-      [ActiveGame, number[], number, CardColor | undefined]
+      [ActiveGame, number[], number]
     >,
     @Inject(GameUpdatedEventHandler)
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
@@ -62,31 +76,59 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     >,
     @Inject(CurrentPlayerCanPlayCardsSpec)
     currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec,
+    @Inject(transactionProvisionOutputPortSymbol)
+    transactionProvisionOutputPort: TransactionProvisionOutputPort,
   ) {
     super(
       gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
+      transactionProvisionOutputPort,
     );
 
+    this.#gameCardsEffectUpdateQueryFromGameBuilder =
+      gameCardsEffectUpdateQueryFromGameBuilder;
     this.#cardColorFromCardColorV1Builder = cardColorFromCardColorV1Builder;
     this.#currentPlayerCanPlayCardsSpec = currentPlayerCanPlayCardsSpec;
     this.#gamePlayCardsUpdateQueryFromGameBuilder =
       gamePlayCardsUpdateQueryFromGameBuilder;
   }
 
-  protected override _buildUpdateQuery(
+  protected override _buildUpdateQueries(
     game: ActiveGame,
-    _gameSpec: GameSpec,
+    gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
-  ): GameUpdateQuery {
-    return this.#gamePlayCardsUpdateQueryFromGameBuilder.build(
-      game,
-      gameIdUpdateQueryV1.cardIndexes,
-      gameIdUpdateQueryV1.slotIndex,
-      this.#getColorOrUndefined(gameIdUpdateQueryV1.colorChoice),
+  ): GameUpdateQuery[] {
+    const cardColor: CardColor | undefined = this.#getColorOrUndefined(
+      gameIdUpdateQueryV1.colorChoice,
     );
+
+    const gamePlayCardsUpdatequery: GameUpdateQuery =
+      this.#gamePlayCardsUpdateQueryFromGameBuilder.build(
+        game,
+        gameIdUpdateQueryV1.cardIndexes,
+        gameIdUpdateQueryV1.slotIndex,
+      );
+
+    const card: Card | undefined = gamePlayCardsUpdatequery.currentCard;
+
+    if (card === undefined) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected missing card when attempting to play cards',
+      );
+    }
+
+    const gameCardsEffectUpdateQuery: GameUpdateQuery =
+      this.#gameCardsEffectUpdateQueryFromGameBuilder.build(
+        game,
+        card,
+        gameSpec.gameSlotsAmount,
+        cardColor,
+      );
+
+    return [gamePlayCardsUpdatequery, gameCardsEffectUpdateQuery];
   }
 
   protected override _checkUnprocessableOperation(

@@ -8,28 +8,15 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
-import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
-import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
-import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
-import { ReverseCard } from '../../../cards/domain/valueObjects/ReverseCard';
 import { ActiveGame } from '../entities/ActiveGame';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { GameService } from '../services/GameService';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
-import { GameDirection } from '../valueObjects/GameDirection';
-
-const DRAW_CARDS_TO_DRAW: number = 2;
-const SKIP_TURNS_TO_SKIP: number = 1;
-const WILD_DRAW_4_CARDS_TO_DRAW: number = 4;
 
 @Injectable()
 export class GamePlayCardsUpdateQueryFromGameBuilder
-  implements
-    Builder<
-      GameUpdateQuery,
-      [ActiveGame, number[], number, CardColor | undefined]
-    >
+  implements Builder<GameUpdateQuery, [ActiveGame, number[], number]>
 {
   readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
   readonly #gameService: GameService;
@@ -48,7 +35,6 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
     game: ActiveGame,
     cardIndexes: number[],
     slotIndex: number,
-    colorChoice: CardColor | undefined,
   ): GameUpdateQuery {
     const gameSlot: ActiveGameSlot = this.#gameService.getGameSlotOrThrow(
       game,
@@ -67,6 +53,7 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
 
     const gameUpdateQuery: GameUpdateQuery = {
       currentCard: nextCurrentCard,
+      currentTurnCardsPlayed: true,
       discardPile: nextDiscardPile,
       gameFindQuery: {
         id: game.id,
@@ -87,32 +74,6 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
       ],
     };
 
-    this.#setPlayCardsGameUpdateQueryColor(
-      gameUpdateQuery,
-      nextCurrentCard,
-      colorChoice,
-    );
-
-    this.#setPlayCardsGameUpdateQueryDrawCount(
-      game,
-      gameUpdateQuery,
-      nextCurrentCard,
-      cardIndexes.length,
-    );
-
-    this.#setPlayCardsGameUpdateQueryDirection(
-      game,
-      gameUpdateQuery,
-      nextCurrentCard,
-      cardIndexes.length,
-    );
-
-    this.#setPlayCardsGameUpdateQuerySkipCount(
-      gameUpdateQuery,
-      nextCurrentCard,
-      cardIndexes.length,
-    );
-
     return gameUpdateQuery;
   }
 
@@ -127,23 +88,6 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
     this.#putCardsInDiscardPile(nextDiscardPile, nextCurrentCards);
 
     return nextDiscardPile;
-  }
-
-  #getReverseDirection(direction: GameDirection): GameDirection {
-    switch (direction) {
-      case GameDirection.antiClockwise:
-        return GameDirection.clockwise;
-      case GameDirection.clockwise:
-        return GameDirection.antiClockwise;
-    }
-  }
-
-  #isColored(card: Card): card is Card & ColoredCard {
-    return (card as ColoredCard).color !== undefined;
-  }
-
-  #isReverse(card: Card): card is ReverseCard {
-    return card.kind === CardKind.reverse;
   }
 
   #putCardsInDiscardPile(discardPile: GameCardSpec[], cards: Card[]): void {
@@ -171,67 +115,6 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
     cardSpec.amount += cardsToAdd;
   }
 
-  #setPlayCardsGameUpdateQueryColor(
-    gameUpdateQuery: GameUpdateQuery,
-    nextCurrentCard: Card,
-    colorChoice: CardColor | undefined,
-  ): void {
-    if (this.#isColored(nextCurrentCard)) {
-      if (colorChoice !== undefined) {
-        throw new AppError(
-          AppErrorKind.unprocessableOperation,
-          'Operation not allowed. Reason: unexpected color choice when playing these cards',
-        );
-      }
-
-      gameUpdateQuery.currentColor = nextCurrentCard.color;
-    } else {
-      if (colorChoice === undefined) {
-        throw new AppError(
-          AppErrorKind.unprocessableOperation,
-          'Operation not allowed. Reason: expecting a color choice when playing these cards',
-        );
-      }
-
-      gameUpdateQuery.currentColor = colorChoice;
-    }
-  }
-
-  #setPlayCardsGameUpdateQueryDrawCount(
-    game: ActiveGame,
-    gameUpdateQuery: GameUpdateQuery,
-    nextCurrentCard: Card,
-    cardsAmount: number,
-  ): void {
-    switch (nextCurrentCard.kind) {
-      case CardKind.draw:
-        gameUpdateQuery.drawCount =
-          game.state.drawCount + DRAW_CARDS_TO_DRAW * cardsAmount;
-        break;
-      case CardKind.wildDraw4:
-        gameUpdateQuery.drawCount =
-          game.state.drawCount + WILD_DRAW_4_CARDS_TO_DRAW * cardsAmount;
-        break;
-      default:
-    }
-  }
-
-  #setPlayCardsGameUpdateQueryDirection(
-    game: ActiveGame,
-    gameUpdateQuery: GameUpdateQuery,
-    nextCurrentCard: Card,
-    cardsAmount: number,
-  ): void {
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    const isOddNumberCards: boolean = cardsAmount % 2 !== 0;
-
-    if (this.#isReverse(nextCurrentCard) && isOddNumberCards) {
-      gameUpdateQuery.currentDirection = this.#getReverseDirection(
-        game.state.currentDirection,
-      );
-    }
-  }
-
   #getPlayCardsGameUpdateQueryNextCurrentCard(
     gameSlot: ActiveGameSlot,
     cardIndexes: number[],
@@ -257,15 +140,5 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
     }
 
     return nextCurrentCards as [Card, ...Card[]];
-  }
-
-  #setPlayCardsGameUpdateQuerySkipCount(
-    gameUpdateQuery: GameUpdateQuery,
-    nextCurrentCard: Card,
-    cardsAmount: number,
-  ): void {
-    if (nextCurrentCard.kind === CardKind.skip) {
-      gameUpdateQuery.skipCount = SKIP_TURNS_TO_SKIP * cardsAmount;
-    }
   }
 }

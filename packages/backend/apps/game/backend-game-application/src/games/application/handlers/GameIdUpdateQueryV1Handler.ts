@@ -1,5 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
   Game,
@@ -11,6 +12,7 @@ import {
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 
+import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
@@ -19,21 +21,24 @@ export abstract class GameIdUpdateQueryV1Handler<
   TQuery extends apiModels.GameIdUpdateQueryV1,
 > implements Handler<[string, TQuery, apiModels.UserV1], void>
 {
-  protected readonly _gamePersistenceOutputPort: GamePersistenceOutputPort;
+  readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
   readonly #gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>;
   readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
+  readonly #transactionProvisionOutputPort: TransactionProvisionOutputPort;
 
   constructor(
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
+    transactionProvisionOutputPort: TransactionProvisionOutputPort,
   ) {
     this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
-    this._gamePersistenceOutputPort = gamePersistenceOutputPort;
+    this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
     this.#gameUpdatedEventHandler = gameUpdatedEventHandler;
     this.#playerCanUpdateGameSpec = playerCanUpdateGameSpec;
+    this.#transactionProvisionOutputPort = transactionProvisionOutputPort;
   }
 
   public async handle(
@@ -48,18 +53,28 @@ export abstract class GameIdUpdateQueryV1Handler<
 
     this._checkUnprocessableOperation(game, gameSpec, gameIdUpdateQueryV1);
 
-    const gameUpdateQuery: GameUpdateQuery = this._buildUpdateQuery(
+    const gameUpdateQueries: GameUpdateQuery[] = this._buildUpdateQueries(
       game,
       gameSpec,
       gameIdUpdateQueryV1,
     );
 
-    await this._gamePersistenceOutputPort.update(gameUpdateQuery);
+    const transactionWrapper: TransactionWrapper =
+      await this.#transactionProvisionOutputPort.provide();
+
+    for (const gameUpdateQuery of gameUpdateQueries) {
+      await this.#gamePersistenceOutputPort.update(
+        gameUpdateQuery,
+        transactionWrapper,
+      );
+    }
 
     await this.#gameUpdatedEventHandler.handle({
       gameBeforeUpdate: game,
-      gameUpdateQuery,
+      transactionWrapper,
     });
+
+    await transactionWrapper.tryCommit();
   }
 
   #checkRightPlayer(
@@ -95,7 +110,7 @@ export abstract class GameIdUpdateQueryV1Handler<
 
     const [game, gameSpec]: [Game | undefined, GameSpec | undefined] =
       await Promise.all([
-        this._gamePersistenceOutputPort.findOne(gameFindQuery),
+        this.#gamePersistenceOutputPort.findOne(gameFindQuery),
         this.#gameSpecPersistenceOutputPort.findOne(gameSpecFindQuery),
       ]);
 
@@ -127,11 +142,11 @@ export abstract class GameIdUpdateQueryV1Handler<
     return game.state.status === GameStatus.active;
   }
 
-  protected abstract _buildUpdateQuery(
+  protected abstract _buildUpdateQueries(
     game: ActiveGame,
     gameSpec: GameSpec,
     gameIdUpdateQueryV1: TQuery,
-  ): GameUpdateQuery;
+  ): GameUpdateQuery[];
 
   protected abstract _checkUnprocessableOperation(
     game: ActiveGame,
