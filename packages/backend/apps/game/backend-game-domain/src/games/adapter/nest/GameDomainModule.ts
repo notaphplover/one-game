@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { CardDomainModule } from '../../../cards/adapter/nest/CardDomainModule';
+import { GameCardsEffectUpdateQueryFromGameBuilder } from '../../domain/builders/GameCardsEffectUpdateQueryFromGameBuilder';
 import { GameDrawCardsUpdateQueryFromGameBuilder } from '../../domain/builders/GameDrawCardsUpdateQueryFromGameBuilder';
 import { GamePassTurnUpdateQueryFromGameBuilder } from '../../domain/builders/GamePassTurnUpdateQueryFromGameBuilder';
 import { GamePlayCardsUpdateQueryFromGameBuilder } from '../../domain/builders/GamePlayCardsUpdateQueryFromGameBuilder';
@@ -22,6 +23,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     CurrentPlayerCanPlayCardsSpec,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
+    GameCardsEffectUpdateQueryFromGameBuilder,
     GameDrawCardsUpdateQueryFromGameBuilder,
     GameService,
     GamePassTurnUpdateQueryFromGameBuilder,
@@ -37,6 +39,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     CurrentPlayerCanPlayCardsSpec,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
+    GameCardsEffectUpdateQueryFromGameBuilder,
     GameDrawCardsUpdateQueryFromGameBuilder,
     GameDrawService,
     GamePassTurnUpdateQueryFromGameBuilder,
