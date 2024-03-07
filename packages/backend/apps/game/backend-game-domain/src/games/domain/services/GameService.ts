@@ -1,7 +1,6 @@
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
 import { CardKind } from '../../../cards/domain/valueObjects/CardKind';
@@ -9,19 +8,14 @@ import { ColoredCard } from '../../../cards/domain/valueObjects/ColoredCard';
 import { ActiveGame } from '../entities/ActiveGame';
 import { Game } from '../entities/Game';
 import { NonStartedGame } from '../entities/NonStartedGame';
-import { GameSlotUpdateQuery } from '../query/GameSlotUpdateQuery';
-import { GameUpdateQuery } from '../query/GameUpdateQuery';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
-import { GameInitialDrawsMutation } from '../valueObjects/GameInitialDrawsMutation';
 import { GameSpec } from '../valueObjects/GameSpec';
-import { GameStatus } from '../valueObjects/GameStatus';
 import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
 import { GameDrawService } from './GameDrawService';
 
 const UNO_ORIGINAL_ACTION_CARDS_PER_COLOR: number = 2;
-const UNO_ORIGINAL_FIRST_TURN: number = 1;
 const UNO_ORIGINAL_NUMBERS_AMOUNT: number = 10;
 const UNO_ORIGINAL_NUMBERED_NON_ZERO_CARDS_PER_COLOR: number = 2;
 const UNO_ORIGINAL_NUMBERED_ZERO_CARDS_PER_COLOR: number = 1;
@@ -29,56 +23,13 @@ const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 
 @Injectable()
 export class GameService {
-  readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
   readonly #gameDrawService: GameDrawService;
 
   constructor(
-    @Inject(AreCardsEqualsSpec)
-    areCardsEqualsSpec: AreCardsEqualsSpec,
     @Inject(GameDrawService)
     gameDrawService: GameDrawService,
   ) {
-    this.#areCardsEqualsSpec = areCardsEqualsSpec;
     this.#gameDrawService = gameDrawService;
-  }
-
-  public buildStartGameUpdateQuery(
-    game: NonStartedGame,
-    gameSpec: GameSpec,
-  ): GameUpdateQuery {
-    const gameInitialDraws: GameInitialDrawsMutation =
-      this.#gameDrawService.calculateInitialCardsDrawMutation(gameSpec);
-
-    const gameSlotUpdateQueries: GameSlotUpdateQuery[] =
-      gameInitialDraws.cards.map(
-        (cards: Card[], index: number): GameSlotUpdateQuery => ({
-          cards: cards,
-          gameSlotFindQuery: {
-            gameId: game.id,
-            position: index,
-          },
-        }),
-      );
-
-    const gameUpdateQuery: GameUpdateQuery = {
-      currentCard: gameInitialDraws.currentCard,
-      currentColor: this.#getInitialCardColor(gameInitialDraws.currentCard),
-      currentDirection: this.#getInitialDirection(),
-      currentPlayingSlotIndex: this.#getInitialPlayingSlotIndex(),
-      currentTurnCardsDrawn: false,
-      currentTurnCardsPlayed: false,
-      deck: gameInitialDraws.deck,
-      drawCount: this.#getInitialDrawCount(),
-      gameFindQuery: {
-        id: game.id,
-      },
-      gameSlotUpdateQueries,
-      skipCount: 0,
-      status: GameStatus.active,
-      turn: UNO_ORIGINAL_FIRST_TURN,
-    };
-
-    return gameUpdateQuery;
   }
 
   public getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
@@ -172,7 +123,7 @@ export class GameService {
     ];
   }
 
-  #getInitialCardColor(card: Card): CardColor {
+  public getInitialCardColor(card: Card): CardColor {
     const cardAsMaybeColoredCard: Partial<ColoredCard> =
       card as Partial<ColoredCard>;
 
@@ -183,16 +134,20 @@ export class GameService {
     return this.#getRandomColor();
   }
 
-  #getInitialDirection(): GameDirection {
+  public getInitialDirection(): GameDirection {
     return GameDirection.clockwise;
   }
 
-  #getInitialDrawCount(): number {
+  public getInitialPlayingSlotIndex(gameSpec: GameSpec): number {
+    return gameSpec.gameSlotsAmount - 1;
+  }
+
+  public getInitialTurn(): number {
     return 0;
   }
 
-  #getInitialPlayingSlotIndex(): number {
-    return 0;
+  public isColored(card: Card): card is Card & ColoredCard {
+    return (card as ColoredCard).color !== undefined;
   }
 
   #getRandomColor(): CardColor {

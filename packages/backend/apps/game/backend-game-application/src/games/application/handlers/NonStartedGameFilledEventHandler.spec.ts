@@ -1,17 +1,23 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   ActiveGameSlot,
   GameFindQuery,
-  GameService,
   GameSpec,
   GameSpecFindQuery,
   GameUpdateQuery,
   NonStartedGame,
+  GameService,
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,
@@ -34,9 +40,18 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       void
     >
   >;
+  let gameCardsEffectUpdateQueryFromGameBuilderMock: jest.Mocked<
+    Builder<GameUpdateQuery, [ActiveGame, Card, number, CardColor | undefined]>
+  >;
+  let gamePassTurnUpdateQueryFromGameBuilderMock: jest.Mocked<
+    Builder<GameUpdateQuery, [ActiveGame, GameSpec]>
+  >;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
+  let startGameUpdateQueryFromGameBuilderMock: jest.Mocked<
+    Builder<GameUpdateQuery, [NonStartedGame, GameSpec]>
+  >;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
   let nonStartedGameFilledEventHandler: NonStartedGameFilledEventHandler;
@@ -44,6 +59,14 @@ describe(NonStartedGameFilledEventHandler.name, () => {
   beforeAll(() => {
     createGameInitialSnapshotUseCaseHandlerMock = {
       handle: jest.fn(),
+    };
+
+    gameCardsEffectUpdateQueryFromGameBuilderMock = {
+      build: jest.fn(),
+    };
+
+    gamePassTurnUpdateQueryFromGameBuilderMock = {
+      build: jest.fn(),
     };
 
     gamePersistenceOutputPortMock = {
@@ -54,7 +77,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
     > as jest.Mocked<GamePersistenceOutputPort>;
 
     gameServiceMock = {
-      buildStartGameUpdateQuery: jest.fn(),
+      isColored: jest.fn() as unknown,
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
 
     gameSpecPersistenceOutputPortMock = {
@@ -63,15 +86,22 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       jest.Mocked<GameSpecPersistenceOutputPort>
     > as jest.Mocked<GameSpecPersistenceOutputPort>;
 
+    startGameUpdateQueryFromGameBuilderMock = {
+      build: jest.fn(),
+    };
+
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
     };
 
     nonStartedGameFilledEventHandler = new NonStartedGameFilledEventHandler(
       createGameInitialSnapshotUseCaseHandlerMock,
+      gameCardsEffectUpdateQueryFromGameBuilderMock,
+      gamePassTurnUpdateQueryFromGameBuilderMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
       gameSpecPersistenceOutputPortMock,
+      startGameUpdateQueryFromGameBuilderMock,
       uuidProviderOutputPortMock,
     );
   });
@@ -180,11 +210,13 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns a non started game and gameSpecPersistenceOutputPort.findOne() returns a game spec, and gamePersistenceOutputPort.findOne() returns an active game after game is updated', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns a non started game and gameSpecPersistenceOutputPort.findOne() returns a game spec, and gamePersistenceOutputPort.findOne() returns an active game after game is updated and gameService.isColored() returns false', () => {
       let activeGameFixture: ActiveGame;
       let nonStartedGameFixture: NonStartedGame;
       let gameSpecFixture: GameSpec;
-      let gameUpdateQueryFixture: GameUpdateQuery;
+      let startGameUpdateQueryFixture: GameUpdateQuery;
+      let cardEffectUpdateQueryFixture: GameUpdateQuery;
+      let passTurnUpdateQueryFixture: GameUpdateQuery;
       let uuidFixture: string;
 
       let result: unknown;
@@ -192,12 +224,25 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       beforeAll(async () => {
         activeGameFixture = ActiveGameFixtures.withSlotsOne;
         nonStartedGameFixture = NonStartedGameFixtures.withGameSlotsOne;
+
         gameSpecFixture = GameSpecFixtures.any;
-        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+        startGameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+        cardEffectUpdateQueryFixture = GameUpdateQueryFixtures.any;
+        passTurnUpdateQueryFixture = GameUpdateQueryFixtures.any;
         uuidFixture = 'uuid-fixture';
 
-        gameServiceMock.buildStartGameUpdateQuery.mockReturnValueOnce(
-          gameUpdateQueryFixture,
+        startGameUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          startGameUpdateQueryFixture,
+        );
+
+        gameServiceMock.isColored.mockReturnValueOnce(false);
+
+        gameCardsEffectUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          cardEffectUpdateQueryFixture,
+        );
+
+        gamePassTurnUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          passTurnUpdateQueryFixture,
         );
 
         gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
@@ -206,6 +251,8 @@ describe(NonStartedGameFilledEventHandler.name, () => {
 
         gamePersistenceOutputPortMock.findOne
           .mockResolvedValueOnce(nonStartedGameFixture)
+          .mockResolvedValueOnce(activeGameFixture)
+          .mockResolvedValueOnce(activeGameFixture)
           .mockResolvedValueOnce(activeGameFixture);
 
         uuidProviderOutputPortMock.generateV4.mockReturnValue(uuidFixture);
@@ -231,7 +278,15 @@ describe(NonStartedGameFilledEventHandler.name, () => {
           id: nonStartedGameFixture.id,
         };
 
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(2);
+        const expectedThirdQuery: GameFindQuery = {
+          id: activeGameFixture.id,
+        };
+
+        const expectedFourthQuery: GameFindQuery = {
+          id: activeGameFixture.id,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(4);
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
           1,
           expectedFirstQuery,
@@ -239,6 +294,16 @@ describe(NonStartedGameFilledEventHandler.name, () => {
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
           2,
           expectedSecondQuery,
+          transactionWrapperFixture,
+        );
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          3,
+          expectedThirdQuery,
+          transactionWrapperFixture,
+        );
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          4,
+          expectedFourthQuery,
           transactionWrapperFixture,
         );
       });
@@ -256,20 +321,60 @@ describe(NonStartedGameFilledEventHandler.name, () => {
         ).toHaveBeenNthCalledWith(1, expected);
       });
 
-      it('should call gameService.buildStartGameUpdateQuery()', () => {
-        expect(gameServiceMock.buildStartGameUpdateQuery).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(gameServiceMock.buildStartGameUpdateQuery).toHaveBeenCalledWith(
-          nonStartedGameFixture,
-          gameSpecFixture,
+      it('should call startGameUpdateQueryFromGameBuilder.build()', () => {
+        expect(
+          startGameUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          startGameUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledWith(nonStartedGameFixture, gameSpecFixture);
+      });
+
+      it('should call gameService.isColored()', () => {
+        expect(gameServiceMock.isColored).toHaveBeenCalledTimes(1);
+        expect(gameServiceMock.isColored).toHaveBeenCalledWith(
+          activeGameFixture.state.currentCard,
         );
       });
 
+      it('should call gameCardsEffectUpdateQueryFromGameBuilder.build()', () => {
+        expect(
+          gameCardsEffectUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameCardsEffectUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledWith(
+          activeGameFixture,
+          activeGameFixture.state.currentCard,
+          1,
+          activeGameFixture.state.currentColor,
+        );
+      });
+
+      it('should call gamePassTurnUpdateQueryFromGameBuilder.build()', () => {
+        expect(
+          gamePassTurnUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gamePassTurnUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledWith(activeGameFixture, gameSpecFixture);
+      });
+
       it('should call gamePersistenceOutputPort.update()', () => {
-        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
-          gameUpdateQueryFixture,
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(3);
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenNthCalledWith(
+          1,
+          startGameUpdateQueryFixture,
+          transactionWrapperFixture,
+        );
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenNthCalledWith(
+          2,
+          cardEffectUpdateQueryFixture,
+          transactionWrapperFixture,
+        );
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenNthCalledWith(
+          3,
+          passTurnUpdateQueryFixture,
           transactionWrapperFixture,
         );
       });
