@@ -1,9 +1,18 @@
-import { createTheme } from '@mui/material/styles';
+import { Theme } from '@emotion/react';
+import {
+  PaletteOptions,
+  SimplePaletteColorOptions,
+  createTheme,
+} from '@mui/material/styles';
 
-/** @type {import("@mui/material/styles").PaletteOptions } */
-const corniePalette = {
+interface CorniePaletteOptions extends PaletteOptions {
+  primary?: SimplePaletteColorOptions;
+  secondary?: SimplePaletteColorOptions;
+}
+
+const corniePalette: CorniePaletteOptions = {
   primary: {
-    white: '#fff',
+    //white: '#fff',
     light: '#a44fbb',
     main: '#8e24aa',
     dark: '#631976',
@@ -17,7 +26,7 @@ const corniePalette = {
   },
 };
 
-export const cornieTheme = createTheme({
+export const cornieTheme: Theme = createTheme({
   palette: corniePalette,
   components: {
     MuiTextField: {
@@ -34,14 +43,14 @@ export const cornieTheme = createTheme({
     MuiFormLabel: {
       defaultProps: {
         style: {
-          color: corniePalette.secondary.dark,
+          color: corniePalette.secondary?.dark,
         },
       },
     },
     MuiInputBase: {
       defaultProps: {
         style: {
-          color: corniePalette.secondary.dark,
+          color: corniePalette.secondary?.dark,
         },
       },
     },
