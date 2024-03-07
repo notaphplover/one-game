@@ -46,7 +46,6 @@ export class GamePassTurnUpdateQueryFromGameBuilder
 
   #getNextTurnPlayerIndex(game: ActiveGame, gameSpec: GameSpec): number {
     const players: number = gameSpec.gameSlotsAmount;
-    const modulus: number = players + 1;
     const direction: GameDirection = game.state.currentDirection;
 
     let nextTurnPlayerIndex: number;
@@ -56,12 +55,12 @@ export class GamePassTurnUpdateQueryFromGameBuilder
         game.state.currentPlayingSlotIndex - (1 + game.state.skipCount);
 
       if (nextTurnPlayerIndex < 0) {
-        nextTurnPlayerIndex = (nextTurnPlayerIndex % modulus) + modulus;
+        nextTurnPlayerIndex = (nextTurnPlayerIndex % players) + players;
       }
     } else {
       nextTurnPlayerIndex =
         (game.state.currentPlayingSlotIndex + (1 + game.state.skipCount)) %
-        modulus;
+        players;
     }
 
     return nextTurnPlayerIndex;
