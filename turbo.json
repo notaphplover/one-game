@@ -6,9 +6,7 @@
       "inputs": ["src/**/*.{cts,mts,ts}"],
       "outputs": [
         "dist/**",
-        "!dist/**/.spec.js",
-        "lib/**",
-        "!lib/**/.spec.js"
+        "lib/**"
       ]
     },
     "@cornie-js/api-graphql-schemas#build": {
