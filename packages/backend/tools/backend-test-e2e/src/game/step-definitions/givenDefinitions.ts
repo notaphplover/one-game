@@ -17,9 +17,9 @@ import { UserV1Parameter } from '../../user/models/UserV1Parameter';
 import { getUserOrFail } from '../../user/utils/calculations/getUserOrFail';
 import { GameOptionsV1Parameter } from '../models/GameOptionsV1Parameter';
 import { GameV1Parameter } from '../models/GameV1Parameter';
-import { setActiveGameCards } from '../utils/actions/setActiveGameCards';
 import { setGame } from '../utils/actions/setGame';
 import { setGameOptions } from '../utils/actions/setGameOptions';
+import { updateActiveGame } from '../utils/actions/updateActiveGame';
 import { getGameOptionsOrFail } from '../utils/calculations/getGameOptionsOrFail';
 import { getGameOrFail } from '../utils/calculations/getGameOrFail';
 import {
@@ -360,6 +360,14 @@ export async function givenStartedGameForPlayersWithUserCredentials(
   }
 
   await updateGameParameter.bind(this)(gameAlias, userAlias);
+
+  const gameV1Parameter: GameV1Parameter = getGameOrFail.bind(this)(
+    gameAlias ?? defaultAlias,
+  );
+
+  await updateActiveGame(undefined, 0, gameV1Parameter, []);
+
+  await updateGameParameter.bind(this)(gameAlias, userAlias);
 }
 
 export async function givenStartedGameForTwoPlayersWithUserCredentials(
@@ -389,9 +397,11 @@ export async function givenStartedGameForTwoPlayersWithUserCredentials(
   const firstUserCardsV1Parameter: CardArrayV1Parameter =
     getCardArrayOrFail.bind(this)(firstUserCardAlias);
 
-  await setActiveGameCards(cardV1Parameter, gameV1Parameter, [
+  await updateActiveGame(cardV1Parameter, 0, gameV1Parameter, [
     [firstUserV1Parameter, firstUserCardsV1Parameter],
   ]);
+
+  await updateGameParameter.bind(this)(undefined, credentialsAlias);
 }
 
 async function updateGameParameter(
