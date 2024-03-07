@@ -173,6 +173,7 @@ describe(GameV1FromGameBuilder.name, () => {
               currentDirection: gameDirectionV1Fixture,
               currentPlayingSlotIndex:
                 gameFixture.state.currentPlayingSlotIndex,
+              currentTurnCardsDrawn: gameFixture.state.currentTurnCardsDrawn,
               currentTurnCardsPlayed: gameFixture.state.currentTurnCardsPlayed,
               drawCount: gameFixture.state.drawCount,
               slots: [activeGameSlotV1Fixture],
@@ -277,6 +278,7 @@ describe(GameV1FromGameBuilder.name, () => {
               currentDirection: gameDirectionV1Fixture,
               currentPlayingSlotIndex:
                 gameFixture.state.currentPlayingSlotIndex,
+              currentTurnCardsDrawn: gameFixture.state.currentTurnCardsDrawn,
               currentTurnCardsPlayed: gameFixture.state.currentTurnCardsPlayed,
               drawCount: gameFixture.state.drawCount,
               slots: [activeGameSlotV1Fixture],
