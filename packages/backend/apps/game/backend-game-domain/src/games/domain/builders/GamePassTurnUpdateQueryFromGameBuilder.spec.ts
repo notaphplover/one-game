@@ -33,16 +33,15 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
 
       beforeAll(() => {
         activeGameFixture = {
-          ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero,
+          ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero,
           state: {
-            ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero.state,
+            ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero.state,
             currentDirection: GameDirection.antiClockwise,
-            currentPlayingSlotIndex: 0,
             skipCount: 0,
           },
         };
 
-        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountTwo;
+        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountThree;
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
@@ -141,16 +140,15 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
 
       beforeAll(() => {
         activeGameFixture = {
-          ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero,
+          ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero,
           state: {
-            ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero.state,
+            ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero.state,
             currentDirection: GameDirection.antiClockwise,
-            currentPlayingSlotIndex: 0,
             skipCount: 1,
           },
         };
 
-        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountTwo;
+        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountThree;
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
@@ -249,16 +247,15 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
 
       beforeAll(() => {
         activeGameFixture = {
-          ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero,
+          ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero,
           state: {
-            ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero.state,
+            ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero.state,
             currentDirection: GameDirection.clockwise,
-            currentPlayingSlotIndex: 0,
             skipCount: 0,
           },
         };
 
-        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountTwo;
+        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountThree;
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
@@ -357,16 +354,15 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
 
       beforeAll(() => {
         activeGameFixture = {
-          ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero,
+          ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero,
           state: {
-            ...ActiveGameFixtures.withSlotsTwoAndCurrentPlayingSlotZero.state,
+            ...ActiveGameFixtures.withSlotsThreeAndCurrentPlayingSlotZero.state,
             currentDirection: GameDirection.clockwise,
-            currentPlayingSlotIndex: 0,
             skipCount: 1,
           },
         };
 
-        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountTwo;
+        gameSpecFixtures = GameSpecFixtures.withGameSlotsAmountThree;
       });
 
       describe('when called, and isGameFinishedSpec.isSatisfiedBy() returns false', () => {
