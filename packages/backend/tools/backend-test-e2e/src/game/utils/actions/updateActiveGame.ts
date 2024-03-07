@@ -4,7 +4,10 @@ import {
   gamePersistenceOutputPortSymbol,
 } from '@cornie-js/backend-game-application/games';
 import { ColoredCard } from '@cornie-js/backend-game-domain/cards';
-import { GameUpdateQuery } from '@cornie-js/backend-game-domain/games';
+import {
+  GameDirection,
+  GameUpdateQuery,
+} from '@cornie-js/backend-game-domain/games';
 import { INestApplicationContext } from '@nestjs/common';
 
 import { applicationContext } from '../../../app/adapter/nest/contexts/applicationContext';
@@ -13,8 +16,9 @@ import { CardV1Parameter } from '../../../card/models/CardV1Parameter';
 import { UserV1Parameter } from '../../../user/models/UserV1Parameter';
 import { GameV1Parameter } from '../../models/GameV1Parameter';
 
-export async function setActiveGameCards(
-  currentCardV1Parameter: CardV1Parameter,
+export async function updateActiveGame(
+  currentCardV1Parameter: CardV1Parameter | undefined,
+  currentPlayingSlotIndex: number | undefined,
   gameV1Parameter: GameV1Parameter,
   playerSettings: [UserV1Parameter, CardArrayV1Parameter][],
 ): Promise<void> {
@@ -31,7 +35,7 @@ export async function setActiveGameCards(
     resolvedApplicationContext.get(gamePersistenceOutputPortSymbol);
 
   const gameUpdateQuery: GameUpdateQuery = {
-    currentCard: currentCardV1Parameter.card,
+    currentDirection: GameDirection.clockwise,
     drawCount: 0,
     gameFindQuery: {
       id: gameV1Parameter.game.id,
@@ -51,10 +55,18 @@ export async function setActiveGameCards(
     skipCount: 0,
   };
 
-  const colorProperty: keyof ColoredCard = 'color';
+  if (currentCardV1Parameter !== undefined) {
+    gameUpdateQuery.currentCard = currentCardV1Parameter.card;
 
-  if (colorProperty in currentCardV1Parameter.card) {
-    gameUpdateQuery.currentColor = currentCardV1Parameter.card.color;
+    const colorProperty: keyof ColoredCard = 'color';
+
+    if (colorProperty in currentCardV1Parameter.card) {
+      gameUpdateQuery.currentColor = currentCardV1Parameter.card.color;
+    }
+  }
+
+  if (currentPlayingSlotIndex !== undefined) {
+    gameUpdateQuery.currentPlayingSlotIndex = currentPlayingSlotIndex;
   }
 
   await gamePersistenceOutputPort.update(gameUpdateQuery);
