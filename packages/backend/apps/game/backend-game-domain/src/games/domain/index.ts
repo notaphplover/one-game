@@ -1,3 +1,4 @@
+import { GameCardsEffectUpdateQueryFromGameBuilder } from './builders/GameCardsEffectUpdateQueryFromGameBuilder';
 import { GameDrawCardsUpdateQueryFromGameBuilder } from './builders/GameDrawCardsUpdateQueryFromGameBuilder';
 import { GamePassTurnUpdateQueryFromGameBuilder } from './builders/GamePassTurnUpdateQueryFromGameBuilder';
 import { GamePlayCardsUpdateQueryFromGameBuilder } from './builders/GamePlayCardsUpdateQueryFromGameBuilder';
@@ -64,6 +65,7 @@ export type {
 export {
   GameCanHoldMoreGameSlotsSpec,
   GameCanHoldOnlyOneMoreGameSlotSpec,
+  GameCardsEffectUpdateQueryFromGameBuilder,
   GameDirection,
   GameDrawCardsUpdateQueryFromGameBuilder,
   GamePassTurnUpdateQueryFromGameBuilder,

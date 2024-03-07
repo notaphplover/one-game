@@ -35,6 +35,44 @@ describe(CurrentPlayerCanPlayCardsSpec.name, () => {
     );
   });
 
+  describe('Having an active game with currentTurnCardsPlayed true', () => {
+    let gameFixture: ActiveGame;
+    let gameOptionsFixture: GameOptions;
+    let cardIndexesFixture: number[];
+
+    beforeAll(() => {
+      gameFixture = {
+        ...ActiveGameFixtures.any,
+        state: {
+          ...ActiveGameFixtures.any.state,
+          currentTurnCardsPlayed: true,
+        },
+      };
+      gameOptionsFixture = GameOptionsFixtures.any;
+      cardIndexesFixture = [0];
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = currentPlayerCanPlayCardsSpec.isSatisfiedBy(
+          gameFixture,
+          gameOptionsFixture,
+          cardIndexesFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should return false', () => {
+        expect(result).toBe(false);
+      });
+    });
+  });
+
   describe.each<
     [string, ActiveGameSlot, GameOptions, number[], boolean, boolean, boolean]
   >([
@@ -151,6 +189,7 @@ describe(CurrentPlayerCanPlayCardsSpec.name, () => {
             ...activeGameWithOneSlotFixture,
             state: {
               ...activeGameWithOneSlotFixture.state,
+              currentTurnCardsPlayed: false,
               slots: [gameSlotFixture],
             },
           };

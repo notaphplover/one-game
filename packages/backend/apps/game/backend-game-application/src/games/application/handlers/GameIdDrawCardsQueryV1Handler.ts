@@ -15,6 +15,10 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
+import {
+  TransactionProvisionOutputPort,
+  transactionProvisionOutputPortSymbol,
+} from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import {
   GamePersistenceOutputPort,
@@ -51,12 +55,15 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(PlayerCanDrawCardsSpec)
     playerCanDrawCardsSpec: PlayerCanDrawCardsSpec,
+    @Inject(transactionProvisionOutputPortSymbol)
+    transactionProvisionOutputPort: TransactionProvisionOutputPort,
   ) {
     super(
       gameSpecPersistenceOutputPort,
       gamePersistenceOutputPort,
       gameUpdatedEventHandler,
       playerCanUpdateGameSpec,
+      transactionProvisionOutputPort,
     );
 
     this.#gameDrawCardsUpdateQueryFromGameBuilder =
@@ -64,8 +71,8 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     this.#playerCanDrawCardsSpec = playerCanDrawCardsSpec;
   }
 
-  protected override _buildUpdateQuery(game: ActiveGame): GameUpdateQuery {
-    return this.#gameDrawCardsUpdateQueryFromGameBuilder.build(game);
+  protected override _buildUpdateQueries(game: ActiveGame): GameUpdateQuery[] {
+    return [this.#gameDrawCardsUpdateQueryFromGameBuilder.build(game)];
   }
 
   protected override _checkUnprocessableOperation(
@@ -82,7 +89,7 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     ) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
-        'Player cannot end the turn. Reason: there is a pending action preventing the turn to be ended',
+        'Player cannot draw cards',
       );
     }
   }
