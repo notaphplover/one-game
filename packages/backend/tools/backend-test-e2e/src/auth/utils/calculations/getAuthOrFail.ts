@@ -1,16 +1,16 @@
 import { OneGameApiWorld } from '../../../http/models/OneGameApiWorld';
-import { AuthV1Parameter } from '../../models/AuthV1Parameter';
+import { AuthV2Parameter } from '../../models/AuthV2Parameter';
 
 export function getAuthOrFail(
   this: OneGameApiWorld,
   alias: string,
-): AuthV1Parameter {
-  const authV1Parameter: AuthV1Parameter | undefined =
+): AuthV2Parameter {
+  const authV2Parameter: AuthV2Parameter | undefined =
     this.entities.auth.get(alias);
 
-  if (authV1Parameter === undefined) {
+  if (authV2Parameter === undefined) {
     throw new Error(`Expected "${alias}" aliased auth not found`);
   }
 
-  return authV1Parameter;
+  return authV2Parameter;
 }

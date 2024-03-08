@@ -4,7 +4,7 @@ import { Given } from '@cucumber/cucumber';
 import { faker } from '@faker-js/faker';
 import { HttpStatus } from '@nestjs/common';
 
-import { AuthV1Parameter } from '../../auth/models/AuthV1Parameter';
+import { AuthV2Parameter } from '../../auth/models/AuthV2Parameter';
 import { whenCreateCodeAuthRequestIsSendFromUserActivationMail } from '../../auth/step-definitions/whenDefinitions';
 import { setAuth } from '../../auth/utils/actions/setAuth';
 import { getAuthOrFail } from '../../auth/utils/calculations/getAuthOrFail';
@@ -133,10 +133,10 @@ export async function givenUser(
     requestAlias,
   );
 
-  type CreateAuthResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
+  type CreateAuthResponseType = Awaited<ReturnType<HttpClient['createAuthV2']>>;
 
   const createCodeAuthResponse: CreateAuthResponseType =
-    getResponseParametersOrFail(this, 'createAuth', processedRequestAlias);
+    getResponseParametersOrFail(this, 'createAuthV2', processedRequestAlias);
 
   if (createCodeAuthResponse.statusCode !== HttpStatus.OK) {
     throw new Error(
@@ -144,13 +144,16 @@ export async function givenUser(
     );
   }
 
+  const [, authCreateQueryV2]: Parameters<HttpClient['createAuthV2']> =
+    getRequestParametersOrFail(this, 'createAuthV2', processedRequestAlias);
+
+  if (authCreateQueryV2 === undefined) {
+    throw new Error('Expected auth create query V2 to be defined');
+  }
+
   setAuth.bind(this)(processedUserAlias, {
     auth: createCodeAuthResponse.body,
-    authCreateQuery: getRequestParametersOrFail(
-      this,
-      'createAuth',
-      processedRequestAlias,
-    )[1],
+    authCreateQuery: authCreateQueryV2,
   });
 
   givenUpdateUserRequestFromUser.bind(this)(
@@ -204,13 +207,13 @@ export function givenDeleteOwnUserRequestFromUser(
   const procesedRequestAlias: string = requestAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
-  const authV1Parameter: AuthV1Parameter =
+  const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
   const deleteUserMeRequestParameters: Parameters<HttpClient['deleteUserMe']> =
     [
       {
-        authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+        authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
       },
     ];
 
@@ -229,12 +232,12 @@ export function givenGetUserMeRequestFromUserCredentials(
   const procesedRequestAlias: string = requestAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
-  const authV1Parameter: AuthV1Parameter =
+  const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
   const getUserMeRequestParameters: Parameters<HttpClient['getUserMe']> = [
     {
-      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
   ];
 
@@ -254,7 +257,7 @@ export function givenUpdateUserRequestFromUser(
   const procesedRequestAlias: string = requestAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
-  const authV1Parameter: AuthV1Parameter =
+  const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
   const processedUserMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1 =
@@ -265,7 +268,7 @@ export function givenUpdateUserRequestFromUser(
   const updateUserMeRequestParameters: Parameters<HttpClient['updateUserMe']> =
     [
       {
-        authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+        authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
       },
       processedUserMeUpdateQueryV1,
     ];

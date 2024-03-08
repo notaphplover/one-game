@@ -3,7 +3,7 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { Given } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
 
-import { AuthV1Parameter } from '../../auth/models/AuthV1Parameter';
+import { AuthV2Parameter } from '../../auth/models/AuthV2Parameter';
 import { getAuthOrFail } from '../../auth/utils/calculations/getAuthOrFail';
 import { CardArrayV1Parameter } from '../../card/models/CardArrayV1Parameter';
 import { CardV1Parameter } from '../../card/models/CardV1Parameter';
@@ -43,12 +43,12 @@ export function givenGameFindQueryRequestForGame(
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
-  const authV1Parameter: AuthV1Parameter =
+  const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
   const getGameV1Request: Parameters<HttpClient['getGame']> = [
     {
-      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
     {
       gameId: gameV1Parameter.game.id,
@@ -81,7 +81,7 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
     playWildDraw4IfNoOtherAlternative: true,
   };
 
-  const auth: AuthV1Parameter = getAuthOrFail.bind(this)(processedUserAlias);
+  const auth: AuthV2Parameter = getAuthOrFail.bind(this)(processedUserAlias);
 
   const gameCreateQueryV1: apiModels.GameCreateQueryV1 = {
     gameSlotsAmount,
@@ -91,7 +91,7 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
 
   const requestParameters: Parameters<HttpClient['createGame']> = [
     {
-      authorization: `Bearer ${auth.auth.jwt}`,
+      authorization: `Bearer ${auth.auth.accessToken}`,
     },
     gameCreateQueryV1,
   ];
@@ -113,7 +113,7 @@ export function givenCreateGameSlotRequestForPlayerWithUserCredentials(
   const processedRequestAlias: string = requestAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
-  const auth: AuthV1Parameter = getAuthOrFail.bind(this)(processedUserAlias);
+  const auth: AuthV2Parameter = getAuthOrFail.bind(this)(processedUserAlias);
 
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
@@ -127,7 +127,7 @@ export function givenCreateGameSlotRequestForPlayerWithUserCredentials(
 
   const requestParameters: Parameters<HttpClient['createGameSlot']> = [
     {
-      authorization: `Bearer ${auth.auth.jwt}`,
+      authorization: `Bearer ${auth.auth.accessToken}`,
     },
     {
       gameId: gameV1Parameter.game.id,
@@ -162,14 +162,14 @@ export function givenGetGameSpecRequestForGameWithUserCredentials(
   const processedGameAlias: string = gameAlias ?? defaultAlias;
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
-  const authParameter: AuthV1Parameter =
+  const authParameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
   const requestParameters: Parameters<HttpClient['getGameGameIdSpec']> = [
     {
-      authorization: `Bearer ${authParameter.auth.jwt}`,
+      authorization: `Bearer ${authParameter.auth.accessToken}`,
     },
     {
       gameId: gameV1Parameter.game.id,
@@ -241,7 +241,7 @@ export function givenGameUpdateQueryRequestForGame(
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
-  const authV1Parameter: AuthV1Parameter =
+  const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
   const userV1Parameter: UserV1Parameter =
@@ -259,7 +259,7 @@ export function givenGameUpdateQueryRequestForGame(
 
   const updateGameV1Request: Parameters<HttpClient['updateGame']> = [
     {
-      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
     {
       gameId: gameV1Parameter.game.id,
@@ -415,14 +415,14 @@ async function updateGameParameter(
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
-  const authV1Parameter: AuthV1Parameter =
+  const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
   type GetGameParameters = Parameters<HttpClient['getGame']>;
 
   const getGameParameters: GetGameParameters = [
     {
-      authorization: `Bearer ${authV1Parameter.auth.jwt}`,
+      authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
     {
       gameId: gameV1Parameter.game.id,
