@@ -7,4 +7,11 @@ export class GameIdDrawCardsQueryV1Fixtures {
       slotIndex: 0,
     };
   }
+
+  public static get withSlotIndexZero(): apiModels.GameIdDrawCardsQueryV1 {
+    return {
+      ...GameIdDrawCardsQueryV1Fixtures.any,
+      slotIndex: 0,
+    };
+  }
 }

@@ -2,17 +2,26 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
   ActiveGameSlot,
   Game,
+  GameCardsEffectUpdateQueryFromGameBuilder,
+  GamePassTurnUpdateQueryFromGameBuilder,
   GameService,
   GameSpec,
   GameStatus,
   GameUpdateQuery,
   NonStartedGame,
+  StartGameUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { GameInitialSnapshotCreateQuery } from '@cornie-js/backend-game-domain/gameSnapshots';
 import { Inject, Injectable } from '@nestjs/common';
@@ -36,9 +45,21 @@ export class NonStartedGameFilledEventHandler
     [GameInitialSnapshotCreateQuery, TransactionWrapper | undefined],
     void
   >;
-  readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
+  readonly #gameCardsEffectUpdateQueryFromGameBuilder: Builder<
+    GameUpdateQuery,
+    [ActiveGame, Card, number, CardColor | undefined]
+  >;
+  readonly #gamePassTurnUpdateQueryFromGameBuilder: Builder<
+    GameUpdateQuery,
+    [ActiveGame, GameSpec]
+  >;
   readonly #gameService: GameService;
+  readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
+  readonly #startGameUpdateQueryFromGameBuilder: Builder<
+    GameUpdateQuery,
+    [NonStartedGame, GameSpec]
+  >;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
@@ -47,20 +68,41 @@ export class NonStartedGameFilledEventHandler
       [GameInitialSnapshotCreateQuery, TransactionWrapper | undefined],
       void
     >,
+    @Inject(GameCardsEffectUpdateQueryFromGameBuilder)
+    gameCardsEffectUpdateQueryFromGameBuilder: Builder<
+      GameUpdateQuery,
+      [ActiveGame, Card, number, CardColor | undefined]
+    >,
+    @Inject(GamePassTurnUpdateQueryFromGameBuilder)
+    gamePassTurnUpdateQueryFromGameBuilder: Builder<
+      GameUpdateQuery,
+      [ActiveGame, GameSpec]
+    >,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
     gameService: GameService,
     @Inject(gameSpecPersistenceOutputPortSymbol)
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
+    @Inject(StartGameUpdateQueryFromGameBuilder)
+    startGameUpdateQueryFromGameBuilder: Builder<
+      GameUpdateQuery,
+      [NonStartedGame, GameSpec]
+    >,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#createGameInitialSnapshotUseCaseHandler =
       createGameInitialSnapshotUseCaseHandler;
+    this.#gameCardsEffectUpdateQueryFromGameBuilder =
+      gameCardsEffectUpdateQueryFromGameBuilder;
+    this.#gamePassTurnUpdateQueryFromGameBuilder =
+      gamePassTurnUpdateQueryFromGameBuilder;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
     this.#gameService = gameService;
     this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
+    this.#startGameUpdateQueryFromGameBuilder =
+      startGameUpdateQueryFromGameBuilder;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
@@ -73,15 +115,13 @@ export class NonStartedGameFilledEventHandler
       this.#getGameSpecOrFail(nonStartedGameFilledEvent.gameId),
     ]);
 
-    const gameUpdateQuery: GameUpdateQuery =
-      this.#gameService.buildStartGameUpdateQuery(game, gameSpec);
-
-    await this.#gamePersistenceOutputPort.update(
-      gameUpdateQuery,
+    const updatedGame: ActiveGame = await this.#updateNonStartedGame(
+      game,
+      gameSpec,
       transactionWrapper,
     );
 
-    await this.#createGameInitialSnapshot(game, transactionWrapper);
+    await this.#createGameInitialSnapshot(updatedGame, transactionWrapper);
   }
 
   #isActiveGame(game: Game | undefined): game is ActiveGame {
@@ -89,26 +129,47 @@ export class NonStartedGameFilledEventHandler
   }
 
   async #createGameInitialSnapshot(
-    game: Game,
+    game: ActiveGame,
     transactionWrapper: TransactionWrapper,
   ): Promise<void> {
-    const updatedGame: Game | undefined =
-      await this.#gamePersistenceOutputPort.findOne(
-        { id: game.id },
-        transactionWrapper,
+    const gameInitialSnapshotCreateQuery: GameInitialSnapshotCreateQuery =
+      this.#buildGameInitialSnapshotCreateQuery(game);
+
+    await this.#createGameInitialSnapshotUseCaseHandler.handle(
+      gameInitialSnapshotCreateQuery,
+      transactionWrapper,
+    );
+  }
+
+  async #applyCurrentCardEffect(
+    game: ActiveGame,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<ActiveGame> {
+    const cardEffectUpdateQuery: GameUpdateQuery =
+      this.#gameCardsEffectUpdateQueryFromGameBuilder.build(
+        game,
+        game.state.currentCard,
+        1,
+        this.#gameService.isColored(game.state.currentCard)
+          ? undefined
+          : game.state.currentColor,
       );
 
-    if (!this.#isActiveGame(updatedGame)) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected non active game when attempting to create game snapshot',
-      );
-    }
+    await this.#gamePersistenceOutputPort.update(
+      cardEffectUpdateQuery,
+      transactionWrapper,
+    );
 
+    return this.#getUpdatedGame(game, transactionWrapper);
+  }
+
+  #buildGameInitialSnapshotCreateQuery(
+    updatedGame: ActiveGame,
+  ): GameInitialSnapshotCreateQuery {
     const gameInitialSnapshotId: string =
       this.#uuidProviderOutputPort.generateV4();
 
-    const gameInitialSnapshotCreateQuery: GameInitialSnapshotCreateQuery = {
+    return {
       currentCard: updatedGame.state.currentCard,
       currentColor: updatedGame.state.currentColor,
       currentDirection: updatedGame.state.currentDirection,
@@ -127,11 +188,6 @@ export class NonStartedGameFilledEventHandler
       ),
       id: gameInitialSnapshotId,
     };
-
-    await this.#createGameInitialSnapshotUseCaseHandler.handle(
-      gameInitialSnapshotCreateQuery,
-      transactionWrapper,
-    );
   }
 
   async #getNonStartedGameOrFail(gameId: string): Promise<NonStartedGame> {
@@ -157,6 +213,26 @@ export class NonStartedGameFilledEventHandler
     return game;
   }
 
+  async #getUpdatedGame(
+    game: Game,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<ActiveGame> {
+    const updatedGame: Game | undefined =
+      await this.#gamePersistenceOutputPort.findOne(
+        { id: game.id },
+        transactionWrapper,
+      );
+
+    if (!this.#isActiveGame(updatedGame)) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected non active game when attempting to create game snapshot',
+      );
+    }
+
+    return updatedGame;
+  }
+
   async #getGameSpecOrFail(gameId: string): Promise<GameSpec> {
     const gameSpec: GameSpec | undefined =
       await this.#gameSpecPersistenceOutputPort.findOne({ gameIds: [gameId] });
@@ -173,5 +249,62 @@ export class NonStartedGameFilledEventHandler
 
   #isNonStartedGame(game: Game): game is NonStartedGame {
     return game.state.status === GameStatus.nonStarted;
+  }
+
+  async #passTurn(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<ActiveGame> {
+    const passTurnGameUpdateQuery: GameUpdateQuery =
+      this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec);
+
+    await this.#gamePersistenceOutputPort.update(
+      passTurnGameUpdateQuery,
+      transactionWrapper,
+    );
+
+    return this.#getUpdatedGame(game, transactionWrapper);
+  }
+
+  async #startGame(
+    game: NonStartedGame,
+    gameSpec: GameSpec,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<ActiveGame> {
+    const startGameUpdateQuery: GameUpdateQuery =
+      this.#startGameUpdateQueryFromGameBuilder.build(game, gameSpec);
+
+    await this.#gamePersistenceOutputPort.update(
+      startGameUpdateQuery,
+      transactionWrapper,
+    );
+
+    return this.#getUpdatedGame(game, transactionWrapper);
+  }
+
+  async #updateNonStartedGame(
+    game: NonStartedGame,
+    gameSpec: GameSpec,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<ActiveGame> {
+    let updatedGame: ActiveGame = await this.#startGame(
+      game,
+      gameSpec,
+      transactionWrapper,
+    );
+
+    updatedGame = await this.#applyCurrentCardEffect(
+      updatedGame,
+      transactionWrapper,
+    );
+
+    updatedGame = await this.#passTurn(
+      updatedGame,
+      gameSpec,
+      transactionWrapper,
+    );
+
+    return updatedGame;
   }
 }

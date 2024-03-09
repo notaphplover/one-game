@@ -13,17 +13,18 @@ function thenCreateAuthResponseShouldContainValidUserAuth(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
+  type ResponseType = Awaited<ReturnType<HttpClient['createAuthV2']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
-    'createAuth',
+    'createAuthV2',
     alias,
   );
 
   expectObjectContaining<ResponseType>(response, {
     body: {
-      jwt: () => undefined,
+      accessToken: () => undefined,
+      refreshToken: () => undefined,
     },
     headers: {},
     statusCode: HttpStatus.OK,

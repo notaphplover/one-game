@@ -11,6 +11,13 @@ export class GameDrawMutationFixtures {
     };
   }
 
+  public static get withCardsOne(): GameDrawMutation {
+    return {
+      ...GameDrawMutationFixtures.any,
+      cards: [CardFixtures.any],
+    };
+  }
+
   public static get withIsDiscardPileEmptiedFalse(): GameDrawMutation {
     return {
       ...GameDrawMutationFixtures.any,

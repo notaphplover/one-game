@@ -5,6 +5,7 @@ import { GameCardsEffectUpdateQueryFromGameBuilder } from '../../domain/builders
 import { GameDrawCardsUpdateQueryFromGameBuilder } from '../../domain/builders/GameDrawCardsUpdateQueryFromGameBuilder';
 import { GamePassTurnUpdateQueryFromGameBuilder } from '../../domain/builders/GamePassTurnUpdateQueryFromGameBuilder';
 import { GamePlayCardsUpdateQueryFromGameBuilder } from '../../domain/builders/GamePlayCardsUpdateQueryFromGameBuilder';
+import { StartGameUpdateQueryFromGameBuilder } from '../../domain/builders/StartGameUpdateQueryFromGameBuilder';
 import { GameDrawService } from '../../domain/services/GameDrawService';
 import { GameService } from '../../domain/services/GameService';
 import { CardCanBePlayedSpec } from '../../domain/specs/CardCanBePlayedSpec';
@@ -32,6 +33,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     PlayerCanDrawCardsSpec,
     PlayerCanPassTurnSpec,
     PlayerCanUpdateGameSpec,
+    StartGameUpdateQueryFromGameBuilder,
   ],
   imports: [CardDomainModule],
   providers: [
@@ -50,6 +52,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     PlayerCanDrawCardsSpec,
     PlayerCanPassTurnSpec,
     PlayerCanUpdateGameSpec,
+    StartGameUpdateQueryFromGameBuilder,
   ],
 })
 export class GameDomainModule {}

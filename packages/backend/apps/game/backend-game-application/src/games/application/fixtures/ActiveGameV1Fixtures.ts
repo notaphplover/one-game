@@ -12,6 +12,7 @@ export class ActiveGameV1Fixtures {
         currentColor: 'blue',
         currentDirection: 'antiClockwise',
         currentPlayingSlotIndex: 0,
+        currentTurnCardsDrawn: false,
         currentTurnCardsPlayed: false,
         drawCount: 0,
         slots: [ActiveGameSlotV1Fixtures.any],

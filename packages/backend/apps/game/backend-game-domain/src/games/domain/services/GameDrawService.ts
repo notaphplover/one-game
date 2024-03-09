@@ -1,5 +1,7 @@
 import { AppError, AppErrorKind, Writable } from '@cornie-js/backend-common';
+import { Inject, Injectable } from '@nestjs/common';
 
+import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
@@ -8,7 +10,17 @@ import { GameSpec } from '../valueObjects/GameSpec';
 
 const INITIAL_CARDS_PER_PLAYER: number = 7;
 
+@Injectable()
 export class GameDrawService {
+  readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
+
+  constructor(
+    @Inject(AreCardsEqualsSpec)
+    areCardsEqualsSpec: AreCardsEqualsSpec,
+  ) {
+    this.#areCardsEqualsSpec = areCardsEqualsSpec;
+  }
+
   public calculateDrawMutation(
     deck: GameCardSpec[],
     discardPile: GameCardSpec[],
@@ -49,6 +61,12 @@ export class GameDrawService {
       currentCard,
       deck: currentCardDrawMutation.deck,
     };
+  }
+
+  public putCards(deck: GameCardSpec[], cards: Card[]): void {
+    for (const card of cards) {
+      this.#putCard(deck, card);
+    }
   }
 
   #calculateDrawMutationFromDeck(
@@ -316,5 +334,24 @@ export class GameDrawService {
     return [...randomIndexesSet.values()].sort(
       (i1: number, i2: number) => i1 - i2,
     );
+  }
+
+  #putCard(deck: GameCardSpec[], card: Card): void {
+    const cardsToAdd: number = 1;
+    let cardSpec: Writable<GameCardSpec> | undefined = deck.find(
+      (cardSpec: GameCardSpec) =>
+        this.#areCardsEqualsSpec.isSatisfiedBy(card, cardSpec.card),
+    );
+
+    if (cardSpec === undefined) {
+      cardSpec = {
+        amount: 0,
+        card,
+      };
+
+      deck.push(cardSpec);
+    }
+
+    cardSpec.amount += cardsToAdd;
   }
 }

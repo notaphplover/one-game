@@ -1,15 +1,10 @@
-import {
-  AppError,
-  AppErrorKind,
-  Builder,
-  Writable,
-} from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { ActiveGame } from '../entities/ActiveGame';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { GameDrawService } from '../services/GameDrawService';
 import { GameService } from '../services/GameService';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
@@ -18,16 +13,16 @@ import { GameCardSpec } from '../valueObjects/GameCardSpec';
 export class GamePlayCardsUpdateQueryFromGameBuilder
   implements Builder<GameUpdateQuery, [ActiveGame, number[], number]>
 {
-  readonly #areCardsEqualsSpec: AreCardsEqualsSpec;
+  readonly #gameDrawService: GameDrawService;
   readonly #gameService: GameService;
 
   constructor(
-    @Inject(AreCardsEqualsSpec)
-    areCardsEqualsSpec: AreCardsEqualsSpec,
+    @Inject(GameDrawService)
+    gameDrawService: GameDrawService,
     @Inject(GameService)
     gameService: GameService,
   ) {
-    this.#areCardsEqualsSpec = areCardsEqualsSpec;
+    this.#gameDrawService = gameDrawService;
     this.#gameService = gameService;
   }
 
@@ -85,34 +80,9 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
       (gameCardSpec: GameCardSpec) => ({ ...gameCardSpec }),
     );
 
-    this.#putCardsInDiscardPile(nextDiscardPile, nextCurrentCards);
+    this.#gameDrawService.putCards(nextDiscardPile, nextCurrentCards);
 
     return nextDiscardPile;
-  }
-
-  #putCardsInDiscardPile(discardPile: GameCardSpec[], cards: Card[]): void {
-    for (const card of cards) {
-      this.#putCardInDiscardPile(discardPile, card);
-    }
-  }
-
-  #putCardInDiscardPile(discardPile: GameCardSpec[], card: Card): void {
-    const cardsToAdd: number = 1;
-    let cardSpec: Writable<GameCardSpec> | undefined = discardPile.find(
-      (cardSpec: GameCardSpec) =>
-        this.#areCardsEqualsSpec.isSatisfiedBy(card, cardSpec.card),
-    );
-
-    if (cardSpec === undefined) {
-      cardSpec = {
-        amount: 0,
-        card,
-      };
-
-      discardPile.push(cardSpec);
-    }
-
-    cardSpec.amount += cardsToAdd;
   }
 
   #getPlayCardsGameUpdateQueryNextCurrentCard(

@@ -10,7 +10,7 @@ import { getRequestParametersOrFail } from '../../http/utils/calculations/getReq
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 import { UserV1Parameter } from '../../user/models/UserV1Parameter';
 import { getUserOrFail } from '../../user/utils/calculations/getUserOrFail';
-import { AuthV1Parameter } from '../models/AuthV1Parameter';
+import { AuthV2Parameter } from '../models/AuthV2Parameter';
 import { setAuth } from '../utils/actions/setAuth';
 import { whenCreateAuthRequestIsSend } from './whenDefinitions';
 
@@ -23,14 +23,18 @@ export async function givenAuthForUser(
   givenCreateAuthRequestForUser.bind(this)(alias, alias);
   await whenCreateAuthRequestIsSend.bind(this)(alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createAuth']>>;
+  type ResponseType = Awaited<ReturnType<HttpClient['createAuthV2']>>;
 
-  const [, authCreateQueryV1]: Parameters<HttpClient['createAuth']> =
-    getRequestParametersOrFail(this, 'createAuth', alias);
+  const [, authCreateQueryV2]: Parameters<HttpClient['createAuthV2']> =
+    getRequestParametersOrFail(this, 'createAuthV2', alias);
+
+  if (authCreateQueryV2 === undefined) {
+    throw new Error('Expected auth create query V2 to be defined');
+  }
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
-    'createAuth',
+    'createAuthV2',
     alias,
   );
 
@@ -40,9 +44,9 @@ export async function givenAuthForUser(
     );
   }
 
-  const authParameter: AuthV1Parameter = {
+  const authParameter: AuthV2Parameter = {
     auth: response.body,
-    authCreateQuery: authCreateQueryV1,
+    authCreateQuery: authCreateQueryV2,
   };
 
   setAuth.bind(this)(alias, authParameter);
@@ -59,18 +63,19 @@ export function givenCreateAuthRequestForUser(
   const userParameter: UserV1Parameter =
     getUserOrFail.bind(this)(procesedUserAlias);
 
-  const authCreateQuery: apiModels.AuthCreateQueryV1 = {
+  const authCreateQuery: apiModels.AuthCreateQueryV2 = {
     email: userParameter.userCreateQuery.email,
+    kind: 'login',
     password: userParameter.userCreateQuery.password,
   };
 
-  const requestParameters: Parameters<HttpClient['createAuth']> = [
+  const requestParameters: Parameters<HttpClient['createAuthV2']> = [
     {},
     authCreateQuery,
   ];
 
   setRequestParameters.bind(this)(
-    'createAuth',
+    'createAuthV2',
     procesedRequestAlias,
     requestParameters,
   );

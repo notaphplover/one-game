@@ -2,6 +2,7 @@ import { GameCardsEffectUpdateQueryFromGameBuilder } from './builders/GameCardsE
 import { GameDrawCardsUpdateQueryFromGameBuilder } from './builders/GameDrawCardsUpdateQueryFromGameBuilder';
 import { GamePassTurnUpdateQueryFromGameBuilder } from './builders/GamePassTurnUpdateQueryFromGameBuilder';
 import { GamePlayCardsUpdateQueryFromGameBuilder } from './builders/GamePlayCardsUpdateQueryFromGameBuilder';
+import { StartGameUpdateQueryFromGameBuilder } from './builders/StartGameUpdateQueryFromGameBuilder';
 import { ActiveGame } from './entities/ActiveGame';
 import { BaseGame } from './entities/BaseGame';
 import { FinishedGame } from './entities/FinishedGame';
@@ -79,4 +80,5 @@ export {
   PlayerCanPassTurnSpec,
   CurrentPlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,
+  StartGameUpdateQueryFromGameBuilder,
 };

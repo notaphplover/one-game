@@ -117,6 +117,7 @@ export class GameV1FromGameBuilder
           game.state.currentDirection,
         ),
         currentPlayingSlotIndex: game.state.currentPlayingSlotIndex,
+        currentTurnCardsDrawn: game.state.currentTurnCardsDrawn,
         currentTurnCardsPlayed: game.state.currentTurnCardsPlayed,
         drawCount: game.state.drawCount,
         slots: game.state.slots.map((gameSlot: ActiveGameSlot) =>

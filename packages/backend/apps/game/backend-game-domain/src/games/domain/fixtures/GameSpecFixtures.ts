@@ -26,6 +26,13 @@ export class GameSpecFixtures {
     };
   }
 
+  public static get withGameSlotsAmountThree(): GameSpec {
+    return {
+      ...GameSpecFixtures.any,
+      gameSlotsAmount: 3,
+    };
+  }
+
   public static get withGameSlotsAmountTwo(): GameSpec {
     return {
       ...GameSpecFixtures.any,

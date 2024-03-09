@@ -1,0 +1,620 @@
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+
+import { models as apiModels } from '@cornie-js/api-models';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
+import {
+  ActiveGame,
+  GameFindQuery,
+  GameSpec,
+  GameSpecFindQuery,
+  GameUpdateQuery,
+  PlayerCanDrawCardsSpec,
+  PlayerCanUpdateGameSpec,
+} from '@cornie-js/backend-game-domain/games';
+import {
+  ActiveGameFixtures,
+  ActiveGameSlotFixtures,
+  GameSpecFixtures,
+  GameUpdateQueryFixtures,
+} from '@cornie-js/backend-game-domain/games/fixtures';
+
+import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
+import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
+import { GameIdDrawCardsQueryV1Fixtures } from '../fixtures/GameIdDrawCardsQueryV1Fixtures';
+import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
+import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
+import { GameIdDrawCardsQueryV1Handler } from './GameIdDrawCardsQueryV1Handler';
+
+describe(GameIdDrawCardsQueryV1Handler.name, () => {
+  let gameDrawCardsUpdateQueryFromGameBuilderMock: jest.Mocked<
+    Builder<GameUpdateQuery, [ActiveGame]>
+  >;
+  let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
+  let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
+  let gameUpdatedEventHandlerMock: jest.Mocked<
+    Handler<[GameUpdatedEvent], void>
+  >;
+  let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
+  let playerCanDrawCardsSpecMock: jest.Mocked<PlayerCanDrawCardsSpec>;
+  let transactionProvisionOutputPortMock: jest.Mocked<TransactionProvisionOutputPort>;
+
+  let gameIdDrawCardsQueryV1Handler: GameIdDrawCardsQueryV1Handler;
+
+  beforeAll(() => {
+    gameDrawCardsUpdateQueryFromGameBuilderMock = {
+      build: jest.fn(),
+    };
+    gamePersistenceOutputPortMock = {
+      findOne: jest.fn(),
+      update: jest.fn(),
+    } as Partial<
+      jest.Mocked<GamePersistenceOutputPort>
+    > as jest.Mocked<GamePersistenceOutputPort>;
+    gameSpecPersistenceOutputPortMock = {
+      findOne: jest.fn(),
+    } as Partial<
+      jest.Mocked<GameSpecPersistenceOutputPort>
+    > as jest.Mocked<GameSpecPersistenceOutputPort>;
+    gameUpdatedEventHandlerMock = {
+      handle: jest.fn(),
+    };
+    playerCanUpdateGameSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    };
+    playerCanDrawCardsSpecMock = {
+      isSatisfiedBy: jest.fn(),
+    } as Partial<
+      jest.Mocked<PlayerCanDrawCardsSpec>
+    > as jest.Mocked<PlayerCanDrawCardsSpec>;
+    transactionProvisionOutputPortMock = {
+      provide: jest.fn(),
+    };
+
+    gameIdDrawCardsQueryV1Handler = new GameIdDrawCardsQueryV1Handler(
+      gameDrawCardsUpdateQueryFromGameBuilderMock,
+      gamePersistenceOutputPortMock,
+      gameSpecPersistenceOutputPortMock,
+      gameUpdatedEventHandlerMock,
+      playerCanUpdateGameSpecMock,
+      playerCanDrawCardsSpecMock,
+      transactionProvisionOutputPortMock,
+    );
+  });
+
+  describe('having a gameId', () => {
+    let gameIdFixture: string;
+    let gameIdDrawCardsQueryV1Fixture: apiModels.GameIdDrawCardsQueryV1;
+    let userV1Fixture: apiModels.UserV1;
+
+    beforeAll(() => {
+      gameIdFixture = ActiveGameFixtures.any.id;
+      gameIdDrawCardsQueryV1Fixture = GameIdDrawCardsQueryV1Fixtures.any;
+      userV1Fixture = UserV1Fixtures.any;
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns undefined', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          GameSpecFixtures.any,
+        );
+
+        try {
+          await gameIdDrawCardsQueryV1Handler.handle(
+            gameIdFixture,
+            gameIdDrawCardsQueryV1Fixture,
+            userV1Fixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
+        };
+
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.entityNotFound,
+          message: `Game "${gameIdFixture}" not found`,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and gameSpecPersistenceOutputPort.findOne() returns undefined', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          ActiveGameFixtures.any,
+        );
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          undefined,
+        );
+
+        try {
+          await gameIdDrawCardsQueryV1Handler.handle(
+            gameIdFixture,
+            gameIdDrawCardsQueryV1Fixture,
+            userV1Fixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
+        };
+
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unknown,
+          message: `Expecting game "${gameIdFixture}" to have spec, none found`,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+  });
+
+  describe('having a gameId, a gameIdPassTurnQueryV1 and a user', () => {
+    let gameIdFixture: string;
+    let gameIdDrawCardsQueryV1Fixture: apiModels.GameIdDrawCardsQueryV1;
+    let userV1Fixture: apiModels.UserV1;
+
+    beforeAll(() => {
+      gameIdFixture = ActiveGameFixtures.any.id;
+      gameIdDrawCardsQueryV1Fixture =
+        GameIdDrawCardsQueryV1Fixtures.withSlotIndexZero;
+      userV1Fixture = UserV1Fixtures.any;
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
+      let activeGameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        const anyFixtures: ActiveGame = ActiveGameFixtures.any;
+
+        activeGameFixture = {
+          ...anyFixtures,
+          state: {
+            ...anyFixtures.state,
+            currentPlayingSlotIndex: 0,
+            slots: [
+              {
+                ...ActiveGameSlotFixtures.withPositionZero,
+                userId: userV1Fixture.id,
+              },
+              ActiveGameSlotFixtures.withPositionOne,
+            ],
+          },
+        };
+        gameSpecFixture = GameSpecFixtures.any;
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          activeGameFixture,
+        );
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
+        );
+
+        gameDrawCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          gameUpdateQueryFixture,
+        );
+
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
+        try {
+          await gameIdDrawCardsQueryV1Handler.handle(
+            gameIdFixture,
+            gameIdDrawCardsQueryV1Fixture,
+            userV1Fixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
+        };
+
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
+      });
+
+      it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          userV1Fixture.id,
+          gameIdDrawCardsQueryV1Fixture.slotIndex,
+        );
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message:
+            'Invalid game update request. Expecting the owner of the playing slot to perform this action',
+        };
+
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns false', () => {
+      let activeGameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        const anyFixtures: ActiveGame = ActiveGameFixtures.any;
+
+        activeGameFixture = {
+          ...anyFixtures,
+          state: {
+            ...anyFixtures.state,
+            currentPlayingSlotIndex: 0,
+            slots: [
+              {
+                ...ActiveGameSlotFixtures.withPositionZero,
+                userId: userV1Fixture.id,
+              },
+              ActiveGameSlotFixtures.withPositionOne,
+            ],
+          },
+        };
+        gameSpecFixture = GameSpecFixtures.any;
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          activeGameFixture,
+        );
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
+        );
+
+        gameDrawCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          gameUpdateQueryFixture,
+        );
+
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        playerCanDrawCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
+        try {
+          await gameIdDrawCardsQueryV1Handler.handle(
+            gameIdFixture,
+            gameIdDrawCardsQueryV1Fixture,
+            userV1Fixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
+        };
+
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
+      });
+
+      it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          userV1Fixture.id,
+          gameIdDrawCardsQueryV1Fixture.slotIndex,
+        );
+      });
+
+      it('playerCanPassTurnSpec.isSatisfiedBy()', () => {
+        expect(playerCanDrawCardsSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanDrawCardsSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          gameSpecFixture.options,
+          gameIdDrawCardsQueryV1Fixture.slotIndex,
+        );
+      });
+
+      it('should throw an Error', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message: 'Player cannot draw cards',
+        };
+
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns true', () => {
+      let activeGameFixture: ActiveGame;
+      let gameSpecFixture: GameSpec;
+      let gameUpdateQueryFixture: GameUpdateQuery;
+      let transactionWrapperMock: jest.Mocked<TransactionWrapper>;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        const anyFixtures: ActiveGame = ActiveGameFixtures.any;
+
+        activeGameFixture = {
+          ...anyFixtures,
+          state: {
+            ...anyFixtures.state,
+            currentPlayingSlotIndex: 0,
+            slots: [
+              {
+                ...ActiveGameSlotFixtures.withPositionZero,
+                userId: userV1Fixture.id,
+              },
+              ActiveGameSlotFixtures.withPositionOne,
+            ],
+          },
+        };
+        gameSpecFixture = GameSpecFixtures.any;
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
+        transactionWrapperMock = {
+          tryCommit: jest.fn(),
+        } as Partial<
+          jest.Mocked<TransactionWrapper>
+        > as jest.Mocked<TransactionWrapper>;
+
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          activeGameFixture,
+        );
+        gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameSpecFixture,
+        );
+
+        gameDrawCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          gameUpdateQueryFixture,
+        );
+
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        playerCanDrawCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
+          transactionWrapperMock,
+        );
+
+        gameUpdatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
+
+        result = await gameIdDrawCardsQueryV1Handler.handle(
+          gameIdFixture,
+          gameIdDrawCardsQueryV1Fixture,
+          userV1Fixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expectedGameFindQuery: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameFindQuery,
+        );
+      });
+
+      it('should call gameSpecPersistenceOutputPort.findOne()', () => {
+        const expectedGameSpecFindQuery: GameSpecFindQuery = {
+          gameIds: [gameIdFixture],
+        };
+
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameSpecPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expectedGameSpecFindQuery,
+        );
+      });
+
+      it('should call playerCanUpdateGameSpec.isSatisfiedBy()', () => {
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanUpdateGameSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          userV1Fixture.id,
+          gameIdDrawCardsQueryV1Fixture.slotIndex,
+        );
+      });
+
+      it('should call playerCanPassTurnSpec.isSatisfiedBy()', () => {
+        expect(playerCanDrawCardsSpecMock.isSatisfiedBy).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(playerCanDrawCardsSpecMock.isSatisfiedBy).toHaveBeenCalledWith(
+          activeGameFixture,
+          gameSpecFixture.options,
+          gameIdDrawCardsQueryV1Fixture.slotIndex,
+        );
+      });
+
+      it('should call gameDrawCardsUpdateQueryFromGameBuilder.build()', () => {
+        expect(
+          gameDrawCardsUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameDrawCardsUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledWith(activeGameFixture);
+      });
+
+      it('should call transactionProvisionOutputPort.provide()', () => {
+        expect(
+          transactionProvisionOutputPortMock.provide,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          transactionProvisionOutputPortMock.provide,
+        ).toHaveBeenCalledWith();
+      });
+
+      it('should call gamePersistenceOutputPort.update()', () => {
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
+          gameUpdateQueryFixture,
+          transactionWrapperMock,
+        );
+      });
+
+      it('should call gameUpdatedEventHandler.handle()', () => {
+        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+          gameBeforeUpdate: activeGameFixture,
+          transactionWrapper: transactionWrapperMock,
+        };
+
+        expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(gameUpdatedEventHandlerMock.handle).toHaveBeenCalledWith(
+          expectedGameUpdatedEvent,
+        );
+      });
+
+      it('should call transactionWrapper.tryCommit()', () => {
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
+        expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+});
