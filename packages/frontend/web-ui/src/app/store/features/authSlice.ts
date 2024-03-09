@@ -7,43 +7,37 @@ import {
 } from '@reduxjs/toolkit';
 import { createAuthByCredentials } from '../thunk/createAuthByCredentials';
 import { createAuthByToken } from '../thunk/createAuthByToken';
-import {
-  STATUS_AUTH_AUTHENTICATED,
-  STATUS_AUTH_CHECKING,
-  STATUS_AUTH_NOT_AUTHENTICATED,
-} from '../data/authSliceStatus';
 import { AuthState } from '../helpers/models/AuthState';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 
-function createAuthPendingReducer(state: AuthState): void {
-  state.status = STATUS_AUTH_CHECKING;
-  state.token = null;
-  state.errorMessage = null;
+function createAuthPendingReducer(): AuthState {
+  return {
+    status: AuthStateStatus.pending,
+  };
 }
 
 function createAuthFulfilledReducer(
-  state: AuthState,
+  _state: AuthState,
   action: PayloadAction<AuthSerializedResponse>,
-): void {
-  state.status = STATUS_AUTH_NOT_AUTHENTICATED;
-
+): AuthState {
   switch (action.payload.statusCode) {
     case 200:
-      state.status = STATUS_AUTH_AUTHENTICATED;
-      state.token = action.payload.body.jwt;
-      break;
-    case 400:
-    case 401:
-      state.errorMessage = 'Invalid operation, please try again later';
-      break;
+      return {
+        status: AuthStateStatus.authenticated,
+        token: action.payload.body.jwt,
+      };
     default:
-      state.errorMessage = 'An error occurred, please try again later';
+      return {
+        status: AuthStateStatus.nonAuthenticated,
+      };
   }
 }
 
-function createAuthRejectedReducer(state: AuthState): void {
-  state.status = STATUS_AUTH_NOT_AUTHENTICATED;
-  state.errorMessage = 'An error occurred, please try again later';
+function createAuthRejectedReducer(): AuthState {
+  return {
+    status: AuthStateStatus.nonAuthenticated,
+  };
 }
 
 const initialState: AuthState = createInitialState();

@@ -4,14 +4,16 @@ import { buildSerializableResponse } from '../../../common/http/helpers/buildSer
 import { AuthResponse } from '../../../common/http/models/AuthResponse';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 
-interface FormField {
+export interface CreateAuthByCredentialsParams {
   email: string;
   password: string;
 }
 
 export const createAuthByCredentials = createAsyncThunk(
   'auth/createAuthByCredentials',
-  async (formField: FormField): Promise<AuthSerializedResponse> => {
+  async (
+    formField: CreateAuthByCredentialsParams,
+  ): Promise<AuthSerializedResponse> => {
     const response: AuthResponse = await httpClient.createAuth(
       {},
       {
