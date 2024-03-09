@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
+import { GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder } from '../../typeorm/builders/GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder';
 import { GameActionFromGameActionDbBuilder } from '../../typeorm/builders/GameActionFromGameActionDbBuilder';
 import { GameActionDb } from '../../typeorm/models/GameActionDb';
 
@@ -16,7 +17,10 @@ export class GameActionsDbModule {
         dbModuleOptions.builders.feature([GameActionDb]),
       ],
       module: GameActionsDbModule,
-      providers: [GameActionFromGameActionDbBuilder],
+      providers: [
+        GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder,
+        GameActionFromGameActionDbBuilder,
+      ],
     };
   }
 }

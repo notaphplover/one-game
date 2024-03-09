@@ -1,13 +1,17 @@
 import { GameDbFixtures } from '../../../../games/adapter/typeorm/fixtures/GameDbFixtures';
+import { GameDb } from '../../../../games/adapter/typeorm/models/GameDb';
 import { GameActionDb } from '../models/GameActionDb';
 import { GameActionDbPayloadV1Fixtures } from './GameActionDbPayloadV1Fixtures';
 
 export class GameActionDbFixtures {
   public static get any(): GameActionDb {
+    const gameDbFixture: GameDb =
+      GameDbFixtures.withStatusActiveAndGameSlotsOne;
+
     return {
       currentPlayingSlotIndex: 0,
-      game: GameDbFixtures.withStatusActiveAndGameSlotsOne,
-      gameId: GameDbFixtures.withStatusActiveAndGameSlotsOne.id,
+      game: gameDbFixture,
+      gameId: gameDbFixture.id,
       id: '20f00a2b-bc9f-47fd-afb2-c2ed1b60e1b3',
       payload: JSON.stringify(GameActionDbPayloadV1Fixtures.any),
       position: 0,
