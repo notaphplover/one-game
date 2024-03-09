@@ -49,6 +49,7 @@ export class GameActionFromGameActionDbBuilder
           draw: payload.draw.map((cardDb: CardDb) =>
             this.#cardBuilder.build(cardDb),
           ),
+          gameId: gameActionDb.gameId,
           kind: GameActionKind.draw,
           position: gameActionDb.position,
           turn: gameActionDb.turn,
@@ -56,6 +57,7 @@ export class GameActionFromGameActionDbBuilder
       case GameActionDbPayloadV1Kind.passTurn:
         return {
           currentPlayingSlotIndex: gameActionDb.currentPlayingSlotIndex,
+          gameId: gameActionDb.gameId,
           kind: GameActionKind.passTurn,
           position: gameActionDb.position,
           turn: gameActionDb.turn,
@@ -66,6 +68,7 @@ export class GameActionFromGameActionDbBuilder
             this.#cardBuilder.build(cardDb),
           ),
           currentPlayingSlotIndex: gameActionDb.currentPlayingSlotIndex,
+          gameId: gameActionDb.gameId,
           kind: GameActionKind.playCards,
           position: gameActionDb.position,
           turn: gameActionDb.turn,
