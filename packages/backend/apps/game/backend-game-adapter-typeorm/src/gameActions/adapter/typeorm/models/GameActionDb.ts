@@ -13,7 +13,7 @@ import { GameDb } from '../../../../games/adapter/typeorm/models/GameDb';
 @Entity({
   name: 'GameAction',
 })
-@Index(['game', 'position'])
+@Index(['game', 'position'], { unique: true })
 @Index(['game', 'turn'])
 export class GameActionDb {
   @Column({
