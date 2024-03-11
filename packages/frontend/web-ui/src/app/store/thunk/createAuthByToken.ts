@@ -1,11 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { httpClient } from '../../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
+import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import { AuthResponse } from '../../../common/http/models/AuthResponse';
 
 export const createAuthByToken = createAsyncThunk(
   'auth/createAuthByToken',
-  async (code) => {
-    const response = await httpClient.createAuth(
+  async (code: string): Promise<AuthSerializedResponse> => {
+    const response: AuthResponse = await httpClient.createAuth(
       {},
       {
         code: code,
