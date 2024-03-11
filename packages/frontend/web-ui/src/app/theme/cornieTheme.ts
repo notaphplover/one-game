@@ -6,13 +6,12 @@ import {
 } from '@mui/material/styles';
 
 interface CorniePaletteOptions extends PaletteOptions {
-  primary?: SimplePaletteColorOptions;
-  secondary?: SimplePaletteColorOptions;
+  primary: SimplePaletteColorOptions;
+  secondary: SimplePaletteColorOptions;
 }
 
 const corniePalette: CorniePaletteOptions = {
   primary: {
-    //white: '#fff',
     light: '#a44fbb',
     main: '#8e24aa',
     dark: '#631976',
@@ -43,14 +42,14 @@ export const cornieTheme: Theme = createTheme({
     MuiFormLabel: {
       defaultProps: {
         style: {
-          color: corniePalette.secondary?.dark,
+          color: corniePalette.secondary.dark,
         },
       },
     },
     MuiInputBase: {
       defaultProps: {
         style: {
-          color: corniePalette.secondary?.dark,
+          color: corniePalette.secondary.dark,
         },
       },
     },
