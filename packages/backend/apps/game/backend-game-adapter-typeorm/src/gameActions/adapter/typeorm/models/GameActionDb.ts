@@ -13,9 +13,15 @@ import { GameDb } from '../../../../games/adapter/typeorm/models/GameDb';
 @Entity({
   name: 'GameAction',
 })
-@Index(['game', 'position'])
+@Index(['game', 'position'], { unique: true })
 @Index(['game', 'turn'])
 export class GameActionDb {
+  @Column({
+    name: 'current_playing_slot',
+    type: 'smallint',
+  })
+  public readonly currentPlayingSlotIndex!: number;
+
   @ManyToOne(() => GameDb, undefined, { nullable: false })
   @JoinColumn({ name: 'game_id' })
   public readonly game!: GameDb;

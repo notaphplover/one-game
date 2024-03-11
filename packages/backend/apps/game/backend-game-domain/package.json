@@ -32,6 +32,8 @@
     ".": "./lib/index.js",
     "./cards": "./lib/cards/domain/index.js",
     "./cards/fixtures": "./lib/cards/domain/fixtures/index.js",
+    "./gameActions": "./lib/gameActions/domain/index.js",
+    "./gameActions/fixtures": "./lib/gameActions/domain/fixtures/index.js",
     "./games": "./lib/games/domain/index.js",
     "./games/fixtures": "./lib/games/domain/fixtures/index.js",
     "./gameSnapshots": "./lib/gameSnapshots/domain/index.js",

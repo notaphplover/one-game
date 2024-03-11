@@ -3,28 +3,26 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
-import { AreCardsEqualsSpec } from '../../../cards/domain/specs/AreCardsEqualsSpec';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { ActiveGame } from '../entities/ActiveGame';
 import { ActiveGameFixtures } from '../fixtures/ActiveGameFixtures';
 import { ActiveGameSlotFixtures } from '../fixtures/ActiveGameSlotFixtures';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
+import { GameDrawService } from '../services/GameDrawService';
 import { GameService } from '../services/GameService';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GamePlayCardsUpdateQueryFromGameBuilder } from './GamePlayCardsUpdateQueryFromGameBuilder';
 
 describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
-  let areCardsEqualsSpecMock: jest.Mocked<AreCardsEqualsSpec>;
+  let gameDrawServiceMock: jest.Mocked<GameDrawService>;
   let gameServiceMock: jest.Mocked<GameService>;
 
   let gamePlayCardsUpdateQueryFromGameBuilder: GamePlayCardsUpdateQueryFromGameBuilder;
 
   beforeAll(() => {
-    areCardsEqualsSpecMock = {
-      isSatisfiedBy: jest.fn(),
-    } as Partial<
-      jest.Mocked<AreCardsEqualsSpec>
-    > as jest.Mocked<AreCardsEqualsSpec>;
+    gameDrawServiceMock = {
+      putCards: jest.fn(),
+    } as Partial<jest.Mocked<GameDrawService>> as jest.Mocked<GameDrawService>;
 
     gameServiceMock = {
       getGameSlotOrThrow: jest.fn() as unknown,
@@ -32,7 +30,7 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
 
     gamePlayCardsUpdateQueryFromGameBuilder =
       new GamePlayCardsUpdateQueryFromGameBuilder(
-        areCardsEqualsSpecMock,
+        gameDrawServiceMock,
         gameServiceMock,
       );
   });
@@ -125,8 +123,6 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
             gameSlotFixture,
           );
 
-          areCardsEqualsSpecMock.isSatisfiedBy.mockReturnValue(false);
-
           result = gamePlayCardsUpdateQueryFromGameBuilder.build(
             gameFixture,
             cardIndexesFixture,
@@ -136,8 +132,6 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
 
         afterAll(() => {
           jest.clearAllMocks();
-
-          areCardsEqualsSpecMock.isSatisfiedBy.mockReset();
         });
 
         it('should call gameService.getGameSlotOrThrow()', () => {
@@ -145,6 +139,14 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
           expect(gameServiceMock.getGameSlotOrThrow).toHaveBeenCalledWith(
             gameFixture,
             slotIndexFixture,
+          );
+        });
+
+        it('should call gameDrawService.putCards()', () => {
+          expect(gameDrawServiceMock.putCards).toHaveBeenCalledTimes(1);
+          expect(gameDrawServiceMock.putCards).toHaveBeenCalledWith(
+            gameFixture.state.discardPile,
+            expect.any(Array),
           );
         });
 
@@ -157,13 +159,7 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
           const expectedGameUpdateQuery: GameUpdateQuery = {
             currentCard: cardFixture,
             currentTurnCardsPlayed: true,
-            discardPile: [
-              ...gameFixture.state.discardPile,
-              {
-                amount: 1,
-                card: cardFixture,
-              },
-            ],
+            discardPile: gameFixture.state.discardPile,
             gameFindQuery: {
               id: gameFixture.id,
               state: {

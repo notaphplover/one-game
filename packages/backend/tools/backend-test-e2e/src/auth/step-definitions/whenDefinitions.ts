@@ -40,17 +40,18 @@ export async function whenCreateCodeAuthRequestIsSendFromUserActivationMail(
 
   await deleteMaildevServerEmailsToAddress(userCreateQueryV1.email);
 
-  const authCreateQuery: apiModels.CodeAuthCreateQueryV1 = {
+  const authCreateQuery: apiModels.CodeAuthCreateQueryV2 = {
     code: userCode,
+    kind: 'code',
   };
 
-  const requestParameters: Parameters<HttpClient['createAuth']> = [
+  const requestParameters: Parameters<HttpClient['createAuthV2']> = [
     {},
     authCreateQuery,
   ];
 
   setRequestParameters.bind(this)(
-    'createAuth',
+    'createAuthV2',
     processedRequestAlias,
     requestParameters,
   );
@@ -62,7 +63,7 @@ export async function whenCreateAuthRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
 ): Promise<void> {
-  await sendRequest.bind(this)('createAuth', requestAlias);
+  await sendRequest.bind(this)('createAuthV2', requestAlias);
 }
 
 When<OneGameApiWorld>(

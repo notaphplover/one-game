@@ -8,7 +8,7 @@
     "@cornie-js/backend-application-mail": "workspace:*",
     "@nestjs/common": "10.3.3",
     "@types/nodemailer": "6.4.14",
-    "nodemailer": "6.9.11"
+    "nodemailer": "6.9.12"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",

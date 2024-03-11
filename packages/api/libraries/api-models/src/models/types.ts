@@ -134,6 +134,7 @@ export interface ActiveGameStateV1 {
   currentColor: CardColorV1;
   currentDirection: GameDirectionV1;
   currentPlayingSlotIndex: number;
+  currentTurnCardsDrawn: boolean;
   currentTurnCardsPlayed: boolean;
   drawCount: number;
   slots: ActiveGameSlotV1[];
