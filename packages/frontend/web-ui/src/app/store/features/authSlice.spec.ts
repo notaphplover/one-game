@@ -5,7 +5,7 @@ import {
   CreateAuthByCredentialsParams,
   createAuthByCredentials,
 } from '../thunk/createAuthByCredentials';
-import { PayloadAction, Slice, UnknownAction } from '@reduxjs/toolkit';
+import { PayloadAction, UnknownAction } from '@reduxjs/toolkit';
 import {
   AuthState,
   NonAuthenticatedAuthState,
