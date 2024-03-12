@@ -10,6 +10,7 @@ import { createAuthByToken } from '../thunk/createAuthByToken';
 import { AuthState } from '../helpers/models/AuthState';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
+import type { RootState } from '../store';
 
 function createAuthPendingReducer(): AuthState {
   return {
@@ -56,5 +57,7 @@ export const authSlice: Slice = createSlice({
       .addCase(createAuthByCredentials.rejected, createAuthRejectedReducer);
   },
 });
+
+export const selectAuthToken = (state: RootState) => state.auth.token;
 
 export default authSlice;

@@ -3,7 +3,7 @@ import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 jest.mock('../../common/http/services/HttpService');
 jest.mock('react-redux', () => {
   return {
-    ...(jest.requireActual('react-redux') ?? {}),
+    ...(jest.requireActual('react-redux') as Record<string, unknown>),
     useSelector: jest.fn(),
   };
 });

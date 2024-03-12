@@ -1,48 +1,48 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import { render } from '@testing-library/react';
-import { useSelector } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import { CornieHome } from './CornieHome';
 
 jest.mock('react-redux', () => {
   return {
-    ...jest.requireActual('react-redux'),
+    ...(jest.requireActual('react-redux') as Record<string, unknown>),
     useSelector: jest.fn(),
   };
 });
+
+import { RenderResult, render } from '@testing-library/react';
+import { UseSelector, useSelector } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { CornieHome } from './CornieHome';
 
 const HOME_PAGE = '#home-page';
 const HOME_PAGE_WITH_AUTH = '#home-page-with-auth';
 
 describe(CornieHome.name, () => {
-  let tokenFixture;
-  let errorMessageFixture;
+  let tokenFixture: unknown;
 
   beforeAll(() => {
     tokenFixture = null;
-    errorMessageFixture = null;
   });
 
   describe('when called, and useSelector() returns a null token', () => {
-    let result;
-    let shownPage;
+    let shownPage: Element | null;
 
     beforeAll(() => {
       tokenFixture = null;
-      errorMessageFixture = null;
 
-      useSelector.mockImplementation(() => ({
+      (
+        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
+          typeof useSelector
+        >
+      ).mockImplementation((() => ({
         token: tokenFixture,
-        errorMessage: errorMessageFixture,
-      }));
+      })) as Partial<UseSelector<unknown>> as UseSelector<unknown>);
 
-      result = render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <CornieHome />
         </MemoryRouter>,
       );
 
-      shownPage = result.container.querySelector(HOME_PAGE);
+      shownPage = renderResult.container.querySelector(HOME_PAGE);
     });
 
     afterAll(() => {
@@ -56,25 +56,26 @@ describe(CornieHome.name, () => {
   });
 
   describe('when called, and useSelector() returns a valid token', () => {
-    let result;
-    let shownPage;
+    let shownPage: Element | null;
 
     beforeAll(() => {
       tokenFixture = 'jwt token fixture';
-      errorMessageFixture = null;
 
-      useSelector.mockImplementation(() => ({
+      (
+        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
+          typeof useSelector
+        >
+      ).mockImplementation((() => ({
         token: tokenFixture,
-        errorMessage: errorMessageFixture,
-      }));
+      })) as Partial<UseSelector<unknown>> as UseSelector<unknown>);
 
-      result = render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <CornieHome />
         </MemoryRouter>,
       );
 
-      shownPage = result.container.querySelector(HOME_PAGE_WITH_AUTH);
+      shownPage = renderResult.container.querySelector(HOME_PAGE_WITH_AUTH);
     });
 
     afterAll(() => {
