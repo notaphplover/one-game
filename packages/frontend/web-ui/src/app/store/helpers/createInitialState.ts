@@ -1,22 +1,17 @@
 import { AuthState } from './models/AuthState';
-import {
-  STATUS_AUTH_AUTHENTICATED,
-  STATUS_AUTH_NOT_AUTHENTICATED,
-} from '../data/authSliceStatus';
+import { AuthStateStatus } from './models/AuthStateStatus';
 
 export const createInitialState = (): AuthState => {
   const token: string | null = window.localStorage.getItem('token');
-  let status: string;
 
   if (token === null) {
-    status = STATUS_AUTH_NOT_AUTHENTICATED;
+    return {
+      status: AuthStateStatus.nonAuthenticated,
+    };
   } else {
-    status = STATUS_AUTH_AUTHENTICATED;
+    return {
+      status: AuthStateStatus.authenticated,
+      token,
+    };
   }
-
-  return {
-    status,
-    token,
-    errorMessage: null,
-  };
 };

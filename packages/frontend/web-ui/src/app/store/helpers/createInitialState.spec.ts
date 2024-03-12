@@ -1,10 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { createInitialState } from './createInitialState';
 import { AuthState } from './models/AuthState';
-import {
-  STATUS_AUTH_AUTHENTICATED,
-  STATUS_AUTH_NOT_AUTHENTICATED,
-} from '../data/authSliceStatus';
+import { AuthStateStatus } from './models/AuthStateStatus';
 
 describe(createInitialState.name, () => {
   let getItemSpy: jest.SpiedFunction<typeof window.localStorage.getItem>;
@@ -41,11 +38,9 @@ describe(createInitialState.name, () => {
     });
 
     it('should return an initial state without token', () => {
-      expect(result).toStrictEqual({
-        status: STATUS_AUTH_NOT_AUTHENTICATED,
-        token: null,
-        errorMessage: null,
-      });
+      const expected: AuthState = { status: AuthStateStatus.nonAuthenticated };
+
+      expect(result).toStrictEqual(expected);
     });
   });
 
@@ -71,11 +66,12 @@ describe(createInitialState.name, () => {
     });
 
     it('should return an initial state with token', () => {
-      expect(result).toStrictEqual({
-        status: STATUS_AUTH_AUTHENTICATED,
+      const expected: AuthState = {
+        status: AuthStateStatus.authenticated,
         token: tokenFixture,
-        errorMessage: null,
-      });
+      };
+
+      expect(result).toStrictEqual(expected);
     });
   });
 });

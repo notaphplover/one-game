@@ -1,22 +1,38 @@
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { createAuthByToken } from './createAuthByToken';
-import { httpClient } from '../../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../../common/http/services/HttpService');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');
 
-describe(createAuthByToken.name, () => {
+import {
+  CreateAuthByCredentialsParams,
+  createAuthByCredentials,
+} from './createAuthByCredentials';
+import { httpClient } from '../../../common/http/services/HttpService';
+import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
+import { AuthResponse } from '../../../common/http/models/AuthResponse';
+import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+
+describe('createAuthByCredentials', () => {
   describe('when called', () => {
-    let codeFixture;
-    let dispatchMock;
-    let authResponseFixture;
-    let serializableResponseFixture;
-    let result;
+    let emailPasswordFixture: CreateAuthByCredentialsParams;
+    let dispatchMock: jest.Mock;
+    let getStateMock: jest.Mock;
+    let extraMock: unknown;
+    let authResponseFixture: AuthResponse;
+    let serializableResponseFixture: AuthSerializedResponse;
+    let result: unknown;
 
     beforeAll(async () => {
-      codeFixture = 'code-fixture';
+      emailPasswordFixture = {
+        email: 'email-fixture',
+        password: 'password-fixture',
+      };
+
       dispatchMock = jest.fn();
+      getStateMock = jest.fn();
+      extraMock = {
+        extra: 'fixture',
+      };
 
       authResponseFixture = {
         headers: {},
@@ -33,12 +49,18 @@ describe(createAuthByToken.name, () => {
         statusCode: 200,
       };
 
-      httpClient.createAuth.mockResolvedValueOnce(authResponseFixture);
-      buildSerializableResponse.mockReturnValueOnce(
-        serializableResponseFixture,
-      );
+      (
+        httpClient.createAuth as jest.Mock<typeof httpClient.createAuth>
+      ).mockResolvedValueOnce(authResponseFixture);
+      (
+        buildSerializableResponse as jest.Mock<typeof buildSerializableResponse>
+      ).mockReturnValueOnce(serializableResponseFixture);
 
-      result = await createAuthByToken(codeFixture)(dispatchMock);
+      result = await createAuthByCredentials(emailPasswordFixture)(
+        dispatchMock,
+        getStateMock,
+        extraMock,
+      );
     });
 
     afterAll(() => {
@@ -69,9 +91,7 @@ describe(createAuthByToken.name, () => {
       expect(httpClient.createAuth).toHaveBeenCalledTimes(1);
       expect(httpClient.createAuth).toHaveBeenCalledWith(
         {},
-        {
-          code: codeFixture,
-        },
+        emailPasswordFixture,
       );
     });
 

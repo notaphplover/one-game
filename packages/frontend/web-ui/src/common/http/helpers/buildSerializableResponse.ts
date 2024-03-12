@@ -1,22 +1,13 @@
 import { Response } from '@cornie-js/api-http-client';
-
-export interface SerializableResponse<
-  TBody,
-  TStatusCode extends number = number,
-> {
-  body: TBody;
-  statusCode: TStatusCode;
-}
+import { SerializableResponseUnion } from '../models/SerializableResponseUnion';
 
 export function buildSerializableResponse<
-  THeaders extends Record<string, string>,
   TBody,
   TStatusCode extends number,
->(
-  response: Response<THeaders, TBody, TStatusCode>,
-): SerializableResponse<TBody, TStatusCode> {
+  TResponse extends Response<Record<string, string>, TBody, TStatusCode>,
+>(response: TResponse): SerializableResponseUnion<TResponse> {
   return {
     body: response.body,
     statusCode: response.statusCode,
-  };
+  } as SerializableResponseUnion<TResponse>;
 }
