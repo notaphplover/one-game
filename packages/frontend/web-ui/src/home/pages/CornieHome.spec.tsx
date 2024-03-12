@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('react-redux', () => {
   return {
-    ...(jest.requireActual('react-redux') ?? {}),
+    ...(jest.requireActual('react-redux') as Record<string, unknown>),
     useSelector: jest.fn(),
   };
 });
