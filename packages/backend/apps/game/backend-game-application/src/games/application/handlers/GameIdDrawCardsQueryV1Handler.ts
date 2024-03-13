@@ -5,9 +5,12 @@ import {
   Builder,
   Handler,
 } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
   GameDrawCardsUpdateQueryFromGameBuilder,
+  GameDrawMutation,
+  GameDrawService,
   GameSpec,
   GameUpdateQuery,
   PlayerCanDrawCardsSpec,
@@ -31,20 +34,25 @@ import {
 import { GameIdUpdateQueryV1Handler } from './GameIdUpdateQueryV1Handler';
 import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
+const MIN_CARDS_TO_DRAW: number = 1;
+
 @Injectable()
 export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<apiModels.GameIdDrawCardsQueryV1> {
   readonly #gameDrawCardsUpdateQueryFromGameBuilder: Builder<
     GameUpdateQuery,
-    [ActiveGame]
+    [ActiveGame, GameDrawMutation]
   >;
+  readonly #gameDrawService: GameDrawService;
   readonly #playerCanDrawCardsSpec: PlayerCanDrawCardsSpec;
 
   constructor(
     @Inject(GameDrawCardsUpdateQueryFromGameBuilder)
     gameDrawCardsUpdateQueryFromGameBuilder: Builder<
       GameUpdateQuery,
-      [ActiveGame]
+      [ActiveGame, GameDrawMutation]
     >,
+    @Inject(GameDrawService)
+    gameDrawService: GameDrawService,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(gameSpecPersistenceOutputPortSymbol)
@@ -68,11 +76,8 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
 
     this.#gameDrawCardsUpdateQueryFromGameBuilder =
       gameDrawCardsUpdateQueryFromGameBuilder;
+    this.#gameDrawService = gameDrawService;
     this.#playerCanDrawCardsSpec = playerCanDrawCardsSpec;
-  }
-
-  protected override _buildUpdateQueries(game: ActiveGame): GameUpdateQuery[] {
-    return [this.#gameDrawCardsUpdateQueryFromGameBuilder.build(game)];
   }
 
   protected override _checkUnprocessableOperation(
@@ -92,5 +97,36 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
         'Player cannot draw cards',
       );
     }
+  }
+  protected override async _handleUpdateGame(
+    game: ActiveGame,
+    _gameSpec: GameSpec,
+    _gameIdUpdateQueryV1: apiModels.GameIdDrawCardsQueryV1,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<GameUpdatedEvent> {
+    const drawMutation: GameDrawMutation = this.#buildDrawMutation(game);
+
+    const gameUpdateQuery: GameUpdateQuery =
+      this.#gameDrawCardsUpdateQueryFromGameBuilder.build(game, drawMutation);
+
+    await this._updateGame([gameUpdateQuery], transactionWrapper);
+
+    return {
+      gameBeforeUpdate: game,
+      transactionWrapper,
+    };
+  }
+
+  #buildDrawMutation(game: ActiveGame): GameDrawMutation {
+    const cardsToDraw: number = Math.max(
+      MIN_CARDS_TO_DRAW,
+      game.state.drawCount,
+    );
+
+    return this.#gameDrawService.calculateDrawMutation(
+      game.state.deck,
+      game.state.discardPile,
+      cardsToDraw,
+    );
   }
 }

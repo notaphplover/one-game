@@ -5,6 +5,7 @@ import {
   Builder,
   Handler,
 } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
@@ -95,7 +96,43 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       gamePlayCardsUpdateQueryFromGameBuilder;
   }
 
-  protected override _buildUpdateQueries(
+  protected override _checkUnprocessableOperation(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+    gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
+  ): void {
+    if (
+      !this.#currentPlayerCanPlayCardsSpec.isSatisfiedBy(
+        game,
+        gameSpec.options,
+        gameIdUpdateQueryV1.cardIndexes,
+      )
+    ) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        'Operation not allowed. Reason: selected cards cannot be played in the current context',
+      );
+    }
+  }
+
+  protected override async _handleUpdateGame(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+    gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<GameUpdatedEvent> {
+    await this._updateGame(
+      this.#buildUpdateQueries(game, gameSpec, gameIdUpdateQueryV1),
+      transactionWrapper,
+    );
+
+    return {
+      gameBeforeUpdate: game,
+      transactionWrapper,
+    };
+  }
+
+  #buildUpdateQueries(
     game: ActiveGame,
     gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
@@ -129,25 +166,6 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       );
 
     return [gamePlayCardsUpdatequery, gameCardsEffectUpdateQuery];
-  }
-
-  protected override _checkUnprocessableOperation(
-    game: ActiveGame,
-    gameSpec: GameSpec,
-    gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
-  ): void {
-    if (
-      !this.#currentPlayerCanPlayCardsSpec.isSatisfiedBy(
-        game,
-        gameSpec.options,
-        gameIdUpdateQueryV1.cardIndexes,
-      )
-    ) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        'Operation not allowed. Reason: selected cards cannot be played in the current context',
-      );
-    }
   }
 
   #getColorOrUndefined(
