@@ -4,31 +4,29 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { ActiveGame } from '../entities/ActiveGame';
 import { GameUpdateQuery } from '../query/GameUpdateQuery';
-import { GameDrawService } from '../services/GameDrawService';
 import { GameService } from '../services/GameService';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameDrawMutation } from '../valueObjects/GameDrawMutation';
 
-const MIN_CARDS_TO_DRAW: number = 1;
+const SINGLE_DRAW_AMOUNT: number = 1;
 
 @Injectable()
 export class GameDrawCardsUpdateQueryFromGameBuilder
-  implements Builder<GameUpdateQuery, [ActiveGame]>
+  implements Builder<GameUpdateQuery, [ActiveGame, GameDrawMutation]>
 {
-  readonly #gameDrawService: GameDrawService;
   readonly #gameService: GameService;
 
   constructor(
-    @Inject(GameDrawService)
-    gameDrawService: GameDrawService,
     @Inject(GameService)
     gameService: GameService,
   ) {
-    this.#gameDrawService = gameDrawService;
     this.#gameService = gameService;
   }
 
-  public build(game: ActiveGame): GameUpdateQuery {
+  public build(
+    game: ActiveGame,
+    drawMutation: GameDrawMutation,
+  ): GameUpdateQuery {
     const gameUpdateQuery: GameUpdateQuery = {
       currentTurnCardsDrawn: true,
       drawCount: 0,
@@ -40,7 +38,7 @@ export class GameDrawCardsUpdateQueryFromGameBuilder
       },
     };
 
-    this.#setGameUpdateQueryDrawCards(game, gameUpdateQuery);
+    this.#setGameUpdateQueryDrawCards(game, drawMutation, gameUpdateQuery);
 
     return gameUpdateQuery;
   }
@@ -63,25 +61,14 @@ export class GameDrawCardsUpdateQueryFromGameBuilder
 
   #setGameUpdateQueryDrawCards(
     game: ActiveGame,
+    drawMutation: GameDrawMutation,
     gameUpdateQuery: GameUpdateQuery,
   ): void {
-    const cardsToDraw: number = Math.max(
-      MIN_CARDS_TO_DRAW,
-      game.state.drawCount,
-    );
-
-    const drawMutation: GameDrawMutation =
-      this.#gameDrawService.calculateDrawMutation(
-        game.state.deck,
-        game.state.discardPile,
-        cardsToDraw,
-      );
-
     if (drawMutation.isDiscardPileEmptied) {
       gameUpdateQuery.discardPile = [];
     }
 
-    if (cardsToDraw === MIN_CARDS_TO_DRAW) {
+    if (drawMutation.cards.length === SINGLE_DRAW_AMOUNT) {
       this.#setGameUpdateQueryCurrentTurnSingleCardDraw(
         gameUpdateQuery,
         drawMutation,

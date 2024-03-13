@@ -53,28 +53,31 @@ export abstract class GameIdUpdateQueryV1Handler<
 
     this._checkUnprocessableOperation(game, gameSpec, gameIdUpdateQueryV1);
 
-    const gameUpdateQueries: GameUpdateQuery[] = this._buildUpdateQueries(
-      game,
-      gameSpec,
-      gameIdUpdateQueryV1,
-    );
-
     const transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
+    const gameUpdatedEvent: GameUpdatedEvent = await this._handleUpdateGame(
+      game,
+      gameSpec,
+      gameIdUpdateQueryV1,
+      transactionWrapper,
+    );
+
+    await this.#gameUpdatedEventHandler.handle(gameUpdatedEvent);
+
+    await transactionWrapper.tryCommit();
+  }
+
+  protected async _updateGame(
+    gameUpdateQueries: GameUpdateQuery[],
+    transactionWrapper: TransactionWrapper,
+  ): Promise<void> {
     for (const gameUpdateQuery of gameUpdateQueries) {
       await this.#gamePersistenceOutputPort.update(
         gameUpdateQuery,
         transactionWrapper,
       );
     }
-
-    await this.#gameUpdatedEventHandler.handle({
-      gameBeforeUpdate: game,
-      transactionWrapper,
-    });
-
-    await transactionWrapper.tryCommit();
   }
 
   #checkRightPlayer(
@@ -142,15 +145,16 @@ export abstract class GameIdUpdateQueryV1Handler<
     return game.state.status === GameStatus.active;
   }
 
-  protected abstract _buildUpdateQueries(
-    game: ActiveGame,
-    gameSpec: GameSpec,
-    gameIdUpdateQueryV1: TQuery,
-  ): GameUpdateQuery[];
-
   protected abstract _checkUnprocessableOperation(
     game: ActiveGame,
     gameSpec: GameSpec,
     gameIdUpdateQueryV1: TQuery,
   ): void;
+
+  protected abstract _handleUpdateGame(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+    gameIdUpdateQueryV1: TQuery,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<GameUpdatedEvent>;
 }

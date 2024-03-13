@@ -10,6 +10,8 @@ import {
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
+  GameDrawMutation,
+  GameDrawService,
   GameFindQuery,
   GameSpec,
   GameSpecFindQuery,
@@ -22,6 +24,7 @@ import {
   ActiveGameSlotFixtures,
   GameSpecFixtures,
   GameUpdateQueryFixtures,
+  GameDrawMutationFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
@@ -36,6 +39,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
   let gameDrawCardsUpdateQueryFromGameBuilderMock: jest.Mocked<
     Builder<GameUpdateQuery, [ActiveGame]>
   >;
+  let gameDrawServiceMock: jest.Mocked<GameDrawService>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gameUpdatedEventHandlerMock: jest.Mocked<
@@ -51,6 +55,9 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
     gameDrawCardsUpdateQueryFromGameBuilderMock = {
       build: jest.fn(),
     };
+    gameDrawServiceMock = {
+      calculateDrawMutation: jest.fn(),
+    } as Partial<jest.Mocked<GameDrawService>> as jest.Mocked<GameDrawService>;
     gamePersistenceOutputPortMock = {
       findOne: jest.fn(),
       update: jest.fn(),
@@ -79,6 +86,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
 
     gameIdDrawCardsQueryV1Handler = new GameIdDrawCardsQueryV1Handler(
       gameDrawCardsUpdateQueryFromGameBuilderMock,
+      gameDrawServiceMock,
       gamePersistenceOutputPortMock,
       gameSpecPersistenceOutputPortMock,
       gameUpdatedEventHandlerMock,
@@ -240,7 +248,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       userV1Fixture = UserV1Fixtures.any;
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
       let gameUpdateQueryFixture: GameUpdateQuery;
@@ -343,10 +351,9 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns false', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanDrawCardsSpec.isSatisfiedBy() returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
-      let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
 
@@ -368,17 +375,12 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
           },
         };
         gameSpecFixture = GameSpecFixtures.any;
-        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
         );
         gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           gameSpecFixture,
-        );
-
-        gameDrawCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
-          gameUpdateQueryFixture,
         );
 
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
@@ -458,9 +460,10 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       });
     });
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns true', () => {
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanDrawCardsSpec.isSatisfiedBy() returns true', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
+      let gameDrawMutationFixture: GameDrawMutation;
       let gameUpdateQueryFixture: GameUpdateQuery;
       let transactionWrapperMock: jest.Mocked<TransactionWrapper>;
 
@@ -484,6 +487,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
           },
         };
         gameSpecFixture = GameSpecFixtures.any;
+        gameDrawMutationFixture = GameDrawMutationFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
         transactionWrapperMock = {
           tryCommit: jest.fn(),
@@ -498,13 +502,17 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
-        gameDrawCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
-          gameUpdateQueryFixture,
-        );
-
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
 
         playerCanDrawCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        gameDrawServiceMock.calculateDrawMutation.mockReturnValueOnce(
+          gameDrawMutationFixture,
+        );
+
+        gameDrawCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
+          gameUpdateQueryFixture,
+        );
 
         transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
           transactionWrapperMock,
@@ -569,15 +577,6 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
         );
       });
 
-      it('should call gameDrawCardsUpdateQueryFromGameBuilder.build()', () => {
-        expect(
-          gameDrawCardsUpdateQueryFromGameBuilderMock.build,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameDrawCardsUpdateQueryFromGameBuilderMock.build,
-        ).toHaveBeenCalledWith(activeGameFixture);
-      });
-
       it('should call transactionProvisionOutputPort.provide()', () => {
         expect(
           transactionProvisionOutputPortMock.provide,
@@ -585,6 +584,15 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
         expect(
           transactionProvisionOutputPortMock.provide,
         ).toHaveBeenCalledWith();
+      });
+
+      it('should call gameDrawCardsUpdateQueryFromGameBuilder.build()', () => {
+        expect(
+          gameDrawCardsUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameDrawCardsUpdateQueryFromGameBuilderMock.build,
+        ).toHaveBeenCalledWith(activeGameFixture, gameDrawMutationFixture);
       });
 
       it('should call gamePersistenceOutputPort.update()', () => {

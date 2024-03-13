@@ -4,6 +4,7 @@ import { FinishedGameFixtures } from './FinishedGameFixtures';
 import { FinishedGameSlotFixtures } from './FinishedGameSlotFixtures';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
 import { GameCreateQueryFixtures } from './GameCreateQueryFixtures';
+import { GameDrawMutationFixtures } from './GameDrawMutationFixtures';
 import { GameFindQueryFixtures } from './GameFindQueryFixtures';
 import { GameOptionsCreateQueryFixtures } from './GameOptionsCreateQueryFixtures';
 import { GameOptionsFindQueryFixtures } from './GameOptionsFindQueryFixtures';
@@ -25,6 +26,7 @@ export {
   FinishedGameSlotFixtures,
   GameCardSpecFixtures,
   GameCreateQueryFixtures,
+  GameDrawMutationFixtures,
   GameFindQueryFixtures,
   GameOptionsCreateQueryFixtures,
   GameOptionsFindQueryFixtures,

@@ -19,6 +19,7 @@ import { GameSpecCreateQuery } from './query/GameSpecCreateQuery';
 import { GameSpecFindQuery } from './query/GameSpecFindQuery';
 import { GameSpecFindQuerySortOption } from './query/GameSpecFindQuerySortOption';
 import { GameUpdateQuery } from './query/GameUpdateQuery';
+import { GameDrawService } from './services/GameDrawService';
 import { GameService } from './services/GameService';
 import { CurrentPlayerCanPlayCardsSpec } from './specs/CurrentPlayerCanPlayCardsSpec';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
@@ -33,6 +34,8 @@ import { BaseGameSlot } from './valueObjects/BaseGameSlot';
 import { FinishedGameSlot } from './valueObjects/FinishedGameSlot';
 import { GameCardSpec } from './valueObjects/GameCardSpec';
 import { GameDirection } from './valueObjects/GameDirection';
+import { GameDrawMutation } from './valueObjects/GameDrawMutation';
+import { GameInitialDrawsMutation } from './valueObjects/GameInitialDrawsMutation';
 import { GameOptions } from './valueObjects/GameOptions';
 import { GameSpec } from './valueObjects/GameSpec';
 import { GameStatus } from './valueObjects/GameStatus';
@@ -48,7 +51,9 @@ export type {
   Game,
   GameCardSpec,
   GameCreateQuery,
+  GameDrawMutation,
   GameFindQuery,
+  GameInitialDrawsMutation,
   GameOptions,
   GameOptionsCreateQuery,
   GameOptionsFindQuery,
@@ -69,6 +74,7 @@ export {
   GameCardsEffectUpdateQueryFromGameBuilder,
   GameDirection,
   GameDrawCardsUpdateQueryFromGameBuilder,
+  GameDrawService,
   GamePassTurnUpdateQueryFromGameBuilder,
   GamePlayCardsUpdateQueryFromGameBuilder,
   GameService,

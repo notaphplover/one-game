@@ -243,7 +243,6 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
-      let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
 
@@ -265,17 +264,12 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
           },
         };
         gameSpecFixture = GameSpecFixtures.any;
-        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
         );
         gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           gameSpecFixture,
-        );
-
-        gamePassTurnUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
-          gameUpdateQueryFixture,
         );
 
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
@@ -346,7 +340,6 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
     describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy() returns true and playerCanPassTurnSpec.isSatisfiedBy() returns false', () => {
       let activeGameFixture: ActiveGame;
       let gameSpecFixture: GameSpec;
-      let gameUpdateQueryFixture: GameUpdateQuery;
 
       let result: unknown;
 
@@ -368,17 +361,12 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
           },
         };
         gameSpecFixture = GameSpecFixtures.any;
-        gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
 
         gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           activeGameFixture,
         );
         gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           gameSpecFixture,
-        );
-
-        gamePassTurnUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
-          gameUpdateQueryFixture,
         );
 
         playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
