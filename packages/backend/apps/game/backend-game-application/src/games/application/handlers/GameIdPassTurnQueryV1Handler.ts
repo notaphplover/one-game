@@ -5,6 +5,7 @@ import {
   Builder,
   Handler,
 } from '@cornie-js/backend-common';
+import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
   GameSpec,
@@ -71,13 +72,6 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     this.#playerCanPassTurnSpec = playerCanPassTurnSpec;
   }
 
-  protected override _buildUpdateQueries(
-    game: ActiveGame,
-    gameSpec: GameSpec,
-  ): GameUpdateQuery[] {
-    return [this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec)];
-  }
-
   protected override _checkUnprocessableOperation(
     game: ActiveGame,
     gameSpec: GameSpec,
@@ -95,5 +89,26 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
         'Player cannot end the turn. Reason: there is a pending action preventing the turn to be ended',
       );
     }
+  }
+
+  protected override async _handleUpdateGame(
+    game: ActiveGame,
+    gameSpec: GameSpec,
+    _gameIdUpdateQueryV1: apiModels.GameIdPassTurnQueryV1,
+    transactionWrapper: TransactionWrapper,
+  ): Promise<GameUpdatedEvent> {
+    await this._updateGame(
+      this.#buildUpdateQueries(game, gameSpec),
+      transactionWrapper,
+    );
+
+    return {
+      gameBeforeUpdate: game,
+      transactionWrapper,
+    };
+  }
+
+  #buildUpdateQueries(game: ActiveGame, gameSpec: GameSpec): GameUpdateQuery[] {
+    return [this.#gamePassTurnUpdateQueryFromGameBuilder.build(game, gameSpec)];
   }
 }
