@@ -5,7 +5,7 @@ import { useAppSelector } from '../../app/store/hooks';
 import { selectAuthToken } from '../../app/store/features/authSlice';
 
 export const CornieHome = (): React.JSX.Element => {
-  const { token } = useAppSelector(selectAuthToken);
+  const token = useAppSelector(selectAuthToken);
 
   if (token === null) {
     return <Home />;

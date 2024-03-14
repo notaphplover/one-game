@@ -46,12 +46,12 @@ describe('authSlice', () => {
   });
 
   describe('having an state and no action', () => {
-    let stateFixture: unknown;
+    let stateFixture: NonAuthenticatedAuthState;
     let actionFixture: UnknownAction;
 
     beforeAll(() => {
       stateFixture = {
-        foo: 'bar',
+        status: AuthStateStatus.nonAuthenticated,
       };
       actionFixture = {
         type: 'unknown-action',
