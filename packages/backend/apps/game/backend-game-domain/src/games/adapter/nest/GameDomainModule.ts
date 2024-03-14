@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 
 import { CardDomainModule } from '../../../cards/adapter/nest/CardDomainModule';
+import { CardsFromActiveGameSlotBuilder } from '../../domain/builders/CardsFromActiveGameSlotBuilder';
+import { CardsFromCurrentSlotOfActiveGameBuilder } from '../../domain/builders/CardsFromCurrentSlotOfActiveGameBuilder';
 import { GameCardsEffectUpdateQueryFromGameBuilder } from '../../domain/builders/GameCardsEffectUpdateQueryFromGameBuilder';
 import { GameDrawCardsUpdateQueryFromGameBuilder } from '../../domain/builders/GameDrawCardsUpdateQueryFromGameBuilder';
 import { GamePassTurnUpdateQueryFromGameBuilder } from '../../domain/builders/GamePassTurnUpdateQueryFromGameBuilder';
@@ -26,6 +28,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameCanHoldOnlyOneMoreGameSlotSpec,
     GameCardsEffectUpdateQueryFromGameBuilder,
     GameDrawCardsUpdateQueryFromGameBuilder,
+    GameDrawService,
     GameService,
     GamePassTurnUpdateQueryFromGameBuilder,
     GamePlayCardsUpdateQueryFromGameBuilder,
@@ -38,6 +41,8 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
   imports: [CardDomainModule],
   providers: [
     CardCanBePlayedSpec,
+    CardsFromActiveGameSlotBuilder,
+    CardsFromCurrentSlotOfActiveGameBuilder,
     CurrentPlayerCanPlayCardsSpec,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
