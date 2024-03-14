@@ -18,17 +18,10 @@ export class GameDrawMutationFixtures {
     };
   }
 
-  public static get withIsDiscardPileEmptiedFalse(): GameDrawMutation {
+  public static get withCardsTwo(): GameDrawMutation {
     return {
       ...GameDrawMutationFixtures.any,
-      isDiscardPileEmptied: false,
-    };
-  }
-
-  public static get withIsDiscardPileEmptiedTrue(): GameDrawMutation {
-    return {
-      ...GameDrawMutationFixtures.any,
-      isDiscardPileEmptied: true,
+      cards: [CardFixtures.any, CardFixtures.any],
     };
   }
 }
