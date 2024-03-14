@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
 import { Card } from '../../../cards/domain/valueObjects/Card';
@@ -14,12 +14,18 @@ import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GamePlayCardsUpdateQueryFromGameBuilder } from './GamePlayCardsUpdateQueryFromGameBuilder';
 
 describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
+  let cardsFromActiveGameSlotBuilderMock: jest.Mocked<
+    Builder<Card[], [ActiveGameSlot, number[]]>
+  >;
   let gameDrawServiceMock: jest.Mocked<GameDrawService>;
   let gameServiceMock: jest.Mocked<GameService>;
 
   let gamePlayCardsUpdateQueryFromGameBuilder: GamePlayCardsUpdateQueryFromGameBuilder;
 
   beforeAll(() => {
+    cardsFromActiveGameSlotBuilderMock = {
+      build: jest.fn(),
+    };
     gameDrawServiceMock = {
       putCards: jest.fn(),
     } as Partial<jest.Mocked<GameDrawService>> as jest.Mocked<GameDrawService>;
@@ -30,34 +36,35 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
 
     gamePlayCardsUpdateQueryFromGameBuilder =
       new GamePlayCardsUpdateQueryFromGameBuilder(
+        cardsFromActiveGameSlotBuilderMock,
         gameDrawServiceMock,
         gameServiceMock,
       );
   });
 
   describe('.build', () => {
-    describe('having an existing slotIndex and cardIndexes empty', () => {
+    describe('having an existing slotIndex and cardIndexes', () => {
       let gameFixture: ActiveGame;
+      let gameSlotFixture: ActiveGameSlot;
       let cardIndexesFixture: number[];
       let slotIndexFixture: number;
 
       beforeAll(() => {
         gameFixture = ActiveGameFixtures.withSlotsOne;
+        gameSlotFixture = ActiveGameSlotFixtures.any;
         cardIndexesFixture = [];
         slotIndexFixture = 0;
       });
 
-      describe('when called', () => {
-        let gameSlotFixture: ActiveGameSlot;
-
+      describe('when called, and cardsFromActiveGameSlotBuilder.build() returns an empty array', () => {
         let result: unknown;
 
         beforeAll(() => {
-          gameSlotFixture = ActiveGameSlotFixtures.any;
-
           gameServiceMock.getGameSlotOrThrow.mockReturnValueOnce(
             gameSlotFixture,
           );
+
+          cardsFromActiveGameSlotBuilderMock.build.mockReturnValueOnce([]);
 
           try {
             gamePlayCardsUpdateQueryFromGameBuilder.build(
@@ -82,6 +89,16 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
           );
         });
 
+        it('should call cardsFromActiveGameSlotBuilder.build()', () => {
+          expect(
+            cardsFromActiveGameSlotBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(cardsFromActiveGameSlotBuilderMock.build).toHaveBeenCalledWith(
+            gameSlotFixture,
+            cardIndexesFixture,
+          );
+        });
+
         it('should throw an Error', () => {
           const expectedErrorProperties: Partial<AppError> = {
             kind: AppErrorKind.unknown,
@@ -95,33 +112,22 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
           );
         });
       });
-    });
 
-    describe('having existing cardIndexes', () => {
-      let cardFixture: Card;
-      let gameFixture: ActiveGame;
-      let gameSlotFixture: ActiveGameSlot;
-      let cardIndexesFixture: number[];
-      let slotIndexFixture: number;
+      describe('when called, and cardsFromActiveGameSlotBuilder.build() returns array with a single Card and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
+        let cardFixture: Card;
 
-      beforeAll(() => {
-        cardFixture = CardFixtures.normalBlueTwoCard;
-        gameFixture = ActiveGameFixtures.withSlotsOne;
-        gameSlotFixture = {
-          ...ActiveGameSlotFixtures.any,
-          cards: [cardFixture, CardFixtures.any],
-        };
-        cardIndexesFixture = [0];
-        slotIndexFixture = 0;
-      });
-
-      describe('when called, and areCardsEqualsSpec.isSatisfiedBy() returns false', () => {
         let result: unknown;
 
         beforeAll(() => {
+          cardFixture = CardFixtures.any;
+
           gameServiceMock.getGameSlotOrThrow.mockReturnValueOnce(
             gameSlotFixture,
           );
+
+          cardsFromActiveGameSlotBuilderMock.build.mockReturnValueOnce([
+            cardFixture,
+          ]);
 
           result = gamePlayCardsUpdateQueryFromGameBuilder.build(
             gameFixture,
@@ -139,6 +145,16 @@ describe(GamePlayCardsUpdateQueryFromGameBuilder.name, () => {
           expect(gameServiceMock.getGameSlotOrThrow).toHaveBeenCalledWith(
             gameFixture,
             slotIndexFixture,
+          );
+        });
+
+        it('should call cardsFromActiveGameSlotBuilder.build()', () => {
+          expect(
+            cardsFromActiveGameSlotBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(cardsFromActiveGameSlotBuilderMock.build).toHaveBeenCalledWith(
+            gameSlotFixture,
+            cardIndexesFixture,
           );
         });
 
