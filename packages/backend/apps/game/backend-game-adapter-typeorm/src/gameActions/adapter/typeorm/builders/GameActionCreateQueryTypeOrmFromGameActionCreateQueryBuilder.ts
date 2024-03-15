@@ -6,7 +6,7 @@ import {
 } from '@cornie-js/backend-game-domain/gameActions';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardDbBuilder } from '../../../../cards/adapter/typeorm/builders/CardDbBuilder';
@@ -78,20 +78,19 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
   }
 
   #buildPositionQuery(gameActionCreateQuery: GameActionCreateQuery): string {
-    const findOptions: FindOptionsWhere<GameActionDb> = {
-      game: {
-        id: gameActionCreateQuery.gameId,
-      },
-    };
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const positionQueryBuilder: SelectQueryBuilder<GameActionDb> =
       this.#repository
         .createQueryBuilder(GameActionDb.name)
         .subQuery()
+        .from(GameActionDb, GameActionDb.name)
         .select([
           `COALESCE(MAX(${GameActionDb.name}.position) + 1, 0) as position`,
         ])
-        .where(findOptions);
+        .where(
+          // TODO: use a parameter ASAP! In this specific context, this operation is safe since id is manages by us.
+          `${GameActionDb.name}.game = '${gameActionCreateQuery.gameId}'`,
+        );
 
     return positionQueryBuilder.getQuery();
   }
