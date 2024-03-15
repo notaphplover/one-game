@@ -22,7 +22,8 @@ import {
   TransactionProvisionOutputPort,
   transactionProvisionOutputPortSymbol,
 } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
@@ -58,7 +59,7 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     @Inject(gameSpecPersistenceOutputPortSymbol)
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(GameUpdatedEventHandler)
-    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
+    gameUpdatedEventHandler: Handler<[ActiveGameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(PlayerCanDrawCardsSpec)
@@ -103,7 +104,7 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     _gameSpec: GameSpec,
     _gameIdUpdateQueryV1: apiModels.GameIdDrawCardsQueryV1,
     transactionWrapper: TransactionWrapper,
-  ): Promise<GameUpdatedEvent> {
+  ): Promise<ActiveGameUpdatedEvent> {
     const drawMutation: GameDrawMutation = this.#buildDrawMutation(game);
 
     const gameUpdateQuery: GameUpdateQuery =
@@ -112,7 +113,9 @@ export class GameIdDrawCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     await this._updateGame([gameUpdateQuery], transactionWrapper);
 
     return {
+      draw: drawMutation.cards,
       gameBeforeUpdate: game,
+      kind: ActiveGameUpdatedEventKind.cardsDraw,
       transactionWrapper,
     };
   }

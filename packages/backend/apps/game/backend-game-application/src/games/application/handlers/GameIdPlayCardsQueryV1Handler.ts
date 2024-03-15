@@ -9,6 +9,7 @@ import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGame,
+  CardsFromCurrentSlotOfActiveGameBuilder,
   CurrentPlayerCanPlayCardsSpec,
   GameCardsEffectUpdateQueryFromGameBuilder,
   GamePlayCardsUpdateQueryFromGameBuilder,
@@ -23,7 +24,8 @@ import {
   TransactionProvisionOutputPort,
   transactionProvisionOutputPortSymbol,
 } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
@@ -40,6 +42,10 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
   readonly #cardColorFromCardColorV1Builder: Builder<
     CardColor,
     [apiModels.CardColorV1]
+  >;
+  readonly #cardsFromCurrentSlotOfActiveGameBuilder: Builder<
+    Card[],
+    [ActiveGame, number[]]
   >;
   readonly #currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec;
   readonly #gameCardsEffectUpdateQueryFromGameBuilder: Builder<
@@ -67,13 +73,18 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       [ActiveGame, number[], number]
     >,
     @Inject(GameUpdatedEventHandler)
-    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
+    gameUpdatedEventHandler: Handler<[ActiveGameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(CardColorFromCardColorV1Builder)
     cardColorFromCardColorV1Builder: Builder<
       CardColor,
       [apiModels.CardColorV1]
+    >,
+    @Inject(CardsFromCurrentSlotOfActiveGameBuilder)
+    cardsFromCurrentSlotOfActiveGameBuilder: Builder<
+      Card[],
+      [ActiveGame, number[]]
     >,
     @Inject(CurrentPlayerCanPlayCardsSpec)
     currentPlayerCanPlayCardsSpec: CurrentPlayerCanPlayCardsSpec,
@@ -88,10 +99,12 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       transactionProvisionOutputPort,
     );
 
+    this.#cardColorFromCardColorV1Builder = cardColorFromCardColorV1Builder;
+    this.#cardsFromCurrentSlotOfActiveGameBuilder =
+      cardsFromCurrentSlotOfActiveGameBuilder;
+    this.#currentPlayerCanPlayCardsSpec = currentPlayerCanPlayCardsSpec;
     this.#gameCardsEffectUpdateQueryFromGameBuilder =
       gameCardsEffectUpdateQueryFromGameBuilder;
-    this.#cardColorFromCardColorV1Builder = cardColorFromCardColorV1Builder;
-    this.#currentPlayerCanPlayCardsSpec = currentPlayerCanPlayCardsSpec;
     this.#gamePlayCardsUpdateQueryFromGameBuilder =
       gamePlayCardsUpdateQueryFromGameBuilder;
   }
@@ -120,14 +133,21 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
     gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
     transactionWrapper: TransactionWrapper,
-  ): Promise<GameUpdatedEvent> {
+  ): Promise<ActiveGameUpdatedEvent> {
     await this._updateGame(
       this.#buildUpdateQueries(game, gameSpec, gameIdUpdateQueryV1),
       transactionWrapper,
     );
 
+    const cards: Card[] = this.#cardsFromCurrentSlotOfActiveGameBuilder.build(
+      game,
+      gameIdUpdateQueryV1.cardIndexes,
+    );
+
     return {
+      cards,
       gameBeforeUpdate: game,
+      kind: ActiveGameUpdatedEventKind.cardsPlay,
       transactionWrapper,
     };
   }

@@ -2,8 +2,8 @@ import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import { Game } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 import {
   GameEventsSubscriptionOutputPort,
@@ -16,7 +16,7 @@ import {
 
 @Injectable()
 export class GameUpdatedEventHandler
-  implements Handler<[GameUpdatedEvent], void>
+  implements Handler<[ActiveGameUpdatedEvent], void>
 {
   readonly #gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort;
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
@@ -31,7 +31,7 @@ export class GameUpdatedEventHandler
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
   }
 
-  public async handle(gameUpdatedEvent: GameUpdatedEvent): Promise<void> {
+  public async handle(gameUpdatedEvent: ActiveGameUpdatedEvent): Promise<void> {
     const gameId: string = gameUpdatedEvent.gameBeforeUpdate.id;
     const game: Game | undefined =
       await this.#gamePersistenceOutputPort.findOne(

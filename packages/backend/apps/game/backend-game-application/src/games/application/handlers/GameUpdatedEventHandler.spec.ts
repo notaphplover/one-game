@@ -5,8 +5,9 @@ import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import { ActiveGameFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 import { GameEventsSubscriptionOutputPort } from '../ports/output/GameEventsSubscriptionOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
@@ -37,11 +38,12 @@ describe(GameUpdatedEventHandler.name, () => {
   });
 
   describe('.handle', () => {
-    let gameUpdatedEventFixture: GameUpdatedEvent;
+    let gameUpdatedEventFixture: ActiveGameUpdatedEvent;
 
     beforeAll(() => {
       gameUpdatedEventFixture = {
         gameBeforeUpdate: ActiveGameFixtures.any,
+        kind: ActiveGameUpdatedEventKind.turnPass,
         transactionWrapper: Symbol() as unknown as TransactionWrapper,
       };
     });

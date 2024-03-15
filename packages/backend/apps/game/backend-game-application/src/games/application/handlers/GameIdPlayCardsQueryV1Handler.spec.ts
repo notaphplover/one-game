@@ -9,6 +9,7 @@ import {
 } from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { CardColor, Card } from '@cornie-js/backend-game-domain/cards';
+import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
 import {
   ActiveGame,
   CurrentPlayerCanPlayCardsSpec,
@@ -28,7 +29,8 @@ import {
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdPlayCardsQueryV1Fixtures } from '../fixtures/GameIdPlayCardsQueryV1Fixtures';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdPlayCardsQueryV1Handler } from './GameIdPlayCardsQueryV1Handler';
@@ -43,11 +45,14 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     Builder<GameUpdateQuery, [ActiveGame, number[], number]>
   >;
   let gameUpdatedEventHandlerMock: jest.Mocked<
-    Handler<[GameUpdatedEvent], void>
+    Handler<[ActiveGameUpdatedEvent], void>
   >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let cardColorFromCardColorV1BuilderMock: jest.Mocked<
     Builder<CardColor, [apiModels.CardColorV1]>
+  >;
+  let cardsFromCurrentSlotOfActiveGameBuilderMock: jest.Mocked<
+    Builder<Card[], [ActiveGame, number[]]>
   >;
   let currentPlayerCanPlayCardsSpecMock: jest.Mocked<CurrentPlayerCanPlayCardsSpec>;
   let transactionProvisionOutputPortMock: jest.Mocked<TransactionProvisionOutputPort>;
@@ -81,6 +86,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     cardColorFromCardColorV1BuilderMock = {
       build: jest.fn(),
     };
+    cardsFromCurrentSlotOfActiveGameBuilderMock = {
+      build: jest.fn(),
+    };
     currentPlayerCanPlayCardsSpecMock = {
       isSatisfiedBy: jest.fn(),
     } as Partial<
@@ -98,6 +106,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
       gameUpdatedEventHandlerMock,
       playerCanUpdateGameSpecMock,
       cardColorFromCardColorV1BuilderMock,
+      cardsFromCurrentSlotOfActiveGameBuilderMock,
       currentPlayerCanPlayCardsSpecMock,
       transactionProvisionOutputPortMock,
     );
@@ -469,6 +478,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
 
     describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPlayCardsSpec.isSatisfiedBy returns true', () => {
       let activeGameFixture: ActiveGame;
+      let cardsFixture: Card[];
       let gameSpecFixture: GameSpec;
       let gamePlayCardsUpdateQueryFixture: GameUpdateQuery;
       let gameCardsEffectUpdateQueryFixture: GameUpdateQuery;
@@ -493,6 +503,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
             ],
           },
         };
+        cardsFixture = [CardFixtures.any];
         gameSpecFixture = GameSpecFixtures.any;
         gamePlayCardsUpdateQueryFixture =
           GameUpdateQueryFixtures.withCurrentCard;
@@ -510,6 +521,8 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           gameSpecFixture,
         );
 
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
         gamePlayCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gamePlayCardsUpdateQueryFixture,
         );
@@ -517,7 +530,9 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           gameCardsEffectUpdateQueryFixture,
         );
 
-        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+        cardsFromCurrentSlotOfActiveGameBuilderMock.build.mockReturnValueOnce(
+          cardsFixture,
+        );
 
         currentPlayerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(
           true,
@@ -638,9 +653,23 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
+      it('should call cardsFromCurrentSlotOfActiveGameBuilder.build()', () => {
+        expect(
+          cardsFromCurrentSlotOfActiveGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          cardsFromCurrentSlotOfActiveGameBuilderMock.build,
+        ).toHaveBeenCalledWith(
+          activeGameFixture,
+          gameIdPlayCardsQueryV1Fixture.cardIndexes,
+        );
+      });
+
       it('should call gameUpdatedEventHandler.handle()', () => {
-        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+        const expectedGameUpdatedEvent: ActiveGameUpdatedEvent = {
+          cards: cardsFixture,
           gameBeforeUpdate: activeGameFixture,
+          kind: ActiveGameUpdatedEventKind.cardsPlay,
           transactionWrapper: transactionWrapperMock,
         };
 
@@ -676,6 +705,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
     describe('when called, and gamePersistenceOutputPort.findOne() returns Game, gameSpecPersistenceOutputPort.findOne() returns GameSpec and playerCanUpdateGameSpec.isSatisfiedBy returns true and playerCanPlayCardsSpec.isSatisfiedBy returns true', () => {
       let activeGameFixture: ActiveGame;
       let cardColorFixture: CardColor;
+      let cardsFixture: Card[];
       let gameSpecFixture: GameSpec;
       let gamePlayCardsUpdateQueryFixture: GameUpdateQuery;
       let gameCardsEffectUpdateQueryFixture: GameUpdateQuery;
@@ -701,6 +731,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           },
         };
         cardColorFixture = CardColor.blue;
+        cardsFixture = [CardFixtures.any];
         gameSpecFixture = GameSpecFixtures.any;
         gamePlayCardsUpdateQueryFixture =
           GameUpdateQueryFixtures.withCurrentCard;
@@ -721,6 +752,12 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           cardColorFixture,
         );
 
+        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
+
+        currentPlayerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(
+          true,
+        );
+
         gamePlayCardsUpdateQueryFromGameBuilderMock.build.mockReturnValueOnce(
           gamePlayCardsUpdateQueryFixture,
         );
@@ -728,14 +765,12 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
           gameCardsEffectUpdateQueryFixture,
         );
 
-        playerCanUpdateGameSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
-
-        currentPlayerCanPlayCardsSpecMock.isSatisfiedBy.mockReturnValueOnce(
-          true,
-        );
-
         transactionProvisionOutputPortMock.provide.mockResolvedValueOnce(
           transactionWrapperMock,
+        );
+
+        cardsFromCurrentSlotOfActiveGameBuilderMock.build.mockReturnValueOnce(
+          cardsFixture,
         );
 
         gameUpdatedEventHandlerMock.handle.mockResolvedValueOnce(undefined);
@@ -858,9 +893,23 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         );
       });
 
+      it('should call cardsFromCurrentSlotOfActiveGameBuilder.build()', () => {
+        expect(
+          cardsFromCurrentSlotOfActiveGameBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          cardsFromCurrentSlotOfActiveGameBuilderMock.build,
+        ).toHaveBeenCalledWith(
+          activeGameFixture,
+          gameIdPlayCardsQueryV1Fixture.cardIndexes,
+        );
+      });
+
       it('should call gameUpdatedEventHandler.handle()', () => {
-        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+        const expectedGameUpdatedEvent: ActiveGameUpdatedEvent = {
+          cards: cardsFixture,
           gameBeforeUpdate: activeGameFixture,
+          kind: ActiveGameUpdatedEventKind.cardsPlay,
           transactionWrapper: transactionWrapperMock,
         };
 

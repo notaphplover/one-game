@@ -30,7 +30,8 @@ import {
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdDrawCardsQueryV1Fixtures } from '../fixtures/GameIdDrawCardsQueryV1Fixtures';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdDrawCardsQueryV1Handler } from './GameIdDrawCardsQueryV1Handler';
@@ -43,7 +44,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gameUpdatedEventHandlerMock: jest.Mocked<
-    Handler<[GameUpdatedEvent], void>
+    Handler<[ActiveGameUpdatedEvent], void>
   >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let playerCanDrawCardsSpecMock: jest.Mocked<PlayerCanDrawCardsSpec>;
@@ -604,8 +605,10 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       });
 
       it('should call gameUpdatedEventHandler.handle()', () => {
-        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+        const expectedGameUpdatedEvent: ActiveGameUpdatedEvent = {
+          draw: gameDrawMutationFixture.cards,
           gameBeforeUpdate: activeGameFixture,
+          kind: ActiveGameUpdatedEventKind.cardsDraw,
           transactionWrapper: transactionWrapperMock,
         };
 

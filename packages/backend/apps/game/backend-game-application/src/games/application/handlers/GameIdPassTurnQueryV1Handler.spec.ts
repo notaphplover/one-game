@@ -27,7 +27,8 @@ import {
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdPassTurnQueryV1Fixtures } from '../fixtures/GameIdPassTurnQueryV1Fixtures';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdPassTurnQueryV1Handler } from './GameIdPassTurnQueryV1Handler';
@@ -39,7 +40,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gameUpdatedEventHandlerMock: jest.Mocked<
-    Handler<[GameUpdatedEvent], void>
+    Handler<[ActiveGameUpdatedEvent], void>
   >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let playerCanPassTurnSpecMock: jest.Mocked<PlayerCanPassTurnSpec>;
@@ -585,8 +586,9 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       });
 
       it('should call gameUpdatedEventHandler.handle()', () => {
-        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+        const expectedGameUpdatedEvent: ActiveGameUpdatedEvent = {
           gameBeforeUpdate: activeGameFixture,
+          kind: ActiveGameUpdatedEventKind.turnPass,
           transactionWrapper: transactionWrapperMock,
         };
 

@@ -23,6 +23,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
 @Module({
   exports: [
     CardCanBePlayedSpec,
+    CardsFromCurrentSlotOfActiveGameBuilder,
     CurrentPlayerCanPlayCardsSpec,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
