@@ -9,7 +9,7 @@
     "@jest/globals": "29.7.0",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
-    "@types/node": "20.11.27",
+    "@types/node": "20.11.28",
     "@typescript-eslint/eslint-plugin": "7.2.0",
     "@typescript-eslint/parser": "7.2.0",
     "eslint": "8.57.0",
