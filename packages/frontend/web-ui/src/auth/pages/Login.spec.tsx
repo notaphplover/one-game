@@ -2,18 +2,15 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../hooks/useLoginForm');
 jest.mock('../../common/hooks/useShowPassword');
+jest.mock('../../app/store/hooks');
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useNavigate: jest.fn(),
 }));
-jest.mock('react-redux', () => ({
-  ...(jest.requireActual('react-redux') as Record<string, unknown>),
-  useSelector: jest.fn(),
-}));
 
 import { Login } from './Login';
 import { RenderResult, render } from '@testing-library/react';
-import { MemoryRouter, NavigateFunction, useNavigate } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { UseLoginFormParams } from '../models/UseLoginFormResult';
@@ -58,7 +55,7 @@ describe(Login.name, () => {
     let inputPassword: string;
 
     beforeAll(() => {
-      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValue({
+      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValueOnce({
         backendError: null,
         formFields: formFieldsFixture,
         formStatus: LoginStatus.initial,
@@ -67,7 +64,9 @@ describe(Login.name, () => {
         setFormField: setFormFieldMock,
       });
 
-      (useShowPassword as jest.Mock<typeof useShowPassword>).mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
@@ -117,7 +116,7 @@ describe(Login.name, () => {
     const passwordFixtureError: string = 'password Error';
 
     beforeAll(() => {
-      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValue({
+      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValueOnce({
         backendError: null,
         formFields: {
           email: '',
@@ -132,7 +131,9 @@ describe(Login.name, () => {
         setFormField: setFormFieldMock,
       });
 
-      (useShowPassword as jest.Mock<typeof useShowPassword>).mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
@@ -180,7 +181,7 @@ describe(Login.name, () => {
     const backendErrorFixture = 'backend error';
 
     beforeAll(() => {
-      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValue({
+      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValueOnce({
         backendError: backendErrorFixture,
         formFields: formFieldsFixture,
         formStatus: LoginStatus.backendKO,
@@ -189,7 +190,9 @@ describe(Login.name, () => {
         setFormField: setFormFieldMock,
       });
 
-      (useShowPassword as jest.Mock<typeof useShowPassword>).mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
@@ -226,11 +229,11 @@ describe(Login.name, () => {
     beforeAll(() => {
       tokenFixture = 'jwt token fixture';
 
-      (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
+      (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
         navigateMock,
       );
 
-      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValue({
+      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValueOnce({
         backendError: null,
         formFields: formFieldsFixture,
         formStatus: LoginStatus.backendOK,
@@ -239,7 +242,9 @@ describe(Login.name, () => {
         setFormField: setFormFieldMock,
       });
 
-      (useShowPassword as jest.Mock<typeof useShowPassword>).mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
