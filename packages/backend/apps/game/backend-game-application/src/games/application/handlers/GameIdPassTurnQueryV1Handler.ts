@@ -20,7 +20,8 @@ import {
   TransactionProvisionOutputPort,
   transactionProvisionOutputPortSymbol,
 } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
@@ -51,7 +52,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     @Inject(gameSpecPersistenceOutputPortSymbol)
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     @Inject(GameUpdatedEventHandler)
-    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
+    gameUpdatedEventHandler: Handler<[ActiveGameUpdatedEvent], void>,
     @Inject(PlayerCanUpdateGameSpec)
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     @Inject(PlayerCanPassTurnSpec)
@@ -96,7 +97,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     gameSpec: GameSpec,
     _gameIdUpdateQueryV1: apiModels.GameIdPassTurnQueryV1,
     transactionWrapper: TransactionWrapper,
-  ): Promise<GameUpdatedEvent> {
+  ): Promise<ActiveGameUpdatedEvent> {
     await this._updateGame(
       this.#buildUpdateQueries(game, gameSpec),
       transactionWrapper,
@@ -104,6 +105,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
 
     return {
       gameBeforeUpdate: game,
+      kind: ActiveGameUpdatedEventKind.turnPass,
       transactionWrapper,
     };
   }

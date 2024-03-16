@@ -1,5 +1,6 @@
 import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
 import {
+  GameActionDbModule,
   DbModule as GameAdapterDbModule,
   GameDbModule,
   GameSnapshotDbModule,
@@ -17,6 +18,7 @@ import { buildIoredisModuleOptions } from '../../../../foundation/redis/adapter/
     EnvModule,
     GameApplicationModule.forRootAsync([
       GameAdapterDbModule.forTransaction(),
+      GameActionDbModule.forRootAsync(buildDbModuleOptions()),
       GameDbModule.forRootAsync(buildDbModuleOptions()),
       GameIoredisModule.forRootAsync(buildIoredisModuleOptions()),
       GameSnapshotDbModule.forRootAsync(buildDbModuleOptions()),

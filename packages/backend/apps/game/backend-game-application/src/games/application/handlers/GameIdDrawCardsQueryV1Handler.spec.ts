@@ -1,3 +1,15 @@
+/*
+ * Ugly workaround until https://github.com/jestjs/jest/issues/14874 is provided in jest@30
+ */
+
+const disposeSymbol: unique symbol = Symbol('Symbol.dispose');
+const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
+
+(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
+  asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
+(Symbol as Writable<SymbolConstructor>).dispose ??=
+  disposeSymbol as unknown as SymbolConstructor['dispose'];
+
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
@@ -6,6 +18,7 @@ import {
   AppErrorKind,
   Builder,
   Handler,
+  Writable,
 } from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
@@ -30,7 +43,8 @@ import {
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameIdDrawCardsQueryV1Fixtures } from '../fixtures/GameIdDrawCardsQueryV1Fixtures';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 import { GameIdDrawCardsQueryV1Handler } from './GameIdDrawCardsQueryV1Handler';
@@ -43,7 +57,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
   let gameUpdatedEventHandlerMock: jest.Mocked<
-    Handler<[GameUpdatedEvent], void>
+    Handler<[ActiveGameUpdatedEvent], void>
   >;
   let playerCanUpdateGameSpecMock: jest.Mocked<PlayerCanUpdateGameSpec>;
   let playerCanDrawCardsSpecMock: jest.Mocked<PlayerCanDrawCardsSpec>;
@@ -490,6 +504,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
         gameDrawMutationFixture = GameDrawMutationFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
         transactionWrapperMock = {
+          [Symbol.asyncDispose]: jest.fn(),
           tryCommit: jest.fn(),
         } as Partial<
           jest.Mocked<TransactionWrapper>
@@ -604,8 +619,10 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       });
 
       it('should call gameUpdatedEventHandler.handle()', () => {
-        const expectedGameUpdatedEvent: GameUpdatedEvent = {
+        const expectedGameUpdatedEvent: ActiveGameUpdatedEvent = {
+          draw: gameDrawMutationFixture.cards,
           gameBeforeUpdate: activeGameFixture,
+          kind: ActiveGameUpdatedEventKind.cardsDraw,
           transactionWrapper: transactionWrapperMock,
         };
 
@@ -618,6 +635,15 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       it('should call transactionWrapper.tryCommit()', () => {
         expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
         expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
+      });
+
+      it('should call transactionWrapper[Symbol.asyncDispose]()', () => {
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledWith();
       });
 
       it('should return undefined', () => {

@@ -132,7 +132,7 @@ export class GameSlotManagementInputPort {
         this.#createGameSlotCreationQueryContext(game),
       );
 
-    const transactionWrapper: TransactionWrapper =
+    await using transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
     const gameSlot: ActiveGameSlot | NonStartedGameSlot =

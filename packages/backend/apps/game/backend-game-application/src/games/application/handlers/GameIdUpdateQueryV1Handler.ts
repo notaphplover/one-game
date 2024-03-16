@@ -13,7 +13,7 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
-import { GameUpdatedEvent } from '../models/GameUpdatedEvent';
+import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
 
@@ -23,14 +23,14 @@ export abstract class GameIdUpdateQueryV1Handler<
 {
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
-  readonly #gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>;
+  readonly #gameUpdatedEventHandler: Handler<[ActiveGameUpdatedEvent], void>;
   readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
   readonly #transactionProvisionOutputPort: TransactionProvisionOutputPort;
 
   constructor(
     gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort,
     gamePersistenceOutputPort: GamePersistenceOutputPort,
-    gameUpdatedEventHandler: Handler<[GameUpdatedEvent], void>,
+    gameUpdatedEventHandler: Handler<[ActiveGameUpdatedEvent], void>,
     playerCanUpdateGameSpec: PlayerCanUpdateGameSpec,
     transactionProvisionOutputPort: TransactionProvisionOutputPort,
   ) {
@@ -53,15 +53,16 @@ export abstract class GameIdUpdateQueryV1Handler<
 
     this._checkUnprocessableOperation(game, gameSpec, gameIdUpdateQueryV1);
 
-    const transactionWrapper: TransactionWrapper =
+    await using transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
-    const gameUpdatedEvent: GameUpdatedEvent = await this._handleUpdateGame(
-      game,
-      gameSpec,
-      gameIdUpdateQueryV1,
-      transactionWrapper,
-    );
+    const gameUpdatedEvent: ActiveGameUpdatedEvent =
+      await this._handleUpdateGame(
+        game,
+        gameSpec,
+        gameIdUpdateQueryV1,
+        transactionWrapper,
+      );
 
     await this.#gameUpdatedEventHandler.handle(gameUpdatedEvent);
 
@@ -156,5 +157,5 @@ export abstract class GameIdUpdateQueryV1Handler<
     gameSpec: GameSpec,
     gameIdUpdateQueryV1: TQuery,
     transactionWrapper: TransactionWrapper,
-  ): Promise<GameUpdatedEvent>;
+  ): Promise<ActiveGameUpdatedEvent>;
 }

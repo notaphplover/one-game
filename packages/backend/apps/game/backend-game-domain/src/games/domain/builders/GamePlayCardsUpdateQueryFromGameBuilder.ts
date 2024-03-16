@@ -8,20 +8,28 @@ import { GameDrawService } from '../services/GameDrawService';
 import { GameService } from '../services/GameService';
 import { ActiveGameSlot } from '../valueObjects/ActiveGameSlot';
 import { GameCardSpec } from '../valueObjects/GameCardSpec';
+import { CardsFromActiveGameSlotBuilder } from './CardsFromActiveGameSlotBuilder';
 
 @Injectable()
 export class GamePlayCardsUpdateQueryFromGameBuilder
   implements Builder<GameUpdateQuery, [ActiveGame, number[], number]>
 {
+  readonly #cardsFromActiveGameSlotBuilder: Builder<
+    Card[],
+    [ActiveGameSlot, number[]]
+  >;
   readonly #gameDrawService: GameDrawService;
   readonly #gameService: GameService;
 
   constructor(
+    @Inject(CardsFromActiveGameSlotBuilder)
+    cardsFromActiveGameSlotBuilder: Builder<Card[], [ActiveGameSlot, number[]]>,
     @Inject(GameDrawService)
     gameDrawService: GameDrawService,
     @Inject(GameService)
     gameService: GameService,
   ) {
+    this.#cardsFromActiveGameSlotBuilder = cardsFromActiveGameSlotBuilder;
     this.#gameDrawService = gameDrawService;
     this.#gameService = gameService;
   }
@@ -89,18 +97,10 @@ export class GamePlayCardsUpdateQueryFromGameBuilder
     gameSlot: ActiveGameSlot,
     cardIndexes: number[],
   ): [Card, ...Card[]] {
-    const nextCurrentCards: Card[] = cardIndexes.map((cardIndex: number) => {
-      const card: Card | undefined = gameSlot.cards[cardIndex];
-
-      if (card === undefined) {
-        throw new AppError(
-          AppErrorKind.unknown,
-          'An unexpected error happened while attempting to update game',
-        );
-      }
-
-      return card;
-    });
+    const nextCurrentCards: Card[] = this.#cardsFromActiveGameSlotBuilder.build(
+      gameSlot,
+      cardIndexes,
+    );
 
     if (nextCurrentCards[0] === undefined) {
       throw new AppError(

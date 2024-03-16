@@ -6,6 +6,7 @@ import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
 import { GameSnapshotApplicationModule } from '../../../../gameSnapshots/adapter/nest/modules/GameSnapshotApplicationModule';
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from '../../../application/builders/ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { FinishedGameSlotV1FromFinishedGameSlotBuilder } from '../../../application/builders/FinishedGameSlotV1FromFinishedGameSlotBuilder';
+import { GameActionCreateQueryFromGameUpdateEventBuilder } from '../../../application/builders/GameActionCreateQueryFromGameUpdateEventBuilder';
 import { GameCardSpecFromGameCardSpecV1Builder } from '../../../application/builders/GameCardSpecFromGameCardSpecV1Builder';
 import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builders/GameCardSpecsFromGameSpecV1Builder';
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
@@ -60,6 +61,7 @@ export class GameApplicationModule {
         ActiveGameSlotV1FromActiveGameSlotBuilder,
         CreateGameUseCaseHandler,
         FinishedGameSlotV1FromFinishedGameSlotBuilder,
+        GameActionCreateQueryFromGameUpdateEventBuilder,
         GameCardSpecFromGameCardSpecV1Builder,
         GameCardSpecsFromGameSpecV1Builder,
         GameCardSpecV1FromGameCardSpecBuilder,
