@@ -1,7 +1,23 @@
-import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
+import {
+  UuidProviderOutputPort,
+  uuidProviderOutputPortSymbol,
+} from '@cornie-js/backend-app-uuid';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
+import { GameActionCreateQuery } from '@cornie-js/backend-game-domain/gameActions';
 import { Game } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
+import {
+  GameActionPersistenceOutputPort,
+  gameActionPersistenceOutputPortSymbol,
+} from '../../../gameActions/application/ports/output/GameActionPersistenceOutputPort';
+import { GameActionCreateQueryFromGameUpdateEventBuilder } from '../builders/GameActionCreateQueryFromGameUpdateEventBuilder';
 import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
@@ -18,17 +34,36 @@ import {
 export class GameUpdatedEventHandler
   implements Handler<[ActiveGameUpdatedEvent], void>
 {
+  readonly #gameActionCreateQueryFromGameUpdateEventBuilder: Builder<
+    GameActionCreateQuery,
+    [ActiveGameUpdatedEvent, UuidContext]
+  >;
+  readonly #gameActionPersistenceOutputPort: GameActionPersistenceOutputPort;
   readonly #gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort;
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
+  readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
+    @Inject(GameActionCreateQueryFromGameUpdateEventBuilder)
+    gameActionCreateQueryFromGameUpdateEventBuilder: Builder<
+      GameActionCreateQuery,
+      [ActiveGameUpdatedEvent, UuidContext]
+    >,
+    @Inject(gameActionPersistenceOutputPortSymbol)
+    gameActionPersistenceOutputPort: GameActionPersistenceOutputPort,
     @Inject(gameEventsSubscriptionOutputPortSymbol)
     gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
+    @Inject(uuidProviderOutputPortSymbol)
+    uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
+    this.#gameActionCreateQueryFromGameUpdateEventBuilder =
+      gameActionCreateQueryFromGameUpdateEventBuilder;
+    this.#gameActionPersistenceOutputPort = gameActionPersistenceOutputPort;
     this.#gameEventsSubscriptionOutputPort = gameEventsSubscriptionOutputPort;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
+    this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
   public async handle(gameUpdatedEvent: ActiveGameUpdatedEvent): Promise<void> {
@@ -45,13 +80,38 @@ export class GameUpdatedEventHandler
       throw new AppError(AppErrorKind.unknown, `Game "${gameId}" not found`);
     }
 
+    await Promise.all([
+      this.#createGameAction(gameUpdatedEvent),
+      this.#publishGameUpdatedMessageEvent(game),
+    ]);
+  }
+
+  async #createGameAction(
+    gameUpdatedEvent: ActiveGameUpdatedEvent,
+  ): Promise<void> {
+    const uuidContext: UuidContext = {
+      uuid: this.#uuidProviderOutputPort.generateV4(),
+    };
+    const gameActionCreateQuery: GameActionCreateQuery =
+      this.#gameActionCreateQueryFromGameUpdateEventBuilder.build(
+        gameUpdatedEvent,
+        uuidContext,
+      );
+
+    await this.#gameActionPersistenceOutputPort.create(
+      gameActionCreateQuery,
+      gameUpdatedEvent.transactionWrapper,
+    );
+  }
+
+  async #publishGameUpdatedMessageEvent(game: Game): Promise<void> {
     const gameUpdatedMessageEvent: GameUpdatedMessageEvent = {
       game,
       kind: GameMessageEventKind.gameUpdated,
     };
 
     await this.#gameEventsSubscriptionOutputPort.publish(
-      gameId,
+      game.id,
       gameUpdatedMessageEvent,
     );
   }
