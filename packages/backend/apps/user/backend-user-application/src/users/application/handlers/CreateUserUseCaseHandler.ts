@@ -55,7 +55,7 @@ export class CreateUserUseCaseHandler
   public async handle(userCreateQuery: UserCreateQuery): Promise<User> {
     this.#validate(userCreateQuery);
 
-    const transactionWrapper: TransactionWrapper =
+    await using transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
     const user: User = await this.#userPersistenceOutputPort.create(
