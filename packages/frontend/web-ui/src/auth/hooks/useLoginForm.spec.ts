@@ -209,7 +209,7 @@ describe(useLoginForm.name, () => {
       ).mockReturnValueOnce(true);
 
       (
-        useDispatch as unknown as jest.Mock<typeof useAppDispatch>
+        useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
       ).mockReturnValue(dispatchMock);
 
       result = renderHook(() => useLoginForm(initialForm));
@@ -280,7 +280,7 @@ describe(useLoginForm.name, () => {
       ).mockReturnValueOnce(true);
 
       (
-        useDispatch as unknown as jest.Mock<typeof useAppDispatch>
+        useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
       ).mockReturnValue(dispatchMock);
 
       result = renderHook(() => useLoginForm(initialForm));
