@@ -33,6 +33,12 @@ export class TypeOrmTransactionWrapper implements TransactionWrapper {
     );
   }
 
+  public async [Symbol.asyncDispose](): Promise<void> {
+    if (!this.#queryRunner.isReleased) {
+      await this.rollback();
+    }
+  }
+
   public async rollback(): Promise<void> {
     try {
       await this.#queryRunner.rollbackTransaction();

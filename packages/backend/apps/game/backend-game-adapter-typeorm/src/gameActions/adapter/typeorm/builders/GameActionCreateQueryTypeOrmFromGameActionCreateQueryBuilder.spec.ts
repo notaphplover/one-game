@@ -8,7 +8,7 @@ import {
   PlayCardsGameActionCreateQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
 import { GameActionCreateQueryFixtures } from '@cornie-js/backend-game-domain/gameActions/fixtures';
-import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';

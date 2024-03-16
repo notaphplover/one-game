@@ -53,7 +53,7 @@ export abstract class GameIdUpdateQueryV1Handler<
 
     this._checkUnprocessableOperation(game, gameSpec, gameIdUpdateQueryV1);
 
-    const transactionWrapper: TransactionWrapper =
+    await using transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
     const gameUpdatedEvent: ActiveGameUpdatedEvent =

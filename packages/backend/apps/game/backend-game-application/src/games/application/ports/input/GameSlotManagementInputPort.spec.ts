@@ -1,3 +1,15 @@
+/*
+ * Ugly workaround until https://github.com/jestjs/jest/issues/14874 is provided in jest@30
+ */
+
+const disposeSymbol: unique symbol = Symbol('Symbol.dispose');
+const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
+
+(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
+  asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
+(Symbol as Writable<SymbolConstructor>).dispose ??=
+  disposeSymbol as unknown as SymbolConstructor['dispose'];
+
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
@@ -8,6 +20,7 @@ import {
   Builder,
   Handler,
   Spec,
+  Writable,
 } from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { Card } from '@cornie-js/backend-game-domain/cards';
@@ -138,6 +151,7 @@ describe(GameSlotManagementInputPort.name, () => {
         gameSlotFixture = NonStartedGameSlotFixtures.any;
         gameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
         transactionWrapperMock = {
+          [Symbol.asyncDispose]: jest.fn(),
           tryCommit: jest.fn(),
         } as Partial<
           jest.Mocked<TransactionWrapper>
@@ -257,6 +271,15 @@ describe(GameSlotManagementInputPort.name, () => {
         );
       });
 
+      it('should call transactionWrapper[Symbol.asyncDispose]()', () => {
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledWith();
+      });
+
       it('should return a GameSlotV1', () => {
         expect(result).toBe(gameSlotV1Fixture);
       });
@@ -276,6 +299,7 @@ describe(GameSlotManagementInputPort.name, () => {
         gameSlotFixture = NonStartedGameSlotFixtures.any;
         gameSlotV1Fixture = NonStartedGameSlotV1Fixtures.any;
         transactionWrapperMock = {
+          [Symbol.asyncDispose]: jest.fn(),
           tryCommit: jest.fn(),
         } as Partial<
           jest.Mocked<TransactionWrapper>
@@ -403,6 +427,15 @@ describe(GameSlotManagementInputPort.name, () => {
         expect(gameSlotV1FromGameSlotBuilderMock.build).toHaveBeenCalledWith(
           gameSlotFixture,
         );
+      });
+
+      it('should call transactionWrapper[Symbol.asyncDispose]()', () => {
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledWith();
       });
 
       it('should return a GameSlotV1', () => {
