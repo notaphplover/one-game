@@ -1,3 +1,15 @@
+/*
+ * Ugly workaround until https://github.com/jestjs/jest/issues/14874 is provided in jest@30
+ */
+
+const disposeSymbol: unique symbol = Symbol('Symbol.dispose');
+const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
+
+(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
+  asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
+(Symbol as Writable<SymbolConstructor>).dispose ??=
+  disposeSymbol as unknown as SymbolConstructor['dispose'];
+
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
@@ -6,6 +18,7 @@ import {
   AppErrorKind,
   Builder,
   Handler,
+  Writable,
 } from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
@@ -476,6 +489,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         gameSpecFixture = GameSpecFixtures.any;
         gameUpdateQueryFixture = GameUpdateQueryFixtures.any;
         transactionWrapperMock = {
+          [Symbol.asyncDispose]: jest.fn(),
           tryCommit: jest.fn(),
         } as Partial<
           jest.Mocked<TransactionWrapper>
@@ -601,6 +615,15 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
       it('should call transactionWrapper.tryCommit()', () => {
         expect(transactionWrapperMock.tryCommit).toHaveBeenCalledTimes(1);
         expect(transactionWrapperMock.tryCommit).toHaveBeenCalledWith();
+      });
+
+      it('should call transactionWrapper[Symbol.asyncDispose]()', () => {
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          transactionWrapperMock[Symbol.asyncDispose],
+        ).toHaveBeenCalledWith();
       });
 
       it('should return undefined', () => {
