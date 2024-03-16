@@ -89,7 +89,7 @@ export class CreateGameUseCaseHandler
 
     this.#validate(gameCreateQuery);
 
-    const transactionWrapper: TransactionWrapper =
+    await using transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
 
     const game: Game = await this.#gamePersistenceOutputPort.create(
