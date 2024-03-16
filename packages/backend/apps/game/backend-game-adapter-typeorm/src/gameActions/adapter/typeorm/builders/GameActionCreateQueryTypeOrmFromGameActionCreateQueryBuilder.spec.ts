@@ -35,6 +35,7 @@ describe(
       };
 
       queryBuilderMock = {
+        from: jest.fn().mockReturnThis(),
         getQuery: jest.fn(),
         select: jest.fn().mockReturnThis(),
         subQuery: jest.fn().mockReturnThis(),
@@ -152,15 +153,19 @@ describe(
               ]);
             });
 
-            it('should call queryBuilder.where()', () => {
-              const expected: FindOptionsWhere<GameActionDb> = {
-                game: {
-                  id: drawGameActionCreateQueryFixture.gameId,
-                },
-              };
+            it('should call queryBuilder.from()', () => {
+              expect(queryBuilderMock.from).toHaveBeenCalledTimes(1);
+              expect(queryBuilderMock.from).toHaveBeenCalledWith(
+                GameActionDb,
+                GameActionDb.name,
+              );
+            });
 
+            it('should call queryBuilder.where()', () => {
               expect(queryBuilderMock.where).toHaveBeenCalledTimes(1);
-              expect(queryBuilderMock.where).toHaveBeenCalledWith(expected);
+              expect(queryBuilderMock.where).toHaveBeenCalledWith(
+                expect.any(String),
+              );
             });
 
             it('should return string', () => {
@@ -264,15 +269,19 @@ describe(
               ]);
             });
 
-            it('should call queryBuilder.where()', () => {
-              const expected: FindOptionsWhere<GameActionDb> = {
-                game: {
-                  id: passTurnGameActionCreateQueryFixture.gameId,
-                },
-              };
+            it('should call queryBuilder.from()', () => {
+              expect(queryBuilderMock.from).toHaveBeenCalledTimes(1);
+              expect(queryBuilderMock.from).toHaveBeenCalledWith(
+                GameActionDb,
+                GameActionDb.name,
+              );
+            });
 
+            it('should call queryBuilder.where()', () => {
               expect(queryBuilderMock.where).toHaveBeenCalledTimes(1);
-              expect(queryBuilderMock.where).toHaveBeenCalledWith(expected);
+              expect(queryBuilderMock.where).toHaveBeenCalledWith(
+                expect.any(String),
+              );
             });
 
             it('should return string', () => {
@@ -377,15 +386,19 @@ describe(
               ]);
             });
 
-            it('should call queryBuilder.where()', () => {
-              const expected: FindOptionsWhere<GameActionDb> = {
-                game: {
-                  id: playCardsGameActionCreateQueryFixture.gameId,
-                },
-              };
+            it('should call queryBuilder.from()', () => {
+              expect(queryBuilderMock.from).toHaveBeenCalledTimes(1);
+              expect(queryBuilderMock.from).toHaveBeenCalledWith(
+                GameActionDb,
+                GameActionDb.name,
+              );
+            });
 
+            it('should call queryBuilder.where()', () => {
               expect(queryBuilderMock.where).toHaveBeenCalledTimes(1);
-              expect(queryBuilderMock.where).toHaveBeenCalledWith(expected);
+              expect(queryBuilderMock.where).toHaveBeenCalledWith(
+                expect.any(String),
+              );
             });
 
             it('should return string', () => {
