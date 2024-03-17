@@ -8,7 +8,12 @@ import {
   PlayCardsGameActionCreateQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
 import { GameActionCreateQueryFixtures } from '@cornie-js/backend-game-domain/gameActions/fixtures';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import {
+  InsertQueryBuilder,
+  ObjectLiteral,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
@@ -25,7 +30,9 @@ describe(
   () => {
     let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
     let repositoryMock: jest.Mocked<Repository<GameActionDb>>;
-    let queryBuilderMock: jest.Mocked<SelectQueryBuilder<GameActionDb>>;
+    let queryBuilderMock: jest.Mocked<
+      InsertQueryBuilder<GameActionDb> & SelectQueryBuilder<GameActionDb>
+    >;
 
     let gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder: GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder;
 
@@ -38,11 +45,17 @@ describe(
         from: jest.fn().mockReturnThis(),
         getQuery: jest.fn(),
         select: jest.fn().mockReturnThis(),
+        setParameters: jest.fn().mockReturnThis(),
         subQuery: jest.fn().mockReturnThis(),
+        values: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
       } as Partial<
-        jest.Mocked<SelectQueryBuilder<GameActionDb>>
-      > as jest.Mocked<SelectQueryBuilder<GameActionDb>>;
+        jest.Mocked<
+          InsertQueryBuilder<GameActionDb> & SelectQueryBuilder<GameActionDb>
+        >
+      > as jest.Mocked<
+        InsertQueryBuilder<GameActionDb> & SelectQueryBuilder<GameActionDb>
+      >;
 
       repositoryMock = {
         createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
@@ -71,7 +84,7 @@ describe(
 
           let result: unknown;
 
-          let resultPosition: () => string;
+          let positionValue: () => string;
 
           beforeAll(() => {
             cardDbFixture = 0x0039;
@@ -81,6 +94,7 @@ describe(
             result =
               gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder.build(
                 drawGameActionCreateQueryFixture,
+                queryBuilderMock,
               );
           });
 
@@ -88,7 +102,7 @@ describe(
             jest.clearAllMocks();
           });
 
-          it('should return a GameActionDb', () => {
+          it('should call insertQueryBuilder.values()', () => {
             const expectedPayload: DrawCardsGameActionDbPayloadV1 = {
               draw: [cardDbFixture],
               kind: GameActionDbPayloadV1Kind.draw,
@@ -107,10 +121,32 @@ describe(
               turn: drawGameActionCreateQueryFixture.turn,
             };
 
-            expect(result).toStrictEqual(expectedGameActionDb);
+            expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+            expect(queryBuilderMock.values).toHaveBeenCalledWith(
+              expectedGameActionDb,
+            );
 
-            resultPosition = (result as QueryDeepPartialEntity<GameActionDb>)
-              .position as () => string;
+            positionValue = (
+              queryBuilderMock.values.mock.calls[0] as [
+                QueryDeepPartialEntity<GameActionDb>,
+              ]
+            )[0].position as () => string;
+          });
+
+          it('should call insertQueryBuilder.setParameters()', () => {
+            const expected: ObjectLiteral = {
+              [`${GameActionDb.name}.game`]:
+                drawGameActionCreateQueryFixture.gameId,
+            };
+
+            expect(queryBuilderMock.setParameters).toHaveBeenCalledTimes(1);
+            expect(queryBuilderMock.setParameters).toHaveBeenCalledWith(
+              expected,
+            );
+          });
+
+          it('should return InsertQueryBuilder', () => {
+            expect(result).toBe(queryBuilderMock);
           });
 
           describe('when position function is called', () => {
@@ -125,7 +161,7 @@ describe(
                 positionQueryFixture,
               );
 
-              result = resultPosition();
+              result = positionValue();
             });
 
             afterAll(() => {
@@ -184,20 +220,15 @@ describe(
         });
 
         describe('when called', () => {
-          let cardDbFixture: CardDb;
-
           let result: unknown;
 
-          let resultPosition: () => string;
+          let positionValue: () => string;
 
           beforeAll(() => {
-            cardDbFixture = 0x0039;
-
-            cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
-
             result =
               gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder.build(
                 passTurnGameActionCreateQueryFixture,
+                queryBuilderMock,
               );
           });
 
@@ -205,7 +236,7 @@ describe(
             jest.clearAllMocks();
           });
 
-          it('should return a GameActionDb', () => {
+          it('should call insertQueryBuilder.values()', () => {
             const expectedPayload: PassTurnGameActionDbPayloadV1 = {
               kind: GameActionDbPayloadV1Kind.passTurn,
               version: GameActionDbVersion.v1,
@@ -223,10 +254,32 @@ describe(
               turn: passTurnGameActionCreateQueryFixture.turn,
             };
 
-            expect(result).toStrictEqual(expectedGameActionDb);
+            expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+            expect(queryBuilderMock.values).toHaveBeenCalledWith(
+              expectedGameActionDb,
+            );
 
-            resultPosition = (result as QueryDeepPartialEntity<GameActionDb>)
-              .position as () => string;
+            positionValue = (
+              queryBuilderMock.values.mock.calls[0] as [
+                QueryDeepPartialEntity<GameActionDb>,
+              ]
+            )[0].position as () => string;
+          });
+
+          it('should call insertQueryBuilder.setParameters()', () => {
+            const expected: ObjectLiteral = {
+              [`${GameActionDb.name}.game`]:
+                passTurnGameActionCreateQueryFixture.gameId,
+            };
+
+            expect(queryBuilderMock.setParameters).toHaveBeenCalledTimes(1);
+            expect(queryBuilderMock.setParameters).toHaveBeenCalledWith(
+              expected,
+            );
+          });
+
+          it('should return InsertQueryBuilder', () => {
+            expect(result).toBe(queryBuilderMock);
           });
 
           describe('when position function is called', () => {
@@ -241,7 +294,7 @@ describe(
                 positionQueryFixture,
               );
 
-              result = resultPosition();
+              result = positionValue();
             });
 
             afterAll(() => {
@@ -304,7 +357,7 @@ describe(
 
           let result: unknown;
 
-          let resultPosition: () => string;
+          let positionValue: () => string;
 
           beforeAll(() => {
             cardDbFixture = 0x0039;
@@ -314,6 +367,7 @@ describe(
             result =
               gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder.build(
                 playCardsGameActionCreateQueryFixture,
+                queryBuilderMock,
               );
           });
 
@@ -321,7 +375,7 @@ describe(
             jest.clearAllMocks();
           });
 
-          it('should return a GameActionDb', () => {
+          it('should call insertQueryBuilder.values()', () => {
             const expectedPayload: PlayCardsGameActionDbPayloadV1 = {
               cards: [cardDbFixture],
               kind: GameActionDbPayloadV1Kind.playCards,
@@ -340,10 +394,32 @@ describe(
               turn: playCardsGameActionCreateQueryFixture.turn,
             };
 
-            expect(result).toStrictEqual(expectedGameActionDb);
+            expect(queryBuilderMock.values).toHaveBeenCalledTimes(1);
+            expect(queryBuilderMock.values).toHaveBeenCalledWith(
+              expectedGameActionDb,
+            );
 
-            resultPosition = (result as QueryDeepPartialEntity<GameActionDb>)
-              .position as () => string;
+            positionValue = (
+              queryBuilderMock.values.mock.calls[0] as [
+                QueryDeepPartialEntity<GameActionDb>,
+              ]
+            )[0].position as () => string;
+          });
+
+          it('should call insertQueryBuilder.setParameters()', () => {
+            const expected: ObjectLiteral = {
+              [`${GameActionDb.name}.game`]:
+                playCardsGameActionCreateQueryFixture.gameId,
+            };
+
+            expect(queryBuilderMock.setParameters).toHaveBeenCalledTimes(1);
+            expect(queryBuilderMock.setParameters).toHaveBeenCalledWith(
+              expected,
+            );
+          });
+
+          it('should return InsertQueryBuilder', () => {
+            expect(result).toBe(queryBuilderMock);
           });
 
           describe('when position function is called', () => {
@@ -358,7 +434,7 @@ describe(
                 positionQueryFixture,
               );
 
-              result = resultPosition();
+              result = positionValue();
             });
 
             afterAll(() => {
