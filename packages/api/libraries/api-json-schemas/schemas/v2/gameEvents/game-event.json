@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameEventV2",
+  "$id": "https://onegame.schemas/api/v2/game-events/game-event.json",
+  "anyOf": [
+    { "$ref": "https://onegame.schemas/api/v2/game-events/cards-drawn-game-event.json" },
+    { "$ref": "https://onegame.schemas/api/v2/game-events/cards-played-game-event.json" },
+    { "$ref": "https://onegame.schemas/api/v2/game-events/turn-passed-game-event.json" }
+  ]
+}

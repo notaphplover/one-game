@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v2/game-events/turn-passed-game-event.json",
+  "title": "TurnPassedGameEventV2",
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "currentPlayingSlotIndex": {
+      "type": "integer"
+    },
+    "kind": {
+      "const": "turnPassed",
+      "type": "string"
+    },
+    "nextPlayingSlotIndex": {
+      "type": "integer"
+    },
+    "position": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "currentPlayingSlotIndex",
+    "kind",
+    "nextPlayingSlotIndex",
+    "position"
+  ]
+}
