@@ -4,13 +4,14 @@ import { DeleteTypeOrmQueryBuilderService } from './services/DeleteTypeOrmQueryB
 import { DeleteTypeOrmService } from './services/DeleteTypeOrmService';
 import { FindTypeOrmQueryBuilderService } from './services/FindTypeOrmQueryBuilderService';
 import { FindTypeOrmService } from './services/FindTypeOrmService';
+import { InsertTypeOrmQueryBuilderService } from './services/InsertTypeOrmQueryBuilderService';
 import { InsertTypeOrmService } from './services/InsertTypeOrmService';
 import { InsertTypeOrmPostgresService } from './services/postgres/InsertTypeOrmPostgresService';
+import { InsertTypeOrmQueryBuilderPostgresService } from './services/postgres/InsertTypeOrmQueryBuilderPostgresService';
 import { UpdateTypeOrmQueryBuilderService } from './services/UpdateTypeOrmQueryBuilderService';
 import { UpdateTypeOrmService } from './services/UpdateTypeOrmService';
 
 export type { FindQueryTypeOrmFromQueryBuilder };
-
 export {
   DeleteTypeOrmQueryBuilderService,
   DeleteTypeOrmService,
@@ -18,6 +19,8 @@ export {
   FindTypeOrmService,
   InsertTypeOrmService,
   InsertTypeOrmPostgresService,
+  InsertTypeOrmQueryBuilderPostgresService,
+  InsertTypeOrmQueryBuilderService,
   TypeOrmTransactionWrapper,
   UpdateTypeOrmQueryBuilderService,
   UpdateTypeOrmService,
