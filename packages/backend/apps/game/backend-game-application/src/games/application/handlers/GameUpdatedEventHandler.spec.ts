@@ -195,6 +195,7 @@ describe(GameUpdatedEventHandler.name, () => {
       it('should call gameEventsSubscriptionOutputPort.publish()', () => {
         const expected: GameUpdatedMessageEvent = {
           game: gameFixture,
+          gameAction: gameActionFixture,
           kind: GameMessageEventKind.gameUpdated,
         };
 
