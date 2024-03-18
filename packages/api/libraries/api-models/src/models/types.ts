@@ -241,5 +241,6 @@ export interface CardsPlayedGameEventV2 {
 export interface TurnPassedGameEventV2 {
   currentPlayingSlotIndex: number;
   kind: 'turnPassed';
+  nextPlayingSlotIndex: number;
   position: number;
 }

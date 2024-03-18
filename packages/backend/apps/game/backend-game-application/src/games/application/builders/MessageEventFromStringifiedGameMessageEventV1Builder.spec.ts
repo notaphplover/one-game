@@ -7,14 +7,14 @@ import { MessageEvent } from '@cornie-js/backend-http';
 import { GameMessageEventFixtures } from '../fixtures/GameMessageEventFixtures';
 import { GameMessageEventV1Fixtures } from '../fixtures/GameMessageEventV1Fixtures';
 import { GameMessageEvent } from '../models/GameMessageEvent';
-import { MessageEventFromStringifiedGameMessageEventBuilder } from './MessageEventFromStringifiedGameMessageEventBuilder';
+import { MessageEventFromStringifiedGameMessageEventV1Builder } from './MessageEventFromStringifiedGameMessageEventV1Builder';
 
-describe(MessageEventFromStringifiedGameMessageEventBuilder.name, () => {
+describe(MessageEventFromStringifiedGameMessageEventV1Builder.name, () => {
   let gameMessageEventV1FromGameMessageEventBuilderMock: jest.Mocked<
     Builder<apiModels.GameMessageEventV1, [GameMessageEvent]>
   >;
 
-  let messageEventFromStringifiedGameMessageEventBuilder: MessageEventFromStringifiedGameMessageEventBuilder;
+  let messageEventFromStringifiedGameMessageEventBuilder: MessageEventFromStringifiedGameMessageEventV1Builder;
 
   beforeAll(() => {
     gameMessageEventV1FromGameMessageEventBuilderMock = {
@@ -22,7 +22,7 @@ describe(MessageEventFromStringifiedGameMessageEventBuilder.name, () => {
     };
 
     messageEventFromStringifiedGameMessageEventBuilder =
-      new MessageEventFromStringifiedGameMessageEventBuilder(
+      new MessageEventFromStringifiedGameMessageEventV1Builder(
         gameMessageEventV1FromGameMessageEventBuilderMock,
       );
   });
