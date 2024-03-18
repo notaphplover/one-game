@@ -3,10 +3,8 @@ import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 jest.mock('../../common/helpers/validateEmail');
 jest.mock('../../common/helpers/validatePassword');
 jest.mock('../helpers/isFullfilledPayloadAction');
-jest.mock('react-redux', () => ({
-  ...(jest.requireActual('react-redux') as Record<string, unknown>),
-  useDispatch: jest.fn(),
-}));
+jest.mock('../../app/store/thunk/createAuthByCredentials');
+jest.mock('../../app/store/hooks');
 
 import {
   RenderHookResult,
@@ -17,7 +15,6 @@ import {
 import { INVALID_CREDENTIALS_ERROR, useLoginForm } from './useLoginForm';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
-import { useDispatch } from 'react-redux';
 import {
   FormFieldsApp,
   FormValidationResult,
@@ -29,6 +26,7 @@ import { useAppDispatch } from '../../app/store/hooks';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
 import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
+import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 
 describe(useLoginForm.name, () => {
   let initialForm: UseLoginFormParams;
@@ -78,7 +76,6 @@ describe(useLoginForm.name, () => {
 
   describe('when called, and email input value is not correct', () => {
     let result: RenderHookResult<UseLoginFormResult, unknown>;
-    let notifyFormFieldsFilled: () => void;
     let formValidation: FormValidationResult;
 
     beforeAll(() => {
@@ -96,7 +93,8 @@ describe(useLoginForm.name, () => {
 
       result = renderHook(() => useLoginForm(initialForm));
 
-      notifyFormFieldsFilled = result.result.current.notifyFormFieldsFilled;
+      const notifyFormFieldsFilled: () => void =
+        result.result.current.notifyFormFieldsFilled;
 
       act(() => {
         notifyFormFieldsFilled();
@@ -124,7 +122,6 @@ describe(useLoginForm.name, () => {
 
   describe('when called, and password input value is not correct', () => {
     let result: RenderHookResult<UseLoginFormResult, unknown>;
-    let notifyFormFieldsFilled: () => void;
     let formValidation: FormValidationResult;
 
     beforeAll(() => {
@@ -142,7 +139,8 @@ describe(useLoginForm.name, () => {
 
       result = renderHook(() => useLoginForm(initialForm));
 
-      notifyFormFieldsFilled = result.result.current.notifyFormFieldsFilled;
+      const notifyFormFieldsFilled: () => void =
+        result.result.current.notifyFormFieldsFilled;
 
       act(() => {
         notifyFormFieldsFilled();
@@ -167,11 +165,18 @@ describe(useLoginForm.name, () => {
   });
 
   describe('when called, and API returns an OK response', () => {
-    let result: RenderHookResult<UseLoginFormResult, unknown>;
-    let notifyFormFieldsFilled: () => void;
+    let createAuthByCredentialsResult: ReturnType<
+      typeof createAuthByCredentials
+    >;
     let formStatus: LoginStatus;
 
+    let result: RenderHookResult<UseLoginFormResult, unknown>;
+
     beforeAll(async () => {
+      createAuthByCredentialsResult = Symbol() as unknown as ReturnType<
+        typeof createAuthByCredentials
+      >;
+
       (validateEmail as jest.Mock<typeof validateEmail>).mockReturnValueOnce({
         isRight: true,
         value: undefined,
@@ -194,6 +199,12 @@ describe(useLoginForm.name, () => {
         type: 'sample-type',
       };
 
+      (
+        createAuthByCredentials as unknown as jest.Mock<
+          typeof createAuthByCredentials
+        >
+      ).mockReturnValueOnce(createAuthByCredentialsResult);
+
       dispatchMock = jest
         .fn<ReturnType<typeof useAppDispatch>>()
         .mockImplementationOnce(
@@ -214,7 +225,8 @@ describe(useLoginForm.name, () => {
 
       result = renderHook(() => useLoginForm(initialForm));
 
-      notifyFormFieldsFilled = result.result.current.notifyFormFieldsFilled;
+      const notifyFormFieldsFilled: () => void =
+        result.result.current.notifyFormFieldsFilled;
 
       act(() => {
         notifyFormFieldsFilled();
@@ -231,18 +243,29 @@ describe(useLoginForm.name, () => {
       dispatchMock.mockReset();
     });
 
+    it('should called useAppDispatch()', () => {
+      expect(dispatchMock).toHaveBeenCalled();
+      expect(dispatchMock).toHaveBeenCalledWith(createAuthByCredentialsResult);
+    });
+
     it('should return an status backend OK', () => {
       expect(formStatus).toBe(LoginStatus.backendOK);
     });
   });
 
   describe('when called, and API returns a non OK response', () => {
+    let createAuthByCredentialsResult: ReturnType<
+      typeof createAuthByCredentials
+    >;
     let result: RenderHookResult<UseLoginFormResult, unknown>;
-    let notifyFormFieldsFilled: () => void;
     let formStatus: LoginStatus;
     let backendError: string | null;
 
     beforeAll(async () => {
+      createAuthByCredentialsResult = Symbol() as unknown as ReturnType<
+        typeof createAuthByCredentials
+      >;
+
       (validateEmail as jest.Mock<typeof validateEmail>).mockReturnValueOnce({
         isRight: true,
         value: undefined,
@@ -265,6 +288,12 @@ describe(useLoginForm.name, () => {
         type: 'sample-type',
       };
 
+      (
+        createAuthByCredentials as unknown as jest.Mock<
+          typeof createAuthByCredentials
+        >
+      ).mockReturnValueOnce(createAuthByCredentialsResult);
+
       dispatchMock = jest
         .fn<ReturnType<typeof useAppDispatch>>()
         .mockImplementationOnce(
@@ -285,7 +314,8 @@ describe(useLoginForm.name, () => {
 
       result = renderHook(() => useLoginForm(initialForm));
 
-      notifyFormFieldsFilled = result.result.current.notifyFormFieldsFilled;
+      const notifyFormFieldsFilled: () => void =
+        result.result.current.notifyFormFieldsFilled;
 
       act(() => {
         notifyFormFieldsFilled();
@@ -301,6 +331,11 @@ describe(useLoginForm.name, () => {
     afterAll(() => {
       jest.clearAllMocks();
       jest.resetAllMocks();
+    });
+
+    it('should called useAppDispatch()', () => {
+      expect(dispatchMock).toHaveBeenCalled();
+      expect(dispatchMock).toHaveBeenCalledWith(createAuthByCredentialsResult);
     });
 
     it('should return an status backend KO', () => {
