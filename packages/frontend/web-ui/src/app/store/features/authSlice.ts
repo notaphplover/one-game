@@ -43,7 +43,7 @@ function createAuthRejectedReducer(): AuthState {
 
 const initialState: AuthState = createInitialState();
 
-export const authSlice: Slice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
@@ -58,6 +58,10 @@ export const authSlice: Slice = createSlice({
   },
 });
 
-export const selectAuthToken = (state: RootState) => state.auth.token;
+export const selectAuthToken = (state: RootState): string | null => {
+  return state.auth.status === AuthStateStatus.authenticated
+    ? state.auth.token
+    : null;
+};
 
 export default authSlice;

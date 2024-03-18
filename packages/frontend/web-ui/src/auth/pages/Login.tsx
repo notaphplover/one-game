@@ -1,4 +1,9 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import {
+  NavigateFunction,
+  Link as RouterLink,
+  useNavigate,
+} from 'react-router-dom';
 import {
   Alert,
   AlertTitle,
@@ -12,20 +17,16 @@ import {
   Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  STATUS_LOG_BACKEND_KO,
-  STATUS_LOG_BACKEND_OK,
-  STATUS_LOG_PENDING_BACKEND,
-  STATUS_LOG_PENDING_VAL,
-  useLoginForm,
-} from '../hooks/useLoginForm';
+import { useLoginForm } from '../hooks/useLoginForm';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useAppSelector } from '../../app/store/hooks';
+import { LoginStatus } from '../models/LoginStatus';
+import { UseLoginFormResult } from '../models/UseLoginFormResult';
+import { selectAuthToken } from '../../app/store/features/authSlice';
 
-export const Login = () => {
+export const Login = (): React.JSX.Element => {
   const {
     backendError,
     formFields,
@@ -33,7 +34,7 @@ export const Login = () => {
     formValidation,
     notifyFormFieldsFilled,
     setFormField,
-  } = useLoginForm({
+  }: UseLoginFormResult = useLoginForm({
     email: '',
     password: '',
   });
@@ -41,18 +42,18 @@ export const Login = () => {
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
 
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     notifyFormFieldsFilled();
   };
 
-  const { token } = useSelector((state) => state.auth);
+  const token = useAppSelector(selectAuthToken);
 
   useEffect(() => {
-    if (formStatus === STATUS_LOG_BACKEND_OK) {
+    if (formStatus === LoginStatus.backendOK && token !== null) {
       window.localStorage.setItem('token', token);
       navigate('/', { replace: true });
     }
@@ -60,23 +61,23 @@ export const Login = () => {
 
   const isTextFieldDisabled = () => {
     return (
-      formStatus === STATUS_LOG_BACKEND_OK ||
-      formStatus === STATUS_LOG_PENDING_BACKEND ||
-      formStatus === STATUS_LOG_PENDING_VAL
+      formStatus === LoginStatus.backendOK ||
+      formStatus === LoginStatus.pendingBackend ||
+      formStatus === LoginStatus.pendingValidation
     );
   };
 
   const isShowPasswordButtonDisabled = () => {
     return (
-      formStatus === STATUS_LOG_BACKEND_OK ||
-      formStatus === STATUS_LOG_PENDING_BACKEND ||
-      formStatus === STATUS_LOG_PENDING_VAL
+      formStatus === LoginStatus.backendOK ||
+      formStatus === LoginStatus.pendingBackend ||
+      formStatus === LoginStatus.pendingValidation
     );
   };
 
   if (
-    formStatus === STATUS_LOG_PENDING_VAL ||
-    formStatus === STATUS_LOG_PENDING_BACKEND
+    formStatus === LoginStatus.pendingValidation ||
+    formStatus === LoginStatus.pendingBackend
   ) {
     return <CheckingAuth />;
   }
@@ -114,9 +115,8 @@ export const Login = () => {
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-text-fieldset"
+                    className="form-text-fieldset form-login-email"
                     autoFocus
-                    aria-label="form-login-email"
                     disabled={isTextFieldDisabled()}
                     label="Email"
                     type="email"
@@ -125,14 +125,13 @@ export const Login = () => {
                     name="email"
                     value={formFields.email}
                     onChange={setFormField}
-                    error={formValidation.email !== undefined}
-                    helperText={formValidation.email}
+                    error={formValidation?.email !== undefined}
+                    helperText={formValidation?.email}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-text-fieldset"
-                    aria-label="form-login-password"
+                    className="form-text-fieldset form-login-password"
                     disabled={isTextFieldDisabled()}
                     label="Password"
                     type={showPassword ? 'text' : 'password'}
@@ -163,9 +162,8 @@ export const Login = () => {
                 </Grid>
 
                 <Grid
-                  aria-label="form-login-error"
                   container
-                  display={formStatus === STATUS_LOG_BACKEND_KO ? '' : 'none'}
+                  display={formStatus === LoginStatus.backendKO ? '' : 'none'}
                 >
                   <Grid item xs={12}>
                     <Box className="form-login-error">
