@@ -16,8 +16,6 @@ import { INVALID_CREDENTIALS_ERROR, useLoginForm } from './useLoginForm';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import {
-  FormFieldsApp,
-  FormValidationResult,
   UseLoginFormParams,
   UseLoginFormResult,
 } from '../models/UseLoginFormResult';
@@ -27,6 +25,8 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
 import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
+import { FormFieldsApp } from '../models/FormFieldsApp';
+import { FormValidationResult } from '../models/FormValidationResult';
 
 describe(useLoginForm.name, () => {
   let initialForm: UseLoginFormParams;

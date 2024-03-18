@@ -1,23 +1,11 @@
 import { LoginStatus } from './LoginStatus';
+import { FormFieldsApp } from './FormFieldsApp';
+import { FormValidationResult } from './FormValidationResult';
 
 export interface UseLoginFormParams {
   email: string;
   password: string;
 }
-
-export interface FormValidationResult {
-  name?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-}
-
-export type FormFieldsApp = {
-  name?: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-};
 
 export interface UseLoginFormResult {
   backendError: string | null;

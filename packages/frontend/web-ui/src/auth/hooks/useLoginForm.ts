@@ -4,13 +4,13 @@ import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 import {
-  FormValidationResult,
   UseLoginFormParams,
   UseLoginFormResult,
 } from '../models/UseLoginFormResult';
 import { useAppDispatch } from '../../app/store/hooks';
 import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
 import { Either } from '../../common/models/Either';
+import { FormValidationResult } from '../models/FormValidationResult';
 
 export const INVALID_CREDENTIALS_ERROR: string = 'Invalid credentials.';
 const UNEXPECTED_ERROR: string =
