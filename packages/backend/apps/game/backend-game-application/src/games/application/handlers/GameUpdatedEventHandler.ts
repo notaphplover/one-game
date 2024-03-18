@@ -8,7 +8,10 @@ import {
   Builder,
   Handler,
 } from '@cornie-js/backend-common';
-import { GameActionCreateQuery } from '@cornie-js/backend-game-domain/gameActions';
+import {
+  GameAction,
+  GameActionCreateQuery,
+} from '@cornie-js/backend-game-domain/gameActions';
 import { Game } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -80,15 +83,15 @@ export class GameUpdatedEventHandler
       throw new AppError(AppErrorKind.unknown, `Game "${gameId}" not found`);
     }
 
-    await Promise.all([
-      this.#createGameAction(gameUpdatedEvent),
-      this.#publishGameUpdatedMessageEvent(game),
-    ]);
+    const gameAction: GameAction =
+      await this.#createGameAction(gameUpdatedEvent);
+
+    await this.#publishGameUpdatedMessageEvent(game, gameAction);
   }
 
   async #createGameAction(
     gameUpdatedEvent: ActiveGameUpdatedEvent,
-  ): Promise<void> {
+  ): Promise<GameAction> {
     const uuidContext: UuidContext = {
       uuid: this.#uuidProviderOutputPort.generateV4(),
     };
@@ -98,15 +101,19 @@ export class GameUpdatedEventHandler
         uuidContext,
       );
 
-    await this.#gameActionPersistenceOutputPort.create(
+    return this.#gameActionPersistenceOutputPort.create(
       gameActionCreateQuery,
       gameUpdatedEvent.transactionWrapper,
     );
   }
 
-  async #publishGameUpdatedMessageEvent(game: Game): Promise<void> {
+  async #publishGameUpdatedMessageEvent(
+    game: Game,
+    gameAction: GameAction,
+  ): Promise<void> {
     const gameUpdatedMessageEvent: GameUpdatedMessageEvent = {
       game,
+      gameAction,
       kind: GameMessageEventKind.gameUpdated,
     };
 

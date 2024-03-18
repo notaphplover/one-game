@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v2/game-events/cards-drawn-game-event.json",
+  "title": "CardsDrawnGameEventV2",
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "currentPlayingSlotIndex": {
+      "type": "integer"
+    },
+    "drawAmount": {
+      "type": "integer"
+    },
+    "kind": {
+      "const": "draw",
+      "type": "string"
+    },
+    "position": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "currentPlayingSlotIndex",
+    "drawAmount",
+    "kind",
+    "position"
+  ]
+}

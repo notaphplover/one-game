@@ -6,7 +6,12 @@ import {
 } from '@cornie-js/backend-game-domain/gameActions';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import {
+  InsertQueryBuilder,
+  ObjectLiteral,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { CardDbBuilder } from '../../../../cards/adapter/typeorm/builders/CardDbBuilder';
@@ -19,7 +24,10 @@ import { GameActionDbPayloadV1Kind } from '../models/v1/GameActionDbPayloadV1Kin
 @Injectable()
 export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
   implements
-    Builder<QueryDeepPartialEntity<GameActionDb>, [GameActionCreateQuery]>
+    Builder<
+      InsertQueryBuilder<GameActionDb>,
+      [GameActionCreateQuery, InsertQueryBuilder<GameActionDb>]
+    >
 {
   readonly #cardDbBuilder: Builder<CardDb, [Card]>;
   readonly #repository: Repository<GameActionDb>;
@@ -36,17 +44,22 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
 
   public build(
     gameActionCreateQuery: GameActionCreateQuery,
-  ): QueryDeepPartialEntity<GameActionDb> {
-    return {
+    insertQueryBuilder: InsertQueryBuilder<GameActionDb>,
+  ): InsertQueryBuilder<GameActionDb> {
+    const gameActionCreateQueryTypeOrm: QueryDeepPartialEntity<GameActionDb> = {
       currentPlayingSlotIndex: gameActionCreateQuery.currentPlayingSlotIndex,
       game: {
         id: gameActionCreateQuery.gameId,
       },
       id: gameActionCreateQuery.id,
       payload: JSON.stringify(this.#buildPayload(gameActionCreateQuery)),
-      position: (): string => this.#buildPositionQuery(gameActionCreateQuery),
+      position: (): string => this.#buildPositionQuery(),
       turn: gameActionCreateQuery.turn,
     };
+
+    return insertQueryBuilder
+      .values(gameActionCreateQueryTypeOrm)
+      .setParameters(this.#buildPositionQueryParameters(gameActionCreateQuery));
   }
 
   #buildPayload(
@@ -77,7 +90,7 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
     }
   }
 
-  #buildPositionQuery(gameActionCreateQuery: GameActionCreateQuery): string {
+  #buildPositionQuery(): string {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const positionQueryBuilder: SelectQueryBuilder<GameActionDb> =
       this.#repository
@@ -87,11 +100,16 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
         .select([
           `COALESCE(MAX(${GameActionDb.name}.position) + 1, 0) as position`,
         ])
-        .where(
-          // TODO: use a parameter ASAP! In this specific context, this operation is safe since id is manages by us.
-          `${GameActionDb.name}.game = '${gameActionCreateQuery.gameId}'`,
-        );
+        .where(`${GameActionDb.name}.game = :${GameActionDb.name}.game`);
 
     return positionQueryBuilder.getQuery();
+  }
+
+  #buildPositionQueryParameters(
+    gameActionCreateQuery: GameActionCreateQuery,
+  ): ObjectLiteral {
+    return {
+      [`${GameActionDb.name}.game`]: gameActionCreateQuery.gameId,
+    };
   }
 }

@@ -9,7 +9,7 @@
       "type": "integer"
     },
     "userId": {
-      "type": ["string"]
+      "type": "string"
     }
   },
   "required": [

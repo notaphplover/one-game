@@ -6,7 +6,7 @@ import { GameMessageEvent } from '../models/GameMessageEvent';
 import { GameMessageEventV1FromGameMessageEventBuilder } from './GameMessageEventV1FromGameMessageEventBuilder';
 
 @Injectable()
-export class MessageEventFromStringifiedGameMessageEventBuilder
+export class MessageEventFromStringifiedGameMessageEventV1Builder
   implements Builder<MessageEvent, [string]>
 {
   readonly #gameMessageEventV1FromGameMessageEventBuilder: Builder<
