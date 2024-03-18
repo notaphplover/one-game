@@ -20,7 +20,7 @@ import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/Gam
 import { GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder } from '../../../application/builders/GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder';
 import { GameSpecV1FromGameSpecBuilder } from '../../../application/builders/GameSpecV1FromGameSpecBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
-import { MessageEventFromStringifiedGameMessageEventBuilder } from '../../../application/builders/MessageEventFromStringifiedGameMessageEventBuilder';
+import { MessageEventFromStringifiedGameMessageEventV1Builder } from '../../../application/builders/MessageEventFromStringifiedGameMessageEventV1Builder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
 import { CreateGameUseCaseHandler } from '../../../application/handlers/CreateGameUseCaseHandler';
 import { GameIdDrawCardsQueryV1Handler } from '../../../application/handlers/GameIdDrawCardsQueryV1Handler';
@@ -84,7 +84,7 @@ export class GameApplicationModule {
         GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder,
         GameUpdatedEventHandler,
         GameV1FromGameBuilder,
-        MessageEventFromStringifiedGameMessageEventBuilder,
+        MessageEventFromStringifiedGameMessageEventV1Builder,
         NonStartedGameFilledEventHandler,
         NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
       ],

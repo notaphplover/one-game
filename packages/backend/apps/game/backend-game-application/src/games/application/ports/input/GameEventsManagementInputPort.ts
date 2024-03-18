@@ -6,7 +6,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { MessageEventFromStringifiedGameMessageEventBuilder } from '../../builders/MessageEventFromStringifiedGameMessageEventBuilder';
+import { MessageEventFromStringifiedGameMessageEventV1Builder } from '../../builders/MessageEventFromStringifiedGameMessageEventV1Builder';
 import {
   GameEventsSubscriptionOutputPort,
   gameEventsSubscriptionOutputPortSymbol,
@@ -23,7 +23,7 @@ export class GameEventsManagementInputPort {
   constructor(
     @Inject(gameEventsSubscriptionOutputPortSymbol)
     gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort,
-    @Inject(MessageEventFromStringifiedGameMessageEventBuilder)
+    @Inject(MessageEventFromStringifiedGameMessageEventV1Builder)
     messageEventFromStringifiedGameMessageEventBuilder: Builder<
       MessageEvent,
       [string]
