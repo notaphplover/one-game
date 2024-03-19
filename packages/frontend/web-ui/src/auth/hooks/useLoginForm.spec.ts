@@ -25,7 +25,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
 import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
-import { FormFieldsApp } from '../models/FormFieldsApp';
+import { FormFieldsLogin } from '../models/FormFieldsLogin';
 import { FormValidationResult } from '../models/FormValidationResult';
 
 describe(useLoginForm.name, () => {
@@ -47,7 +47,7 @@ describe(useLoginForm.name, () => {
 
   describe('when called, on an initialize values', () => {
     let result: RenderHookResult<UseLoginFormResult, unknown>;
-    let formFields: FormFieldsApp;
+    let formFields: FormFieldsLogin;
     let formStatus: LoginStatus;
 
     beforeAll(() => {
