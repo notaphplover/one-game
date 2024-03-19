@@ -1,34 +1,36 @@
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { Register } from './Register';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import {
-  STATUS_REG_BACKEND_KO,
-  STATUS_REG_BACKEND_OK,
-  STATUS_REG_INITIAL,
-  STATUS_REG_VALIDATION_KO,
-  useRegisterForm,
-} from '../hooks/useRegisterForm';
-import { useShowPassword } from '../../common/hooks/useShowPassword';
+import { afterAll, beforeAll, describe, expect, jest, it } from '@jest/globals';
 
 jest.mock('../hooks/useRegisterForm');
 jest.mock('../../common/hooks/useShowPassword');
 
+import { Register } from './Register';
+import {
+  RenderResult,
+  fireEvent,
+  render,
+  screen,
+} from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { useRegisterForm } from '../hooks/useRegisterForm';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
+import { RegisterStatus } from '../models/RegisterStatus';
+import { UseRegisterFormParams } from '../models/UseRegisterFormResult';
+
 describe(Register.name, () => {
-  let formFieldsFixture;
+  let formFieldsFixture: UseRegisterFormParams;
 
-  let notifyFormFieldsFilledMock;
-  let setFormFieldMock;
+  let notifyFormFieldsFilledMock: jest.Mock;
+  let setFormFieldMock: jest.Mock;
 
-  let handleClickShowPasswordMock;
-  let handleMouseDownPasswordMock;
+  let handleClickShowPasswordMock: jest.Mock;
+  let handleMouseDownPasswordMock: jest.Mock;
 
   beforeAll(() => {
     formFieldsFixture = {
-      name: 'Mariote',
-      email: 'mario@google.com',
-      password: 'password',
-      confirmPassword: 'confirm-password',
+      name: 'name fixture',
+      email: 'name@fixture.com',
+      password: 'password-fixture',
+      confirmPassword: 'confirm-password-fixture',
     };
 
     notifyFormFieldsFilledMock = jest.fn();
@@ -39,56 +41,58 @@ describe(Register.name, () => {
   });
 
   describe('when called, on an initial state', () => {
-    let inputAlias;
-    let inputEmail;
-    let inputPassword;
-    let inputConfirmPassword;
+    let inputAlias: string;
+    let inputEmail: string;
+    let inputPassword: string;
+    let inputConfirmPassword: string;
 
     beforeAll(() => {
-      useRegisterForm.mockReturnValue({
+      (
+        useRegisterForm as jest.Mock<typeof useRegisterForm>
+      ).mockReturnValueOnce({
         backendError: null,
         formFields: formFieldsFixture,
-        formStatus: STATUS_REG_INITIAL,
+        formStatus: RegisterStatus.initial,
         formValidation: {},
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
 
-      useShowPassword.mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <Register />
         </MemoryRouter>,
       );
 
-      const formAliasTextField = screen.getByLabelText('form-register-alias');
-      const formAliasTextFieldInput = formAliasTextField.querySelector('input');
+      const formAliasTextFieldInput: HTMLInputElement | null =
+        (renderResult.container.querySelector('.form-register-alias')
+          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
 
       inputAlias = formAliasTextFieldInput.value;
 
-      const formEmailTextField = screen.getByLabelText('form-register-email');
-      const formEmailTextFieldInput = formEmailTextField.querySelector('input');
+      const formEmailTextFieldInput: HTMLInputElement | null =
+        (renderResult.container.querySelector('.form-register-email')
+          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
 
       inputEmail = formEmailTextFieldInput.value;
 
-      const formPasswordTextField = screen.getByLabelText(
-        'form-register-password',
-      );
-      const formPasswordTextFieldInput =
-        formPasswordTextField.querySelector('input');
+      const formPasswordTextFieldInput: HTMLInputElement | null =
+        (renderResult.container.querySelector('.form-register-password')
+          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
 
       inputPassword = formPasswordTextFieldInput.value;
 
-      const formConfirmPasswordTextField = screen.getByLabelText(
-        'form-register-confirm-password',
-      );
-      const formConfirmPasswordTextFieldInput =
-        formConfirmPasswordTextField.querySelector('input');
+      const formConfirmPasswordTextFieldInput: HTMLInputElement | null =
+        (renderResult.container.querySelector('.form-register-confirm-password')
+          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
 
       inputConfirmPassword = formConfirmPasswordTextFieldInput.value;
     });
@@ -116,17 +120,25 @@ describe(Register.name, () => {
   });
 
   describe('when called, and input value are invalid and an error is displayed', () => {
-    let pErrorName, pErrorEmail, pErrorPassword, pErrorConfirmPassword;
+    let pErrorName: string | null, pErrorEmail: string | null;
+    let pErrorPassword: string | null, pErrorConfirmPassword: string | null;
     const nameFixtureError = 'name Error';
     const emailFixtureError = 'email Error';
     const passwordFixtureError = 'password Error';
     const confirmPasswordFixtureError = 'confirmPassword Error';
 
     beforeAll(() => {
-      useRegisterForm.mockReturnValue({
+      (
+        useRegisterForm as jest.Mock<typeof useRegisterForm>
+      ).mockReturnValueOnce({
         backendError: null,
-        formFields: {},
-        formStatus: STATUS_REG_VALIDATION_KO,
+        formFields: {
+          name: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        },
+        formStatus: RegisterStatus.validationKO,
         formValidation: {
           name: nameFixtureError,
           email: emailFixtureError,
@@ -137,42 +149,44 @@ describe(Register.name, () => {
         setFormField: setFormFieldMock,
       });
 
-      useShowPassword.mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <Register />
         </MemoryRouter>,
       );
 
-      const formNameTextField = screen.getByLabelText('form-register-alias');
-      const formNameTextFieldP = formNameTextField.querySelector('p');
+      const formAliasTextFieldParagraph: Text | null =
+        (renderResult.container.querySelector('.form-register-alias')
+          ?.childNodes[2]?.firstChild as Text) ?? null;
 
-      pErrorName = formNameTextFieldP.innerHTML;
+      pErrorName = formAliasTextFieldParagraph?.textContent;
 
-      const formEmailTextField = screen.getByLabelText('form-register-email');
-      const formEmailTextFieldP = formEmailTextField.querySelector('p');
+      const formEmailTextFieldParagraph: Text | null =
+        (renderResult.container.querySelector('.form-register-email')
+          ?.childNodes[2]?.firstChild as Text) ?? null;
 
-      pErrorEmail = formEmailTextFieldP.innerHTML;
+      pErrorEmail = formEmailTextFieldParagraph?.textContent;
 
-      const formPasswordTextField = screen.getByLabelText(
-        'form-register-password',
-      );
-      const formPasswordTextFieldP = formPasswordTextField.querySelector('p');
+      const formPasswordTextFieldParagraph: Text | null =
+        (renderResult.container.querySelector('.form-register-password')
+          ?.childNodes[2]?.firstChild as Text) ?? null;
 
-      pErrorPassword = formPasswordTextFieldP.innerHTML;
+      pErrorPassword = formPasswordTextFieldParagraph?.textContent;
 
-      const formConfirmPasswordTextField = screen.getByLabelText(
-        'form-register-confirm-password',
-      );
-      const formConfirmPasswordTextFieldP =
-        formConfirmPasswordTextField.querySelector('p');
+      const formConfirmPasswordTextFieldParagraph: Text | null =
+        (renderResult.container.querySelector('.form-register-confirm-password')
+          ?.childNodes[2]?.firstChild as Text) ?? null;
 
-      pErrorConfirmPassword = formConfirmPasswordTextFieldP.innerHTML;
+      pErrorConfirmPassword =
+        formConfirmPasswordTextFieldParagraph?.textContent;
     });
 
     afterAll(() => {
@@ -198,38 +212,40 @@ describe(Register.name, () => {
   });
 
   describe('when called, and exist a backend error and error is displayed', () => {
-    let pErrorBackend;
-    const backendErrorFixture = 'backend error';
+    let pErrorBackend: string | null;
+    const backendErrorFixture: string = 'backend error';
 
     beforeAll(() => {
-      useRegisterForm.mockReturnValue({
+      (
+        useRegisterForm as jest.Mock<typeof useRegisterForm>
+      ).mockReturnValueOnce({
         backendError: backendErrorFixture,
         formFields: formFieldsFixture,
-        formStatus: STATUS_REG_BACKEND_KO,
+        formStatus: RegisterStatus.backendKO,
         formValidation: {},
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
 
-      useShowPassword.mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <Register />
         </MemoryRouter>,
       );
 
-      const formErrorMessageAlert = screen.getByLabelText(
-        'form-register-error',
-      );
-      const formErrorMessageAlertMessage =
-        formErrorMessageAlert.querySelector('.MuiAlert-message');
+      const formErrorMessageAlertMessage: Text | null =
+        (renderResult.container.querySelector('.MuiAlert-message')
+          ?.childNodes[1] as Text) ?? null;
 
-      pErrorBackend = formErrorMessageAlertMessage.childNodes[1].data;
+      pErrorBackend = formErrorMessageAlertMessage.textContent;
     });
 
     afterAll(() => {
@@ -243,37 +259,41 @@ describe(Register.name, () => {
   });
 
   describe('when called, and create user is ok and the message is displayed', () => {
-    let userCreateOK;
-    const messageConfirmation =
+    let userCreateOK: string | null;
+    const messageConfirmation: string =
       'User created! We sent an email, please, complete the steps.';
 
     beforeAll(() => {
-      useRegisterForm.mockReturnValue({
+      (
+        useRegisterForm as jest.Mock<typeof useRegisterForm>
+      ).mockReturnValueOnce({
         backendError: null,
         formFields: formFieldsFixture,
-        formStatus: STATUS_REG_BACKEND_OK,
+        formStatus: RegisterStatus.backendOK,
         formValidation: {},
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
 
-      useShowPassword.mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <Register />
         </MemoryRouter>,
       );
 
-      const formMessageAlert = screen.getByLabelText('form-register-ok');
-      const formMessageAlertMessage =
-        formMessageAlert.querySelector('.MuiAlert-message');
+      const formMessageAlertMessage: Text | null =
+        (renderResult.container.querySelector('.form-register-success')
+          ?.childNodes[0]?.childNodes[1]?.lastChild as Text) ?? null;
 
-      userCreateOK = formMessageAlertMessage.childNodes[1].data;
+      userCreateOK = formMessageAlertMessage.textContent;
     });
 
     afterAll(() => {
@@ -288,28 +308,35 @@ describe(Register.name, () => {
 
   describe('when called, and the Create button is pressed', () => {
     beforeAll(() => {
-      useRegisterForm.mockReturnValue({
+      (
+        useRegisterForm as jest.Mock<typeof useRegisterForm>
+      ).mockReturnValueOnce({
         backendError: null,
         formFields: formFieldsFixture,
-        formStatus: STATUS_REG_INITIAL,
+        formStatus: RegisterStatus.initial,
         formValidation: {},
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
 
-      useShowPassword.mockReturnValue({
+      (
+        useShowPassword as jest.Mock<typeof useShowPassword>
+      ).mockReturnValueOnce({
         showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <Register />
         </MemoryRouter>,
       );
 
-      const buttonCreate = screen.getByLabelText('form-register-button');
+      const buttonCreate: Element = renderResult.container.querySelector(
+        '.register-button',
+      ) as Element;
+
       fireEvent.click(buttonCreate);
     });
 
