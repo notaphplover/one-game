@@ -9,13 +9,20 @@
       "$ref": "https://onegame.schemas/api/v1/cards/card-array.json"
     },
     "currentCard": {
-      "$ref": "https://onegame.schemas/api/v1/cards/card.json"
+      "anyOf": [
+        {
+          "$ref": "https://onegame.schemas/api/v1/cards/card.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "currentPlayingSlotIndex": {
       "type": "integer"
     },
     "kind": {
-      "const": "draw",
+      "const": "cardsPlayed",
       "type": "string"
     },
     "position": {

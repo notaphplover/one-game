@@ -1,24 +1,16 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 
 import { NonStartedGame } from '../entities/NonStartedGame';
 import { NonStartedGameFixtures } from '../fixtures/NonStartedGameFixtures';
-import { GameDrawService } from './GameDrawService';
 import { GameService } from './GameService';
 
 describe(GameService.name, () => {
-  let gameDrawServiceMock: jest.Mocked<GameDrawService>;
-
   let gameService: GameService;
 
   beforeAll(() => {
-    gameDrawServiceMock = {
-      calculateDrawMutation: jest.fn(),
-      calculateInitialCardsDrawMutation: jest.fn(),
-    } as Partial<jest.Mocked<GameDrawService>> as jest.Mocked<GameDrawService>;
-
-    gameService = new GameService(gameDrawServiceMock);
+    gameService = new GameService();
   });
 
   describe('.getGameSlotOrThrow', () => {

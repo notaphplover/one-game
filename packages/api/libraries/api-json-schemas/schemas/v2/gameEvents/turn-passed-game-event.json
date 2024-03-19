@@ -13,7 +13,7 @@
       "type": "string"
     },
     "nextPlayingSlotIndex": {
-      "type": "integer"
+      "type": ["integer", "null"]
     },
     "position": {
       "type": "integer"

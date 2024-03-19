@@ -1,5 +1,5 @@
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { Card } from '../../../cards/domain/valueObjects/Card';
 import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
@@ -13,7 +13,6 @@ import { GameCardSpec } from '../valueObjects/GameCardSpec';
 import { GameDirection } from '../valueObjects/GameDirection';
 import { GameSpec } from '../valueObjects/GameSpec';
 import { NonStartedGameSlot } from '../valueObjects/NonStartedGameSlot';
-import { GameDrawService } from './GameDrawService';
 
 const UNO_ORIGINAL_ACTION_CARDS_PER_COLOR: number = 2;
 const UNO_ORIGINAL_NUMBERS_AMOUNT: number = 10;
@@ -23,15 +22,6 @@ const UNO_ORIGINAL_WILD_CARDS_PER_COLOR: number = 4;
 
 @Injectable()
 export class GameService {
-  readonly #gameDrawService: GameDrawService;
-
-  constructor(
-    @Inject(GameDrawService)
-    gameDrawService: GameDrawService,
-  ) {
-    this.#gameDrawService = gameDrawService;
-  }
-
   public getGameSlotOrThrow(game: ActiveGame, index: number): ActiveGameSlot;
   public getGameSlotOrThrow(
     game: NonStartedGame,
