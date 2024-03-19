@@ -12,7 +12,7 @@
       "type": "integer"
     },
     "kind": {
-      "const": "draw",
+      "const": "cardsDrawn",
       "type": "string"
     },
     "position": {
