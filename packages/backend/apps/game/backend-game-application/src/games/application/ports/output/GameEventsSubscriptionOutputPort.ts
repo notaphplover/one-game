@@ -4,8 +4,9 @@ import { SseTeardownExecutor } from '@cornie-js/backend-http';
 import { GameMessageEvent } from '../../models/GameMessageEvent';
 
 export interface GameEventsSubscriptionOutputPort {
-  publish(gameId: string, gameMessageEvent: GameMessageEvent): Promise<void>;
-  subscribe(
+  publishV1(gameId: string, gameMessageEvent: GameMessageEvent): Promise<void>;
+  publishV2(gameId: string, gameMessageEvent: GameMessageEvent): Promise<void>;
+  subscribeV1(
     gameId: string,
     publisher: Publisher<string>,
   ): Promise<SseTeardownExecutor>;

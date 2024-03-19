@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GameEventsChannelFromGameIdBuilder
-  implements Builder<string, [string]>
+  implements Builder<string, [string, number]>
 {
-  public build(gameId: string): string {
-    return `v1/games/${gameId}`;
+  public build(gameId: string, version: number): string {
+    return `v${version}/games/${gameId}`;
   }
 }

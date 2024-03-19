@@ -10,7 +10,7 @@ import { GameEventsSubscriptionIoredisOutputAdapter } from './GameEventsSubscrip
 
 describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
   let gameEventsChannelFromGameIdBuilderMock: jest.Mocked<
-    Builder<string, [string]>
+    Builder<string, [string, number]>
   >;
   let gameEventsIoredisSubscriberMock: jest.Mocked<GameEventsIoredisSubscriber>;
   let ioredisPublisherMock: jest.Mocked<IoredisPublisher>;
@@ -41,7 +41,7 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
       );
   });
 
-  describe('.publish', () => {
+  describe('.publishV1', () => {
     let gameIdFixture: string;
     let channelFixture: string;
     let gameMessageEventFixture: GameMessageEvent;
@@ -60,7 +60,50 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
           channelFixture,
         );
 
-        result = await gameEventsSubscriptionIoredisOutputAdapter.publish(
+        result = await gameEventsSubscriptionIoredisOutputAdapter.publishV1(
+          gameIdFixture,
+          gameMessageEventFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call ioredisPublisher.publish()', () => {
+        expect(ioredisPublisherMock.publish).toHaveBeenCalledTimes(1);
+        expect(ioredisPublisherMock.publish).toHaveBeenCalledWith(
+          channelFixture,
+          JSON.stringify(gameMessageEventFixture),
+        );
+      });
+
+      it('should resolve to undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('.publishV2', () => {
+    let gameIdFixture: string;
+    let channelFixture: string;
+    let gameMessageEventFixture: GameMessageEvent;
+
+    beforeAll(() => {
+      gameIdFixture = 'game id';
+      channelFixture = 'channel fixture';
+      gameMessageEventFixture = Symbol() as unknown as GameMessageEvent;
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameEventsChannelFromGameIdBuilderMock.build.mockReturnValueOnce(
+          channelFixture,
+        );
+
+        result = await gameEventsSubscriptionIoredisOutputAdapter.publishV2(
           gameIdFixture,
           gameMessageEventFixture,
         );
@@ -106,7 +149,7 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
           undefined,
         );
 
-        result = await gameEventsSubscriptionIoredisOutputAdapter.subscribe(
+        result = await gameEventsSubscriptionIoredisOutputAdapter.subscribeV1(
           gameIdFixture,
           publisherFixture,
         );
@@ -122,7 +165,7 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameEventsChannelFromGameIdBuilderMock.build,
-        ).toHaveBeenCalledWith(gameIdFixture);
+        ).toHaveBeenCalledWith(gameIdFixture, 1);
       });
 
       it('should call gameEventsIoredisSubscriber.subscribe()', () => {

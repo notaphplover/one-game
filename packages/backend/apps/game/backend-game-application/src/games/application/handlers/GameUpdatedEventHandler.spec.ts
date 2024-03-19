@@ -43,7 +43,7 @@ describe(GameUpdatedEventHandler.name, () => {
       create: jest.fn(),
     };
     gameEventsSubscriptionOutputPortMock = {
-      publish: jest.fn(),
+      publishV1: jest.fn(),
     } as Partial<
       jest.Mocked<GameEventsSubscriptionOutputPort>
     > as jest.Mocked<GameEventsSubscriptionOutputPort>;
@@ -200,10 +200,10 @@ describe(GameUpdatedEventHandler.name, () => {
         };
 
         expect(
-          gameEventsSubscriptionOutputPortMock.publish,
+          gameEventsSubscriptionOutputPortMock.publishV1,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameEventsSubscriptionOutputPortMock.publish,
+          gameEventsSubscriptionOutputPortMock.publishV1,
         ).toHaveBeenCalledWith(
           gameUpdatedEventFixture.gameBeforeUpdate.id,
           expected,

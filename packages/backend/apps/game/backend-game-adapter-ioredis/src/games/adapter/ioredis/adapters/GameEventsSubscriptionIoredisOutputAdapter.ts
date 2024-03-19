@@ -10,17 +10,23 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { GameEventsIoredisSubscriber } from '../subscribers/GameEventsIoredisSubscriber';
 
+const V1: number = 1;
+const V2: number = 2;
+
 @Injectable()
 export class GameEventsSubscriptionIoredisOutputAdapter
   implements GameEventsSubscriptionOutputPort
 {
-  readonly #gameEventsChannelFromGameIdBuilder: Builder<string, [string]>;
+  readonly #gameEventsChannelFromGameIdBuilder: Builder<
+    string,
+    [string, number]
+  >;
   readonly #gameEventsIoredisSubscriber: GameEventsIoredisSubscriber;
   readonly #ioredisPublisher: IoredisPublisher;
 
   constructor(
     @Inject(GameEventsChannelFromGameIdBuilder)
-    gameEventsChannelFromGameIdBuilder: Builder<string, [string]>,
+    gameEventsChannelFromGameIdBuilder: Builder<string, [string, number]>,
     @Inject(GameEventsIoredisSubscriber)
     gameEventsIoredisSubscriber: GameEventsIoredisSubscriber,
     @Inject(IoredisPublisher)
@@ -32,25 +38,29 @@ export class GameEventsSubscriptionIoredisOutputAdapter
     this.#ioredisPublisher = ioredisPublisher;
   }
 
-  public async publish(
+  public async publishV1(
     gameId: string,
     gameMessageEvent: GameMessageEvent,
   ): Promise<void> {
-    const channel: string =
-      this.#gameEventsChannelFromGameIdBuilder.build(gameId);
-
-    await this.#ioredisPublisher.publish(
-      channel,
-      JSON.stringify(gameMessageEvent),
-    );
+    return this.#publish(gameId, gameMessageEvent, V1);
   }
 
-  public async subscribe(
+  public async publishV2(
+    gameId: string,
+    gameMessageEvent: GameMessageEvent,
+  ): Promise<void> {
+    return this.#publish(gameId, gameMessageEvent, V2);
+  }
+
+  public async subscribeV1(
     gameId: string,
     publisher: Publisher<string>,
   ): Promise<SseTeardownExecutor> {
-    const channel: string =
-      this.#gameEventsChannelFromGameIdBuilder.build(gameId);
+    const channel: string = this.#gameEventsChannelFromGameIdBuilder.build(
+      gameId,
+      V1,
+    );
+
     await this.#gameEventsIoredisSubscriber.subscribe(channel, publisher);
 
     return {
@@ -60,5 +70,21 @@ export class GameEventsSubscriptionIoredisOutputAdapter
           publisher,
         ),
     };
+  }
+
+  async #publish(
+    gameId: string,
+    gameMessageEvent: GameMessageEvent,
+    version: number,
+  ): Promise<void> {
+    const channel: string = this.#gameEventsChannelFromGameIdBuilder.build(
+      gameId,
+      version,
+    );
+
+    await this.#ioredisPublisher.publish(
+      channel,
+      JSON.stringify(gameMessageEvent),
+    );
   }
 }
