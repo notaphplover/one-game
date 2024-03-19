@@ -12,20 +12,25 @@ describe(GameEventsChannelFromGameIdBuilder.name, () => {
 
   describe('.build', () => {
     let gameIdFixture: string;
+    let versionFixture: number;
 
     beforeAll(() => {
       gameIdFixture = 'gameId';
+      versionFixture = 1;
     });
 
     describe('when called', () => {
       let result: unknown;
 
       beforeAll(() => {
-        result = gameEventsChannelFromGameIdBuilder.build(gameIdFixture);
+        result = gameEventsChannelFromGameIdBuilder.build(
+          gameIdFixture,
+          versionFixture,
+        );
       });
 
       it('should return a channel', () => {
-        expect(result).toBe(`v1/games/${gameIdFixture}`);
+        expect(result).toBe(`v${versionFixture}/games/${gameIdFixture}`);
       });
     });
   });

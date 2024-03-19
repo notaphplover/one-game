@@ -73,7 +73,7 @@ export class GetGameGameIdEventsV1SseController extends HttpSseRequestController
         headers: {},
         statusCode: HttpStatus.OK,
       },
-      await this.#gameEventsManagementInputPort.subscribe(game.id, publisher),
+      await this.#gameEventsManagementInputPort.subscribeV1(game.id, publisher),
     ];
   }
 
