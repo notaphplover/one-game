@@ -5,7 +5,7 @@ import { Builder } from '@cornie-js/backend-common';
 import { Game } from '@cornie-js/backend-game-domain/games';
 
 import { NonStartedGameV1Fixtures } from '../fixtures';
-import { GameMessageEventFixtures } from '../fixtures/GameMessageEventFixtures';
+import { GameUpdatedMessageEventFixtures } from '../fixtures/GameUpdatedMessageEventFixtures';
 import { GameMessageEvent } from '../models/GameMessageEvent';
 import { GameMessageEventV1FromGameMessageEventBuilder } from './GameMessageEventV1FromGameMessageEventBuilder';
 
@@ -33,7 +33,7 @@ describe(GameMessageEventV1FromGameMessageEventBuilder, () => {
 
     beforeAll(() => {
       gameV1Fixture = NonStartedGameV1Fixtures.any;
-      gameMessageEventFixture = GameMessageEventFixtures.any;
+      gameMessageEventFixture = GameUpdatedMessageEventFixtures.any;
 
       gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
 

@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 
-import { NonStartedGameV1Fixtures } from '.';
+import { NonStartedGameV1Fixtures } from './NonStartedGameV1Fixtures';
 
 export class GameMessageEventV1Fixtures {
   public static get any(): apiModels.GameMessageEventV1 {
