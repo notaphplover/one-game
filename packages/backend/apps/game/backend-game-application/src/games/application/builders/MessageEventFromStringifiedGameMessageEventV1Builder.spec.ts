@@ -4,8 +4,8 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
 import { MessageEvent } from '@cornie-js/backend-http';
 
-import { GameMessageEventFixtures } from '../fixtures/GameMessageEventFixtures';
 import { GameMessageEventV1Fixtures } from '../fixtures/GameMessageEventV1Fixtures';
+import { GameUpdatedMessageEventFixtures } from '../fixtures/GameUpdatedMessageEventFixtures';
 import { GameMessageEvent } from '../models/GameMessageEvent';
 import { MessageEventFromStringifiedGameMessageEventV1Builder } from './MessageEventFromStringifiedGameMessageEventV1Builder';
 
@@ -32,7 +32,7 @@ describe(MessageEventFromStringifiedGameMessageEventV1Builder.name, () => {
     let stringifiedGameMessageEventFixture: string;
 
     beforeAll(() => {
-      gameMessageEventFixture = GameMessageEventFixtures.any;
+      gameMessageEventFixture = GameUpdatedMessageEventFixtures.any;
       stringifiedGameMessageEventFixture = JSON.stringify(
         gameMessageEventFixture,
       );

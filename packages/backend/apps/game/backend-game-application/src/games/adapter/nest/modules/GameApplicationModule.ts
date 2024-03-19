@@ -12,6 +12,7 @@ import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builder
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../application/builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
+import { GameEventV2FromGameMessageEventBuilder } from '../../../application/builders/GameEventV2FromGameMessageEventBuilder';
 import { GameMessageEventV1FromGameMessageEventBuilder } from '../../../application/builders/GameMessageEventV1FromGameMessageEventBuilder';
 import { GameOptionsCreateQueryFromGameOptionsV1Builder } from '../../../application/builders/GameOptionsCreateQueryFromGameOptionsV1Builder';
 import { GameOptionsV1FromGameOptionsBuilder } from '../../../application/builders/GameOptionsV1FromGameOptionsBuilder';
@@ -69,6 +70,7 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
         GameEventsManagementInputPort,
+        GameEventV2FromGameMessageEventBuilder,
         GameIdDrawCardsQueryV1Handler,
         GameIdPassTurnQueryV1Handler,
         GameIdPlayCardsQueryV1Handler,
