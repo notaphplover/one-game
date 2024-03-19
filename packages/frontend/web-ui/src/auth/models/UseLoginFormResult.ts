@@ -1,5 +1,5 @@
 import { LoginStatus } from './LoginStatus';
-import { FormFieldsApp } from './FormFieldsApp';
+import { FormFieldsLogin } from './FormFieldsLogin';
 import { FormValidationResult } from './FormValidationResult';
 
 export interface UseLoginFormParams {
@@ -9,7 +9,7 @@ export interface UseLoginFormParams {
 
 export interface UseLoginFormResult {
   backendError: string | null;
-  formFields: FormFieldsApp;
+  formFields: FormFieldsLogin;
   formStatus: LoginStatus;
   formValidation: FormValidationResult;
   notifyFormFieldsFilled: () => void;
