@@ -44,6 +44,7 @@ describe(GameUpdatedEventHandler.name, () => {
     };
     gameEventsSubscriptionOutputPortMock = {
       publishV1: jest.fn(),
+      publishV2: jest.fn(),
     } as Partial<
       jest.Mocked<GameEventsSubscriptionOutputPort>
     > as jest.Mocked<GameEventsSubscriptionOutputPort>;
@@ -192,7 +193,7 @@ describe(GameUpdatedEventHandler.name, () => {
         );
       });
 
-      it('should call gameEventsSubscriptionOutputPort.publish()', () => {
+      it('should call gameEventsSubscriptionOutputPort.publishV1()', () => {
         const expected: GameUpdatedMessageEvent = {
           game: gameFixture,
           gameAction: gameActionFixture,
@@ -204,6 +205,24 @@ describe(GameUpdatedEventHandler.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameEventsSubscriptionOutputPortMock.publishV1,
+        ).toHaveBeenCalledWith(
+          gameUpdatedEventFixture.gameBeforeUpdate.id,
+          expected,
+        );
+      });
+
+      it('should call gameEventsSubscriptionOutputPort.publishV2()', () => {
+        const expected: GameUpdatedMessageEvent = {
+          game: gameFixture,
+          gameAction: gameActionFixture,
+          kind: GameMessageEventKind.gameUpdated,
+        };
+
+        expect(
+          gameEventsSubscriptionOutputPortMock.publishV2,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameEventsSubscriptionOutputPortMock.publishV2,
         ).toHaveBeenCalledWith(
           gameUpdatedEventFixture.gameBeforeUpdate.id,
           expected,
