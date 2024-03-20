@@ -7,6 +7,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { MessageEventFromStringifiedGameMessageEventV1Builder } from '../../builders/MessageEventFromStringifiedGameMessageEventV1Builder';
+import { MessageEventFromStringifiedGameMessageEventV2Builder } from '../../builders/MessageEventFromStringifiedGameMessageEventV2Builder';
 import {
   GameEventsSubscriptionOutputPort,
   gameEventsSubscriptionOutputPortSymbol,
@@ -19,6 +20,10 @@ export class GameEventsManagementInputPort {
     MessageEvent,
     [string]
   >;
+  readonly #messageEventFromStringifiedGameMessageEventV2Builder: Builder<
+    MessageEvent,
+    [string]
+  >;
 
   constructor(
     @Inject(gameEventsSubscriptionOutputPortSymbol)
@@ -28,10 +33,17 @@ export class GameEventsManagementInputPort {
       MessageEvent,
       [string]
     >,
+    @Inject(MessageEventFromStringifiedGameMessageEventV2Builder)
+    messageEventFromStringifiedGameMessageEventV2Builder: Builder<
+      MessageEvent,
+      [string]
+    >,
   ) {
     this.#gameEventsSubscriptionOutputPort = gameEventsSubscriptionOutputPort;
     this.#messageEventFromStringifiedGameMessageEventV1Builder =
       messageEventFromStringifiedGameMessageEventV1Builder;
+    this.#messageEventFromStringifiedGameMessageEventV2Builder =
+      messageEventFromStringifiedGameMessageEventV2Builder;
   }
 
   public async subscribeV1(
@@ -50,6 +62,27 @@ export class GameEventsManagementInputPort {
     };
 
     return this.#gameEventsSubscriptionOutputPort.subscribeV1(
+      gameId,
+      publisher,
+    );
+  }
+
+  public async subscribeV2(
+    gameId: string,
+    ssePublisher: SsePublisher,
+  ): Promise<SseTeardownExecutor> {
+    const publisher: Publisher<string> = {
+      publish: (event: string) => {
+        const messageEvent: MessageEvent =
+          this.#messageEventFromStringifiedGameMessageEventV2Builder.build(
+            event,
+          );
+
+        ssePublisher.publish(messageEvent);
+      },
+    };
+
+    return this.#gameEventsSubscriptionOutputPort.subscribeV2(
       gameId,
       publisher,
     );
