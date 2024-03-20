@@ -1,77 +1,84 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { RegisterConfirm } from './RegisterConfirm';
-import {
-  STATUS_FULFILLED,
-  STATUS_REJECTED,
-  UNEXPECTED_ERROR_MESSAGE,
-  useRegisterConfirm,
-} from '../hooks/useRegisterConfirm';
 
 jest.mock('../hooks/useRegisterConfirm');
 
+import { RenderResult, render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { RegisterConfirm } from './RegisterConfirm';
+import {
+  UNEXPECTED_ERROR_MESSAGE,
+  useRegisterConfirm,
+} from '../hooks/useRegisterConfirm';
+import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
+
 describe(RegisterConfirm.name, () => {
   describe('when called, and useRegisterConfirm() returns a fulfilled status', () => {
-    let confirmRegisterOkGridDisplayValue;
+    let confirmRegisterOkGridDisplayValue: string;
 
     beforeAll(() => {
-      useRegisterConfirm.mockReturnValue({
-        status: STATUS_FULFILLED,
+      (
+        useRegisterConfirm as jest.Mock<typeof useRegisterConfirm>
+      ).mockReturnValueOnce({
+        status: RegisterConfirmStatus.fulfilled,
         errorMessage: null,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <RegisterConfirm />
         </MemoryRouter>,
       );
 
-      const confirmRegisterOkGrid = screen.getByLabelText(
-        'confirm-register-ok',
-      );
+      const confirmRegisterOkGrid: HTMLElement =
+        renderResult.container.querySelector(
+          '.confirm-register-ok',
+        ) as HTMLElement;
 
       confirmRegisterOkGridDisplayValue = window
         .getComputedStyle(confirmRegisterOkGrid)
         .getPropertyValue('display');
     });
 
-    it('should show the success grid', () => {
-      expect(confirmRegisterOkGridDisplayValue).not.toBe('none');
-    });
-
     afterAll(() => {
       jest.resetAllMocks();
       jest.clearAllMocks();
     });
+
+    it('should show the success grid', () => {
+      expect(confirmRegisterOkGridDisplayValue).not.toBe('none');
+    });
   });
 
   describe('when called, and useRegisterConfirm() returns a rejected status', () => {
-    let confirmRegisterErrorGridDisplayValue;
+    let confirmRegisterErrorGridDisplayValue: string;
 
     beforeAll(() => {
-      useRegisterConfirm.mockReturnValue({
-        status: STATUS_REJECTED,
+      (
+        useRegisterConfirm as jest.Mock<typeof useRegisterConfirm>
+      ).mockReturnValueOnce({
+        status: RegisterConfirmStatus.rejected,
         errorMessage: UNEXPECTED_ERROR_MESSAGE,
       });
 
-      render(
+      const renderResult: RenderResult = render(
         <MemoryRouter>
           <RegisterConfirm />
         </MemoryRouter>,
       );
 
-      const confirmRegisterErrorGrid = screen.getByLabelText(
-        'confirm-register-error-message',
-      );
+      const confirmRegisterErrorGrid: HTMLElement =
+        renderResult.container.querySelector(
+          '.confirm-register-error-message',
+        ) as HTMLElement;
 
       confirmRegisterErrorGridDisplayValue = window
         .getComputedStyle(confirmRegisterErrorGrid)
         .getPropertyValue('display');
     });
 
-    it('should show the error grid', () => {
-      expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
+    afterAll(() => {
+      jest.resetAllMocks();
+      jest.clearAllMocks();
     });
 
     it('should call hook useRegisterConfirm()', () => {
@@ -79,9 +86,8 @@ describe(RegisterConfirm.name, () => {
       expect(useRegisterConfirm).toHaveBeenCalledWith();
     });
 
-    afterAll(() => {
-      jest.resetAllMocks();
-      jest.clearAllMocks();
+    it('should show the error grid', () => {
+      expect(confirmRegisterErrorGridDisplayValue).not.toBe('none');
     });
   });
 });
