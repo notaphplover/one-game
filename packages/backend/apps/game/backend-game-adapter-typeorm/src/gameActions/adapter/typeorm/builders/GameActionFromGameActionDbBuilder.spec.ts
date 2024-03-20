@@ -44,6 +44,7 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
               gameActionDbFixture.currentPlayingSlotIndex,
             draw: [CardFixtures.any],
             gameId: gameActionDbFixture.gameId,
+            id: gameActionDbFixture.id,
             kind: GameActionKind.draw,
             position: gameActionDbFixture.position,
             turn: gameActionDbFixture.turn,
@@ -61,6 +62,7 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
             currentPlayingSlotIndex:
               gameActionDbFixture.currentPlayingSlotIndex,
             gameId: gameActionDbFixture.gameId,
+            id: gameActionDbFixture.id,
             kind: GameActionKind.passTurn,
             position: gameActionDbFixture.position,
             turn: gameActionDbFixture.turn,
@@ -79,6 +81,7 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
             currentPlayingSlotIndex:
               gameActionDbFixture.currentPlayingSlotIndex,
             gameId: gameActionDbFixture.gameId,
+            id: gameActionDbFixture.id,
             kind: GameActionKind.playCards,
             position: gameActionDbFixture.position,
             turn: gameActionDbFixture.turn,

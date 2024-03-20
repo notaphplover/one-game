@@ -10,6 +10,7 @@ export class GameActionFixtures {
     return {
       currentPlayingSlotIndex: 0,
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.passTurn,
       position: 1,
       turn: 1,
@@ -21,6 +22,7 @@ export class GameActionFixtures {
       currentPlayingSlotIndex: 0,
       draw: [CardFixtures.any],
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.draw,
       position: 1,
       turn: 1,
@@ -31,6 +33,7 @@ export class GameActionFixtures {
     return {
       currentPlayingSlotIndex: 0,
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.passTurn,
       position: 1,
       turn: 1,
@@ -42,6 +45,7 @@ export class GameActionFixtures {
       cards: [CardFixtures.any],
       currentPlayingSlotIndex: 0,
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.playCards,
       position: 1,
       turn: 1,
