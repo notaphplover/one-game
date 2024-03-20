@@ -56,20 +56,14 @@ export class GameEventsSubscriptionIoredisOutputAdapter
     gameId: string,
     publisher: Publisher<string>,
   ): Promise<SseTeardownExecutor> {
-    const channel: string = this.#gameEventsChannelFromGameIdBuilder.build(
-      gameId,
-      V1,
-    );
+    return this.#subscribe(gameId, publisher, V1);
+  }
 
-    await this.#gameEventsIoredisSubscriber.subscribe(channel, publisher);
-
-    return {
-      teardown: () =>
-        void this.#gameEventsIoredisSubscriber.unsetGamePublisher(
-          channel,
-          publisher,
-        ),
-    };
+  public async subscribeV2(
+    gameId: string,
+    publisher: Publisher<string>,
+  ): Promise<SseTeardownExecutor> {
+    return this.#subscribe(gameId, publisher, V2);
   }
 
   async #publish(
@@ -86,5 +80,26 @@ export class GameEventsSubscriptionIoredisOutputAdapter
       channel,
       JSON.stringify(gameMessageEvent),
     );
+  }
+
+  async #subscribe(
+    gameId: string,
+    publisher: Publisher<string>,
+    version: number,
+  ): Promise<SseTeardownExecutor> {
+    const channel: string = this.#gameEventsChannelFromGameIdBuilder.build(
+      gameId,
+      version,
+    );
+
+    await this.#gameEventsIoredisSubscriber.subscribe(channel, publisher);
+
+    return {
+      teardown: () =>
+        void this.#gameEventsIoredisSubscriber.unsetGamePublisher(
+          channel,
+          publisher,
+        ),
+    };
   }
 }

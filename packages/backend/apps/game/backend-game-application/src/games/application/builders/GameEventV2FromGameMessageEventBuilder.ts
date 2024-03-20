@@ -1,7 +1,13 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
-import { GameActionKind } from '@cornie-js/backend-game-domain/gameActions';
+import {
+  DrawGameAction,
+  GameAction,
+  GameActionKind,
+  PassTurnGameAction,
+  PlayCardsGameAction,
+} from '@cornie-js/backend-game-domain/gameActions';
 import {
   ActiveGame,
   Game,
@@ -16,7 +22,8 @@ import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 
 @Injectable()
 export class GameEventV2FromGameMessageEventBuilder
-  implements Builder<apiModels.GameEventV2, [GameMessageEvent]>
+  implements
+    Builder<[string | null, apiModels.GameEventV2], [GameMessageEvent]>
 {
   readonly #cardV1FromCardBuilder: Builder<apiModels.CardV1, [Card]>;
 
@@ -27,7 +34,9 @@ export class GameEventV2FromGameMessageEventBuilder
     this.#cardV1FromCardBuilder = cardV1FromCardBuilder;
   }
 
-  public build(gameMessageEvent: GameMessageEvent): apiModels.GameEventV2 {
+  public build(
+    gameMessageEvent: GameMessageEvent,
+  ): [string | null, apiModels.GameEventV2] {
     switch (gameMessageEvent.kind) {
       case GameMessageEventKind.gameUpdated:
         return this.#buildFromGameUpdatedMessageEvent(gameMessageEvent);
@@ -36,38 +45,62 @@ export class GameEventV2FromGameMessageEventBuilder
 
   #buildFromGameUpdatedMessageEvent(
     gameUpdatedMessageEvent: GameUpdatedMessageEvent,
-  ): apiModels.GameEventV2 {
-    switch (gameUpdatedMessageEvent.gameAction.kind) {
+  ): [string | null, apiModels.GameEventV2] {
+    const gameEvent: apiModels.GameEventV2 = this.#buildGameEventV2(
+      gameUpdatedMessageEvent.game,
+      gameUpdatedMessageEvent.gameAction,
+    );
+
+    return [gameUpdatedMessageEvent.gameAction.id, gameEvent];
+  }
+
+  #buildCardsDrawnGameEventV2(
+    gameAction: DrawGameAction,
+  ): apiModels.CardsDrawnGameEventV2 {
+    return {
+      currentPlayingSlotIndex: gameAction.currentPlayingSlotIndex,
+      drawAmount: gameAction.draw.length,
+      kind: 'cardsDrawn',
+      position: gameAction.position,
+    };
+  }
+
+  #buildCardsPlayedGameEventV2(
+    game: Game,
+    gameAction: PlayCardsGameAction,
+  ): apiModels.CardsPlayedGameEventV2 {
+    return {
+      cards: gameAction.cards.map((card: Card) =>
+        this.#cardV1FromCardBuilder.build(card),
+      ),
+      currentCard: this.#getCurrentCard(game),
+      currentPlayingSlotIndex: gameAction.currentPlayingSlotIndex,
+      kind: 'cardsPlayed',
+      position: gameAction.position,
+    };
+  }
+
+  #buildGameEventV2(game: Game, gameAction: GameAction): apiModels.GameEventV2 {
+    switch (gameAction.kind) {
       case GameActionKind.draw:
-        return {
-          currentPlayingSlotIndex:
-            gameUpdatedMessageEvent.gameAction.currentPlayingSlotIndex,
-          drawAmount: gameUpdatedMessageEvent.gameAction.draw.length,
-          kind: 'cardsDrawn',
-          position: gameUpdatedMessageEvent.gameAction.position,
-        };
+        return this.#buildCardsDrawnGameEventV2(gameAction);
       case GameActionKind.passTurn:
-        return {
-          currentPlayingSlotIndex:
-            gameUpdatedMessageEvent.gameAction.currentPlayingSlotIndex,
-          kind: 'turnPassed',
-          nextPlayingSlotIndex: this.#getNextPlayingSlotIndex(
-            gameUpdatedMessageEvent.game,
-          ),
-          position: gameUpdatedMessageEvent.gameAction.position,
-        };
+        return this.#buildTurnPassedGameEventV2(game, gameAction);
       case GameActionKind.playCards:
-        return {
-          cards: gameUpdatedMessageEvent.gameAction.cards.map((card: Card) =>
-            this.#cardV1FromCardBuilder.build(card),
-          ),
-          currentCard: this.#getCurrentCard(gameUpdatedMessageEvent.game),
-          currentPlayingSlotIndex:
-            gameUpdatedMessageEvent.gameAction.currentPlayingSlotIndex,
-          kind: 'cardsPlayed',
-          position: gameUpdatedMessageEvent.gameAction.position,
-        };
+        return this.#buildCardsPlayedGameEventV2(game, gameAction);
     }
+  }
+
+  #buildTurnPassedGameEventV2(
+    game: Game,
+    gameAction: PassTurnGameAction,
+  ): apiModels.TurnPassedGameEventV2 {
+    return {
+      currentPlayingSlotIndex: gameAction.currentPlayingSlotIndex,
+      kind: 'turnPassed',
+      nextPlayingSlotIndex: this.#getNextPlayingSlotIndex(game),
+      position: gameAction.position,
+    };
   }
 
   #getCurrentCard(game: Game): Card | null {

@@ -7,13 +7,13 @@ export class BaseMessageEventFromStringifiedMessageBuilder<T>
   implements Builder<MessageEvent, [string]>
 {
   readonly #gameMessageEventFromStringifiedMessageBuilder: Builder<
-    T,
+    [string | null, T],
     [GameMessageEvent]
   >;
 
   constructor(
     gameMessageEventFromStringifiedMessageBuilder: Builder<
-      T,
+      [string | null, T],
       [GameMessageEvent]
     >,
   ) {
@@ -26,13 +26,19 @@ export class BaseMessageEventFromStringifiedMessageBuilder<T>
       stringifiedGameMessageEvent,
     ) as GameMessageEvent;
 
-    const messageEvent: T =
+    const [id, messageEventData]: [string | null, T] =
       this.#gameMessageEventFromStringifiedMessageBuilder.build(
         gameMessageEvent,
       );
 
-    return {
-      data: JSON.stringify(messageEvent),
+    const messageEvent: MessageEvent = {
+      data: JSON.stringify(messageEventData),
     };
+
+    if (id !== null) {
+      messageEvent.id = id;
+    }
+
+    return messageEvent;
   }
 }

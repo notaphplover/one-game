@@ -10,6 +10,10 @@ export interface GameEventsSubscriptionOutputPort {
     gameId: string,
     publisher: Publisher<string>,
   ): Promise<SseTeardownExecutor>;
+  subscribeV2(
+    gameId: string,
+    publisher: Publisher<string>,
+  ): Promise<SseTeardownExecutor>;
 }
 
 export const gameEventsSubscriptionOutputPortSymbol: symbol = Symbol.for(

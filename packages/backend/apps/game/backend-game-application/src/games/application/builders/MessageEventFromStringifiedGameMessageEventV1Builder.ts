@@ -11,7 +11,7 @@ export class MessageEventFromStringifiedGameMessageEventV1Builder extends BaseMe
   constructor(
     @Inject(GameMessageEventV1FromGameMessageEventBuilder)
     gameMessageEventV1FromGameMessageEventBuilder: Builder<
-      apiModels.GameMessageEventV1,
+      [string | null, apiModels.GameMessageEventV1],
       [GameMessageEvent]
     >,
   ) {

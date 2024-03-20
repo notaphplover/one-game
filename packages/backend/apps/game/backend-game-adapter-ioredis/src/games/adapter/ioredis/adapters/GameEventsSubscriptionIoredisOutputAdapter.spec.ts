@@ -127,7 +127,7 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
     });
   });
 
-  describe('.subscribe', () => {
+  describe('.subscribeV1', () => {
     let gameIdFixture: string;
     let channelFixture: string;
     let publisherFixture: Publisher<string>;
@@ -166,6 +166,67 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
         expect(
           gameEventsChannelFromGameIdBuilderMock.build,
         ).toHaveBeenCalledWith(gameIdFixture, 1);
+      });
+
+      it('should call gameEventsIoredisSubscriber.subscribe()', () => {
+        expect(gameEventsIoredisSubscriberMock.subscribe).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(gameEventsIoredisSubscriberMock.subscribe).toHaveBeenCalledWith(
+          channelFixture,
+          publisherFixture,
+        );
+      });
+
+      it('should return an SseTeardownExecutor', () => {
+        const expected: SseTeardownExecutor = {
+          teardown: expect.any(Function) as unknown as () => void,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('.subscribeV2', () => {
+    let gameIdFixture: string;
+    let channelFixture: string;
+    let publisherFixture: Publisher<string>;
+
+    beforeAll(() => {
+      gameIdFixture = 'game id';
+      channelFixture = 'channel fixture';
+      publisherFixture = Symbol() as unknown as Publisher<string>;
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameEventsChannelFromGameIdBuilderMock.build.mockReturnValueOnce(
+          channelFixture,
+        );
+        gameEventsIoredisSubscriberMock.subscribe.mockResolvedValueOnce(
+          undefined,
+        );
+
+        result = await gameEventsSubscriptionIoredisOutputAdapter.subscribeV2(
+          gameIdFixture,
+          publisherFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameEventsChannelFromGameIdBuilder.build()', () => {
+        expect(
+          gameEventsChannelFromGameIdBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameEventsChannelFromGameIdBuilderMock.build,
+        ).toHaveBeenCalledWith(gameIdFixture, 2);
       });
 
       it('should call gameEventsIoredisSubscriber.subscribe()', () => {
