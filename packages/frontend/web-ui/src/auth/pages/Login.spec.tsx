@@ -20,11 +20,15 @@ import { useAppSelector } from '../../app/store/hooks';
 describe(Login.name, () => {
   let formFieldsFixture: UseLoginFormParams;
 
-  let notifyFormFieldsFilledMock: jest.Mock;
-  let setFormFieldMock: jest.Mock;
+  let notifyFormFieldsFilledMock: jest.Mock<() => void>;
+  let setFormFieldMock: jest.Mock<
+    (event: React.ChangeEvent<HTMLInputElement>) => void
+  >;
 
-  let handleClickShowPasswordMock: jest.Mock;
-  let handleMouseDownPasswordMock: jest.Mock;
+  let handleClickShowPasswordMock: jest.Mock<() => void>;
+  let handleMouseDownPasswordMock: jest.Mock<
+    (event: React.MouseEvent<HTMLElement>) => void
+  >;
 
   let navigateMock: ReturnType<typeof useNavigate> &
     jest.Mock<ReturnType<typeof useNavigate>>;
