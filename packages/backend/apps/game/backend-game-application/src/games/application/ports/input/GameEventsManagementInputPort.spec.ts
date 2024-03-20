@@ -23,6 +23,7 @@ describe(GameEventsManagementInputPort.name, () => {
       publishV1: jest.fn(),
       publishV2: jest.fn(),
       subscribeV1: jest.fn(),
+      subscribeV2: jest.fn(),
     };
     messageEventFromStringifiedGameMessageEventBuilderMock = {
       build: jest.fn(),
