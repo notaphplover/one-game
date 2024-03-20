@@ -228,19 +228,19 @@ export interface AuthV2 {
 export interface CardsDrawnGameEventV2 {
   currentPlayingSlotIndex: number;
   drawAmount: number;
-  kind: 'draw';
+  kind: 'cardsDrawn';
   position: number;
 }
 export interface CardsPlayedGameEventV2 {
   cards: CardArrayV1;
-  currentCard: CardV1;
+  currentCard: CardV1 | null;
   currentPlayingSlotIndex: number;
-  kind: 'draw';
+  kind: 'cardsPlayed';
   position: number;
 }
 export interface TurnPassedGameEventV2 {
   currentPlayingSlotIndex: number;
   kind: 'turnPassed';
-  nextPlayingSlotIndex: number;
+  nextPlayingSlotIndex: number | null;
   position: number;
 }

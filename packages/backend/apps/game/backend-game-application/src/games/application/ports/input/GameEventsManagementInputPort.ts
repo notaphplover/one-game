@@ -15,7 +15,7 @@ import {
 @Injectable()
 export class GameEventsManagementInputPort {
   readonly #gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort;
-  readonly #messageEventFromStringifiedGameMessageEventBuilder: Builder<
+  readonly #messageEventFromStringifiedGameMessageEventV1Builder: Builder<
     MessageEvent,
     [string]
   >;
@@ -24,29 +24,34 @@ export class GameEventsManagementInputPort {
     @Inject(gameEventsSubscriptionOutputPortSymbol)
     gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort,
     @Inject(MessageEventFromStringifiedGameMessageEventV1Builder)
-    messageEventFromStringifiedGameMessageEventBuilder: Builder<
+    messageEventFromStringifiedGameMessageEventV1Builder: Builder<
       MessageEvent,
       [string]
     >,
   ) {
     this.#gameEventsSubscriptionOutputPort = gameEventsSubscriptionOutputPort;
-    this.#messageEventFromStringifiedGameMessageEventBuilder =
-      messageEventFromStringifiedGameMessageEventBuilder;
+    this.#messageEventFromStringifiedGameMessageEventV1Builder =
+      messageEventFromStringifiedGameMessageEventV1Builder;
   }
 
-  public async subscribe(
+  public async subscribeV1(
     gameId: string,
     ssePublisher: SsePublisher,
   ): Promise<SseTeardownExecutor> {
     const publisher: Publisher<string> = {
       publish: (event: string) => {
         const messageEvent: MessageEvent =
-          this.#messageEventFromStringifiedGameMessageEventBuilder.build(event);
+          this.#messageEventFromStringifiedGameMessageEventV1Builder.build(
+            event,
+          );
 
         ssePublisher.publish(messageEvent);
       },
     };
 
-    return this.#gameEventsSubscriptionOutputPort.subscribe(gameId, publisher);
+    return this.#gameEventsSubscriptionOutputPort.subscribeV1(
+      gameId,
+      publisher,
+    );
   }
 }

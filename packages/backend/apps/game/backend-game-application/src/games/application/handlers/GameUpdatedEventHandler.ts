@@ -117,7 +117,7 @@ export class GameUpdatedEventHandler
       kind: GameMessageEventKind.gameUpdated,
     };
 
-    await this.#gameEventsSubscriptionOutputPort.publish(
+    await this.#gameEventsSubscriptionOutputPort.publishV1(
       game.id,
       gameUpdatedMessageEvent,
     );

@@ -1,19 +1,13 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
-import { Inject, Injectable, MessageEvent } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { GameMessageEvent } from '../models/GameMessageEvent';
+import { BaseMessageEventFromStringifiedMessageBuilder } from './BaseMessageEventFromStringifiedGameMessageEventBuilder';
 import { GameMessageEventV1FromGameMessageEventBuilder } from './GameMessageEventV1FromGameMessageEventBuilder';
 
 @Injectable()
-export class MessageEventFromStringifiedGameMessageEventV1Builder
-  implements Builder<MessageEvent, [string]>
-{
-  readonly #gameMessageEventV1FromGameMessageEventBuilder: Builder<
-    apiModels.GameMessageEventV1,
-    [GameMessageEvent]
-  >;
-
+export class MessageEventFromStringifiedGameMessageEventV1Builder extends BaseMessageEventFromStringifiedMessageBuilder<apiModels.GameMessageEventV1> {
   constructor(
     @Inject(GameMessageEventV1FromGameMessageEventBuilder)
     gameMessageEventV1FromGameMessageEventBuilder: Builder<
@@ -21,22 +15,6 @@ export class MessageEventFromStringifiedGameMessageEventV1Builder
       [GameMessageEvent]
     >,
   ) {
-    this.#gameMessageEventV1FromGameMessageEventBuilder =
-      gameMessageEventV1FromGameMessageEventBuilder;
-  }
-
-  public build(stringifiedGameMessageEvent: string): MessageEvent {
-    const gameMessageEvent: GameMessageEvent = JSON.parse(
-      stringifiedGameMessageEvent,
-    ) as GameMessageEvent;
-
-    const gameMessageEventV1: apiModels.GameMessageEventV1 =
-      this.#gameMessageEventV1FromGameMessageEventBuilder.build(
-        gameMessageEvent,
-      );
-
-    return {
-      data: JSON.stringify(gameMessageEventV1),
-    };
+    super(gameMessageEventV1FromGameMessageEventBuilder);
   }
 }

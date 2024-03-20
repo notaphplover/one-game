@@ -20,8 +20,9 @@ describe(GameEventsManagementInputPort.name, () => {
 
   beforeAll(() => {
     gameEventsSubscriptionOutputPortMock = {
-      publish: jest.fn(),
-      subscribe: jest.fn(),
+      publishV1: jest.fn(),
+      publishV2: jest.fn(),
+      subscribeV1: jest.fn(),
     };
     messageEventFromStringifiedGameMessageEventBuilderMock = {
       build: jest.fn(),
@@ -49,11 +50,11 @@ describe(GameEventsManagementInputPort.name, () => {
       beforeAll(async () => {
         sseTeardownExecutorFixture = Symbol() as unknown as SseTeardownExecutor;
 
-        gameEventsSubscriptionOutputPortMock.subscribe.mockResolvedValueOnce(
+        gameEventsSubscriptionOutputPortMock.subscribeV1.mockResolvedValueOnce(
           sseTeardownExecutorFixture,
         );
 
-        result = await gameEventsManagementInputPort.subscribe(
+        result = await gameEventsManagementInputPort.subscribeV1(
           gameIdFixture,
           ssePublisherFixture,
         );
@@ -69,10 +70,10 @@ describe(GameEventsManagementInputPort.name, () => {
         };
 
         expect(
-          gameEventsSubscriptionOutputPortMock.subscribe,
+          gameEventsSubscriptionOutputPortMock.subscribeV1,
         ).toHaveBeenCalledTimes(1);
         expect(
-          gameEventsSubscriptionOutputPortMock.subscribe,
+          gameEventsSubscriptionOutputPortMock.subscribeV1,
         ).toHaveBeenCalledWith(gameIdFixture, expectedPublisher);
       });
 

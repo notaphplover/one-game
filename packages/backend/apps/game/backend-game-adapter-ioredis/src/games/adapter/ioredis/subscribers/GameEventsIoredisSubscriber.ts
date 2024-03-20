@@ -6,7 +6,7 @@ import Redis from 'ioredis';
 import { ioredisClientSubscriberSymbol } from '../../../../foundation/redis/adapter/nest/models/ioredisClientSymbol';
 
 const GAME_EVENT_CHANNEL_REGEX: RegExp =
-  /^v1\/games\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
+  /^v[1-9][0-9]*\/games\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
 
 @Injectable()
 export class GameEventsIoredisSubscriber extends IoredisSubscriber<
