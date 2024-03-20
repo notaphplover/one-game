@@ -13,9 +13,11 @@ import { FormFieldsRegister } from '../models/FormFieldsRegister';
 import { RegisterResponse } from '../../common/http/models/RegisterResponse';
 import { RegisterSerializedResponse } from '../../common/http/models/RegisterSerializedResponse';
 
-export const INVALID_CREDENTIALS_REG_ERROR: string = 'Invalid credentials.';
-export const UNEXPECTED_REG_ERROR: string =
-  'Ups... Something strange happened. Try again?';
+export const INVALID_CREDENTIALS_REG_ERROR_MESSAGE: string =
+  'Invalid credentials.';
+const HTTP_BAD_REQUEST_ERROR_MESSAGE: string =
+  'Unexpected error occurred while processing the request.';
+export const HTTP_CONFLICT_ERROR_MESSAGE: string = `Cannot register user. There's already a user with the same mail address.`;
 
 export const useRegisterForm = (initialFormFields: UseRegisterFormParams) => {
   const [formFields, setFormFields] =
@@ -114,14 +116,21 @@ export const useRegisterForm = (initialFormFields: UseRegisterFormParams) => {
     const response: RegisterSerializedResponse =
       await fetchCreateUser(formFields);
 
-    if (response.statusCode === 200) {
-      setFormStatus(RegisterStatus.backendOK);
-    } else if (response.statusCode === 409) {
-      setBackendError(INVALID_CREDENTIALS_REG_ERROR);
-      setFormStatus(RegisterStatus.backendKO);
-    } else {
-      setBackendError(UNEXPECTED_REG_ERROR);
-      setFormStatus(RegisterStatus.backendKO);
+    switch (response.statusCode) {
+      case 200:
+        setFormStatus(RegisterStatus.backendOK);
+        break;
+      case 400:
+        setBackendError(HTTP_BAD_REQUEST_ERROR_MESSAGE);
+        setFormStatus(RegisterStatus.backendKO);
+        break;
+      case 409:
+        setBackendError(HTTP_CONFLICT_ERROR_MESSAGE);
+        setFormStatus(RegisterStatus.backendKO);
+        break;
+      default:
+        setBackendError(INVALID_CREDENTIALS_REG_ERROR_MESSAGE);
+        setFormStatus(RegisterStatus.backendKO);
     }
   };
 

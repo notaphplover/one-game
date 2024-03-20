@@ -12,9 +12,9 @@ import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction'
 import { Either } from '../../common/models/Either';
 import { FormValidationResult } from '../models/FormValidationResult';
 
-export const INVALID_CREDENTIALS_ERROR: string = 'Invalid credentials.';
-const UNEXPECTED_ERROR: string =
-  'Ups... Something strange happened. Try again?';
+export const INVALID_CREDENTIALS_ERROR_MESSAGE: string = 'Invalid credentials.';
+const UNEXPECTED_ERROR_MESSAGE: string =
+  'Unexpected error occurred while processing the request.';
 
 export const useLoginForm = (
   params: UseLoginFormParams,
@@ -100,14 +100,17 @@ export const useLoginForm = (
     const response = await dispatch(createAuthByCredentials(formFields));
 
     if (isFullfilledPayloadAction(response)) {
-      if (response.payload.statusCode === 200) {
-        setFormStatus(LoginStatus.backendOK);
-      } else if (response.payload.statusCode === 401) {
-        setBackendError(INVALID_CREDENTIALS_ERROR);
-        setFormStatus(LoginStatus.backendKO);
-      } else {
-        setBackendError(UNEXPECTED_ERROR);
-        setFormStatus(LoginStatus.backendKO);
+      switch (response.payload.statusCode) {
+        case 200:
+          setFormStatus(LoginStatus.backendOK);
+          break;
+        case 401:
+          setBackendError(INVALID_CREDENTIALS_ERROR_MESSAGE);
+          setFormStatus(LoginStatus.backendKO);
+          break;
+        default:
+          setBackendError(UNEXPECTED_ERROR_MESSAGE);
+          setFormStatus(LoginStatus.backendKO);
       }
     }
   };

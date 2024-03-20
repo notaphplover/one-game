@@ -12,7 +12,10 @@ import {
   renderHook,
   waitFor,
 } from '@testing-library/react';
-import { INVALID_CREDENTIALS_ERROR, useLoginForm } from './useLoginForm';
+import {
+  INVALID_CREDENTIALS_ERROR_MESSAGE,
+  useLoginForm,
+} from './useLoginForm';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import {
@@ -342,7 +345,7 @@ describe(useLoginForm.name, () => {
       expect(formStatus).toBe(LoginStatus.backendKO);
     });
     it('should return an error message Invalid Credentials', () => {
-      expect(backendError).toBe(INVALID_CREDENTIALS_ERROR);
+      expect(backendError).toBe(INVALID_CREDENTIALS_ERROR_MESSAGE);
     });
   });
 });

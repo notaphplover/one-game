@@ -15,15 +15,26 @@ import { useRegisterForm } from '../hooks/useRegisterForm';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { RegisterStatus } from '../models/RegisterStatus';
 import { UseRegisterFormParams } from '../models/UseRegisterFormResult';
+import { FormValidationResult } from '../models/FormValidationResult';
 
 describe(Register.name, () => {
   let formFieldsFixture: UseRegisterFormParams;
 
-  let notifyFormFieldsFilledMock: jest.Mock;
-  let setFormFieldMock: jest.Mock;
+  let notifyFormFieldsFilledMock: jest.Mock<() => void>;
+  let setFormFieldMock: jest.Mock<
+    (event: React.ChangeEvent<HTMLInputElement>) => void
+  >;
 
-  let handleClickShowPasswordMock: jest.Mock;
-  let handleMouseDownPasswordMock: jest.Mock;
+  let handleClickShowPasswordMock: jest.Mock<() => void>;
+  let handleMouseDownPasswordMock: jest.Mock<
+    (event: React.MouseEvent<HTMLElement>) => void
+  >;
+
+  let formValidationResult: FormValidationResult;
+  let nameFixtureError: string;
+  let emailFixtureError: string;
+  let passwordFixtureError: string;
+  let confirmPasswordFixtureError: string;
 
   beforeAll(() => {
     formFieldsFixture = {
@@ -38,6 +49,13 @@ describe(Register.name, () => {
 
     handleClickShowPasswordMock = jest.fn();
     handleMouseDownPasswordMock = jest.fn();
+
+    formValidationResult = {
+      name: 'name Error',
+      email: 'email Error',
+      password: 'password Error',
+      confirmPassword: 'confirmPassword Error',
+    };
   });
 
   describe('when called, on an initial state', () => {
@@ -122,10 +140,6 @@ describe(Register.name, () => {
   describe('when called, and input value are invalid and an error is displayed', () => {
     let pErrorName: string | null, pErrorEmail: string | null;
     let pErrorPassword: string | null, pErrorConfirmPassword: string | null;
-    const nameFixtureError = 'name Error';
-    const emailFixtureError = 'email Error';
-    const passwordFixtureError = 'password Error';
-    const confirmPasswordFixtureError = 'confirmPassword Error';
 
     beforeAll(() => {
       (
@@ -139,12 +153,7 @@ describe(Register.name, () => {
           confirmPassword: '',
         },
         formStatus: RegisterStatus.validationKO,
-        formValidation: {
-          name: nameFixtureError,
-          email: emailFixtureError,
-          password: passwordFixtureError,
-          confirmPassword: confirmPasswordFixtureError,
-        },
+        formValidation: formValidationResult,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
@@ -195,19 +204,19 @@ describe(Register.name, () => {
     });
 
     it('should name has an error', () => {
-      expect(pErrorName).toBe(nameFixtureError);
+      expect(pErrorName).toBe(formValidationResult.name);
     });
 
     it('should email has an error', () => {
-      expect(pErrorEmail).toBe(emailFixtureError);
+      expect(pErrorEmail).toBe(formValidationResult.email);
     });
 
     it('should password has an error', () => {
-      expect(pErrorPassword).toBe(passwordFixtureError);
+      expect(pErrorPassword).toBe(formValidationResult.password);
     });
 
     it('should confirm password has an error', () => {
-      expect(pErrorConfirmPassword).toBe(confirmPasswordFixtureError);
+      expect(pErrorConfirmPassword).toBe(formValidationResult.confirmPassword);
     });
   });
 

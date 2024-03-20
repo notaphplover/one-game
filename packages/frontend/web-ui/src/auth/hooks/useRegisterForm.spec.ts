@@ -14,7 +14,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {
-  INVALID_CREDENTIALS_REG_ERROR,
+  HTTP_CONFLICT_ERROR_MESSAGE,
   useRegisterForm,
 } from './useRegisterForm';
 import { validateName } from '../../common/helpers/validateName';
@@ -525,7 +525,7 @@ describe(useRegisterForm.name, () => {
     });
 
     it('should return an error message Invalid Credentials', () => {
-      expect(backendError).toBe(INVALID_CREDENTIALS_REG_ERROR);
+      expect(backendError).toBe(HTTP_CONFLICT_ERROR_MESSAGE);
     });
   });
 });
