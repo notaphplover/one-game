@@ -12,15 +12,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  STATUS_REG_BACKEND_OK,
-  STATUS_REG_PENDING_BACKEND,
-  STATUS_REG_PENDING_VAL,
-  useRegisterForm,
-} from '../hooks/useRegisterForm';
+import { useRegisterForm } from '../hooks/useRegisterForm';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
+import { RegisterStatus } from '../models/RegisterStatus';
 
 export const Register = () => {
   const {
@@ -39,7 +35,7 @@ export const Register = () => {
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     notifyFormFieldsFilled();
@@ -47,23 +43,23 @@ export const Register = () => {
 
   const isTextFieldDisabled = () => {
     return (
-      formStatus === STATUS_REG_BACKEND_OK ||
-      formStatus === STATUS_REG_PENDING_BACKEND ||
-      formStatus === STATUS_REG_PENDING_VAL
+      formStatus === RegisterStatus.backendOK ||
+      formStatus === RegisterStatus.pendingBackend ||
+      formStatus === RegisterStatus.pendingValidation
     );
   };
 
   const isShowPasswordButtonDisabled = () => {
     return (
-      formStatus === STATUS_REG_BACKEND_OK ||
-      formStatus === STATUS_REG_PENDING_BACKEND ||
-      formStatus === STATUS_REG_PENDING_VAL
+      formStatus === RegisterStatus.backendOK ||
+      formStatus === RegisterStatus.pendingBackend ||
+      formStatus === RegisterStatus.pendingValidation
     );
   };
 
   if (
-    formStatus === STATUS_REG_PENDING_VAL ||
-    formStatus === STATUS_REG_PENDING_BACKEND
+    formStatus === RegisterStatus.pendingValidation ||
+    formStatus === RegisterStatus.pendingBackend
   ) {
     return <CheckingAuth />;
   }
@@ -102,8 +98,7 @@ export const Register = () => {
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-text-fieldset"
-                    aria-label="form-register-alias"
+                    className="form-text-fieldset form-register-alias"
                     autoFocus
                     disabled={isTextFieldDisabled()}
                     label="Alias"
@@ -119,8 +114,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-text-fieldset"
-                    aria-label="form-register-email"
+                    className="form-text-fieldset form-register-email"
                     disabled={isTextFieldDisabled()}
                     label="Email"
                     type="email"
@@ -135,8 +129,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-text-fieldset"
-                    aria-label="form-register-password"
+                    className="form-text-fieldset form-register-password"
                     disabled={isTextFieldDisabled()}
                     label="Password"
                     type={showPassword ? 'text' : 'password'}
@@ -167,8 +160,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    className="form-text-fieldset"
-                    aria-label="form-register-confirm-password"
+                    className="form-text-fieldset form-register-confirm-password"
                     disabled={isTextFieldDisabled()}
                     label="Confirm Password"
                     type={showPassword ? 'text' : 'password'}
@@ -199,11 +191,7 @@ export const Register = () => {
                 </Grid>
               </Grid>
 
-              <Grid
-                aria-label="form-register-error"
-                container
-                display={backendError !== null ? '' : 'none'}
-              >
+              <Grid container display={backendError !== null ? '' : 'none'}>
                 <Grid item xs={12}>
                   <Box className="form-register-error">
                     <Alert severity="error">
@@ -215,9 +203,8 @@ export const Register = () => {
               </Grid>
 
               <Grid
-                aria-label="form-register-ok"
                 container
-                display={formStatus === STATUS_REG_BACKEND_OK ? '' : 'none'}
+                display={formStatus === RegisterStatus.backendOK ? '' : 'none'}
               >
                 <Grid item xs={12}>
                   <Box className="form-register-success">
@@ -233,9 +220,9 @@ export const Register = () => {
                 <Grid item xs={12}>
                   <Box className="register-form-button">
                     <Button
-                      aria-label="form-register-button"
+                      className="register-button"
                       disabled={
-                        formStatus === STATUS_REG_BACKEND_OK ? true : false
+                        formStatus === RegisterStatus.backendOK ? true : false
                       }
                       type="submit"
                       variant="contained"

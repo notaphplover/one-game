@@ -12,7 +12,10 @@ import {
   renderHook,
   waitFor,
 } from '@testing-library/react';
-import { INVALID_CREDENTIALS_ERROR, useLoginForm } from './useLoginForm';
+import {
+  INVALID_CREDENTIALS_ERROR_MESSAGE,
+  useLoginForm,
+} from './useLoginForm';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import {
@@ -25,7 +28,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
 import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
-import { FormFieldsApp } from '../models/FormFieldsApp';
+import { FormFieldsLogin } from '../models/FormFieldsLogin';
 import { FormValidationResult } from '../models/FormValidationResult';
 
 describe(useLoginForm.name, () => {
@@ -47,7 +50,7 @@ describe(useLoginForm.name, () => {
 
   describe('when called, on an initialize values', () => {
     let result: RenderHookResult<UseLoginFormResult, unknown>;
-    let formFields: FormFieldsApp;
+    let formFields: FormFieldsLogin;
     let formStatus: LoginStatus;
 
     beforeAll(() => {
@@ -342,7 +345,7 @@ describe(useLoginForm.name, () => {
       expect(formStatus).toBe(LoginStatus.backendKO);
     });
     it('should return an error message Invalid Credentials', () => {
-      expect(backendError).toBe(INVALID_CREDENTIALS_ERROR);
+      expect(backendError).toBe(INVALID_CREDENTIALS_ERROR_MESSAGE);
     });
   });
 });
