@@ -50,6 +50,7 @@ export class GameActionFromGameActionDbBuilder
             this.#cardBuilder.build(cardDb),
           ),
           gameId: gameActionDb.gameId,
+          id: gameActionDb.id,
           kind: GameActionKind.draw,
           position: gameActionDb.position,
           turn: gameActionDb.turn,
@@ -58,6 +59,7 @@ export class GameActionFromGameActionDbBuilder
         return {
           currentPlayingSlotIndex: gameActionDb.currentPlayingSlotIndex,
           gameId: gameActionDb.gameId,
+          id: gameActionDb.id,
           kind: GameActionKind.passTurn,
           position: gameActionDb.position,
           turn: gameActionDb.turn,
@@ -69,6 +71,7 @@ export class GameActionFromGameActionDbBuilder
           ),
           currentPlayingSlotIndex: gameActionDb.currentPlayingSlotIndex,
           gameId: gameActionDb.gameId,
+          id: gameActionDb.id,
           kind: GameActionKind.playCards,
           position: gameActionDb.position,
           turn: gameActionDb.turn,

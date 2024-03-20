@@ -31,10 +31,6 @@ describe(Register.name, () => {
   >;
 
   let formValidationResult: FormValidationResult;
-  let nameFixtureError: string;
-  let emailFixtureError: string;
-  let passwordFixtureError: string;
-  let confirmPasswordFixtureError: string;
 
   beforeAll(() => {
     formFieldsFixture = {

@@ -10,25 +10,22 @@ import {
 } from '@mui/material';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
-import {
-  STATUS_FULFILLED,
-  STATUS_PENDING,
-  STATUS_REJECTED,
-  useRegisterConfirm,
-} from '../hooks/useRegisterConfirm';
+import { useRegisterConfirm } from '../hooks/useRegisterConfirm';
+import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
+import React from 'react';
 
-export const RegisterConfirm = () => {
+export const RegisterConfirm = (): React.JSX.Element => {
   const { status, errorMessage } = useRegisterConfirm();
 
-  const getRegisterConfirmOkDisplay = () => {
-    return status === STATUS_FULFILLED ? '' : 'none';
+  const getRegisterConfirmOkDisplay = (): string => {
+    return status === RegisterConfirmStatus.fulfilled ? '' : 'none';
   };
 
-  const getRegisterConfirmErrorDisplay = () => {
-    return status === STATUS_REJECTED ? '' : 'none';
+  const getRegisterConfirmErrorDisplay = (): string => {
+    return status === RegisterConfirmStatus.rejected ? '' : 'none';
   };
 
-  if (status === STATUS_PENDING) {
+  if (status === RegisterConfirmStatus.pending) {
     return <CheckingAuth />;
   }
 
@@ -63,7 +60,7 @@ export const RegisterConfirm = () => {
             </Typography>
             <Grid container>
               <Grid
-                aria-label="confirm-register-ok"
+                className="confirm-register-ok"
                 container
                 display={getRegisterConfirmOkDisplay()}
               >
@@ -78,7 +75,7 @@ export const RegisterConfirm = () => {
               </Grid>
 
               <Grid
-                aria-label="confirm-register-error-message"
+                className="confirm-register-error-message"
                 container
                 display={getRegisterConfirmErrorDisplay()}
               >
@@ -93,7 +90,7 @@ export const RegisterConfirm = () => {
               </Grid>
 
               <Grid
-                aria-label="confirm-register-button"
+                className="confirm-register-button"
                 container
                 direction="row"
                 justifyContent="end"
