@@ -8,7 +8,8 @@ import { GameV1FromGameBuilder } from './GameV1FromGameBuilder';
 
 @Injectable()
 export class GameMessageEventV1FromGameMessageEventBuilder
-  implements Builder<apiModels.GameMessageEventV1, [GameMessageEvent]>
+  implements
+    Builder<[string | null, apiModels.GameMessageEventV1], [GameMessageEvent]>
 {
   readonly #gameV1FromGameBuilder: Builder<apiModels.GameV1, [Game]>;
 
@@ -21,10 +22,13 @@ export class GameMessageEventV1FromGameMessageEventBuilder
 
   public build(
     gameMessageEvent: GameMessageEvent,
-  ): apiModels.GameMessageEventV1 {
-    return {
-      game: this.#gameV1FromGameBuilder.build(gameMessageEvent.game),
-      kind: 'game-updated',
-    };
+  ): [string | null, apiModels.GameMessageEventV1] {
+    return [
+      null,
+      {
+        game: this.#gameV1FromGameBuilder.build(gameMessageEvent.game),
+        kind: 'game-updated',
+      },
+    ];
   }
 }

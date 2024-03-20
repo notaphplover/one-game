@@ -48,14 +48,17 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
         });
 
         it('should return CardsDrawnGameEventV2', () => {
-          const expected: apiModels.CardsDrawnGameEventV2 = {
-            currentPlayingSlotIndex:
-              gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
-            drawAmount: (gameMessageEventFixture.gameAction as DrawGameAction)
-              .draw.length,
-            kind: 'cardsDrawn',
-            position: gameMessageEventFixture.gameAction.position,
-          };
+          const expected: [string, apiModels.CardsDrawnGameEventV2] = [
+            gameMessageEventFixture.gameAction.id,
+            {
+              currentPlayingSlotIndex:
+                gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
+              drawAmount: (gameMessageEventFixture.gameAction as DrawGameAction)
+                .draw.length,
+              kind: 'cardsDrawn',
+              position: gameMessageEventFixture.gameAction.position,
+            },
+          ];
 
           expect(result).toStrictEqual(expected);
         });
@@ -84,14 +87,17 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
         });
 
         it('should return CardsPlayedGameEventV2', () => {
-          const expected: apiModels.TurnPassedGameEventV2 = {
-            currentPlayingSlotIndex:
-              gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
-            kind: 'turnPassed',
-            nextPlayingSlotIndex: (gameMessageEventFixture.game as ActiveGame)
-              .state.currentPlayingSlotIndex,
-            position: gameMessageEventFixture.gameAction.position,
-          };
+          const expected: [string, apiModels.TurnPassedGameEventV2] = [
+            gameMessageEventFixture.gameAction.id,
+            {
+              currentPlayingSlotIndex:
+                gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
+              kind: 'turnPassed',
+              nextPlayingSlotIndex: (gameMessageEventFixture.game as ActiveGame)
+                .state.currentPlayingSlotIndex,
+              position: gameMessageEventFixture.gameAction.position,
+            },
+          ];
 
           expect(result).toStrictEqual(expected);
         });
@@ -120,13 +126,16 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
         });
 
         it('should return CardsPlayedGameEventV2', () => {
-          const expected: apiModels.TurnPassedGameEventV2 = {
-            currentPlayingSlotIndex:
-              gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
-            kind: 'turnPassed',
-            nextPlayingSlotIndex: null,
-            position: gameMessageEventFixture.gameAction.position,
-          };
+          const expected: [string, apiModels.TurnPassedGameEventV2] = [
+            gameMessageEventFixture.gameAction.id,
+            {
+              currentPlayingSlotIndex:
+                gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
+              kind: 'turnPassed',
+              nextPlayingSlotIndex: null,
+              position: gameMessageEventFixture.gameAction.position,
+            },
+          ];
 
           expect(result).toStrictEqual(expected);
         });
@@ -163,15 +172,18 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
         });
 
         it('should return CardsPlayedGameEventV2', () => {
-          const expected: apiModels.CardsPlayedGameEventV2 = {
-            cards: [cardV1Fixture],
-            currentCard: (gameMessageEventFixture.game as ActiveGame).state
-              .currentCard,
-            currentPlayingSlotIndex:
-              gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
-            kind: 'cardsPlayed',
-            position: gameMessageEventFixture.gameAction.position,
-          };
+          const expected: [string, apiModels.CardsPlayedGameEventV2] = [
+            gameMessageEventFixture.gameAction.id,
+            {
+              cards: [cardV1Fixture],
+              currentCard: (gameMessageEventFixture.game as ActiveGame).state
+                .currentCard,
+              currentPlayingSlotIndex:
+                gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
+              kind: 'cardsPlayed',
+              position: gameMessageEventFixture.gameAction.position,
+            },
+          ];
 
           expect(result).toStrictEqual(expected);
         });
@@ -208,14 +220,17 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
         });
 
         it('should return CardsPlayedGameEventV2', () => {
-          const expected: apiModels.CardsPlayedGameEventV2 = {
-            cards: [cardV1Fixture],
-            currentCard: null,
-            currentPlayingSlotIndex:
-              gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
-            kind: 'cardsPlayed',
-            position: gameMessageEventFixture.gameAction.position,
-          };
+          const expected: [string, apiModels.CardsPlayedGameEventV2] = [
+            gameMessageEventFixture.gameAction.id,
+            {
+              cards: [cardV1Fixture],
+              currentCard: null,
+              currentPlayingSlotIndex:
+                gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
+              kind: 'cardsPlayed',
+              position: gameMessageEventFixture.gameAction.position,
+            },
+          ];
 
           expect(result).toStrictEqual(expected);
         });
