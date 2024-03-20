@@ -14,7 +14,10 @@ describe(GameEventsManagementInputPort.name, () => {
   let gameEventsSubscriptionOutputPortMock: jest.Mocked<GameEventsSubscriptionOutputPort>;
 
   let gameEventsManagementInputPort: GameEventsManagementInputPort;
-  let messageEventFromStringifiedGameMessageEventBuilderMock: jest.Mocked<
+  let messageEventFromStringifiedGameMessageEventV1BuilderMock: jest.Mocked<
+    Builder<MessageEvent, [string]>
+  >;
+  let messageEventFromStringifiedGameMessageEventV2BuilderMock: jest.Mocked<
     Builder<MessageEvent, [string]>
   >;
 
@@ -23,18 +26,23 @@ describe(GameEventsManagementInputPort.name, () => {
       publishV1: jest.fn(),
       publishV2: jest.fn(),
       subscribeV1: jest.fn(),
+      subscribeV2: jest.fn(),
     };
-    messageEventFromStringifiedGameMessageEventBuilderMock = {
+    messageEventFromStringifiedGameMessageEventV1BuilderMock = {
+      build: jest.fn(),
+    };
+    messageEventFromStringifiedGameMessageEventV2BuilderMock = {
       build: jest.fn(),
     };
 
     gameEventsManagementInputPort = new GameEventsManagementInputPort(
       gameEventsSubscriptionOutputPortMock,
-      messageEventFromStringifiedGameMessageEventBuilderMock,
+      messageEventFromStringifiedGameMessageEventV1BuilderMock,
+      messageEventFromStringifiedGameMessageEventV2BuilderMock,
     );
   });
 
-  describe('.subscribe', () => {
+  describe('.subscribeV1', () => {
     let gameIdFixture: string;
     let ssePublisherFixture: SsePublisher;
 
@@ -74,6 +82,55 @@ describe(GameEventsManagementInputPort.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           gameEventsSubscriptionOutputPortMock.subscribeV1,
+        ).toHaveBeenCalledWith(gameIdFixture, expectedPublisher);
+      });
+
+      it('should resolve SseTeardownExecutor', () => {
+        expect(result).toBe(sseTeardownExecutorFixture);
+      });
+    });
+  });
+
+  describe('.subscribeV2', () => {
+    let gameIdFixture: string;
+    let ssePublisherFixture: SsePublisher;
+
+    beforeAll(() => {
+      gameIdFixture = 'game-id-fixture';
+      ssePublisherFixture = Symbol() as unknown as SsePublisher;
+    });
+
+    describe('when called', () => {
+      let sseTeardownExecutorFixture: SseTeardownExecutor;
+      let result: unknown;
+
+      beforeAll(async () => {
+        sseTeardownExecutorFixture = Symbol() as unknown as SseTeardownExecutor;
+
+        gameEventsSubscriptionOutputPortMock.subscribeV2.mockResolvedValueOnce(
+          sseTeardownExecutorFixture,
+        );
+
+        result = await gameEventsManagementInputPort.subscribeV2(
+          gameIdFixture,
+          ssePublisherFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameEventsSubscriptionOutputPort.subscribe()', () => {
+        const expectedPublisher: Publisher<string> = {
+          publish: expect.any(Function) as unknown as (value: string) => void,
+        };
+
+        expect(
+          gameEventsSubscriptionOutputPortMock.subscribeV2,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameEventsSubscriptionOutputPortMock.subscribeV2,
         ).toHaveBeenCalledWith(gameIdFixture, expectedPublisher);
       });
 
