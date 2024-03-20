@@ -11,7 +11,7 @@ import { MessageEventFromStringifiedGameMessageEventV1Builder } from './MessageE
 
 describe(MessageEventFromStringifiedGameMessageEventV1Builder.name, () => {
   let gameMessageEventV1FromGameMessageEventBuilderMock: jest.Mocked<
-    Builder<apiModels.GameMessageEventV1, [GameMessageEvent]>
+    Builder<[string | null, apiModels.GameMessageEventV1], [GameMessageEvent]>
   >;
 
   let messageEventFromStringifiedGameMessageEventBuilder: MessageEventFromStringifiedGameMessageEventV1Builder;
@@ -38,7 +38,7 @@ describe(MessageEventFromStringifiedGameMessageEventV1Builder.name, () => {
       );
     });
 
-    describe('when called', () => {
+    describe('when called, and gameMessageEventV1FromGameMessageEventBuilder.build() returns null id', () => {
       let gameMessageEventV1Fixture: apiModels.GameMessageEventV1;
 
       let result: unknown;
@@ -46,7 +46,7 @@ describe(MessageEventFromStringifiedGameMessageEventV1Builder.name, () => {
       beforeAll(() => {
         gameMessageEventV1Fixture = GameMessageEventV1Fixtures.any;
         gameMessageEventV1FromGameMessageEventBuilderMock.build.mockReturnValueOnce(
-          gameMessageEventV1Fixture,
+          [null, gameMessageEventV1Fixture],
         );
 
         result = messageEventFromStringifiedGameMessageEventBuilder.build(
@@ -70,6 +70,48 @@ describe(MessageEventFromStringifiedGameMessageEventV1Builder.name, () => {
       it('should return a MessageEvent', () => {
         const expected: MessageEvent = {
           data: JSON.stringify(gameMessageEventV1Fixture),
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+
+    describe('when called, and gameMessageEventV1FromGameMessageEventBuilder.build() returns string id', () => {
+      let gameMessageEventV1Fixture: apiModels.GameMessageEventV1;
+      let idFixture: string;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        gameMessageEventV1Fixture = GameMessageEventV1Fixtures.any;
+        idFixture = 'id-fixture';
+
+        gameMessageEventV1FromGameMessageEventBuilderMock.build.mockReturnValueOnce(
+          [idFixture, gameMessageEventV1Fixture],
+        );
+
+        result = messageEventFromStringifiedGameMessageEventBuilder.build(
+          stringifiedGameMessageEventFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameMessageEventV1FromGameMessageEventBuilder.build()', () => {
+        expect(
+          gameMessageEventV1FromGameMessageEventBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameMessageEventV1FromGameMessageEventBuilderMock.build,
+        ).toHaveBeenCalledWith(gameMessageEventFixture);
+      });
+
+      it('should return a MessageEvent', () => {
+        const expected: MessageEvent = {
+          data: JSON.stringify(gameMessageEventV1Fixture),
+          id: idFixture,
         };
 
         expect(result).toStrictEqual(expected);

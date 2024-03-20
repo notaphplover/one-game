@@ -53,11 +53,14 @@ describe(GameMessageEventV1FromGameMessageEventBuilder, () => {
       );
     });
 
-    it('should retuen a GameMessageEventV1', () => {
-      const expected: apiModels.GameMessageEventV1 = {
-        game: gameV1Fixture,
-        kind: 'game-updated',
-      };
+    it('should return a GameMessageEventV1', () => {
+      const expected: [null, apiModels.GameMessageEventV1] = [
+        null,
+        {
+          game: gameV1Fixture,
+          kind: 'game-updated',
+        },
+      ];
 
       expect(result).toStrictEqual(expected);
     });
