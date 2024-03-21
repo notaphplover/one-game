@@ -3,7 +3,7 @@ import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
 import { RegisterConfirm } from '../pages/RegisterConfirm';
 
-export const AuthRoutes = () => {
+export const AuthRoutes = (): React.JSX.Element => {
   return (
     <Routes>
       <Route path="login" element={<Login />} />
