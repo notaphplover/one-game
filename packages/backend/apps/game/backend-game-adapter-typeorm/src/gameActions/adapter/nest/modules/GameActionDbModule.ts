@@ -6,9 +6,11 @@ import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/D
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
 import { GameActionPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameActionPersistenceTypeOrmAdapter';
 import { GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder } from '../../typeorm/builders/GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder';
+import { GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder } from '../../typeorm/builders/GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder';
 import { GameActionFromGameActionDbBuilder } from '../../typeorm/builders/GameActionFromGameActionDbBuilder';
 import { GameActionDb } from '../../typeorm/models/GameActionDb';
 import { CreateGameActionTypeOrmService } from '../../typeorm/services/CreateGameActionTypeOrmService';
+import { FindGameActionTypeOrmService } from '../../typeorm/services/FindGameActionTypeOrmService';
 
 @Module({})
 export class GameActionDbModule {
@@ -24,7 +26,9 @@ export class GameActionDbModule {
       module: GameActionDbModule,
       providers: [
         CreateGameActionTypeOrmService,
+        FindGameActionTypeOrmService,
         GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder,
+        GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder,
         GameActionFromGameActionDbBuilder,
         {
           provide: gameActionPersistenceOutputPortSymbol,
