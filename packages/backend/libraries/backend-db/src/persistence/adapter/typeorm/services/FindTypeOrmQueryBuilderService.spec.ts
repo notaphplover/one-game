@@ -4,7 +4,6 @@ jest.mock('../utils/unwrapTypeOrmTransaction');
 
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
-  ObjectLiteral,
   QueryBuilder,
   QueryRunner,
   Repository,
@@ -29,12 +28,12 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
   let repositoryMock: jest.Mocked<Repository<ModelTest>>;
   let queryTypeOrmFromQueryBuilderMock: jest.Mocked<
     | Builder<
-        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-        [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        QueryBuilder<ModelTest> & WhereExpressionBuilder,
+        [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
       >
     | BuilderAsync<
-        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-        [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        QueryBuilder<ModelTest> & WhereExpressionBuilder,
+        [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
       >
   >;
   let modelFromModelDbBuilderMock: jest.Mocked<
@@ -72,22 +71,22 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
     } as Partial<
       jest.Mocked<
         | Builder<
-            QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-            [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+            QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
           >
         | BuilderAsync<
-            QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-            [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+            QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
           >
       >
     > as jest.Mocked<
       | Builder<
-          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-          [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+          QueryBuilder<ModelTest> & WhereExpressionBuilder,
+          [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
         >
       | BuilderAsync<
-          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-          [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+          QueryBuilder<ModelTest> & WhereExpressionBuilder,
+          [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
         >
     >;
 
@@ -284,7 +283,7 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
       });
     });
 
-    describe('when called and repository.findOne() returns a TModelDb', () => {
+    describe('when called and repository.findOne() returns a ModelTest', () => {
       let modelTestFixture: ModelTest;
       let queryRunnerFixture: QueryRunner;
       let result: unknown;

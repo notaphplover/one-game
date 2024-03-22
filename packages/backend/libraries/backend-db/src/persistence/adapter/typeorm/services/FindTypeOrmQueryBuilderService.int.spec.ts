@@ -9,7 +9,6 @@ import {
   DataSource,
   DataSourceOptions,
   Entity,
-  ObjectLiteral,
   PrimaryColumn,
   QueryBuilder,
   QueryRunner,
@@ -107,12 +106,12 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
   let modelTestRepository: Repository<ModelTest>;
   let findQueryTypeOrmFromQueryBuilderMock: jest.Mocked<
     | Builder<
-        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-        [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        QueryBuilder<ModelTest> & WhereExpressionBuilder,
+        [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
       >
     | BuilderAsync<
-        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-        [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+        QueryBuilder<ModelTest> & WhereExpressionBuilder,
+        [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
       >
   >;
   let modelFromModelDbBuilder: jest.Mocked<
@@ -158,22 +157,22 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
     } as Partial<
       jest.Mocked<
         | Builder<
-            QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-            [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+            QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
           >
         | BuilderAsync<
-            QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-            [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+            QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
           >
       >
     > as jest.Mocked<
       | Builder<
-          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-          [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+          QueryBuilder<ModelTest> & WhereExpressionBuilder,
+          [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
         >
       | BuilderAsync<
-          QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-          [QueryTest, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+          QueryBuilder<ModelTest> & WhereExpressionBuilder,
+          [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
         >
     >;
     modelFromModelDbBuilder = {

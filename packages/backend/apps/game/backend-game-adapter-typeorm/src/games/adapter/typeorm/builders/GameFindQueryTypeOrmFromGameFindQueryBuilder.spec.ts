@@ -32,20 +32,20 @@ import {
 import { GameFindQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 import {
   InstanceChecker,
-  ObjectLiteral,
   QueryBuilder,
   SelectQueryBuilder,
   WhereExpressionBuilder,
 } from 'typeorm';
 
 import { GameDb } from '../models/GameDb';
+import { GameSlotDb } from '../models/GameSlotDb';
 import { GameFindQueryTypeOrmFromGameFindQueryBuilder } from './GameFindQueryTypeOrmFromGameFindQueryBuilder';
 
 describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
   let gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock: jest.Mocked<
     Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      [GameSlotFindQuery, QueryBuilder<GameSlotDb> & WhereExpressionBuilder]
     >
   >;
   let gameFindQueryTypeOrmFromGameFindQueryBuilder: GameFindQueryTypeOrmFromGameFindQueryBuilder;
@@ -63,12 +63,14 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
 
   describe('.build', () => {
     let queryFixture: string;
-    let queryBuilderFixture: jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
+    let queryBuilderMock: jest.Mocked<
+      SelectQueryBuilder<GameDb> & SelectQueryBuilder<GameSlotDb>
+    >;
 
     beforeAll(() => {
       queryFixture = '(query fixture)';
 
-      queryBuilderFixture = {
+      queryBuilderMock = {
         andWhere: jest.fn().mockReturnThis(),
         distinct: jest.fn().mockReturnThis(),
         from: jest.fn().mockReturnThis(),
@@ -81,8 +83,10 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         setParameters: jest.fn().mockReturnThis(),
         subQuery: jest.fn().mockReturnThis(),
       } as Partial<
-        jest.Mocked<SelectQueryBuilder<ObjectLiteral>>
-      > as jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
+        jest.Mocked<SelectQueryBuilder<GameDb> & SelectQueryBuilder<GameSlotDb>>
+      > as jest.Mocked<
+        SelectQueryBuilder<GameDb> & SelectQueryBuilder<GameSlotDb>
+      >;
     });
 
     describe('having a GameFindQuery with id', () => {
@@ -102,7 +106,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
@@ -115,8 +119,8 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should call queryBuilder.andWhere()', () => {
-          expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
-          expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+          expect(queryBuilderMock.andWhere).toHaveBeenCalled();
+          expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
             `${GameDb.name}.id = :${GameDb.name}id`,
             {
               [`${GameDb.name}id`]: gameFindQueryFixture.id,
@@ -125,7 +129,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should return a QueryBuilder', () => {
-          expect(result).toBe(queryBuilderFixture);
+          expect(result).toBe(queryBuilderMock);
         });
       });
     });
@@ -146,12 +150,12 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
           ).mockReturnValue(true);
 
           gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build.mockReturnValueOnce(
-            queryBuilderFixture,
+            queryBuilderMock,
           );
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
@@ -171,12 +175,12 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
             gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build,
           ).toHaveBeenCalledWith(
             gameFindQueryFixture.gameSlotFindQuery,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
         it('should return a QueryBuilder', () => {
-          expect(result).toBe(queryBuilderFixture);
+          expect(result).toBe(queryBuilderMock);
         });
       });
     });
@@ -198,7 +202,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
@@ -211,14 +215,14 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should call queryBuilder.limit()', () => {
-          expect(queryBuilderFixture.limit).toHaveBeenCalledTimes(1);
-          expect(queryBuilderFixture.limit).toHaveBeenCalledWith(
+          expect(queryBuilderMock.limit).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.limit).toHaveBeenCalledWith(
             gameFindQueryFixture.limit,
           );
         });
 
         it('should return a QueryBuilder', () => {
-          expect(result).toBe(queryBuilderFixture);
+          expect(result).toBe(queryBuilderMock);
         });
       });
     });
@@ -240,7 +244,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
@@ -253,14 +257,14 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should call queryBuilder.offset()', () => {
-          expect(queryBuilderFixture.offset).toHaveBeenCalledTimes(1);
-          expect(queryBuilderFixture.offset).toHaveBeenCalledWith(
+          expect(queryBuilderMock.offset).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.offset).toHaveBeenCalledWith(
             gameFindQueryFixture.offset,
           );
         });
 
         it('should return a QueryBuilder', () => {
-          expect(result).toBe(queryBuilderFixture);
+          expect(result).toBe(queryBuilderMock);
         });
       });
     });
@@ -283,7 +287,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
@@ -296,8 +300,8 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should call queryBuilder.andWhere()', () => {
-          expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
-          expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+          expect(queryBuilderMock.andWhere).toHaveBeenCalled();
+          expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
             `${GameDb.name}.currentPlayingSlotIndex = :${GameDb.name}currentPlayingSlotIndex`,
             {
               [`${GameDb.name}currentPlayingSlotIndex`]:
@@ -307,7 +311,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should return a QueryBuilder', () => {
-          expect(result).toBe(queryBuilderFixture);
+          expect(result).toBe(queryBuilderMock);
         });
       });
     });
@@ -329,7 +333,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
-            queryBuilderFixture,
+            queryBuilderMock,
           );
         });
 
@@ -342,8 +346,8 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should call queryBuilder.andWhere()', () => {
-          expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
-          expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+          expect(queryBuilderMock.andWhere).toHaveBeenCalled();
+          expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
             `${GameDb.name}.status = :${GameDb.name}status`,
             {
               [`${GameDb.name}status`]: gameFindQueryFixture.status,
@@ -352,7 +356,7 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         });
 
         it('should return a QueryBuilder', () => {
-          expect(result).toBe(queryBuilderFixture);
+          expect(result).toBe(queryBuilderMock);
         });
       });
     });
