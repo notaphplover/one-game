@@ -1,6 +1,7 @@
 import { BaseGameActionCreateQuery } from './query/BaseGameActionCreateQuery';
 import { DrawGameActionCreateQuery } from './query/DrawGameActionCreateQuery';
 import { GameActionCreateQuery } from './query/GameActionCreateQuery';
+import { GameActionFindQuery } from './query/GameActionFindQuery';
 import { PassTurnGameActionCreateQuery } from './query/PassTurnGameActionCreateQuery';
 import { PlayCardsGameActionCreateQuery } from './query/PlayCardsGameActionCreateQuery';
 import { BaseGameAction } from './valueObjects/BaseGameAction';
@@ -17,6 +18,7 @@ export type {
   DrawGameActionCreateQuery,
   GameAction,
   GameActionCreateQuery,
+  GameActionFindQuery,
   PassTurnGameAction,
   PassTurnGameActionCreateQuery,
   PlayCardsGameAction,

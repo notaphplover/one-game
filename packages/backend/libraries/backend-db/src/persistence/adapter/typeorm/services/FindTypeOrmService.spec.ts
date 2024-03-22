@@ -40,14 +40,13 @@ describe(FindTypeOrmService.name, () => {
       getMany: jest.fn(),
       getOne: jest.fn(),
       select: jest.fn().mockReturnThis(),
+      setFindOptions: jest.fn().mockReturnThis(),
     } as Partial<jest.Mocked<SelectQueryBuilder<ModelTest>>> as jest.Mocked<
       SelectQueryBuilder<ModelTest>
     >;
 
     repositoryMock = {
       createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
-      find: jest.fn(),
-      findOne: jest.fn(),
       metadata: {
         name: 'ModelTest',
       } as unknown,
@@ -103,7 +102,7 @@ describe(FindTypeOrmService.name, () => {
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
           >
         ).mockResolvedValueOnce(queryTypeOrmFixture);
-        repositoryMock.find.mockResolvedValueOnce(modelTestFixtures);
+        queryBuilderMock.getMany.mockResolvedValueOnce(modelTestFixtures);
 
         result = await findTypeOrmService.find(queryTestFixture);
       });
@@ -159,7 +158,7 @@ describe(FindTypeOrmService.name, () => {
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
           >
         ).mockResolvedValueOnce(queryTypeOrmFixture);
-        repositoryMock.find.mockResolvedValueOnce(modelTestFixtures);
+        queryBuilderMock.getMany.mockResolvedValueOnce(modelTestFixtures);
 
         await findTypeOrmService.find(queryTestFixture);
       });
@@ -168,9 +167,19 @@ describe(FindTypeOrmService.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call repository.find()', () => {
-        expect(repositoryMock.find).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.find).toHaveBeenCalledWith(queryTypeOrmFixture);
+      it('should call queryBuilder.setFindOptions()', () => {
+        const expected: FindManyOptions<ModelTest> = {
+          ...queryTypeOrmFixture,
+          loadEagerRelations: true,
+        };
+
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call queryBuilder.getMany()', () => {
+        expect(queryBuilderMock.getMany).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.getMany).toHaveBeenCalledWith();
       });
     });
 
@@ -219,7 +228,7 @@ describe(FindTypeOrmService.name, () => {
   });
 
   describe('.findOne()', () => {
-    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns FindManyOptions<TModelDb> and repository.findOne() returns null', () => {
+    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns FindManyOptions<TModelDb> and queryBuilder.getOne() returns null', () => {
       let queryTestFixture: QueryTest;
       let queryTypeOrmFixture: FindManyOptions<ModelTest>;
       let modelTestFixture: null;
@@ -238,7 +247,7 @@ describe(FindTypeOrmService.name, () => {
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
           >
         ).mockResolvedValueOnce(queryTypeOrmFixture);
-        repositoryMock.findOne.mockResolvedValueOnce(modelTestFixture);
+        queryBuilderMock.getOne.mockResolvedValueOnce(modelTestFixture);
 
         result = await findTypeOrmService.findOne(queryTestFixture);
       });
@@ -255,11 +264,19 @@ describe(FindTypeOrmService.name, () => {
         );
       });
 
-      it('should call repository.findOne()', () => {
-        expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.findOne).toHaveBeenCalledWith(
-          queryTypeOrmFixture,
-        );
+      it('should call queryBuilder.setFindOptions()', () => {
+        const expected: FindManyOptions<ModelTest> = {
+          ...queryTypeOrmFixture,
+          loadEagerRelations: true,
+        };
+
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call queryBuilder.getOne()', () => {
+        expect(queryBuilderMock.getOne).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.getOne).toHaveBeenCalledWith();
       });
 
       it('should not call modelFromModelDbBuilder.build()', () => {
@@ -297,7 +314,7 @@ describe(FindTypeOrmService.name, () => {
             (query: QueryTest) => Promise<FindManyOptions<ModelTest>>
           >
         ).mockResolvedValueOnce(queryTypeOrmFixture);
-        repositoryMock.findOne.mockResolvedValueOnce(modelTestFixture);
+        queryBuilderMock.getOne.mockResolvedValueOnce(modelTestFixture);
 
         result = await findTypeOrmService.findOne(queryTestFixture);
       });
@@ -314,11 +331,19 @@ describe(FindTypeOrmService.name, () => {
         );
       });
 
-      it('should call repository.findOne()', () => {
-        expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
-        expect(repositoryMock.findOne).toHaveBeenCalledWith(
-          queryTypeOrmFixture,
-        );
+      it('should call queryBuilder.setFindOptions()', () => {
+        const expected: FindManyOptions<ModelTest> = {
+          ...queryTypeOrmFixture,
+          loadEagerRelations: true,
+        };
+
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.setFindOptions).toHaveBeenCalledWith(expected);
+      });
+
+      it('should call queryBuilder.getOne()', () => {
+        expect(queryBuilderMock.getOne).toHaveBeenCalledTimes(1);
+        expect(queryBuilderMock.getOne).toHaveBeenCalledWith();
       });
 
       it('should call modelFromModelDbBuilder.build()', () => {
@@ -333,7 +358,7 @@ describe(FindTypeOrmService.name, () => {
       });
     });
 
-    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb> and repository.findOne() returns null', () => {
+    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb> and queryBuilder.getOne() returns null', () => {
       let queryTestFixture: QueryTest;
       let modelTestFixture: null;
       let result: unknown;
@@ -384,7 +409,7 @@ describe(FindTypeOrmService.name, () => {
       });
     });
 
-    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb> and repository.findOne() returns a TModelDb', () => {
+    describe('when called and findQueryTypeOrmFromQueryBuilder.build() returns QueryBuilder<TModelDb> and queryBuilder.getOne() returns a TModelDb', () => {
       let queryTestFixture: QueryTest;
       let modelTestFixture: ModelTest;
       let result: unknown;
