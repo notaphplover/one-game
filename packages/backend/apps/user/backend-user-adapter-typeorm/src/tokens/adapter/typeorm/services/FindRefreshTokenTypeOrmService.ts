@@ -33,10 +33,10 @@ export class FindRefreshTokenTypeOrmService extends FindTypeOrmQueryBuilderServi
     >,
     @Inject(RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder)
     refreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder: Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
       [
         RefreshTokenFindQuery,
-        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+        QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
       ]
     >,
   ) {

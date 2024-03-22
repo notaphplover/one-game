@@ -22,20 +22,20 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
   extends BaseFindQueryToFindQueryTypeOrmBuilder
   implements
     Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      [GameFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      QueryBuilder<GameDb> & WhereExpressionBuilder,
+      [GameFindQuery, QueryBuilder<GameDb> & WhereExpressionBuilder]
     >
 {
   readonly #gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder: Builder<
-    QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-    [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+    QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+    [GameSlotFindQuery, QueryBuilder<GameSlotDb> & WhereExpressionBuilder]
   >;
 
   constructor(
     @Inject(GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder)
     gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder: Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      [GameSlotFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
+      [GameSlotFindQuery, QueryBuilder<GameSlotDb> & WhereExpressionBuilder]
     >,
   ) {
     super();
@@ -46,8 +46,8 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
 
   public build(
     gameFindQuery: GameFindQuery,
-    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<GameDb> & WhereExpressionBuilder,
+  ): QueryBuilder<GameDb> & WhereExpressionBuilder {
     const gamePropertiesPrefix: string = this._getEntityPrefix(
       queryBuilder,
       GameDb,
@@ -80,7 +80,7 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
       queryBuilder = this.#findByGameSlotFindQuery(
         gameFindQuery.gameSlotFindQuery,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        queryBuilder,
+        queryBuilder as SelectQueryBuilder<GameDb>,
       );
     }
 
@@ -126,10 +126,10 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
 
   #findByGameSlotFindQuery(
     gameSlotFindQuery: GameSlotFindQuery,
-    selectQueryBuilder: SelectQueryBuilder<ObjectLiteral>,
-  ): SelectQueryBuilder<ObjectLiteral> {
+    selectQueryBuilder: SelectQueryBuilder<GameDb>,
+  ): SelectQueryBuilder<GameDb> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    let subQueryBuilder: SelectQueryBuilder<ObjectLiteral> = selectQueryBuilder
+    let subQueryBuilder: SelectQueryBuilder<GameSlotDb> = selectQueryBuilder
       .subQuery()
       .select(`"${GameSlotDb.name}".game_Id`)
       .distinct(true)
@@ -139,7 +139,7 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
       this.#gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder.build(
         gameSlotFindQuery,
         subQueryBuilder,
-      ) as SelectQueryBuilder<ObjectLiteral>;
+      ) as SelectQueryBuilder<GameSlotDb>;
 
     selectQueryBuilder = selectQueryBuilder.andWhere(
       `${GameDb.name}.id IN (${subQueryBuilder.getQuery()})`,
