@@ -111,6 +111,65 @@ describe(DelayedSseConsumer.name, () => {
     });
   });
 
+  describe('.setPreviousEvents', () => {
+    describe('when called', () => {
+      let delayedSseConsumer: DelayedSseConsumer;
+      let eventFixture: MessageEvent;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        eventFixture = { data: 'event-fixture-data' };
+
+        delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
+
+        result = delayedSseConsumer.setPreviousEvents([eventFixture]);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should not call innerConsumer.consume()', () => {
+        expect(sseConsumerMock.consume).not.toHaveBeenCalled();
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when called, after free() is called', () => {
+      let delayedSseConsumer: DelayedSseConsumer;
+      let eventFixture: MessageEvent;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        eventFixture = { data: 'event-fixture-data' };
+
+        delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
+
+        delayedSseConsumer.setPreviousEvents([eventFixture]);
+
+        delayedSseConsumer.free();
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call innerConsumer.consume()', () => {
+        expect(sseConsumerMock.consume).toHaveBeenCalledTimes(1);
+        expect(sseConsumerMock.consume).toHaveBeenCalledWith(eventFixture);
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
   describe('.onComplete', () => {
     describe('when called', () => {
       let delayedSseConsumer: DelayedSseConsumer;
