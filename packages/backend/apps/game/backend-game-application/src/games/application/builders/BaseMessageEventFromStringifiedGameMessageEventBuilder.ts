@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { MessageEvent } from '@nestjs/common';
+import { MessageEvent } from '@cornie-js/backend-http';
 
 import { GameMessageEvent } from '../models/GameMessageEvent';
 

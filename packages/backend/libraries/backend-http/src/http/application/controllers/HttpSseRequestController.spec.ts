@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder, Handler, Left, Right } from '@cornie-js/backend-common';
 
+import { MessageEvent } from '../models/MessageEvent';
 import { Request } from '../models/Request';
 import { RequestWithBody } from '../models/RequestWithBody';
 import { Response } from '../models/Response';
@@ -19,7 +20,7 @@ class HttpSseRequestControllerMock<
     (
       publisher: SsePublisher,
       ...useCaseParams: TUseCaseParams
-    ) => Promise<[Response, SseTeardownExecutor]>
+    ) => Promise<[Response, MessageEvent[], SseTeardownExecutor]>
   >;
 
   constructor(
@@ -33,7 +34,7 @@ class HttpSseRequestControllerMock<
       (
         publisher: SsePublisher,
         ...useCaseParams: TUseCaseParams
-      ) => Promise<[Response, SseTeardownExecutor]>
+      ) => Promise<[Response, MessageEvent[], SseTeardownExecutor]>
     >,
   ) {
     super(requestParamHandler, responseFromErrorBuilder, middlewarePipeline);
@@ -44,7 +45,7 @@ class HttpSseRequestControllerMock<
   protected override async _handleUseCase(
     publisher: SsePublisher,
     ...useCaseParams: TUseCaseParams
-  ): Promise<[Response, SseTeardownExecutor]> {
+  ): Promise<[Response, MessageEvent[], SseTeardownExecutor]> {
     return this.#handleUseCaseMock(publisher, ...useCaseParams);
   }
 }
@@ -61,7 +62,7 @@ describe(HttpSseRequestController.name, () => {
     (
       publisher: SsePublisher,
       ...useCaseParams: unknown[]
-    ) => Promise<[Response, SseTeardownExecutor]>
+    ) => Promise<[Response, MessageEvent[], SseTeardownExecutor]>
   >;
   let httpSseRequestControllerMock: HttpSseRequestControllerMock;
 
@@ -137,6 +138,7 @@ describe(HttpSseRequestController.name, () => {
     describe('when called, and middlewarePipeline.apply() returns undefined', () => {
       let responseFixture: Response;
       let useCaseParamsFixtures: unknown[];
+      let messageEventsFixture: MessageEvent[];
       let sseTeardownExecutorFixture: SseTeardownExecutor;
       let result: unknown;
 
@@ -145,6 +147,7 @@ describe(HttpSseRequestController.name, () => {
           | Response
           | ResponseWithBody<unknown>;
         useCaseParamsFixtures = [Symbol()];
+        messageEventsFixture = [Symbol() as unknown as MessageEvent];
         sseTeardownExecutorFixture = Symbol() as unknown as SseTeardownExecutor;
 
         middlewarePipelineMock.apply.mockResolvedValueOnce(undefined);
@@ -153,6 +156,7 @@ describe(HttpSseRequestController.name, () => {
         );
         handleUseCaseMock.mockResolvedValueOnce([
           responseFixture,
+          messageEventsFixture,
           sseTeardownExecutorFixture,
         ]);
 
@@ -182,10 +186,15 @@ describe(HttpSseRequestController.name, () => {
       });
 
       it('should return a Right value', () => {
-        const expected: Right<[Response, SseTeardownExecutor]> = {
-          isRight: true,
-          value: [responseFixture, sseTeardownExecutorFixture],
-        };
+        const expected: Right<[Response, MessageEvent[], SseTeardownExecutor]> =
+          {
+            isRight: true,
+            value: [
+              responseFixture,
+              messageEventsFixture,
+              sseTeardownExecutorFixture,
+            ],
+          };
 
         expect(result).toStrictEqual(expected);
       });

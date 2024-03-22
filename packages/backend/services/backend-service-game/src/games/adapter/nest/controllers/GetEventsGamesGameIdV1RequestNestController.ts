@@ -5,6 +5,7 @@ import {
   FastifyReplySseConsumerFromFastifyReplyBuilder,
   FastifySseReplyFromResponseBuilder,
   HttpNestFastifySseController,
+  MessageEvent,
   Request,
   RequestFromFastifyRequestBuilder,
   Response,
@@ -25,7 +26,10 @@ export class GetEventsGamesGameIdV1RequestNestController extends HttpNestFastify
     @Inject(GetGameGameIdEventsV1SseController)
     getGameGameIdEventsV1SseController: Handler<
       [Request, SsePublisher],
-      Either<Response, [Response, SseTeardownExecutor]>
+      Either<
+        Response | ResponseWithBody<unknown>,
+        [Response, MessageEvent[], SseTeardownExecutor]
+      >
     >,
     @Inject(FastifyReplyFromResponseBuilder)
     resultBuilder: Builder<
