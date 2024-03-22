@@ -16,6 +16,10 @@ import {
 import { TransactionWrapper } from '../../../application/models/TransactionWrapper';
 import { unwrapTypeOrmTransaction } from '../utils/unwrapTypeOrmTransaction';
 
+interface CountResult {
+  count: number;
+}
+
 export class FindTypeOrmQueryBuilderService<
   TModel,
   TModelDb extends ObjectLiteral,
@@ -59,18 +63,13 @@ export class FindTypeOrmQueryBuilderService<
     query: TQuery,
     transactionWrapper?: TransactionWrapper | undefined,
   ): Promise<number> {
-    const queryRunner: QueryRunner | undefined =
-      unwrapTypeOrmTransaction(transactionWrapper);
+    const findQueryTypeOrmOrQueryBuilder: SelectQueryBuilder<TModelDb> =
+      await this.#buildSelectQueryBuilder(query, transactionWrapper);
 
-    const selectQueryBuilder: SelectQueryBuilder<TModelDb> =
-      this.#repository.createQueryBuilder(
-        this.#repository.metadata.name,
-        queryRunner,
-      );
-
-    const countResult: number | undefined = await selectQueryBuilder
-      .select(['count(*)'])
-      .getRawOne<number>();
+    const countResult: CountResult | undefined =
+      await findQueryTypeOrmOrQueryBuilder
+        .select(['count(*) as count'])
+        .getRawOne<CountResult>();
 
     if (countResult === undefined) {
       throw new AppError(
@@ -79,7 +78,7 @@ export class FindTypeOrmQueryBuilderService<
       );
     }
 
-    return countResult;
+    return countResult.count;
   }
 
   public async find(
@@ -124,13 +123,10 @@ export class FindTypeOrmQueryBuilderService<
     return model;
   }
 
-  async #innerFind<TOutputDb extends undefined | TModelDb | TModelDb[]>(
+  async #buildSelectQueryBuilder(
     query: TQuery,
-    findByQueryBuilder: (
-      queryBuilder: SelectQueryBuilder<TModelDb>,
-    ) => Promise<TOutputDb>,
     transactionWrapper: TransactionWrapper | undefined,
-  ): Promise<TOutputDb> {
+  ): Promise<SelectQueryBuilder<TModelDb>> {
     const queryRunner: QueryRunner | undefined =
       unwrapTypeOrmTransaction(transactionWrapper);
 
@@ -145,6 +141,19 @@ export class FindTypeOrmQueryBuilderService<
         query,
         selectQueryBuilder,
       )) as SelectQueryBuilder<TModelDb>;
+
+    return findQueryTypeOrmOrQueryBuilder;
+  }
+
+  async #innerFind<TOutputDb extends undefined | TModelDb | TModelDb[]>(
+    query: TQuery,
+    findByQueryBuilder: (
+      queryBuilder: SelectQueryBuilder<TModelDb>,
+    ) => Promise<TOutputDb>,
+    transactionWrapper: TransactionWrapper | undefined,
+  ): Promise<TOutputDb> {
+    const findQueryTypeOrmOrQueryBuilder: SelectQueryBuilder<TModelDb> =
+      await this.#buildSelectQueryBuilder(query, transactionWrapper);
 
     return findByQueryBuilder(findQueryTypeOrmOrQueryBuilder);
   }
