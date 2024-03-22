@@ -52,6 +52,43 @@ paths:
       tags:
         - Auth
 
+  /v1/events/games/{gameId}:
+    get:
+      deprecated: true
+      summary: Get game events (SSE)
+      operationId: getGameEvents
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Game id of the events to get.
+      responses:
+        '200':
+          description: Game events found
+          content:
+            text/event-stream:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    data:
+                      $ref: 'https://onegame.schemas/api/v1/games/game.json'
+                  required:
+                    - data
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - accessToken: []
+      tags:
+        - Game events
+
   /v1/games:
     post:
       summary: Create a game
@@ -670,10 +707,51 @@ paths:
       tags:
         - Auth
 
+  /v2/events/games/{gameId}:
+    get:
+      summary: Get game events (SSE)
+      operationId: getGameEventsV2
+      parameters:
+        - in: path
+          name: gameId
+          schema:
+            type: string
+          required: true
+          description: Game id of the events to get.
+      responses:
+        '200':
+          description: Game events found
+          content:
+            text/event-stream:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    data:
+                      $ref: 'https://onegame.schemas/api/v2/game-events/game-event.json'
+                  required:
+                    - id
+                    - data
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - accessToken: []
+      tags:
+        - Game events
+
 tags:
   - name: Auth
     description: Authorization management operations
   - name: Game
     description: Game management operations
+  - name: Game events
+    description: Game events management operations
   - name: User
     description: User management operations

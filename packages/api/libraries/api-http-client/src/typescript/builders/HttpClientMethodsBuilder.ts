@@ -587,7 +587,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
 
         if (applicationJsonMediaContent?.schema === undefined) {
           responseBodyType = ts.factory.createKeywordTypeNode(
-            ts.SyntaxKind.UndefinedKeyword,
+            ts.SyntaxKind.UnknownKeyword,
           );
         } else {
           responseBodyType = this.#buildNodeTypeFromSchema(

@@ -31,6 +31,27 @@ export class HttpClient {
       body,
     );
   }
+  public async getGameEvents(
+    headers: {
+      [key: string]: string;
+    },
+    url: {
+      [key: string]: string;
+      gameId: string;
+    },
+  ): Promise<
+    | Response<Record<string, string>, unknown, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v1/events/games/{gameId}',
+      headers,
+      undefined,
+      url,
+      undefined,
+    );
+  }
   public async createGame(
     headers: {
       [key: string]: string;
@@ -370,6 +391,27 @@ export class HttpClient {
       undefined,
       undefined,
       body,
+    );
+  }
+  public async getGameEventsV2(
+    headers: {
+      [key: string]: string;
+    },
+    url: {
+      [key: string]: string;
+      gameId: string;
+    },
+  ): Promise<
+    | Response<Record<string, string>, unknown, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+  > {
+    return this.#axiosHttpClient.callEndpoint(
+      'GET',
+      '/v2/events/games/{gameId}',
+      headers,
+      undefined,
+      url,
+      undefined,
     );
   }
 }

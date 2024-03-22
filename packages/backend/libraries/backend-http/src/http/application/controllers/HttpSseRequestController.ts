@@ -1,5 +1,6 @@
 import { Builder, Either, Handler } from '@cornie-js/backend-common';
 
+import { MessageEvent } from '../models/MessageEvent';
 import { Request } from '../models/Request';
 import { RequestWithBody } from '../models/RequestWithBody';
 import { Response } from '../models/Response';
@@ -14,7 +15,7 @@ export abstract class HttpSseRequestController<
 > implements
     Handler<
       [TRequest, SsePublisher],
-      Either<Response, [Response, SseTeardownExecutor]>
+      Either<Response, [Response, MessageEvent[], SseTeardownExecutor]>
     >
 {
   readonly #requestParamHandler: Handler<[TRequest], TUseCaseParams>;
@@ -43,7 +44,7 @@ export abstract class HttpSseRequestController<
   ): Promise<
     Either<
       Response | ResponseWithBody<unknown>,
-      [Response, SseTeardownExecutor]
+      [Response, MessageEvent[], SseTeardownExecutor]
     >
   > {
     try {
@@ -72,7 +73,7 @@ export abstract class HttpSseRequestController<
   async #handleUseCase(
     request: TRequest,
     publisher: SsePublisher,
-  ): Promise<[Response, SseTeardownExecutor]> {
+  ): Promise<[Response, MessageEvent[], SseTeardownExecutor]> {
     const useCaseParams: TUseCaseParams =
       await this.#requestParamHandler.handle(request);
 
@@ -82,5 +83,5 @@ export abstract class HttpSseRequestController<
   protected abstract _handleUseCase(
     publisher: SsePublisher,
     ...useCaseParams: TUseCaseParams
-  ): Promise<[Response, SseTeardownExecutor]>;
+  ): Promise<[Response, MessageEvent[], SseTeardownExecutor]>;
 }

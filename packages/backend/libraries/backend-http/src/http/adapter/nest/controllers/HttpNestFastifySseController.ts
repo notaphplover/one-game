@@ -2,6 +2,7 @@ import { Builder, Either, Handler } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
+import { MessageEvent } from '../../../application/models/MessageEvent';
 import { Request } from '../../../application/models/Request';
 import { RequestWithBody } from '../../../application/models/RequestWithBody';
 import { Response } from '../../../application/models/Response';
@@ -23,7 +24,7 @@ export class HttpNestFastifySseController<
     [TRequest, SsePublisher],
     Either<
       Response | ResponseWithBody<unknown>,
-      [Response, SseTeardownExecutor]
+      [Response, MessageEvent[], SseTeardownExecutor]
     >
   >;
   readonly #resultBuilder: Builder<
@@ -39,7 +40,7 @@ export class HttpNestFastifySseController<
       [TRequest, SsePublisher],
       Either<
         Response | ResponseWithBody<unknown>,
-        [Response, SseTeardownExecutor]
+        [Response, MessageEvent[], SseTeardownExecutor]
       >
     >,
     resultBuilder: Builder<
@@ -69,17 +70,24 @@ export class HttpNestFastifySseController<
 
     const ssePublisher: SsePublisher = new SsePublisher(delayedSseConsumer);
 
-    const result: Either<Response, [Response, SseTeardownExecutor]> =
-      await this.#requestController.handle(request, ssePublisher);
+    const result: Either<
+      Response,
+      [Response, MessageEvent[], SseTeardownExecutor]
+    > = await this.#requestController.handle(request, ssePublisher);
 
     if (result.isRight) {
-      const [response, sseTeardownExecutor]: [Response, SseTeardownExecutor] =
-        result.value;
+      const [response, messageEvents, sseTeardownExecutor]: [
+        Response,
+        MessageEvent[],
+        SseTeardownExecutor,
+      ] = result.value;
 
       this.#handleRequestOnClose(fastifyRequest, () => {
         sseTeardownExecutor.teardown();
         delayedSseConsumer.onComplete();
       });
+
+      delayedSseConsumer.setPreviousEvents(messageEvents);
 
       void this.#sseResultBuilder.build(response, fastifyReply);
 
