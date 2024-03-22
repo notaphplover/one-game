@@ -10,6 +10,7 @@ import {
   AuthRequestContextHolder,
   ErrorV1ResponseFromErrorBuilder,
   HttpSseRequestController,
+  MessageEvent,
   MiddlewarePipeline,
   Request,
   Response,
@@ -63,7 +64,7 @@ export class GetGameGameIdEventsV1SseController extends HttpSseRequestController
     publisher: SsePublisher,
     game: Game,
     userV1: apiModels.UserV1,
-  ): Promise<[Response, SseTeardownExecutor]> {
+  ): Promise<[Response, MessageEvent[], SseTeardownExecutor]> {
     if (!this.#isUserPlayingGame(game, userV1)) {
       throw new AppError(AppErrorKind.invalidCredentials, 'Access denied');
     }
@@ -73,6 +74,7 @@ export class GetGameGameIdEventsV1SseController extends HttpSseRequestController
         headers: {},
         statusCode: HttpStatus.OK,
       },
+      [],
       await this.#gameEventsManagementInputPort.subscribeV1(game.id, publisher),
     ];
   }

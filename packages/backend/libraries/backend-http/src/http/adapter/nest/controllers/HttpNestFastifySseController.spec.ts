@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { Builder, Either, Handler } from '@cornie-js/backend-common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
+import { MessageEvent } from '../../../application/models/MessageEvent';
 import { Request } from '../../../application/models/Request';
 import { RequestWithBody } from '../../../application/models/RequestWithBody';
 import { Response } from '../../../application/models/Response';
@@ -27,7 +28,7 @@ describe(HttpNestFastifySseController.name, () => {
       [Request | RequestWithBody, SsePublisher],
       Either<
         Response | ResponseWithBody<unknown>,
-        [Response, SseTeardownExecutor]
+        [Response, MessageEvent[], SseTeardownExecutor]
       >
     >
   >;
@@ -197,6 +198,7 @@ describe(HttpNestFastifySseController.name, () => {
     describe('when called, and requestController.handle() returns Right and fastifyRequest.raw.closed returns false', () => {
       let requestFixture: Request | RequestWithBody;
       let responseFixture: Response | ResponseWithBody<unknown>;
+      let messageEventsFixture: MessageEvent[];
       let delayedSseConsumerMock: jest.Mocked<DelayedSseConsumer>;
       let sseTeardownExecutorMock: jest.Mocked<SseTeardownExecutor>;
 
@@ -207,9 +209,11 @@ describe(HttpNestFastifySseController.name, () => {
         responseFixture = Symbol() as unknown as
           | Response
           | ResponseWithBody<unknown>;
+        messageEventsFixture = [Symbol() as unknown as MessageEvent];
         delayedSseConsumerMock = {
           free: jest.fn(),
           onComplete: jest.fn(),
+          setPreviousEvents: jest.fn(),
         } as Partial<
           jest.Mocked<DelayedSseConsumer>
         > as jest.Mocked<DelayedSseConsumer>;
@@ -223,7 +227,11 @@ describe(HttpNestFastifySseController.name, () => {
         );
         requestControllerMock.handle.mockResolvedValueOnce({
           isRight: true,
-          value: [responseFixture, sseTeardownExecutorMock],
+          value: [
+            responseFixture,
+            messageEventsFixture,
+            sseTeardownExecutorMock,
+          ],
         });
         resultBuilderMock.build.mockReturnValueOnce(fastifyReplyFixture);
         closeGetterMock.mockReturnValueOnce(false);
@@ -295,6 +303,15 @@ describe(HttpNestFastifySseController.name, () => {
         );
       });
 
+      it('should call delayedSseConsumer.setPreviousEvents()', () => {
+        expect(delayedSseConsumerMock.setPreviousEvents).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(delayedSseConsumerMock.setPreviousEvents).toHaveBeenCalledWith(
+          messageEventsFixture,
+        );
+      });
+
       it('should call sseResultBuilder.build()', () => {
         expect(sseResultBuilderMock.build).toHaveBeenCalledTimes(1);
         expect(sseResultBuilderMock.build).toHaveBeenCalledWith(
@@ -316,6 +333,7 @@ describe(HttpNestFastifySseController.name, () => {
     describe('when called, and requestController.handle() returns Right and fastifyRequest.raw.closed returns true', () => {
       let requestFixture: Request | RequestWithBody;
       let responseFixture: Response | ResponseWithBody<unknown>;
+      let messageEventsFixture: MessageEvent[];
       let delayedSseConsumerMock: jest.Mocked<DelayedSseConsumer>;
       let sseTeardownExecutorMock: jest.Mocked<SseTeardownExecutor>;
 
@@ -326,9 +344,11 @@ describe(HttpNestFastifySseController.name, () => {
         responseFixture = Symbol() as unknown as
           | Response
           | ResponseWithBody<unknown>;
+        messageEventsFixture = [Symbol() as unknown as MessageEvent];
         delayedSseConsumerMock = {
           free: jest.fn(),
           onComplete: jest.fn(),
+          setPreviousEvents: jest.fn(),
         } as Partial<
           jest.Mocked<DelayedSseConsumer>
         > as jest.Mocked<DelayedSseConsumer>;
@@ -342,7 +362,11 @@ describe(HttpNestFastifySseController.name, () => {
         );
         requestControllerMock.handle.mockResolvedValueOnce({
           isRight: true,
-          value: [responseFixture, sseTeardownExecutorMock],
+          value: [
+            responseFixture,
+            messageEventsFixture,
+            sseTeardownExecutorMock,
+          ],
         });
         resultBuilderMock.build.mockReturnValueOnce(fastifyReplyFixture);
         closeGetterMock.mockReturnValueOnce(true);
@@ -414,6 +438,15 @@ describe(HttpNestFastifySseController.name, () => {
       it('should call delayedSseConsumer.onComplete()', () => {
         expect(delayedSseConsumerMock.onComplete).toHaveBeenCalledTimes(1);
         expect(delayedSseConsumerMock.onComplete).toHaveBeenCalledWith();
+      });
+
+      it('should call delayedSseConsumer.setPreviousEvents()', () => {
+        expect(delayedSseConsumerMock.setPreviousEvents).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(delayedSseConsumerMock.setPreviousEvents).toHaveBeenCalledWith(
+          messageEventsFixture,
+        );
       });
 
       it('should call sseResultBuilder.build()', () => {
