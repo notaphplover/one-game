@@ -110,7 +110,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
         <Grid container>
           <Grid item xs={12}>
             <Box component="div" className="home-auth-button-container">
-              <Link component={RouterLink} to="/">
+              <Link component={RouterLink} to="/game/">
                 <Button
                   type="button"
                   className="home-auth-button-new-game"

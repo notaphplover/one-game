@@ -1,0 +1,39 @@
+@use '../base/variables' as var;
+
+.new-game-form-grid {
+  background-color: var(--cg-text-primary);
+  border-radius: 10px;
+  text-align: left;
+  color: var(--cg-bkg-primary-light);
+  padding: 3rem;
+  margin: 0rem 2rem;
+}
+
+@media (min-width: var.$sm) {
+  .new-game-form-grid {
+    margin: 0;
+  }
+}
+
+.new-game-form-title {
+  padding-bottom: 1.5rem;
+}
+
+.new-game-login-error {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.new-game-form-grid .new-game-text-fieldset {
+  margin-top: 1.5rem;
+}
+
+.new-game-form-grid .new-game-text-fieldset:hover {
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
+}
+
+.new-game-form-button {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
