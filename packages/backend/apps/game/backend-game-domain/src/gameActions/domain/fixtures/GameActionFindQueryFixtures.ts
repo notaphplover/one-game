@@ -10,4 +10,18 @@ export class GameActionFindQueryFixtures {
       id: '16b54159-a4ef-41fc-994a-20709526bda0',
     };
   }
+
+  public static get withLimit(): GameActionFindQuery {
+    return {
+      limit: 10,
+    };
+  }
+
+  public static get withPositionGt(): GameActionFindQuery {
+    return {
+      position: {
+        gt: 1,
+      },
+    };
+  }
 }
