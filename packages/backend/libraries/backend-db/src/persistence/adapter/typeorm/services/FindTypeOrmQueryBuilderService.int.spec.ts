@@ -207,6 +207,90 @@ describe(FindTypeOrmQueryBuilderService.name, () => {
       await modelTestRepository.save(modelTest);
     });
 
+    describe('.count', () => {
+      describe('when called, and findQueryTypeOrmFromQueryBuilder.build returns a query builder matching a ModelTest', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          const queryTest: QueryTest = {
+            fooValue: 'blah',
+          };
+
+          (
+            findQueryTypeOrmFromQueryBuilderMock as jest.Mocked<
+              Builder<
+                QueryBuilder<ModelTest> & WhereExpressionBuilder,
+                [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
+              >
+            >
+          ).build.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            ): QueryBuilder<ModelTest> & WhereExpressionBuilder => {
+              queryBuilder.andWhere(
+                `${ModelTest.name}.id = :${ModelTest.name}id`,
+                { [`${ModelTest.name}id`]: modelTest.id },
+              );
+
+              return queryBuilder;
+            },
+          );
+
+          result = await findTypeOrmQueryBuilderService.count(queryTest);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a number', () => {
+          expect(result).toBe(1);
+        });
+      });
+
+      describe('when called, and findQueryTypeOrmFromQueryBuilder.build returns a query builder not matching a ModelTest', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          const queryTest: QueryTest = {
+            fooValue: 'blah',
+          };
+
+          (
+            findQueryTypeOrmFromQueryBuilderMock as jest.Mocked<
+              Builder<
+                QueryBuilder<ModelTest> & WhereExpressionBuilder,
+                [QueryTest, QueryBuilder<ModelTest> & WhereExpressionBuilder]
+              >
+            >
+          ).build.mockImplementationOnce(
+            (
+              _query: QueryTest,
+              queryBuilder: QueryBuilder<ModelTest> & WhereExpressionBuilder,
+            ): QueryBuilder<ModelTest> & WhereExpressionBuilder => {
+              queryBuilder.andWhere(
+                `${ModelTest.name}.id != :${ModelTest.name}id`,
+                { [`${ModelTest.name}id`]: modelTest.id },
+              );
+
+              return queryBuilder;
+            },
+          );
+
+          result = await findTypeOrmQueryBuilderService.count(queryTest);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a number', () => {
+          expect(result).toBe(0);
+        });
+      });
+    });
+
     describe('.findOne', () => {
       describe('when called, and findQueryTypeOrmFromQueryBuilder.build returns a query builder matching a ModelTest', () => {
         let result: unknown;
