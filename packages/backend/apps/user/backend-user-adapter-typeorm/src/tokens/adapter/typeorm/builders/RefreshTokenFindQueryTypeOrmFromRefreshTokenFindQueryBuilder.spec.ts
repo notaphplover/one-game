@@ -42,14 +42,14 @@ describe(
     });
 
     describe('.build', () => {
-      let queryBuilderFixture: jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
+      let queryBuilderFixture: jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>;
 
       beforeAll(() => {
         queryBuilderFixture = {
           andWhere: jest.fn().mockReturnThis(),
         } as Partial<
-          jest.Mocked<SelectQueryBuilder<ObjectLiteral>>
-        > as jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
+          jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>
+        > as jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>;
       });
 
       describe.each<

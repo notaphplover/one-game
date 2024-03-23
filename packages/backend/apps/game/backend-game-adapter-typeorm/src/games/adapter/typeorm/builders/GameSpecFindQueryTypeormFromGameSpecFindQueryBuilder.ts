@@ -6,7 +6,6 @@ import {
 import { Injectable } from '@nestjs/common';
 import {
   InstanceChecker,
-  ObjectLiteral,
   QueryBuilder,
   SelectQueryBuilder,
   WhereExpressionBuilder,
@@ -20,14 +19,14 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
   extends BaseFindQueryToFindQueryTypeOrmBuilder
   implements
     Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      [GameSpecFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      QueryBuilder<GameSpecDb> & WhereExpressionBuilder,
+      [GameSpecFindQuery, QueryBuilder<GameSpecDb> & WhereExpressionBuilder]
     >
 {
   public build(
     gameSpecFindQuery: GameSpecFindQuery,
-    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<GameSpecDb> & WhereExpressionBuilder,
+  ): QueryBuilder<GameSpecDb> & WhereExpressionBuilder {
     const gameSpecPropertiesPrefix: string = this._getEntityPrefix(
       queryBuilder,
       GameSpecDb,
@@ -59,8 +58,8 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
   }
 
   #assertSelectQueryBuilderIsUsedForSelectFilters(
-    queryBuilder: QueryBuilder<ObjectLiteral>,
-  ): asserts queryBuilder is SelectQueryBuilder<ObjectLiteral> {
+    queryBuilder: QueryBuilder<GameSpecDb>,
+  ): asserts queryBuilder is SelectQueryBuilder<GameSpecDb> {
     if (!InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
@@ -76,7 +75,7 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
   #processGameIds(
     gameSpecFindQuery: GameSpecFindQuery,
     gameSpecPropertiesPrefix: string,
-    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+    queryBuilder: QueryBuilder<GameSpecDb> & WhereExpressionBuilder,
   ): void {
     if (gameSpecFindQuery.gameIds !== undefined) {
       if (gameSpecFindQuery.gameIds.length > 0) {
@@ -104,7 +103,7 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
   #processSort(
     gameSpecFindQuery: GameSpecFindQuery,
     gameSpecPropertiesPrefix: string,
-    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+    queryBuilder: QueryBuilder<GameSpecDb> & WhereExpressionBuilder,
   ): void {
     if (gameSpecFindQuery.sort !== undefined) {
       this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);

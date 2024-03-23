@@ -41,7 +41,9 @@ describe(GameUpdatedEventHandler.name, () => {
     };
     gameActionPersistenceOutputPortMock = {
       create: jest.fn(),
-    };
+    } as Partial<
+      jest.Mocked<GameActionPersistenceOutputPort>
+    > as jest.Mocked<GameActionPersistenceOutputPort>;
     gameEventsSubscriptionOutputPortMock = {
       publishV1: jest.fn(),
       publishV2: jest.fn(),

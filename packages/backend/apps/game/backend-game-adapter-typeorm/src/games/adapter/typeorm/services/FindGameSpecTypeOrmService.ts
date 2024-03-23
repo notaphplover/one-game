@@ -6,12 +6,7 @@ import {
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  ObjectLiteral,
-  QueryBuilder,
-  Repository,
-  WhereExpressionBuilder,
-} from 'typeorm';
+import { QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm';
 
 import { GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder } from '../builders/GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder';
 import { GameSpecFromGameSpecDbBuilder } from '../builders/GameSpecFromGameSpecDbBuilder';
@@ -30,8 +25,8 @@ export class FindGameSpecTypeOrmService extends FindTypeOrmQueryBuilderService<
     gameSpecFromGameSpecDbBuilder: Builder<GameSpec, [GameSpecDb]>,
     @Inject(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder)
     gameSpecFindQueryTypeormFromGameSpecFindQueryBuilder: Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-      [GameSpecFindQuery, QueryBuilder<ObjectLiteral> & WhereExpressionBuilder]
+      QueryBuilder<GameSpecDb> & WhereExpressionBuilder,
+      [GameSpecFindQuery, QueryBuilder<GameSpecDb> & WhereExpressionBuilder]
     >,
   ) {
     super(

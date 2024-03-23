@@ -27,7 +27,7 @@ jest.mock('typeorm', () => {
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
 import { GameSpecFindQueryFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
-import { InstanceChecker, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import { InstanceChecker, SelectQueryBuilder } from 'typeorm';
 
 import { GameSpecDb } from '../models/GameSpecDb';
 import { GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder } from './GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder';
@@ -41,7 +41,7 @@ describe(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.name, () => {
   });
 
   describe('.build', () => {
-    let queryBuilderMock: jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
+    let queryBuilderMock: jest.Mocked<SelectQueryBuilder<GameSpecDb>>;
 
     beforeAll(() => {
       queryBuilderMock = {
@@ -49,9 +49,9 @@ describe(GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder.name, () => {
         andWhere: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         offset: jest.fn().mockReturnThis(),
-      } as Partial<
-        jest.Mocked<SelectQueryBuilder<ObjectLiteral>>
-      > as jest.Mocked<SelectQueryBuilder<ObjectLiteral>>;
+      } as Partial<jest.Mocked<SelectQueryBuilder<GameSpecDb>>> as jest.Mocked<
+        SelectQueryBuilder<GameSpecDb>
+      >;
     });
 
     describe('having a GameSpecFindQuery with gameIds with an empty array', () => {

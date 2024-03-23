@@ -18,17 +18,17 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
   extends BaseFindQueryToFindQueryTypeOrmBuilder
   implements
     Builder<
-      QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+      QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
       [
         RefreshTokenFindQuery,
-        QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+        QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
       ]
     >
 {
   public build(
     refreshTokenFindQuery: RefreshTokenFindQuery,
-    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
+    queryBuilder: QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
+  ): QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder {
     const gamePropertiesPrefix: string = this._getEntityPrefix(
       queryBuilder,
       RefreshTokenDb,
@@ -94,10 +94,10 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
   }
 
   #handleDate(
-    queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
+    queryBuilder: QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
     gamePropertiesPrefix: string,
     date: Interval<Date>,
-  ): QueryBuilder<ObjectLiteral> & WhereExpressionBuilder {
+  ): QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder {
     if (date.from !== undefined) {
       queryBuilder = queryBuilder.andWhere(
         `${gamePropertiesPrefix}dateFrom >= :${RefreshTokenDb.name}dateFrom`,

@@ -3,22 +3,28 @@ import { GameActionPersistenceOutputPort } from '@cornie-js/backend-game-applica
 import {
   GameAction,
   GameActionCreateQuery,
+  GameActionFindQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateGameActionTypeOrmService } from '../services/CreateGameActionTypeOrmService';
+import { FindGameActionTypeOrmService } from '../services/FindGameActionTypeOrmService';
 
 @Injectable()
 export class GameActionPersistenceTypeOrmAdapter
   implements GameActionPersistenceOutputPort
 {
   readonly #createGameActionTypeOrmService: CreateGameActionTypeOrmService;
+  readonly #findGameActionTypeOrmService: FindGameActionTypeOrmService;
 
   constructor(
     @Inject(CreateGameActionTypeOrmService)
     createGameActionTypeOrmService: CreateGameActionTypeOrmService,
+    @Inject(FindGameActionTypeOrmService)
+    findGameActionTypeOrmService: FindGameActionTypeOrmService,
   ) {
     this.#createGameActionTypeOrmService = createGameActionTypeOrmService;
+    this.#findGameActionTypeOrmService = findGameActionTypeOrmService;
   }
 
   public async create(
@@ -27,6 +33,26 @@ export class GameActionPersistenceTypeOrmAdapter
   ): Promise<GameAction> {
     return this.#createGameActionTypeOrmService.insertOne(
       gameActionCreateQuery,
+      transactionWrapper,
+    );
+  }
+
+  public async find(
+    gameActionFindQuery: GameActionFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<GameAction[]> {
+    return this.#findGameActionTypeOrmService.find(
+      gameActionFindQuery,
+      transactionWrapper,
+    );
+  }
+
+  public async findOne(
+    gameActionFindQuery: GameActionFindQuery,
+    transactionWrapper?: TransactionWrapper,
+  ): Promise<GameAction | undefined> {
+    return this.#findGameActionTypeOrmService.findOne(
+      gameActionFindQuery,
       transactionWrapper,
     );
   }
