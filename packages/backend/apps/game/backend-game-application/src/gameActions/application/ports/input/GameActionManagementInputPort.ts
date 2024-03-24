@@ -32,27 +32,12 @@ export class GameActionManagementInputPort {
     this.#messageEventFromGameActionBuilder = messageEventFromGameActionBuilder;
   }
 
-  public async findNextEventsByGameActionId(
-    id: string,
+  public async findNextGameEvents(
+    gameId: string,
+    lastGameActionId: string | null,
   ): Promise<MessageEvent[]> {
-    const gameAction: GameAction | undefined =
-      await this.#gameActionPersistenceOutputPort.findOne({
-        id,
-      });
-
-    if (gameAction === undefined) {
-      throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        `Unable to find previous game actions. No game action with id "${id}" was found`,
-      );
-    }
-
-    const previousGameActionsFindQuery: GameActionFindQuery = {
-      limit: MAX_PREVIOUS_GAME_ACTIONS + 1,
-      position: {
-        gt: gameAction.position,
-      },
-    };
+    const previousGameActionsFindQuery: GameActionFindQuery =
+      await this.#buildFindQuery(gameId, lastGameActionId);
 
     const previousGameActions: GameAction[] =
       await this.#gameActionPersistenceOutputPort.find(
@@ -69,5 +54,51 @@ export class GameActionManagementInputPort {
     return previousGameActions.map((gameAction: GameAction) =>
       this.#messageEventFromGameActionBuilder.build(gameAction),
     );
+  }
+
+  async #buildFindQuery(
+    gameId: string,
+    lastGameActionId: string | null,
+  ): Promise<GameActionFindQuery> {
+    const previousGameActionsFindQuery: GameActionFindQuery = {
+      gameId,
+      limit: MAX_PREVIOUS_GAME_ACTIONS + 1,
+    };
+
+    if (lastGameActionId !== null) {
+      const gameAction: GameAction = await this.#getGameAction(
+        gameId,
+        lastGameActionId,
+      );
+
+      previousGameActionsFindQuery.position = {
+        gt: gameAction.position,
+      };
+    }
+
+    return previousGameActionsFindQuery;
+  }
+
+  async #getGameAction(gameId: string, id: string): Promise<GameAction> {
+    const gameAction: GameAction | undefined =
+      await this.#gameActionPersistenceOutputPort.findOne({
+        id: id,
+      });
+
+    if (gameAction === undefined) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Unable to find previous game actions. No game action with id "${id}" was found`,
+      );
+    }
+
+    if (gameAction.gameId !== gameId) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Unable to find previous game actions. Game action "${id}" does not belong to game "${gameId}"`,
+      );
+    }
+
+    return gameAction;
   }
 }

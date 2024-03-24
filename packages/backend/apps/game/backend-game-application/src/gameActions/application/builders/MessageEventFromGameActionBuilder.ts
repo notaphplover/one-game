@@ -4,7 +4,7 @@ import { GameAction } from '@cornie-js/backend-game-domain/gameActions';
 import { MessageEvent } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { GameEventV2FromGameActionBuilder } from '../../../games/application/builders/GameEventV2FromGameActionBuilder';
+import { GameEventV2FromGameActionBuilder } from './GameEventV2FromGameActionBuilder';
 
 @Injectable()
 export class MessageEventFromGameActionBuilder
