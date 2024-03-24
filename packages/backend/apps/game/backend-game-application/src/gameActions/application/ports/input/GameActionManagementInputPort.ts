@@ -1,10 +1,12 @@
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import {
   GameAction,
   GameActionFindQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
+import { MessageEvent } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { MessageEventFromGameActionBuilder } from '../../builders/MessageEventFromGameActionBuilder';
 import {
   GameActionPersistenceOutputPort,
   gameActionPersistenceOutputPortSymbol,
@@ -15,15 +17,24 @@ const MAX_PREVIOUS_GAME_ACTIONS: number = 20;
 @Injectable()
 export class GameActionManagementInputPort {
   readonly #gameActionPersistenceOutputPort: GameActionPersistenceOutputPort;
+  readonly #messageEventFromGameActionBuilder: Builder<
+    MessageEvent,
+    [GameAction]
+  >;
 
   constructor(
     @Inject(gameActionPersistenceOutputPortSymbol)
     gameActionPersistenceOutputPort: GameActionPersistenceOutputPort,
+    @Inject(MessageEventFromGameActionBuilder)
+    messageEventFromGameActionBuilder: Builder<MessageEvent, [GameAction]>,
   ) {
     this.#gameActionPersistenceOutputPort = gameActionPersistenceOutputPort;
+    this.#messageEventFromGameActionBuilder = messageEventFromGameActionBuilder;
   }
 
-  public async findPrevious(id: string): Promise<GameAction[]> {
+  public async findNextEventsByGameActionId(
+    id: string,
+  ): Promise<MessageEvent[]> {
     const gameAction: GameAction | undefined =
       await this.#gameActionPersistenceOutputPort.findOne({
         id,
@@ -55,6 +66,8 @@ export class GameActionManagementInputPort {
       );
     }
 
-    return previousGameActions;
+    return previousGameActions.map((gameAction: GameAction) =>
+      this.#messageEventFromGameActionBuilder.build(gameAction),
+    );
   }
 }
