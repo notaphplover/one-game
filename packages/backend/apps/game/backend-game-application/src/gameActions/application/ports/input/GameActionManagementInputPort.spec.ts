@@ -1,17 +1,21 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
+import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import {
   GameAction,
   GameActionFindQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
 import { GameActionFixtures } from '@cornie-js/backend-game-domain/gameActions/fixtures';
+import { MessageEvent } from '@cornie-js/backend-http';
 
 import { GameActionPersistenceOutputPort } from '../output/GameActionPersistenceOutputPort';
 import { GameActionManagementInputPort } from './GameActionManagementInputPort';
 
 describe(GameActionManagementInputPort.name, () => {
   let gameActionPersistenceOutputPortMock: jest.Mocked<GameActionPersistenceOutputPort>;
+  let messageEventFromGameActionBuilderMock: jest.Mocked<
+    Builder<MessageEvent, [GameAction]>
+  >;
 
   let gameActionManagementInputPort: GameActionManagementInputPort;
 
@@ -22,13 +26,17 @@ describe(GameActionManagementInputPort.name, () => {
     } as Partial<
       jest.Mocked<GameActionPersistenceOutputPort>
     > as jest.Mocked<GameActionPersistenceOutputPort>;
+    messageEventFromGameActionBuilderMock = {
+      build: jest.fn(),
+    };
 
     gameActionManagementInputPort = new GameActionManagementInputPort(
       gameActionPersistenceOutputPortMock,
+      messageEventFromGameActionBuilderMock,
     );
   });
 
-  describe('.findPrevious', () => {
+  describe('.findNextEventsByGameActionId', () => {
     let idFixture: string;
 
     beforeAll(() => {
@@ -44,7 +52,9 @@ describe(GameActionManagementInputPort.name, () => {
         );
 
         try {
-          await gameActionManagementInputPort.findPrevious(idFixture);
+          await gameActionManagementInputPort.findNextEventsByGameActionId(
+            idFixture,
+          );
         } catch (error: unknown) {
           result = error;
         }
@@ -101,7 +111,9 @@ describe(GameActionManagementInputPort.name, () => {
         );
 
         try {
-          await gameActionManagementInputPort.findPrevious(idFixture);
+          await gameActionManagementInputPort.findNextEventsByGameActionId(
+            idFixture,
+          );
         } catch (error: unknown) {
           result = error;
         }
@@ -155,23 +167,29 @@ describe(GameActionManagementInputPort.name, () => {
 
     describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction and gameActionPersistenceOutputPort.find() returns GameAction[]', () => {
       let gameActionFixture: GameAction;
-      let gameActionsFixture: GameAction[];
+      let messageEventFixture: MessageEvent;
 
       let result: unknown;
 
       beforeAll(async () => {
         gameActionFixture = GameActionFixtures.any;
-        gameActionsFixture = [GameActionFixtures.any];
 
         gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           gameActionFixture,
         );
 
-        gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce(
-          gameActionsFixture,
+        gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce([
+          GameActionFixtures.any,
+        ]);
+
+        messageEventFromGameActionBuilderMock.build.mockReturnValueOnce(
+          messageEventFixture,
         );
 
-        result = await gameActionManagementInputPort.findPrevious(idFixture);
+        result =
+          await gameActionManagementInputPort.findNextEventsByGameActionId(
+            idFixture,
+          );
       });
 
       afterAll(() => {
@@ -191,6 +209,15 @@ describe(GameActionManagementInputPort.name, () => {
         ).toHaveBeenCalledWith(expected);
       });
 
+      it('should call messageEventFromGameActionBuilder.build()', () => {
+        expect(
+          messageEventFromGameActionBuilderMock.build,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          messageEventFromGameActionBuilderMock.build,
+        ).toHaveBeenCalledWith(gameActionFixture);
+      });
+
       it('should call gameActionPersistenceOutputPort.find()', () => {
         const expected: GameActionFindQuery = {
           limit: 21,
@@ -208,7 +235,7 @@ describe(GameActionManagementInputPort.name, () => {
       });
 
       it('should return GameAction[]', () => {
-        expect(result).toBe(gameActionsFixture);
+        expect(result).toStrictEqual([messageEventFixture]);
       });
     });
   });
