@@ -1,5 +1,6 @@
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
+import { MessageEventFromGameActionBuilder } from '../../../application/builders/MessageEventFromGameActionBuilder';
 import { GameActionManagementInputPort } from '../../../application/ports/input/GameActionManagementInputPort';
 
 @Module({})
@@ -14,7 +15,10 @@ export class GameActionApplicationModule {
       global: false,
       imports: [...(imports ?? [])],
       module: GameActionApplicationModule,
-      providers: [GameActionManagementInputPort],
+      providers: [
+        GameActionManagementInputPort,
+        MessageEventFromGameActionBuilder,
+      ],
     };
   }
 }
