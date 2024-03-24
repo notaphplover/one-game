@@ -4,5 +4,6 @@ import { BaseGameActionCreateQuery } from './BaseGameActionCreateQuery';
 
 export interface PlayCardsGameActionCreateQuery
   extends BaseGameActionCreateQuery<GameActionKind.playCards> {
-  cards: Card[];
+  readonly cards: Card[];
+  readonly currentCard: Card | null;
 }

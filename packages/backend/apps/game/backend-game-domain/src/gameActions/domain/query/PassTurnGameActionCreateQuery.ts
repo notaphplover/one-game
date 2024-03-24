@@ -1,5 +1,7 @@
 import { GameActionKind } from '../valueObjects/GameActionKind';
 import { BaseGameActionCreateQuery } from './BaseGameActionCreateQuery';
 
-export type PassTurnGameActionCreateQuery =
-  BaseGameActionCreateQuery<GameActionKind.passTurn>;
+export interface PassTurnGameActionCreateQuery
+  extends BaseGameActionCreateQuery<GameActionKind.passTurn> {
+  nextPlayingSlotIndex: number | null;
+}
