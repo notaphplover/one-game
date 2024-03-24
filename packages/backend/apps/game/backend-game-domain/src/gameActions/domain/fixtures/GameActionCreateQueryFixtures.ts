@@ -22,6 +22,7 @@ export class GameActionCreateQueryFixtures {
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       id: '20f00a2b-bc9f-47fd-afb2-c2ed1b60e1b3',
       kind: GameActionKind.passTurn,
+      nextPlayingSlotIndex: 1,
       turn: 1,
     };
   }
@@ -29,6 +30,7 @@ export class GameActionCreateQueryFixtures {
   public static get withKindPlayCardsAndCardsOne(): PlayCardsGameActionCreateQuery {
     return {
       cards: [CardFixtures.any],
+      currentCard: CardFixtures.any,
       currentPlayingSlotIndex: 0,
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       id: '20f00a2b-bc9f-47fd-afb2-c2ed1b60e1b3',

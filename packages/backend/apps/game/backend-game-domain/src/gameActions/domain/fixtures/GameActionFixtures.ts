@@ -12,6 +12,7 @@ export class GameActionFixtures {
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.passTurn,
+      nextPlayingSlotIndex: 1,
       position: 1,
       turn: 1,
     };
@@ -35,20 +36,38 @@ export class GameActionFixtures {
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.passTurn,
+      nextPlayingSlotIndex: 1,
       position: 1,
       turn: 1,
     };
   }
 
-  public static get withKindPlayCardsAndCardsOne(): PlayCardsGameAction {
+  public static get withKindPlayCards(): PlayCardsGameAction {
     return {
-      cards: [CardFixtures.any],
+      cards: [],
+      currentCard: null,
       currentPlayingSlotIndex: 0,
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.playCards,
       position: 1,
       turn: 1,
+    };
+  }
+
+  public static get withKindPlayCardsAndCardsOneAndCurrentCard(): PlayCardsGameAction {
+    return {
+      ...GameActionFixtures.withKindPlayCards,
+      cards: [CardFixtures.any],
+      currentCard: CardFixtures.any,
+    };
+  }
+
+  public static get withKindPlayCardsAndCardsOneAndCurrentCardNull(): PlayCardsGameAction {
+    return {
+      ...GameActionFixtures.withKindPlayCards,
+      cards: [CardFixtures.any],
+      currentCard: null,
     };
   }
 }

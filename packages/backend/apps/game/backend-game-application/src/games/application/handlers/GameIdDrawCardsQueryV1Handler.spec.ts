@@ -510,9 +510,9 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
           jest.Mocked<TransactionWrapper>
         > as jest.Mocked<TransactionWrapper>;
 
-        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          activeGameFixture,
-        );
+        gamePersistenceOutputPortMock.findOne
+          .mockResolvedValueOnce(activeGameFixture)
+          .mockResolvedValueOnce(activeGameFixture);
         gameSpecPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
           gameSpecFixture,
         );
@@ -547,13 +547,21 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       });
 
       it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expectedGameFindQuery: GameFindQuery = {
+        const expectedFirstGameFindQuery: GameFindQuery = {
           id: gameIdFixture,
         };
+        const expectedSecondGameFindQuery: GameFindQuery = {
+          id: activeGameFixture.id,
+        };
 
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expectedGameFindQuery,
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(2);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          1,
+          expectedFirstGameFindQuery,
+        );
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
+          2,
+          expectedSecondGameFindQuery,
         );
       });
 
@@ -621,6 +629,7 @@ describe(GameIdDrawCardsQueryV1Handler.name, () => {
       it('should call gameUpdatedEventHandler.handle()', () => {
         const expectedGameUpdatedEvent: ActiveGameUpdatedEvent = {
           draw: gameDrawMutationFixture.cards,
+          game: activeGameFixture,
           gameBeforeUpdate: activeGameFixture,
           kind: ActiveGameUpdatedEventKind.cardsDraw,
           transactionWrapper: transactionWrapperMock,

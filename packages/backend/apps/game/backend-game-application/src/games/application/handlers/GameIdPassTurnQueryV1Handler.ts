@@ -104,6 +104,7 @@ export class GameIdPassTurnQueryV1Handler extends GameIdUpdateQueryV1Handler<api
     );
 
     return {
+      game: await this._getUpdatedGame(game),
       gameBeforeUpdate: game,
       kind: ActiveGameUpdatedEventKind.turnPass,
       transactionWrapper,

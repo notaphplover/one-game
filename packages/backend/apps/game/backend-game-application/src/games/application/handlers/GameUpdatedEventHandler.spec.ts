@@ -2,7 +2,6 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   GameAction,
   GameActionCreateQuery,
@@ -16,8 +15,8 @@ import { ActiveGameFixtures } from '@cornie-js/backend-game-domain/games/fixture
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import { GameActionPersistenceOutputPort } from '../../../gameActions/application/ports/output/GameActionPersistenceOutputPort';
+import { ActiveGameUpdatedEventFixtures } from '../fixtures/ActiveGameUpdatedEventFixtures';
 import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
-import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 import { GameEventsSubscriptionOutputPort } from '../ports/output/GameEventsSubscriptionOutputPort';
@@ -72,11 +71,7 @@ describe(GameUpdatedEventHandler.name, () => {
     let gameUpdatedEventFixture: ActiveGameUpdatedEvent;
 
     beforeAll(() => {
-      gameUpdatedEventFixture = {
-        gameBeforeUpdate: ActiveGameFixtures.any,
-        kind: ActiveGameUpdatedEventKind.turnPass,
-        transactionWrapper: Symbol() as unknown as TransactionWrapper,
-      };
+      gameUpdatedEventFixture = ActiveGameUpdatedEventFixtures.anyTurnPassEvent;
     });
 
     describe('when called, and gamePersistenceOutputPort.findOne() returns undefined', () => {
