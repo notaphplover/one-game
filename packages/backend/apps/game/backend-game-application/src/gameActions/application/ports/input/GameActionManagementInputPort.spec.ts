@@ -36,206 +36,334 @@ describe(GameActionManagementInputPort.name, () => {
     );
   });
 
-  describe('.findNextEventsByGameActionId', () => {
-    let idFixture: string;
+  describe('.findNextGameEvents', () => {
+    describe('having gameId', () => {
+      let gameIdFixture: string;
 
-    beforeAll(() => {
-      idFixture = 'id-fixture';
-    });
+      beforeAll(() => {
+        gameIdFixture = 'game-id-fixture';
+      });
 
-    describe('when called, and gameActionPersistenceOutputPort.findOne() returns undefined', () => {
-      let result: unknown;
+      describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction and gameActionPersistenceOutputPort.find() returns GameAction[]', () => {
+        let gameActionFixture: GameAction;
+        let messageEventFixture: MessageEvent;
 
-      beforeAll(async () => {
-        gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          undefined,
-        );
+        let result: unknown;
 
-        try {
-          await gameActionManagementInputPort.findNextEventsByGameActionId(
-            idFixture,
+        beforeAll(async () => {
+          gameActionFixture = GameActionFixtures.any;
+
+          gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce([
+            gameActionFixture,
+          ]);
+
+          messageEventFromGameActionBuilderMock.build.mockReturnValueOnce(
+            messageEventFixture,
           );
-        } catch (error: unknown) {
-          result = error;
-        }
-      });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gameActionPersistenceOutputPort.findOne()', () => {
-        const expected: GameActionFindQuery = {
-          id: idFixture,
-        };
-
-        expect(
-          gameActionPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameActionPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expected);
-      });
-
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message: `Unable to find previous game actions. No game action with id "${idFixture}" was found`,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
-
-    describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction and gameActionPersistenceOutputPort.find() returns too many GameAction[]', () => {
-      let gameActionFixture: GameAction;
-      let gameActionsFixture: GameAction[];
-
-      let result: unknown;
-
-      beforeAll(async () => {
-        gameActionFixture = GameActionFixtures.any;
-        gameActionsFixture = {
-          length: 21,
-        } as Partial<GameAction[]> as GameAction[];
-
-        gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          gameActionFixture,
-        );
-
-        gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce(
-          gameActionsFixture,
-        );
-
-        try {
-          await gameActionManagementInputPort.findNextEventsByGameActionId(
-            idFixture,
+          result = await gameActionManagementInputPort.findNextGameEvents(
+            gameIdFixture,
+            null,
           );
-        } catch (error: unknown) {
-          result = error;
-        }
-      });
+        });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
-      it('should call gameActionPersistenceOutputPort.findOne()', () => {
-        const expected: GameActionFindQuery = {
-          id: idFixture,
-        };
+        it('should call gameActionPersistenceOutputPort.find()', () => {
+          const expected: GameActionFindQuery = {
+            gameId: gameIdFixture,
+            limit: 21,
+          };
 
-        expect(
-          gameActionPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameActionPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expected);
-      });
+          expect(
+            gameActionPersistenceOutputPortMock.find,
+          ).toHaveBeenCalledTimes(1);
+          expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+            expected,
+          );
+        });
 
-      it('should call gameActionPersistenceOutputPort.find()', () => {
-        const expected: GameActionFindQuery = {
-          limit: 21,
-          position: {
-            gt: gameActionFixture.position,
-          },
-        };
+        it('should call messageEventFromGameActionBuilder.build()', () => {
+          expect(
+            messageEventFromGameActionBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            messageEventFromGameActionBuilderMock.build,
+          ).toHaveBeenCalledWith(gameActionFixture);
+        });
 
-        expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledWith(
-          expected,
-        );
-      });
-
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unprocessableOperation,
-          message: 'Unable to retrieve more than 20 previous game actions',
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
+        it('should return GameAction[]', () => {
+          expect(result).toStrictEqual([messageEventFixture]);
+        });
       });
     });
 
-    describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction and gameActionPersistenceOutputPort.find() returns GameAction[]', () => {
-      let gameActionFixture: GameAction;
-      let messageEventFixture: MessageEvent;
+    describe('having gameId and string lastGameActionId', () => {
+      let gameIdFixture: string;
+      let idFixture: string;
 
-      let result: unknown;
+      beforeAll(() => {
+        gameIdFixture = 'game-id-fixture';
+        idFixture = 'id-fixture';
+      });
 
-      beforeAll(async () => {
-        gameActionFixture = GameActionFixtures.any;
+      describe('when called, and gameActionPersistenceOutputPort.findOne() returns undefined', () => {
+        let result: unknown;
 
-        gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          gameActionFixture,
-        );
+        beforeAll(async () => {
+          gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            undefined,
+          );
 
-        gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce([
-          GameActionFixtures.any,
-        ]);
+          try {
+            await gameActionManagementInputPort.findNextGameEvents(
+              gameIdFixture,
+              idFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
 
-        messageEventFromGameActionBuilderMock.build.mockReturnValueOnce(
-          messageEventFixture,
-        );
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
-        result =
-          await gameActionManagementInputPort.findNextEventsByGameActionId(
+        it('should call gameActionPersistenceOutputPort.findOne()', () => {
+          const expected: GameActionFindQuery = {
+            id: idFixture,
+          };
+
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledWith(expected);
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message: `Unable to find previous game actions. No game action with id "${idFixture}" was found`,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+
+      describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction with gameId different than gameId param', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            GameActionFixtures.any,
+          );
+
+          try {
+            await gameActionManagementInputPort.findNextGameEvents(
+              gameIdFixture,
+              idFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameActionPersistenceOutputPort.findOne()', () => {
+          const expected: GameActionFindQuery = {
+            id: idFixture,
+          };
+
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledWith(expected);
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message: `Unable to find previous game actions. Game action "${idFixture}" does not belong to game "${gameIdFixture}"`,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+
+      describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction and gameActionPersistenceOutputPort.find() returns too many GameAction[]', () => {
+        let gameActionFixture: GameAction;
+        let gameActionsFixture: GameAction[];
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          gameActionFixture = {
+            ...GameActionFixtures.any,
+            gameId: gameIdFixture,
+          };
+          gameActionsFixture = {
+            length: 21,
+          } as Partial<GameAction[]> as GameAction[];
+
+          gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            gameActionFixture,
+          );
+
+          gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce(
+            gameActionsFixture,
+          );
+
+          try {
+            await gameActionManagementInputPort.findNextGameEvents(
+              gameIdFixture,
+              idFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameActionPersistenceOutputPort.findOne()', () => {
+          const expected: GameActionFindQuery = {
+            id: idFixture,
+          };
+
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledWith(expected);
+        });
+
+        it('should call gameActionPersistenceOutputPort.find()', () => {
+          const expected: GameActionFindQuery = {
+            gameId: gameIdFixture,
+            limit: 21,
+            position: {
+              gt: gameActionFixture.position,
+            },
+          };
+
+          expect(
+            gameActionPersistenceOutputPortMock.find,
+          ).toHaveBeenCalledTimes(1);
+          expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+            expected,
+          );
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unprocessableOperation,
+            message: 'Unable to retrieve more than 20 previous game actions',
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+
+      describe('when called, and gameActionPersistenceOutputPort.findOne() returns GameAction and gameActionPersistenceOutputPort.find() returns GameAction[]', () => {
+        let firstGameActionFixture: GameAction;
+        let secondGameActionFixture: GameAction;
+        let messageEventFixture: MessageEvent;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          firstGameActionFixture = {
+            ...GameActionFixtures.any,
+            gameId: gameIdFixture,
+          };
+
+          secondGameActionFixture = GameActionFixtures.any;
+
+          gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            firstGameActionFixture,
+          );
+
+          gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce([
+            secondGameActionFixture,
+          ]);
+
+          messageEventFromGameActionBuilderMock.build.mockReturnValueOnce(
+            messageEventFixture,
+          );
+
+          result = await gameActionManagementInputPort.findNextGameEvents(
+            gameIdFixture,
             idFixture,
           );
-      });
+        });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
-      it('should call gameActionPersistenceOutputPort.findOne()', () => {
-        const expected: GameActionFindQuery = {
-          id: idFixture,
-        };
+        it('should call gameActionPersistenceOutputPort.findOne()', () => {
+          const expected: GameActionFindQuery = {
+            id: idFixture,
+          };
 
-        expect(
-          gameActionPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameActionPersistenceOutputPortMock.findOne,
-        ).toHaveBeenCalledWith(expected);
-      });
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameActionPersistenceOutputPortMock.findOne,
+          ).toHaveBeenCalledWith(expected);
+        });
 
-      it('should call messageEventFromGameActionBuilder.build()', () => {
-        expect(
-          messageEventFromGameActionBuilderMock.build,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          messageEventFromGameActionBuilderMock.build,
-        ).toHaveBeenCalledWith(gameActionFixture);
-      });
+        it('should call gameActionPersistenceOutputPort.find()', () => {
+          const expected: GameActionFindQuery = {
+            gameId: gameIdFixture,
+            limit: 21,
+            position: {
+              gt: firstGameActionFixture.position,
+            },
+          };
 
-      it('should call gameActionPersistenceOutputPort.find()', () => {
-        const expected: GameActionFindQuery = {
-          limit: 21,
-          position: {
-            gt: gameActionFixture.position,
-          },
-        };
+          expect(
+            gameActionPersistenceOutputPortMock.find,
+          ).toHaveBeenCalledTimes(1);
+          expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+            expected,
+          );
+        });
 
-        expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(gameActionPersistenceOutputPortMock.find).toHaveBeenCalledWith(
-          expected,
-        );
-      });
+        it('should call messageEventFromGameActionBuilder.build()', () => {
+          expect(
+            messageEventFromGameActionBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            messageEventFromGameActionBuilderMock.build,
+          ).toHaveBeenCalledWith(secondGameActionFixture);
+        });
 
-      it('should return GameAction[]', () => {
-        expect(result).toStrictEqual([messageEventFixture]);
+        it('should return GameAction[]', () => {
+          expect(result).toStrictEqual([messageEventFixture]);
+        });
       });
     });
   });

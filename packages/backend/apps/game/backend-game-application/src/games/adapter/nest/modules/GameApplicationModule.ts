@@ -3,6 +3,7 @@ import { GameDomainModule } from '@cornie-js/backend-game-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
+import { GameActionApplicationModule } from '../../../../gameActions/adapter/nest/modules/GameActionApplicationModule';
 import { GameSnapshotApplicationModule } from '../../../../gameSnapshots/adapter/nest/modules/GameSnapshotApplicationModule';
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from '../../../application/builders/ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { FinishedGameSlotV1FromFinishedGameSlotBuilder } from '../../../application/builders/FinishedGameSlotV1FromFinishedGameSlotBuilder';
@@ -12,7 +13,6 @@ import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builder
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../application/builders/GameCreateQueryFromGameCreateQueryV1Builder';
 import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
-import { GameEventV2FromGameActionBuilder } from '../../../application/builders/GameEventV2FromGameActionBuilder';
 import { GameEventV2FromGameMessageEventBuilder } from '../../../application/builders/GameEventV2FromGameMessageEventBuilder';
 import { GameMessageEventV1FromGameMessageEventBuilder } from '../../../application/builders/GameMessageEventV1FromGameMessageEventBuilder';
 import { GameOptionsCreateQueryFromGameOptionsV1Builder } from '../../../application/builders/GameOptionsCreateQueryFromGameOptionsV1Builder';
@@ -54,10 +54,11 @@ export class GameApplicationModule {
       global: false,
       imports: [
         ...(imports ?? []),
+        CardModule,
+        GameActionApplicationModule.forRootAsync(imports),
         GameDomainModule,
         GameSnapshotApplicationModule.forRootAsync(imports),
         UuidModule,
-        CardModule,
       ],
       module: GameApplicationModule,
       providers: [
@@ -72,7 +73,6 @@ export class GameApplicationModule {
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameDirectionV1FromGameDirectionBuilder,
         GameEventsManagementInputPort,
-        GameEventV2FromGameActionBuilder,
         GameEventV2FromGameMessageEventBuilder,
         GameIdDrawCardsQueryV1Handler,
         GameIdPassTurnQueryV1Handler,

@@ -3,6 +3,7 @@ import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 import { AuthModule } from '../../../../auth/adapter/nest/modules/AuthModule';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
+import { GameActionApplicationModule } from '../../../../gameActions/adapter/nest/modules/GameActionApplicationModule';
 import { GetGameGameIdEventsV1SseController } from '../../../application';
 import { GetGameGameIdEventsV2SseController } from '../../../application/controllers/GetGameGameIdEventsV2SseController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from '../../../application/controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
@@ -51,6 +52,7 @@ export class GameHttpApiModule {
       imports: [
         ...(gameImports ?? []),
         AuthModule,
+        GameActionApplicationModule.forRootAsync(gameImports),
         GameApplicationModule.forRootAsync(gameImports),
         JsonSchemaModule,
         HttpModule,

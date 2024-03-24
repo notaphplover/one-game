@@ -3,10 +3,10 @@ import { Builder } from '@cornie-js/backend-common';
 import { GameAction } from '@cornie-js/backend-game-domain/gameActions';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { GameEventV2FromGameActionBuilder } from '../../../gameActions/application/builders/GameEventV2FromGameActionBuilder';
 import { GameMessageEvent } from '../models/GameMessageEvent';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
-import { GameEventV2FromGameActionBuilder } from './GameEventV2FromGameActionBuilder';
 
 @Injectable()
 export class GameEventV2FromGameMessageEventBuilder
