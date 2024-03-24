@@ -3,12 +3,14 @@ import { AppError, AppErrorKind, Handler } from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
+  FinishedGame,
   Game,
   GameFindQuery,
   GameSpec,
   GameSpecFindQuery,
   GameStatus,
   GameUpdateQuery,
+  NonStartedGame,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
 
@@ -67,6 +69,22 @@ export abstract class GameIdUpdateQueryV1Handler<
     await this.#gameUpdatedEventHandler.handle(gameUpdatedEvent);
 
     await transactionWrapper.tryCommit();
+  }
+
+  protected async _getUpdatedGame(
+    game: ActiveGame,
+  ): Promise<ActiveGame | FinishedGame> {
+    const gameFound: Game | undefined =
+      await this.#gamePersistenceOutputPort.findOne({ id: game.id });
+
+    if (gameFound === undefined || this.#isNonStartedGame(gameFound)) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected game found trying to get an updated active game',
+      );
+    }
+
+    return gameFound;
   }
 
   protected async _updateGame(
@@ -144,6 +162,10 @@ export abstract class GameIdUpdateQueryV1Handler<
 
   #isActiveGame(game: Game): game is ActiveGame {
     return game.state.status === GameStatus.active;
+  }
+
+  #isNonStartedGame(game: Game): game is NonStartedGame {
+    return game.state.status === GameStatus.nonStarted;
   }
 
   protected abstract _checkUnprocessableOperation(
