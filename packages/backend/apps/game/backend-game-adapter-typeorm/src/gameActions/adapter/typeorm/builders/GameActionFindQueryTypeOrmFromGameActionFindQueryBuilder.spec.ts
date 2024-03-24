@@ -51,6 +51,48 @@ describe(GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder.name, () => {
       > as jest.Mocked<SelectQueryBuilder<GameActionDb>>;
     });
 
+    describe('having a GameActionFindQuery with game id', () => {
+      let gameActionFindQueryFixture: GameActionFindQuery;
+
+      beforeAll(() => {
+        gameActionFindQueryFixture = GameActionFindQueryFixtures.withGameId;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result =
+            gameActionFindQueryTypeOrmFromGameActionFindQueryBuilder.build(
+              gameActionFindQueryFixture,
+              queryBuilderMock,
+            );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call queryBuilder.andWhere()', () => {
+          expect(queryBuilderMock.andWhere).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
+            `${GameActionDb.name}.game = :${GameActionDb.name}game`,
+            {
+              [`${GameActionDb.name}game`]: gameActionFindQueryFixture.gameId,
+            },
+          );
+        });
+
+        it('should return QueryBuilder<GameActionDb>', () => {
+          expect(result).toBe(queryBuilderMock);
+        });
+      });
+    });
+
     describe('having a GameActionFindQuery with id', () => {
       let gameActionFindQueryFixture: GameActionFindQuery;
 
