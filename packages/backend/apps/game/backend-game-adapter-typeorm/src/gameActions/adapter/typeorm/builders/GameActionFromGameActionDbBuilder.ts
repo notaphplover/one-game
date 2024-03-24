@@ -61,6 +61,7 @@ export class GameActionFromGameActionDbBuilder
           gameId: gameActionDb.gameId,
           id: gameActionDb.id,
           kind: GameActionKind.passTurn,
+          nextPlayingSlotIndex: payload.nextPlayingSlotIndex,
           position: gameActionDb.position,
           turn: gameActionDb.turn,
         };
@@ -69,6 +70,10 @@ export class GameActionFromGameActionDbBuilder
           cards: payload.cards.map((cardDb: CardDb) =>
             this.#cardBuilder.build(cardDb),
           ),
+          currentCard:
+            payload.currentCard === null
+              ? null
+              : this.#cardBuilder.build(payload.currentCard),
           currentPlayingSlotIndex: gameActionDb.currentPlayingSlotIndex,
           gameId: gameActionDb.gameId,
           id: gameActionDb.id,

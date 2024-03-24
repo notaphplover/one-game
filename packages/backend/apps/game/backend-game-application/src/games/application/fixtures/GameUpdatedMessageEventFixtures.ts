@@ -25,10 +25,9 @@ export class GameUpdatedMessageEventFixtures {
     };
   }
 
-  public static get withGameActiveAndPassTurnGameAction(): GameUpdatedMessageEvent {
+  public static get withPassTurnGameAction(): GameUpdatedMessageEvent {
     return {
       ...GameUpdatedMessageEventFixtures.any,
-      game: ActiveGameFixtures.any,
       gameAction: GameActionFixtures.withKindPassTurn,
     };
   }
@@ -41,19 +40,18 @@ export class GameUpdatedMessageEventFixtures {
     };
   }
 
-  public static get withGameActiveAndPlayCardsGameActionAndCardsOne(): GameUpdatedMessageEvent {
+  public static get withPlayCardsGameActionWithCardsOneAndCurrentCard(): GameUpdatedMessageEvent {
     return {
       ...GameUpdatedMessageEventFixtures.any,
-      game: ActiveGameFixtures.any,
-      gameAction: GameActionFixtures.withKindPlayCardsAndCardsOne,
+      gameAction: GameActionFixtures.withKindPlayCardsAndCardsOneAndCurrentCard,
     };
   }
 
-  public static get withGameFinishedAndPlayCardsGameActionAndCardsOne(): GameUpdatedMessageEvent {
+  public static get withPlayCardsGameActionWithCardsOneAndCurrentCardNull(): GameUpdatedMessageEvent {
     return {
       ...GameUpdatedMessageEventFixtures.any,
-      game: FinishedGameFixtures.any,
-      gameAction: GameActionFixtures.withKindPlayCardsAndCardsOne,
+      gameAction:
+        GameActionFixtures.withKindPlayCardsAndCardsOneAndCurrentCardNull,
     };
   }
 }

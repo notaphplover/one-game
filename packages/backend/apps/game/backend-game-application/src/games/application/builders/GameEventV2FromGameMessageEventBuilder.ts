@@ -47,7 +47,6 @@ export class GameEventV2FromGameMessageEventBuilder
     gameUpdatedMessageEvent: GameUpdatedMessageEvent,
   ): [string | null, apiModels.GameEventV2] {
     const gameEvent: apiModels.GameEventV2 = this.#buildGameEventV2(
-      gameUpdatedMessageEvent.game,
       gameUpdatedMessageEvent.gameAction,
     );
 
@@ -66,57 +65,42 @@ export class GameEventV2FromGameMessageEventBuilder
   }
 
   #buildCardsPlayedGameEventV2(
-    game: Game,
     gameAction: PlayCardsGameAction,
   ): apiModels.CardsPlayedGameEventV2 {
     return {
       cards: gameAction.cards.map((card: Card) =>
         this.#cardV1FromCardBuilder.build(card),
       ),
-      currentCard: this.#getCurrentCard(game),
+      currentCard:
+        gameAction.currentCard === null
+          ? null
+          : this.#cardV1FromCardBuilder.build(gameAction.currentCard),
       currentPlayingSlotIndex: gameAction.currentPlayingSlotIndex,
       kind: 'cardsPlayed',
       position: gameAction.position,
     };
   }
 
-  #buildGameEventV2(game: Game, gameAction: GameAction): apiModels.GameEventV2 {
+  #buildGameEventV2(gameAction: GameAction): apiModels.GameEventV2 {
     switch (gameAction.kind) {
       case GameActionKind.draw:
         return this.#buildCardsDrawnGameEventV2(gameAction);
       case GameActionKind.passTurn:
-        return this.#buildTurnPassedGameEventV2(game, gameAction);
+        return this.#buildTurnPassedGameEventV2(gameAction);
       case GameActionKind.playCards:
-        return this.#buildCardsPlayedGameEventV2(game, gameAction);
+        return this.#buildCardsPlayedGameEventV2(gameAction);
     }
   }
 
   #buildTurnPassedGameEventV2(
-    game: Game,
     gameAction: PassTurnGameAction,
   ): apiModels.TurnPassedGameEventV2 {
     return {
       currentPlayingSlotIndex: gameAction.currentPlayingSlotIndex,
       kind: 'turnPassed',
-      nextPlayingSlotIndex: this.#getNextPlayingSlotIndex(game),
+      nextPlayingSlotIndex: gameAction.nextPlayingSlotIndex,
       position: gameAction.position,
     };
-  }
-
-  #getCurrentCard(game: Game): Card | null {
-    if (this.#isActiveGame(game)) {
-      return game.state.currentCard;
-    }
-
-    return null;
-  }
-
-  #getNextPlayingSlotIndex(game: Game): number | null {
-    if (this.#isActiveGame(game)) {
-      return game.state.currentPlayingSlotIndex;
-    }
-
-    return null;
   }
 
   #isActiveGame(game: Game): game is ActiveGame {

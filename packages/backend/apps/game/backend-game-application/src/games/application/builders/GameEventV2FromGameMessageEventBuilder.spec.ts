@@ -3,8 +3,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
-import { DrawGameAction } from '@cornie-js/backend-game-domain/gameActions';
-import { ActiveGame } from '@cornie-js/backend-game-domain/games';
+import {
+  DrawGameAction,
+  PassTurnGameAction,
+} from '@cornie-js/backend-game-domain/gameActions';
 
 import { CardV1Fixtures } from '../../../cards/application/fixtures';
 import { GameUpdatedMessageEventFixtures } from '../fixtures/GameUpdatedMessageEventFixtures';
@@ -65,12 +67,12 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
       });
     });
 
-    describe('having a GameMessageEvent with an pass turn game action and game active', () => {
+    describe('having a GameMessageEvent with an pass turn game action', () => {
       let gameMessageEventFixture: GameMessageEvent;
 
       beforeAll(() => {
         gameMessageEventFixture =
-          GameUpdatedMessageEventFixtures.withGameActiveAndPassTurnGameAction;
+          GameUpdatedMessageEventFixtures.withPassTurnGameAction;
       });
 
       describe('when called', () => {
@@ -93,8 +95,9 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
               currentPlayingSlotIndex:
                 gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
               kind: 'turnPassed',
-              nextPlayingSlotIndex: (gameMessageEventFixture.game as ActiveGame)
-                .state.currentPlayingSlotIndex,
+              nextPlayingSlotIndex: (
+                gameMessageEventFixture.gameAction as PassTurnGameAction
+              ).nextPlayingSlotIndex,
               position: gameMessageEventFixture.gameAction.position,
             },
           ];
@@ -104,50 +107,12 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
       });
     });
 
-    describe('having a GameMessageEvent with an pass turn game action and game finished', () => {
+    describe('having a GameMessageEvent with an play cards game action and current card', () => {
       let gameMessageEventFixture: GameMessageEvent;
 
       beforeAll(() => {
         gameMessageEventFixture =
-          GameUpdatedMessageEventFixtures.withGameFinishedAndPassTurnGameAction;
-      });
-
-      describe('when called', () => {
-        let result: unknown;
-
-        beforeAll(() => {
-          result = gameEventV2FromGameMessageEventBuilder.build(
-            gameMessageEventFixture,
-          );
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should return CardsPlayedGameEventV2', () => {
-          const expected: [string, apiModels.TurnPassedGameEventV2] = [
-            gameMessageEventFixture.gameAction.id,
-            {
-              currentPlayingSlotIndex:
-                gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
-              kind: 'turnPassed',
-              nextPlayingSlotIndex: null,
-              position: gameMessageEventFixture.gameAction.position,
-            },
-          ];
-
-          expect(result).toStrictEqual(expected);
-        });
-      });
-    });
-
-    describe('having a GameMessageEvent with an play cards game action and game active', () => {
-      let gameMessageEventFixture: GameMessageEvent;
-
-      beforeAll(() => {
-        gameMessageEventFixture =
-          GameUpdatedMessageEventFixtures.withGameActiveAndPlayCardsGameActionAndCardsOne;
+          GameUpdatedMessageEventFixtures.withPlayCardsGameActionWithCardsOneAndCurrentCard;
       });
 
       describe('when called', () => {
@@ -176,8 +141,7 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
             gameMessageEventFixture.gameAction.id,
             {
               cards: [cardV1Fixture],
-              currentCard: (gameMessageEventFixture.game as ActiveGame).state
-                .currentCard,
+              currentCard: cardV1Fixture,
               currentPlayingSlotIndex:
                 gameMessageEventFixture.gameAction.currentPlayingSlotIndex,
               kind: 'cardsPlayed',
@@ -195,7 +159,7 @@ describe(GameEventV2FromGameMessageEventBuilder.name, () => {
 
       beforeAll(() => {
         gameMessageEventFixture =
-          GameUpdatedMessageEventFixtures.withGameFinishedAndPlayCardsGameActionAndCardsOne;
+          GameUpdatedMessageEventFixtures.withPlayCardsGameActionWithCardsOneAndCurrentCardNull;
       });
 
       describe('when called', () => {
