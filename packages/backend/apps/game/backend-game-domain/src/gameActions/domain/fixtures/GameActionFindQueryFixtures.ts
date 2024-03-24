@@ -5,6 +5,12 @@ export class GameActionFindQueryFixtures {
     return {};
   }
 
+  public static get withGameId(): GameActionFindQuery {
+    return {
+      gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+    };
+  }
+
   public static get withId(): GameActionFindQuery {
     return {
       id: '16b54159-a4ef-41fc-994a-20709526bda0',

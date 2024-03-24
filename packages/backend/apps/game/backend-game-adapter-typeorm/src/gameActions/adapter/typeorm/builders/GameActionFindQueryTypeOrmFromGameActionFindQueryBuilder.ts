@@ -30,6 +30,15 @@ export class GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder
       GameActionDb,
     );
 
+    if (gameActionFindQuery.gameId !== undefined) {
+      queryBuilder = queryBuilder.andWhere(
+        `${gameActionPropertiesPrefix}game = :${GameActionDb.name}game`,
+        {
+          [`${GameActionDb.name}game`]: gameActionFindQuery.gameId,
+        },
+      );
+    }
+
     if (gameActionFindQuery.id !== undefined) {
       queryBuilder = queryBuilder.andWhere(
         `${gameActionPropertiesPrefix}id = :${GameActionDb.name}id`,
