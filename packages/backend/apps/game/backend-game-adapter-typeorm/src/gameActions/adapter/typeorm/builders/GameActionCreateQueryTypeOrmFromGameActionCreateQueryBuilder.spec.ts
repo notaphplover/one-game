@@ -239,6 +239,8 @@ describe(
           it('should call insertQueryBuilder.values()', () => {
             const expectedPayload: PassTurnGameActionDbPayloadV1 = {
               kind: GameActionDbPayloadV1Kind.passTurn,
+              nextPlayingSlotIndex:
+                passTurnGameActionCreateQueryFixture.nextPlayingSlotIndex,
               version: GameActionDbVersion.v1,
             };
 
@@ -362,7 +364,9 @@ describe(
           beforeAll(() => {
             cardDbFixture = 0x0039;
 
-            cardDbBuilderMock.build.mockReturnValueOnce(cardDbFixture);
+            cardDbBuilderMock.build
+              .mockReturnValueOnce(cardDbFixture)
+              .mockReturnValueOnce(cardDbFixture);
 
             result =
               gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder.build(
@@ -378,6 +382,7 @@ describe(
           it('should call insertQueryBuilder.values()', () => {
             const expectedPayload: PlayCardsGameActionDbPayloadV1 = {
               cards: [cardDbFixture],
+              currentCard: cardDbFixture,
               kind: GameActionDbPayloadV1Kind.playCards,
               version: GameActionDbVersion.v1,
             };

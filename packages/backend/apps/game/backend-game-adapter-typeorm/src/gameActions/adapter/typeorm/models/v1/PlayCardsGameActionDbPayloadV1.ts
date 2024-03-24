@@ -5,4 +5,5 @@ import { GameActionDbPayloadV1Kind } from './GameActionDbPayloadV1Kind';
 export interface PlayCardsGameActionDbPayloadV1
   extends BaseGameActionDbPayloadV1<GameActionDbPayloadV1Kind.playCards> {
   readonly cards: CardDb[];
+  readonly currentCard: CardDb | null;
 }
