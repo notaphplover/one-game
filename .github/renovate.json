@@ -5,7 +5,7 @@
     "pnpm": "8"
   },
   "extends": ["config:base", ":disableRateLimiting"],
-  "ignoreDeps": ["eslint-plugin-import", "vite"],
+  "ignoreDeps": ["eslint-plugin-import"],
   "kubernetes": {
     "fileMatch": ["k8s/.+\\.yaml$"]
   },
