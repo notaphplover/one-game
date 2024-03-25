@@ -7,18 +7,23 @@ import {
   SseTeardownExecutor,
 } from '@cornie-js/backend-http';
 
+import { GameUpdatedMessageEventFixtures } from '../../fixtures/GameUpdatedMessageEventFixtures';
+import { GameMessageEvent } from '../../models/GameMessageEvent';
 import { GameEventsSubscriptionOutputPort } from '../output/GameEventsSubscriptionOutputPort';
 import { GameEventsManagementInputPort } from './GameEventsManagementInputPort';
 
 describe(GameEventsManagementInputPort.name, () => {
   let gameEventsSubscriptionOutputPortMock: jest.Mocked<GameEventsSubscriptionOutputPort>;
+  let gameMessageEventFromStringBuilderMock: jest.Mocked<
+    Builder<GameMessageEvent, [string]>
+  >;
 
   let gameEventsManagementInputPort: GameEventsManagementInputPort;
-  let messageEventFromStringifiedGameMessageEventV1BuilderMock: jest.Mocked<
-    Builder<MessageEvent, [string]>
+  let messageEventFromGameMessageEventV1BuilderMock: jest.Mocked<
+    Builder<MessageEvent, [GameMessageEvent]>
   >;
-  let messageEventFromStringifiedGameMessageEventV2BuilderMock: jest.Mocked<
-    Builder<MessageEvent, [string]>
+  let messageEventFromGameMessageEventV2BuilderMock: jest.Mocked<
+    Builder<MessageEvent, [GameMessageEvent]>
   >;
 
   beforeAll(() => {
@@ -28,35 +33,49 @@ describe(GameEventsManagementInputPort.name, () => {
       subscribeV1: jest.fn(),
       subscribeV2: jest.fn(),
     };
-    messageEventFromStringifiedGameMessageEventV1BuilderMock = {
+    gameMessageEventFromStringBuilderMock = {
       build: jest.fn(),
     };
-    messageEventFromStringifiedGameMessageEventV2BuilderMock = {
+    messageEventFromGameMessageEventV1BuilderMock = {
+      build: jest.fn(),
+    };
+    messageEventFromGameMessageEventV2BuilderMock = {
       build: jest.fn(),
     };
 
     gameEventsManagementInputPort = new GameEventsManagementInputPort(
       gameEventsSubscriptionOutputPortMock,
-      messageEventFromStringifiedGameMessageEventV1BuilderMock,
-      messageEventFromStringifiedGameMessageEventV2BuilderMock,
+      gameMessageEventFromStringBuilderMock,
+      messageEventFromGameMessageEventV1BuilderMock,
+      messageEventFromGameMessageEventV2BuilderMock,
     );
   });
 
   describe('.subscribeV1', () => {
     let gameIdFixture: string;
-    let ssePublisherFixture: SsePublisher;
+    let ssePublisherMock: jest.Mocked<SsePublisher>;
 
     beforeAll(() => {
       gameIdFixture = 'game-id-fixture';
-      ssePublisherFixture = Symbol() as unknown as SsePublisher;
+      ssePublisherMock = {
+        conplete: jest.fn(),
+        publish: jest.fn(),
+      } as Partial<jest.Mocked<SsePublisher>> as jest.Mocked<SsePublisher>;
     });
 
-    describe('when called', () => {
+    describe('when called, and gameMessageEventFromStringBuilder.build() returns GameMessageEvent with active game', () => {
+      let gameMessageEventFixture: GameMessageEvent;
       let sseTeardownExecutorFixture: SseTeardownExecutor;
       let result: unknown;
 
       beforeAll(async () => {
+        gameMessageEventFixture =
+          GameUpdatedMessageEventFixtures.withGameActive;
         sseTeardownExecutorFixture = Symbol() as unknown as SseTeardownExecutor;
+
+        gameMessageEventFromStringBuilderMock.build.mockReturnValueOnce(
+          gameMessageEventFixture,
+        );
 
         gameEventsSubscriptionOutputPortMock.subscribeV1.mockResolvedValueOnce(
           sseTeardownExecutorFixture,
@@ -64,7 +83,7 @@ describe(GameEventsManagementInputPort.name, () => {
 
         result = await gameEventsManagementInputPort.subscribeV1(
           gameIdFixture,
-          ssePublisherFixture,
+          ssePublisherMock,
         );
       });
 
@@ -93,19 +112,29 @@ describe(GameEventsManagementInputPort.name, () => {
 
   describe('.subscribeV2', () => {
     let gameIdFixture: string;
-    let ssePublisherFixture: SsePublisher;
+    let ssePublisherMock: jest.Mocked<SsePublisher>;
 
     beforeAll(() => {
       gameIdFixture = 'game-id-fixture';
-      ssePublisherFixture = Symbol() as unknown as SsePublisher;
+      ssePublisherMock = {
+        conplete: jest.fn(),
+        publish: jest.fn(),
+      } as Partial<jest.Mocked<SsePublisher>> as jest.Mocked<SsePublisher>;
     });
 
-    describe('when called', () => {
+    describe('when called, and gameMessageEventFromStringBuilder.build() returns GameMessageEvent with active game', () => {
+      let gameMessageEventFixture: GameMessageEvent;
       let sseTeardownExecutorFixture: SseTeardownExecutor;
       let result: unknown;
 
       beforeAll(async () => {
+        gameMessageEventFixture =
+          GameUpdatedMessageEventFixtures.withGameActive;
         sseTeardownExecutorFixture = Symbol() as unknown as SseTeardownExecutor;
+
+        gameMessageEventFromStringBuilderMock.build.mockReturnValueOnce(
+          gameMessageEventFixture,
+        );
 
         gameEventsSubscriptionOutputPortMock.subscribeV2.mockResolvedValueOnce(
           sseTeardownExecutorFixture,
@@ -113,7 +142,7 @@ describe(GameEventsManagementInputPort.name, () => {
 
         result = await gameEventsManagementInputPort.subscribeV2(
           gameIdFixture,
-          ssePublisherFixture,
+          ssePublisherMock,
         );
       });
 

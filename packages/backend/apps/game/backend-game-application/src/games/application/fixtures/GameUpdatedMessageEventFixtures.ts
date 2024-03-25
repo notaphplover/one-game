@@ -17,10 +17,16 @@ export class GameUpdatedMessageEventFixtures {
     };
   }
 
-  public static get withGameActiveAndDrawGameAction(): GameUpdatedMessageEvent {
+  public static get withGameActive(): GameUpdatedMessageEvent {
     return {
       ...GameUpdatedMessageEventFixtures.any,
       game: ActiveGameFixtures.any,
+    };
+  }
+
+  public static get withGameActiveAndDrawGameAction(): GameUpdatedMessageEvent {
+    return {
+      ...GameUpdatedMessageEventFixtures.withGameActive,
       gameAction: GameActionFixtures.withKindCardsDrawnAndDrawOne,
     };
   }
@@ -32,10 +38,16 @@ export class GameUpdatedMessageEventFixtures {
     };
   }
 
-  public static get withGameFinishedAndPassTurnGameAction(): GameUpdatedMessageEvent {
+  public static get withGameFinished(): GameUpdatedMessageEvent {
     return {
       ...GameUpdatedMessageEventFixtures.any,
       game: FinishedGameFixtures.any,
+    };
+  }
+
+  public static get withGameFinishedAndPassTurnGameAction(): GameUpdatedMessageEvent {
+    return {
+      ...GameUpdatedMessageEventFixtures.withGameFinished,
       gameAction: GameActionFixtures.withKindPassTurn,
     };
   }

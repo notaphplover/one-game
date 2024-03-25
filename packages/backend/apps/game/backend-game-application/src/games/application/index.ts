@@ -38,7 +38,6 @@ export type {
   BaseGameMessageEvent,
   GameEventsSubscriptionOutputPort,
   GameMessageEvent,
-  GameMessageEventKind,
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
   GameSpecPersistenceOutputPort,
@@ -48,6 +47,7 @@ export type {
 export {
   GameEventsChannelFromGameIdBuilder,
   gameEventsSubscriptionOutputPortSymbol,
+  GameMessageEventKind,
   GameMiddleware,
   gamePersistenceOutputPortSymbol,
   gameSpecPersistenceOutputPortSymbol,
