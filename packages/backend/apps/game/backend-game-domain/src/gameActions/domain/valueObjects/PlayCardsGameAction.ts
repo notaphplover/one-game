@@ -5,4 +5,5 @@ import { GameActionKind } from './GameActionKind';
 export interface PlayCardsGameAction
   extends BaseGameAction<GameActionKind.playCards> {
   readonly cards: Card[];
+  readonly currentCard: Card | null;
 }

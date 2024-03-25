@@ -21,6 +21,7 @@ import {
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
+import { GameActionManagementInputPort } from '../../../gameActions/application/ports/input/GameActionManagementInputPort';
 import { GetGameGameIdEventsV2RequestParamHandler } from '../handlers/GetGameGameIdEventsV2RequestParamHandler';
 import { GameMiddleware } from '../middlewares/GameMiddleware';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
@@ -31,6 +32,7 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
   Request & AuthRequestContextHolder & GameRequestContextHolder,
   [Game, apiModels.UserV1, string | null]
 > {
+  readonly #gameActionsManagementInputPort: GameActionManagementInputPort;
   readonly #gameEventsManagementInputPort: GameEventsManagementInputPort;
 
   constructor(
@@ -48,6 +50,8 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
     authMiddleware: AuthMiddleware,
     @Inject(GameMiddleware)
     gameMiddleware: GameMiddleware,
+    @Inject(GameActionManagementInputPort)
+    gameActionsManagementInputPort: GameActionManagementInputPort,
     @Inject(GameEventsManagementInputPort)
     gameEventsManagementInputPort: GameEventsManagementInputPort,
   ) {
@@ -57,6 +61,7 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
       new MiddlewarePipeline([authMiddleware, gameMiddleware]),
     );
 
+    this.#gameActionsManagementInputPort = gameActionsManagementInputPort;
     this.#gameEventsManagementInputPort = gameEventsManagementInputPort;
   }
 
@@ -64,18 +69,24 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
     publisher: SsePublisher,
     game: Game,
     userV1: apiModels.UserV1,
-    _lastEventId: string | null,
+    lastEventId: string | null,
   ): Promise<[Response, MessageEvent[], SseTeardownExecutor]> {
     if (!this.#isUserPlayingGame(game, userV1)) {
       throw new AppError(AppErrorKind.invalidCredentials, 'Access denied');
     }
+
+    const previousMessageEvents: MessageEvent[] =
+      await this.#gameActionsManagementInputPort.findNextGameEvents(
+        game.id,
+        lastEventId,
+      );
 
     return [
       {
         headers: {},
         statusCode: HttpStatus.OK,
       },
-      [],
+      previousMessageEvents,
       await this.#gameEventsManagementInputPort.subscribeV2(game.id, publisher),
     ];
   }

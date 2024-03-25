@@ -64,6 +64,7 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
             gameId: gameActionDbFixture.gameId,
             id: gameActionDbFixture.id,
             kind: GameActionKind.passTurn,
+            nextPlayingSlotIndex: 1,
             position: gameActionDbFixture.position,
             turn: gameActionDbFixture.turn,
           };
@@ -78,6 +79,7 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
 
           return {
             cards: [CardFixtures.any],
+            currentCard: CardFixtures.any,
             currentPlayingSlotIndex:
               gameActionDbFixture.currentPlayingSlotIndex,
             gameId: gameActionDbFixture.gameId,

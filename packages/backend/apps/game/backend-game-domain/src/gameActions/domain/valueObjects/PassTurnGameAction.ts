@@ -1,4 +1,7 @@
 import { BaseGameAction } from './BaseGameAction';
 import { GameActionKind } from './GameActionKind';
 
-export type PassTurnGameAction = BaseGameAction<GameActionKind.passTurn>;
+export interface PassTurnGameAction
+  extends BaseGameAction<GameActionKind.passTurn> {
+  nextPlayingSlotIndex: number | null;
+}

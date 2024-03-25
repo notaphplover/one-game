@@ -10,6 +10,7 @@ export class GameActionDbPayloadV1Fixtures {
   public static get any(): GameActionDbPayloadV1 {
     return {
       kind: GameActionDbPayloadV1Kind.passTurn,
+      nextPlayingSlotIndex: 1,
       version: GameActionDbVersion.v1,
     };
   }
@@ -25,6 +26,7 @@ export class GameActionDbPayloadV1Fixtures {
   public static get withKindPassTurn(): PassTurnGameActionDbPayloadV1 {
     return {
       kind: GameActionDbPayloadV1Kind.passTurn,
+      nextPlayingSlotIndex: 1,
       version: GameActionDbVersion.v1,
     };
   }
@@ -32,6 +34,7 @@ export class GameActionDbPayloadV1Fixtures {
   public static get withKindPlayCardsAndCardsOne(): PlayCardsGameActionDbPayloadV1 {
     return {
       cards: [0x0039],
+      currentCard: 0x0039,
       kind: GameActionDbPayloadV1Kind.playCards,
       version: GameActionDbVersion.v1,
     };

@@ -77,6 +77,7 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
       case GameActionKind.passTurn:
         return {
           kind: GameActionDbPayloadV1Kind.passTurn,
+          nextPlayingSlotIndex: gameActionCreateQuery.nextPlayingSlotIndex,
           version: GameActionDbVersion.v1,
         };
       case GameActionKind.playCards:
@@ -84,6 +85,10 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
           cards: gameActionCreateQuery.cards.map((card: Card) =>
             this.#cardDbBuilder.build(card),
           ),
+          currentCard:
+            gameActionCreateQuery.currentCard === null
+              ? null
+              : this.#cardDbBuilder.build(gameActionCreateQuery.currentCard),
           kind: GameActionDbPayloadV1Kind.playCards,
           version: GameActionDbVersion.v1,
         };

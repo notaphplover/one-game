@@ -3,6 +3,7 @@ import { GameDomainModule } from '@cornie-js/backend-game-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
+import { GameActionApplicationModule } from '../../../../gameActions/adapter/nest/modules/GameActionApplicationModule';
 import { GameSnapshotApplicationModule } from '../../../../gameSnapshots/adapter/nest/modules/GameSnapshotApplicationModule';
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from '../../../application/builders/ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { FinishedGameSlotV1FromFinishedGameSlotBuilder } from '../../../application/builders/FinishedGameSlotV1FromFinishedGameSlotBuilder';
@@ -53,10 +54,11 @@ export class GameApplicationModule {
       global: false,
       imports: [
         ...(imports ?? []),
+        CardModule,
+        GameActionApplicationModule.forRootAsync(imports),
         GameDomainModule,
         GameSnapshotApplicationModule.forRootAsync(imports),
         UuidModule,
-        CardModule,
       ],
       module: GameApplicationModule,
       providers: [
