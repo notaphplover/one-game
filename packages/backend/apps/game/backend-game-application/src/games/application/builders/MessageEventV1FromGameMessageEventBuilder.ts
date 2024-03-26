@@ -3,11 +3,11 @@ import { Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { GameMessageEvent } from '../models/GameMessageEvent';
-import { BaseMessageEventFromStringifiedMessageBuilder } from './BaseMessageEventFromStringifiedGameMessageEventBuilder';
+import { BaseMessageEventFromGameMessageEventBuilder } from './BaseMessageEventFromGameMessageEventBuilder';
 import { GameMessageEventV1FromGameMessageEventBuilder } from './GameMessageEventV1FromGameMessageEventBuilder';
 
 @Injectable()
-export class MessageEventFromStringifiedGameMessageEventV1Builder extends BaseMessageEventFromStringifiedMessageBuilder<apiModels.GameMessageEventV1> {
+export class MessageEventV1FromGameMessageEventBuilder extends BaseMessageEventFromGameMessageEventBuilder<apiModels.GameMessageEventV1> {
   constructor(
     @Inject(GameMessageEventV1FromGameMessageEventBuilder)
     gameMessageEventV1FromGameMessageEventBuilder: Builder<

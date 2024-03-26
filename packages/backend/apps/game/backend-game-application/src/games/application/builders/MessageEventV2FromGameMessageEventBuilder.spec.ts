@@ -7,14 +7,14 @@ import { MessageEvent } from '@cornie-js/backend-http';
 import { GameEventV2Fixtures } from '../fixtures/GameEventV2Fixtures';
 import { GameUpdatedMessageEventFixtures } from '../fixtures/GameUpdatedMessageEventFixtures';
 import { GameMessageEvent } from '../models/GameMessageEvent';
-import { MessageEventFromStringifiedGameMessageEventV2Builder } from './MessageEventFromStringifiedGameMessageEventV2Builder';
+import { MessageEventV2FromGameMessageEventBuilder } from './MessageEventV2FromGameMessageEventBuilder';
 
-describe(MessageEventFromStringifiedGameMessageEventV2Builder.name, () => {
+describe(MessageEventV2FromGameMessageEventBuilder.name, () => {
   let gameEventV2FromGameMessageEventBuilderMock: jest.Mocked<
     Builder<[string | null, apiModels.GameEventV2], [GameMessageEvent]>
   >;
 
-  let messageEventFromStringifiedGameMessageEventV2Builder: MessageEventFromStringifiedGameMessageEventV2Builder;
+  let messageEventFromStringifiedGameMessageEventV2Builder: MessageEventV2FromGameMessageEventBuilder;
 
   beforeAll(() => {
     gameEventV2FromGameMessageEventBuilderMock = {
@@ -22,20 +22,16 @@ describe(MessageEventFromStringifiedGameMessageEventV2Builder.name, () => {
     };
 
     messageEventFromStringifiedGameMessageEventV2Builder =
-      new MessageEventFromStringifiedGameMessageEventV2Builder(
+      new MessageEventV2FromGameMessageEventBuilder(
         gameEventV2FromGameMessageEventBuilderMock,
       );
   });
 
   describe('.build', () => {
     let gameMessageEventFixture: GameMessageEvent;
-    let stringifiedGameMessageEventFixture: string;
 
     beforeAll(() => {
       gameMessageEventFixture = GameUpdatedMessageEventFixtures.any;
-      stringifiedGameMessageEventFixture = JSON.stringify(
-        gameMessageEventFixture,
-      );
     });
 
     describe('when called, and gameEventV2FromGameMessageEventBuilder.build() returns null id', () => {
@@ -51,7 +47,7 @@ describe(MessageEventFromStringifiedGameMessageEventV2Builder.name, () => {
         ]);
 
         result = messageEventFromStringifiedGameMessageEventV2Builder.build(
-          stringifiedGameMessageEventFixture,
+          gameMessageEventFixture,
         );
       });
 
@@ -93,7 +89,7 @@ describe(MessageEventFromStringifiedGameMessageEventV2Builder.name, () => {
         ]);
 
         result = messageEventFromStringifiedGameMessageEventV2Builder.build(
-          stringifiedGameMessageEventFixture,
+          gameMessageEventFixture,
         );
       });
 
