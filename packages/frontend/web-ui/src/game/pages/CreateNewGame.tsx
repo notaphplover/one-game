@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Button,
@@ -6,44 +6,39 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
-  FormLabel,
   Grid,
   TextField,
   Typography,
-  NativeSelect,
-  InputLabel,
-  Select,
-  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
 } from '@mui/material';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { VideogameAssetRounded } from '@mui/icons-material';
-
-interface GameOptions {
-  chainDraw2Draw2Cards: boolean;
-  chainDraw2Draw4Cards: boolean;
-  chainDraw4Draw4Cards: boolean;
-  chainDraw4Draw2Cards: boolean;
-  playCardIsMandatory: boolean;
-  playMultipleSameCards: boolean;
-  playWildDraw4IfNoOtherAlternative: boolean;
-}
+import {
+  VideogameAssetOutlined,
+  PlaylistAddCheckOutlined,
+} from '@mui/icons-material';
+import { useCreateNewGame } from '../hooks/useCreateNewGame';
 
 export const CreateNewGame = (): React.JSX.Element => {
-  const [gameOptions, setGameOptions] = useState<GameOptions>({
-    chainDraw2Draw2Cards: true,
-    chainDraw2Draw4Cards: true,
-    chainDraw4Draw4Cards: true,
-    chainDraw4Draw2Cards: false,
-    playCardIsMandatory: true,
-    playMultipleSameCards: false,
-    playWildDraw4IfNoOtherAlternative: true,
-  });
+  const {
+    gameName,
+    gameOptions,
+    numberOfPlayers,
+    openOptions,
+    setNewGame,
+    setNewGameOptions,
+    setNumberOfPlayers,
+    setHandleOpenOptions,
+    setHandleCloseOptions,
+  } = useCreateNewGame();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setGameOptions({
-      ...gameOptions,
-      [event.target.value]: event.target.checked,
-    });
+  const onSubmit = (event: React.FormEvent): void => {
+    event.preventDefault();
+    console.log(gameName);
+    console.log(numberOfPlayers);
+    console.log(gameOptions);
   };
 
   return (
@@ -52,150 +47,180 @@ export const CreateNewGame = (): React.JSX.Element => {
         component="div"
         className="page-section-container new-game-container"
       >
-        <Grid item xs={12}>
-          <Box className="box-shadow new-game-form-grid">
-            <Typography variant="h5" className="new-game-form-title">
-              {'Create new game'}
-            </Typography>
+        <Box className="box-shadow new-game-form-grid">
+          <Typography variant="h5" className="new-game-form-title">
+            {'New game'}
+          </Typography>
 
-            <form>
-              <Grid container>
-                <Grid item xs={12}>
-                  <TextField
-                    className="new-game-text-fieldset"
-                    autoFocus
-                    label="Name of the game"
-                    type="text"
-                    placeholder="Name of the game"
-                    fullWidth
-                    name="name"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                    <select id="demo-simple-select" value={1}>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </select>
-                  </FormControl>
-                </Grid>
-                <Box className="new-game-form-grid">
-                  <Grid item xs={12}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Game Options</FormLabel>
-                      <FormGroup aria-label="position">
-                        <FormControlLabel
-                          value="chainTwoToTwoCard"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={gameOptions.chainDraw2Draw2Cards}
-                              onChange={handleChange}
-                              name="chainDraw2Draw2cards"
-                            />
-                          }
-                          label="Chain Draw Two with Draw Two cards."
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="chainTwoToFourCard"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={gameOptions.chainDraw2Draw4Cards}
-                              onChange={handleChange}
-                              name="chainDraw2Draw4cards"
-                            />
-                          }
-                          label="Chain Draw Two with Wild Draw Four cards."
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="chainFourToFourCard"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={gameOptions.chainDraw4Draw4Cards}
-                              onChange={handleChange}
-                              name="chainDraw4Draw4cards"
-                            />
-                          }
-                          label="Chain Wild Draw Four with Wild Draw Four cards."
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="chainFourToTwoCard"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={gameOptions.chainDraw4Draw2Cards}
-                              onChange={handleChange}
-                              name="chainDraw4Draw2cards"
-                            />
-                          }
-                          label="Chain Wild Draw Four with Draw Two cards."
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="playCardMandatory"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={gameOptions.playCardIsMandatory}
-                              onChange={handleChange}
-                              name="playCardIsMandatory"
-                            />
-                          }
-                          label="Playing card is mandatory."
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="playMultiplesSameCards"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={gameOptions.playMultipleSameCards}
-                              onChange={handleChange}
-                              name="playMultipleSameCards"
-                            />
-                          }
-                          label="Playing multiple same cards."
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="playWildDraw4IfNoOtherAlternative"
-                          className="new-game-text-fieldset"
-                          control={
-                            <Checkbox
-                              checked={
-                                gameOptions.playWildDraw4IfNoOtherAlternative
-                              }
-                              onChange={handleChange}
-                              name="playWildDraw4IfNoOtherAlternative"
-                            />
-                          }
-                          label="Playing Wild Draw Four if no other alternative."
-                          labelPlacement="end"
-                        />
-                      </FormGroup>
-                    </FormControl>
-                  </Grid>
+          <form>
+            <Grid container>
+              <Grid item xs={12}>
+                <TextField
+                  autoFocus
+                  className="new-game-text-fieldset"
+                  label="Name"
+                  type="text"
+                  fullWidth
+                  name="name"
+                  value={gameName}
+                  onChange={setNewGame}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  className="new-game-text-fieldset"
+                  label="Players"
+                  type="number"
+                  fullWidth
+                  name="players"
+                  value={numberOfPlayers}
+                  onChange={setNumberOfPlayers}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box className="new-game-options">
+                  <Button onClick={setHandleOpenOptions}>Options</Button>
+                  <Dialog
+                    open={openOptions}
+                    onClose={setHandleCloseOptions}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {'Choose game options'}
+                    </DialogTitle>
+                    <DialogContent>
+                      <FormControl component="fieldset">
+                        <FormGroup aria-label="position">
+                          <FormControlLabel
+                            value="chainDraw2Draw2Cards"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={gameOptions.chainDraw2Draw2Cards}
+                                onChange={setNewGameOptions}
+                                name="chainDraw2Draw2Cards"
+                              />
+                            }
+                            label="Chain +2 with +2 cards."
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="chainDraw2Draw4Cards"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={gameOptions.chainDraw2Draw4Cards}
+                                onChange={setNewGameOptions}
+                                name="chainDraw2Draw4Cards"
+                              />
+                            }
+                            label="Chain +2 with +4 cards."
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="chainDraw4Draw4Cards"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={gameOptions.chainDraw4Draw4Cards}
+                                onChange={setNewGameOptions}
+                                name="chainDraw4Draw4Cards"
+                              />
+                            }
+                            label="Chain +4 with +4 cards."
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="chainDraw4Draw2Cards"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={gameOptions.chainDraw4Draw2Cards}
+                                onChange={setNewGameOptions}
+                                name="chainDraw4Draw2Cards"
+                              />
+                            }
+                            label="Chain +4 with +2 cards."
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="playCardMandatory"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={gameOptions.playCardIsMandatory}
+                                onChange={setNewGameOptions}
+                                name="playCardIsMandatory"
+                              />
+                            }
+                            label="Playing cards is mandatory."
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="playMultiplesSameCards"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={gameOptions.playMultipleSameCards}
+                                onChange={setNewGameOptions}
+                                name="playMultipleSameCards"
+                              />
+                            }
+                            label="Playing multiple same cards is allowed."
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="playWildDraw4IfNoOtherAlternative"
+                            className="new-game-option-formcontrol"
+                            control={
+                              <Checkbox
+                                checked={
+                                  gameOptions.playWildDraw4IfNoOtherAlternative
+                                }
+                                onChange={setNewGameOptions}
+                                name="playWildDraw4IfNoOtherAlternative"
+                              />
+                            }
+                            label="Playing +4 is allowed only if there's no other alternative."
+                            labelPlacement="end"
+                          />
+                        </FormGroup>
+                      </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        type="button"
+                        className="new-game-form-button"
+                        variant="contained"
+                        startIcon={<PlaylistAddCheckOutlined />}
+                        onClick={setHandleCloseOptions}
+                        autoFocus
+                      >
+                        OK
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Box>
               </Grid>
-
-              <Button
-                type="button"
-                className="new-game-form-button"
-                variant="contained"
-                startIcon={<VideogameAssetRounded />}
-              >
-                CREATE
-              </Button>
-            </form>
-          </Box>
-        </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={12}>
+                <Box className="new-game-form-button">
+                  <Button
+                    fullWidth
+                    type="button"
+                    variant="contained"
+                    startIcon={<VideogameAssetOutlined />}
+                    onClick={onSubmit}
+                  >
+                    CREATE
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
       </Box>
     </CornieLayout>
   );

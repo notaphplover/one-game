@@ -5,18 +5,20 @@
   border-radius: 10px;
   text-align: left;
   color: var(--cg-bkg-primary-light);
-  padding: 3rem;
-  margin: 0rem 2rem;
+  padding: 2rem;
+  margin: 0rem 1rem;
 }
 
 @media (min-width: var.$sm) {
   .new-game-form-grid {
+    padding: 3rem;
     margin: 0;
+    max-width: 450px;
   }
 }
 
 .new-game-form-title {
-  padding-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .new-game-login-error {
@@ -24,8 +26,17 @@
   text-align: left;
 }
 
+.new-game-options {
+  margin-top: 1rem;
+  text-align: right;
+}
+
 .new-game-form-grid .new-game-text-fieldset {
-  margin-top: 1.5rem;
+  margin-top: 1.2rem;
+}
+
+.new-game-form-grid .new-game-option-title {
+  margin: 1.5rem 0 1rem;
 }
 
 .new-game-form-grid .new-game-text-fieldset:hover {
@@ -34,6 +45,6 @@
 }
 
 .new-game-form-button {
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-bottom: 2rem;
 }

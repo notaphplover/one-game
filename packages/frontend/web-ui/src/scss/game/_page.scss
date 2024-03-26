@@ -1,5 +1,6 @@
 @use '../base/variables' as var;
 
 .new-game-container {
-  padding: 3rem;
+  padding: 8rem 0.5rem;
+  max-width: 450px;
 }
