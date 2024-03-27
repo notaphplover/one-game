@@ -26,14 +26,14 @@ import { CheckingAuth } from '../../auth/components/CheckingAuth';
 
 export const CreateNewGame = (): React.JSX.Element => {
   const {
-    gameName,
+    formFields,
     gameOptions,
-    numberOfPlayers,
     status,
-    setNewGame,
     setNewGameOptions,
-    setNumberOfPlayers,
     notifyFormFieldsFilled,
+    formValidation,
+    backendError,
+    setFormField,
   } = useCreateNewGame();
 
   const { openDialog, setHandleOpenDialog, setHandleCloseDialog } =
@@ -52,13 +52,13 @@ export const CreateNewGame = (): React.JSX.Element => {
       status === CreateNewGameStatus.pendingValidation
     );
   };
-
+  /*
   if (
     status === CreateNewGameStatus.pendingValidation ||
     status === CreateNewGameStatus.pendingBackend
   ) {
     return <CheckingAuth />;
-  }
+  }*/
 
   return (
     <CornieLayout id="create-new-game-page" withFooter withNavBar>
@@ -82,8 +82,8 @@ export const CreateNewGame = (): React.JSX.Element => {
                   type="text"
                   fullWidth
                   name="name"
-                  value={gameName}
-                  onChange={setNewGame}
+                  value={formFields.name}
+                  onChange={setFormField}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -93,8 +93,10 @@ export const CreateNewGame = (): React.JSX.Element => {
                   type="number"
                   fullWidth
                   name="players"
-                  value={numberOfPlayers}
-                  onChange={setNumberOfPlayers}
+                  value={formFields.players}
+                  onChange={setFormField}
+                  error={formValidation.numberOfPlayers !== undefined}
+                  helperText={formValidation.numberOfPlayers}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -119,7 +121,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                               <Checkbox
                                 checked={gameOptions.chainDraw2Draw2Cards}
                                 onChange={setNewGameOptions}
-                                name="chainDraw2Draw2Cards"
+                                name="options.chainDraw2Draw2Cards"
                               />
                             }
                             label="Chain +2 with +2 cards."

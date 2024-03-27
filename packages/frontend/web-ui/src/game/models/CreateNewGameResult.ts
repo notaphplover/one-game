@@ -1,13 +1,15 @@
 import { CreateNewGameStatus } from './CreateNewGameStatus';
+import { FormFieldsNewGame } from './FormFieldsNewGame';
+import { FormValidationNewGameResult } from './FormValidationNewGameResult';
 import { GameOptions } from './GameOptions';
 
 export interface CreateNewGameResult {
-  gameName: string;
-  numberOfPlayers: number;
+  formFields: FormFieldsNewGame;
   gameOptions: GameOptions;
   status: CreateNewGameStatus;
-  setNewGame: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setNewGameOptions: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setNumberOfPlayers: (event: React.ChangeEvent<HTMLInputElement>) => void;
   notifyFormFieldsFilled: () => void;
+  formValidation: FormValidationNewGameResult;
+  backendError: string | null;
+  setFormField: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
