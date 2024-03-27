@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { GameOptions } from '../models/GameOptions';
 import { CreateNewGameResult } from '../models/CreateNewGameResult';
+import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const [gameName, setGameName] = useState<string>('');
-  const [openOptions, setOpenOptions] = useState<boolean>(false);
   const [numberOfPlayers, setNumberOfPlayer] = useState<number>(2);
+  const [status, setStatus] = useState(CreateNewGameStatus.initial);
   const [gameOptions, setGameOptions] = useState<GameOptions>({
     chainDraw2Draw2Cards: false,
     chainDraw2Draw4Cards: false,
@@ -17,12 +18,26 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   });
 
   const setNewGame = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (
+      status !== CreateNewGameStatus.initial &&
+      status !== CreateNewGameStatus.validationKO
+    ) {
+      throw new Error('Unexpected form state at setNewGame');
+    }
+
     setGameName(event.target.value);
   };
 
   const setNewGameOptions = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
+    if (
+      status !== CreateNewGameStatus.initial &&
+      status !== CreateNewGameStatus.validationKO
+    ) {
+      throw new Error('Unexpected form state at setNewGameOptions');
+    }
+
     setGameOptions({
       ...gameOptions,
       [event.target.name]: event.target.checked,
@@ -32,6 +47,13 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const setNumberOfPlayers = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
+    if (
+      status !== CreateNewGameStatus.initial &&
+      status !== CreateNewGameStatus.validationKO
+    ) {
+      throw new Error('Unexpected form state at setNumberOfPlayers');
+    }
+
     const value: number = parseInt(event.target.value);
     let newValue: number;
 
@@ -48,23 +70,20 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     setNumberOfPlayer(newValue);
   };
 
-  const setHandleOpenOptions = (): void => {
-    setOpenOptions(true);
-  };
-
-  const setHandleCloseOptions = (): void => {
-    setOpenOptions(false);
+  const notifyFormFieldsFilled = (): void => {
+    //setFormStatus(RegisterStatus.pendingValidation);
+    //setBackendError(null);
+    console.log('estamos en el hook');
   };
 
   return {
     gameName,
     numberOfPlayers,
     gameOptions,
-    openOptions,
+    status,
     setNewGame,
     setNewGameOptions,
     setNumberOfPlayers,
-    setHandleOpenOptions,
-    setHandleCloseOptions,
+    notifyFormFieldsFilled,
   };
 };

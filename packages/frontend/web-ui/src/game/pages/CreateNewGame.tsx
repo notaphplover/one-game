@@ -20,26 +20,45 @@ import {
   PlaylistAddCheckOutlined,
 } from '@mui/icons-material';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
+import { useDisplayDialog } from '../hooks/useDisplayDialog';
+import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
+import { CheckingAuth } from '../../auth/components/CheckingAuth';
 
 export const CreateNewGame = (): React.JSX.Element => {
   const {
     gameName,
     gameOptions,
     numberOfPlayers,
-    openOptions,
+    status,
     setNewGame,
     setNewGameOptions,
     setNumberOfPlayers,
-    setHandleOpenOptions,
-    setHandleCloseOptions,
+    notifyFormFieldsFilled,
   } = useCreateNewGame();
+
+  const { openDialog, setHandleOpenDialog, setHandleCloseDialog } =
+    useDisplayDialog();
 
   const onSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    console.log(gameName);
-    console.log(numberOfPlayers);
-    console.log(gameOptions);
+
+    notifyFormFieldsFilled();
   };
+
+  const isTextFieldDisabled = (): boolean => {
+    return (
+      status === CreateNewGameStatus.backendOK ||
+      status === CreateNewGameStatus.pendingBackend ||
+      status === CreateNewGameStatus.pendingValidation
+    );
+  };
+
+  if (
+    status === CreateNewGameStatus.pendingValidation ||
+    status === CreateNewGameStatus.pendingBackend
+  ) {
+    return <CheckingAuth />;
+  }
 
   return (
     <CornieLayout id="create-new-game-page" withFooter withNavBar>
@@ -58,6 +77,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                 <TextField
                   autoFocus
                   className="new-game-text-fieldset"
+                  disabled={isTextFieldDisabled()}
                   label="Name"
                   type="text"
                   fullWidth
@@ -79,10 +99,10 @@ export const CreateNewGame = (): React.JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <Box className="new-game-options">
-                  <Button onClick={setHandleOpenOptions}>Options</Button>
+                  <Button onClick={setHandleOpenDialog}>Options</Button>
                   <Dialog
-                    open={openOptions}
-                    onClose={setHandleCloseOptions}
+                    open={openDialog}
+                    onClose={setHandleCloseDialog}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                   >
@@ -194,7 +214,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                         className="new-game-form-button"
                         variant="contained"
                         startIcon={<PlaylistAddCheckOutlined />}
-                        onClick={setHandleCloseOptions}
+                        onClick={setHandleCloseDialog}
                         autoFocus
                       >
                         OK
