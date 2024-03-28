@@ -11,7 +11,6 @@ import { Module } from '@nestjs/common';
 import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { buildIoredisModuleOptions } from '../../../../foundation/redis/adapter/ioredis/calculations/buildIoredisModuleOptions';
-import { GetEventsGamesGameIdV1RequestNestController } from '../controllers/GetEventsGamesGameIdV1RequestNestController';
 import { GetEventsGamesGameIdV2RequestNestController } from '../controllers/GetEventsGamesGameIdV2RequestNestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
 import { GetGamesV1GameIdSpecHttpRequestNestController } from '../controllers/GetGamesV1GameIdSpecHttpRequestNestController';
@@ -25,7 +24,6 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
 @Module({
   controllers: [
     // Mind the order
-    GetEventsGamesGameIdV1RequestNestController,
     GetEventsGamesGameIdV2RequestNestController,
     GetGamesV1SpecsHttpRequestNestController,
     GetGameV1MineHttpRequestNestController,

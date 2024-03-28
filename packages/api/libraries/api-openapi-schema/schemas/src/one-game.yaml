@@ -52,43 +52,6 @@ paths:
       tags:
         - Auth
 
-  /v1/events/games/{gameId}:
-    get:
-      deprecated: true
-      summary: Get game events (SSE)
-      operationId: getGameEvents
-      parameters:
-        - in: path
-          name: gameId
-          schema:
-            type: string
-          required: true
-          description: Game id of the events to get.
-      responses:
-        '200':
-          description: Game events found
-          content:
-            text/event-stream:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    data:
-                      $ref: 'https://onegame.schemas/api/v1/games/game.json'
-                  required:
-                    - data
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
-      security:
-        - accessToken: []
-      tags:
-        - Game events
-
   /v1/games:
     post:
       summary: Create a game
