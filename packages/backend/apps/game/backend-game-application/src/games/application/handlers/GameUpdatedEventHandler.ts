@@ -117,15 +117,9 @@ export class GameUpdatedEventHandler
       kind: GameMessageEventKind.gameUpdated,
     };
 
-    await Promise.all([
-      this.#gameEventsSubscriptionOutputPort.publishV1(
-        game.id,
-        gameUpdatedMessageEvent,
-      ),
-      this.#gameEventsSubscriptionOutputPort.publishV2(
-        game.id,
-        gameUpdatedMessageEvent,
-      ),
-    ]);
+    await this.#gameEventsSubscriptionOutputPort.publishV2(
+      game.id,
+      gameUpdatedMessageEvent,
+    );
   }
 }
