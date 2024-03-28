@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Publisher } from '@cornie-js/backend-common';
+import { Builder, PublisherAsync } from '@cornie-js/backend-common';
 import { GameMessageEvent } from '@cornie-js/backend-game-application/games';
 import { SseTeardownExecutor } from '@cornie-js/backend-http';
 import { IoredisPublisher } from '@cornie-js/backend-pub-sub';
@@ -39,49 +39,6 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
         gameEventsIoredisSubscriberMock,
         ioredisPublisherMock,
       );
-  });
-
-  describe('.publishV1', () => {
-    let gameIdFixture: string;
-    let channelFixture: string;
-    let gameMessageEventFixture: GameMessageEvent;
-
-    beforeAll(() => {
-      gameIdFixture = 'game id';
-      channelFixture = 'channel fixture';
-      gameMessageEventFixture = Symbol() as unknown as GameMessageEvent;
-    });
-
-    describe('when called', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        gameEventsChannelFromGameIdBuilderMock.build.mockReturnValueOnce(
-          channelFixture,
-        );
-
-        result = await gameEventsSubscriptionIoredisOutputAdapter.publishV1(
-          gameIdFixture,
-          gameMessageEventFixture,
-        );
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call ioredisPublisher.publish()', () => {
-        expect(ioredisPublisherMock.publish).toHaveBeenCalledTimes(1);
-        expect(ioredisPublisherMock.publish).toHaveBeenCalledWith(
-          channelFixture,
-          JSON.stringify(gameMessageEventFixture),
-        );
-      });
-
-      it('should resolve to undefined', () => {
-        expect(result).toBeUndefined();
-      });
-    });
   });
 
   describe('.publishV2', () => {
@@ -127,76 +84,15 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
     });
   });
 
-  describe('.subscribeV1', () => {
-    let gameIdFixture: string;
-    let channelFixture: string;
-    let publisherFixture: Publisher<string>;
-
-    beforeAll(() => {
-      gameIdFixture = 'game id';
-      channelFixture = 'channel fixture';
-      publisherFixture = Symbol() as unknown as Publisher<string>;
-    });
-
-    describe('when called', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        gameEventsChannelFromGameIdBuilderMock.build.mockReturnValueOnce(
-          channelFixture,
-        );
-        gameEventsIoredisSubscriberMock.subscribe.mockResolvedValueOnce(
-          undefined,
-        );
-
-        result = await gameEventsSubscriptionIoredisOutputAdapter.subscribeV1(
-          gameIdFixture,
-          publisherFixture,
-        );
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call gameEventsChannelFromGameIdBuilder.build()', () => {
-        expect(
-          gameEventsChannelFromGameIdBuilderMock.build,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameEventsChannelFromGameIdBuilderMock.build,
-        ).toHaveBeenCalledWith(gameIdFixture, 1);
-      });
-
-      it('should call gameEventsIoredisSubscriber.subscribe()', () => {
-        expect(gameEventsIoredisSubscriberMock.subscribe).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(gameEventsIoredisSubscriberMock.subscribe).toHaveBeenCalledWith(
-          channelFixture,
-          publisherFixture,
-        );
-      });
-
-      it('should return an SseTeardownExecutor', () => {
-        const expected: SseTeardownExecutor = {
-          teardown: expect.any(Function) as unknown as () => void,
-        };
-
-        expect(result).toStrictEqual(expected);
-      });
-    });
-  });
-
   describe('.subscribeV2', () => {
     let gameIdFixture: string;
     let channelFixture: string;
-    let publisherFixture: Publisher<string>;
+    let publisherFixture: PublisherAsync<string>;
 
     beforeAll(() => {
       gameIdFixture = 'game id';
       channelFixture = 'channel fixture';
-      publisherFixture = Symbol() as unknown as Publisher<string>;
+      publisherFixture = Symbol() as unknown as PublisherAsync<string>;
     });
 
     describe('when called', () => {

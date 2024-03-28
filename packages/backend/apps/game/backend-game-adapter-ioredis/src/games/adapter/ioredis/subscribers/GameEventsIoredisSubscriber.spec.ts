@@ -1,6 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind, Publisher } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  PublisherAsync,
+} from '@cornie-js/backend-common';
 import Redis from 'ioredis';
 
 import { GameEventsIoredisSubscriber } from './GameEventsIoredisSubscriber';
@@ -41,7 +45,7 @@ describe(GameEventsIoredisSubscriber.name, () => {
       });
 
       describe('when called', () => {
-        let publisherMock: jest.Mocked<Publisher<string>>;
+        let publisherMock: jest.Mocked<PublisherAsync<string>>;
 
         let result: unknown;
 
@@ -83,7 +87,7 @@ describe(GameEventsIoredisSubscriber.name, () => {
     describe('when called', () => {
       let gameIdFixture: string;
       let channelFixture: string;
-      let publisherMock: jest.Mocked<Publisher<string>>;
+      let publisherMock: jest.Mocked<PublisherAsync<string>>;
 
       let gameEventsIoredisSubscriber: GameEventsIoredisSubscriber;
 
@@ -134,8 +138,8 @@ describe(GameEventsIoredisSubscriber.name, () => {
 
   describe('.unsetGamePublisher', () => {
     describe('having two publishers', () => {
-      let firstPublisherMock: jest.Mocked<Publisher<string>>;
-      let secondPublisherMock: jest.Mocked<Publisher<string>>;
+      let firstPublisherMock: jest.Mocked<PublisherAsync<string>>;
+      let secondPublisherMock: jest.Mocked<PublisherAsync<string>>;
 
       beforeAll(() => {
         firstPublisherMock = {
@@ -213,7 +217,7 @@ describe(GameEventsIoredisSubscriber.name, () => {
     describe('when called, after ioredisSubscriber.subscribe() is called', () => {
       let gameIdFixture: string;
       let channelFixture: string;
-      let publisherMock: jest.Mocked<Publisher<string>>;
+      let publisherMock: jest.Mocked<PublisherAsync<string>>;
 
       let gameEventsIoredisSubscriber: GameEventsIoredisSubscriber;
 

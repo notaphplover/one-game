@@ -4,7 +4,6 @@ import { AuthModule } from '../../../../auth/adapter/nest/modules/AuthModule';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
 import { GameActionApplicationModule } from '../../../../gameActions/adapter/nest/modules/GameActionApplicationModule';
-import { GetGameGameIdEventsV1SseController } from '../../../application';
 import { GetGameGameIdEventsV2SseController } from '../../../application/controllers/GetGameGameIdEventsV2SseController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from '../../../application/controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
 import { GetGamesV1GameIdSpecHttpRequestController } from '../../../application/controllers/GetGamesV1GameIdSpecHttpRequestController';
@@ -14,7 +13,6 @@ import { GetGameV1MineHttpRequestController } from '../../../application/control
 import { PatchGameV1GameIdHttpRequestController } from '../../../application/controllers/PatchGameV1GameIdHttpRequestController';
 import { PostGameIdSlotV1HttpRequestController } from '../../../application/controllers/PostGameIdSlotV1HttpRequestController';
 import { PostGameV1HttpRequestController } from '../../../application/controllers/PostGameV1HttpRequestController';
-import { GetGameGameIdEventsV1RequestParamHandler } from '../../../application/handlers/GetGameGameIdEventsV1RequestParamHandler';
 import { GetGameGameIdEventsV2RequestParamHandler } from '../../../application/handlers/GetGameGameIdEventsV2RequestParamHandler';
 import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from '../../../application/handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 import { GetGamesV1GameIdRequestParamHandler } from '../../../application/handlers/GetGamesV1GameIdRequestParamHandler';
@@ -37,7 +35,6 @@ export class GameHttpApiModule {
   ): DynamicModule {
     return {
       exports: [
-        GetGameGameIdEventsV1SseController,
         GetGameGameIdEventsV2SseController,
         GetGameGameIdSlotSlotIdCardsV1RequestController,
         GetGamesV1SpecsHttpRequestController,
@@ -60,8 +57,6 @@ export class GameHttpApiModule {
       module: GameHttpApiModule,
       providers: [
         GameMiddleware,
-        GetGameGameIdEventsV1RequestParamHandler,
-        GetGameGameIdEventsV1SseController,
         GetGameGameIdEventsV2RequestParamHandler,
         GetGameGameIdEventsV2SseController,
         GetGameGameIdSlotSlotIdCardsV1RequestController,

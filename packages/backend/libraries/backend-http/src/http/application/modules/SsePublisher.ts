@@ -8,11 +8,11 @@ export class SsePublisher {
     this.#consumer = consumer;
   }
 
-  public publish(event: MessageEvent): void {
-    this.#consumer.consume(event);
+  public async publish(event: MessageEvent): Promise<void> {
+    await this.#consumer.consume(event);
   }
 
-  public conplete(): void {
-    this.#consumer.onComplete();
+  public async conplete(): Promise<void> {
+    await this.#consumer.onComplete();
   }
 }
