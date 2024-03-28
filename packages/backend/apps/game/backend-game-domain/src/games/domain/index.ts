@@ -25,6 +25,7 @@ import { GameService } from './services/GameService';
 import { CurrentPlayerCanPlayCardsSpec } from './specs/CurrentPlayerCanPlayCardsSpec';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
+import { GameEventsCanBeObservedSpec } from './specs/GameEventsCanBeObservedSpec';
 import { IsGameFinishedSpec } from './specs/IsGameFinishedSpec';
 import { IsValidGameCreateQuerySpec } from './specs/IsValidGameCreateQuerySpec';
 import { PlayerCanDrawCardsSpec } from './specs/PlayerCanDrawCardsSpec';
@@ -77,6 +78,7 @@ export {
   GameDirection,
   GameDrawCardsUpdateQueryFromGameBuilder,
   GameDrawService,
+  GameEventsCanBeObservedSpec,
   GamePassTurnUpdateQueryFromGameBuilder,
   GamePlayCardsUpdateQueryFromGameBuilder,
   GameService,
