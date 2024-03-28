@@ -13,6 +13,8 @@ import {
   DialogActions,
   DialogTitle,
   DialogContent,
+  Alert,
+  AlertTitle,
 } from '@mui/material';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import {
@@ -87,13 +89,13 @@ export const CreateNewGame = (): React.JSX.Element => {
       status === CreateNewGameStatus.pendingValidation
     );
   };
-  /*
+
   if (
     status === CreateNewGameStatus.pendingValidation ||
     status === CreateNewGameStatus.pendingBackend
   ) {
     return <CheckingAuth />;
-  }*/
+  }
 
   return (
     <CornieLayout id="create-new-game-page" withFooter withNavBar>
@@ -153,6 +155,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="chainDraw2Draw2Cards"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={
@@ -168,6 +171,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="chainDraw2Draw4Cards"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={
@@ -183,6 +187,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="chainDraw4Draw4Cards"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={
@@ -198,6 +203,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="chainDraw4Draw2Cards"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={
@@ -213,6 +219,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="playCardIsMandatory"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={formFields.options.playCardIsMandatory}
@@ -226,6 +233,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="playMultipleSameCards"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={
@@ -241,6 +249,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                           <FormControlLabel
                             value="playWildDraw4IfNoOtherAlternative"
                             className="new-game-option-formcontrol"
+                            disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
                                 checked={
@@ -273,11 +282,38 @@ export const CreateNewGame = (): React.JSX.Element => {
                 </Box>
               </Grid>
             </Grid>
+
+            <Grid container display={backendError !== null ? '' : 'none'}>
+              <Grid item xs={12}>
+                <Box className="form-new-game-error">
+                  <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    {backendError}
+                  </Alert>
+                </Box>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              display={status === CreateNewGameStatus.backendOK ? '' : 'none'}
+            >
+              <Grid item xs={12}>
+                <Box className="form-new-game-success">
+                  <Alert severity="success">
+                    <AlertTitle>Success</AlertTitle>
+                    {`New game created!`}
+                  </Alert>
+                </Box>
+              </Grid>
+            </Grid>
+
             <Grid container>
               <Grid item xs={12}>
                 <Box className="new-game-form-button">
                   <Button
                     fullWidth
+                    disabled={isTextFieldDisabled()}
                     type="button"
                     variant="contained"
                     startIcon={<VideogameAssetOutlined />}

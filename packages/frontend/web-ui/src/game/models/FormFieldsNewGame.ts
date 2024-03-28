@@ -1,7 +1,7 @@
 import { GameOptions } from './GameOptions';
 
 export interface FormFieldsNewGame {
-  name: string | null;
+  name: string;
   players: number;
   options: GameOptions;
 }
