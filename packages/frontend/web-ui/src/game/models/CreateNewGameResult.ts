@@ -3,13 +3,16 @@ import { FormFieldsNewGame } from './FormFieldsNewGame';
 import { FormValidationNewGameResult } from './FormValidationNewGameResult';
 import { GameOptions } from './GameOptions';
 
+export interface setFormFieldsParams {
+  name: string;
+  value: string | number | GameOptions;
+}
+
 export interface CreateNewGameResult {
   formFields: FormFieldsNewGame;
-  gameOptions: GameOptions;
   status: CreateNewGameStatus;
-  setNewGameOptions: (event: React.ChangeEvent<HTMLInputElement>) => void;
   notifyFormFieldsFilled: () => void;
   formValidation: FormValidationNewGameResult;
   backendError: string | null;
-  setFormField: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setFormField: (params: setFormFieldsParams) => void;
 }

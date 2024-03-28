@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
 import { Either } from '../../common/models/Either';
-import { GameOptions } from '../models/GameOptions';
-import { CreateNewGameResult } from '../models/CreateNewGameResult';
+import {
+  setFormFieldsParams,
+  CreateNewGameResult,
+} from '../models/CreateNewGameResult';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { FormValidationNewGameResult } from '../models/FormValidationNewGameResult';
 import { validateNumberOfPlayers } from '../../common/helpers/validateNumberOfPlayers';
-import { setFormFieldValue } from '../helpers/setFormFieldValue';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
     name: '',
     players: 2,
-  });
-  const [gameOptions, setGameOptions] = useState<GameOptions>({
-    chainDraw2Draw2Cards: false,
-    chainDraw2Draw4Cards: false,
-    chainDraw4Draw4Cards: false,
-    chainDraw4Draw2Cards: false,
-    playCardIsMandatory: false,
-    playMultipleSameCards: false,
-    playWildDraw4IfNoOtherAlternative: true,
+    options: {
+      chainDraw2Draw2Cards: false,
+      chainDraw2Draw4Cards: false,
+      chainDraw4Draw4Cards: false,
+      chainDraw4Draw2Cards: false,
+      playCardIsMandatory: false,
+      playMultipleSameCards: false,
+      playWildDraw4IfNoOtherAlternative: true,
+    },
   });
   const [status, setStatus] = useState<CreateNewGameStatus>(
     CreateNewGameStatus.initial,
@@ -29,7 +30,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     useState<FormValidationNewGameResult>({});
   const [backendError, setBackendError] = useState<string | null>(null);
 
-  const setFormField = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const setFormField = (params: setFormFieldsParams): void => {
     if (
       status !== CreateNewGameStatus.initial &&
       status !== CreateNewGameStatus.validationKO
@@ -37,30 +38,9 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       throw new Error('Unexpected form state at setFormField');
     }
 
-    const value: string | number = setFormFieldValue(
-      event.target.name,
-      event.target.value,
-    );
-
     setFormFields({
       ...formFields,
-      [event.target.name]: value,
-    });
-  };
-
-  const setNewGameOptions = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    if (
-      status !== CreateNewGameStatus.initial &&
-      status !== CreateNewGameStatus.validationKO
-    ) {
-      throw new Error('Unexpected form state at setNewGameOptions');
-    }
-
-    setGameOptions({
-      ...gameOptions,
-      [event.target.name]: event.target.checked,
+      [params.name]: params.value,
     });
   };
 
@@ -90,7 +70,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     const formValidationValue: FormValidationNewGameResult = {};
 
     const numberOfPlayersValidation: Either<string, undefined> =
-      validateNumberOfPlayers(formFields.players);
+      validateNumberOfPlayers(formFields.players as number);
 
     if (!numberOfPlayersValidation.isRight) {
       formValidationValue.numberOfPlayers = numberOfPlayersValidation.value;
@@ -107,9 +87,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
 
   return {
     formFields,
-    gameOptions,
     status,
-    setNewGameOptions,
     notifyFormFieldsFilled,
     formValidation,
     backendError,
