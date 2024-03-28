@@ -1,4 +1,4 @@
-import { Publisher } from '@cornie-js/backend-common';
+import { PublisherAsync } from '@cornie-js/backend-common';
 import { SseTeardownExecutor } from '@cornie-js/backend-http';
 
 import { GameMessageEvent } from '../../models/GameMessageEvent';
@@ -8,11 +8,11 @@ export interface GameEventsSubscriptionOutputPort {
   publishV2(gameId: string, gameMessageEvent: GameMessageEvent): Promise<void>;
   subscribeV1(
     gameId: string,
-    publisher: Publisher<string>,
+    publisher: PublisherAsync<string>,
   ): Promise<SseTeardownExecutor>;
   subscribeV2(
     gameId: string,
-    publisher: Publisher<string>,
+    publisher: PublisherAsync<string>,
   ): Promise<SseTeardownExecutor>;
 }
 

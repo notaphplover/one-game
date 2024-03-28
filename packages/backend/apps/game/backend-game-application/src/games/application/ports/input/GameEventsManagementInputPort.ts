@@ -1,4 +1,4 @@
-import { Builder, Publisher } from '@cornie-js/backend-common';
+import { Builder, PublisherAsync } from '@cornie-js/backend-common';
 import { GameStatus } from '@cornie-js/backend-game-domain/games';
 import {
   MessageEvent,
@@ -60,8 +60,8 @@ export class GameEventsManagementInputPort {
     gameId: string,
     ssePublisher: SsePublisher,
   ): Promise<SseTeardownExecutor> {
-    const publisher: Publisher<string> = {
-      publish: (event: string) => {
+    const publisher: PublisherAsync<string> = {
+      publish: async (event: string): Promise<void> => {
         const gameMessageEvent: GameMessageEvent =
           this.#gameMessageEventFromStringBuilder.build(event);
 
@@ -70,10 +70,10 @@ export class GameEventsManagementInputPort {
             gameMessageEvent,
           );
 
-        ssePublisher.publish(messageEvent);
+        await ssePublisher.publish(messageEvent);
 
         if (gameMessageEvent.game.state.status === GameStatus.finished) {
-          ssePublisher.conplete();
+          await ssePublisher.conplete();
         }
       },
     };
@@ -88,8 +88,8 @@ export class GameEventsManagementInputPort {
     gameId: string,
     ssePublisher: SsePublisher,
   ): Promise<SseTeardownExecutor> {
-    const publisher: Publisher<string> = {
-      publish: (event: string) => {
+    const publisher: PublisherAsync<string> = {
+      publish: async (event: string): Promise<void> => {
         const gameMessageEvent: GameMessageEvent =
           this.#gameMessageEventFromStringBuilder.build(event);
 
@@ -98,10 +98,10 @@ export class GameEventsManagementInputPort {
             gameMessageEvent,
           );
 
-        ssePublisher.publish(messageEvent);
+        await ssePublisher.publish(messageEvent);
 
         if (gameMessageEvent.game.state.status === GameStatus.finished) {
-          ssePublisher.conplete();
+          await ssePublisher.conplete();
         }
       },
     };

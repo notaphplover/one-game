@@ -21,12 +21,12 @@ describe(DelayedSseConsumer.name, () => {
 
       let result: unknown;
 
-      beforeAll(() => {
+      beforeAll(async () => {
         eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
-        result = delayedSseConsumer.consume(eventFixture);
+        result = await delayedSseConsumer.consume(eventFixture);
       });
 
       afterAll(() => {
@@ -48,14 +48,14 @@ describe(DelayedSseConsumer.name, () => {
 
       let result: unknown;
 
-      beforeAll(() => {
+      beforeAll(async () => {
         eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
-        delayedSseConsumer.free();
+        await delayedSseConsumer.free();
 
-        result = delayedSseConsumer.consume(eventFixture);
+        result = await delayedSseConsumer.consume(eventFixture);
       });
 
       afterAll(() => {
@@ -80,15 +80,15 @@ describe(DelayedSseConsumer.name, () => {
 
       let result: unknown;
 
-      beforeAll(() => {
+      beforeAll(async () => {
         eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
-        delayedSseConsumer.consume(eventFixture);
-        delayedSseConsumer.onComplete();
+        await delayedSseConsumer.consume(eventFixture);
+        await delayedSseConsumer.onComplete();
 
-        delayedSseConsumer.free();
+        await delayedSseConsumer.free();
       });
 
       afterAll(() => {
@@ -145,14 +145,14 @@ describe(DelayedSseConsumer.name, () => {
 
       let result: unknown;
 
-      beforeAll(() => {
+      beforeAll(async () => {
         eventFixture = { data: 'event-fixture-data' };
 
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
         delayedSseConsumer.setPreviousEvents([eventFixture]);
 
-        delayedSseConsumer.free();
+        await delayedSseConsumer.free();
       });
 
       afterAll(() => {
@@ -176,10 +176,10 @@ describe(DelayedSseConsumer.name, () => {
 
       let result: unknown;
 
-      beforeAll(() => {
+      beforeAll(async () => {
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
-        result = delayedSseConsumer.onComplete();
+        result = await delayedSseConsumer.onComplete();
       });
 
       afterAll(() => {
@@ -200,12 +200,12 @@ describe(DelayedSseConsumer.name, () => {
 
       let result: unknown;
 
-      beforeAll(() => {
+      beforeAll(async () => {
         delayedSseConsumer = new DelayedSseConsumer(sseConsumerMock);
 
-        delayedSseConsumer.free();
+        await delayedSseConsumer.free();
 
-        result = delayedSseConsumer.onComplete();
+        result = await delayedSseConsumer.onComplete();
       });
 
       afterAll(() => {

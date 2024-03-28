@@ -1,4 +1,4 @@
-import { Builder, Publisher } from '@cornie-js/backend-common';
+import { Builder, PublisherAsync } from '@cornie-js/backend-common';
 import {
   GameEventsChannelFromGameIdBuilder,
   GameEventsSubscriptionOutputPort,
@@ -54,14 +54,14 @@ export class GameEventsSubscriptionIoredisOutputAdapter
 
   public async subscribeV1(
     gameId: string,
-    publisher: Publisher<string>,
+    publisher: PublisherAsync<string>,
   ): Promise<SseTeardownExecutor> {
     return this.#subscribe(gameId, publisher, V1);
   }
 
   public async subscribeV2(
     gameId: string,
-    publisher: Publisher<string>,
+    publisher: PublisherAsync<string>,
   ): Promise<SseTeardownExecutor> {
     return this.#subscribe(gameId, publisher, V2);
   }
@@ -84,7 +84,7 @@ export class GameEventsSubscriptionIoredisOutputAdapter
 
   async #subscribe(
     gameId: string,
-    publisher: Publisher<string>,
+    publisher: PublisherAsync<string>,
     version: number,
   ): Promise<SseTeardownExecutor> {
     const channel: string = this.#gameEventsChannelFromGameIdBuilder.build(

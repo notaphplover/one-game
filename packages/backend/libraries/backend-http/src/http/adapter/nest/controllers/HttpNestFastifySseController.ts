@@ -82,16 +82,16 @@ export class HttpNestFastifySseController<
         SseTeardownExecutor,
       ] = result.value;
 
-      this.#handleRequestOnClose(fastifyRequest, () => {
+      await this.#handleRequestOnClose(fastifyRequest, async () => {
         sseTeardownExecutor.teardown();
-        delayedSseConsumer.onComplete();
+        await delayedSseConsumer.onComplete();
       });
 
       delayedSseConsumer.setPreviousEvents(messageEvents);
 
       void this.#sseResultBuilder.build(response, fastifyReply);
 
-      delayedSseConsumer.free();
+      await delayedSseConsumer.free();
     } else {
       const response: Response = result.value;
 
@@ -105,14 +105,14 @@ export class HttpNestFastifySseController<
     fastifyRequest.socket.setTimeout(0);
   }
 
-  #handleRequestOnClose(
+  async #handleRequestOnClose(
     fastifyRequest: FastifyRequest,
-    callback: () => void,
-  ): void {
+    callback: () => Promise<void>,
+  ): Promise<void> {
     if (fastifyRequest.raw.closed) {
-      callback();
+      await callback();
     } else {
-      fastifyRequest.raw.on('close', callback);
+      fastifyRequest.raw.on('close', () => void callback());
     }
   }
 }

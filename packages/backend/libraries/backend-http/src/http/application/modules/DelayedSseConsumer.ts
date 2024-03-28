@@ -47,25 +47,25 @@ export class DelayedSseConsumer implements SseConsumer {
     };
   }
 
-  public consume(event: MessageEvent): void {
+  public async consume(event: MessageEvent): Promise<void> {
     if (this.#isDelayed(this.#state)) {
       this.#appendEvent(event, this.#state.store);
     } else {
-      this.#innerConsumer.consume(event);
+      await this.#innerConsumer.consume(event);
     }
   }
 
-  public free(): void {
-    this.#consumeEventsBuffer();
+  public async free(): Promise<void> {
+    await this.#consumeEventsBuffer();
     this.#setActiveState();
-    this.#freePendingOnComplete();
+    await this.#freePendingOnComplete();
   }
 
-  public onComplete(): void {
+  public async onComplete(): Promise<void> {
     if (this.#isDelayed(this.#state)) {
       this.#pendingOnComplete = true;
     } else {
-      this.#innerConsumer.onComplete();
+      await this.#innerConsumer.onComplete();
     }
   }
 
@@ -112,21 +112,21 @@ export class DelayedSseConsumer implements SseConsumer {
     }
   }
 
-  #consumeEventsBuffer(): void {
+  async #consumeEventsBuffer(): Promise<void> {
     if (this.#isDelayed(this.#state)) {
       for (const event of this.#state.store.previousEventsBuffer) {
-        this.#innerConsumer.consume(event);
+        await this.#innerConsumer.consume(event);
       }
 
       for (const event of this.#state.store.eventsBuffer) {
-        this.#innerConsumer.consume(event);
+        await this.#innerConsumer.consume(event);
       }
     }
   }
 
-  #freePendingOnComplete(): void {
+  async #freePendingOnComplete(): Promise<void> {
     if (this.#pendingOnComplete) {
-      this.onComplete();
+      await this.onComplete();
       this.#pendingOnComplete = false;
     }
   }
