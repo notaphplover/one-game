@@ -6,12 +6,7 @@ import {
 } from '@cornie-js/backend-user-domain/tokens';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  ObjectLiteral,
-  QueryBuilder,
-  Repository,
-  WhereExpressionBuilder,
-} from 'typeorm';
+import { QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm';
 
 import { RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder } from '../builders/RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder';
 import { RefreshTokenFromRefreshTokenDbBuilder } from '../builders/RefreshTokenFromRefreshTokenDbBuilder';
