@@ -1,4 +1,8 @@
-import { AppError, AppErrorKind, Publisher } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  PublisherAsync,
+} from '@cornie-js/backend-common';
 import { IoredisSubscriber } from '@cornie-js/backend-pub-sub';
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
@@ -10,9 +14,9 @@ const GAME_EVENT_CHANNEL_REGEX: RegExp =
 
 @Injectable()
 export class GameEventsIoredisSubscriber extends IoredisSubscriber<
-  Publisher<string>
+  PublisherAsync<string>
 > {
-  readonly #gameIdToSseStreamsMap: Map<string, Publisher<string>[]>;
+  readonly #gameIdToSseStreamsMap: Map<string, PublisherAsync<string>[]>;
 
   constructor(
     @Inject(ioredisClientSubscriberSymbol)
@@ -25,7 +29,7 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<
 
   public override async subscribe(
     channel: string,
-    publisher: Publisher<string>,
+    publisher: PublisherAsync<string>,
   ): Promise<void> {
     const gameId: string = this.#getGameId(channel);
     this.#setGameStream(gameId, publisher);
@@ -35,18 +39,19 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<
 
   public async unsetGamePublisher(
     channel: string,
-    gamePublisher: Publisher<string>,
+    gamePublisher: PublisherAsync<string>,
   ): Promise<void> {
     const gameId: string = this.#getGameId(channel);
-    const gamePublishers: Publisher<string>[] | undefined =
+    const gamePublishers: PublisherAsync<string>[] | undefined =
       this.#gameIdToSseStreamsMap.get(gameId);
 
     if (gamePublishers === undefined) {
       return;
     }
 
-    const otherGamePublishers: Publisher<string>[] = gamePublishers.filter(
-      (gameStream: Publisher<string>): boolean => gameStream !== gamePublisher,
+    const otherGamePublishers: PublisherAsync<string>[] = gamePublishers.filter(
+      (gameStream: PublisherAsync<string>): boolean =>
+        gameStream !== gamePublisher,
     );
 
     if (otherGamePublishers.length === 0) {
@@ -69,20 +74,22 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<
   ): void {
     const gameId: string = this.#getGameId(channel);
 
-    this.#broadcastGameEvent(gameId, message);
+    void this.#broadcastGameEvent(gameId, message);
   }
 
-  #broadcastGameEvent(gameId: string, event: string): void {
-    const gamePublishers: Publisher<string>[] | undefined =
+  async #broadcastGameEvent(gameId: string, event: string): Promise<void> {
+    const gamePublishers: PublisherAsync<string>[] | undefined =
       this.#gameIdToSseStreamsMap.get(gameId);
 
     if (gamePublishers === undefined) {
       return;
     }
 
-    for (const gamePublisher of gamePublishers) {
-      gamePublisher.publish(event);
-    }
+    await Promise.all(
+      gamePublishers.map(async (gamePublisher: PublisherAsync<string>) =>
+        gamePublisher.publish(event),
+      ),
+    );
   }
 
   #getGameId(channel: string): string {
@@ -107,8 +114,8 @@ export class GameEventsIoredisSubscriber extends IoredisSubscriber<
     return match[1];
   }
 
-  #setGameStream(gameId: string, gamePublisher: Publisher<string>): void {
-    let gamePublishers: Publisher<string>[] | undefined =
+  #setGameStream(gameId: string, gamePublisher: PublisherAsync<string>): void {
+    let gamePublishers: PublisherAsync<string>[] | undefined =
       this.#gameIdToSseStreamsMap.get(gameId);
 
     if (gamePublishers === undefined) {

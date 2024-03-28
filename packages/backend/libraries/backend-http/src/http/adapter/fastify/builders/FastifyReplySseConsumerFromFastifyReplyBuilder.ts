@@ -26,16 +26,42 @@ export class FastifyReplySseConsumerFromFastifyReplyBuilder
 
   public build(fastifyReply: FastifyReply): DelayedSseConsumer {
     const sseConsumer: SseConsumer = {
-      consume: (event: MessageEvent) => {
-        fastifyReply.raw.write(
+      consume: async (event: MessageEvent) => {
+        await this.#promisifiedWrite(
+          fastifyReply,
           this.#stringifiedSseFromMessageEventBuilder.build(event),
         );
       },
-      onComplete: () => {
-        fastifyReply.raw.end();
+      onComplete: async () => {
+        await this.#promisifiedEnd(fastifyReply);
       },
     };
 
     return new DelayedSseConsumer(sseConsumer);
+  }
+
+  async #promisifiedEnd(fastifyReply: FastifyReply): Promise<void> {
+    return new Promise<void>((resolve: () => void) => {
+      fastifyReply.raw.end(() => {
+        resolve();
+      });
+    });
+  }
+
+  async #promisifiedWrite(
+    fastifyReply: FastifyReply,
+    chunk: string,
+  ): Promise<void> {
+    return new Promise<void>(
+      (resolve: () => void, reject: (reason: unknown) => void) => {
+        fastifyReply.raw.write(chunk, (error: Error | null | undefined) => {
+          if (error == null) {
+            resolve();
+          } else {
+            reject(error);
+          }
+        });
+      },
+    );
   }
 }

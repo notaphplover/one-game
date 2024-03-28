@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { Builder, Publisher } from '@cornie-js/backend-common';
+import { Builder, PublisherAsync } from '@cornie-js/backend-common';
 import { GameMessageEvent } from '@cornie-js/backend-game-application/games';
 import { SseTeardownExecutor } from '@cornie-js/backend-http';
 import { IoredisPublisher } from '@cornie-js/backend-pub-sub';
@@ -130,12 +130,12 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
   describe('.subscribeV1', () => {
     let gameIdFixture: string;
     let channelFixture: string;
-    let publisherFixture: Publisher<string>;
+    let publisherFixture: PublisherAsync<string>;
 
     beforeAll(() => {
       gameIdFixture = 'game id';
       channelFixture = 'channel fixture';
-      publisherFixture = Symbol() as unknown as Publisher<string>;
+      publisherFixture = Symbol() as unknown as PublisherAsync<string>;
     });
 
     describe('when called', () => {
@@ -191,12 +191,12 @@ describe(GameEventsSubscriptionIoredisOutputAdapter.name, () => {
   describe('.subscribeV2', () => {
     let gameIdFixture: string;
     let channelFixture: string;
-    let publisherFixture: Publisher<string>;
+    let publisherFixture: PublisherAsync<string>;
 
     beforeAll(() => {
       gameIdFixture = 'game id';
       channelFixture = 'channel fixture';
-      publisherFixture = Symbol() as unknown as Publisher<string>;
+      publisherFixture = Symbol() as unknown as PublisherAsync<string>;
     });
 
     describe('when called', () => {
