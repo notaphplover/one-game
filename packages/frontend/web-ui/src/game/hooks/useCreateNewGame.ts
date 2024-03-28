@@ -8,11 +8,12 @@ import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { FormValidationNewGameResult } from '../models/FormValidationNewGameResult';
 import { validateNumberOfPlayers } from '../../common/helpers/validateNumberOfPlayers';
+import { NUMBER_PLAYERS_MINIMUM } from '../../common/helpers/numberPlayersLength';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
     name: '',
-    players: 2,
+    players: NUMBER_PLAYERS_MINIMUM,
     options: {
       chainDraw2Draw2Cards: false,
       chainDraw2Draw4Cards: false,
@@ -70,7 +71,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     const formValidationValue: FormValidationNewGameResult = {};
 
     const numberOfPlayersValidation: Either<string, undefined> =
-      validateNumberOfPlayers(formFields.players as number);
+      validateNumberOfPlayers(formFields.players);
 
     if (!numberOfPlayersValidation.isRight) {
       formValidationValue.numberOfPlayers = numberOfPlayersValidation.value;
