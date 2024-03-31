@@ -14,6 +14,7 @@ import { CardCanBePlayedSpec } from '../../domain/specs/CardCanBePlayedSpec';
 import { CurrentPlayerCanPlayCardsSpec } from '../../domain/specs/CurrentPlayerCanPlayCardsSpec';
 import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
+import { GameEventsCanBeObservedSpec } from '../../domain/specs/GameEventsCanBeObservedSpec';
 import { IsGameFinishedSpec } from '../../domain/specs/IsGameFinishedSpec';
 import { IsValidGameCreateQuerySpec } from '../../domain/specs/IsValidGameCreateQuerySpec';
 import { PlayerCanDrawCardsSpec } from '../../domain/specs/PlayerCanDrawCardsSpec';
@@ -30,6 +31,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameCardsEffectUpdateQueryFromGameBuilder,
     GameDrawCardsUpdateQueryFromGameBuilder,
     GameDrawService,
+    GameEventsCanBeObservedSpec,
     GameService,
     GamePassTurnUpdateQueryFromGameBuilder,
     GamePlayCardsUpdateQueryFromGameBuilder,
@@ -50,6 +52,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     GameCardsEffectUpdateQueryFromGameBuilder,
     GameDrawCardsUpdateQueryFromGameBuilder,
     GameDrawService,
+    GameEventsCanBeObservedSpec,
     GamePassTurnUpdateQueryFromGameBuilder,
     GamePlayCardsUpdateQueryFromGameBuilder,
     GameService,

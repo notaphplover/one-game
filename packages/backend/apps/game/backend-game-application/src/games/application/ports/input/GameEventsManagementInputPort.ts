@@ -1,5 +1,14 @@
-import { Builder, PublisherAsync } from '@cornie-js/backend-common';
-import { GameStatus } from '@cornie-js/backend-game-domain/games';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  PublisherAsync,
+} from '@cornie-js/backend-common';
+import {
+  Game,
+  GameEventsCanBeObservedSpec,
+  GameStatus,
+} from '@cornie-js/backend-game-domain/games';
 import {
   MessageEvent,
   SsePublisher,
@@ -17,6 +26,7 @@ import {
 
 @Injectable()
 export class GameEventsManagementInputPort {
+  readonly #gameEventsCanBeObservedSpec: GameEventsCanBeObservedSpec;
   readonly #gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort;
   readonly #gameMessageEventFromStringBuilder: Builder<
     GameMessageEvent,
@@ -28,6 +38,8 @@ export class GameEventsManagementInputPort {
   >;
 
   constructor(
+    @Inject(GameEventsCanBeObservedSpec)
+    gameEventsCanBeObservedSpec: GameEventsCanBeObservedSpec,
     @Inject(gameEventsSubscriptionOutputPortSymbol)
     gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort,
     @Inject(GameMessageEventFromStringBuilder)
@@ -38,6 +50,7 @@ export class GameEventsManagementInputPort {
       [GameMessageEvent]
     >,
   ) {
+    this.#gameEventsCanBeObservedSpec = gameEventsCanBeObservedSpec;
     this.#gameEventsSubscriptionOutputPort = gameEventsSubscriptionOutputPort;
     this.#gameMessageEventFromStringBuilder = gameMessageEventFromStringBuilder;
     this.#messageEventFromGameMessageEventV2Builder =
@@ -45,9 +58,11 @@ export class GameEventsManagementInputPort {
   }
 
   public async subscribeV2(
-    gameId: string,
+    game: Game,
     ssePublisher: SsePublisher,
   ): Promise<SseTeardownExecutor> {
+    this.#assertGameEventsCanBeObserved(game);
+
     const publisher: PublisherAsync<string> = {
       publish: async (event: string): Promise<void> => {
         const gameMessageEvent: GameMessageEvent =
@@ -67,8 +82,17 @@ export class GameEventsManagementInputPort {
     };
 
     return this.#gameEventsSubscriptionOutputPort.subscribeV2(
-      gameId,
+      game.id,
       publisher,
     );
+  }
+
+  #assertGameEventsCanBeObserved(game: Game): void {
+    if (!this.#gameEventsCanBeObservedSpec.isSatisfiedBy(game)) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        `Game "${game.id}" events cannot be observed`,
+      );
+    }
   }
 }

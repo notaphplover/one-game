@@ -11,13 +11,13 @@
     "@cornie-js/backend-user-domain": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-db": "workspace:*",
-    "pg": "8.11.3",
-    "reflect-metadata": "0.2.1",
+    "pg": "8.11.4",
+    "reflect-metadata": "0.2.2",
     "typeorm": "0.3.20"
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@types/node": "20.11.30",
+    "@types/node": "20.12.2",
     "@typescript-eslint/eslint-plugin": "7.4.0",
     "@typescript-eslint/parser": "7.4.0",
     "eslint": "8.57.0",

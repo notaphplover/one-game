@@ -18,12 +18,12 @@
     "@nestjs/typeorm": "10.0.2",
     "axios": "1.6.8",
     "envalid": "8.0.0",
-    "reflect-metadata": "0.2.1",
+    "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1"
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",
-    "@types/node": "20.11.30",
+    "@types/node": "20.12.2",
     "@typescript-eslint/eslint-plugin": "7.4.0",
     "@typescript-eslint/parser": "7.4.0",
     "eslint": "8.57.0",

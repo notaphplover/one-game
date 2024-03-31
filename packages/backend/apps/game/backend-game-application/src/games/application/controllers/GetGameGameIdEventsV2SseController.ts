@@ -87,7 +87,7 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
         statusCode: HttpStatus.OK,
       },
       previousMessageEvents,
-      await this.#gameEventsManagementInputPort.subscribeV2(game.id, publisher),
+      await this.#gameEventsManagementInputPort.subscribeV2(game, publisher),
     ];
   }
 
