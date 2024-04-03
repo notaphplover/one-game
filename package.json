@@ -13,6 +13,7 @@
     "@cornie-js/backend-scripts": "workspace:*",
     "@cornie-js/backend-stryker-config": "workspace:*",
     "@cornie-js/backend-typescript-config": "workspace:*",
+    "@cornie-js/frontend-prettier-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
