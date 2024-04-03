@@ -4,24 +4,32 @@ import {
   setFormFieldsParams,
   CreateNewGameResult,
 } from '../models/CreateNewGameResult';
+import { selectAuthToken } from '../../app/store/features/authSlice';
+import { useAppSelector } from '../../app/store/hooks';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { FormValidationNewGameResult } from '../models/FormValidationNewGameResult';
+import { httpClient } from '../../common/http/services/HttpService';
+import { getUserMeId } from '../../common/helpers/getUserMeId';
+import { joinGame } from '../../common/helpers/joinGame';
+import { NewGameResponse } from '../../common/http/models/NewGameResponse';
 import { validateNumberOfPlayers } from '../../common/helpers/validateNumberOfPlayers';
 import { NUMBER_PLAYERS_MINIMUM } from '../../common/helpers/numberPlayersLength';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
-import { httpClient } from '../../common/http/services/HttpService';
-import { NewGameResponse } from '../../common/http/models/NewGameResponse';
 import { NewGameSerializedResponse } from '../../common/http/models/NewGameSerializedResponse';
-import { useAppSelector } from '../../app/store/hooks';
-import { selectAuthToken } from '../../app/store/features/authSlice';
-
-const UNAUTHORIZED_ERROR_MESSAGE: string = 'Unauthorized error.';
-const HTTP_BAD_REQUEST_ERROR_MESSAGE: string =
-  'Unexpected error occurred while processing the request.';
-const FORBIDDEN_ERROR_MESSAGE: string = `Forbidden error.`;
+import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
+import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
+import {
+  FORBIDDEN_ERROR_MESSAGE,
+  HTTP_BAD_REQUEST_ERROR_MESSAGE,
+  INVALID_CREDENTIALS_ERROR_MESSAGE,
+  UNAUTHORIZED_ERROR_MESSAGE,
+  UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
+} from '../../common/helpers/errorMessage';
+import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
+  const token: string | null = useAppSelector(selectAuthToken);
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
     name: '',
     players: NUMBER_PLAYERS_MINIMUM,
@@ -41,7 +49,11 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [formValidation, setFormValidation] =
     useState<FormValidationNewGameResult>({});
   const [backendError, setBackendError] = useState<string | null>(null);
-  const token: string | null = useAppSelector(selectAuthToken);
+
+  const [gameId, setGameId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [backendErrorUser, setBackendErrorUser] = useState<string | null>(null);
+  const [backendErrorGame, setBackendErrorGame] = useState<string | null>(null);
 
   const setFormField = (params: setFormFieldsParams): void => {
     if (
@@ -66,9 +78,13 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     switch (status) {
       case CreateNewGameStatus.pendingValidation:
         validateForm();
+        setUserMe(token);
         break;
       case CreateNewGameStatus.pendingBackend:
         createGame(formFields);
+        break;
+      case CreateNewGameStatus.backendOK:
+        joinNewGame(token, gameId, userId);
         break;
       default:
     }
@@ -97,9 +113,67 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     }
   };
 
+  const setUserMe = async (token: string | null): Promise<void> => {
+    if (status !== CreateNewGameStatus.pendingValidation) {
+      throw new Error('Unexpected form state at createGame');
+    }
+    const responseUser: UserMeSerializedResponse = await getUserMeId(token);
+
+    switch (responseUser.statusCode) {
+      case 200:
+        setUserId(responseUser.body.id);
+        break;
+      case 401:
+        setBackendErrorUser(UNAUTHORIZED_ERROR_MESSAGE);
+        break;
+      case 403:
+        setBackendErrorUser(INVALID_CREDENTIALS_ERROR_MESSAGE);
+        break;
+      default:
+    }
+  };
+
+  const joinNewGame = async (
+    token: string | null,
+    gameId: string | null,
+    userId: string | null,
+  ): Promise<void> => {
+    if (status !== CreateNewGameStatus.backendOK) {
+      throw new Error('Unexpected form state at createGame');
+    }
+
+    const responseJoinGame: JoinGameSerializedResponse = await joinGame(
+      token,
+      gameId,
+      userId,
+    );
+
+    switch (responseJoinGame.statusCode) {
+      case 200:
+        setUserId(responseJoinGame.body.userId);
+        break;
+      case 400:
+        setBackendErrorGame(HTTP_BAD_REQUEST_ERROR_MESSAGE);
+        break;
+      case 401:
+        setBackendErrorGame(UNAUTHORIZED_ERROR_MESSAGE);
+        break;
+      case 403:
+        setBackendErrorGame(FORBIDDEN_ERROR_MESSAGE);
+        break;
+      case 409:
+        setBackendErrorGame(HTTP_CONFLICT_ERROR_MESSAGE);
+        break;
+      case 422:
+        setBackendErrorGame(UNPROCESSABLE_REQUEST_ERROR_MESSAGE);
+        break;
+      default:
+    }
+  };
+
   const createGame = async (formFields: FormFieldsNewGame): Promise<void> => {
     if (status !== CreateNewGameStatus.pendingBackend) {
-      throw new Error('Unexpected form state at createUser');
+      throw new Error('Unexpected form state at createGame');
     }
 
     const response: NewGameSerializedResponse =
@@ -107,6 +181,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
 
     switch (response.statusCode) {
       case 200:
+        setGameId(response.body.id);
         setStatus(CreateNewGameStatus.backendOK);
         break;
       case 400:

@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -20,6 +21,7 @@ import { CornieLayout } from '../../common/layout/CornieLayout';
 import {
   VideogameAssetOutlined,
   PlaylistAddCheckOutlined,
+  Home,
 } from '@mui/icons-material';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { useDisplayDialog } from '../hooks/useDisplayDialog';
@@ -42,10 +44,17 @@ export const CreateNewGame = (): React.JSX.Element => {
   const { openDialog, setHandleOpenDialog, setHandleCloseDialog } =
     useDisplayDialog();
 
+  const navigate: NavigateFunction = useNavigate();
+
   const onSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
 
     notifyFormFieldsFilled();
+  };
+
+  const onGoHome = (event: React.FormEvent): void => {
+    event.preventDefault();
+    navigate('/', { replace: true });
   };
 
   const onHandleNamePlayers = (
@@ -308,12 +317,33 @@ export const CreateNewGame = (): React.JSX.Element => {
               </Grid>
             </Grid>
 
-            <Grid container>
+            <Grid
+              container
+              display={status === CreateNewGameStatus.backendOK ? '' : 'none'}
+            >
               <Grid item xs={12}>
                 <Box className="new-game-form-button">
                   <Button
                     fullWidth
-                    disabled={isTextFieldDisabled()}
+                    type="button"
+                    variant="contained"
+                    startIcon={<Home />}
+                    onClick={onGoHome}
+                  >
+                    CORNIE HOME
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              display={status === CreateNewGameStatus.backendOK ? 'none' : ''}
+            >
+              <Grid item xs={12}>
+                <Box className="new-game-form-button">
+                  <Button
+                    fullWidth
                     type="button"
                     variant="contained"
                     startIcon={<VideogameAssetOutlined />}
