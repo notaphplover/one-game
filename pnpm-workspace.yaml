@@ -6,4 +6,6 @@ packages:
   - "packages/backend/services/*"
   - "packages/backend/tools/*"
   - "packages/frontend/*"
+  - "packages/frontend/libraries/*"
+  - "packages/frontend/tools/*"
   - "packages/tools/*"
