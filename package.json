@@ -16,6 +16,7 @@
     "@cornie-js/frontend-prettier-config": "workspace:*",
     "@cornie-js/frontend-typescript-config": "workspace:*",
     "@cornie-js/eslint-config-backend": "workspace:*",
+    "@cornie-js/eslint-config-frontend": "workspace:*",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "turbo": "1.13.2"
