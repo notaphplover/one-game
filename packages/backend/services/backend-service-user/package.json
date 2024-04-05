@@ -21,7 +21,7 @@
     "@cornie-js/backend-user-application": "workspace:*",
     "fastify": "4.26.2",
     "glob": "10.3.12",
-    "reflect-metadata": "0.2.1",
+    "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
     "typeorm": "0.3.20"
   },
@@ -29,9 +29,9 @@
     "@cornie-js/process-manager": "workspace:*",
     "@jest/globals": "29.7.0",
     "@types/glob": "8.1.0",
-    "@types/node": "20.11.30",
-    "@typescript-eslint/eslint-plugin": "7.4.0",
-    "@typescript-eslint/parser": "7.4.0",
+    "@types/node": "20.12.4",
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
     "dotenv-cli": "7.4.1",
     "eslint": "8.57.0",
     "eslint-import-resolver-typescript": "3.6.1",
@@ -43,7 +43,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "engines": {
     "node": "^20.0.0",

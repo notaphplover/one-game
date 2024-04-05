@@ -18,14 +18,14 @@
     "@nestjs/typeorm": "10.0.2",
     "axios": "1.6.8",
     "envalid": "8.0.0",
-    "reflect-metadata": "0.2.1",
+    "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1"
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",
-    "@types/node": "20.11.30",
-    "@typescript-eslint/eslint-plugin": "7.4.0",
-    "@typescript-eslint/parser": "7.4.0",
+    "@types/node": "20.12.4",
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
     "eslint": "8.57.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
@@ -34,7 +34,7 @@
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
     "ts-node": "10.9.2",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
