@@ -12,7 +12,7 @@ function getJestJsProjectConfig(
   testPathIgnorePatterns,
   extension,
 ) {
-  const testMatch = [getTestMatch(extension, false)];
+  const testMatch = getTestMatch(extension, false);
 
   return getJestProjectConfig(projectName, testMatch, testPathIgnorePatterns);
 }
