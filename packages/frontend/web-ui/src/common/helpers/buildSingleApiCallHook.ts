@@ -1,25 +1,20 @@
 import { HttpClient } from '@cornie-js/api-http-client';
 import { useEffect, useState } from 'react';
-import { Either, Left, Right } from '../models/Either';
+import { Either } from '../models/Either';
 import { httpClient } from '../http/services/HttpService';
+import { HttpApiParams } from '../http/models/HttpApiParams';
+import { HttpApiResult } from '../http/models/HttpApiResult';
 
 export enum ApiHookStatus {
   idle,
   pending,
 }
 
-export type HttpApiResult<TEndpoint extends keyof HttpClient> = Awaited<
-  ReturnType<HttpClient[TEndpoint]>
->;
-
-export type HttpApiParams<TEndpoint extends keyof HttpClient> = Parameters<
-  HttpClient[TEndpoint]
->;
-
 export interface BuildSingleApiCallHookParams<
   TContext,
   TParams,
   TEndpoint extends keyof HttpClient,
+  TResult,
 > {
   buildContext(): TContext;
   buildErrorMessage(err: unknown): string;
@@ -27,6 +22,7 @@ export interface BuildSingleApiCallHookParams<
     context: TContext,
     params: TParams,
   ): HttpApiParams<TEndpoint>;
+  buildResult(httpResponse: HttpApiResult<TEndpoint>): Either<string, TResult>;
   endpoint: TEndpoint;
 }
 
@@ -39,15 +35,18 @@ export function buildSingleApiCallHook<
   TContext,
   TParams,
   TEndpoint extends keyof HttpClient,
+  TResult,
 >(
-  buildParams: BuildSingleApiCallHookParams<TContext, TParams, TEndpoint>,
-): SingleApiCallHookResult<TParams, HttpApiResult<TEndpoint>> {
+  buildParams: BuildSingleApiCallHookParams<
+    TContext,
+    TParams,
+    TEndpoint,
+    TResult
+  >,
+): SingleApiCallHookResult<TParams, TResult> {
   const context: TContext = buildParams.buildContext();
 
-  const [result, setResult] = useState<Either<
-    string,
-    HttpApiResult<TEndpoint>
-  > | null>(null);
+  const [result, setResult] = useState<Either<string, TResult> | null>(null);
   const [params, setParams] = useState<TParams | null>(null);
   const [status, setStatus] = useState<ApiHookStatus>(ApiHookStatus.idle);
 
@@ -78,12 +77,9 @@ export function buildSingleApiCallHook<
       switch (status) {
         case ApiHookStatus.pending:
           try {
-            const result: HttpApiResult<TEndpoint> = await handleRequest();
+            const httpResult: HttpApiResult<TEndpoint> = await handleRequest();
 
-            setResult({
-              isRight: true,
-              value: result,
-            });
+            setResult(buildParams.buildResult(httpResult));
           } catch (error: unknown) {
             setResult({
               isRight: false,
