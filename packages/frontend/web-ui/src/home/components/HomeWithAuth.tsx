@@ -9,42 +9,35 @@ import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
 } from '@mui/icons-material';
-import {
-  GameState,
-  UseGetGamesParams,
-  UseGetGamesResult,
-} from '../models/UseGetGamesResult';
+import { GameStatus } from '../../game/models/GameStatus';
+import { UseGetGamesParams } from '../hooks/useGetGames/models/UseGetGamesParams';
 
-export const GAME_STATUS_NON_STARTED: GameState = 'nonStarted';
-const GAME_STATUS_ACTIVE: GameState = 'active';
+export const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
+const GAME_STATUS_ACTIVE: GameStatus = 'active';
 export const PAGE_SIZE: number = 3;
 export const ONE_PAGE: number = 1;
 
+interface GetGamesParams extends UseGetGamesParams {
+  status: string;
+  page: number;
+  pageSize: number;
+}
+
 export const HomeWithAuth = (): React.JSX.Element => {
-  const [paramsNonStarted, setParamsNonStarted] = useState<UseGetGamesParams>({
-    pageNumber: 1,
+  const [paramsNonStarted, setParamsNonStarted] = useState<GetGamesParams>({
+    page: 1,
+    pageSize: PAGE_SIZE,
     status: GAME_STATUS_NON_STARTED,
   });
-  const [paramsActive, setParamsActive] = useState<UseGetGamesParams>({
-    pageNumber: 1,
+  const [paramsActive, setParamsActive] = useState<GetGamesParams>({
+    page: 1,
+    pageSize: PAGE_SIZE,
     status: GAME_STATUS_ACTIVE,
   });
 
-  const { call: callNonStarted, result: resultNonStarted }: UseGetGamesResult =
-    useGetGames(PAGE_SIZE);
+  const { call: callNonStarted, result: resultNonStarted } = useGetGames();
 
-  const { call: callActive, result: resultActive }: UseGetGamesResult =
-    useGetGames(PAGE_SIZE);
-
-  let newParamsNonStarted: UseGetGamesParams = {
-    pageNumber: 1,
-    status: GAME_STATUS_NON_STARTED,
-  };
-
-  let newParamsActive: UseGetGamesParams = {
-    pageNumber: 1,
-    status: GAME_STATUS_ACTIVE,
-  };
+  const { call: callActive, result: resultActive } = useGetGames();
 
   useEffect(() => {
     callNonStarted(paramsNonStarted);
@@ -61,9 +54,10 @@ export const HomeWithAuth = (): React.JSX.Element => {
       resultNonStarted?.isRight === true &&
       resultNonStarted.value.length > 0
     ) {
-      const nextPage: number = paramsNonStarted.pageNumber + ONE_PAGE;
-      newParamsNonStarted.pageNumber = nextPage;
-      setParamsNonStarted(newParamsNonStarted);
+      setParamsNonStarted({
+        ...paramsNonStarted,
+        page: paramsNonStarted.page + ONE_PAGE,
+      });
     }
   };
 
@@ -71,10 +65,12 @@ export const HomeWithAuth = (): React.JSX.Element => {
     event.preventDefault();
 
     if (resultNonStarted?.isRight === true) {
-      const prevPage: number = paramsNonStarted.pageNumber - ONE_PAGE;
-      if (prevPage >= ONE_PAGE) {
-        newParamsNonStarted.pageNumber = prevPage;
-        setParamsNonStarted(newParamsNonStarted);
+      const previousPage: number = paramsNonStarted.page - ONE_PAGE;
+      if (previousPage >= ONE_PAGE) {
+        setParamsNonStarted({
+          ...paramsNonStarted,
+          page: previousPage,
+        });
       }
     }
   };
@@ -83,9 +79,10 @@ export const HomeWithAuth = (): React.JSX.Element => {
     event.preventDefault();
 
     if (resultActive?.isRight === true && resultActive.value.length > 0) {
-      const nextPage: number = paramsActive.pageNumber + ONE_PAGE;
-      newParamsActive.pageNumber = nextPage;
-      setParamsActive(newParamsActive);
+      setParamsActive({
+        ...paramsActive,
+        page: paramsActive.page + ONE_PAGE,
+      });
     }
   };
 
@@ -93,10 +90,12 @@ export const HomeWithAuth = (): React.JSX.Element => {
     event.preventDefault();
 
     if (resultActive?.isRight === true) {
-      const prevPage: number = paramsActive.pageNumber - ONE_PAGE;
-      if (prevPage >= ONE_PAGE) {
-        newParamsActive.pageNumber = prevPage;
-        setParamsActive(newParamsActive);
+      const previousPage: number = paramsActive.page - ONE_PAGE;
+      if (previousPage >= ONE_PAGE) {
+        setParamsActive({
+          ...paramsActive,
+          page: previousPage,
+        });
       }
     }
   };
