@@ -1,0 +1,24 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Backend jest config for backend packages",
+  "devDependencies": {
+    "@jest/types": "29.6.3",
+    "prettier": "3.2.5"
+  },
+  "exports": "./lib/index.js",
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/frontend-jest-config",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {
+    "format": "prettier --write ./lib/**/*.js"
+  },
+  "type": "module"
+}

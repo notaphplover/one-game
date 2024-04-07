@@ -7,6 +7,8 @@
     { "pattern": "./packages/backend/services/*" },
     { "pattern": "./packages/backend/tools/*" },
     { "pattern": "./packages/frontend/*" },
+    { "pattern": "./packages/frontend/libraries/*" },
+    { "pattern": "./packages/frontend/tools/*" },
     { "pattern": "./packages/tools/*" }
   ]
 }

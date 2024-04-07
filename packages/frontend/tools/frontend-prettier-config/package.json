@@ -1,0 +1,22 @@
+{
+  "author": "Multiple authors",
+  "name": "@cornie-js/frontend-prettier-config",
+  "description": "common prettier config for frontendpackages",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    }
+  },
+  "type": "module",
+  "license": "See license in \"LICENSE\" file",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  }
+}
