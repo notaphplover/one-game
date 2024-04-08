@@ -38,6 +38,7 @@
     "build": "turbo run build",
     "build:api:rest": "turbo run build --filter=backend-service-user --filter=backend-service-game",
     "build:api:graphql": "pnpm run build:api:rest --filter=backend-service-gateway",
+    "build:web": "turbo run build --filter=web-ui",
     "close:e2e": "turbo run close:e2e",
     "commit": "commit",
     "docker:build:game": "docker build . -f ./docker/backend/Dockerfile --target backendservicegame --tag one-game-backend-service-game:latest",

@@ -10,7 +10,7 @@ import { useGetGames } from '../hooks/useGetGames';
 import { GameList } from '../../game/components/GameList';
 import { HomeWithAuth } from './HomeWithAuth';
 import { Either } from '../../common/models/Either';
-import { UseGetGamesParams } from '../models/UseGetGamesResult';
+import { UseGetGamesParams } from '../hooks/useGetGames/models/UseGetGamesParams';
 
 describe(HomeWithAuth.name, () => {
   describe('useGetGames', () => {
@@ -163,24 +163,38 @@ describe(HomeWithAuth.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call callNonStarted() twice times', () => {
+      it('should call callNonStarted() twice', () => {
+        const expectedFirstParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
+          status: 'nonStarted',
+        };
+        const expectedSecondParams: UseGetGamesParams = {
+          page: 2,
+          pageSize: 3,
+          status: 'nonStarted',
+        };
+
         expect(callNonStartedMock).toHaveBeenCalledTimes(2);
-        expect(callNonStartedMock).toHaveBeenNthCalledWith(1, {
-          pageNumber: 1,
-          status: 'nonStarted',
-        });
-        expect(callNonStartedMock).toHaveBeenNthCalledWith(2, {
-          pageNumber: 2,
-          status: 'nonStarted',
-        });
+        expect(callNonStartedMock).toHaveBeenNthCalledWith(
+          1,
+          expectedFirstParams,
+        );
+        expect(callNonStartedMock).toHaveBeenNthCalledWith(
+          2,
+          expectedSecondParams,
+        );
       });
 
-      it('should call callActive() once time', () => {
-        expect(callActiveMock).toHaveBeenCalledTimes(1);
-        expect(callActiveMock).toHaveBeenCalledWith({
-          pageNumber: 1,
+      it('should call callActive() once', () => {
+        const expectedParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
           status: 'active',
-        });
+        };
+
+        expect(callActiveMock).toHaveBeenCalledTimes(1);
+        expect(callActiveMock).toHaveBeenCalledWith(expectedParams);
       });
     });
 
@@ -271,20 +285,26 @@ describe(HomeWithAuth.name, () => {
         jest.resetAllMocks();
       });
 
-      it('should call callNonStarted() once time', () => {
-        expect(callNonStartedMock).toHaveBeenCalledTimes(1);
-        expect(callNonStartedMock).toHaveBeenCalledWith({
-          pageNumber: 1,
+      it('should call callNonStarted() once', () => {
+        const expectedParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
           status: 'nonStarted',
-        });
+        };
+
+        expect(callNonStartedMock).toHaveBeenCalledTimes(1);
+        expect(callNonStartedMock).toHaveBeenCalledWith(expectedParams);
       });
 
-      it('should call callActive() once time', () => {
-        expect(callActiveMock).toHaveBeenCalledTimes(1);
-        expect(callActiveMock).toHaveBeenCalledWith({
-          pageNumber: 1,
+      it('should call callActive() once', () => {
+        const expectedParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
           status: 'active',
-        });
+        };
+
+        expect(callActiveMock).toHaveBeenCalledTimes(1);
+        expect(callActiveMock).toHaveBeenCalledWith(expectedParams);
       });
     });
 
@@ -374,24 +394,32 @@ describe(HomeWithAuth.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call callNonStarted() once time', () => {
-        expect(callNonStartedMock).toHaveBeenCalledTimes(1);
-        expect(callNonStartedMock).toHaveBeenCalledWith({
-          pageNumber: 1,
+      it('should call callNonStarted() once', () => {
+        const expectedParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
           status: 'nonStarted',
-        });
+        };
+
+        expect(callNonStartedMock).toHaveBeenCalledTimes(1);
+        expect(callNonStartedMock).toHaveBeenCalledWith(expectedParams);
       });
 
-      it('should call callActive() twice times', () => {
+      it('should call callActive() twice', () => {
+        const expectedFirstParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
+          status: 'active',
+        };
+        const expectedSecondParams: UseGetGamesParams = {
+          page: 2,
+          pageSize: 3,
+          status: 'active',
+        };
+
         expect(callActiveMock).toHaveBeenCalledTimes(2);
-        expect(callActiveMock).toHaveBeenNthCalledWith(1, {
-          pageNumber: 1,
-          status: 'active',
-        });
-        expect(callActiveMock).toHaveBeenNthCalledWith(2, {
-          pageNumber: 2,
-          status: 'active',
-        });
+        expect(callActiveMock).toHaveBeenNthCalledWith(1, expectedFirstParams);
+        expect(callActiveMock).toHaveBeenNthCalledWith(2, expectedSecondParams);
       });
     });
 
@@ -482,20 +510,26 @@ describe(HomeWithAuth.name, () => {
         jest.resetAllMocks();
       });
 
-      it('should call callNonStarted() once time', () => {
-        expect(callNonStartedMock).toHaveBeenCalledTimes(1);
-        expect(callNonStartedMock).toHaveBeenCalledWith({
-          pageNumber: 1,
+      it('should call callNonStarted() once', () => {
+        const expectedParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
           status: 'nonStarted',
-        });
+        };
+
+        expect(callNonStartedMock).toHaveBeenCalledTimes(1);
+        expect(callNonStartedMock).toHaveBeenCalledWith(expectedParams);
       });
 
-      it('should call callActive() once time', () => {
-        expect(callActiveMock).toHaveBeenCalledTimes(1);
-        expect(callActiveMock).toHaveBeenCalledWith({
-          pageNumber: 1,
+      it('should call callActive() once', () => {
+        const expectedParams: UseGetGamesParams = {
+          page: 1,
+          pageSize: 3,
           status: 'active',
-        });
+        };
+
+        expect(callActiveMock).toHaveBeenCalledTimes(1);
+        expect(callActiveMock).toHaveBeenCalledWith(expectedParams);
       });
     });
   });
