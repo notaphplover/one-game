@@ -2,22 +2,17 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { buildResult } from './buildResult';
-import { Response } from '@cornie-js/api-http-client';
 import { HttpApiResult } from '../../../../common/http/models/HttpApiResult';
 import { Left, Right } from '../../../../common/models/Either';
 import { UNEXPECTED_ERROR_MESSAGE } from './unexpectedErrorMesssage';
+import { HttpSpecificResponse } from '../../../../common/http/models/HttpSpecificResponse';
 
-type SpecificResponse<TResponse, TStatusCode extends number> =
-  TResponse extends Response<infer THeaders, infer TBody, TStatusCode>
-    ? Response<THeaders, TBody, TStatusCode>
-    : never;
-
-type GetGamesMineBadRequestResponse = SpecificResponse<
+type GetGamesMineBadRequestResponse = HttpSpecificResponse<
   HttpApiResult<'getGamesMine'>,
   400
 >;
 
-type GetGamesMineOkResponse = SpecificResponse<
+type GetGamesMineOkResponse = HttpSpecificResponse<
   HttpApiResult<'getGamesMine'>,
   200
 >;
