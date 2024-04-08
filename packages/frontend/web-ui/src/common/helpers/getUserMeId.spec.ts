@@ -54,7 +54,6 @@ describe(getUserMeId.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      jest.resetAllMocks();
     });
 
     it('should return an OK response', () => {
@@ -98,7 +97,6 @@ describe(getUserMeId.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
-      jest.resetAllMocks();
     });
 
     it('should return a non OK response', () => {
