@@ -3,7 +3,10 @@ import {
   NUMBER_PLAYERS_MINIMUM,
 } from '../../common/helpers/numberPlayersLength';
 
-export function setFormFieldValue(fieldName: string, fieldValue: string) {
+export function setFormFieldValue(
+  fieldName: string,
+  fieldValue: string,
+): string | number {
   let finalValue: string | number;
 
   if (fieldName === 'name') {

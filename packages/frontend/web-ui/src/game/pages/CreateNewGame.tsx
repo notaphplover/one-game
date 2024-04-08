@@ -21,7 +21,7 @@ import { CornieLayout } from '../../common/layout/CornieLayout';
 import {
   VideogameAssetOutlined,
   PlaylistAddCheckOutlined,
-  Home,
+  HomeOutlined,
 } from '@mui/icons-material';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { useDisplayDialog } from '../hooks/useDisplayDialog';
@@ -122,7 +122,7 @@ export const CreateNewGame = (): React.JSX.Element => {
               <Grid item xs={12}>
                 <TextField
                   autoFocus
-                  className="new-game-text-fieldset"
+                  className="new-game-text-fieldset form-name-new-game"
                   disabled={isTextFieldDisabled()}
                   label="Name"
                   type="text"
@@ -134,7 +134,7 @@ export const CreateNewGame = (): React.JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  className="new-game-text-fieldset"
+                  className="new-game-text-fieldset form-players-new-game"
                   disabled={isTextFieldDisabled()}
                   label="Players"
                   type="number"
@@ -148,7 +148,12 @@ export const CreateNewGame = (): React.JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <Box className="new-game-options">
-                  <Button onClick={setHandleOpenDialog}>Options</Button>
+                  <Button
+                    className="button-new-game-options"
+                    onClick={setHandleOpenDialog}
+                  >
+                    Options
+                  </Button>
                   <Dialog
                     open={openDialog}
                     onClose={setHandleCloseDialog}
@@ -327,7 +332,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                     fullWidth
                     type="button"
                     variant="contained"
-                    startIcon={<Home />}
+                    startIcon={<HomeOutlined />}
                     onClick={onGoHome}
                   >
                     CORNIE HOME
