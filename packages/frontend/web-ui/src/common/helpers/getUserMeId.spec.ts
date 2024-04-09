@@ -10,7 +10,7 @@ import { UserMeResponse } from '../http/models/UserMeResponse';
 import { UserMeSerializedResponse } from '../http/models/UserMeSerializedResponse';
 
 describe(getUserMeId.name, () => {
-  let tokenFixture: string | null;
+  let tokenFixture: string;
 
   beforeAll(() => {
     tokenFixture = 'token-fixture';
@@ -67,7 +67,7 @@ describe(getUserMeId.name, () => {
     let result: unknown;
 
     beforeAll(async () => {
-      tokenFixture = null;
+      tokenFixture = '';
 
       userMeResponseFixture = {
         headers: {},
