@@ -174,6 +174,17 @@ export class EventSource implements EventTarget {
     }
   }
 
+  protected _buildHeaders(): Headers {
+    const headers: Headers = new Headers();
+    headers.set('accept', EVENT_STREAM_MIME_TYPE);
+
+    if (this.#lastEventId !== '') {
+      headers.set('last-event-id', this.#lastEventId);
+    }
+
+    return headers;
+  }
+
   // https://html.spec.whatwg.org/multipage/urls-and-fetching.html#create-a-potential-cors-request
   #buildPotentialCorsRequest(
     url: string,
@@ -209,17 +220,10 @@ export class EventSource implements EventTarget {
      *  and whose use-URL-credentials flag is set.
      */
 
-    const headers: Headers = new Headers();
-    headers.set('accept', EVENT_STREAM_MIME_TYPE);
-
-    if (this.#lastEventId !== '') {
-      headers.set('last-event-id', this.#lastEventId);
-    }
-
     const requestInit: RequestInit = {
       cache: 'no-store',
       credentials: credentialsMode,
-      headers,
+      headers: this._buildHeaders(),
       mode,
       redirect: 'follow',
     };
