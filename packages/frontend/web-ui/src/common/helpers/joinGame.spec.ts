@@ -10,7 +10,7 @@ import { JoinGameResponse } from '../http/models/JoinGameResponse';
 import { JoinGameSerializedResponse } from '../http/models/JoinGameSerializedResponse';
 
 describe(joinGame.name, () => {
-  let tokenFixture: string | null;
+  let tokenFixture: string;
   let gameIdFixture: string;
   let userIdFixture: string;
 
@@ -67,7 +67,7 @@ describe(joinGame.name, () => {
     let result: unknown;
 
     beforeAll(async () => {
-      tokenFixture = null;
+      tokenFixture = '';
       joinGameResponseFixture = {
         headers: {},
         body: {
