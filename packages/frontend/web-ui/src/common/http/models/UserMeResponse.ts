@@ -1,3 +1,3 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpApiResult } from './HttpApiResult';
 
-export type UserMeResponse = Awaited<ReturnType<HttpClient['getUserMe']>>;
+export type UserMeResponse = HttpApiResult<'getUserMe'>;

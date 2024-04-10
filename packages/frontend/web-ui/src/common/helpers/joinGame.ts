@@ -1,22 +1,22 @@
 import { buildSerializableResponse } from '../http/helpers/buildSerializableResponse';
-import { JoinGameResponse } from '../http/models/JoinGame';
+import { JoinGameResponse } from '../http/models/JoinGameResponse';
 import { JoinGameSerializedResponse } from '../http/models/JoinGameSerializedResponse';
 import { httpClient } from '../http/services/HttpService';
 
 export const joinGame = async (
-  token: string | null,
-  gameId: string | null,
-  userId: string | null,
+  token: string,
+  gameId: string,
+  userId: string,
 ): Promise<JoinGameSerializedResponse> => {
   const response: JoinGameResponse = await httpClient.createGameSlot(
     {
       authorization: `Bearer ${token}`,
     },
     {
-      gameId: gameId as string,
+      gameId: gameId,
     },
     {
-      userId: userId as string,
+      userId: userId,
     },
   );
 

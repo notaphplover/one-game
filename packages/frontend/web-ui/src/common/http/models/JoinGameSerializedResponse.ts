@@ -1,4 +1,4 @@
-import { JoinGameResponse } from './JoinGame';
+import { JoinGameResponse } from './JoinGameResponse';
 import { SerializableResponseUnion } from './SerializableResponseUnion';
 
 export type JoinGameSerializedResponse =

@@ -2,12 +2,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Button, Typography, Link, Box } from '@mui/material';
 import { JoinInnerOutlined, Share } from '@mui/icons-material';
-import { GameState } from '../../home/models/UseGetGamesResult';
+import { GameStatus } from '../models/GameStatus';
 
-function getChosenButtonGame(typeGame: GameState): React.JSX.Element {
+function getChosenButtonGame(gameStatus: GameStatus): React.JSX.Element {
   let chosenButton: React.JSX.Element;
 
-  switch (typeGame) {
+  switch (gameStatus) {
     case 'nonStarted':
       chosenButton = (
         <Box component="div">
