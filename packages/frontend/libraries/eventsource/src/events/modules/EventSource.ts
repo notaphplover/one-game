@@ -52,9 +52,11 @@ export class EventSource implements EventTarget {
 
     this.#readyState = EventSource.CONNECTING;
 
-    void this.#fetch(() =>
-      this.#buildPotentialCorsRequest(this.#url, corsAtributeState),
-    );
+    setTimeout(() => {
+      void this.#fetch(() =>
+        this.#buildPotentialCorsRequest(this.#url, corsAtributeState),
+      );
+    }, 1);
   }
 
   public get onerror():
@@ -226,6 +228,7 @@ export class EventSource implements EventTarget {
       headers: this._buildHeaders(),
       mode,
       redirect: 'follow',
+      signal: abortController.signal,
     };
 
     const request: Request = new Request(url, requestInit);
@@ -259,19 +262,20 @@ export class EventSource implements EventTarget {
       buildRequest,
       fail: async () => this.#close(),
       getRetryMs: () => this.#retryMs,
-      onMessage: (messageEvent: MessageEvent<unknown>): void => {
-        if (messageEvent.lastEventId != null) {
-          this.#lastEventId = messageEvent.lastEventId;
-        }
-
-        this.dispatchEvent(messageEvent);
-      },
       onOpen: () => {
         this.#readyState = EventSource.OPEN;
         this.dispatchEvent(new Event(EventSourceEmitter.openEventType));
       },
-      onRetryMsChanged: (retryMs: number) => {
-        this.#retryMs = retryMs;
+      parseSseStreamParams: {
+        onMessage: (messageEvent: MessageEvent<unknown>): void => {
+          this.dispatchEvent(messageEvent);
+        },
+        onMessageId: (id: string): void => {
+          this.#lastEventId = id;
+        },
+        onRetryMsChanged: (retryMs: number) => {
+          this.#retryMs = retryMs;
+        },
       },
     });
   }
