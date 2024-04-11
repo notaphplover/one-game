@@ -26,6 +26,9 @@
     "drawCount": {
       "type": "number"
     },
+    "lastEventId": {
+      "type": ["string", "null"]
+    },
     "slots": {
       "type": "array",
       "items": {
@@ -45,6 +48,7 @@
     "currentTurnCardsDrawn",
     "currentTurnCardsPlayed",
     "drawCount",
+    "lastEventId",
     "slots",
     "status"
   ]

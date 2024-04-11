@@ -120,6 +120,7 @@ export class GameV1FromGameBuilder
         currentTurnCardsDrawn: game.state.currentTurnCardsDrawn,
         currentTurnCardsPlayed: game.state.currentTurnCardsPlayed,
         drawCount: game.state.drawCount,
+        lastEventId: game.state.lastGameActionId,
         slots: game.state.slots.map((gameSlot: ActiveGameSlot) =>
           this.#activeGameSlotV1FromActiveGameSlotBuilder.build(gameSlot),
         ),

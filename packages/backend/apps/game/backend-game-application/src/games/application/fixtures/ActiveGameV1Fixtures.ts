@@ -15,6 +15,7 @@ export class ActiveGameV1Fixtures {
         currentTurnCardsDrawn: false,
         currentTurnCardsPlayed: false,
         drawCount: 0,
+        lastEventId: null,
         slots: [ActiveGameSlotV1Fixtures.any],
         status: 'active',
       },
