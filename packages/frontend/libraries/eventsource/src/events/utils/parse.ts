@@ -11,10 +11,21 @@ type MessageEventFieldMap = {
   [TKey in MessageEventField]?: MessageEventFieldTypesMap[TKey];
 };
 
+export interface ParseSseStreamParams {
+  onMessage: (messageEvent: MessageEvent<unknown>) => void;
+  onMessageId: (id: string) => void;
+  onRetryMsChanged: (retry: number) => void;
+}
+
 const LINE_REGEX: RegExp =
   /^(?:(data|event|id|retry)(?::\s?(.*))?)?(?:\n|\r|\r\n)/gm;
 const FIELD_NAME_GROUP: number = 1;
 const FIELD_CONTENT_GROUP: number = 2;
+
+const LINE_FEED: string = '\n';
+
+const SLICE_LAST_CHARACTER_START: number | undefined = 0;
+const SLICE_LAST_CHARACTER_END: number | undefined = -1;
 
 const textDecoder: TextDecoder = new TextDecoder(undefined, {
   ignoreBOM: false,
@@ -22,8 +33,7 @@ const textDecoder: TextDecoder = new TextDecoder(undefined, {
 
 export async function parse(
   reader: ReadableStreamDefaultReader<Uint8Array>,
-  onMessage: (messageEvent: MessageEvent<unknown>) => void,
-  onRetryChanged: (retry: number) => void,
+  params: ParseSseStreamParams,
 ): Promise<void> {
   let currentData: string = '';
 
@@ -35,7 +45,7 @@ export async function parse(
     const matches: RegExpMatchArray[] = [...currentData.matchAll(LINE_REGEX)];
 
     if (matches.length > 0) {
-      parseLineMatches(matches, messageEventFields, onMessage, onRetryChanged);
+      parseLineMatches(matches, messageEventFields, params);
 
       const lastMatch: RegExpMatchArray = matches[
         matches.length - 1
@@ -48,16 +58,31 @@ export async function parse(
   });
 }
 
+// https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
+
 function buildMessageEvent(
   messageEventFields: MessageEventFieldMap,
-): MessageEvent {
+  params: ParseSseStreamParams,
+): MessageEvent | undefined {
   const messageEventInit: MessageEventInit<unknown> = {};
 
   if (messageEventFields.data !== undefined) {
-    messageEventInit.data = messageEventFields.data;
+    let data: string = messageEventFields.data;
+
+    if (data === '') {
+      return undefined;
+    }
+
+    if (data.endsWith(LINE_FEED)) {
+      data = copyWithoutLastCharacter(data);
+    }
+
+    messageEventInit.data = data;
   }
 
   if (messageEventFields.id !== undefined) {
+    params.onMessageId(messageEventFields.id);
+
     messageEventInit.lastEventId = messageEventFields.id;
   }
 
@@ -76,6 +101,10 @@ function emptyFields(messageEventFields: MessageEventFieldMap): void {
   delete messageEventFields.retry;
 }
 
+function copyWithoutLastCharacter(text: string): string {
+  return text.slice(SLICE_LAST_CHARACTER_START, SLICE_LAST_CHARACTER_END);
+}
+
 async function getBytes(
   reader: ReadableStreamDefaultReader<Uint8Array>,
   onChunk: (chunk: Uint8Array) => void,
@@ -89,20 +118,27 @@ async function getBytes(
 function parseLineMatches(
   matches: RegExpMatchArray[],
   messageEventFields: MessageEventFieldMap,
-  onMessage: (messageEvent: MessageEvent<unknown>) => void,
-  onRetryChanged: (retry: number) => void,
+  params: ParseSseStreamParams,
 ): void {
   for (const match of matches) {
     const name: string | undefined = match[FIELD_NAME_GROUP];
     const content: string | undefined = match[FIELD_CONTENT_GROUP];
 
     if (name === undefined) {
-      onMessage(buildMessageEvent(messageEventFields));
+      const messageEvent: MessageEvent | undefined = buildMessageEvent(
+        messageEventFields,
+        params,
+      );
+
+      if (messageEvent !== undefined) {
+        params.onMessage(messageEvent);
+      }
+
       emptyFields(messageEventFields);
     } else {
       setMessageEventField(
         messageEventFields,
-        onRetryChanged,
+        params.onRetryMsChanged,
         name as MessageEventField,
         content,
       );
@@ -118,7 +154,8 @@ function setMessageEventField(
 ): void {
   switch (fieldName) {
     case 'data':
-      messageEventFields.data = messageEventFields.data ?? '' + content ?? '';
+      messageEventFields.data =
+        messageEventFields.data ?? '' + content ?? '' + LINE_FEED;
       break;
     case 'event':
       messageEventFields.event = content ?? '';
@@ -130,7 +167,7 @@ function setMessageEventField(
       {
         const retry: number = parseInt(content ?? '');
 
-        if (!Number.isNaN(retry)) {
+        if (!Number.isNaN(retry) && retry >= 0) {
           onRetryChanged(retry);
         }
       }
