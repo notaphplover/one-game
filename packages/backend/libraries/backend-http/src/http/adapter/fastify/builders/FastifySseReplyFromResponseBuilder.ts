@@ -30,8 +30,6 @@ export class FastifySseReplyFromResponseBuilder
 
     fastifyReply.raw.flushHeaders();
 
-    fastifyReply.raw.write('\n');
-
     return fastifyReply;
   }
 }
