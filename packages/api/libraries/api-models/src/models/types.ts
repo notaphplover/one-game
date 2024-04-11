@@ -116,6 +116,7 @@ export interface ActiveGameStateV1 {
   currentTurnCardsDrawn: boolean;
   currentTurnCardsPlayed: boolean;
   drawCount: number;
+  lastEventId: string | null;
   slots: ActiveGameSlotV1[];
   status: 'active';
 }
