@@ -1,3 +1,5 @@
+import * as assert from 'node:assert/strict';
+
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Then } from '@cucumber/cucumber';
@@ -8,7 +10,9 @@ import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { getRequestParametersOrFail } from '../../http/utils/calculations/getRequestOrFail';
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
+import { GameEventSubscriptionV2Parameter } from '../models/GameEventSubscriptionV2Parameter';
 import { GameV1Parameter } from '../models/GameV1Parameter';
+import { getGameEventSubscriptionOrFail } from '../utils/calculations/getGameEventSubscriptionOrFail';
 import { getGameOrFail } from '../utils/calculations/getGameOrFail';
 
 export function thenCreateGameResponseShouldContainValidGame(
@@ -123,6 +127,31 @@ export function thenGetGameSpecResponseShouldContainGameSpec(
   });
 }
 
+function thenMessageEventMatchesPlayFirstCardRequest(
+  this: OneGameApiWorld,
+): void {
+  type RequestType = Parameters<HttpClient['updateGame']>;
+
+  const playFirstCardRequest: RequestType = getRequestParametersOrFail(
+    this,
+    'updateGame',
+    defaultAlias,
+  );
+
+  const gameEventSubscriptionV2Parameter: GameEventSubscriptionV2Parameter =
+    getGameEventSubscriptionOrFail.bind(this)(defaultAlias);
+
+  const firstGameEvent: apiModels.GameEventV2 | undefined =
+    gameEventSubscriptionV2Parameter.gameEvents[0];
+
+  assert.ok(firstGameEvent !== undefined);
+  assert.ok(firstGameEvent.kind === 'cardsPlayed');
+  assert.deepEqual(
+    firstGameEvent.currentPlayingSlotIndex,
+    playFirstCardRequest[2].slotIndex,
+  );
+}
+
 export function thenUpdateGameResponseShouldBeSuccessful(
   this: OneGameApiWorld,
   requestAlias?: string,
@@ -169,6 +198,13 @@ Then<OneGameApiWorld>(
   'the get game response should contain the game spec',
   function (this: OneGameApiWorld): void {
     thenGetGameSpecResponseShouldContainGameSpec.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the message event matches the game play first card request',
+  function (this: OneGameApiWorld): void {
+    thenMessageEventMatchesPlayFirstCardRequest.bind(this)();
   },
 );
 

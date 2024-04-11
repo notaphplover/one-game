@@ -15,9 +15,12 @@ import { getRequestParametersOrFail } from '../../http/utils/calculations/getReq
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
 import { UserV1Parameter } from '../../user/models/UserV1Parameter';
 import { getUserOrFail } from '../../user/utils/calculations/getUserOrFail';
+import { GameEventSubscriptionV2Parameter } from '../models/GameEventSubscriptionV2Parameter';
 import { GameOptionsV1Parameter } from '../models/GameOptionsV1Parameter';
 import { GameV1Parameter } from '../models/GameV1Parameter';
+import { CustomEventSource } from '../modules/CustomEventSource';
 import { setGame } from '../utils/actions/setGame';
+import { setGameEventSubscription } from '../utils/actions/setGameEventSubscription';
 import { setGameOptions } from '../utils/actions/setGameOptions';
 import { updateActiveGame } from '../utils/actions/updateActiveGame';
 import { getGameOptionsOrFail } from '../utils/calculations/getGameOptionsOrFail';
@@ -27,6 +30,34 @@ import {
   whenCreateGameSlotRequestIsSend,
   whenGetGameRequestIsSend,
 } from './whenDefinitions';
+
+/**
+ * A message received by a target object.
+ *
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessageEvent)
+ *
+ * EDIT: interface simplified to be a workaround for missing node types.
+ */
+interface MessageEvent<T = unknown> extends Event {
+  /**
+   * Returns the data of the message.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessageEvent/data)
+   */
+  readonly data: T;
+  /**
+   * Returns the last event ID string, for server-sent events.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessageEvent/lastEventId)
+   */
+  readonly lastEventId: string;
+  /**
+   * Returns the origin of the message, for server-sent events and cross-document messaging.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessageEvent/origin)
+   */
+  readonly origin: string;
+}
 
 const INDEX_NOT_FOUND_RESULT: number = -1;
 
@@ -140,6 +171,39 @@ export function givenCreateGameSlotRequestForPlayerWithUserCredentials(
     processedRequestAlias,
     requestParameters,
   );
+}
+
+function givenGameEventSubscriptionForGame(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+  userAlias?: string,
+): void {
+  const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  const gameV1Parameter: GameV1Parameter =
+    getGameOrFail.bind(this)(processedGameAlias);
+
+  const authV2Parameter: AuthV2Parameter =
+    getAuthOrFail.bind(this)(processedUserAlias);
+
+  const parameter: GameEventSubscriptionV2Parameter = {
+    eventSource: new CustomEventSource(
+      `${this.env.backendBaseUrl}/v2/events/games/${gameV1Parameter.game.id}`,
+      {
+        token: authV2Parameter.auth.accessToken,
+      },
+    ),
+    gameEvents: [],
+  };
+
+  parameter.eventSource.onmessage = (event: MessageEvent) => {
+    parameter.gameEvents.push(
+      JSON.parse(event.data as string) as apiModels.GameEventV2,
+    );
+  };
+
+  setGameEventSubscription.bind(this)(processedGameAlias, parameter);
 }
 
 export function givenGameOptions(
@@ -308,7 +372,7 @@ export function givenGamePassTurnQueryRequestForGame(
   );
 }
 
-export function givenGamePlayCardsQueryRequestForGame(
+export function givenGamePlayFirstCardQueryRequestForGame(
   this: OneGameApiWorld,
   gameAlias?: string,
   requestAlias?: string,
@@ -502,6 +566,13 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
+  'a game event subscription for game with {string} credentials',
+  async function (this: OneGameApiWorld, userAlias: string): Promise<void> {
+    givenGameEventSubscriptionForGame.bind(this)(undefined, userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
   'a game for {int} players created with {string} credentials',
   async function (
     this: OneGameApiWorld,
@@ -529,9 +600,9 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
-  'a game pass play first card request for game for {string}',
+  'a game play first card request for game for {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
-    givenGamePlayCardsQueryRequestForGame.bind(this)(
+    givenGamePlayFirstCardQueryRequestForGame.bind(this)(
       undefined,
       undefined,
       userAlias,
