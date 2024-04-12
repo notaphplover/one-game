@@ -132,6 +132,24 @@ export class GameUpdateQueryFixtures {
     };
   }
 
+  public static get withLastGameActionIdNull(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      lastGameActionId: null,
+    };
+
+    return fixture;
+  }
+
+  public static get withLastGameActionIdString(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      lastGameActionId: '16b54159-a4ef-41fc-994a-20709526bda0',
+    };
+
+    return fixture;
+  }
+
   public static get withSkipCount(): GameUpdateQuery {
     const fixture: GameUpdateQuery = {
       ...GameUpdateQueryFixtures.any,

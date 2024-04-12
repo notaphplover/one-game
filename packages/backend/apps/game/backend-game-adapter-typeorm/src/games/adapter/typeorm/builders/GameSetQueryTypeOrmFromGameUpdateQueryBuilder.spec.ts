@@ -462,6 +462,74 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
       });
     });
 
+    describe('having a GameUpdateQuery with withLastGameActionId null', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture =
+          GameUpdateQueryFixtures.withLastGameActionIdNull;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            lastGameAction: null,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a GameUpdateQuery with withLastGameActionId string', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture =
+          GameUpdateQueryFixtures.withLastGameActionIdString;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            lastGameAction: {
+              id: gameUpdateQueryFixture.lastGameActionId as string,
+            },
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
+
     describe('having a GameUpdateQuery with skipCount', () => {
       let gameUpdateQueryFixture: GameUpdateQuery;
 
