@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -23,8 +23,8 @@ export class UserQueryResolver
     args: graphqlModels.UserQueryUserByIdArgs,
     context: Context,
   ): Promise<graphqlModels.User | null> {
-    const httpResponse: Awaited<ReturnType<HttpClient['getUser']>> =
-      await this.#httpClient.getUser(context.request.headers, {
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['getUser']>> =
+      await this.#httpClient.endpoints.getUser(context.request.headers, {
         userId: args.id,
       });
 
@@ -46,8 +46,8 @@ export class UserQueryResolver
     _args: unknown,
     context: Context,
   ): Promise<graphqlModels.User> {
-    const httpResponse: Awaited<ReturnType<HttpClient['getUserMe']>> =
-      await this.#httpClient.getUserMe(context.request.headers);
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['getUserMe']>> =
+      await this.#httpClient.endpoints.getUserMe(context.request.headers);
 
     switch (httpResponse.statusCode) {
       case 200:

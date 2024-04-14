@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
@@ -43,8 +43,8 @@ export class GameQueryResolver
     args: graphqlModels.GameQueryGameByIdArgs,
     context: Context,
   ): Promise<Partial<graphqlModels.Game> | null> {
-    const httpResponse: Awaited<ReturnType<HttpClient['getGame']>> =
-      await this.#httpClient.getGame(context.request.headers, {
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['getGame']>> =
+      await this.#httpClient.endpoints.getGame(context.request.headers, {
         gameId: args.id,
       });
 
@@ -71,11 +71,12 @@ export class GameQueryResolver
     args: Partial<graphqlModels.GameQueryMyGamesArgs>,
     context: Context,
   ): Promise<Partial<graphqlModels.Game>[]> {
-    const httpResponse: Awaited<ReturnType<HttpClient['getGamesMine']>> =
-      await this.#httpClient.getGamesMine(
-        context.request.headers,
-        this.#buildGetGamesMineQuery(args),
-      );
+    const httpResponse: Awaited<
+      ReturnType<HttpClientEndpoints['getGamesMine']>
+    > = await this.#httpClient.endpoints.getGamesMine(
+      context.request.headers,
+      this.#buildGetGamesMineQuery(args),
+    );
 
     switch (httpResponse.statusCode) {
       case 200:

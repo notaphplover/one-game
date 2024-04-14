@@ -34,7 +34,7 @@ const CONTENT_TYPE_JSON: string = 'application/json';
 
 const JSON_STRINGIFY_SPACES: number = 2;
 
-export class HttpClientMethodsBuilder {
+export class HttpClientEndpointsMethodsBuilder {
   readonly #openApiJsonPointerResolver: OpenApiJsonPointerResolver;
 
   constructor(openApiJsonPointerResolver: OpenApiJsonPointerResolver) {

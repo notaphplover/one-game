@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Given } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
@@ -77,7 +77,7 @@ export function givenGameFindQueryRequestForGame(
   const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
-  const getGameV1Request: Parameters<HttpClient['getGame']> = [
+  const getGameV1Request: Parameters<HttpClientEndpoints['getGame']> = [
     {
       authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
@@ -120,7 +120,7 @@ export function givenCreateGameRequestForPlayersWithUserCredentials(
     options: processedGameOptions,
   };
 
-  const requestParameters: Parameters<HttpClient['createGame']> = [
+  const requestParameters: Parameters<HttpClientEndpoints['createGame']> = [
     {
       authorization: `Bearer ${auth.auth.accessToken}`,
     },
@@ -156,7 +156,7 @@ export function givenCreateGameSlotRequestForPlayerWithUserCredentials(
     userId: userV1Parameter.user.id,
   };
 
-  const requestParameters: Parameters<HttpClient['createGameSlot']> = [
+  const requestParameters: Parameters<HttpClientEndpoints['createGameSlot']> = [
     {
       authorization: `Bearer ${auth.auth.accessToken}`,
     },
@@ -231,7 +231,9 @@ export function givenGetGameSpecRequestForGameWithUserCredentials(
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
-  const requestParameters: Parameters<HttpClient['getGameGameIdSpec']> = [
+  const requestParameters: Parameters<
+    HttpClientEndpoints['getGameGameIdSpec']
+  > = [
     {
       authorization: `Bearer ${authParameter.auth.accessToken}`,
     },
@@ -266,10 +268,10 @@ export async function givenGameForPlayersWithUserCredentials(
 
   await whenCreateGameRequestIsSend.bind(this)(processedGameAlias);
 
-  const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
+  const [, gameCreateQueryV1]: Parameters<HttpClientEndpoints['createGame']> =
     getRequestParametersOrFail(this, 'createGame', processedGameAlias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['createGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -321,7 +323,7 @@ export function givenGameUpdateQueryRequestForGame(
     );
   }
 
-  const updateGameV1Request: Parameters<HttpClient['updateGame']> = [
+  const updateGameV1Request: Parameters<HttpClientEndpoints['updateGame']> = [
     {
       authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
@@ -482,7 +484,7 @@ async function updateGameParameter(
   const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
-  type GetGameParameters = Parameters<HttpClient['getGame']>;
+  type GetGameParameters = Parameters<HttpClientEndpoints['getGame']>;
 
   const getGameParameters: GetGameParameters = [
     {
@@ -501,7 +503,7 @@ async function updateGameParameter(
 
   await whenGetGameRequestIsSend.bind(this)(processedGameAlias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['getGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['getGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,

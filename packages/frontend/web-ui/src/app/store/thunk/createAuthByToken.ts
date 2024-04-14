@@ -7,7 +7,7 @@ import { AuthResponse } from '../../../common/http/models/AuthResponse';
 export const createAuthByToken = createAsyncThunk(
   'auth/createAuthByToken',
   async (code: string): Promise<AuthSerializedResponse> => {
-    const response: AuthResponse = await httpClient.createAuth(
+    const response: AuthResponse = await httpClient.endpoints.createAuth(
       {},
       {
         code: code,
