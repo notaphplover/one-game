@@ -1,6 +1,6 @@
 export interface Request {
   method: string;
-  url: string;
+  path: string;
   headers: Record<string, string> | undefined;
   queryParams:
     | Record<string, number | number[] | string | string[]>

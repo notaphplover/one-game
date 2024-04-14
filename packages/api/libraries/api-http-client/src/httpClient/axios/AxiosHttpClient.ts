@@ -27,14 +27,14 @@ export class AxiosHttpClient {
     let processedUrl: string;
 
     if (request.urlParameters === undefined) {
-      processedUrl = request.url;
+      processedUrl = request.path;
     } else {
       processedUrl = Object.entries(request.urlParameters).reduce<string>(
         (
           url: string,
           [urlParamName, urlParamValue]: [string, string],
         ): string => url.replace(`{${urlParamName}}`, urlParamValue),
-        request.url,
+        request.path,
       );
     }
 

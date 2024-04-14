@@ -390,7 +390,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
                 methodParameter,
               ),
               ts.factory.createPropertyAssignment(
-                ts.factory.createIdentifier('url'),
+                ts.factory.createIdentifier('path'),
                 pathParameter,
               ),
               ts.factory.createPropertyAssignment(

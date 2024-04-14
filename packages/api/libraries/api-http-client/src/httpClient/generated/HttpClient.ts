@@ -26,7 +26,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'POST',
-      url: '/v1/auth',
+      path: '/v1/auth',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -46,7 +46,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'POST',
-      url: '/v1/games',
+      path: '/v1/games',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -70,7 +70,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/games/mine',
+      path: '/v1/games/mine',
       queryParams: query,
       urlParameters: undefined,
     });
@@ -93,7 +93,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/games/{gameId}',
+      path: '/v1/games/{gameId}',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -117,7 +117,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'PATCH',
-      url: '/v1/games/{gameId}',
+      path: '/v1/games/{gameId}',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -140,7 +140,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/games/{gameId}/specs',
+      path: '/v1/games/{gameId}/specs',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -165,7 +165,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/games/specs',
+      path: '/v1/games/specs',
       queryParams: query,
       urlParameters: undefined,
     });
@@ -191,7 +191,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'POST',
-      url: '/v1/games/{gameId}/slots',
+      path: '/v1/games/{gameId}/slots',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -215,7 +215,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/games/{gameId}/slots/{gameSlotIndex}/cards',
+      path: '/v1/games/{gameId}/slots/{gameSlotIndex}/cards',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -234,7 +234,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'POST',
-      url: '/v1/users',
+      path: '/v1/users',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -255,7 +255,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'DELETE',
-      url: '/v1/users/email/{email}/code',
+      path: '/v1/users/email/{email}/code',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -276,7 +276,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'POST',
-      url: '/v1/users/email/{email}/code',
+      path: '/v1/users/email/{email}/code',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -291,7 +291,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'DELETE',
-      url: '/v1/users/me',
+      path: '/v1/users/me',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -307,7 +307,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/users/me',
+      path: '/v1/users/me',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -326,7 +326,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'PATCH',
-      url: '/v1/users/me',
+      path: '/v1/users/me',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -348,7 +348,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v1/users/{userId}',
+      path: '/v1/users/{userId}',
       queryParams: undefined,
       urlParameters: url,
     });
@@ -367,7 +367,7 @@ export class HttpClient {
       body: body,
       headers: headers,
       method: 'POST',
-      url: '/v2/auth',
+      path: '/v2/auth',
       queryParams: undefined,
       urlParameters: undefined,
     });
@@ -388,7 +388,7 @@ export class HttpClient {
       body: undefined,
       headers: headers,
       method: 'GET',
-      url: '/v2/events/games/{gameId}',
+      path: '/v2/events/games/{gameId}',
       queryParams: undefined,
       urlParameters: url,
     });
