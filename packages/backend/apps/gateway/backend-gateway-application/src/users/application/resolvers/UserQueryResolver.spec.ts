@@ -1,7 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient, Response } from '@cornie-js/api-http-client';
+import {
+  HttpClient,
+  HttpClientEndpoints,
+  Response,
+} from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
@@ -16,15 +20,17 @@ describe(UserQueryResolver.name, () => {
 
   beforeAll(() => {
     httpClientMock = {
-      getUser: jest.fn(),
-      getUserMe: jest.fn(),
+      endpoints: {
+        getUser: jest.fn(),
+        getUserMe: jest.fn(),
+      } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     userQueryResolver = new UserQueryResolver(httpClientMock);
   });
 
   describe('.userById', () => {
-    describe('when called, and httpClient.getUser() returns a Response with status code 200', () => {
+    describe('when called, and httpClient.endpoints.getUser() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let contextFixture: Context;
@@ -56,7 +62,7 @@ describe(UserQueryResolver.name, () => {
           statusCode: HttpStatus.OK,
         };
 
-        httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUser.mockResolvedValueOnce(responseFixture);
 
         result = await userQueryResolver.userById(
           firstArgFixture,
@@ -69,9 +75,9 @@ describe(UserQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUser()', () => {
-        expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUser).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUser()', () => {
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             userId: argsFixture.id,
@@ -84,7 +90,7 @@ describe(UserQueryResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.getUser() returns a Response with status code 401', () => {
+    describe('when called, and httpClient.endpoints.getUser() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let contextFixture: Context;
@@ -114,7 +120,7 @@ describe(UserQueryResolver.name, () => {
           statusCode: HttpStatus.UNAUTHORIZED,
         };
 
-        httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUser.mockResolvedValueOnce(responseFixture);
 
         try {
           await userQueryResolver.userById(
@@ -131,9 +137,9 @@ describe(UserQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUser()', () => {
-        expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUser).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUser()', () => {
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             userId: argsFixture.id,
@@ -154,7 +160,7 @@ describe(UserQueryResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.getUser() returns a Response with status code 404', () => {
+    describe('when called, and httpClient.endpoints.getUser() returns a Response with status code 404', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.UserQueryUserByIdArgs;
       let contextFixture: Context;
@@ -184,7 +190,7 @@ describe(UserQueryResolver.name, () => {
           statusCode: HttpStatus.NOT_FOUND,
         };
 
-        httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUser.mockResolvedValueOnce(responseFixture);
 
         result = await userQueryResolver.userById(
           firstArgFixture,
@@ -197,9 +203,9 @@ describe(UserQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUser()', () => {
-        expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUser).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUser()', () => {
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             userId: argsFixture.id,
@@ -214,7 +220,7 @@ describe(UserQueryResolver.name, () => {
   });
 
   describe('.userMe', () => {
-    describe('when called, and httpClient.getUserMe() returns a Response with status code 200', () => {
+    describe('when called, and httpClient.endpoints.getUserMe() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
       let argsFixture: Record<string, string>;
       let contextFixture: Context;
@@ -244,7 +250,9 @@ describe(UserQueryResolver.name, () => {
           statusCode: HttpStatus.OK,
         };
 
-        httpClientMock.getUserMe.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUserMe.mockResolvedValueOnce(
+          responseFixture,
+        );
 
         result = await userQueryResolver.userMe(
           firstArgFixture,
@@ -257,9 +265,9 @@ describe(UserQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUserMe()', () => {
-        expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUserMe()', () => {
+        expect(httpClientMock.endpoints.getUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUserMe).toHaveBeenCalledWith(
           contextFixture.request.headers,
         );
       });
@@ -269,7 +277,7 @@ describe(UserQueryResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.getUserMe() returns a Response with status code 401', () => {
+    describe('when called, and httpClient.endpoints.getUserMe() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
       let argsFixture: Record<string, string>;
       let contextFixture: Context;
@@ -297,7 +305,9 @@ describe(UserQueryResolver.name, () => {
           statusCode: HttpStatus.UNAUTHORIZED,
         };
 
-        httpClientMock.getUserMe.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUserMe.mockResolvedValueOnce(
+          responseFixture,
+        );
 
         try {
           await userQueryResolver.userMe(
@@ -314,9 +324,9 @@ describe(UserQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUserMe()', () => {
-        expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUserMe()', () => {
+        expect(httpClientMock.endpoints.getUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUserMe).toHaveBeenCalledWith(
           contextFixture.request.headers,
         );
       });
@@ -334,7 +344,7 @@ describe(UserQueryResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.getUserMe() returns a Response with status code 403', () => {
+    describe('when called, and httpClient.endpoints.getUserMe() returns a Response with status code 403', () => {
       let firstArgFixture: unknown;
       let argsFixture: Record<string, string>;
       let contextFixture: Context;
@@ -362,7 +372,9 @@ describe(UserQueryResolver.name, () => {
           statusCode: HttpStatus.FORBIDDEN,
         };
 
-        httpClientMock.getUserMe.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUserMe.mockResolvedValueOnce(
+          responseFixture,
+        );
 
         try {
           await userQueryResolver.userMe(
@@ -379,9 +391,9 @@ describe(UserQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUserMe()', () => {
-        expect(httpClientMock.getUserMe).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUserMe).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUserMe()', () => {
+        expect(httpClientMock.endpoints.getUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUserMe).toHaveBeenCalledWith(
           contextFixture.request.headers,
         );
       });

@@ -1,6 +1,6 @@
 import * as assert from 'node:assert/strict';
 
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Then } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
@@ -21,10 +21,10 @@ export function thenCreateGameResponseShouldContainValidGame(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
+  const [, gameCreateQueryV1]: Parameters<HttpClientEndpoints['createGame']> =
     getRequestParametersOrFail(this, 'createGame', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['createGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -48,10 +48,13 @@ export function thenCreateGameSlotResponseShouldContainValidGameSlot(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, , gameCreateSlotQueryV1]: Parameters<HttpClient['createGameSlot']> =
-    getRequestParametersOrFail(this, 'createGameSlot', alias);
+  const [, , gameCreateSlotQueryV1]: Parameters<
+    HttpClientEndpoints['createGameSlot']
+  > = getRequestParametersOrFail(this, 'createGameSlot', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createGameSlot']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['createGameSlot']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -81,7 +84,7 @@ export function thenGetGameResponseShouldContainStartedGame(
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['getGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['getGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -105,10 +108,12 @@ export function thenGetGameSpecResponseShouldContainGameSpec(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
+  const [, gameCreateQueryV1]: Parameters<HttpClientEndpoints['createGame']> =
     getRequestParametersOrFail(this, 'createGame', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['getGameGameIdSpec']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['getGameGameIdSpec']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -130,7 +135,7 @@ export function thenGetGameSpecResponseShouldContainGameSpec(
 function thenMessageEventMatchesPlayFirstCardRequest(
   this: OneGameApiWorld,
 ): void {
-  type RequestType = Parameters<HttpClient['updateGame']>;
+  type RequestType = Parameters<HttpClientEndpoints['updateGame']>;
 
   const playFirstCardRequest: RequestType = getRequestParametersOrFail(
     this,
@@ -158,7 +163,7 @@ export function thenUpdateGameResponseShouldBeSuccessful(
 ): void {
   const processedRequestAlias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['updateGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['updateGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,

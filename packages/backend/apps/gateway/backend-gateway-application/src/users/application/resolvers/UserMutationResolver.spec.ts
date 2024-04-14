@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
@@ -15,8 +15,10 @@ describe(UserMutationResolver.name, () => {
 
   beforeAll(() => {
     httpClientMock = {
-      createUser: jest.fn(),
-      deleteUserMe: jest.fn(),
+      endpoints: {
+        createUser: jest.fn(),
+        deleteUserMe: jest.fn(),
+      } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     userMutationResolver = new UserMutationResolver(httpClientMock);
@@ -33,7 +35,7 @@ describe(UserMutationResolver.name, () => {
       passwordFixture = 'password-fixture';
     });
 
-    describe('when called, and httpClient.createUser() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.createUser() returns an OK response', () => {
       let userV1: apiModels.UserV1;
       let contextFixture: Context;
 
@@ -56,7 +58,7 @@ describe(UserMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createUser.mockResolvedValueOnce({
+        httpClientMock.endpoints.createUser.mockResolvedValueOnce({
           body: userV1,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -79,15 +81,15 @@ describe(UserMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createUser()', () => {
+      it('should call httpClient.endpoints.createUser()', () => {
         const expectedBody: apiModels.UserCreateQueryV1 = {
           email: emailFixture,
           name: nameFixture,
           password: passwordFixture,
         };
 
-        expect(httpClientMock.createUser).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createUser).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createUser).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createUser).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -98,7 +100,7 @@ describe(UserMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.createUser() returns an BAD_REQUEST response', () => {
+    describe('when called, and httpClient.endpoints.createUser() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -119,7 +121,7 @@ describe(UserMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createUser.mockResolvedValueOnce({
+        httpClientMock.endpoints.createUser.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.BAD_REQUEST,
@@ -146,15 +148,15 @@ describe(UserMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createUser()', () => {
+      it('should call httpClient.endpoints.createUser()', () => {
         const expectedBody: apiModels.UserCreateQueryV1 = {
           email: emailFixture,
           name: nameFixture,
           password: passwordFixture,
         };
 
-        expect(httpClientMock.createUser).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createUser).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createUser).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createUser).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -175,7 +177,7 @@ describe(UserMutationResolver.name, () => {
   });
 
   describe('.deleteUserMe', () => {
-    describe('when called, and httpClient.deleteUserMe() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.deleteUserMe() returns an OK response', () => {
       let contextFixture: Context;
 
       let result: unknown;
@@ -191,7 +193,7 @@ describe(UserMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.deleteUserMe.mockResolvedValueOnce({
+        httpClientMock.endpoints.deleteUserMe.mockResolvedValueOnce({
           body: undefined,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -208,9 +210,9 @@ describe(UserMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.deleteUserMe()', () => {
-        expect(httpClientMock.deleteUserMe).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.deleteUserMe).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.deleteUserMe()', () => {
+        expect(httpClientMock.endpoints.deleteUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.deleteUserMe).toHaveBeenCalledWith(
           contextFixture.request.headers,
         );
       });
@@ -220,7 +222,7 @@ describe(UserMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.deleteUserMe() returns an UNAUTHORIZED response', () => {
+    describe('when called, and httpClient.endpoints.deleteUserMe() returns an UNAUTHORIZED response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -241,7 +243,7 @@ describe(UserMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.deleteUserMe.mockResolvedValueOnce({
+        httpClientMock.endpoints.deleteUserMe.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.UNAUTHORIZED,
@@ -262,9 +264,9 @@ describe(UserMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.deleteUserMe()', () => {
-        expect(httpClientMock.deleteUserMe).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.deleteUserMe).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.deleteUserMe()', () => {
+        expect(httpClientMock.endpoints.deleteUserMe).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.deleteUserMe).toHaveBeenCalledWith(
           contextFixture.request.headers,
         );
       });

@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { Then } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
 
@@ -13,7 +13,7 @@ function thenCreateAuthResponseShouldContainValidUserAuth(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createAuthV2']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['createAuthV2']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,

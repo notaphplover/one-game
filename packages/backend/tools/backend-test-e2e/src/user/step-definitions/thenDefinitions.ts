@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { Then } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
 
@@ -14,10 +14,10 @@ function thenCreateUserResponseShouldContainValidUser(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
+  const [, userCreateQueryV1]: Parameters<HttpClientEndpoints['createUser']> =
     getRequestParametersOrFail(this, 'createUser', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['createUser']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -42,7 +42,9 @@ function thenCreateUserCodeResponseShouldBeSuccessful(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createUserByEmailCode']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['createUserByEmailCode']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -62,7 +64,9 @@ function thenCreateUserCodeResponseShouldFailDueToConflict(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createUserByEmailCode']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['createUserByEmailCode']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -82,7 +86,9 @@ function thenDeleteUserCodeResponseShouldBeSuccessful(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['deleteUserByEmailCode']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['deleteUserByEmailCode']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -102,7 +108,7 @@ function thenDeleteUserMeResponseShouldBeSuccessful(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['deleteUserMe']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['deleteUserMe']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -122,10 +128,11 @@ function thenUpdateUserResponseShouldContainValidUser(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, userMeUpdateQueryV1]: Parameters<HttpClient['updateUserMe']> =
-    getRequestParametersOrFail(this, 'updateUserMe', alias);
+  const [, userMeUpdateQueryV1]: Parameters<
+    HttpClientEndpoints['updateUserMe']
+  > = getRequestParametersOrFail(this, 'updateUserMe', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['updateUserMe']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['updateUserMe']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,

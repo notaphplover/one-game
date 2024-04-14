@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { When } from '@cucumber/cucumber';
 
@@ -18,7 +18,7 @@ export async function whenCreateCodeAuthRequestIsSendFromUserActivationMail(
 ): Promise<void> {
   const processedRequestAlias: string = requestAlias ?? defaultAlias;
 
-  const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
+  const [, userCreateQueryV1]: Parameters<HttpClientEndpoints['createUser']> =
     getRequestParametersOrFail(this, 'createUser', processedRequestAlias);
 
   const userMails: MaildevMail[] = await getMaildevServerEmailsToUser(
@@ -45,7 +45,7 @@ export async function whenCreateCodeAuthRequestIsSendFromUserActivationMail(
     kind: 'code',
   };
 
-  const requestParameters: Parameters<HttpClient['createAuthV2']> = [
+  const requestParameters: Parameters<HttpClientEndpoints['createAuthV2']> = [
     {},
     authCreateQuery,
   ];

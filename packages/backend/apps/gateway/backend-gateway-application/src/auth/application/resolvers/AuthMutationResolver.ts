@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -22,8 +22,8 @@ export class AuthMutationResolver
     args: graphqlModels.AuthMutationCreateAuthByCodeArgs,
     context: Context,
   ): Promise<graphqlModels.Auth> {
-    const httpResponse: Awaited<ReturnType<HttpClient['createAuth']>> =
-      await this.#httpClient.createAuth(context.request.headers, {
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['createAuth']>> =
+      await this.#httpClient.endpoints.createAuth(context.request.headers, {
         code: args.codeAuthCreateInput.code,
       });
 
@@ -44,8 +44,8 @@ export class AuthMutationResolver
     args: graphqlModels.AuthMutationCreateAuthByCredentialsArgs,
     context: Context,
   ): Promise<graphqlModels.Auth> {
-    const httpResponse: Awaited<ReturnType<HttpClient['createAuth']>> =
-      await this.#httpClient.createAuth(context.request.headers, {
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['createAuth']>> =
+      await this.#httpClient.endpoints.createAuth(context.request.headers, {
         email: args.emailPasswordAuthCreateInput.email,
         password: args.emailPasswordAuthCreateInput.password,
       });

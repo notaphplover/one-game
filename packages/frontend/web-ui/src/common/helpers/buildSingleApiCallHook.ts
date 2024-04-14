@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { useEffect, useState } from 'react';
 import { Either } from '../models/Either';
 import { httpClient } from '../http/services/HttpService';
@@ -13,7 +13,7 @@ export enum ApiHookStatus {
 export interface BuildSingleApiCallHookParams<
   TContext,
   TParams,
-  TEndpoint extends keyof HttpClient,
+  TEndpoint extends keyof HttpClientEndpoints,
   TResult,
 > {
   buildContext(): TContext;
@@ -34,7 +34,7 @@ export interface SingleApiCallHookResult<TParams, TResult> {
 export function buildSingleApiCallHook<
   TContext,
   TParams,
-  TEndpoint extends keyof HttpClient,
+  TEndpoint extends keyof HttpClientEndpoints,
   TResult,
 >(
   buildParams: BuildSingleApiCallHookParams<
@@ -66,7 +66,7 @@ export function buildSingleApiCallHook<
       buildParams.buildRequestParams(context, params as TParams);
 
     return (
-      httpClient[buildParams.endpoint] as (
+      httpClient.endpoints[buildParams.endpoint] as (
         ...params: HttpApiParams<TEndpoint>
       ) => Promise<HttpApiResult<TEndpoint>>
     )(...requestParams);

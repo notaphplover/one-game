@@ -42,7 +42,9 @@ describe(joinGame.name, () => {
       };
 
       (
-        httpClient.createGameSlot as jest.Mock<typeof httpClient.createGameSlot>
+        httpClient.endpoints.createGameSlot as jest.Mock<
+          typeof httpClient.endpoints.createGameSlot
+        >
       ).mockResolvedValueOnce(joinGameResponseFixture);
 
       (
@@ -84,7 +86,9 @@ describe(joinGame.name, () => {
       };
 
       (
-        httpClient.createGameSlot as jest.Mock<typeof httpClient.createGameSlot>
+        httpClient.endpoints.createGameSlot as jest.Mock<
+          typeof httpClient.endpoints.createGameSlot
+        >
       ).mockResolvedValueOnce(joinGameResponseFixture);
 
       (

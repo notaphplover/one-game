@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { IWorld } from '@cucumber/cucumber';
 
 import { AuthV2Parameter } from '../../auth/models/AuthV2Parameter';
@@ -22,13 +22,16 @@ export interface Environment {
 }
 
 export type RequestMap = {
-  [TKey in keyof HttpClient]?: Record<string, Parameters<HttpClient[TKey]>>;
+  [TKey in keyof HttpClientEndpoints]?: Record<
+    string,
+    Parameters<HttpClientEndpoints[TKey]>
+  >;
 };
 
 export type ResponseMap = {
-  [TKey in keyof HttpClient]?: Record<
+  [TKey in keyof HttpClientEndpoints]?: Record<
     string,
-    Awaited<ReturnType<HttpClient[TKey]>>
+    Awaited<ReturnType<HttpClientEndpoints[TKey]>>
   >;
 };
 
