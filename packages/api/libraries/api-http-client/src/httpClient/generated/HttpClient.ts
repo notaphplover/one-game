@@ -22,14 +22,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'POST',
-      '/v1/auth',
-      headers,
-      undefined,
-      undefined,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'POST',
+      url: '/v1/auth',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async createGame(
     headers: {
@@ -42,14 +42,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'POST',
-      '/v1/games',
-      headers,
-      undefined,
-      undefined,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'POST',
+      url: '/v1/games',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async getGamesMine(
     headers: {
@@ -66,14 +66,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/games/mine',
-      headers,
-      query,
-      undefined,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/games/mine',
+      queryParams: query,
+      urlParameters: undefined,
+    });
   }
   public async getGame(
     headers: {
@@ -89,14 +89,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/games/{gameId}',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/games/{gameId}',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async updateGame(
     headers: {
@@ -113,14 +113,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'PATCH',
-      '/v1/games/{gameId}',
-      headers,
-      undefined,
-      url,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'PATCH',
+      url: '/v1/games/{gameId}',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async getGameGameIdSpec(
     headers: {
@@ -136,14 +136,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/games/{gameId}/specs',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/games/{gameId}/specs',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async getGamesSpecs(
     headers: {
@@ -161,14 +161,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/games/specs',
-      headers,
-      query,
-      undefined,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/games/specs',
+      queryParams: query,
+      urlParameters: undefined,
+    });
   }
   public async createGameSlot(
     headers: {
@@ -187,14 +187,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'POST',
-      '/v1/games/{gameId}/slots',
-      headers,
-      undefined,
-      url,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'POST',
+      url: '/v1/games/{gameId}/slots',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async getGameSlotCards(
     headers: {
@@ -211,14 +211,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/games/{gameId}/slots/{gameSlotIndex}/cards',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/games/{gameId}/slots/{gameSlotIndex}/cards',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async createUser(
     headers: {
@@ -230,14 +230,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'POST',
-      '/v1/users',
-      headers,
-      undefined,
-      undefined,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'POST',
+      url: '/v1/users',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async deleteUserByEmailCode(
     headers: {
@@ -251,14 +251,14 @@ export class HttpClient {
     | Response<Record<string, string>, undefined, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'DELETE',
-      '/v1/users/email/{email}/code',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'DELETE',
+      url: '/v1/users/email/{email}/code',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async createUserByEmailCode(
     headers: {
@@ -272,14 +272,14 @@ export class HttpClient {
     | Response<Record<string, string>, undefined, 201>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'POST',
-      '/v1/users/email/{email}/code',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'POST',
+      url: '/v1/users/email/{email}/code',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async deleteUserMe(headers: {
     [key: string]: string;
@@ -287,14 +287,14 @@ export class HttpClient {
     | Response<Record<string, string>, undefined, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'DELETE',
-      '/v1/users/me',
-      headers,
-      undefined,
-      undefined,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'DELETE',
+      url: '/v1/users/me',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async getUserMe(headers: {
     [key: string]: string;
@@ -303,14 +303,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/users/me',
-      headers,
-      undefined,
-      undefined,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/users/me',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async updateUserMe(
     headers: {
@@ -322,14 +322,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'PATCH',
-      '/v1/users/me',
-      headers,
-      undefined,
-      undefined,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'PATCH',
+      url: '/v1/users/me',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async getUser(
     headers: {
@@ -344,14 +344,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v1/users/{userId}',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v1/users/{userId}',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
   public async createAuthV2(
     headers: {
@@ -363,14 +363,14 @@ export class HttpClient {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'POST',
-      '/v2/auth',
-      headers,
-      undefined,
-      undefined,
-      body,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: body,
+      headers: headers,
+      method: 'POST',
+      url: '/v2/auth',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
   }
   public async getGameEventsV2(
     headers: {
@@ -384,13 +384,13 @@ export class HttpClient {
     | Response<Record<string, string>, unknown, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint(
-      'GET',
-      '/v2/events/games/{gameId}',
-      headers,
-      undefined,
-      url,
-      undefined,
-    );
+    return this.#axiosHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      url: '/v2/events/games/{gameId}',
+      queryParams: undefined,
+      urlParameters: url,
+    });
   }
 }
