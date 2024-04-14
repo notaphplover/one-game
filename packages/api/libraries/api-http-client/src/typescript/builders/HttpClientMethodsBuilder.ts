@@ -376,12 +376,32 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
           ),
           undefined,
           [
-            methodParameter,
-            pathParameter,
-            headerParameter,
-            queryParameter,
-            urlParameter,
-            bodyParameter,
+            ts.factory.createObjectLiteralExpression([
+              ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier('body'),
+                bodyParameter,
+              ),
+              ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier('headers'),
+                headerParameter,
+              ),
+              ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier('method'),
+                methodParameter,
+              ),
+              ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier('path'),
+                pathParameter,
+              ),
+              ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier('queryParams'),
+                queryParameter,
+              ),
+              ts.factory.createPropertyAssignment(
+                ts.factory.createIdentifier('urlParameters'),
+                urlParameter,
+              ),
+            ]),
           ],
         ),
       );
