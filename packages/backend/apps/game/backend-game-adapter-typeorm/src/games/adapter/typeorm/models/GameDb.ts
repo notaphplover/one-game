@@ -1,7 +1,18 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { GameAction } from '@cornie-js/backend-game-domain/gameActions';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+  RelationId,
+} from 'typeorm';
 
 import { BinaryToNumberTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/BinaryToNumberTransformer';
 import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
+import { GameActionDb } from '../../../../gameActions/adapter/typeorm/models/GameActionDb';
 import { GameDirectionDb } from './GameDirectionDb';
 import { GameSlotDb } from './GameSlotDb';
 import { GameSpecDb } from './GameSpecDb';
@@ -126,6 +137,13 @@ export class GameDb {
     },
   )
   public readonly gameSpecDb!: GameSpecDb;
+
+  @ManyToOne(() => GameActionDb, undefined, { eager: true, nullable: true })
+  @JoinColumn({ name: 'last_game_action_id' })
+  public readonly lastGameAction!: GameAction | null;
+
+  @RelationId((game: GameDb) => game.lastGameAction)
+  public readonly lastGameActionId!: string | null;
 
   @Column({
     length: 255,

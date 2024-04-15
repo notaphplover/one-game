@@ -384,7 +384,9 @@ describe(useRegisterForm.name, () => {
       });
 
       (
-        httpClient.createUser as jest.Mock<typeof httpClient.createUser>
+        httpClient.endpoints.createUser as jest.Mock<
+          typeof httpClient.endpoints.createUser
+        >
       ).mockResolvedValueOnce(registerResponseFixture);
 
       (
@@ -409,9 +411,9 @@ describe(useRegisterForm.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should called httpClient.createUser()', () => {
-      expect(httpClient.createUser).toHaveBeenCalled();
-      expect(httpClient.createUser).toHaveBeenCalledWith(
+    it('should called httpClient.endpoints.createUser()', () => {
+      expect(httpClient.endpoints.createUser).toHaveBeenCalled();
+      expect(httpClient.endpoints.createUser).toHaveBeenCalledWith(
         {},
         {
           name: 'Mariote',
@@ -481,7 +483,9 @@ describe(useRegisterForm.name, () => {
       });
 
       (
-        httpClient.createUser as jest.Mock<typeof httpClient.createUser>
+        httpClient.endpoints.createUser as jest.Mock<
+          typeof httpClient.endpoints.createUser
+        >
       ).mockResolvedValueOnce(registerResponseFixture);
 
       (
@@ -508,9 +512,9 @@ describe(useRegisterForm.name, () => {
       jest.resetAllMocks();
     });
 
-    it('should called httpClient.createUser()', () => {
-      expect(httpClient.createUser).toHaveBeenCalled();
-      expect(httpClient.createUser).toHaveBeenCalledWith(
+    it('should called httpClient.endpoints.createUser()', () => {
+      expect(httpClient.endpoints.createUser).toHaveBeenCalled();
+      expect(httpClient.endpoints.createUser).toHaveBeenCalledWith(
         {},
         {
           name: 'Mariote',

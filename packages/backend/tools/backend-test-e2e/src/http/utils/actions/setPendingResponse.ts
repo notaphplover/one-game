@@ -1,12 +1,12 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 
 import { OneGameApiWorld } from '../../models/OneGameApiWorld';
 
-export function setPendingResponse<TEndpoint extends keyof HttpClient>(
+export function setPendingResponse<TEndpoint extends keyof HttpClientEndpoints>(
   this: OneGameApiWorld,
   endpoint: TEndpoint,
   alias: string,
-  response: Awaited<ReturnType<HttpClient[TEndpoint]>>,
+  response: Awaited<ReturnType<HttpClientEndpoints[TEndpoint]>>,
 ): void {
   /*
    * ResponseMap[TEndpoint] produces a union type that is too complex to represent.

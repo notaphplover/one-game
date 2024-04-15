@@ -75,6 +75,9 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
       throw new AppError(AppErrorKind.invalidCredentials, 'Access denied');
     }
 
+    const sseTeardownExecutor: SseTeardownExecutor =
+      await this.#gameEventsManagementInputPort.subscribeV2(game, publisher);
+
     const previousMessageEvents: MessageEvent[] =
       await this.#gameActionsManagementInputPort.findNextGameEvents(
         game.id,
@@ -87,7 +90,7 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
         statusCode: HttpStatus.OK,
       },
       previousMessageEvents,
-      await this.#gameEventsManagementInputPort.subscribeV2(game, publisher),
+      sseTeardownExecutor,
     ];
   }
 

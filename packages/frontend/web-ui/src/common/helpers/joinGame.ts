@@ -8,7 +8,7 @@ export const joinGame = async (
   gameId: string,
   userId: string,
 ): Promise<JoinGameSerializedResponse> => {
-  const response: JoinGameResponse = await httpClient.createGameSlot(
+  const response: JoinGameResponse = await httpClient.endpoints.createGameSlot(
     {
       authorization: `Bearer ${token}`,
     },

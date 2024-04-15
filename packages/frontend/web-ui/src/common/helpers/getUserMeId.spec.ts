@@ -42,7 +42,9 @@ describe(getUserMeId.name, () => {
       };
 
       (
-        httpClient.getUserMe as jest.Mock<typeof httpClient.getUserMe>
+        httpClient.endpoints.getUserMe as jest.Mock<
+          typeof httpClient.endpoints.getUserMe
+        >
       ).mockResolvedValueOnce(userMeResponseFixture);
 
       (
@@ -85,7 +87,9 @@ describe(getUserMeId.name, () => {
       };
 
       (
-        httpClient.getUserMe as jest.Mock<typeof httpClient.getUserMe>
+        httpClient.endpoints.getUserMe as jest.Mock<
+          typeof httpClient.endpoints.getUserMe
+        >
       ).mockResolvedValueOnce(userMeResponseFixture);
 
       (

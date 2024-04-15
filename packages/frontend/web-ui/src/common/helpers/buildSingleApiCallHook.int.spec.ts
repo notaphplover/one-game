@@ -80,7 +80,7 @@ describe(buildSingleApiCallHook.name, () => {
         resultFixture,
       );
 
-      (httpClient as jest.Mocked<HttpClient>)[
+      (httpClient as jest.Mocked<HttpClient>).endpoints[
         buildSingleApiCallHookParamsMock.endpoint
       ].mockResolvedValueOnce(httpApiResultFixture);
 

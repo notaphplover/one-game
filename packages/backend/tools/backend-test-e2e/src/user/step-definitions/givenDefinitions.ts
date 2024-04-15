@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Given } from '@cucumber/cucumber';
 import { faker } from '@faker-js/faker';
@@ -65,7 +65,9 @@ export function givenCreateCodeRequestForUser(
   const userParameter: UserV1Parameter =
     getUserOrFail.bind(this)(procesedUserAlias);
 
-  const requestParameters: Parameters<HttpClient['createUserByEmailCode']> = [
+  const requestParameters: Parameters<
+    HttpClientEndpoints['createUserByEmailCode']
+  > = [
     {},
     {
       email: userParameter.userCreateQuery.email,
@@ -90,7 +92,9 @@ export function givenDeleteCodeRequestForUser(
   const userParameter: UserV1Parameter =
     getUserOrFail.bind(this)(procesedUserAlias);
 
-  const requestParameters: Parameters<HttpClient['deleteUserByEmailCode']> = [
+  const requestParameters: Parameters<
+    HttpClientEndpoints['deleteUserByEmailCode']
+  > = [
     {},
     {
       email: userParameter.userCreateQuery.email,
@@ -115,10 +119,12 @@ export async function givenUser(
   givenCreateUserRequest.bind(this)(processedRequestAlias);
   await whenCreateUserRequestIsSend.bind(this)(processedRequestAlias);
 
-  const [, userCreateQueryV1]: Parameters<HttpClient['createUser']> =
+  const [, userCreateQueryV1]: Parameters<HttpClientEndpoints['createUser']> =
     getRequestParametersOrFail(this, 'createUser', processedRequestAlias);
 
-  type CreateUserResponseType = Awaited<ReturnType<HttpClient['createUser']>>;
+  type CreateUserResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['createUser']>
+  >;
 
   const createUserResponse: CreateUserResponseType =
     getResponseParametersOrFail(this, 'createUser', processedRequestAlias);
@@ -133,7 +139,9 @@ export async function givenUser(
     requestAlias,
   );
 
-  type CreateAuthResponseType = Awaited<ReturnType<HttpClient['createAuthV2']>>;
+  type CreateAuthResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['createAuthV2']>
+  >;
 
   const createCodeAuthResponse: CreateAuthResponseType =
     getResponseParametersOrFail(this, 'createAuthV2', processedRequestAlias);
@@ -144,7 +152,7 @@ export async function givenUser(
     );
   }
 
-  const [, authCreateQueryV2]: Parameters<HttpClient['createAuthV2']> =
+  const [, authCreateQueryV2]: Parameters<HttpClientEndpoints['createAuthV2']> =
     getRequestParametersOrFail(this, 'createAuthV2', processedRequestAlias);
 
   if (authCreateQueryV2 === undefined) {
@@ -173,7 +181,9 @@ export async function givenUser(
 
   await whenGetUserMeRequestIsSend.bind(this)(processedRequestAlias);
 
-  type GetUserMeResponseType = Awaited<ReturnType<HttpClient['getUserMe']>>;
+  type GetUserMeResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['getUserMe']>
+  >;
 
   const getUserMeResponse: GetUserMeResponseType = getResponseParametersOrFail(
     this,
@@ -210,12 +220,13 @@ export function givenDeleteOwnUserRequestFromUser(
   const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
-  const deleteUserMeRequestParameters: Parameters<HttpClient['deleteUserMe']> =
-    [
-      {
-        authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
-      },
-    ];
+  const deleteUserMeRequestParameters: Parameters<
+    HttpClientEndpoints['deleteUserMe']
+  > = [
+    {
+      authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
+    },
+  ];
 
   setRequestParameters.bind(this)(
     'deleteUserMe',
@@ -235,7 +246,9 @@ export function givenGetUserMeRequestFromUserCredentials(
   const authV2Parameter: AuthV2Parameter =
     getAuthOrFail.bind(this)(processedUserAlias);
 
-  const getUserMeRequestParameters: Parameters<HttpClient['getUserMe']> = [
+  const getUserMeRequestParameters: Parameters<
+    HttpClientEndpoints['getUserMe']
+  > = [
     {
       authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
     },
@@ -265,13 +278,14 @@ export function givenUpdateUserRequestFromUser(
       name: faker.person.fullName(),
     };
 
-  const updateUserMeRequestParameters: Parameters<HttpClient['updateUserMe']> =
-    [
-      {
-        authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
-      },
-      processedUserMeUpdateQueryV1,
-    ];
+  const updateUserMeRequestParameters: Parameters<
+    HttpClientEndpoints['updateUserMe']
+  > = [
+    {
+      authorization: `Bearer ${authV2Parameter.auth.accessToken}`,
+    },
+    processedUserMeUpdateQueryV1,
+  ];
 
   setRequestParameters.bind(this)(
     'updateUserMe',

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
@@ -15,7 +15,9 @@ describe(AuthMutationResolver.name, () => {
 
   beforeAll(() => {
     httpClientMock = {
-      createAuth: jest.fn(),
+      endpoints: {
+        createAuth: jest.fn(),
+      } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     authMutationResolver = new AuthMutationResolver(httpClientMock);
@@ -28,7 +30,7 @@ describe(AuthMutationResolver.name, () => {
       codeFixture = 'code-fixture';
     });
 
-    describe('when called, and httpClient.createAuth() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.createAuth() returns an OK response', () => {
       let authV1: apiModels.AuthV1;
       let contextFixture: Context;
 
@@ -49,7 +51,7 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createAuth.mockResolvedValueOnce({
+        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
           body: authV1,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -70,13 +72,13 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createAuth()', () => {
+      it('should call httpClient.endpoints.createAuth()', () => {
         const expectedBody: apiModels.AuthCreateQueryV1 = {
           code: codeFixture,
         };
 
-        expect(httpClientMock.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -87,7 +89,7 @@ describe(AuthMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.createAuth() returns an BAD_REQUEST response', () => {
+    describe('when called, and httpClient.endpoints.createAuth() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -108,7 +110,7 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createAuth.mockResolvedValueOnce({
+        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.BAD_REQUEST,
@@ -133,13 +135,13 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createAuth()', () => {
+      it('should call httpClient.endpoints.createAuth()', () => {
         const expectedBody: apiModels.AuthCreateQueryV1 = {
           code: codeFixture,
         };
 
-        expect(httpClientMock.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -168,7 +170,7 @@ describe(AuthMutationResolver.name, () => {
       passwordFixture = 'password-fixture';
     });
 
-    describe('when called, and httpClient.createAuth() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.createAuth() returns an OK response', () => {
       let authV1: apiModels.AuthV1;
       let contextFixture: Context;
 
@@ -189,7 +191,7 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createAuth.mockResolvedValueOnce({
+        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
           body: authV1,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -211,14 +213,14 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createAuth()', () => {
+      it('should call httpClient.endpoints.createAuth()', () => {
         const expectedBody: apiModels.AuthCreateQueryV1 = {
           email: emailFixture,
           password: passwordFixture,
         };
 
-        expect(httpClientMock.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -229,7 +231,7 @@ describe(AuthMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.createAuth() returns an BAD_REQUEST response', () => {
+    describe('when called, and httpClient.endpoints.createAuth() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -250,7 +252,7 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createAuth.mockResolvedValueOnce({
+        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.BAD_REQUEST,
@@ -276,14 +278,14 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createAuth()', () => {
+      it('should call httpClient.endpoints.createAuth()', () => {
         const expectedBody: apiModels.AuthCreateQueryV1 = {
           email: emailFixture,
           password: passwordFixture,
         };
 
-        expect(httpClientMock.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );

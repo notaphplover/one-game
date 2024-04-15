@@ -72,14 +72,15 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
   const updateUserMe = async (
     token: string,
   ): Promise<RegisterConfirmSerializedResponse> => {
-    const response: RegisterConfirmResponse = await httpClient.updateUserMe(
-      {
-        authorization: `Bearer ${token}`,
-      },
-      {
-        active: true,
-      },
-    );
+    const response: RegisterConfirmResponse =
+      await httpClient.endpoints.updateUserMe(
+        {
+          authorization: `Bearer ${token}`,
+        },
+        {
+          active: true,
+        },
+      );
     return buildSerializableResponse(response);
   };
 

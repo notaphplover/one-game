@@ -12,7 +12,7 @@ import {
   GameAction,
   GameActionCreateQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
-import { Game } from '@cornie-js/backend-game-domain/games';
+import { Game, GameUpdateQuery } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
@@ -86,6 +86,8 @@ export class GameUpdatedEventHandler
     const gameAction: GameAction =
       await this.#createGameAction(gameUpdatedEvent);
 
+    await this.#updateLastGameActionId(gameAction, gameUpdatedEvent);
+
     await this.#publishGameUpdatedMessageEvent(game, gameAction);
   }
 
@@ -120,6 +122,23 @@ export class GameUpdatedEventHandler
     await this.#gameEventsSubscriptionOutputPort.publishV2(
       game.id,
       gameUpdatedMessageEvent,
+    );
+  }
+
+  async #updateLastGameActionId(
+    gameAction: GameAction,
+    gameUpdatedEvent: ActiveGameUpdatedEvent,
+  ): Promise<void> {
+    const gameUpdateQuery: GameUpdateQuery = {
+      gameFindQuery: {
+        id: gameAction.gameId,
+      },
+      lastGameActionId: gameAction.id,
+    };
+
+    await this.#gamePersistenceOutputPort.update(
+      gameUpdateQuery,
+      gameUpdatedEvent.transactionWrapper,
     );
   }
 }

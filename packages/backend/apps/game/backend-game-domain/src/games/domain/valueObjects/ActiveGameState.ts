@@ -16,6 +16,7 @@ export interface ActiveGameState {
   readonly deck: GameCardSpec[];
   readonly discardPile: GameCardSpec[];
   readonly drawCount: number;
+  readonly lastGameActionId: string | null;
   readonly skipCount: number;
   readonly slots: ActiveGameSlot[];
   readonly status: GameStatus.active;

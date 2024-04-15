@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
@@ -24,9 +24,11 @@ describe(GameMutationResolver.name, () => {
     > as jest.Mocked<GameGraphQlFromGameV1BuilderType>;
 
     httpClientMock = {
-      createGame: jest.fn(),
-      createGameSlot: jest.fn(),
-      updateGame: jest.fn(),
+      endpoints: {
+        createGame: jest.fn(),
+        createGameSlot: jest.fn(),
+        updateGame: jest.fn(),
+      } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     gameMutationResolver = new GameMutationResolver(
@@ -54,7 +56,7 @@ describe(GameMutationResolver.name, () => {
       };
     });
 
-    describe('when called, and httpClient.createGame() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.createGame() returns an OK response', () => {
       let gameV1Fixture: apiModels.NonStartedGameV1;
       let gameGraphQlFixture: graphqlModels.Game;
 
@@ -76,7 +78,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.createGame.mockResolvedValueOnce({
           body: gameV1Fixture,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -103,15 +105,15 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createGame()', () => {
+      it('should call httpClient.endpoints.createGame()', () => {
         const expectedBody: apiModels.GameCreateQueryV1 = {
           gameSlotsAmount: gameSlotsAmountFixture,
           name: nameFixture,
           options: optionsFixture,
         };
 
-        expect(httpClientMock.createGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -129,7 +131,7 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.createGame() returns an BAD_REQUEST response', () => {
+    describe('when called, and httpClient.endpoints.createGame() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -150,7 +152,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.createGame.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.BAD_REQUEST,
@@ -177,15 +179,15 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createGame()', () => {
+      it('should call httpClient.endpoints.createGame()', () => {
         const expectedBody: apiModels.GameCreateQueryV1 = {
           gameSlotsAmount: gameSlotsAmountFixture,
           name: nameFixture,
           options: optionsFixture,
         };
 
-        expect(httpClientMock.createGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -214,7 +216,7 @@ describe(GameMutationResolver.name, () => {
       userIdFixture = 'user-id';
     });
 
-    describe('when called, and httpClient.createGameSlot() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.createGameSlot() returns an OK response', () => {
       let gameSlotV1Fixture: apiModels.NonStartedGameSlotV1;
 
       let contextFixture: Context;
@@ -235,7 +237,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.createGameSlot.mockResolvedValueOnce({
+        httpClientMock.endpoints.createGameSlot.mockResolvedValueOnce({
           body: gameSlotV1Fixture,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -257,13 +259,15 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.createGameSlot()', () => {
+      it('should call httpClient.endpoints.createGameSlot()', () => {
         const expectedBody: apiModels.GameIdSlotCreateQueryV1 = {
           userId: userIdFixture,
         };
 
-        expect(httpClientMock.createGameSlot).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.createGameSlot).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createGameSlot).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(httpClientMock.endpoints.createGameSlot).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,
@@ -284,7 +288,7 @@ describe(GameMutationResolver.name, () => {
       [HttpStatus.CONFLICT, AppErrorKind.entityConflict],
       [HttpStatus.UNPROCESSABLE_ENTITY, AppErrorKind.unprocessableOperation],
     ])(
-      'when called, and httpClient.createGameSlot() returns a %s response',
+      'when called, and httpClient.endpoints.createGameSlot() returns a %s response',
       (httpStatus: 400 | 401 | 403 | 409 | 422, appErrorKind: AppErrorKind) => {
         let errorV1: apiModels.ErrorV1;
         let contextFixture: Context;
@@ -306,7 +310,7 @@ describe(GameMutationResolver.name, () => {
             },
           } as Partial<Context> as Context;
 
-          httpClientMock.createGameSlot.mockResolvedValueOnce({
+          httpClientMock.endpoints.createGameSlot.mockResolvedValueOnce({
             body: errorV1,
             headers: {},
             statusCode: httpStatus,
@@ -332,13 +336,15 @@ describe(GameMutationResolver.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.createGameSlot()', () => {
+        it('should call httpClient.endpoints.createGameSlot()', () => {
           const expectedBody: apiModels.GameIdSlotCreateQueryV1 = {
             userId: userIdFixture,
           };
 
-          expect(httpClientMock.createGameSlot).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.createGameSlot).toHaveBeenCalledWith(
+          expect(httpClientMock.endpoints.createGameSlot).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.createGameSlot).toHaveBeenCalledWith(
             contextFixture.request.headers,
             {
               gameId: gameIdFixture,
@@ -371,7 +377,7 @@ describe(GameMutationResolver.name, () => {
       gameIdFixture = 'game-id-fixture';
     });
 
-    describe('when called, and httpClient.updateGame() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.updateGame() returns an OK response', () => {
       let gameV1Fixture: apiModels.NonStartedGameV1;
       let gameGraphQlFixture: graphqlModels.Game;
 
@@ -393,7 +399,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.updateGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
           body: gameV1Fixture,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -419,14 +425,14 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.updateGame()', () => {
+      it('should call httpClient.endpoints.updateGame()', () => {
         const expectedBody: apiModels.GameIdPassTurnQueryV1 = {
           kind: 'passTurn',
           slotIndex: slotIndexFixture,
         };
 
-        expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.updateGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,
@@ -447,7 +453,7 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.updateGame() returns an UNAUTHORIZED response', () => {
+    describe('when called, and httpClient.endpoints.updateGame() returns an UNAUTHORIZED response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -468,7 +474,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.updateGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.UNAUTHORIZED,
@@ -494,14 +500,14 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.updateGame()', () => {
+      it('should call httpClient.endpoints.updateGame()', () => {
         const expectedBody: apiModels.GameIdPassTurnQueryV1 = {
           kind: 'passTurn',
           slotIndex: slotIndexFixture,
         };
 
-        expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.updateGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,
@@ -523,7 +529,7 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.updateGame() returns an FORBIDDEN response', () => {
+    describe('when called, and httpClient.endpoints.updateGame() returns an FORBIDDEN response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -544,7 +550,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.updateGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.FORBIDDEN,
@@ -570,14 +576,14 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.updateGame()', () => {
+      it('should call httpClient.endpoints.updateGame()', () => {
         const expectedBody: apiModels.GameIdPassTurnQueryV1 = {
           kind: 'passTurn',
           slotIndex: slotIndexFixture,
         };
 
-        expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.updateGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,
@@ -611,7 +617,7 @@ describe(GameMutationResolver.name, () => {
       gameIdFixture = 'game-id-fixture';
     });
 
-    describe('when called, and httpClient.updateGame() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.updateGame() returns an OK response', () => {
       let gameV1Fixture: apiModels.NonStartedGameV1;
       let gameGraphQlFixture: graphqlModels.Game;
 
@@ -633,7 +639,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.updateGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
           body: gameV1Fixture,
           headers: {},
           statusCode: HttpStatus.OK,
@@ -661,15 +667,15 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.updateGame()', () => {
+      it('should call httpClient.endpoints.updateGame()', () => {
         const expectedBody: apiModels.GameIdPlayCardsQueryV1 = {
           cardIndexes: cardIndexesFixture,
           kind: 'playCards',
           slotIndex: slotIndexFixture,
         };
 
-        expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.updateGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,
@@ -690,7 +696,7 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.updateGame() returns an UNAUTHORIZED response', () => {
+    describe('when called, and httpClient.endpoints.updateGame() returns an UNAUTHORIZED response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -711,7 +717,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.updateGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.UNAUTHORIZED,
@@ -739,15 +745,15 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.updateGame()', () => {
+      it('should call httpClient.endpoints.updateGame()', () => {
         const expectedBody: apiModels.GameIdPlayCardsQueryV1 = {
           cardIndexes: cardIndexesFixture,
           kind: 'playCards',
           slotIndex: slotIndexFixture,
         };
 
-        expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.updateGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,
@@ -769,7 +775,7 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.updateGame() returns an FORBIDDEN response', () => {
+    describe('when called, and httpClient.endpoints.updateGame() returns an FORBIDDEN response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -790,7 +796,7 @@ describe(GameMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.updateGame.mockResolvedValueOnce({
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.FORBIDDEN,
@@ -818,15 +824,15 @@ describe(GameMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.updateGame()', () => {
+      it('should call httpClient.endpoints.updateGame()', () => {
         const expectedBody: apiModels.GameIdPlayCardsQueryV1 = {
           cardIndexes: cardIndexesFixture,
           kind: 'playCards',
           slotIndex: slotIndexFixture,
         };
 
-        expect(httpClientMock.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.updateGame).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: gameIdFixture,

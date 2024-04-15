@@ -33,7 +33,7 @@ export class UserManagementInputPort {
           Record<string, string>,
           apiModels.ErrorV1,
           HttpStatus.NOT_FOUND
-        > = await this.#httpClient.getUser(
+        > = await this.#httpClient.endpoints.getUser(
       {
         Authorization: this.#buildBearerToken(),
       },

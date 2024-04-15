@@ -1,5 +1,3 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpApiResult } from './HttpApiResult';
 
-export type JoinGameResponse = Awaited<
-  ReturnType<HttpClient['createGameSlot']>
->;
+export type JoinGameResponse = HttpApiResult<'createGameSlot'>;

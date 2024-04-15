@@ -1,12 +1,14 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 
 import { OneGameApiWorld, RequestMap } from '../../models/OneGameApiWorld';
 
-export function setRequestParameters<TEndpoint extends keyof HttpClient>(
+export function setRequestParameters<
+  TEndpoint extends keyof HttpClientEndpoints,
+>(
   this: OneGameApiWorld,
   endpoint: TEndpoint,
   alias: string,
-  parameters: Parameters<HttpClient[TEndpoint]>,
+  parameters: Parameters<HttpClientEndpoints[TEndpoint]>,
 ): void {
   let endpointRequestParametersMap: RequestMap[TEndpoint] =
     this.requestParameters[endpoint];
