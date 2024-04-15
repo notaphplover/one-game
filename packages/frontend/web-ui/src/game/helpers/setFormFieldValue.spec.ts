@@ -3,10 +3,10 @@ import { setFormFieldValue } from './setFormFieldValue';
 
 describe(setFormFieldValue.name, () => {
   let fieldNameFixture: string;
-  let fieldValueFixture: string;
+  let fieldValueFixture: string | undefined;
 
-  describe('having a fieldName with value "name"', () => {
-    let result: string | number;
+  describe('having a fieldName with value "name" and a fieldValue with string value', () => {
+    let result: string | undefined;
 
     beforeAll(() => {
       fieldNameFixture = 'name';
@@ -24,8 +24,27 @@ describe(setFormFieldValue.name, () => {
     });
   });
 
-  describe('having a fieldName with different value "name"', () => {
-    let result: string | number;
+  describe('having a fieldName with value "name" and a fieldValue with undefined value', () => {
+    let result: string | undefined;
+
+    beforeAll(() => {
+      fieldNameFixture = 'name';
+      fieldValueFixture = undefined;
+
+      result = setFormFieldValue(fieldNameFixture, fieldValueFixture);
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return a undefined value', () => {
+      expect(result).toStrictEqual(fieldValueFixture);
+    });
+  });
+
+  describe('having a fieldName with a different value "name" and a fieldValue with string value', () => {
+    let result: string | undefined;
 
     beforeAll(() => {
       fieldNameFixture = 'players';
@@ -39,7 +58,26 @@ describe(setFormFieldValue.name, () => {
     });
 
     it('should return a number value', () => {
-      expect(result).toStrictEqual(parseInt(fieldValueFixture));
+      expect(result).toStrictEqual(fieldValueFixture);
+    });
+  });
+
+  describe('having a fieldName with a different value "name" and a fieldValue with undefined value', () => {
+    let result: string | undefined;
+
+    beforeAll(() => {
+      fieldNameFixture = 'players';
+      fieldValueFixture = undefined;
+
+      result = setFormFieldValue(fieldNameFixture, fieldValueFixture);
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return a undefined value', () => {
+      expect(result).toStrictEqual(fieldValueFixture);
     });
   });
 });
