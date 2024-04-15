@@ -1,7 +1,7 @@
-import { GameOptions } from './GameOptions';
+import { GameOptionsV1 } from '@cornie-js/api-models/lib/models/types';
 
 export interface CreateNewGameHttpRequest {
   gameSlotsAmount: number;
-  name: string;
-  options: GameOptions;
+  name?: string | undefined;
+  options: GameOptionsV1;
 }

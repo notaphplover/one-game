@@ -1,18 +1,13 @@
+import { Either } from '../../common/models/Either';
 import { CreateNewGameStatus } from './CreateNewGameStatus';
 import { FormFieldsNewGame } from './FormFieldsNewGame';
-import { FormValidationNewGameResult } from './FormValidationNewGameResult';
-import { GameOptions } from './GameOptions';
-
-export interface setFormFieldsParams {
-  name: string;
-  value: string | number | GameOptions;
-}
+import { FormNewGameValidationErrorResult } from './FormNewGameValidationErrorResult';
 
 export interface CreateNewGameResult {
   formFields: FormFieldsNewGame;
   status: CreateNewGameStatus;
   notifyFormFieldsFilled: () => void;
-  formValidation: FormValidationNewGameResult;
+  formValidation: Either<FormNewGameValidationErrorResult, undefined>;
   backendError: string | null;
-  setFormField: (params: setFormFieldsParams) => void;
+  setFormField: () => void;
 }
