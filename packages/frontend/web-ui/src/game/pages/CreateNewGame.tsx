@@ -26,9 +26,6 @@ import {
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { CheckingAuth } from '../../auth/components/CheckingAuth';
-import { setFormFieldValue } from '../helpers/setFormFieldValue';
-import { SetFormFieldsParams } from '../models/CreateNewGameResult';
-import { GameOptions } from '../models/GameOptions';
 
 export const CreateNewGame = (): React.JSX.Element => {
   const {
@@ -60,40 +57,6 @@ export const CreateNewGame = (): React.JSX.Element => {
   const onGoHome = (event: React.FormEvent): void => {
     event.preventDefault();
     navigate('/', { replace: true });
-  };
-
-  const onHandleNamePlayers = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    const value: string | number = setFormFieldValue(
-      event.target.name,
-      event.target.value,
-    );
-
-    const paramsNamePlayers: SetFormFieldsParams = {
-      name: event.target.name,
-      value: value,
-    };
-
-    setFormField(paramsNamePlayers);
-  };
-
-  const onHandleOptions = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    const options: GameOptions = formFields.options;
-
-    const optionsWithChanges: GameOptions = {
-      ...options,
-      [event.target.value]: event.target.checked,
-    };
-
-    const paramsOptions: SetFormFieldsParams = {
-      name: 'options',
-      value: optionsWithChanges,
-    };
-
-    setFormField(paramsOptions);
   };
 
   const isTextFieldDisabled = (): boolean => {
@@ -134,7 +97,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                   fullWidth
                   name="name"
                   value={formFields.name}
-                  onChange={onHandleNamePlayers}
+                  onChange={setFormField}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -146,9 +109,9 @@ export const CreateNewGame = (): React.JSX.Element => {
                   fullWidth
                   name="players"
                   value={formFields.players}
-                  onChange={onHandleNamePlayers}
-                  error={formValidation.numberOfPlayers !== undefined}
-                  helperText={formValidation.numberOfPlayers}
+                  onChange={setFormField}
+                  error={formValidation.isRight === false}
+                  helperText={formValidation.value?.numberOfPlayers}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -180,7 +143,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw2Draw2Cards
                                 }
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="options.chainDraw2Draw2Cards"
                               />
                             }
@@ -196,7 +159,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw2Draw4Cards
                                 }
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="chainDraw2Draw4Cards"
                               />
                             }
@@ -212,7 +175,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw4Draw4Cards
                                 }
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="chainDraw4Draw4Cards"
                               />
                             }
@@ -228,7 +191,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw4Draw2Cards
                                 }
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="chainDraw4Draw2Cards"
                               />
                             }
@@ -242,7 +205,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             control={
                               <Checkbox
                                 checked={formFields.options.playCardIsMandatory}
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="playCardIsMandatory"
                               />
                             }
@@ -258,7 +221,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.playMultipleSameCards
                                 }
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="playMultipleSameCards"
                               />
                             }
@@ -275,7 +238,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                   formFields.options
                                     .playWildDraw4IfNoOtherAlternative
                                 }
-                                onChange={onHandleOptions}
+                                onChange={setFormField}
                                 name="playWildDraw4IfNoOtherAlternative"
                               />
                             }

@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Either } from '../../common/models/Either';
-import {
-  SetFormFieldsParams,
-  CreateNewGameResult,
-} from '../models/CreateNewGameResult';
+import { CreateNewGameResult } from '../models/CreateNewGameResult';
 import { selectAuthToken } from '../../app/store/features/authSlice';
 import { useAppSelector } from '../../app/store/hooks';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
-import { FormValidationNewGameResult } from '../models/FormValidationNewGameResult';
+import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
 import { httpClient } from '../../common/http/services/HttpService';
 import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
@@ -27,6 +24,12 @@ import {
   UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
 } from '../../common/helpers/errorMessage';
 import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
+import {
+  GameCreateQueryV1,
+  GameOptionsV1,
+} from '@cornie-js/api-models/lib/models/types';
+import { setFormFieldValue } from '../helpers/setFormFieldValue';
+import { ApiModules } from '@reduxjs/toolkit/query';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const token: string | null = useAppSelector(selectAuthToken);
@@ -46,8 +49,9 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [status, setStatus] = useState<CreateNewGameStatus>(
     CreateNewGameStatus.initial,
   );
-  const [formValidation, setFormValidation] =
-    useState<FormValidationNewGameResult>({});
+  const [formValidation, setFormValidation] = useState<
+    Either<FormNewGameValidationErrorResult, undefined>
+  >({ isRight: true, value: undefined });
   const [backendError, setBackendError] = useState<string | null>(null);
 
   const [gameId, setGameId] = useState<string | null>(null);
@@ -55,7 +59,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [backendErrorUser, setBackendErrorUser] = useState<string | null>(null);
   const [backendErrorGame, setBackendErrorGame] = useState<string | null>(null);
 
-  const setFormField = (params: SetFormFieldsParams): void => {
+  const setFormField = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (
       status !== CreateNewGameStatus.initial &&
       status !== CreateNewGameStatus.validationKO
@@ -63,10 +67,28 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       throw new Error('Unexpected form state at setFormField');
     }
 
-    setFormFields({
-      ...formFields,
-      [params.name]: params.value,
-    });
+    if (event.target.name !== 'name' && event.target.name !== 'players') {
+      const options: GameOptionsV1 = formFields.options;
+
+      const optionsWithChanges: GameOptionsV1 = {
+        ...options,
+        [event.target.value]: event.target.checked,
+      };
+      setFormFields({
+        ...formFields,
+        ['options']: optionsWithChanges,
+      });
+    } else {
+      const value: string | number = setFormFieldValue(
+        event.target.name,
+        event.target.value,
+      );
+
+      setFormFields({
+        ...formFields,
+        [event.target.name]: value,
+      });
+    }
   };
 
   const notifyFormFieldsFilled = (): void => {
@@ -99,7 +121,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       throw new Error('Unexpected form state at validateForm');
     }
 
-    const formValidationValue: FormValidationNewGameResult = {};
+    const formValidationValue: FormNewGameValidationErrorResult = {};
 
     const numberOfPlayersValidation: Either<string, undefined> =
       validateNumberOfPlayers(formFields.players);
@@ -108,11 +130,17 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       formValidationValue.numberOfPlayers = numberOfPlayersValidation.value;
     }
 
-    setFormValidation(formValidationValue);
-
     if (Object.values(formValidationValue).length === 0) {
+      setFormValidation({
+        isRight: true,
+        value: undefined,
+      });
       setStatus(CreateNewGameStatus.pendingBackend);
     } else {
+      setFormValidation({
+        isRight: false,
+        value: formValidationValue,
+      });
       setStatus(CreateNewGameStatus.validationKO);
     }
   };
@@ -205,14 +233,26 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const fetchCreateGame = async (
     formFields: FormFieldsNewGame,
   ): Promise<NewGameSerializedResponse> => {
+    let httpRequestQuery: GameCreateQueryV1;
+
+    if (formFields.name !== undefined) {
+      httpRequestQuery = {
+        gameSlotsAmount: formFields.players,
+        options: formFields.options,
+        name: formFields.name,
+      };
+    } else {
+      httpRequestQuery = {
+        gameSlotsAmount: formFields.players,
+        options: formFields.options,
+      };
+    }
+
     const response: NewGameResponse = await httpClient.createGame(
       {
         authorization: `Bearer ${token}`,
       },
-      {
-        gameSlotsAmount: formFields.players,
-        options: formFields.options,
-      },
+      httpRequestQuery,
     );
 
     return buildSerializableResponse(response);
