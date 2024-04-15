@@ -3,7 +3,7 @@ import { FormFieldsNewGame } from './FormFieldsNewGame';
 import { FormValidationNewGameResult } from './FormValidationNewGameResult';
 import { GameOptions } from './GameOptions';
 
-export interface setFormFieldsParams {
+export interface SetFormFieldsParams {
   name: string;
   value: string | number | GameOptions;
 }
@@ -14,5 +14,5 @@ export interface CreateNewGameResult {
   notifyFormFieldsFilled: () => void;
   formValidation: FormValidationNewGameResult;
   backendError: string | null;
-  setFormField: (params: setFormFieldsParams) => void;
+  setFormField: (params: SetFormFieldsParams) => void;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -24,11 +24,10 @@ import {
   HomeOutlined,
 } from '@mui/icons-material';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
-import { useDisplayDialog } from '../hooks/useDisplayDialog';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { CheckingAuth } from '../../auth/components/CheckingAuth';
 import { setFormFieldValue } from '../helpers/setFormFieldValue';
-import { setFormFieldsParams } from '../models/CreateNewGameResult';
+import { SetFormFieldsParams } from '../models/CreateNewGameResult';
 import { GameOptions } from '../models/GameOptions';
 
 export const CreateNewGame = (): React.JSX.Element => {
@@ -41,10 +40,16 @@ export const CreateNewGame = (): React.JSX.Element => {
     setFormField,
   } = useCreateNewGame();
 
-  const { openDialog, setHandleOpenDialog, setHandleCloseDialog } =
-    useDisplayDialog();
-
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const navigate: NavigateFunction = useNavigate();
+
+  const setHandleOpenDialog = (): void => {
+    setOpenDialog(true);
+  };
+
+  const setHandleCloseDialog = (): void => {
+    setOpenDialog(false);
+  };
 
   const onSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
@@ -65,7 +70,7 @@ export const CreateNewGame = (): React.JSX.Element => {
       event.target.value,
     );
 
-    const paramsNamePlayers: setFormFieldsParams = {
+    const paramsNamePlayers: SetFormFieldsParams = {
       name: event.target.name,
       value: value,
     };
@@ -83,7 +88,7 @@ export const CreateNewGame = (): React.JSX.Element => {
       [event.target.value]: event.target.checked,
     };
 
-    const paramsOptions: setFormFieldsParams = {
+    const paramsOptions: SetFormFieldsParams = {
       name: 'options',
       value: optionsWithChanges,
     };

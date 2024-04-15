@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Either } from '../../common/models/Either';
 import {
-  setFormFieldsParams,
+  SetFormFieldsParams,
   CreateNewGameResult,
 } from '../models/CreateNewGameResult';
 import { selectAuthToken } from '../../app/store/features/authSlice';
@@ -55,7 +55,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [backendErrorUser, setBackendErrorUser] = useState<string | null>(null);
   const [backendErrorGame, setBackendErrorGame] = useState<string | null>(null);
 
-  const setFormField = (params: setFormFieldsParams): void => {
+  const setFormField = (params: SetFormFieldsParams): void => {
     if (
       status !== CreateNewGameStatus.initial &&
       status !== CreateNewGameStatus.validationKO
@@ -78,13 +78,17 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     switch (status) {
       case CreateNewGameStatus.pendingValidation:
         validateForm();
-        setUserMe(token);
+        if (token !== null) {
+          setUserMe(token);
+        }
         break;
       case CreateNewGameStatus.pendingBackend:
         createGame(formFields);
         break;
       case CreateNewGameStatus.backendOK:
-        joinNewGame(token, gameId, userId);
+        if (token !== null && gameId !== null && userId !== null) {
+          joinNewGame(token, gameId, userId);
+        }
         break;
       default:
     }
@@ -113,7 +117,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     }
   };
 
-  const setUserMe = async (token: string | null): Promise<void> => {
+  const setUserMe = async (token: string): Promise<void> => {
     if (status !== CreateNewGameStatus.pendingValidation) {
       throw new Error('Unexpected form state at createGame');
     }
@@ -134,9 +138,9 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   };
 
   const joinNewGame = async (
-    token: string | null,
-    gameId: string | null,
-    userId: string | null,
+    token: string,
+    gameId: string,
+    userId: string,
   ): Promise<void> => {
     if (status !== CreateNewGameStatus.backendOK) {
       throw new Error('Unexpected form state at createGame');
@@ -207,7 +211,6 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       },
       {
         gameSlotsAmount: formFields.players,
-        name: formFields.name,
         options: formFields.options,
       },
     );
