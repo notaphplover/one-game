@@ -9,8 +9,8 @@ import { OpenApi3Dot1Object } from '@cornie-js/openapi-utils';
 import prettier from 'prettier';
 import yaml from 'yaml';
 
-import { HttpClientClassBuilder } from '../typescript/builders/HttpClientClassBuilder';
-import { HttpClientMethodsBuilder } from '../typescript/builders/HttpClientMethodsBuilder';
+import { HttpClientEndpointsClassBuilder } from '../typescript/builders/HttpClientEndpointsClassBuilder';
+import { HttpClientEndpointsMethodsBuilder } from '../typescript/builders/HttpClientEndpointsMethodsBuilder';
 import { HttpClientSourceFileBuilder } from '../typescript/builders/HttpClientSourceFileBuilder';
 import { StringifiedSourceCodeBuilder } from '../typescript/builders/StringifiedSourceCodeBuilder';
 import { HttpClientOptions } from '../typescript/models/HttpClientOptions';
@@ -22,7 +22,7 @@ function arrayHasThreeElements<T>(value: T[]): value is [T, T, T, ...T[]] {
   return value.length >= fourElementArrayLength;
 }
 
-const HTTP_CLIENT_SOURCE_FILE_NAME: string = 'HttpClient.ts';
+const HTTP_CLIENT_ENDPOINTS_SOURCE_FILE_NAME: string = 'HttpClientEndpoints.ts';
 
 void (async () => {
   if (arrayHasThreeElements(argv)) {
@@ -35,8 +35,10 @@ void (async () => {
 
     const endpointClientSourceFileBuilder: HttpClientSourceFileBuilder =
       new HttpClientSourceFileBuilder(
-        new HttpClientClassBuilder(
-          new HttpClientMethodsBuilder(new OpenApiJsonPointerResolver()),
+        new HttpClientEndpointsClassBuilder(
+          new HttpClientEndpointsMethodsBuilder(
+            new OpenApiJsonPointerResolver(),
+          ),
         ),
       );
 
@@ -57,7 +59,7 @@ void (async () => {
     );
 
     await fs.writeFile(
-      path.join(destinationFolder, HTTP_CLIENT_SOURCE_FILE_NAME),
+      path.join(destinationFolder, HTTP_CLIENT_ENDPOINTS_SOURCE_FILE_NAME),
       await prettier.format(sourceFile, {
         ...prettierConfig,
         parser: 'typescript',

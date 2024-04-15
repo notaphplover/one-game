@@ -29,7 +29,7 @@
     "@cornie-js/process-manager": "workspace:*",
     "@jest/globals": "29.7.0",
     "@types/glob": "8.1.0",
-    "@types/node": "20.12.6",
+    "@types/node": "20.12.7",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "dotenv-cli": "7.4.1",
@@ -43,7 +43,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   },
   "engines": {
     "node": "^20.0.0",

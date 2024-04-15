@@ -137,7 +137,7 @@ export const useRegisterForm = (initialFormFields: UseRegisterFormParams) => {
   const fetchCreateUser = async (
     formFields: FormFieldsRegister,
   ): Promise<RegisterSerializedResponse> => {
-    const response: RegisterResponse = await httpClient.createUser(
+    const response: RegisterResponse = await httpClient.endpoints.createUser(
       {},
       {
         email: formFields.email,

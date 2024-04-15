@@ -1,6 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { HttpClient, Response } from '@cornie-js/api-http-client';
+import {
+  HttpClient,
+  HttpClientEndpoints,
+  Response,
+} from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import {
   Environment,
@@ -34,7 +38,9 @@ describe(UserManagementInputPort.name, () => {
     environmentServiceMock.getEnvironment.mockReturnValue(environmentFixture);
 
     httpClientMock = {
-      getUser: jest.fn(),
+      endpoints: {
+        getUser: jest.fn(),
+      } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     userManagementInputPort = new UserManagementInputPort(
@@ -50,7 +56,7 @@ describe(UserManagementInputPort.name, () => {
       userIdFixture = 'user-id';
     });
 
-    describe('when called, and httpClient.getUser() returns an ok response with a user', () => {
+    describe('when called, and httpClient.endpoints.getUser() returns an ok response with a user', () => {
       let responseFixture: Response<
         Record<string, string>,
         apiModels.UserV1,
@@ -66,7 +72,7 @@ describe(UserManagementInputPort.name, () => {
           statusCode: HttpStatus.OK,
         };
 
-        httpClientMock.getUser.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getUser.mockResolvedValueOnce(responseFixture);
 
         result = await userManagementInputPort.findOne(userIdFixture);
       });
@@ -75,9 +81,9 @@ describe(UserManagementInputPort.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getUser()', () => {
-        expect(httpClientMock.getUser).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getUser).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getUser()', () => {
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getUser).toHaveBeenCalledWith(
           {
             Authorization: expect.any(String),
           },

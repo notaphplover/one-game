@@ -1,7 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient, Response } from '@cornie-js/api-http-client';
+import {
+  HttpClient,
+  HttpClientEndpoints,
+  Response,
+} from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { HttpStatus } from '@nestjs/common';
@@ -23,8 +27,10 @@ describe(GameQueryResolver.name, () => {
     };
 
     httpClientMock = {
-      getGame: jest.fn(),
-      getGamesMine: jest.fn(),
+      endpoints: {
+        getGame: jest.fn(),
+        getGamesMine: jest.fn(),
+      } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
     gameQueryResolver = new GameQueryResolver(
@@ -34,7 +40,7 @@ describe(GameQueryResolver.name, () => {
   });
 
   describe('.gameById', () => {
-    describe('when called, and httpClient.getGame() returns a Response with status code 200', () => {
+    describe('when called, and httpClient.endpoints.getGame() returns a Response with status code 200', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.GameQueryGameByIdArgs;
       let contextFixture: Context;
@@ -70,7 +76,7 @@ describe(GameQueryResolver.name, () => {
 
         gameGraphQlFromGameV1BuilderMock.build.mockReturnValueOnce(gameFixture);
 
-        httpClientMock.getGame.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getGame.mockResolvedValueOnce(responseFixture);
 
         result = await gameQueryResolver.gameById(
           firstArgFixture,
@@ -83,9 +89,9 @@ describe(GameQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getGame()', () => {
-        expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getGame).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getGame()', () => {
+        expect(httpClientMock.endpoints.getGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: argsFixture.id,
@@ -105,7 +111,7 @@ describe(GameQueryResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.getGame() returns a Response with status code 401', () => {
+    describe('when called, and httpClient.endpoints.getGame() returns a Response with status code 401', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.GameQueryGameByIdArgs;
       let contextFixture: Context;
@@ -139,7 +145,7 @@ describe(GameQueryResolver.name, () => {
           statusCode: HttpStatus.UNAUTHORIZED,
         };
 
-        httpClientMock.getGame.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getGame.mockResolvedValueOnce(responseFixture);
 
         try {
           await gameQueryResolver.gameById(
@@ -156,9 +162,9 @@ describe(GameQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getGame()', () => {
-        expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getGame).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getGame()', () => {
+        expect(httpClientMock.endpoints.getGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: argsFixture.id,
@@ -179,7 +185,7 @@ describe(GameQueryResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.getGame() returns a Response with status code 404', () => {
+    describe('when called, and httpClient.endpoints.getGame() returns a Response with status code 404', () => {
       let firstArgFixture: unknown;
       let argsFixture: graphqlModels.GameQueryGameByIdArgs;
       let contextFixture: Context;
@@ -213,7 +219,7 @@ describe(GameQueryResolver.name, () => {
           statusCode: HttpStatus.NOT_FOUND,
         };
 
-        httpClientMock.getGame.mockResolvedValueOnce(responseFixture);
+        httpClientMock.endpoints.getGame.mockResolvedValueOnce(responseFixture);
 
         result = await gameQueryResolver.gameById(
           firstArgFixture,
@@ -226,9 +232,9 @@ describe(GameQueryResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.getGame()', () => {
-        expect(httpClientMock.getGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.getGame).toHaveBeenCalledWith(
+      it('should call httpClient.endpoints.getGame()', () => {
+        expect(httpClientMock.endpoints.getGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.getGame).toHaveBeenCalledWith(
           contextFixture.request.headers,
           {
             gameId: argsFixture.id,
@@ -268,7 +274,7 @@ describe(GameQueryResolver.name, () => {
         };
       });
 
-      describe('when called, and httpClient.getGamesMine() returns an OK Response', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns an OK Response', () => {
         let gameV1Fixture: apiModels.GameV1;
         let gameFixture: graphqlModels.Game;
 
@@ -279,7 +285,7 @@ describe(GameQueryResolver.name, () => {
 
           gameFixture = Symbol() as unknown as graphqlModels.Game;
 
-          httpClientMock.getGamesMine.mockResolvedValueOnce({
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce({
             body: [gameV1Fixture],
             headers: {},
             statusCode: HttpStatus.OK,
@@ -300,9 +306,11 @@ describe(GameQueryResolver.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.getGamesMine()', () => {
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             contextFixture.request.headers,
             {
               page: (argsFixture.findMyGamesInput?.page as number).toString(),
@@ -338,7 +346,7 @@ describe(GameQueryResolver.name, () => {
         };
       });
 
-      describe('when called, and httpClient.getGamesMine() returns an OK Response', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns an OK Response', () => {
         let gameV1Fixture: apiModels.GameV1;
         let gameFixture: graphqlModels.Game;
 
@@ -349,7 +357,7 @@ describe(GameQueryResolver.name, () => {
 
           gameFixture = Symbol() as unknown as graphqlModels.Game;
 
-          httpClientMock.getGamesMine.mockResolvedValueOnce({
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce({
             body: [gameV1Fixture],
             headers: {},
             statusCode: HttpStatus.OK,
@@ -370,9 +378,11 @@ describe(GameQueryResolver.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.getGamesMine()', () => {
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             contextFixture.request.headers,
             {
               pageSize: (
@@ -410,7 +420,7 @@ describe(GameQueryResolver.name, () => {
         };
       });
 
-      describe('when called, and httpClient.getGamesMine() returns an OK Response', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns an OK Response', () => {
         let gameV1Fixture: apiModels.GameV1;
         let gameFixture: graphqlModels.Game;
 
@@ -421,7 +431,7 @@ describe(GameQueryResolver.name, () => {
 
           gameFixture = Symbol() as unknown as graphqlModels.Game;
 
-          httpClientMock.getGamesMine.mockResolvedValueOnce({
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce({
             body: [gameV1Fixture],
             headers: {},
             statusCode: HttpStatus.OK,
@@ -442,9 +452,11 @@ describe(GameQueryResolver.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.getGamesMine()', () => {
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             contextFixture.request.headers,
             {
               status: argsFixture.findMyGamesInput?.status,
@@ -480,7 +492,7 @@ describe(GameQueryResolver.name, () => {
         };
       });
 
-      describe('when called, and httpClient.getGamesMine() returns a Bad Request Response', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a Bad Request Response', () => {
         let gameFixture: graphqlModels.Game;
 
         let errorDescriptionFixture: string;
@@ -492,7 +504,7 @@ describe(GameQueryResolver.name, () => {
 
           errorDescriptionFixture = 'error description fixture';
 
-          httpClientMock.getGamesMine.mockResolvedValueOnce({
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce({
             body: {
               description: errorDescriptionFixture,
             },
@@ -519,9 +531,11 @@ describe(GameQueryResolver.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.getGamesMine()', () => {
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.getGamesMine).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             contextFixture.request.headers,
             {
               page: (argsFixture.findMyGamesInput?.page as number).toString(),

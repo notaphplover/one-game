@@ -50,7 +50,9 @@ describe('createAuthByCredentials', () => {
       };
 
       (
-        httpClient.createAuth as jest.Mock<typeof httpClient.createAuth>
+        httpClient.endpoints.createAuth as jest.Mock<
+          typeof httpClient.endpoints.createAuth
+        >
       ).mockResolvedValueOnce(authResponseFixture);
       (
         buildSerializableResponse as jest.Mock<typeof buildSerializableResponse>
@@ -87,9 +89,9 @@ describe('createAuthByCredentials', () => {
       );
     });
 
-    it('should call httpClient.createAuth()', () => {
-      expect(httpClient.createAuth).toHaveBeenCalledTimes(1);
-      expect(httpClient.createAuth).toHaveBeenCalledWith(
+    it('should call httpClient.endpoints.createAuth()', () => {
+      expect(httpClient.endpoints.createAuth).toHaveBeenCalledTimes(1);
+      expect(httpClient.endpoints.createAuth).toHaveBeenCalledWith(
         {},
         emailPasswordFixture,
       );

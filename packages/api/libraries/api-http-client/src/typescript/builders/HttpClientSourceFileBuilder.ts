@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
 import { HttpClientOptions } from '../models/HttpClientOptions';
-import { HttpClientClassBuilder } from './HttpClientClassBuilder';
+import { HttpClientEndpointsClassBuilder } from './HttpClientEndpointsClassBuilder';
 
 const API_MODELS_MODULE: string = '@cornie-js/api-models';
 const API_MODELS_MODULE_MODELS_NAMESPACE: string = 'models';
@@ -10,9 +10,9 @@ export class HttpClientSourceFileBuilder {
   public static apiModelsNamespaceIdentifier: string = 'apiModels';
   public static axiosHttpClientClassIdentifier: string = 'AxiosHttpClient';
 
-  readonly #endpointClientClassBuilder: HttpClientClassBuilder;
+  readonly #endpointClientClassBuilder: HttpClientEndpointsClassBuilder;
 
-  constructor(endpointClientClassBuilder: HttpClientClassBuilder) {
+  constructor(endpointClientClassBuilder: HttpClientEndpointsClassBuilder) {
     this.#endpointClientClassBuilder = endpointClientClassBuilder;
   }
 

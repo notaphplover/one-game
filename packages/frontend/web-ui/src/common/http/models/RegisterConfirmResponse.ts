@@ -1,5 +1,3 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpApiResult } from './HttpApiResult';
 
-export type RegisterConfirmResponse = Awaited<
-  ReturnType<HttpClient['updateUserMe']>
->;
+export type RegisterConfirmResponse = HttpApiResult<'updateUserMe'>;

@@ -52,9 +52,11 @@ export class EventSource implements EventTarget {
 
     this.#readyState = EventSource.CONNECTING;
 
-    void this.#fetch(() =>
-      this.#buildPotentialCorsRequest(this.#url, corsAtributeState),
-    );
+    setTimeout(() => {
+      void this.#fetch(() =>
+        this.#buildPotentialCorsRequest(this.#url, corsAtributeState),
+      );
+    }, 1);
   }
 
   public get onerror():
@@ -174,6 +176,17 @@ export class EventSource implements EventTarget {
     }
   }
 
+  protected _buildHeaders(): Headers {
+    const headers: Headers = new Headers();
+    headers.set('accept', EVENT_STREAM_MIME_TYPE);
+
+    if (this.#lastEventId !== '') {
+      headers.set('last-event-id', this.#lastEventId);
+    }
+
+    return headers;
+  }
+
   // https://html.spec.whatwg.org/multipage/urls-and-fetching.html#create-a-potential-cors-request
   #buildPotentialCorsRequest(
     url: string,
@@ -209,19 +222,13 @@ export class EventSource implements EventTarget {
      *  and whose use-URL-credentials flag is set.
      */
 
-    const headers: Headers = new Headers();
-    headers.set('accept', EVENT_STREAM_MIME_TYPE);
-
-    if (this.#lastEventId !== '') {
-      headers.set('last-event-id', this.#lastEventId);
-    }
-
     const requestInit: RequestInit = {
       cache: 'no-store',
       credentials: credentialsMode,
-      headers,
+      headers: this._buildHeaders(),
       mode,
       redirect: 'follow',
+      signal: abortController.signal,
     };
 
     const request: Request = new Request(url, requestInit);
@@ -255,19 +262,20 @@ export class EventSource implements EventTarget {
       buildRequest,
       fail: async () => this.#close(),
       getRetryMs: () => this.#retryMs,
-      onMessage: (messageEvent: MessageEvent<unknown>): void => {
-        if (messageEvent.lastEventId != null) {
-          this.#lastEventId = messageEvent.lastEventId;
-        }
-
-        this.dispatchEvent(messageEvent);
-      },
       onOpen: () => {
         this.#readyState = EventSource.OPEN;
         this.dispatchEvent(new Event(EventSourceEmitter.openEventType));
       },
-      onRetryMsChanged: (retryMs: number) => {
-        this.#retryMs = retryMs;
+      parseSseStreamParams: {
+        onMessage: (messageEvent: MessageEvent<unknown>): void => {
+          this.dispatchEvent(messageEvent);
+        },
+        onMessageId: (id: string): void => {
+          this.#lastEventId = id;
+        },
+        onRetryMsChanged: (retryMs: number) => {
+          this.#retryMs = retryMs;
+        },
       },
     });
   }

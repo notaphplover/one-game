@@ -14,7 +14,7 @@ export const createAuthByCredentials = createAsyncThunk(
   async (
     formField: CreateAuthByCredentialsParams,
   ): Promise<AuthSerializedResponse> => {
-    const response: AuthResponse = await httpClient.createAuth(
+    const response: AuthResponse = await httpClient.endpoints.createAuth(
       {},
       {
         email: formField.email,

@@ -1,12 +1,14 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 
 import { OneGameApiWorld, RequestMap } from '../../models/OneGameApiWorld';
 
-export function getRequestParametersOrFail<TEndpoint extends keyof HttpClient>(
+export function getRequestParametersOrFail<
+  TEndpoint extends keyof HttpClientEndpoints,
+>(
   world: OneGameApiWorld,
   endpoint: TEndpoint,
   alias: string,
-): Parameters<HttpClient[TEndpoint]> {
+): Parameters<HttpClientEndpoints[TEndpoint]> {
   const endpointRequestParametersMap: RequestMap[TEndpoint] =
     world.requestParameters[endpoint];
 
@@ -16,8 +18,9 @@ export function getRequestParametersOrFail<TEndpoint extends keyof HttpClient>(
     );
   }
 
-  const requestParameters: Parameters<HttpClient[TEndpoint]> | undefined =
-    endpointRequestParametersMap[alias];
+  const requestParameters:
+    | Parameters<HttpClientEndpoints[TEndpoint]>
+    | undefined = endpointRequestParametersMap[alias];
 
   if (requestParameters === undefined) {
     throw new Error(`Expected request "${alias}" to exist in the world`);

@@ -11,18 +11,18 @@ import ts from 'typescript';
 
 import { HttpClientMethodsOptions } from '../models/HttpClientMethodsOptions';
 import { HttpClientOptions } from '../models/HttpClientOptions';
-import { HttpClientMethodsBuilder } from './HttpClientMethodsBuilder';
+import { HttpClientEndpointsMethodsBuilder } from './HttpClientEndpointsMethodsBuilder';
 import { HttpClientSourceFileBuilder } from './HttpClientSourceFileBuilder';
 
-const HTTP_CLIENT_CLASS_NAME: string = 'HttpClient';
-const BASE_URL_CONSTRUCTOR_ARGUMENT_NAME: string = 'baseUrl';
+const HTTP_CLIENT_CLASS_NAME: string = 'HttpClientEndpoints';
+const AXIOS_HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME: string = 'axiosHttpClient';
 
-export class HttpClientClassBuilder {
+export class HttpClientEndpointsClassBuilder {
   public static axiosHttpBuilderPropertyName: string = '#axiosHttpClient';
 
-  readonly #endpointClientMethodsBuilder: HttpClientMethodsBuilder;
+  readonly #endpointClientMethodsBuilder: HttpClientEndpointsMethodsBuilder;
 
-  constructor(endpointClientMethodsBuilder: HttpClientMethodsBuilder) {
+  constructor(endpointClientMethodsBuilder: HttpClientEndpointsMethodsBuilder) {
     this.#endpointClientMethodsBuilder = endpointClientMethodsBuilder;
   }
 
@@ -63,7 +63,7 @@ export class HttpClientClassBuilder {
     return ts.factory.createPropertyDeclaration(
       [ts.factory.createToken(ts.SyntaxKind.ReadonlyKeyword)],
       ts.factory.createPrivateIdentifier(
-        HttpClientClassBuilder.axiosHttpBuilderPropertyName,
+        HttpClientEndpointsClassBuilder.axiosHttpBuilderPropertyName,
       ),
       undefined,
       ts.factory.createTypeReferenceNode(
@@ -83,9 +83,16 @@ export class HttpClientClassBuilder {
         ts.factory.createParameterDeclaration(
           undefined,
           undefined,
-          ts.factory.createIdentifier(BASE_URL_CONSTRUCTOR_ARGUMENT_NAME),
+          ts.factory.createIdentifier(
+            AXIOS_HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME,
+          ),
           undefined,
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+          ts.factory.createTypeReferenceNode(
+            ts.factory.createIdentifier(
+              HttpClientSourceFileBuilder.axiosHttpClientClassIdentifier,
+            ),
+            undefined,
+          ),
           undefined,
         ),
       ],
@@ -96,20 +103,12 @@ export class HttpClientClassBuilder {
               ts.factory.createPropertyAccessExpression(
                 ts.factory.createThis(),
                 ts.factory.createPrivateIdentifier(
-                  HttpClientClassBuilder.axiosHttpBuilderPropertyName,
+                  HttpClientEndpointsClassBuilder.axiosHttpBuilderPropertyName,
                 ),
               ),
               ts.factory.createToken(ts.SyntaxKind.EqualsToken),
-              ts.factory.createNewExpression(
-                ts.factory.createIdentifier(
-                  HttpClientSourceFileBuilder.axiosHttpClientClassIdentifier,
-                ),
-                undefined,
-                [
-                  ts.factory.createIdentifier(
-                    BASE_URL_CONSTRUCTOR_ARGUMENT_NAME,
-                  ),
-                ],
+              ts.factory.createIdentifier(
+                AXIOS_HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME,
               ),
             ),
           ),
