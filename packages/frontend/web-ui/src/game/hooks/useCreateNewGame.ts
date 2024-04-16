@@ -24,10 +24,7 @@ import {
   UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
 } from '../../common/helpers/errorMessage';
 import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
-import {
-  GameCreateQueryV1,
-  GameOptionsV1,
-} from '@cornie-js/api-models/lib/models/types';
+import { models as apiModels } from '@cornie-js/api-models';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const token: string | null = useAppSelector(selectAuthToken);
@@ -116,9 +113,9 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       throw new Error('Unexpected form state at setFormField');
     }
 
-    const options: GameOptionsV1 = formFields.options;
+    const options: apiModels.GameOptionsV1 = formFields.options;
 
-    const optionsWithChanges: GameOptionsV1 = {
+    const optionsWithChanges: apiModels.GameOptionsV1 = {
       ...options,
       [event.target.value]: event.target.checked,
     };
@@ -270,7 +267,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const fetchCreateGame = async (
     formFields: FormFieldsNewGame,
   ): Promise<NewGameSerializedResponse> => {
-    let httpRequestQuery: GameCreateQueryV1;
+    let httpRequestQuery: apiModels.GameCreateQueryV1;
 
     if (formFields.name !== undefined) {
       httpRequestQuery = {
@@ -285,7 +282,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       };
     }
 
-    const response: NewGameResponse = await httpClient.createGame(
+    const response: NewGameResponse = await httpClient.endpoints.createGame(
       {
         authorization: `Bearer ${token}`,
       },
