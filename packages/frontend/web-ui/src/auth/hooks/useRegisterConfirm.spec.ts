@@ -45,7 +45,7 @@ describe(useRegisterConfirm.name, () => {
       });
     });
 
-    describe('when called, and httpClient.updateUserMe() returns an OK response', () => {
+    describe('when called, and httpClient.endpoints.updateUserMe() returns an OK response', () => {
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let registerConfirmResponseFixture: RegisterConfirmResponse;
       let serializableResponseFixture: RegisterConfirmSerializedResponse;
@@ -94,7 +94,9 @@ describe(useRegisterConfirm.name, () => {
         ).mockReturnValueOnce(tokenFixture);
 
         (
-          httpClient.updateUserMe as jest.Mock<typeof httpClient.updateUserMe>
+          httpClient.endpoints.updateUserMe as jest.Mock<
+            typeof httpClient.endpoints.updateUserMe
+          >
         ).mockResolvedValueOnce(registerConfirmResponseFixture);
 
         (
@@ -142,9 +144,9 @@ describe(useRegisterConfirm.name, () => {
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
-      it('should called httpClient.updateUserMe()', () => {
-        expect(httpClient.updateUserMe).toHaveBeenCalled();
-        expect(httpClient.updateUserMe).toHaveBeenCalledWith(
+      it('should called httpClient.endpoints.updateUserMe()', () => {
+        expect(httpClient.endpoints.updateUserMe).toHaveBeenCalled();
+        expect(httpClient.endpoints.updateUserMe).toHaveBeenCalledWith(
           {
             authorization: `Bearer undefined`,
           },
@@ -163,7 +165,7 @@ describe(useRegisterConfirm.name, () => {
       });
     });
 
-    describe('when called, and httpClient.updateUserMe() returns a non OK response', () => {
+    describe('when called, and httpClient.endpoints.updateUserMe() returns a non OK response', () => {
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let registerConfirmResponseFixture: RegisterConfirmResponse;
       let serializableResponseFixture: RegisterConfirmSerializedResponse;
@@ -208,7 +210,9 @@ describe(useRegisterConfirm.name, () => {
         ).mockReturnValueOnce(tokenFixture);
 
         (
-          httpClient.updateUserMe as jest.Mock<typeof httpClient.updateUserMe>
+          httpClient.endpoints.updateUserMe as jest.Mock<
+            typeof httpClient.endpoints.updateUserMe
+          >
         ).mockResolvedValueOnce(registerConfirmResponseFixture);
 
         (
@@ -256,9 +260,9 @@ describe(useRegisterConfirm.name, () => {
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
-      it('should called httpClient.updateUserMe()', () => {
-        expect(httpClient.updateUserMe).toHaveBeenCalled();
-        expect(httpClient.updateUserMe).toHaveBeenCalledWith(
+      it('should called httpClient.endpoints.updateUserMe()', () => {
+        expect(httpClient.endpoints.updateUserMe).toHaveBeenCalled();
+        expect(httpClient.endpoints.updateUserMe).toHaveBeenCalledWith(
           {
             authorization: `Bearer undefined`,
           },

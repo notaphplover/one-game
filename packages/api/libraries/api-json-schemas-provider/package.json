@@ -9,8 +9,8 @@
     "@cornie-js/json-schema-utils": "workspace:*",
     "@types/glob": "8.1.0",
     "@types/node": "20.12.7",
-    "@typescript-eslint/eslint-plugin": "7.6.0",
-    "@typescript-eslint/parser": "7.6.0",
+    "@typescript-eslint/eslint-plugin": "7.7.0",
+    "@typescript-eslint/parser": "7.7.0",
     "eslint": "8.57.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.26.0",
@@ -23,7 +23,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",

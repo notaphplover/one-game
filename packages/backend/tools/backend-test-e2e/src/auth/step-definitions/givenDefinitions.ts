@@ -1,4 +1,4 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Given } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
@@ -23,9 +23,9 @@ export async function givenAuthForUser(
   givenCreateAuthRequestForUser.bind(this)(alias, alias);
   await whenCreateAuthRequestIsSend.bind(this)(alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createAuthV2']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['createAuthV2']>>;
 
-  const [, authCreateQueryV2]: Parameters<HttpClient['createAuthV2']> =
+  const [, authCreateQueryV2]: Parameters<HttpClientEndpoints['createAuthV2']> =
     getRequestParametersOrFail(this, 'createAuthV2', alias);
 
   if (authCreateQueryV2 === undefined) {
@@ -69,7 +69,7 @@ export function givenCreateAuthRequestForUser(
     password: userParameter.userCreateQuery.password,
   };
 
-  const requestParameters: Parameters<HttpClient['createAuthV2']> = [
+  const requestParameters: Parameters<HttpClientEndpoints['createAuthV2']> = [
     {},
     authCreateQuery,
   ];

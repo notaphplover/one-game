@@ -1,4 +1,4 @@
-import { parse } from './parse';
+import { ParseSseStreamParams, parse } from './parse';
 
 const HTTP_STATUS_OK: number = 200;
 const EVENT_STREAM_MIME_TYPE: string = 'text/event-stream';
@@ -8,19 +8,17 @@ export interface FetchSseParams {
   buildRequest: () => [Request, AbortController];
   fail: (error: unknown) => Promise<void>;
   getRetryMs: () => number;
-  onMessage: (messageEvent: MessageEvent<unknown>) => void;
   onOpen: () => void;
-  onRetryMsChanged: (retry: number) => void;
+  parseSseStreamParams: ParseSseStreamParams;
 }
 
 interface GenericFetchSseParams {
   buildRequest: () => [Request, AbortController];
   fail: (error: unknown) => Promise<void>;
   onConnectionLost: (error: unknown) => Promise<void>;
-  onMessage: (messageEvent: MessageEvent<unknown>) => void;
   onOpen: () => void;
   onRequestFail: (error: unknown) => Promise<void>;
-  onRetryMsChanged: (retryMs: number) => void;
+  parseSseStreamParams: ParseSseStreamParams;
 }
 
 export async function fetchSse(params: FetchSseParams): Promise<void> {
@@ -33,10 +31,9 @@ export async function fetchSse(params: FetchSseParams): Promise<void> {
               buildRequest: params.buildRequest,
               fail: params.fail,
               onConnectionLost: retry,
-              onMessage: params.onMessage,
               onOpen: params.onOpen,
               onRequestFail: params.fail,
-              onRetryMsChanged: params.onRetryMsChanged,
+              parseSseStreamParams: params.parseSseStreamParams,
             }),
           );
         } else {
@@ -49,10 +46,9 @@ export async function fetchSse(params: FetchSseParams): Promise<void> {
     buildRequest: params.buildRequest,
     fail: params.fail,
     onConnectionLost: retry,
-    onMessage: params.onMessage,
     onOpen: params.onOpen,
     onRequestFail: retry,
-    onRetryMsChanged: params.onRetryMsChanged,
+    parseSseStreamParams: params.parseSseStreamParams,
   });
 }
 
@@ -95,7 +91,7 @@ async function genericFetchSse(params: GenericFetchSseParams): Promise<void> {
     response.body.getReader();
 
   try {
-    await parse(reader, params.onMessage, params.onRetryMsChanged);
+    await parse(reader, params.parseSseStreamParams);
     throw new Error('Connection ended');
   } catch (error: unknown) {
     abortController.abort(error);

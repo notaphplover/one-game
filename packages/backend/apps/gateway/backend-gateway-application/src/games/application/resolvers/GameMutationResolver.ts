@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
@@ -44,8 +44,8 @@ export class GameMutationResolver
       gameCreateQuery.name = args.gameCreateInput.name;
     }
 
-    const httpResponse: Awaited<ReturnType<HttpClient['createGame']>> =
-      await this.#httpClient.createGame(
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['createGame']>> =
+      await this.#httpClient.endpoints.createGame(
         context.request.headers,
         gameCreateQuery,
       );
@@ -80,14 +80,15 @@ export class GameMutationResolver
       userId: args.gameSlotCreateInput.userId,
     };
 
-    const httpResponse: Awaited<ReturnType<HttpClient['createGameSlot']>> =
-      await this.#httpClient.createGameSlot(
-        context.request.headers,
-        {
-          gameId: args.gameSlotCreateInput.gameId,
-        },
-        gameSlotCreateQuery,
-      );
+    const httpResponse: Awaited<
+      ReturnType<HttpClientEndpoints['createGameSlot']>
+    > = await this.#httpClient.endpoints.createGameSlot(
+      context.request.headers,
+      {
+        gameId: args.gameSlotCreateInput.gameId,
+      },
+      gameSlotCreateQuery,
+    );
 
     switch (httpResponse.statusCode) {
       case 200:
@@ -169,8 +170,8 @@ export class GameMutationResolver
     gameId: string,
     gameUpdateQueryV1: apiModels.GameIdUpdateQueryV1,
   ): Promise<Partial<graphqlModels.Game> | null> {
-    const httpResponse: Awaited<ReturnType<HttpClient['updateGame']>> =
-      await this.#httpClient.updateGame(
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['updateGame']>> =
+      await this.#httpClient.endpoints.updateGame(
         headers,
         { gameId: gameId },
         gameUpdateQueryV1,

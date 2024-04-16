@@ -7,7 +7,7 @@ import { httpClient } from '../http/services/HttpService';
 export const getUserMeId = async (
   token: string,
 ): Promise<UserMeSerializedResponse> => {
-  const response: UserMeResponse = await httpClient.getUserMe({
+  const response: UserMeResponse = await httpClient.endpoints.getUserMe({
     authorization: `Bearer ${token}`,
   });
 

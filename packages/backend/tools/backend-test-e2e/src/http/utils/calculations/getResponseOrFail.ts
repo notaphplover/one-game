@@ -1,12 +1,14 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 
 import { OneGameApiWorld, ResponseMap } from '../../models/OneGameApiWorld';
 
-export function getResponseParametersOrFail<TEndpoint extends keyof HttpClient>(
+export function getResponseParametersOrFail<
+  TEndpoint extends keyof HttpClientEndpoints,
+>(
   world: OneGameApiWorld,
   endpoint: TEndpoint,
   alias: string,
-): Awaited<ReturnType<HttpClient[TEndpoint]>> {
+): Awaited<ReturnType<HttpClientEndpoints[TEndpoint]>> {
   const endpointResponsesMap: ResponseMap[TEndpoint] =
     world.responses[endpoint];
 
@@ -17,7 +19,7 @@ export function getResponseParametersOrFail<TEndpoint extends keyof HttpClient>(
   }
 
   const pendingResponse:
-    | Awaited<ReturnType<HttpClient[TEndpoint]>>
+    | Awaited<ReturnType<HttpClientEndpoints[TEndpoint]>>
     | undefined = endpointResponsesMap[alias];
 
   if (pendingResponse === undefined) {

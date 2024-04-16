@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 import { models as graphqlModels } from '@cornie-js/api-graphql-models';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
 import { Inject, Injectable } from '@nestjs/common';
@@ -23,8 +23,8 @@ export class UserMutationResolver
     args: graphqlModels.UserMutationCreateUserArgs,
     context: Context,
   ): Promise<graphqlModels.User> {
-    const httpResponse: Awaited<ReturnType<HttpClient['createUser']>> =
-      await this.#httpClient.createUser(context.request.headers, {
+    const httpResponse: Awaited<ReturnType<HttpClientEndpoints['createUser']>> =
+      await this.#httpClient.endpoints.createUser(context.request.headers, {
         email: args.userCreateInput.email,
         name: args.userCreateInput.name,
         password: args.userCreateInput.password,
@@ -51,8 +51,9 @@ export class UserMutationResolver
     _args: unknown,
     context: Context,
   ): Promise<null> {
-    const httpResponse: Awaited<ReturnType<HttpClient['deleteUserMe']>> =
-      await this.#httpClient.deleteUserMe(context.request.headers);
+    const httpResponse: Awaited<
+      ReturnType<HttpClientEndpoints['deleteUserMe']>
+    > = await this.#httpClient.endpoints.deleteUserMe(context.request.headers);
 
     switch (httpResponse.statusCode) {
       case 200:
@@ -70,11 +71,12 @@ export class UserMutationResolver
     args: graphqlModels.UserMutationUpdateUserMeArgs,
     context: Context,
   ): Promise<graphqlModels.User> {
-    const httpResponse: Awaited<ReturnType<HttpClient['updateUserMe']>> =
-      await this.#httpClient.updateUserMe(
-        context.request.headers,
-        this.#buildUserMeUpdateQueryV1(args),
-      );
+    const httpResponse: Awaited<
+      ReturnType<HttpClientEndpoints['updateUserMe']>
+    > = await this.#httpClient.endpoints.updateUserMe(
+      context.request.headers,
+      this.#buildUserMeUpdateQueryV1(args),
+    );
 
     switch (httpResponse.statusCode) {
       case 200:

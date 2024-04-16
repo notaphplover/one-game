@@ -1,4 +1,6 @@
-import { HttpClient } from '@cornie-js/api-http-client';
+import * as assert from 'node:assert/strict';
+
+import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Then } from '@cucumber/cucumber';
 import { HttpStatus } from '@nestjs/common';
@@ -8,7 +10,9 @@ import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { getRequestParametersOrFail } from '../../http/utils/calculations/getRequestOrFail';
 import { getResponseParametersOrFail } from '../../http/utils/calculations/getResponseOrFail';
+import { GameEventSubscriptionV2Parameter } from '../models/GameEventSubscriptionV2Parameter';
 import { GameV1Parameter } from '../models/GameV1Parameter';
+import { getGameEventSubscriptionOrFail } from '../utils/calculations/getGameEventSubscriptionOrFail';
 import { getGameOrFail } from '../utils/calculations/getGameOrFail';
 
 export function thenCreateGameResponseShouldContainValidGame(
@@ -17,10 +21,10 @@ export function thenCreateGameResponseShouldContainValidGame(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
+  const [, gameCreateQueryV1]: Parameters<HttpClientEndpoints['createGame']> =
     getRequestParametersOrFail(this, 'createGame', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['createGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -44,10 +48,13 @@ export function thenCreateGameSlotResponseShouldContainValidGameSlot(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, , gameCreateSlotQueryV1]: Parameters<HttpClient['createGameSlot']> =
-    getRequestParametersOrFail(this, 'createGameSlot', alias);
+  const [, , gameCreateSlotQueryV1]: Parameters<
+    HttpClientEndpoints['createGameSlot']
+  > = getRequestParametersOrFail(this, 'createGameSlot', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['createGameSlot']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['createGameSlot']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -77,7 +84,7 @@ export function thenGetGameResponseShouldContainStartedGame(
   const gameV1Parameter: GameV1Parameter =
     getGameOrFail.bind(this)(processedGameAlias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['getGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['getGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -101,10 +108,12 @@ export function thenGetGameSpecResponseShouldContainGameSpec(
 ): void {
   const alias: string = requestAlias ?? defaultAlias;
 
-  const [, gameCreateQueryV1]: Parameters<HttpClient['createGame']> =
+  const [, gameCreateQueryV1]: Parameters<HttpClientEndpoints['createGame']> =
     getRequestParametersOrFail(this, 'createGame', alias);
 
-  type ResponseType = Awaited<ReturnType<HttpClient['getGameGameIdSpec']>>;
+  type ResponseType = Awaited<
+    ReturnType<HttpClientEndpoints['getGameGameIdSpec']>
+  >;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -123,13 +132,38 @@ export function thenGetGameSpecResponseShouldContainGameSpec(
   });
 }
 
+function thenMessageEventMatchesPlayFirstCardRequest(
+  this: OneGameApiWorld,
+): void {
+  type RequestType = Parameters<HttpClientEndpoints['updateGame']>;
+
+  const playFirstCardRequest: RequestType = getRequestParametersOrFail(
+    this,
+    'updateGame',
+    defaultAlias,
+  );
+
+  const gameEventSubscriptionV2Parameter: GameEventSubscriptionV2Parameter =
+    getGameEventSubscriptionOrFail.bind(this)(defaultAlias);
+
+  const firstGameEvent: apiModels.GameEventV2 | undefined =
+    gameEventSubscriptionV2Parameter.gameEvents[0];
+
+  assert.ok(firstGameEvent !== undefined);
+  assert.ok(firstGameEvent.kind === 'cardsPlayed');
+  assert.deepEqual(
+    firstGameEvent.currentPlayingSlotIndex,
+    playFirstCardRequest[2].slotIndex,
+  );
+}
+
 export function thenUpdateGameResponseShouldBeSuccessful(
   this: OneGameApiWorld,
   requestAlias?: string,
 ): void {
   const processedRequestAlias: string = requestAlias ?? defaultAlias;
 
-  type ResponseType = Awaited<ReturnType<HttpClient['updateGame']>>;
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['updateGame']>>;
 
   const response: ResponseType = getResponseParametersOrFail(
     this,
@@ -169,6 +203,13 @@ Then<OneGameApiWorld>(
   'the get game response should contain the game spec',
   function (this: OneGameApiWorld): void {
     thenGetGameSpecResponseShouldContainGameSpec.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the message event matches the game play first card request',
+  function (this: OneGameApiWorld): void {
+    thenMessageEventMatchesPlayFirstCardRequest.bind(this)();
   },
 );
 

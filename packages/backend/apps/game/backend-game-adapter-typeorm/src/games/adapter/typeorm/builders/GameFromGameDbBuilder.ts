@@ -152,6 +152,7 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
             gameDb.discardPile,
           ),
         drawCount: gameDb.drawCount,
+        lastGameActionId: gameDb.lastGameActionId,
         skipCount: gameDb.skipCount,
         slots: gameSlots,
         status: GameStatus.active,

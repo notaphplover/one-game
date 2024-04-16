@@ -1,7 +1,10 @@
 import { When } from '@cucumber/cucumber';
 
+import { defaultAlias } from '../../foundation/application/data/defaultAlias';
 import { OneGameApiWorld } from '../../http/models/OneGameApiWorld';
 import { sendRequest } from '../../http/utils/actions/sendRequest';
+import { GameEventSubscriptionV2Parameter } from '../models/GameEventSubscriptionV2Parameter';
+import { getGameEventSubscriptionOrFail } from '../utils/calculations/getGameEventSubscriptionOrFail';
 
 export async function whenCreateGameRequestIsSend(
   this: OneGameApiWorld,
@@ -31,12 +34,58 @@ export async function whenGetGameSpecRequestIsSend(
   await sendRequest.bind(this)('getGameGameIdSpec', requestAlias);
 }
 
+async function whenMessageEventForGameIsReceived(
+  this: OneGameApiWorld,
+  gameAlias?: string,
+): Promise<void> {
+  const processedGameAlias: string = gameAlias ?? defaultAlias;
+  const gameEventSubscriptionV2Parameter: GameEventSubscriptionV2Parameter =
+    getGameEventSubscriptionOrFail.bind(this)(processedGameAlias);
+
+  if (gameEventSubscriptionV2Parameter.gameEvents.length === 0) {
+    const resolveWrapper: { resolve: () => void; resolved: boolean } = {
+      resolve: () => {
+        resolveWrapper.resolved = true;
+      },
+      resolved: false,
+    };
+
+    const eventListener: () => void = () => {
+      gameEventSubscriptionV2Parameter.eventSource.removeEventListener(
+        'message',
+        eventListener,
+      );
+      resolveWrapper.resolve();
+    };
+
+    gameEventSubscriptionV2Parameter.eventSource.addEventListener(
+      'message',
+      eventListener,
+    );
+
+    await new Promise<void>((resolve: () => void) => {
+      resolveWrapper.resolve = resolve;
+
+      if (resolveWrapper.resolved) {
+        resolve();
+      }
+    });
+  }
+}
+
 export async function whenUpdateGameRequestIsSend(
   this: OneGameApiWorld,
   requestAlias?: string,
 ): Promise<void> {
   await sendRequest.bind(this)('updateGame', requestAlias);
 }
+
+When<OneGameApiWorld>(
+  'a message event for game is received',
+  async function (this: OneGameApiWorld): Promise<void> {
+    await whenMessageEventForGameIsReceived.bind(this)();
+  },
+);
 
 When<OneGameApiWorld>(
   'the create game request is sent',

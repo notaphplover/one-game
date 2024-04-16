@@ -10,7 +10,11 @@ import {
   GameActionCreateQueryFixtures,
   GameActionFixtures,
 } from '@cornie-js/backend-game-domain/gameActions/fixtures';
-import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
+import {
+  Game,
+  GameFindQuery,
+  GameUpdateQuery,
+} from '@cornie-js/backend-game-domain/games';
 import { ActiveGameFixtures } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
@@ -50,6 +54,7 @@ describe(GameUpdatedEventHandler.name, () => {
     > as jest.Mocked<GameEventsSubscriptionOutputPort>;
     gamePersistenceOutputPortMock = {
       findOne: jest.fn(),
+      update: jest.fn(),
     } as Partial<
       jest.Mocked<GamePersistenceOutputPort>
     > as jest.Mocked<GamePersistenceOutputPort>;
@@ -185,6 +190,21 @@ describe(GameUpdatedEventHandler.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(gameActionPersistenceOutputPortMock.create).toHaveBeenCalledWith(
           gameActionCreateQueryFixture,
+          gameUpdatedEventFixture.transactionWrapper,
+        );
+      });
+
+      it('should call gamePersistenceOutputPort.update()', () => {
+        const expected: GameUpdateQuery = {
+          gameFindQuery: {
+            id: gameActionFixture.gameId,
+          },
+          lastGameActionId: gameActionFixture.id,
+        };
+
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
+          expected,
           gameUpdatedEventFixture.transactionWrapper,
         );
       });
