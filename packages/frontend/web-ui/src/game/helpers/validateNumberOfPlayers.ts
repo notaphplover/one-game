@@ -1,12 +1,16 @@
 import { Either } from '../../common/models/Either';
+import {
+  NUMBER_PLAYERS_MAXIMUM,
+  NUMBER_PLAYERS_MINIMUM,
+} from './numberOfPlayersValues';
 
 export const validateNumberOfPlayers = (
-  numberOfPlayers: number | undefined,
+  numberOfPlayers: number,
 ): Either<string, undefined> => {
   if (
     numberOfPlayers === undefined ||
-    numberOfPlayers < 2 ||
-    numberOfPlayers > 10
+    numberOfPlayers < NUMBER_PLAYERS_MINIMUM ||
+    numberOfPlayers > NUMBER_PLAYERS_MAXIMUM
   ) {
     return {
       isRight: false,
