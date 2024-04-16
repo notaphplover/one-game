@@ -28,8 +28,6 @@ import {
   GameCreateQueryV1,
   GameOptionsV1,
 } from '@cornie-js/api-models/lib/models/types';
-import { setFormFieldValue } from '../helpers/setFormFieldValue';
-import { ApiModules } from '@reduxjs/toolkit/query';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const token: string | null = useAppSelector(selectAuthToken);
@@ -59,7 +57,9 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [backendErrorUser, setBackendErrorUser] = useState<string | null>(null);
   const [backendErrorGame, setBackendErrorGame] = useState<string | null>(null);
 
-  const setFormField = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const setFormFieldName = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
     if (
       status !== CreateNewGameStatus.initial &&
       status !== CreateNewGameStatus.validationKO
@@ -67,28 +67,65 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       throw new Error('Unexpected form state at setFormField');
     }
 
-    if (event.target.name !== 'name' && event.target.name !== 'players') {
-      const options: GameOptionsV1 = formFields.options;
+    const eventTargetValue: string = event.target.value;
+    let finalValue: string | undefined;
 
-      const optionsWithChanges: GameOptionsV1 = {
-        ...options,
-        [event.target.value]: event.target.checked,
-      };
-      setFormFields({
-        ...formFields,
-        ['options']: optionsWithChanges,
-      });
+    if (eventTargetValue.trim() !== '') {
+      finalValue = eventTargetValue;
     } else {
-      const value: string | number = setFormFieldValue(
-        event.target.name,
-        event.target.value,
-      );
-
-      setFormFields({
-        ...formFields,
-        [event.target.name]: value,
-      });
+      finalValue = undefined;
     }
+
+    setFormFields({
+      ...formFields,
+      [event.target.name]: finalValue,
+    });
+  };
+
+  const setFormFieldPlayers = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    if (
+      status !== CreateNewGameStatus.initial &&
+      status !== CreateNewGameStatus.validationKO
+    ) {
+      throw new Error('Unexpected form state at setFormField');
+    }
+
+    let finalValue: number;
+
+    if (!isNaN(parseInt(event.target.value))) {
+      finalValue = parseInt(event.target.value);
+    } else {
+      finalValue = NUMBER_PLAYERS_MINIMUM;
+    }
+
+    setFormFields({
+      ...formFields,
+      [event.target.name]: finalValue,
+    });
+  };
+
+  const setFormFieldOptions = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    if (
+      status !== CreateNewGameStatus.initial &&
+      status !== CreateNewGameStatus.validationKO
+    ) {
+      throw new Error('Unexpected form state at setFormField');
+    }
+
+    const options: GameOptionsV1 = formFields.options;
+
+    const optionsWithChanges: GameOptionsV1 = {
+      ...options,
+      [event.target.value]: event.target.checked,
+    };
+    setFormFields({
+      ...formFields,
+      ['options']: optionsWithChanges,
+    });
   };
 
   const notifyFormFieldsFilled = (): void => {
@@ -264,6 +301,8 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     notifyFormFieldsFilled,
     formValidation,
     backendError,
-    setFormField,
+    setFormFieldName,
+    setFormFieldPlayers,
+    setFormFieldOptions,
   };
 };

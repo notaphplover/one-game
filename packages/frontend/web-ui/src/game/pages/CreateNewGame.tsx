@@ -34,7 +34,9 @@ export const CreateNewGame = (): React.JSX.Element => {
     notifyFormFieldsFilled,
     formValidation,
     backendError,
-    setFormField,
+    setFormFieldName,
+    setFormFieldPlayers,
+    setFormFieldOptions,
   } = useCreateNewGame();
 
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -97,7 +99,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                   fullWidth
                   name="name"
                   value={formFields.name}
-                  onChange={setFormField}
+                  onChange={setFormFieldName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -109,7 +111,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                   fullWidth
                   name="players"
                   value={formFields.players}
-                  onChange={setFormField}
+                  onChange={setFormFieldPlayers}
                   error={formValidation.isRight === false}
                   helperText={formValidation.value?.numberOfPlayers}
                 />
@@ -143,7 +145,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw2Draw2Cards
                                 }
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="options.chainDraw2Draw2Cards"
                               />
                             }
@@ -159,7 +161,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw2Draw4Cards
                                 }
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="chainDraw2Draw4Cards"
                               />
                             }
@@ -175,7 +177,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw4Draw4Cards
                                 }
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="chainDraw4Draw4Cards"
                               />
                             }
@@ -191,7 +193,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.chainDraw4Draw2Cards
                                 }
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="chainDraw4Draw2Cards"
                               />
                             }
@@ -205,7 +207,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             control={
                               <Checkbox
                                 checked={formFields.options.playCardIsMandatory}
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="playCardIsMandatory"
                               />
                             }
@@ -221,7 +223,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                 checked={
                                   formFields.options.playMultipleSameCards
                                 }
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="playMultipleSameCards"
                               />
                             }
@@ -238,7 +240,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                                   formFields.options
                                     .playWildDraw4IfNoOtherAlternative
                                 }
-                                onChange={setFormField}
+                                onChange={setFormFieldOptions}
                                 name="playWildDraw4IfNoOtherAlternative"
                               />
                             }
