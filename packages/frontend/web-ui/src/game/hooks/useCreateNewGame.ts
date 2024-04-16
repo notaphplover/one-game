@@ -10,8 +10,8 @@ import { httpClient } from '../../common/http/services/HttpService';
 import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
 import { NewGameResponse } from '../../common/http/models/NewGameResponse';
-import { validateNumberOfPlayers } from '../../common/helpers/validateNumberOfPlayers';
-import { NUMBER_PLAYERS_MINIMUM } from '../../common/helpers/numberPlayersLength';
+import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
+import { NUMBER_PLAYERS_MINIMUM } from '../helpers/numberOfPlayersValues';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 import { NewGameSerializedResponse } from '../../common/http/models/NewGameSerializedResponse';
 import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
@@ -22,7 +22,7 @@ import {
   INVALID_CREDENTIALS_ERROR_MESSAGE,
   UNAUTHORIZED_ERROR_MESSAGE,
   UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
-} from '../../common/helpers/errorMessage';
+} from '../../common/helpers/errorMessages';
 import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
 import { models as apiModels } from '@cornie-js/api-models';
 
