@@ -3,9 +3,8 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import {
   FileInfo,
   HTTPResolverOptions,
-  Options,
-  ResolverOptions,
-} from '@bcherny/json-schema-ref-parser';
+  ParserOptions,
+} from '@apidevtools/json-schema-ref-parser';
 
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { ResolveApiSchemaHttpReferenceUseCase } from '../../application/useCases/ResolveApiSchemaHttpReferenceUseCase';
@@ -32,11 +31,11 @@ describe(SchemasRefParserOptionsBuilder.name, () => {
     describe('having a schemasRootDirectory', () => {
       describe('when called', () => {
         let result: unknown;
-        let resultAsOptions: Options;
+        let resultAsOptions: ParserOptions;
 
         beforeAll(() => {
           result = schemasRefParserOptionsBuilder.build();
-          resultAsOptions = result as Options;
+          resultAsOptions = result as ParserOptions;
         });
 
         afterAll(() => {
@@ -44,19 +43,20 @@ describe(SchemasRefParserOptionsBuilder.name, () => {
         });
 
         it('should return options', () => {
-          const optionsResolveExpectations: Partial<Options['resolve']> = {
-            http: {
-              read: expect.any(
-                Function,
-              ) as unknown as HTTPResolverOptions['read'],
-            } as HTTPResolverOptions,
-          };
+          const optionsResolveExpectations: Partial<ParserOptions['resolve']> =
+            {
+              http: {
+                read: expect.any(
+                  Function,
+                ) as unknown as HTTPResolverOptions['read'],
+              } as HTTPResolverOptions,
+            };
 
-          const optionsExpectations: Partial<Options> = {
+          const optionsExpectations: Partial<ParserOptions> = {
             resolve: expect.objectContaining(
               optionsResolveExpectations,
-            ) as Partial<Options['resolve']> as Options['resolve'],
-          } as Partial<Options>;
+            ) as Partial<ParserOptions['resolve']> as ParserOptions['resolve'],
+          } as Partial<ParserOptions>;
 
           expect(result).toStrictEqual(
             expect.objectContaining(optionsExpectations),
@@ -107,8 +107,19 @@ describe(SchemasRefParserOptionsBuilder.name, () => {
                 const httpResolverOptions: HTTPResolverOptions = resultAsOptions
                   .resolve?.http as HTTPResolverOptions;
 
-                const httpResolverOptionsRead: ResolverOptions['read'] =
-                  httpResolverOptions.read as ResolverOptions['read'];
+                const httpResolverOptionsRead: (
+                  file: FileInfo,
+                  callback?: (
+                    error: Error | null,
+                    data: string | null,
+                  ) => unknown,
+                ) => Promise<Buffer> = httpResolverOptions.read as (
+                  file: FileInfo,
+                  callback?: (
+                    error: Error | null,
+                    data: string | null,
+                  ) => unknown,
+                ) => Promise<Buffer>;
 
                 resolveApiSchemaHttpReferenceUseCaseMock.handle.mockResolvedValueOnce(
                   fileContentBufferFixture,
