@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { argv } from 'node:process';
 
-import { Options as $RefOptions } from '@bcherny/json-schema-ref-parser';
+import { ParserOptions as $RefOptions } from '@apidevtools/json-schema-ref-parser';
 import { readApiJsonSchemas } from '@cornie-js/api-json-schemas-provider';
 import backendPrettierOptions from '@cornie-js/backend-prettier-config';
 import {

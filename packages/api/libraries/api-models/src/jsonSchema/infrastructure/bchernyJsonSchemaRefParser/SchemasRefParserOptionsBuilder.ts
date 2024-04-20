@@ -1,4 +1,4 @@
-import { FileInfo, Options } from '@bcherny/json-schema-ref-parser';
+import { FileInfo, ParserOptions } from '@apidevtools/json-schema-ref-parser';
 
 import { ResolveApiSchemaHttpReferenceQuery } from '../../application/queries/ResolveApiSchemaHttpReferenceQuery';
 import { ResolveApiSchemaHttpReferenceUseCase } from '../../application/useCases/ResolveApiSchemaHttpReferenceUseCase';
@@ -13,8 +13,8 @@ export class SchemasRefParserOptionsBuilder {
       resolveApiSchemaHttpReferenceUseCase;
   }
 
-  public build(): Options {
-    const schemasRefParserOptions: Options = {
+  public build(): ParserOptions {
+    const schemasRefParserOptions: ParserOptions = {
       resolve: {
         http: {
           read: async (
