@@ -13,7 +13,7 @@
     "@cornie-js/backend-env": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
     "@cornie-js/eventsource": "workspace:*",
-    "@cucumber/cucumber": "10.4.0",
+    "@cucumber/cucumber": "10.5.0",
     "@nestjs/common": "10.3.8",
     "@nestjs/core": "10.3.8",
     "@nestjs/typeorm": "10.0.2",
