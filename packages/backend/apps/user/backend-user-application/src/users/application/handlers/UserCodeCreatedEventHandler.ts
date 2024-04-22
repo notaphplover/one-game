@@ -1,8 +1,8 @@
 import {
   MailDeliveryOptions,
   MailDeliveryOutputPort,
+  mailDeliveryOutputPortSymbol,
 } from '@cornie-js/backend-application-mail';
-import { mailDeliveryOutputPortSymbol } from '@cornie-js/backend-application-mail/lib/mail/application/ports/output/MailDeliveryOutputPort';
 import { Builder, Handler } from '@cornie-js/backend-common';
 import { User, UserCode } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
