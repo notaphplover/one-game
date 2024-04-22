@@ -1,4 +1,4 @@
-import { UserV1 } from '@cornie-js/api-models/lib/models/types';
+import { models as apiModels } from '@cornie-js/api-models';
 
 import { AuthKind } from './AuthKind';
 import { BaseAuth } from './BaseAuth';
@@ -10,5 +10,5 @@ export interface UserAuth<
   >,
 > extends BaseAuth<AuthKind.user> {
   jwtPayload: TPayload;
-  user: UserV1;
+  user: apiModels.UserV1;
 }

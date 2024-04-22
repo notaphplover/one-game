@@ -1,4 +1,4 @@
-import { UserV1 } from '@cornie-js/api-models/lib/models/types';
+import { models as apiModels } from '@cornie-js/api-models';
 import { EnvironmentService } from '@cornie-js/backend-app-game-env';
 import { JwtService } from '@cornie-js/backend-app-jwt';
 import * as backendHttp from '@cornie-js/backend-http';
@@ -27,7 +27,9 @@ export class AuthMiddleware extends backendHttp.AuthMiddleware<AccessTokenJwtPay
     this.#userManagementInputPort = userManagementInputPort;
   }
 
-  protected override async _findUser(id: string): Promise<UserV1 | undefined> {
+  protected override async _findUser(
+    id: string,
+  ): Promise<apiModels.UserV1 | undefined> {
     return this.#userManagementInputPort.findOne(id);
   }
 

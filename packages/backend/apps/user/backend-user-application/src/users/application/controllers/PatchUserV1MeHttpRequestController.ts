@@ -1,5 +1,4 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { UserMeUpdateQueryV1 } from '@cornie-js/api-models/lib/models/types';
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
   ErrorV1ResponseFromErrorBuilder,
@@ -54,7 +53,7 @@ export class PatchUserV1MeHttpRequestController extends HttpRequestController<
 
   protected async _handleUseCase(
     userV1: apiModels.UserV1,
-    userMeUpdateQueryV1: UserMeUpdateQueryV1,
+    userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
   ): Promise<apiModels.UserV1> {
     return this.#userManagementInputPort.updateMe(
       userV1.id,
