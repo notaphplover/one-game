@@ -1,7 +1,7 @@
 import { HttpApiParams } from '../../../../common/http/models/HttpApiParams';
 import { UseCreateGameContext } from '../models/UseCreateGameContext';
-import { UseCreateGameParams } from '../models/UseCreateGameParams';
 import { FormFieldsNewGame } from '../../../models/FormFieldsNewGame';
+import { models as apiModels } from '@cornie-js/api-models';
 
 export function buildRequestParams(
   context: UseCreateGameContext,
@@ -11,28 +11,24 @@ export function buildRequestParams(
     {
       authorization: `Bearer ${context.token}`,
     },
-    buildQuery(params).body,
+    buildBody(params),
   ];
 }
 
-function buildQuery(params: FormFieldsNewGame): UseCreateGameParams {
-  let bodyQuery: UseCreateGameParams;
+function buildBody(params: FormFieldsNewGame): apiModels.GameCreateQueryV1 {
+  let body: apiModels.GameCreateQueryV1;
 
-  if (params.name !== undefined) {
-    bodyQuery = {
-      body: {
-        gameSlotsAmount: params.players,
-        options: params.options,
-        name: params.name,
-      },
+  if (params.name === undefined) {
+    body = {
+      gameSlotsAmount: params.players,
+      options: params.options,
     };
   } else {
-    bodyQuery = {
-      body: {
-        gameSlotsAmount: params.players,
-        options: params.options,
-      },
+    body = {
+      gameSlotsAmount: params.players,
+      options: params.options,
+      name: params.name,
     };
   }
-  return bodyQuery;
+  return body;
 }
