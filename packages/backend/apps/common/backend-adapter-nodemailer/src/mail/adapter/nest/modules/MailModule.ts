@@ -1,5 +1,7 @@
-import { MailClientOptions } from '@cornie-js/backend-application-mail';
-import { mailDeliveryOutputPortSymbol } from '@cornie-js/backend-application-mail/lib/mail/application/ports/output/MailDeliveryOutputPort';
+import {
+  MailClientOptions,
+  mailDeliveryOutputPortSymbol,
+} from '@cornie-js/backend-application-mail';
 import { DynamicModule, Module } from '@nestjs/common';
 import nodemailer from 'nodemailer';
 

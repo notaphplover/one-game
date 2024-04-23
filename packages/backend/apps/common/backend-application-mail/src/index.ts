@@ -1,7 +1,10 @@
 import { MailClientAuthOptions } from './mail/application/models/MailClientAuthOptions';
 import { MailClientOptions } from './mail/application/models/MailClientOptions';
 import { MailDeliveryOptions } from './mail/application/models/MailDeliveryOptions';
-import { MailDeliveryOutputPort } from './mail/application/ports/output/MailDeliveryOutputPort';
+import {
+  MailDeliveryOutputPort,
+  mailDeliveryOutputPortSymbol,
+} from './mail/application/ports/output/MailDeliveryOutputPort';
 
 export type {
   MailClientAuthOptions,
@@ -9,3 +12,5 @@ export type {
   MailDeliveryOptions,
   MailDeliveryOutputPort,
 };
+
+export { mailDeliveryOutputPortSymbol };

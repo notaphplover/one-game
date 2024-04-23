@@ -13,7 +13,7 @@ import {
 } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import { SerializableResponse } from '../../../common/http/models/SerializedResponse';
-import { AuthV1, ErrorV1 } from '@cornie-js/api-models/lib/models/types';
+import { models as apiModels } from '@cornie-js/api-models';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 
 describe('authSlice', () => {
@@ -105,7 +105,7 @@ describe('authSlice', () => {
   describe('having a pending state and a createAuthByToken fulfilled action with an HTTP OK status code 200', () => {
     let stateFixture: PendingAuthState;
     let actionFixture: PayloadAction<AuthSerializedResponse>;
-    let payloadFixture: SerializableResponse<AuthV1, 200>;
+    let payloadFixture: SerializableResponse<apiModels.AuthV1, 200>;
 
     beforeAll(() => {
       payloadFixture = {
@@ -145,7 +145,7 @@ describe('authSlice', () => {
   describe('having a pending state and a createAuthByToken fulfilled action with an HTTP BAD REQUEST status code 400', () => {
     let stateFixture: PendingAuthState;
     let actionFixture: PayloadAction<AuthSerializedResponse>;
-    let payloadFixture: SerializableResponse<ErrorV1, 400>;
+    let payloadFixture: SerializableResponse<apiModels.ErrorV1, 400>;
 
     beforeAll(() => {
       payloadFixture = {
@@ -220,7 +220,7 @@ describe('authSlice', () => {
   describe('having a pending state and a createAuthByCredentials fulfilled action with an HTTP OK status code 200', () => {
     let stateFixture: PendingAuthState;
     let actionFixture: PayloadAction<AuthSerializedResponse>;
-    let payloadFixture: SerializableResponse<AuthV1, 200>;
+    let payloadFixture: SerializableResponse<apiModels.AuthV1, 200>;
     let createAuthByCredentialsParamsFixture: CreateAuthByCredentialsParams;
 
     beforeAll(() => {
@@ -265,7 +265,7 @@ describe('authSlice', () => {
   describe('having a pending state and a createAuthByCredentials fulfilled action with an HTTP BAD REQUEST status code 400', () => {
     let stateFixture: PendingAuthState;
     let actionFixture: PayloadAction<AuthSerializedResponse>;
-    let payloadFixture: SerializableResponse<ErrorV1, 400>;
+    let payloadFixture: SerializableResponse<apiModels.ErrorV1, 400>;
     let createAuthByCredentialsParamsFixture: CreateAuthByCredentialsParams;
 
     beforeAll(() => {
