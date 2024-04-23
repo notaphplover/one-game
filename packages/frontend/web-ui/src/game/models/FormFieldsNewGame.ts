@@ -1,7 +1,7 @@
-import { models as apiModels } from '@cornie-js/api-models';
+import { GameOptions } from './GameOptions';
 
 export interface FormFieldsNewGame {
-  name?: string;
-  players: string;
-  options: apiModels.GameOptionsV1;
+  name: string | undefined;
+  players: number;
+  options: GameOptions;
 }
