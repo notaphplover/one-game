@@ -5,7 +5,7 @@
   },
   "description": "Backend api models",
   "devDependencies": {
-    "@apidevtools/json-schema-ref-parser": "11.6.0",
+    "@apidevtools/json-schema-ref-parser": "11.6.1",
     "@jest/globals": "29.7.0",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
