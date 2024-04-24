@@ -3,7 +3,13 @@ import { beforeAll, afterAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../hooks/useGetGames');
 jest.mock('../../game/components/GameList');
 
-import { RenderResult, fireEvent, render } from '@testing-library/react';
+import {
+  RenderResult,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { models as apiModels } from '@cornie-js/api-models';
 import { useGetGames } from '../hooks/useGetGames';
@@ -74,6 +80,64 @@ describe(HomeWithAuth.name, () => {
 
       it('should render a game list', () => {
         expect(gameListComponent).toStrictEqual(expectedGameListFixture);
+      });
+    });
+
+    describe('when called, and the button New Game is pressed', () => {
+      let renderResult: RenderResult;
+      let gameListFixture: React.JSX.Element;
+      let buttonNewGame: Element;
+
+      beforeAll(async () => {
+        (useGetGames as jest.Mock<typeof useGetGames>).mockReturnValueOnce({
+          call: jest.fn(),
+          result: null,
+        });
+
+        (useGetGames as jest.Mock<typeof useGetGames>).mockReturnValueOnce({
+          call: jest.fn(),
+          result: null,
+        });
+
+        gameListFixture = <div className="game-list-mock">Game list mock</div>;
+
+        (GameList as jest.Mock<typeof GameList>).mockReturnValueOnce(
+          gameListFixture,
+        );
+
+        renderResult = render(
+          <MemoryRouter>
+            <HomeWithAuth />
+          </MemoryRouter>,
+        );
+
+        buttonNewGame = renderResult.container.querySelector(
+          '.home-auth-button-new-game',
+        ) as Element;
+
+        (useGetGames as jest.Mock<typeof useGetGames>).mockReturnValueOnce({
+          call: jest.fn(),
+          result: null,
+        });
+
+        (useGetGames as jest.Mock<typeof useGetGames>).mockReturnValueOnce({
+          call: jest.fn(),
+          result: null,
+        });
+
+        fireEvent.click(buttonNewGame);
+
+        await waitFor(() => {
+          expect(screen.getByRole('button', { pressed: true }));
+        });
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should the button New Game is pressed', () => {
+        expect(screen.getByRole('button', { pressed: true })).toBeTruthy();
       });
     });
 

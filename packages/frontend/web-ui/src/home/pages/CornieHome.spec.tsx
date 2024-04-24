@@ -1,16 +1,10 @@
+jest.mock('../../app/store/hooks');
+
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-
-jest.mock('react-redux', () => {
-  return {
-    ...(jest.requireActual('react-redux') as Record<string, unknown>),
-    useSelector: jest.fn(),
-  };
-});
-
 import { RenderResult, render } from '@testing-library/react';
-import { UseSelector, useSelector } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { CornieHome } from './CornieHome';
+import { useAppSelector } from '../../app/store/hooks';
 
 const HOME_PAGE = '#home-page';
 const HOME_PAGE_WITH_AUTH = '#home-page-with-auth';
@@ -29,12 +23,8 @@ describe(CornieHome.name, () => {
       tokenFixture = null;
 
       (
-        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
-          typeof useSelector
-        >
-      ).mockImplementation((() => ({
-        token: tokenFixture,
-      })) as Partial<UseSelector<unknown>> as UseSelector<unknown>);
+        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
+      ).mockReturnValueOnce(tokenFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -62,12 +52,8 @@ describe(CornieHome.name, () => {
       tokenFixture = 'jwt token fixture';
 
       (
-        useSelector as Partial<UseSelector<unknown>> as jest.Mock<
-          typeof useSelector
-        >
-      ).mockImplementation((() => ({
-        token: tokenFixture,
-      })) as Partial<UseSelector<unknown>> as UseSelector<unknown>);
+        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
+      ).mockReturnValueOnce(tokenFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>

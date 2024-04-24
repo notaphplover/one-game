@@ -6,14 +6,10 @@ import { useAppSelector } from '../../app/store/hooks';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
-import { httpClient } from '../../common/http/services/HttpService';
 import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
-import { NewGameResponse } from '../../common/http/models/NewGameResponse';
 import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
 import { NUMBER_PLAYERS_MINIMUM } from '../helpers/numberOfPlayersValues';
-import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
-import { NewGameSerializedResponse } from '../../common/http/models/NewGameSerializedResponse';
 import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
 import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
 import {
@@ -24,7 +20,8 @@ import {
   UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
 } from '../../common/helpers/errorMessages';
 import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
-import { models as apiModels } from '@cornie-js/api-models';
+import { useCreateGame } from './useCreateGame';
+import { GameOptions } from '../models/GameOptions';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const token: string | null = useAppSelector(selectAuthToken);
@@ -54,74 +51,73 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [backendErrorUser, setBackendErrorUser] = useState<string | null>(null);
   const [backendErrorGame, setBackendErrorGame] = useState<string | null>(null);
 
-  const setFormFieldName = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  const { call: callCreateGame, result: resultCreateGame } = useCreateGame();
+
+  function assertFormFieldsCanBeUpdated(
+    status: CreateNewGameStatus,
+  ): asserts status is
+    | CreateNewGameStatus.initial
+    | CreateNewGameStatus.validationKO {
     if (
       status !== CreateNewGameStatus.initial &&
       status !== CreateNewGameStatus.validationKO
     ) {
       throw new Error('Unexpected form state at setFormField');
     }
+  }
 
-    const eventTargetValue: string = event.target.value;
-    let finalValue: string | undefined;
+  const setFormFieldName = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    assertFormFieldsCanBeUpdated(status);
 
-    if (eventTargetValue.trim() !== '') {
-      finalValue = eventTargetValue;
+    let name: string | undefined;
+    if (event.target.value.trim() === '') {
+      name = undefined;
     } else {
-      finalValue = undefined;
+      name = event.target.value.trim();
     }
 
     setFormFields({
       ...formFields,
-      [event.target.name]: finalValue,
+      name,
     });
   };
 
   const setFormFieldPlayers = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    if (
-      status !== CreateNewGameStatus.initial &&
-      status !== CreateNewGameStatus.validationKO
-    ) {
-      throw new Error('Unexpected form state at setFormField');
-    }
+    assertFormFieldsCanBeUpdated(status);
 
-    let finalValue: number;
+    let players: number;
 
     if (!isNaN(parseInt(event.target.value))) {
-      finalValue = parseInt(event.target.value);
+      players = parseInt(event.target.value);
     } else {
-      finalValue = NUMBER_PLAYERS_MINIMUM;
+      players = NUMBER_PLAYERS_MINIMUM;
     }
 
     setFormFields({
       ...formFields,
-      [event.target.name]: finalValue,
+      players,
     });
   };
 
   const setFormFieldOptions = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    if (
-      status !== CreateNewGameStatus.initial &&
-      status !== CreateNewGameStatus.validationKO
-    ) {
-      throw new Error('Unexpected form state at setFormField');
-    }
+    assertFormFieldsCanBeUpdated(status);
 
-    const options: apiModels.GameOptionsV1 = formFields.options;
+    const options: GameOptions = formFields.options;
 
-    const optionsWithChanges: apiModels.GameOptionsV1 = {
+    const optionsWithChanges: GameOptions = {
       ...options,
       [event.target.value]: event.target.checked,
     };
+
     setFormFields({
       ...formFields,
-      ['options']: optionsWithChanges,
+      options: optionsWithChanges,
     });
   };
 
@@ -135,11 +131,11 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       case CreateNewGameStatus.pendingValidation:
         validateForm();
         if (token !== null) {
-          setUserMe(token);
+          getUserMe(token);
         }
         break;
       case CreateNewGameStatus.pendingBackend:
-        createGame(formFields);
+        callCreateGame(formFields);
         break;
       case CreateNewGameStatus.backendOK:
         if (token !== null && gameId !== null && userId !== null) {
@@ -149,6 +145,18 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       default:
     }
   }, [status]);
+
+  useEffect(() => {
+    if (resultCreateGame !== null) {
+      if (resultCreateGame.isRight) {
+        setStatus(CreateNewGameStatus.backendOK);
+        setGameId(resultCreateGame.value.id);
+      } else {
+        setStatus(CreateNewGameStatus.backendKO);
+        setBackendError(resultCreateGame.value);
+      }
+    }
+  }, [resultCreateGame]);
 
   const validateForm = (): void => {
     if (status !== CreateNewGameStatus.pendingValidation) {
@@ -179,7 +187,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     }
   };
 
-  const setUserMe = async (token: string): Promise<void> => {
+  const getUserMe = async (token: string): Promise<void> => {
     if (status !== CreateNewGameStatus.pendingValidation) {
       throw new Error('Unexpected form state at createGame');
     }
@@ -235,61 +243,6 @@ export const useCreateNewGame = (): CreateNewGameResult => {
         break;
       default:
     }
-  };
-
-  const createGame = async (formFields: FormFieldsNewGame): Promise<void> => {
-    if (status !== CreateNewGameStatus.pendingBackend) {
-      throw new Error('Unexpected form state at createGame');
-    }
-
-    const response: NewGameSerializedResponse =
-      await fetchCreateGame(formFields);
-
-    switch (response.statusCode) {
-      case 200:
-        setGameId(response.body.id);
-        setStatus(CreateNewGameStatus.backendOK);
-        break;
-      case 400:
-        setBackendError(HTTP_BAD_REQUEST_ERROR_MESSAGE);
-        setStatus(CreateNewGameStatus.backendKO);
-        break;
-      case 401:
-        setBackendError(UNAUTHORIZED_ERROR_MESSAGE);
-        setStatus(CreateNewGameStatus.backendKO);
-        break;
-      default:
-        setBackendError(FORBIDDEN_ERROR_MESSAGE);
-        setStatus(CreateNewGameStatus.backendKO);
-    }
-  };
-
-  const fetchCreateGame = async (
-    formFields: FormFieldsNewGame,
-  ): Promise<NewGameSerializedResponse> => {
-    let httpRequestQuery: apiModels.GameCreateQueryV1;
-
-    if (formFields.name !== undefined) {
-      httpRequestQuery = {
-        gameSlotsAmount: formFields.players,
-        options: formFields.options,
-        name: formFields.name,
-      };
-    } else {
-      httpRequestQuery = {
-        gameSlotsAmount: formFields.players,
-        options: formFields.options,
-      };
-    }
-
-    const response: NewGameResponse = await httpClient.endpoints.createGame(
-      {
-        authorization: `Bearer ${token}`,
-      },
-      httpRequestQuery,
-    );
-
-    return buildSerializableResponse(response);
   };
 
   return {

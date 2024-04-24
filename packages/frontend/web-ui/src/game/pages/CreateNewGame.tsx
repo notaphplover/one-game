@@ -129,6 +129,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                     onClose={setHandleCloseDialog}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
+                    className="dialog-new-game-options"
                   >
                     <DialogTitle id="alert-dialog-title">
                       {'Choose game options'}
@@ -142,11 +143,12 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={
                                   formFields.options.chainDraw2Draw2Cards
                                 }
                                 onChange={setFormFieldOptions}
-                                name="options.chainDraw2Draw2Cards"
+                                name="chainDraw2Draw2Cards"
                               />
                             }
                             label="Chain +2 with +2 cards."
@@ -158,6 +160,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={
                                   formFields.options.chainDraw2Draw4Cards
                                 }
@@ -174,6 +177,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={
                                   formFields.options.chainDraw4Draw4Cards
                                 }
@@ -190,6 +194,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={
                                   formFields.options.chainDraw4Draw2Cards
                                 }
@@ -206,6 +211,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={formFields.options.playCardIsMandatory}
                                 onChange={setFormFieldOptions}
                                 name="playCardIsMandatory"
@@ -220,6 +226,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={
                                   formFields.options.playMultipleSameCards
                                 }
@@ -236,6 +243,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                             disabled={isTextFieldDisabled()}
                             control={
                               <Checkbox
+                                className="new-game-option-control"
                                 checked={
                                   formFields.options
                                     .playWildDraw4IfNoOtherAlternative
@@ -299,6 +307,7 @@ export const CreateNewGame = (): React.JSX.Element => {
               <Grid item xs={12}>
                 <Box className="new-game-form-button">
                   <Button
+                    className="new-game-cornie-button"
                     fullWidth
                     type="button"
                     variant="contained"
