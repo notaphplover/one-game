@@ -136,7 +136,7 @@ describe(HomeWithAuth.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should the button New Game is pressed', () => {
+      it('should press the new game button', () => {
         expect(screen.getByRole('button', { pressed: true })).toBeTruthy();
       });
     });
