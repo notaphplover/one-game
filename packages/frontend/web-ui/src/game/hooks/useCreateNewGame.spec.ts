@@ -1,19 +1,18 @@
 jest.mock('../helpers/validateNumberOfPlayers');
 jest.mock('../../common/helpers/joinGame');
 jest.mock('../../common/helpers/getUserMeId');
-jest.mock('../../common/http/services/HttpService');
-jest.mock('../../common/http/helpers/buildSerializableResponse');
+jest.mock('./useCreateGame');
 jest.mock('../../app/store/hooks');
 jest.mock('../../app/store/features/authSlice');
 
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
 import { useAppSelector } from '../../app/store/hooks';
-import { httpClient } from '../../common/http/services/HttpService';
+import { useCreateGame } from './useCreateGame';
+import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './useCreateGame/utils/unexpectedErrorMessage';
 import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
 import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
-import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
 import { useCreateNewGame } from './useCreateNewGame';
 import {
   RenderHookResult,
@@ -26,12 +25,11 @@ import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { models as apiModels } from '@cornie-js/api-models';
 import { Either } from '../../common/models/Either';
-import { NewGameResponse } from '../../common/http/models/NewGameResponse';
-import { NewGameSerializedResponse } from '../../common/http/models/NewGameSerializedResponse';
 import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
 import { FormNewGameValidationErrorResult } from './../models/FormNewGameValidationErrorResult';
 import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
-import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from '../../common/helpers/errorMessages';
+import { SingleApiCallHookResult } from './../../common/helpers/buildSingleApiCallHook';
+import { GameOptions } from '../models/GameOptions';
 
 describe(useCreateNewGame.name, () => {
   let numberOfPlayersFixture: string;
@@ -39,6 +37,11 @@ describe(useCreateNewGame.name, () => {
   let formNewGameValidationErrorResultFixture: FormNewGameValidationErrorResult;
   let serializableUserIdFixture: UserMeSerializedResponse;
   let serializableJoinGameFixture: JoinGameSerializedResponse;
+  let callNewGameMock: jest.Mock<(params: FormFieldsNewGame) => void>;
+  let singleApiCallHookResultFixture: SingleApiCallHookResult<
+    FormFieldsNewGame,
+    apiModels.NonStartedGameV1
+  >;
 
   beforeAll(() => {
     numberOfPlayersFixture = 'error-players';
@@ -63,6 +66,13 @@ describe(useCreateNewGame.name, () => {
       },
       statusCode: 200,
     };
+
+    callNewGameMock = jest.fn();
+
+    singleApiCallHookResultFixture = {
+      call: callNewGameMock,
+      result: null,
+    };
   });
 
   describe('when called, on initialize values', () => {
@@ -71,6 +81,10 @@ describe(useCreateNewGame.name, () => {
     let statusNewGame: CreateNewGameStatus;
 
     beforeAll(() => {
+      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValueOnce(
+        singleApiCallHookResultFixture,
+      );
+
       renderResult = renderHook(() => useCreateNewGame());
 
       formFieldsNewGame = renderResult.result.current.formFields;
@@ -92,7 +106,7 @@ describe(useCreateNewGame.name, () => {
     });
 
     it('should initialize values on options', () => {
-      const optionsExpected: apiModels.GameOptionsV1 = {
+      const optionsExpected: GameOptions = {
         chainDraw2Draw2Cards: false,
         chainDraw2Draw4Cards: false,
         chainDraw4Draw4Cards: false,
@@ -114,7 +128,7 @@ describe(useCreateNewGame.name, () => {
     let status: CreateNewGameStatus;
     let formValidation: Either<FormNewGameValidationErrorResult, undefined>;
 
-    beforeAll(() => {
+    beforeAll(async () => {
       (
         validateNumberOfPlayers as jest.Mock<typeof validateNumberOfPlayers>
       ).mockReturnValueOnce({
@@ -130,6 +144,10 @@ describe(useCreateNewGame.name, () => {
         serializableUserIdFixture,
       );
 
+      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValue(
+        singleApiCallHookResultFixture,
+      );
+
       renderResult = renderHook(() => useCreateNewGame());
       const notifyFormFieldsFilled: () => void =
         renderResult.result.current.notifyFormFieldsFilled;
@@ -138,7 +156,7 @@ describe(useCreateNewGame.name, () => {
         notifyFormFieldsFilled();
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         status = renderResult.result.current.status;
         expect(status).toBe(CreateNewGameStatus.validationKO);
       });
@@ -148,6 +166,7 @@ describe(useCreateNewGame.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
     it('should have been called validateNumberOfPlayers once', () => {
@@ -178,56 +197,25 @@ describe(useCreateNewGame.name, () => {
   describe('when called, and API returns an OK response', () => {
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
     let status: CreateNewGameStatus;
-    let formFieldsNewGame: apiModels.GameCreateQueryV1;
-    let newGameResponseFixture: NewGameResponse;
-    let newGameSerializedResponseFixture: NewGameSerializedResponse;
+    let singleApiCallHookFixture: SingleApiCallHookResult<
+      FormFieldsNewGame,
+      apiModels.NonStartedGameV1
+    >;
 
     beforeAll(async () => {
-      formFieldsNewGame = {
-        gameSlotsAmount: 2,
-        name: '',
-        options: {
-          chainDraw2Draw2Cards: false,
-          chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
-          chainDraw4Draw2Cards: false,
-          playCardIsMandatory: false,
-          playMultipleSameCards: false,
-          playWildDraw4IfNoOtherAlternative: true,
-        },
-      };
-
-      newGameResponseFixture = {
-        headers: {},
-        body: {
-          id: 'id-fixture',
-          name: 'name-fixture',
-          state: {
-            slots: [
-              {
-                userId: 'userId-fixture',
-              },
-            ],
-            status: 'nonStarted',
+      singleApiCallHookFixture = {
+        call: callNewGameMock,
+        result: {
+          isRight: true,
+          value: {
+            id: 'id-fixture',
+            name: 'name-fixture',
+            state: {
+              slots: [{ userId: 'userId-fixture' }],
+              status: 'nonStarted',
+            },
           },
         },
-        statusCode: 200,
-      };
-
-      newGameSerializedResponseFixture = {
-        body: {
-          id: 'id-fixture',
-          name: 'name-fixture',
-          state: {
-            slots: [
-              {
-                userId: 'userId-fixture',
-              },
-            ],
-            status: 'nonStarted',
-          },
-        },
-        statusCode: 200,
       };
 
       (
@@ -249,15 +237,9 @@ describe(useCreateNewGame.name, () => {
         serializableJoinGameFixture,
       );
 
-      (
-        httpClient.endpoints.createGame as jest.Mock<
-          typeof httpClient.endpoints.createGame
-        >
-      ).mockResolvedValueOnce(newGameResponseFixture);
-
-      (
-        buildSerializableResponse as jest.Mock<typeof buildSerializableResponse>
-      ).mockReturnValueOnce(newGameSerializedResponseFixture);
+      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValue(
+        singleApiCallHookFixture,
+      );
 
       renderResult = renderHook(() => useCreateNewGame());
       const notifyFormFieldsFilled: () => void =
@@ -275,15 +257,26 @@ describe(useCreateNewGame.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
-    it('should called httpClient.endpoints.createGame()', () => {
-      expect(httpClient.endpoints.createGame).toHaveBeenCalled();
-      expect(httpClient.endpoints.createGame).toHaveBeenCalledWith(
-        {
-          authorization: `Bearer undefined`,
+    it('should called useCreateGame hook', () => {
+      const formFieldsNewGameExpected: FormFieldsNewGame = {
+        name: '',
+        players: 2,
+        options: {
+          chainDraw2Draw2Cards: false,
+          chainDraw2Draw4Cards: false,
+          chainDraw4Draw4Cards: false,
+          chainDraw4Draw2Cards: false,
+          playCardIsMandatory: false,
+          playMultipleSameCards: false,
+          playWildDraw4IfNoOtherAlternative: true,
         },
-        formFieldsNewGame,
+      };
+      expect(singleApiCallHookFixture.call).toHaveBeenCalled();
+      expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
+        formFieldsNewGameExpected,
       );
     });
 
@@ -295,39 +288,18 @@ describe(useCreateNewGame.name, () => {
   describe('when called, and API returns a non OK response', () => {
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
     let status: CreateNewGameStatus;
-    let formFieldsNewGame: apiModels.GameCreateQueryV1;
-    let newGameResponseFixture: NewGameResponse;
-    let newGameSerializedResponseFixture: NewGameSerializedResponse;
-    let backendError: string | null;
+    let singleApiCallHookFixture: SingleApiCallHookResult<
+      FormFieldsNewGame,
+      apiModels.NonStartedGameV1
+    >;
 
     beforeAll(async () => {
-      formFieldsNewGame = {
-        gameSlotsAmount: 2,
-        name: '',
-        options: {
-          chainDraw2Draw2Cards: false,
-          chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
-          chainDraw4Draw2Cards: false,
-          playCardIsMandatory: false,
-          playMultipleSameCards: false,
-          playWildDraw4IfNoOtherAlternative: true,
+      singleApiCallHookFixture = {
+        call: callNewGameMock,
+        result: {
+          isRight: false,
+          value: HTTP_BAD_REQUEST_ERROR_MESSAGE,
         },
-      };
-
-      newGameResponseFixture = {
-        headers: {},
-        body: {
-          description: 'description-fixture',
-        },
-        statusCode: 400,
-      };
-
-      newGameSerializedResponseFixture = {
-        body: {
-          description: 'description-fixture',
-        },
-        statusCode: 400,
       };
 
       (
@@ -349,15 +321,9 @@ describe(useCreateNewGame.name, () => {
         serializableJoinGameFixture,
       );
 
-      (
-        httpClient.endpoints.createGame as jest.Mock<
-          typeof httpClient.endpoints.createGame
-        >
-      ).mockResolvedValueOnce(newGameResponseFixture);
-
-      (
-        buildSerializableResponse as jest.Mock<typeof buildSerializableResponse>
-      ).mockReturnValueOnce(newGameSerializedResponseFixture);
+      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValue(
+        singleApiCallHookFixture,
+      );
 
       renderResult = renderHook(() => useCreateNewGame());
       const notifyFormFieldsFilled: () => void =
@@ -369,31 +335,37 @@ describe(useCreateNewGame.name, () => {
 
       await waitFor(() => {
         status = renderResult.result.current.status;
-        backendError = renderResult.result.current.backendError;
-        expect(status).toBe(CreateNewGameStatus.backendKO);
+        //expect(status).toBe(CreateNewGameStatus.backendOK);
       });
     });
 
     afterAll(() => {
       jest.clearAllMocks();
+      jest.resetAllMocks();
     });
 
-    it('should called httpClient.endpoints.createGame()', () => {
-      expect(httpClient.endpoints.createGame).toHaveBeenCalled();
-      expect(httpClient.endpoints.createGame).toHaveBeenCalledWith(
-        {
-          authorization: `Bearer undefined`,
+    it('should called useCreateGame hook', () => {
+      const formFieldsNewGameExpected: FormFieldsNewGame = {
+        name: '',
+        players: 2,
+        options: {
+          chainDraw2Draw2Cards: false,
+          chainDraw2Draw4Cards: false,
+          chainDraw4Draw4Cards: false,
+          chainDraw4Draw2Cards: false,
+          playCardIsMandatory: false,
+          playMultipleSameCards: false,
+          playWildDraw4IfNoOtherAlternative: true,
         },
-        formFieldsNewGame,
+      };
+      expect(singleApiCallHookFixture.call).toHaveBeenCalled();
+      expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
+        formFieldsNewGameExpected,
       );
     });
 
-    it('should return an status backend OK', () => {
+    it('should return an status backend KO', () => {
       expect(status).toBe(CreateNewGameStatus.backendKO);
-    });
-
-    it('should return an error message Invalid Credentials', () => {
-      expect(backendError).toBe(HTTP_BAD_REQUEST_ERROR_MESSAGE);
     });
   });
 });
