@@ -147,7 +147,10 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   }, [status]);
 
   useEffect(() => {
-    if (resultCreateGame !== null) {
+    if (
+      resultCreateGame !== null &&
+      status === CreateNewGameStatus.pendingBackend
+    ) {
       if (resultCreateGame.isRight) {
         setStatus(CreateNewGameStatus.backendOK);
         setGameId(resultCreateGame.value.id);
@@ -156,7 +159,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
         setBackendError(resultCreateGame.value);
       }
     }
-  }, [resultCreateGame]);
+  }, [resultCreateGame, status]);
 
   const validateForm = (): void => {
     if (status !== CreateNewGameStatus.pendingValidation) {
