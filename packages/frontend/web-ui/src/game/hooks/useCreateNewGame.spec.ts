@@ -7,6 +7,7 @@ jest.mock('../../app/store/features/authSlice');
 
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
+import { act } from 'react';
 import { useAppSelector } from '../../app/store/hooks';
 import { useCreateGame } from './useCreateGame';
 import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './useCreateGame/utils/unexpectedErrorMessage';
@@ -14,12 +15,7 @@ import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
 import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
 import { useCreateNewGame } from './useCreateNewGame';
-import {
-  RenderHookResult,
-  renderHook,
-  waitFor,
-  act,
-} from '@testing-library/react';
+import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
 import { CreateNewGameResult } from '../models/CreateNewGameResult';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
@@ -274,7 +270,7 @@ describe(useCreateNewGame.name, () => {
           playWildDraw4IfNoOtherAlternative: true,
         },
       };
-      expect(singleApiCallHookFixture.call).toHaveBeenCalled();
+      expect(singleApiCallHookFixture.call).toHaveBeenCalledTimes(1);
       expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
         formFieldsNewGameExpected,
       );
@@ -287,6 +283,7 @@ describe(useCreateNewGame.name, () => {
 
   describe('when called, and API returns a non OK response', () => {
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
+    let backendError: string | null;
     let status: CreateNewGameStatus;
     let singleApiCallHookFixture: SingleApiCallHookResult<
       FormFieldsNewGame,
@@ -335,7 +332,8 @@ describe(useCreateNewGame.name, () => {
 
       await waitFor(() => {
         status = renderResult.result.current.status;
-        //expect(status).toBe(CreateNewGameStatus.backendOK);
+        backendError = renderResult.result.current.backendError;
+        expect(status).toBe(CreateNewGameStatus.backendKO);
       });
     });
 
@@ -358,7 +356,7 @@ describe(useCreateNewGame.name, () => {
           playWildDraw4IfNoOtherAlternative: true,
         },
       };
-      expect(singleApiCallHookFixture.call).toHaveBeenCalled();
+      expect(singleApiCallHookFixture.call).toHaveBeenCalledTimes(1);
       expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
         formFieldsNewGameExpected,
       );
@@ -366,6 +364,10 @@ describe(useCreateNewGame.name, () => {
 
     it('should return an status backend KO', () => {
       expect(status).toBe(CreateNewGameStatus.backendKO);
+    });
+
+    it('should return an backend error', () => {
+      expect(backendError).toBe(HTTP_BAD_REQUEST_ERROR_MESSAGE);
     });
   });
 });
