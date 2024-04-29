@@ -1,14 +1,9 @@
-import { AuthStateStatus } from '../../../../app/store/helpers/models/AuthStateStatus';
+import { selectAuthToken } from '../../../../app/store/features/authSlice';
 import { useAppSelector } from '../../../../app/store/hooks';
-import { RootState } from '../../../../app/store/store';
 import { UseGetGamesContext } from '../models/UseGetGamesContext';
 
 export function buildContext(): UseGetGamesContext {
-  const token: string | null = useAppSelector((state: RootState) =>
-    state.auth.status === AuthStateStatus.authenticated
-      ? state.auth.token
-      : null,
-  );
+  const token: string | null = useAppSelector(selectAuthToken);
 
   return {
     token,

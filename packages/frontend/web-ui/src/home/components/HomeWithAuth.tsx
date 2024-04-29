@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import {
+  NavigateFunction,
+  Link as RouterLink,
+  useNavigate,
+} from 'react-router-dom';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { GameList } from '../../game/components/GameList';
 import { useGetGames } from '../hooks/useGetGames';
@@ -24,6 +28,8 @@ interface GetGamesParams extends UseGetGamesParams {
 }
 
 export const HomeWithAuth = (): React.JSX.Element => {
+  const navigate: NavigateFunction = useNavigate();
+
   const [paramsNonStarted, setParamsNonStarted] = useState<GetGamesParams>({
     page: 1,
     pageSize: PAGE_SIZE,
@@ -100,6 +106,11 @@ export const HomeWithAuth = (): React.JSX.Element => {
     }
   };
 
+  const onCreateNewGame = (event: React.FormEvent) => {
+    event.preventDefault();
+    navigate('/game', { replace: true });
+  };
+
   return (
     <CornieLayout id="home-page-with-auth" withFooter withNavBar>
       <Box
@@ -109,12 +120,14 @@ export const HomeWithAuth = (): React.JSX.Element => {
         <Grid container>
           <Grid item xs={12}>
             <Box component="div" className="home-auth-button-container">
-              <Link component={RouterLink} to="/">
+              <Link component={RouterLink} to="/game/">
                 <Button
                   type="button"
+                  aria-pressed="true"
                   className="home-auth-button-new-game"
                   variant="contained"
                   startIcon={<GamesIcon />}
+                  onClick={onCreateNewGame}
                 >
                   New Game
                 </Button>
