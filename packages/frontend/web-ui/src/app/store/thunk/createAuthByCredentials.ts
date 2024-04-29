@@ -14,10 +14,11 @@ export const createAuthByCredentials = createAsyncThunk(
   async (
     formField: CreateAuthByCredentialsParams,
   ): Promise<AuthSerializedResponse> => {
-    const response: AuthResponse = await httpClient.endpoints.createAuth(
+    const response: AuthResponse = await httpClient.endpoints.createAuthV2(
       {},
       {
         email: formField.email,
+        kind: 'login',
         password: formField.password,
       },
     );

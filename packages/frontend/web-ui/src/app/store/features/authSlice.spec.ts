@@ -105,12 +105,13 @@ describe('authSlice', () => {
   describe('having a pending state and a createAuthByToken fulfilled action with an HTTP OK status code 200', () => {
     let stateFixture: PendingAuthState;
     let actionFixture: PayloadAction<AuthSerializedResponse>;
-    let payloadFixture: SerializableResponse<apiModels.AuthV1, 200>;
+    let payloadFixture: SerializableResponse<apiModels.AuthV2, 200>;
 
     beforeAll(() => {
       payloadFixture = {
         body: {
-          jwt: 'jwt-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         },
         statusCode: 200,
       };
@@ -134,7 +135,8 @@ describe('authSlice', () => {
       it('should return a state', () => {
         const expected: AuthState = {
           status: AuthStateStatus.authenticated,
-          token: payloadFixture.body.jwt,
+          token: payloadFixture.body.accessToken,
+          refreshToken: payloadFixture.body.refreshToken,
         };
 
         expect(result).toStrictEqual(expected);
@@ -220,13 +222,14 @@ describe('authSlice', () => {
   describe('having a pending state and a createAuthByCredentials fulfilled action with an HTTP OK status code 200', () => {
     let stateFixture: PendingAuthState;
     let actionFixture: PayloadAction<AuthSerializedResponse>;
-    let payloadFixture: SerializableResponse<apiModels.AuthV1, 200>;
+    let payloadFixture: SerializableResponse<apiModels.AuthV2, 200>;
     let createAuthByCredentialsParamsFixture: CreateAuthByCredentialsParams;
 
     beforeAll(() => {
       payloadFixture = {
         body: {
-          jwt: 'jwt-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         },
         statusCode: 200,
       };
@@ -254,7 +257,8 @@ describe('authSlice', () => {
       it('should return a state', () => {
         const expected: AuthState = {
           status: AuthStateStatus.authenticated,
-          token: payloadFixture.body.jwt,
+          token: payloadFixture.body.accessToken,
+          refreshToken: payloadFixture.body.refreshToken,
         };
 
         expect(result).toStrictEqual(expected);

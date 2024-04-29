@@ -16,6 +16,8 @@ import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { UseLoginFormParams } from '../models/UseLoginFormResult';
 import { LoginStatus } from '../models/LoginStatus';
 import { useAppSelector } from '../../app/store/hooks';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 
 describe(Login.name, () => {
   let formFieldsFixture: UseLoginFormParams;
@@ -32,7 +34,8 @@ describe(Login.name, () => {
 
   let navigateMock: ReturnType<typeof useNavigate> &
     jest.Mock<ReturnType<typeof useNavigate>>;
-  let tokenFixture: string | null;
+
+  let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
 
   beforeAll(() => {
     formFieldsFixture = {
@@ -51,7 +54,7 @@ describe(Login.name, () => {
       .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
       jest.Mock<ReturnType<typeof useNavigate>>;
 
-    tokenFixture = null;
+    authenticatedAuthStateFixture = null;
   });
 
   describe('when called, on an initial state', () => {
@@ -78,7 +81,7 @@ describe(Login.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValueOnce(authenticatedAuthStateFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -145,7 +148,7 @@ describe(Login.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValueOnce(authenticatedAuthStateFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -204,7 +207,7 @@ describe(Login.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValueOnce(authenticatedAuthStateFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -231,7 +234,11 @@ describe(Login.name, () => {
 
   describe('when called, and user exists and navigate to the next page', () => {
     beforeAll(() => {
-      tokenFixture = 'jwt token fixture';
+      authenticatedAuthStateFixture = {
+        status: AuthStateStatus.authenticated,
+        token: 'token-fixture',
+        refreshToken: 'refreshToken-fixture',
+      };
 
       (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
         navigateMock,
@@ -256,7 +263,7 @@ describe(Login.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValueOnce(authenticatedAuthStateFixture);
 
       render(
         <MemoryRouter>
@@ -274,10 +281,15 @@ describe(Login.name, () => {
       expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
     });
 
-    it('should save token in Local Storage', () => {
+    it('should save token and refreshToken in Local Storage', () => {
       const tokenStorage: string | null = window.localStorage.getItem('token');
+      const refreshTokenStorage: string | null =
+        window.localStorage.getItem('refreshToken');
 
-      expect(tokenStorage).toBe(tokenFixture);
+      expect(tokenStorage).toBe(authenticatedAuthStateFixture?.token);
+      expect(refreshTokenStorage).toBe(
+        authenticatedAuthStateFixture?.refreshToken,
+      );
     });
   });
 });

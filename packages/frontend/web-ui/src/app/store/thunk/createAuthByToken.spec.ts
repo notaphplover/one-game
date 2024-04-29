@@ -30,21 +30,23 @@ describe(createAuthByToken.name, () => {
       authResponseFixture = {
         headers: {},
         body: {
-          jwt: 'jwt-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         },
         statusCode: 200,
       };
 
       serializableResponseFixture = {
         body: {
-          jwt: 'jwt-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         },
         statusCode: 200,
       };
 
       (
-        httpClient.endpoints.createAuth as jest.Mock<
-          typeof httpClient.endpoints.createAuth
+        httpClient.endpoints.createAuthV2 as jest.Mock<
+          typeof httpClient.endpoints.createAuthV2
         >
       ).mockResolvedValueOnce(authResponseFixture);
       (
@@ -82,12 +84,13 @@ describe(createAuthByToken.name, () => {
       );
     });
 
-    it('should call httpClient.endpoints.createAuth()', () => {
-      expect(httpClient.endpoints.createAuth).toHaveBeenCalledTimes(1);
-      expect(httpClient.endpoints.createAuth).toHaveBeenCalledWith(
+    it('should call httpClient.endpoints.createAuthV2()', () => {
+      expect(httpClient.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
+      expect(httpClient.endpoints.createAuthV2).toHaveBeenCalledWith(
         {},
         {
           code: codeFixture,
+          kind: 'code',
         },
       );
     });

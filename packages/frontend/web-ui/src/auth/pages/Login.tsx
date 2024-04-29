@@ -24,7 +24,11 @@ import { CheckingAuth } from '../components/CheckingAuth';
 import { useAppSelector } from '../../app/store/hooks';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
-import { selectAuthToken } from '../../app/store/features/authSlice';
+import {
+  selectAuthAllToken,
+  selectAuthToken,
+} from '../../app/store/features/authSlice';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 
 export const Login = (): React.JSX.Element => {
   const {
@@ -50,14 +54,20 @@ export const Login = (): React.JSX.Element => {
     notifyFormFieldsFilled();
   };
 
-  const token = useAppSelector(selectAuthToken);
+  const auth: AuthenticatedAuthState | null =
+    useAppSelector(selectAuthAllToken);
 
   useEffect(() => {
-    if (formStatus === LoginStatus.backendOK && token !== null) {
-      window.localStorage.setItem('token', token);
+    if (
+      formStatus === LoginStatus.backendOK &&
+      auth?.token !== null &&
+      auth?.refreshToken !== null
+    ) {
+      window.localStorage.setItem('token', auth?.token as string);
+      window.localStorage.setItem('refreshToken', auth?.refreshToken as string);
       navigate('/', { replace: true });
     }
-  }, [formStatus, token]);
+  }, [formStatus, auth?.token]);
 
   const isTextFieldDisabled = () => {
     return (

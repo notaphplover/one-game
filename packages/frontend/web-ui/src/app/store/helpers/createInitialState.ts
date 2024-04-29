@@ -3,8 +3,10 @@ import { AuthStateStatus } from './models/AuthStateStatus';
 
 export const createInitialState = (): AuthState => {
   const token: string | null = window.localStorage.getItem('token');
+  const refreshToken: string | null =
+    window.localStorage.getItem('refreshToken');
 
-  if (token === null) {
+  if (token === null || refreshToken === null) {
     return {
       status: AuthStateStatus.nonAuthenticated,
     };
@@ -12,6 +14,7 @@ export const createInitialState = (): AuthState => {
     return {
       status: AuthStateStatus.authenticated,
       token,
+      refreshToken,
     };
   }
 };

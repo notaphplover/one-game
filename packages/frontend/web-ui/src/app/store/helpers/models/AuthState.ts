@@ -14,6 +14,7 @@ export type PendingAuthState = BaseAuthState<AuthStateStatus.pending>;
 export interface AuthenticatedAuthState
   extends BaseAuthState<AuthStateStatus.authenticated> {
   token: string;
+  refreshToken: string;
 }
 
 export type AuthState =
