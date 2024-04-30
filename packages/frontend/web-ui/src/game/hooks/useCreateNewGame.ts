@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Either } from '../../common/models/Either';
 import { CreateNewGameResult } from '../models/CreateNewGameResult';
-import { selectAuthToken } from '../../app/store/features/authSlice';
+import {
+  selectAuthAllToken,
+  selectAuthToken,
+} from '../../app/store/features/authSlice';
 import { useAppSelector } from '../../app/store/hooks';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
@@ -22,9 +25,12 @@ import {
 import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
 import { useCreateGame } from './useCreateGame';
 import { GameOptions } from '../models/GameOptions';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const token: string | null = useAppSelector(selectAuthToken);
+  const auth: AuthenticatedAuthState | null =
+    useAppSelector(selectAuthAllToken);
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
     name: '',
     players: NUMBER_PLAYERS_MINIMUM,
@@ -130,16 +136,16 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     switch (status) {
       case CreateNewGameStatus.pendingValidation:
         validateForm();
-        if (token !== null) {
-          getUserMe(token);
+        if (auth !== null) {
+          getUserMe(auth.token);
         }
         break;
       case CreateNewGameStatus.pendingBackend:
         callCreateGame(formFields);
         break;
       case CreateNewGameStatus.backendOK:
-        if (token !== null && gameId !== null && userId !== null) {
-          joinNewGame(token, gameId, userId);
+        if (auth !== null && gameId !== null && userId !== null) {
+          joinNewGame(auth.token, gameId, userId);
         }
         break;
       default:

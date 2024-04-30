@@ -5,26 +5,26 @@ import { RenderResult, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { CornieHome } from './CornieHome';
 import { useAppSelector } from '../../app/store/hooks';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 
 const HOME_PAGE = '#home-page';
 const HOME_PAGE_WITH_AUTH = '#home-page-with-auth';
 
 describe(CornieHome.name, () => {
-  let tokenFixture: unknown;
+  let authenticateAuthStateFixture: AuthenticatedAuthState | null;
 
   beforeAll(() => {
-    tokenFixture = null;
+    authenticateAuthStateFixture = null;
   });
 
   describe('when called, and useSelector() returns a null token', () => {
     let shownPage: Element | null;
 
     beforeAll(() => {
-      tokenFixture = null;
-
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValueOnce(authenticateAuthStateFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -49,11 +49,15 @@ describe(CornieHome.name, () => {
     let shownPage: Element | null;
 
     beforeAll(() => {
-      tokenFixture = 'jwt token fixture';
+      authenticateAuthStateFixture = {
+        status: AuthStateStatus.authenticated,
+        token: 'token-fixture',
+        refreshToken: 'refreshToken-fixture',
+      };
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValueOnce(authenticateAuthStateFixture);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>

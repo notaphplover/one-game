@@ -26,10 +26,12 @@ import { FormNewGameValidationErrorResult } from './../models/FormNewGameValidat
 import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
 import { SingleApiCallHookResult } from './../../common/helpers/buildSingleApiCallHook';
 import { GameOptions } from '../models/GameOptions';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 
 describe(useCreateNewGame.name, () => {
   let numberOfPlayersFixture: string;
-  let tokenFixture: string | null;
+  let authenticatedAuthStateFixture: AuthenticatedAuthState;
   let formNewGameValidationErrorResultFixture: FormNewGameValidationErrorResult;
   let serializableUserIdFixture: UserMeSerializedResponse;
   let serializableJoinGameFixture: JoinGameSerializedResponse;
@@ -41,7 +43,12 @@ describe(useCreateNewGame.name, () => {
 
   beforeAll(() => {
     numberOfPlayersFixture = 'error-players';
-    tokenFixture = 'token-fixture';
+
+    authenticatedAuthStateFixture = {
+      status: AuthStateStatus.authenticated,
+      token: 'accessToken-fixture',
+      refreshToken: 'refreshToken-fixture',
+    };
 
     formNewGameValidationErrorResultFixture = {
       numberOfPlayers: numberOfPlayersFixture,
@@ -134,7 +141,7 @@ describe(useCreateNewGame.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValue(authenticatedAuthStateFixture);
 
       (getUserMeId as jest.Mock<typeof getUserMeId>).mockResolvedValueOnce(
         serializableUserIdFixture,
@@ -223,7 +230,7 @@ describe(useCreateNewGame.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValue(authenticatedAuthStateFixture);
 
       (getUserMeId as jest.Mock<typeof getUserMeId>).mockResolvedValueOnce(
         serializableUserIdFixture,
@@ -308,7 +315,7 @@ describe(useCreateNewGame.name, () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(tokenFixture);
+      ).mockReturnValue(authenticatedAuthStateFixture);
 
       (getUserMeId as jest.Mock<typeof getUserMeId>).mockResolvedValueOnce(
         serializableUserIdFixture,
