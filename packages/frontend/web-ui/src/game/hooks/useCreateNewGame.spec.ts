@@ -46,7 +46,7 @@ describe(useCreateNewGame.name, () => {
 
     authenticatedAuthStateFixture = {
       status: AuthStateStatus.authenticated,
-      token: 'accessToken-fixture',
+      accessToken: 'accessToken-fixture',
       refreshToken: 'refreshToken-fixture',
     };
 
