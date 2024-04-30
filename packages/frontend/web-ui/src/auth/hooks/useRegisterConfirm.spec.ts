@@ -58,7 +58,7 @@ describe(useRegisterConfirm.name, () => {
 
         authenticatedAuthStateFixture = {
           status: AuthStateStatus.authenticated,
-          token: 'accessToken-fixture',
+          accessToken: 'accessToken-fixture',
           refreshToken: 'refreshToken-fixture',
         };
 
@@ -151,7 +151,7 @@ describe(useRegisterConfirm.name, () => {
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalled();
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalledWith(
           {
-            authorization: `Bearer ${authenticatedAuthStateFixture.token}`,
+            authorization: `Bearer ${authenticatedAuthStateFixture.accessToken}`,
           },
           {
             active: true,
@@ -184,8 +184,8 @@ describe(useRegisterConfirm.name, () => {
 
         authenticatedAuthStateFixture = {
           status: AuthStateStatus.authenticated,
-          token: 'token-fixture',
-          refreshToken: 'token-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         };
 
         registerConfirmResponseFixture = {
@@ -272,7 +272,7 @@ describe(useRegisterConfirm.name, () => {
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalled();
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalledWith(
           {
-            authorization: `Bearer ${authenticatedAuthStateFixture.token}`,
+            authorization: `Bearer ${authenticatedAuthStateFixture.accessToken}`,
           },
           {
             active: true,
@@ -289,7 +289,7 @@ describe(useRegisterConfirm.name, () => {
       });
     });
 
-    describe('when called, and token is null', () => {
+    describe('when called, and accessToken is null', () => {
       let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let status: RegisterConfirmStatus;

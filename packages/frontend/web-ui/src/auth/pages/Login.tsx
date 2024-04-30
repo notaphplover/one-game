@@ -24,10 +24,7 @@ import { CheckingAuth } from '../components/CheckingAuth';
 import { useAppSelector } from '../../app/store/hooks';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
-import {
-  selectAuthAllToken,
-  selectAuthToken,
-} from '../../app/store/features/authSlice';
+import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 
 export const Login = (): React.JSX.Element => {
@@ -54,20 +51,17 @@ export const Login = (): React.JSX.Element => {
     notifyFormFieldsFilled();
   };
 
-  const auth: AuthenticatedAuthState | null =
-    useAppSelector(selectAuthAllToken);
+  const auth: AuthenticatedAuthState | null = useAppSelector(
+    selectAuthenticatedAuth,
+  );
 
   useEffect(() => {
-    if (
-      formStatus === LoginStatus.backendOK &&
-      auth?.token !== null &&
-      auth?.refreshToken !== null
-    ) {
-      window.localStorage.setItem('token', auth?.token as string);
-      window.localStorage.setItem('refreshToken', auth?.refreshToken as string);
+    if (formStatus === LoginStatus.backendOK && auth !== null) {
+      window.localStorage.setItem('accessToken', auth.accessToken);
+      window.localStorage.setItem('refreshToken', auth.refreshToken);
       navigate('/', { replace: true });
     }
-  }, [formStatus, auth?.token]);
+  }, [formStatus, auth]);
 
   const isTextFieldDisabled = () => {
     return (

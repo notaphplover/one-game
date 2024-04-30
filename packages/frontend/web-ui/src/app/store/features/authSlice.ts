@@ -26,7 +26,7 @@ function createAuthFulfilledReducer(
     case 200:
       return {
         status: AuthStateStatus.authenticated,
-        token: action.payload.body.accessToken,
+        accessToken: action.payload.body.accessToken,
         refreshToken: action.payload.body.refreshToken,
       };
     default:
@@ -61,17 +61,17 @@ export const authSlice = createSlice({
 
 export const selectAuthToken = (state: RootState): string | null => {
   return state.auth.status === AuthStateStatus.authenticated
-    ? state.auth.token
+    ? state.auth.accessToken
     : null;
 };
 
-export const selectAuthAllToken = (
+export const selectAuthenticatedAuth = (
   state: RootState,
 ): AuthenticatedAuthState | null => {
   return state.auth.status === AuthStateStatus.authenticated
     ? {
         status: state.auth.status,
-        token: state.auth.token,
+        accessToken: state.auth.accessToken,
         refreshToken: state.auth.refreshToken,
       }
     : null;

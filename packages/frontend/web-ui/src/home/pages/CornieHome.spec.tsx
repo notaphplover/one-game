@@ -18,7 +18,7 @@ describe(CornieHome.name, () => {
     authenticateAuthStateFixture = null;
   });
 
-  describe('when called, and useSelector() returns a null token', () => {
+  describe('when called, and useSelector() returns a null accessToken', () => {
     let shownPage: Element | null;
 
     beforeAll(() => {
@@ -45,13 +45,13 @@ describe(CornieHome.name, () => {
     });
   });
 
-  describe('when called, and useSelector() returns a valid token', () => {
+  describe('when called, and useSelector() returns a valid accessToken', () => {
     let shownPage: Element | null;
 
     beforeAll(() => {
       authenticateAuthStateFixture = {
         status: AuthStateStatus.authenticated,
-        token: 'token-fixture',
+        accessToken: 'accessToken-fixture',
         refreshToken: 'refreshToken-fixture',
       };
 

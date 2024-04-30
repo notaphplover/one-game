@@ -236,7 +236,7 @@ describe(Login.name, () => {
     beforeAll(() => {
       authenticatedAuthStateFixture = {
         status: AuthStateStatus.authenticated,
-        token: 'token-fixture',
+        accessToken: 'accessToken-fixture',
         refreshToken: 'refreshToken-fixture',
       };
 
@@ -281,12 +281,15 @@ describe(Login.name, () => {
       expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
     });
 
-    it('should save token and refreshToken in Local Storage', () => {
-      const tokenStorage: string | null = window.localStorage.getItem('token');
+    it('should save accessToken and refreshToken in Local Storage', () => {
+      const accessTokenStorage: string | null =
+        window.localStorage.getItem('accessToken');
       const refreshTokenStorage: string | null =
         window.localStorage.getItem('refreshToken');
 
-      expect(tokenStorage).toBe(authenticatedAuthStateFixture?.token);
+      expect(accessTokenStorage).toBe(
+        authenticatedAuthStateFixture?.accessToken,
+      );
       expect(refreshTokenStorage).toBe(
         authenticatedAuthStateFixture?.refreshToken,
       );

@@ -4,7 +4,7 @@ import { buildSerializableResponse } from '../../common/http/helpers/buildSerial
 import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
-import { selectAuthAllToken } from '../../app/store/features/authSlice';
+import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
 import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
 import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
@@ -24,8 +24,9 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
   const codeParam: string | null = url.searchParams.get(CODE_QUERY_PARAM);
 
   const dispatch = useAppDispatch();
-  const auth: AuthenticatedAuthState | null =
-    useAppSelector(selectAuthAllToken);
+  const auth: AuthenticatedAuthState | null = useAppSelector(
+    selectAuthenticatedAuth,
+  );
 
   useEffect(() => {
     void (async () => {
@@ -44,7 +45,7 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
           if (auth !== null) {
             try {
               const response: RegisterConfirmSerializedResponse =
-                await updateUserMe(auth.token);
+                await updateUserMe(auth.accessToken);
 
               switch (response.statusCode) {
                 case 200:
