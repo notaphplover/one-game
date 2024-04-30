@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit';
 import { createAuthByCredentials } from '../thunk/createAuthByCredentials';
 import { createAuthByToken } from '../thunk/createAuthByToken';
-import { AuthState } from '../helpers/models/AuthState';
+import { AuthState, AuthenticatedAuthState } from '../helpers/models/AuthState';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import type { RootState } from '../store';
@@ -26,7 +26,8 @@ function createAuthFulfilledReducer(
     case 200:
       return {
         status: AuthStateStatus.authenticated,
-        token: action.payload.body.jwt,
+        token: action.payload.body.accessToken,
+        refreshToken: action.payload.body.refreshToken,
       };
     default:
       return {
@@ -61,6 +62,18 @@ export const authSlice = createSlice({
 export const selectAuthToken = (state: RootState): string | null => {
   return state.auth.status === AuthStateStatus.authenticated
     ? state.auth.token
+    : null;
+};
+
+export const selectAuthAllToken = (
+  state: RootState,
+): AuthenticatedAuthState | null => {
+  return state.auth.status === AuthStateStatus.authenticated
+    ? {
+        status: state.auth.status,
+        token: state.auth.token,
+        refreshToken: state.auth.refreshToken,
+      }
     : null;
 };
 

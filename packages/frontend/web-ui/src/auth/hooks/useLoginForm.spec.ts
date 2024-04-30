@@ -195,7 +195,8 @@ describe(useLoginForm.name, () => {
       const payloadActionFixture: PayloadAction<AuthSerializedResponse> = {
         payload: {
           body: {
-            jwt: 'jwt-fixture',
+            accessToken: 'accessToken-fixture',
+            refreshToken: 'refreshToken-fixture',
           },
           statusCode: 200,
         },

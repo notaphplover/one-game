@@ -37,21 +37,23 @@ describe('createAuthByCredentials', () => {
       authResponseFixture = {
         headers: {},
         body: {
-          jwt: 'jwt-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         },
         statusCode: 200,
       };
 
       serializableResponseFixture = {
         body: {
-          jwt: 'jwt-fixture',
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
         },
         statusCode: 200,
       };
 
       (
-        httpClient.endpoints.createAuth as jest.Mock<
-          typeof httpClient.endpoints.createAuth
+        httpClient.endpoints.createAuthV2 as jest.Mock<
+          typeof httpClient.endpoints.createAuthV2
         >
       ).mockResolvedValueOnce(authResponseFixture);
       (
@@ -89,11 +91,16 @@ describe('createAuthByCredentials', () => {
       );
     });
 
-    it('should call httpClient.endpoints.createAuth()', () => {
-      expect(httpClient.endpoints.createAuth).toHaveBeenCalledTimes(1);
-      expect(httpClient.endpoints.createAuth).toHaveBeenCalledWith(
+    it('should call httpClient.endpoints.createAuthV2()', () => {
+      const emailPasswordKindFixture: unknown = {
+        ...emailPasswordFixture,
+        kind: 'login',
+      };
+
+      expect(httpClient.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
+      expect(httpClient.endpoints.createAuthV2).toHaveBeenCalledWith(
         {},
-        emailPasswordFixture,
+        emailPasswordKindFixture,
       );
     });
 
