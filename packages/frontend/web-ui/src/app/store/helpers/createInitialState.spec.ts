@@ -34,11 +34,11 @@ describe(createInitialState.name, () => {
 
     it('should call localStorage.getItem() twice', () => {
       expect(getItemSpy).toHaveBeenCalledTimes(2);
-      expect(getItemSpy).toHaveBeenCalledWith('token');
+      expect(getItemSpy).toHaveBeenCalledWith('accessToken');
       expect(getItemSpy).toHaveBeenCalledWith('refreshToken');
     });
 
-    it('should return an initial state without token and refreshToken', () => {
+    it('should return an initial state without accessToken and refreshToken', () => {
       const expected: AuthState = { status: AuthStateStatus.nonAuthenticated };
 
       expect(result).toStrictEqual(expected);
@@ -46,15 +46,15 @@ describe(createInitialState.name, () => {
   });
 
   describe('when called, localStorage.getItem() returns string', () => {
-    let tokenFixture: string;
+    let accessTokenFixture: string;
     let refreshTokenFixture: string;
     let result: AuthState;
 
     beforeAll(() => {
-      tokenFixture = 'token-fixture';
+      accessTokenFixture = 'accessToken-fixture';
       refreshTokenFixture = 'refreshToken-fixture';
 
-      window.localStorage.setItem('token', tokenFixture);
+      window.localStorage.setItem('accessToken', accessTokenFixture);
       window.localStorage.setItem('refreshToken', refreshTokenFixture);
 
       result = createInitialState();
@@ -66,13 +66,13 @@ describe(createInitialState.name, () => {
 
     it('should call localStorage.getItem() twice', () => {
       expect(getItemSpy).toHaveBeenCalledTimes(2);
-      expect(getItemSpy).toHaveBeenCalledWith('token');
+      expect(getItemSpy).toHaveBeenCalledWith('accessToken');
     });
 
-    it('should return an initial state with token and refreshToken', () => {
+    it('should return an initial state with accessToken and refreshToken', () => {
       const expected: AuthState = {
         status: AuthStateStatus.authenticated,
-        token: tokenFixture,
+        accessToken: accessTokenFixture,
         refreshToken: refreshTokenFixture,
       };
 

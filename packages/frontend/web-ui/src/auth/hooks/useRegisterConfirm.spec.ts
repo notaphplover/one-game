@@ -1,11 +1,11 @@
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-
 jest.mock('../../common/http/services/HttpService');
 jest.mock('../../common/http/helpers/buildSerializableResponse');
 jest.mock('../../app/store/thunk/createAuthByToken');
 jest.mock('../../app/store/hooks');
 
-import { RenderHookResult, act, renderHook } from '@testing-library/react';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { act } from 'react';
+import { RenderHookResult, renderHook } from '@testing-library/react';
 import {
   UNAUTHORIZED_ERROR_MESSAGE,
   UNEXPECTED_ERROR_MESSAGE,
@@ -21,15 +21,12 @@ import { RegisterConfirmSerializedResponse } from '../../common/http/models/Regi
 import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 
 describe(useRegisterConfirm.name, () => {
   let dispatchMock: ReturnType<typeof useAppDispatch> &
     jest.Mock<ReturnType<typeof useAppDispatch>>;
-  let tokenFixture: string | null;
-
-  beforeAll(() => {
-    tokenFixture = null;
-  });
 
   describe('having a window with location.href with code query', () => {
     let previousLocation: Location;
@@ -46,6 +43,7 @@ describe(useRegisterConfirm.name, () => {
     });
 
     describe('when called, and httpClient.endpoints.updateUserMe() returns an OK response', () => {
+      let authenticatedAuthStateFixture: AuthenticatedAuthState;
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let registerConfirmResponseFixture: RegisterConfirmResponse;
       let serializableResponseFixture: RegisterConfirmSerializedResponse;
@@ -58,7 +56,11 @@ describe(useRegisterConfirm.name, () => {
           typeof createAuthByToken
         >;
 
-        tokenFixture = 'jwt token fixture';
+        authenticatedAuthStateFixture = {
+          status: AuthStateStatus.authenticated,
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
+        };
 
         registerConfirmResponseFixture = {
           headers: {},
@@ -92,7 +94,7 @@ describe(useRegisterConfirm.name, () => {
 
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-        ).mockReturnValueOnce(tokenFixture);
+        ).mockReturnValue(authenticatedAuthStateFixture);
 
         (
           httpClient.endpoints.updateUserMe as jest.Mock<
@@ -149,7 +151,7 @@ describe(useRegisterConfirm.name, () => {
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalled();
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalledWith(
           {
-            authorization: `Bearer undefined`,
+            authorization: `Bearer ${authenticatedAuthStateFixture.accessToken}`,
           },
           {
             active: true,
@@ -167,6 +169,7 @@ describe(useRegisterConfirm.name, () => {
     });
 
     describe('when called, and httpClient.endpoints.updateUserMe() returns a non OK response', () => {
+      let authenticatedAuthStateFixture: AuthenticatedAuthState;
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let registerConfirmResponseFixture: RegisterConfirmResponse;
       let serializableResponseFixture: RegisterConfirmSerializedResponse;
@@ -179,7 +182,11 @@ describe(useRegisterConfirm.name, () => {
           typeof createAuthByToken
         >;
 
-        tokenFixture = 'jwt token fixture';
+        authenticatedAuthStateFixture = {
+          status: AuthStateStatus.authenticated,
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
+        };
 
         registerConfirmResponseFixture = {
           headers: {},
@@ -208,7 +215,7 @@ describe(useRegisterConfirm.name, () => {
 
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-        ).mockReturnValueOnce(tokenFixture);
+        ).mockReturnValue(authenticatedAuthStateFixture);
 
         (
           httpClient.endpoints.updateUserMe as jest.Mock<
@@ -265,7 +272,7 @@ describe(useRegisterConfirm.name, () => {
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalled();
         expect(httpClient.endpoints.updateUserMe).toHaveBeenCalledWith(
           {
-            authorization: `Bearer undefined`,
+            authorization: `Bearer ${authenticatedAuthStateFixture.accessToken}`,
           },
           {
             active: true,
@@ -282,7 +289,8 @@ describe(useRegisterConfirm.name, () => {
       });
     });
 
-    describe('when called, and token is null', () => {
+    describe('when called, and accessToken is null', () => {
+      let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let status: RegisterConfirmStatus;
       let errorMessage: string | null;
@@ -293,7 +301,7 @@ describe(useRegisterConfirm.name, () => {
           typeof createAuthByToken
         >;
 
-        tokenFixture = null;
+        authenticatedAuthStateFixture = null;
 
         const payloadActionFixture: PayloadAction<AuthSerializedResponse> = {
           payload: {
@@ -308,7 +316,7 @@ describe(useRegisterConfirm.name, () => {
 
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-        ).mockReturnValueOnce(tokenFixture);
+        ).mockReturnValue(authenticatedAuthStateFixture);
 
         (
           createAuthByToken as unknown as jest.Mock<typeof createAuthByToken>
@@ -380,9 +388,8 @@ describe(useRegisterConfirm.name, () => {
     });
 
     describe('when called, and code query not exists and the error grid is showed', () => {
+      let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
-      let registerConfirmResponseFixture: RegisterConfirmResponse;
-      let serializableResponseFixture: RegisterConfirmSerializedResponse;
       let status: RegisterConfirmStatus;
       let errorMessage: string | null;
       let renderResult: RenderHookResult<UseRegisterConfirmResult, unknown>;
@@ -392,7 +399,7 @@ describe(useRegisterConfirm.name, () => {
           typeof createAuthByToken
         >;
 
-        tokenFixture = null;
+        authenticatedAuthStateFixture = null;
 
         const payloadActionFixture: PayloadAction<AuthSerializedResponse> = {
           payload: {
@@ -407,7 +414,7 @@ describe(useRegisterConfirm.name, () => {
 
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-        ).mockReturnValueOnce(tokenFixture);
+        ).mockReturnValue(authenticatedAuthStateFixture);
 
         (
           createAuthByToken as unknown as jest.Mock<typeof createAuthByToken>

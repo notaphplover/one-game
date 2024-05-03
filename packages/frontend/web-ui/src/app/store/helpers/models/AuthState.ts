@@ -13,7 +13,7 @@ export type PendingAuthState = BaseAuthState<AuthStateStatus.pending>;
 
 export interface AuthenticatedAuthState
   extends BaseAuthState<AuthStateStatus.authenticated> {
-  token: string;
+  accessToken: string;
   refreshToken: string;
 }
 

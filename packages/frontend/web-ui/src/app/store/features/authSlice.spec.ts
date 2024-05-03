@@ -135,7 +135,7 @@ describe('authSlice', () => {
       it('should return a state', () => {
         const expected: AuthState = {
           status: AuthStateStatus.authenticated,
-          token: payloadFixture.body.accessToken,
+          accessToken: payloadFixture.body.accessToken,
           refreshToken: payloadFixture.body.refreshToken,
         };
 
@@ -257,7 +257,7 @@ describe('authSlice', () => {
       it('should return a state', () => {
         const expected: AuthState = {
           status: AuthStateStatus.authenticated,
-          token: payloadFixture.body.accessToken,
+          accessToken: payloadFixture.body.accessToken,
           refreshToken: payloadFixture.body.refreshToken,
         };
 

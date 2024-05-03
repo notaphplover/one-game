@@ -4,10 +4,11 @@ import { buildSerializableResponse } from '../../common/http/helpers/buildSerial
 import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
-import { selectAuthToken } from '../../app/store/features/authSlice';
+import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
 import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
 import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 
 const CODE_QUERY_PARAM: string = 'code';
 export const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error.';
@@ -23,7 +24,9 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
   const codeParam: string | null = url.searchParams.get(CODE_QUERY_PARAM);
 
   const dispatch = useAppDispatch();
-  const token: string | null = useAppSelector(selectAuthToken);
+  const auth: AuthenticatedAuthState | null = useAppSelector(
+    selectAuthenticatedAuth,
+  );
 
   useEffect(() => {
     void (async () => {
@@ -39,10 +42,10 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
           }
           break;
         case RegisterConfirmStatus.pending:
-          if (token !== null) {
+          if (auth !== null) {
             try {
               const response: RegisterConfirmSerializedResponse =
-                await updateUserMe(token);
+                await updateUserMe(auth.accessToken);
 
               switch (response.statusCode) {
                 case 200:
@@ -67,7 +70,7 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
           break;
       }
     })();
-  }, [token, status]);
+  }, [auth, status]);
 
   const updateUserMe = async (
     token: string,
