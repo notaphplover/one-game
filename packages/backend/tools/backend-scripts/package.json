@@ -14,7 +14,7 @@
   "type": "module",
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "bin": {
-    "backend-get-affected-projects": "./bin/getAffectedProjects.js",
+    "backend-get-affected-project-chunks": "./bin/getAffectedProjectsChunks.js",
     "backend-ts-package-cjs": "./bin/writeCommonJsPackageJson.js",
     "backend-ts-package-esm": "./bin/writeEsmPackageJson.js"
   }
