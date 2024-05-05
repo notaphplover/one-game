@@ -27,7 +27,7 @@ jobs:
 
       - name: Get affected packages
         id: get-affected-packages
-        run: echo "packages=$(pnpm exec backend-get-affected-projects test:js origin/${{github.base_ref}})" >> $GITHUB_OUTPUT
+        run: echo "packages=$(pnpm exec backend-get-affected-project-chunks test:js origin/${{github.base_ref}} 4)" >> $GITHUB_OUTPUT
 
       - name: Compile source files
         run: pnpm run build
@@ -56,7 +56,7 @@ jobs:
     if: ${{ needs.build.outputs.affectedPackages != '[]' }}
     strategy:
       matrix:
-        package: ${{fromJSON(needs.build.outputs.affectedPackages)}}
+        packages: ${{fromJSON(needs.build.outputs.affectedPackages)}}
     steps:
 
       - name: Checkout
@@ -81,14 +81,14 @@ jobs:
             ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
 
       - name: Build on cache miss
-        run: pnpm run build --filter ${{ matrix.package }}
+        run: pnpm run build --filter ${{ join(matrix.packages, ' --filter ') }}
         if: ${{ !steps.ts-build-cache.outputs.cache-hit }}
 
       - name: Launch Unit Tests
-        run: pnpm run test:unit:js --filter ${{ matrix.package }} --only
+        run: pnpm run test:unit:js --filter ${{ join(matrix.packages, ' --filter ') }} --only
 
       - name: Launch Integration Tests
-        run: pnpm run test:integration:js --filter ${{ matrix.package }} --only
+        run: pnpm run test:integration:js --filter ${{ join(matrix.packages, ' --filter ') }} --only
 
       - name: Start SSH session on failure
         if: ${{ failure() && contains(github.event.head_commit.message, '[ci-open-ssh]') }}
