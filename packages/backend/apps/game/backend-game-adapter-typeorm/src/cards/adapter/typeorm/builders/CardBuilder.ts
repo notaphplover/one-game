@@ -47,7 +47,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card version ${cardVersion}`,
+          `Unexpected card version ${cardVersion.toString()}`,
         );
     }
 
@@ -70,7 +70,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card type ${cardType}`,
+          `Unexpected card type ${cardType.toString()}`,
         );
     }
 
@@ -98,7 +98,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card color ${cardColorNumber}`,
+          `Unexpected card color ${cardColorNumber.toString()}`,
         );
     }
 
@@ -122,7 +122,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card number flag ${cardIsNumbered}`,
+          `Unexpected card number flag ${cardIsNumbered.toString()}`,
         );
     }
 
@@ -159,7 +159,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card value ${cardValue}`,
+          `Unexpected card value ${cardValue.toString()}`,
         );
     }
 
@@ -196,7 +196,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card value ${cardValue}`,
+          `Unexpected card value ${cardValue.toString()}`,
         );
     }
 

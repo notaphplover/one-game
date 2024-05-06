@@ -105,6 +105,6 @@ export class CardDbBuilder implements Builder<CardDb, [Card]> {
   }
 
   #isColored(card: BaseCard): card is ColoredCard {
-    return (card as ColoredCard).color !== undefined;
+    return (card as Partial<ColoredCard>).color !== undefined;
   }
 }

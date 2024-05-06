@@ -96,7 +96,6 @@ export class GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder
   }
 
   #buildPositionQuery(): string {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const positionQueryBuilder: SelectQueryBuilder<GameActionDb> =
       this.#repository
         .createQueryBuilder(GameActionDb.name)

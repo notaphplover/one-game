@@ -27,7 +27,7 @@ export class CardColorBuilder implements Builder<CardColor, [CardColorDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card version ${cardVersion}`,
+          `Unexpected card version ${cardVersion.toString()}`,
         );
     }
 
@@ -55,7 +55,7 @@ export class CardColorBuilder implements Builder<CardColor, [CardColorDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card color ${cardColorNumber}`,
+          `Unexpected card color ${cardColorNumber.toString()}`,
         );
     }
 

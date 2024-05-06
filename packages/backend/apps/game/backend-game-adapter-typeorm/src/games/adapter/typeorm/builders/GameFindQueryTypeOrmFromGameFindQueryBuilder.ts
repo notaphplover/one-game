@@ -79,7 +79,6 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
 
       queryBuilder = this.#findByGameSlotFindQuery(
         gameFindQuery.gameSlotFindQuery,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         queryBuilder as SelectQueryBuilder<GameDb>,
       );
     }
@@ -128,7 +127,6 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
     gameSlotFindQuery: GameSlotFindQuery,
     selectQueryBuilder: SelectQueryBuilder<GameDb>,
   ): SelectQueryBuilder<GameDb> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     let subQueryBuilder: SelectQueryBuilder<GameSlotDb> = selectQueryBuilder
       .subQuery()
       .select(`"${GameSlotDb.name}".game_Id`)
