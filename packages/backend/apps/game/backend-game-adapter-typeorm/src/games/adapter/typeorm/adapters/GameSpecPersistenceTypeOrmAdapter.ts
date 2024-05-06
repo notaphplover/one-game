@@ -1,8 +1,8 @@
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { GameSpecPersistenceOutputPort } from '@cornie-js/backend-game-application/games';
 import {
-  GameSpecCreateQuery,
   GameSpec,
+  GameSpecCreateQuery,
   GameSpecFindQuery,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';

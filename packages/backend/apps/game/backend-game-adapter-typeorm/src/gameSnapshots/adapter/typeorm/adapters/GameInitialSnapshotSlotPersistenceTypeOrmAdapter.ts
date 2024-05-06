@@ -1,8 +1,8 @@
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { GameInitialSnapshotSlotPersistenceOutputPort } from '@cornie-js/backend-game-application/gameSnapshots';
 import {
-  GameInitialSnapshotSlotCreateQuery,
   GameInitialSnapshotSlot,
+  GameInitialSnapshotSlotCreateQuery,
 } from '@cornie-js/backend-game-domain/gameSnapshots';
 import { Inject, Injectable } from '@nestjs/common';
 

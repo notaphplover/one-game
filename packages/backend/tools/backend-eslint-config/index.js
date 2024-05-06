@@ -4,6 +4,7 @@ import eslint from '@eslint/js';
 import jestPlugin from 'eslint-plugin-jest';
 import tseslint from 'typescript-eslint';
 import eslintPrettierConfig from 'eslint-plugin-prettier/recommended';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 /**
  * @returns {import('typescript-eslint').ConfigWithExtends}
@@ -22,6 +23,7 @@ function buildBaseConfig() {
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
@@ -111,40 +113,24 @@ function buildBaseConfig() {
         },
       ],
       '@typescript-eslint/unified-signatures': 'error',
-      // 'import/default': 'off',
-      // 'import/namespace': 'off',
-      // 'import/newline-after-import': 'error',
-      // 'import/no-named-as-default': 'off',
-      // 'import/no-named-as-default-member': 'off',
-      // 'import/order': [
-      //   'error',
-      //   {
-      //     alphabetize: {
-      //       order: 'asc',
-      //       caseInsensitive: true,
-      //     },
-      //     groups: ['builtin', 'external'],
-      //     'newlines-between': 'always',
-      //     pathGroups: [
-      //       {
-      //         pattern: '@jest/globals',
-      //         group: 'external',
-      //         position: 'before',
-      //       },
-      //       {
-      //         pattern: 'jest-mock',
-      //         group: 'external',
-      //         position: 'before',
-      //       },
-      //     ],
-      //     pathGroupsExcludedImportTypes: ['@jest/globals', 'jest-mock'],
-      //   },
-      // ],
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_' },
+      ],
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['@jest/globals'],
+            ['^\\u0000'],
+            ['^node:'],
+            ['^@?\\w'],
+            ['^'],
+            ['^\\.'],
+          ],
+        },
       ],
       'sort-keys': [
         'error',
