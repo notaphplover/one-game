@@ -87,7 +87,7 @@ describe(CardArrayFromCardDbStringifiedArrayBuilder.name, () => {
 
       beforeAll(() => {
         cardDbFixture = 39;
-        stringifiedCardsFixture = `[${cardDbFixture}]`;
+        stringifiedCardsFixture = `[${cardDbFixture.toString()}]`;
       });
 
       describe('when called', () => {

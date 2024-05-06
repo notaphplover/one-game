@@ -16,6 +16,7 @@ import { Injectable } from '@nestjs/common';
 
 import { CardDb } from '../models/CardDb';
 import {
+  CARD_V1_MASK,
   COLORED_BLUE_SUBTYPE_MASK,
   COLORED_CARD_TYPE_MASK,
   COLORED_GREEN_SUBTYPE_MASK,
@@ -29,7 +30,6 @@ import {
   NON_COLORED_WILD_DRAW_4_VALUE_MASK,
   NON_COLORED_WILD_VALUE_MASK,
   UNCOLORED_CARD_TYPE_MASK,
-  CARD_V1_MASK,
 } from '../models/cardDbMasks';
 
 @Injectable()
@@ -105,6 +105,6 @@ export class CardDbBuilder implements Builder<CardDb, [Card]> {
   }
 
   #isColored(card: BaseCard): card is ColoredCard {
-    return (card as ColoredCard).color !== undefined;
+    return (card as Partial<ColoredCard>).color !== undefined;
   }
 }

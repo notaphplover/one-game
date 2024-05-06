@@ -1,4 +1,4 @@
-import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
+import { Builder } from '@cornie-js/backend-common';
 import { Card } from '@cornie-js/backend-game-domain/cards';
 import {
   ActiveGameSlot,
@@ -44,13 +44,6 @@ export class GameSlotFromGameSlotDbBuilder
   #buildActiveOrFinishedGameSlots(
     gameSlotDb: GameSlotDb,
   ): ActiveGameSlot | FinishedGameSlot {
-    if (gameSlotDb.userId === null) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected null userId on active game slot',
-      );
-    }
-
     return {
       cards: this.#cardArrayFromCardDbStringifiedArrayBuilder.build(
         gameSlotDb.cards as string,

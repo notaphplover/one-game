@@ -10,7 +10,7 @@ export class NumberToBooleanTransformer implements ValueTransformer {
   }
 
   public to(value: boolean): number {
-    if (value === true) {
+    if (value) {
       return 1;
     } else {
       return 0;

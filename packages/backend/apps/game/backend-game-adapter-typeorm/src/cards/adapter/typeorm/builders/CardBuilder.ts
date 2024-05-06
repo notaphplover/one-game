@@ -22,6 +22,9 @@ import {
   COLORED_BLUE_SUBTYPE_MASK,
   COLORED_CARD_TYPE_MASK,
   COLORED_GREEN_SUBTYPE_MASK,
+  COLORED_NON_NUMBERED_DRAW_VALUE_MASK,
+  COLORED_NON_NUMBERED_REVERSE_VALUE_MASK,
+  COLORED_NON_NUMBERED_SKIP_VALUE_MASK,
   COLORED_NON_NUMBERED_SUBTYPE_MASK,
   COLORED_NUMBERED_SUBTYPE_MASK,
   COLORED_RED_SUBTYPE_MASK,
@@ -29,9 +32,6 @@ import {
   NON_COLORED_WILD_DRAW_4_VALUE_MASK,
   NON_COLORED_WILD_VALUE_MASK,
   UNCOLORED_CARD_TYPE_MASK,
-  COLORED_NON_NUMBERED_DRAW_VALUE_MASK,
-  COLORED_NON_NUMBERED_SKIP_VALUE_MASK,
-  COLORED_NON_NUMBERED_REVERSE_VALUE_MASK,
 } from '../models/cardDbMasks';
 
 export class CardBuilder implements Builder<Card, [CardDb]> {
@@ -47,7 +47,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card version ${cardVersion}`,
+          `Unexpected card version ${cardVersion.toString()}`,
         );
     }
 
@@ -70,7 +70,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card type ${cardType}`,
+          `Unexpected card type ${cardType.toString()}`,
         );
     }
 
@@ -98,7 +98,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card color ${cardColorNumber}`,
+          `Unexpected card color ${cardColorNumber.toString()}`,
         );
     }
 
@@ -122,7 +122,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card number flag ${cardIsNumbered}`,
+          `Unexpected card number flag ${cardIsNumbered.toString()}`,
         );
     }
 
@@ -159,7 +159,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card value ${cardValue}`,
+          `Unexpected card value ${cardValue.toString()}`,
         );
     }
 
@@ -196,7 +196,7 @@ export class CardBuilder implements Builder<Card, [CardDb]> {
       default:
         throw new AppError(
           AppErrorKind.unknown,
-          `Unexpected card value ${cardValue}`,
+          `Unexpected card value ${cardValue.toString()}`,
         );
     }
 
