@@ -154,6 +154,11 @@ export default tseslint.config(
   },
   {
     ...baseRules,
+    extends: [
+      ...(baseRules.extends ?? []),
+      jestPlugin.configs['flat/recommended'],
+      jestPlugin.configs['flat/style'],
+    ],
     files: ['**/*.spec.{ts,tsx}'],
     plugins: {
       ...(baseRules.plugins ?? {}),
