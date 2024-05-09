@@ -1,15 +1,13 @@
 jest.mock('../hooks/useCreateNewGame');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useNavigate: jest.fn(),
 }));
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import { MemoryRouter, useNavigate } from 'react-router-dom';
-import { useCreateNewGame } from '../hooks/useCreateNewGame';
-import { CreateNewGame } from './CreateNewGame';
-import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
-import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
+
 import {
   RenderResult,
   fireEvent,
@@ -17,13 +15,19 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
+
 import { Either } from '../../common/models/Either';
-import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
 import {
   NUMBER_PLAYERS_MAXIMUM,
   NUMBER_PLAYERS_MINIMUM,
 } from '../helpers/numberOfPlayersValues';
+import { useCreateNewGame } from '../hooks/useCreateNewGame';
+import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
+import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
+import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
 import { GameOptions } from '../models/GameOptions';
+import { CreateNewGame } from './CreateNewGame';
 
 describe(CreateNewGame.name, () => {
   let formFieldsFixture: FormFieldsNewGame;
@@ -47,16 +51,16 @@ describe(CreateNewGame.name, () => {
   beforeAll(() => {
     formFieldsFixture = {
       name: 'name-fixture',
-      players: NUMBER_PLAYERS_MINIMUM,
       options: {
         chainDraw2Draw2Cards: false,
         chainDraw2Draw4Cards: false,
-        chainDraw4Draw4Cards: false,
         chainDraw4Draw2Cards: false,
+        chainDraw4Draw4Cards: false,
         playCardIsMandatory: false,
         playMultipleSameCards: false,
         playWildDraw4IfNoOtherAlternative: true,
       },
+      players: NUMBER_PLAYERS_MINIMUM,
     };
 
     notifyFormFieldsFilledMock = jest.fn();
@@ -86,8 +90,8 @@ describe(CreateNewGame.name, () => {
       inputOptions = {
         chainDraw2Draw2Cards: true,
         chainDraw2Draw4Cards: true,
-        chainDraw4Draw4Cards: true,
         chainDraw4Draw2Cards: true,
+        chainDraw4Draw4Cards: true,
         playCardIsMandatory: true,
         playMultipleSameCards: true,
         playWildDraw4IfNoOtherAlternative: false,
@@ -96,14 +100,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        formFields: formFieldsFixture,
-        status: CreateNewGameStatus.initial,
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-        formValidation: formValidationMock,
         backendError: null,
+        formFields: formFieldsFixture,
+        formValidation: formValidationMock,
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
-        setFormFieldPlayers: setFormFieldPlayersMock,
         setFormFieldOptions: setFormFieldOptionsMock,
+        setFormFieldPlayers: setFormFieldPlayersMock,
+        status: CreateNewGameStatus.initial,
       });
 
       renderResult = render(
@@ -132,14 +136,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        formFields: formFieldsFixture,
-        status: CreateNewGameStatus.initial,
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-        formValidation: formValidationMock,
         backendError: null,
+        formFields: formFieldsFixture,
+        formValidation: formValidationMock,
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
-        setFormFieldPlayers: setFormFieldPlayersMock,
         setFormFieldOptions: setFormFieldOptionsMock,
+        setFormFieldPlayers: setFormFieldPlayersMock,
+        status: CreateNewGameStatus.initial,
       });
 
       fireEvent.click(formOptionsButton);
@@ -182,34 +186,34 @@ describe(CreateNewGame.name, () => {
     beforeAll(async () => {
       formFieldsFixture = {
         name: undefined,
-        players: 0,
         options: {
           chainDraw2Draw2Cards: false,
           chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
           chainDraw4Draw2Cards: false,
+          chainDraw4Draw4Cards: false,
           playCardIsMandatory: false,
           playMultipleSameCards: false,
           playWildDraw4IfNoOtherAlternative: true,
         },
+        players: 0,
       };
 
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
+        backendError: null,
         formFields: formFieldsFixture,
-        status: CreateNewGameStatus.validationKO,
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         formValidation: {
           isRight: false,
           value: {
             numberOfPlayers: playersErrorFixture,
           },
         },
-        backendError: null,
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
-        setFormFieldPlayers: setFormFieldPlayersMock,
         setFormFieldOptions: setFormFieldOptionsMock,
+        setFormFieldPlayers: setFormFieldPlayersMock,
+        status: CreateNewGameStatus.validationKO,
       });
 
       renderResult = render(
@@ -243,14 +247,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        formFields: formFieldsFixture,
-        status: CreateNewGameStatus.backendKO,
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-        formValidation: formValidationMock,
         backendError: backendErrorFixture,
+        formFields: formFieldsFixture,
+        formValidation: formValidationMock,
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
-        setFormFieldPlayers: setFormFieldPlayersMock,
         setFormFieldOptions: setFormFieldOptionsMock,
+        setFormFieldPlayers: setFormFieldPlayersMock,
+        status: CreateNewGameStatus.backendKO,
       });
 
       renderResult = render(
@@ -286,14 +290,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        formFields: formFieldsFixture,
-        status: CreateNewGameStatus.backendOK,
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-        formValidation: formValidationMock,
         backendError: null,
+        formFields: formFieldsFixture,
+        formValidation: formValidationMock,
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
-        setFormFieldPlayers: setFormFieldPlayersMock,
         setFormFieldOptions: setFormFieldOptionsMock,
+        setFormFieldPlayers: setFormFieldPlayersMock,
+        status: CreateNewGameStatus.backendOK,
       });
 
       renderResult = render(
@@ -310,14 +314,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        formFields: formFieldsFixture,
-        status: CreateNewGameStatus.backendOK,
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-        formValidation: formValidationMock,
         backendError: null,
+        formFields: formFieldsFixture,
+        formValidation: formValidationMock,
+        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
-        setFormFieldPlayers: setFormFieldPlayersMock,
         setFormFieldOptions: setFormFieldOptionsMock,
+        setFormFieldPlayers: setFormFieldPlayersMock,
+        status: CreateNewGameStatus.backendOK,
       });
 
       fireEvent.click(formCornieHomeButton);

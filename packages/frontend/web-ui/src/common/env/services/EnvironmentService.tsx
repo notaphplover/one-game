@@ -7,7 +7,7 @@ class EnvironmentService {
     this.#env = this.#parseEnv();
   }
 
-  getEnvironment(): Environment {
+  public getEnvironment(): Environment {
     return this.#env;
   }
 

@@ -4,25 +4,27 @@ jest.mock('../../app/store/thunk/createAuthByToken');
 jest.mock('../../app/store/hooks');
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import { act } from 'react';
+
+import { PayloadAction } from '@reduxjs/toolkit';
 import { RenderHookResult, renderHook } from '@testing-library/react';
+import { act } from 'react';
+
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
+import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
+import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
+import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
+import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
+import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
+import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
+import { httpClient } from '../../common/http/services/HttpService';
+import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
+import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
 import {
   UNAUTHORIZED_ERROR_MESSAGE,
   UNEXPECTED_ERROR_MESSAGE,
   useRegisterConfirm,
 } from './useRegisterConfirm';
-import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
-import { httpClient } from '../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
-import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
-import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
-import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
-import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
-import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 
 describe(useRegisterConfirm.name, () => {
   let dispatchMock: ReturnType<typeof useAppDispatch> &
@@ -37,8 +39,8 @@ describe(useRegisterConfirm.name, () => {
       locationFixture = new URL('http://corniegame.com/auth/path?code=code');
 
       Object.defineProperty(window, 'location', {
-        value: new URL(locationFixture),
         configurable: true,
+        value: new URL(locationFixture),
       });
     });
 
@@ -57,18 +59,18 @@ describe(useRegisterConfirm.name, () => {
         >;
 
         authenticatedAuthStateFixture = {
-          status: AuthStateStatus.authenticated,
           accessToken: 'accessToken-fixture',
           refreshToken: 'refreshToken-fixture',
+          status: AuthStateStatus.authenticated,
         };
 
         registerConfirmResponseFixture = {
-          headers: {},
           body: {
             active: true,
             id: 'id',
             name: 'name',
           },
+          headers: {},
           statusCode: 200,
         };
 
@@ -124,6 +126,7 @@ describe(useRegisterConfirm.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderResult = renderHook(() => useRegisterConfirm());
         });
@@ -183,16 +186,16 @@ describe(useRegisterConfirm.name, () => {
         >;
 
         authenticatedAuthStateFixture = {
-          status: AuthStateStatus.authenticated,
           accessToken: 'accessToken-fixture',
           refreshToken: 'refreshToken-fixture',
+          status: AuthStateStatus.authenticated,
         };
 
         registerConfirmResponseFixture = {
-          headers: {},
           body: {
             description: 'Error Fixture',
           },
+          headers: {},
           statusCode: 401,
         };
 
@@ -245,6 +248,7 @@ describe(useRegisterConfirm.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderResult = renderHook(() => useRegisterConfirm());
         });
@@ -334,6 +338,7 @@ describe(useRegisterConfirm.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderResult = renderHook(() => useRegisterConfirm());
         });
@@ -367,8 +372,8 @@ describe(useRegisterConfirm.name, () => {
 
     afterAll(() => {
       Object.defineProperty(window, 'location', {
-        value: previousLocation,
         configurable: true,
+        value: previousLocation,
       });
     });
   });
@@ -382,8 +387,8 @@ describe(useRegisterConfirm.name, () => {
       locationFixture = new URL('http://corniegame.com/auth/path?code=');
 
       Object.defineProperty(window, 'location', {
-        value: new URL(locationFixture),
         configurable: true,
+        value: new URL(locationFixture),
       });
     });
 
@@ -432,6 +437,7 @@ describe(useRegisterConfirm.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderResult = renderHook(() => useRegisterConfirm());
         });
@@ -466,8 +472,8 @@ describe(useRegisterConfirm.name, () => {
 
     afterAll(() => {
       Object.defineProperty(window, 'location', {
-        value: previousLocation,
         configurable: true,
+        value: previousLocation,
       });
     });
   });

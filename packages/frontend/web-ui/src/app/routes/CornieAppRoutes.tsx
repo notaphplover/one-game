@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { AuthRoutes } from '../../auth/routes/AuthRoutes';
+
 import { AboutUsRoutes } from '../../about/routes/AboutUsRoutes';
-import { HomeRoutes } from '../../home/routes/HomeRoutes';
+import { AuthRoutes } from '../../auth/routes/AuthRoutes';
 import { GameRoutes } from '../../game/routes/GameRoutes';
+import { HomeRoutes } from '../../home/routes/HomeRoutes';
 
 export const CornieAppRoutes = (): React.JSX.Element => {
   return (

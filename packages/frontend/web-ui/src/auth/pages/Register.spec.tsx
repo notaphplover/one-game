@@ -3,19 +3,15 @@ import { afterAll, beforeAll, describe, expect, jest, it } from '@jest/globals';
 jest.mock('../hooks/useRegisterForm');
 jest.mock('../../common/hooks/useShowPassword');
 
-import { Register } from './Register';
-import {
-  RenderResult,
-  fireEvent,
-  render,
-  screen,
-} from '@testing-library/react';
+import { RenderResult, fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { useRegisterForm } from '../hooks/useRegisterForm';
+
 import { useShowPassword } from '../../common/hooks/useShowPassword';
+import { useRegisterForm } from '../hooks/useRegisterForm';
+import { FormValidationResult } from '../models/FormValidationResult';
 import { RegisterStatus } from '../models/RegisterStatus';
 import { UseRegisterFormParams } from '../models/UseRegisterFormResult';
-import { FormValidationResult } from '../models/FormValidationResult';
+import { Register } from './Register';
 
 describe(Register.name, () => {
   let formFieldsFixture: UseRegisterFormParams;
@@ -34,10 +30,10 @@ describe(Register.name, () => {
 
   beforeAll(() => {
     formFieldsFixture = {
-      name: 'name fixture',
-      email: 'name@fixture.com',
-      password: 'password-fixture',
       confirmPassword: 'confirm-password-fixture',
+      email: 'name@fixture.com',
+      name: 'name fixture',
+      password: 'password-fixture',
     };
 
     notifyFormFieldsFilledMock = jest.fn();
@@ -47,10 +43,10 @@ describe(Register.name, () => {
     handleMouseDownPasswordMock = jest.fn();
 
     formValidationResult = {
-      name: 'name Error',
-      email: 'email Error',
-      password: 'password Error',
       confirmPassword: 'confirmPassword Error',
+      email: 'email Error',
+      name: 'name Error',
+      password: 'password Error',
     };
   });
 
@@ -75,9 +71,9 @@ describe(Register.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       const renderResult: RenderResult = render(
@@ -143,10 +139,10 @@ describe(Register.name, () => {
       ).mockReturnValueOnce({
         backendError: null,
         formFields: {
-          name: '',
-          email: '',
-          password: '',
           confirmPassword: '',
+          email: '',
+          name: '',
+          password: '',
         },
         formStatus: RegisterStatus.validationKO,
         formValidation: formValidationResult,
@@ -157,9 +153,9 @@ describe(Register.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       const renderResult: RenderResult = render(
@@ -235,9 +231,9 @@ describe(Register.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       const renderResult: RenderResult = render(
@@ -264,7 +260,7 @@ describe(Register.name, () => {
   });
 
   describe('when called, and create user is ok and the message is displayed', () => {
-    let userCreateOK: string | null;
+    let userCreateOk: string | null;
     const messageConfirmation: string =
       'User created! We sent an email, please, complete the steps.';
 
@@ -283,9 +279,9 @@ describe(Register.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       const renderResult: RenderResult = render(
@@ -298,7 +294,7 @@ describe(Register.name, () => {
         (renderResult.container.querySelector('.form-register-success')
           ?.childNodes[0]?.childNodes[1]?.lastChild as Text) ?? null;
 
-      userCreateOK = formMessageAlertMessage.textContent;
+      userCreateOk = formMessageAlertMessage.textContent;
     });
 
     afterAll(() => {
@@ -307,7 +303,7 @@ describe(Register.name, () => {
     });
 
     it('should display a textbox with the confirmation message', () => {
-      expect(userCreateOK).toBe(messageConfirmation);
+      expect(userCreateOk).toBe(messageConfirmation);
     });
   });
 
@@ -327,9 +323,9 @@ describe(Register.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       const renderResult: RenderResult = render(

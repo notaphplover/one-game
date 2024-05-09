@@ -1,11 +1,12 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { buildResult } from './buildResult';
+
 import { HttpApiResult } from '../../../../common/http/models/HttpApiResult';
-import { Left, Right } from '../../../../common/models/Either';
-import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './unexpectedErrorMessage';
 import { HttpSpecificResponse } from '../../../../common/http/models/HttpSpecificResponse';
+import { Left, Right } from '../../../../common/models/Either';
+import { buildResult } from './buildResult';
+import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './unexpectedErrorMessage';
 
 type CreateGameBadRequestResponse = HttpSpecificResponse<
   HttpApiResult<'createGame'>,

@@ -12,8 +12,8 @@ export const useShowPassword = (initial: boolean) => {
   };
 
   return {
-    showPassword,
     handleClickShowPassword,
     handleMouseDownPassword,
+    showPassword,
   };
 };

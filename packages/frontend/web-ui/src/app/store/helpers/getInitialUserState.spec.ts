@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+
 import { getInitialUserState } from './getInitialUserState';
 import { UserState } from './models/UserState';
 import { UserStateStatus } from './models/UserStateStatus';

@@ -6,7 +6,7 @@ export const Footer = (): React.JSX.Element => {
     <Grid
       container
       component="footer"
-      sx={{ mt: 6, backgroundColor: 'primary.dark' }}
+      sx={{ backgroundColor: 'primary.dark', mt: 6 }}
     >
       <Grid
         item

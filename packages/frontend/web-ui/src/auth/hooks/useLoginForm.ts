@@ -1,18 +1,20 @@
-import { LoginStatus } from './../models/LoginStatus';
 import { useEffect, useState } from 'react';
+
+import { useAppDispatch } from '../../app/store/hooks';
+import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
-import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
+import { OK, UNAUTHORIZED } from '../../common/http/helpers/httpCodes';
+import { Either } from '../../common/models/Either';
+import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
+import { FormValidationResult } from '../models/FormValidationResult';
 import {
   UseLoginFormParams,
   UseLoginFormResult,
 } from '../models/UseLoginFormResult';
-import { useAppDispatch } from '../../app/store/hooks';
-import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
-import { Either } from '../../common/models/Either';
-import { FormValidationResult } from '../models/FormValidationResult';
+import { LoginStatus } from './../models/LoginStatus';
 
-export const INVALID_CREDENTIALS_ERROR_MESSAGE: string = 'Invalid credentials.';
+export const UNAUTHORIZED_ERROR_MESSAGE: string = 'Unauthorized.';
 const UNEXPECTED_ERROR_MESSAGE: string =
   'Unexpected error occurred while processing the request.';
 
@@ -20,7 +22,9 @@ export const useLoginForm = (
   params: UseLoginFormParams,
 ): UseLoginFormResult => {
   const [formFields, setFormFields] = useState<UseLoginFormParams>(params);
-  const [formStatus, setFormStatus] = useState<number>(LoginStatus.initial);
+  const [formStatus, setFormStatus] = useState<LoginStatus>(
+    LoginStatus.initial,
+  );
   const [backendError, setBackendError] = useState<string | null>(null);
   const [formValidation, setFormValidation] = useState<FormValidationResult>(
     {},
@@ -34,7 +38,7 @@ export const useLoginForm = (
         validateFormFields();
         break;
       case LoginStatus.pendingBackend:
-        authUser();
+        void authUser();
         break;
       default:
     }
@@ -101,11 +105,11 @@ export const useLoginForm = (
 
     if (isFullfilledPayloadAction(response)) {
       switch (response.payload.statusCode) {
-        case 200:
+        case OK:
           setFormStatus(LoginStatus.backendOK);
           break;
-        case 401:
-          setBackendError(INVALID_CREDENTIALS_ERROR_MESSAGE);
+        case UNAUTHORIZED:
+          setBackendError(UNAUTHORIZED_ERROR_MESSAGE);
           setFormStatus(LoginStatus.backendKO);
           break;
         default:

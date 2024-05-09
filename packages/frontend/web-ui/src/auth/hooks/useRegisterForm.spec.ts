@@ -7,31 +7,28 @@ jest.mock('../../common/helpers/validateConfirmPassword');
 jest.mock('../../common/http/services/HttpService');
 jest.mock('../../common/http/helpers/buildSerializableResponse');
 
-import {
-  RenderHookResult,
-  act,
-  renderHook,
-  waitFor,
-} from '@testing-library/react';
-import {
-  HTTP_CONFLICT_ERROR_MESSAGE,
-  useRegisterForm,
-} from './useRegisterForm';
-import { validateName } from '../../common/helpers/validateName';
-import { validateEmail } from '../../common/helpers/validateEmail';
-import { validatePassword } from '../../common/helpers/validatePassword';
+import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { act } from 'react';
+
 import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
-import { httpClient } from '../../common/http/services/HttpService';
+import { validateEmail } from '../../common/helpers/validateEmail';
+import { validateName } from '../../common/helpers/validateName';
+import { validatePassword } from '../../common/helpers/validatePassword';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
+import { RegisterResponse } from '../../common/http/models/RegisterResponse';
+import { RegisterSerializedResponse } from '../../common/http/models/RegisterSerializedResponse';
+import { httpClient } from '../../common/http/services/HttpService';
+import { FormFieldsRegister } from '../models/FormFieldsRegister';
+import { FormValidationResult } from '../models/FormValidationResult';
 import { RegisterStatus } from '../models/RegisterStatus';
 import {
   UseRegisterFormParams,
   UseRegisterFormResult,
 } from '../models/UseRegisterFormResult';
-import { FormFieldsRegister } from '../models/FormFieldsRegister';
-import { FormValidationResult } from '../models/FormValidationResult';
-import { RegisterResponse } from '../../common/http/models/RegisterResponse';
-import { RegisterSerializedResponse } from '../../common/http/models/RegisterSerializedResponse';
+import {
+  HTTP_CONFLICT_ERROR_MESSAGE,
+  useRegisterForm,
+} from './useRegisterForm';
 
 describe(useRegisterForm.name, () => {
   let initialForm: UseRegisterFormParams;
@@ -42,10 +39,10 @@ describe(useRegisterForm.name, () => {
 
   beforeAll(() => {
     initialForm = {
-      name: 'name',
-      email: 'email',
-      password: 'password',
       confirmPassword: 'confirm-password',
+      email: 'email',
+      name: 'name',
+      password: 'password',
     };
 
     nameErrorFixture = 'error-name';
@@ -334,12 +331,12 @@ describe(useRegisterForm.name, () => {
 
     beforeAll(async () => {
       registerResponseFixture = {
-        headers: {},
         body: {
           active: false,
           id: 'id-fixture',
           name: 'name-fixture',
         },
+        headers: {},
         statusCode: 200,
       };
 
@@ -353,10 +350,10 @@ describe(useRegisterForm.name, () => {
       };
 
       initialForm = {
-        name: 'Mariote',
-        email: 'mario.te@google.com',
-        password: '123456',
         confirmPassword: '123456',
+        email: 'mario.te@google.com',
+        name: 'Mariote',
+        password: '123456',
       };
 
       (validateName as jest.Mock<typeof validateName>).mockReturnValueOnce({
@@ -403,6 +400,7 @@ describe(useRegisterForm.name, () => {
 
       await waitFor(() => {
         formStatus = renderResult.result.current.formStatus;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(formStatus).toBe(RegisterStatus.backendOK);
       });
     });
@@ -416,8 +414,8 @@ describe(useRegisterForm.name, () => {
       expect(httpClient.endpoints.createUser).toHaveBeenCalledWith(
         {},
         {
-          name: 'Mariote',
           email: 'mario.te@google.com',
+          name: 'Mariote',
           password: '123456',
         },
       );
@@ -437,10 +435,10 @@ describe(useRegisterForm.name, () => {
 
     beforeAll(async () => {
       registerResponseFixture = {
-        headers: {},
         body: {
           description: 'desc-fixture',
         },
+        headers: {},
         statusCode: 409,
       };
 
@@ -452,10 +450,10 @@ describe(useRegisterForm.name, () => {
       };
 
       initialForm = {
-        name: 'Mariote',
-        email: 'mario.te@google.com',
-        password: '123456',
         confirmPassword: '123456',
+        email: 'mario.te@google.com',
+        name: 'Mariote',
+        password: '123456',
       };
 
       (validateName as jest.Mock<typeof validateName>).mockReturnValueOnce({
@@ -503,6 +501,7 @@ describe(useRegisterForm.name, () => {
       await waitFor(() => {
         formStatus = renderResult.result.current.formStatus;
         backendError = renderResult.result.current.backendError;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(formStatus).toBe(RegisterStatus.backendKO);
       });
     });
@@ -517,8 +516,8 @@ describe(useRegisterForm.name, () => {
       expect(httpClient.endpoints.createUser).toHaveBeenCalledWith(
         {},
         {
-          name: 'Mariote',
           email: 'mario.te@google.com',
+          name: 'Mariote',
           password: '123456',
         },
       );

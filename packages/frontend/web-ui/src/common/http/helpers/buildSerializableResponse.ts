@@ -1,4 +1,5 @@
 import { Response } from '@cornie-js/api-http-client';
+
 import { SerializableResponseUnion } from '../models/SerializableResponseUnion';
 
 export function buildSerializableResponse<

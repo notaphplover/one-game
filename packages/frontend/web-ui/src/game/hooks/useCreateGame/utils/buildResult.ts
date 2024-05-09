@@ -1,4 +1,11 @@
 import { models as apiModels } from '@cornie-js/api-models';
+
+import {
+  BAD_REQUEST,
+  FORBIDDEN,
+  OK,
+  UNAUTHORIZED,
+} from '../../../../common/http/helpers/httpCodes';
 import { HttpApiResult } from '../../../../common/http/models/HttpApiResult';
 import { Either } from '../../../../common/models/Either';
 import {
@@ -12,22 +19,22 @@ export function buildResult(
   response: HttpApiResult<'createGame'>,
 ): Either<string, apiModels.NonStartedGameV1> {
   switch (response.statusCode) {
-    case 200:
+    case OK:
       return {
         isRight: true,
         value: response.body,
       };
-    case 400:
+    case BAD_REQUEST:
       return {
         isRight: false,
         value: HTTP_BAD_REQUEST_ERROR_MESSAGE,
       };
-    case 401:
+    case UNAUTHORIZED:
       return {
         isRight: false,
         value: UNAUTHORIZED_ERROR_MESSAGE,
       };
-    case 403:
+    case FORBIDDEN:
       return {
         isRight: false,
         value: FORBIDDEN_ERROR_MESSAGE,

@@ -3,6 +3,7 @@ import { beforeAll, afterAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../hooks/useGetGames');
 jest.mock('../../game/components/GameList');
 
+import { models as apiModels } from '@cornie-js/api-models';
 import {
   RenderResult,
   fireEvent,
@@ -11,12 +12,14 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { models as apiModels } from '@cornie-js/api-models';
-import { useGetGames } from '../hooks/useGetGames';
-import { GameList } from '../../game/components/GameList';
-import { HomeWithAuth } from './HomeWithAuth';
+
 import { Either } from '../../common/models/Either';
+import { GameList } from '../../game/components/GameList';
+import { useGetGames } from '../hooks/useGetGames';
 import { UseGetGamesParams } from '../hooks/useGetGames/models/UseGetGamesParams';
+import { HomeWithAuth } from './HomeWithAuth';
+
+const NUMBER_TIMES_EXECUTION: number = 2;
 
 describe(HomeWithAuth.name, () => {
   describe('useGetGames', () => {
@@ -61,7 +64,7 @@ describe(HomeWithAuth.name, () => {
       });
 
       it('should call GameList() twice times', () => {
-        expect(GameList).toHaveBeenCalledTimes(2);
+        expect(GameList).toHaveBeenCalledTimes(NUMBER_TIMES_EXECUTION);
         expect(GameList).toHaveBeenNthCalledWith(
           1,
           {
@@ -70,7 +73,7 @@ describe(HomeWithAuth.name, () => {
           {},
         );
         expect(GameList).toHaveBeenNthCalledWith(
-          2,
+          NUMBER_TIMES_EXECUTION,
           {
             gamesResult: null,
           },
@@ -239,13 +242,15 @@ describe(HomeWithAuth.name, () => {
           status: 'nonStarted',
         };
 
-        expect(callNonStartedMock).toHaveBeenCalledTimes(2);
+        expect(callNonStartedMock).toHaveBeenCalledTimes(
+          NUMBER_TIMES_EXECUTION,
+        );
         expect(callNonStartedMock).toHaveBeenNthCalledWith(
           1,
           expectedFirstParams,
         );
         expect(callNonStartedMock).toHaveBeenNthCalledWith(
-          2,
+          NUMBER_TIMES_EXECUTION,
           expectedSecondParams,
         );
       });
@@ -481,9 +486,12 @@ describe(HomeWithAuth.name, () => {
           status: 'active',
         };
 
-        expect(callActiveMock).toHaveBeenCalledTimes(2);
+        expect(callActiveMock).toHaveBeenCalledTimes(NUMBER_TIMES_EXECUTION);
         expect(callActiveMock).toHaveBeenNthCalledWith(1, expectedFirstParams);
-        expect(callActiveMock).toHaveBeenNthCalledWith(2, expectedSecondParams);
+        expect(callActiveMock).toHaveBeenNthCalledWith(
+          NUMBER_TIMES_EXECUTION,
+          expectedSecondParams,
+        );
       });
     });
 

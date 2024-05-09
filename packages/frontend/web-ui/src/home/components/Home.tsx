@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { ReversedCard } from '../../game/components/ReversedCard';
 

@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -11,11 +11,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useRegisterForm } from '../hooks/useRegisterForm';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
+import { useRegisterForm } from '../hooks/useRegisterForm';
 import { RegisterStatus } from '../models/RegisterStatus';
 
 export const Register = () => {
@@ -27,10 +28,10 @@ export const Register = () => {
     notifyFormFieldsFilled,
     setFormField,
   } = useRegisterForm({
-    name: '',
-    email: '',
-    password: '',
     confirmPassword: '',
+    email: '',
+    name: '',
+    password: '',
   });
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
@@ -227,6 +228,7 @@ export const Register = () => {
                       type="submit"
                       variant="contained"
                       fullWidth
+                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
                       onClick={onSubmit}
                     >
                       <Typography textAlign="center">Create</Typography>

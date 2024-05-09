@@ -1,5 +1,6 @@
-import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { jest } from '@jest/globals';
+
+import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 
 const endpointMethods: (keyof HttpClientEndpoints)[] = Reflect.ownKeys(
   HttpClientEndpoints.prototype,

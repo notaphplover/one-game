@@ -1,15 +1,15 @@
 import { Box } from '@mui/material';
-import { Footer } from '../components/Footer';
-import { Navbar } from '../components/Navbar';
 import React from 'react';
 
-function getLayoutBoxClassName(params: CornieLayoutParams): string {
-  let layoutBoxClassNames = ['bkg-layout'];
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
 
-  if (params.withFooter) {
-    const additionalClass = params.withNavBar
-      ? 'fixed-navbar-footer'
-      : 'fixed-footer';
+function getLayoutBoxClassName(params: CornieLayoutParams): string {
+  const layoutBoxClassNames = ['bkg-layout'];
+
+  if (params.withFooter === true) {
+    const additionalClass =
+      params.withNavBar ?? false ? 'fixed-navbar-footer' : 'fixed-footer';
 
     layoutBoxClassNames.push(additionalClass);
   }
@@ -25,8 +25,8 @@ interface CornieLayoutParams {
 }
 
 export const CornieLayout = (params: CornieLayoutParams): React.JSX.Element => {
-  const navbar = params.withNavBar ? <Navbar /> : undefined;
-  const footer = params.withFooter ? <Footer /> : undefined;
+  const navbar = params.withNavBar ?? false ? <Navbar /> : undefined;
+  const footer = params.withFooter ?? false ? <Footer /> : undefined;
 
   return (
     <Box

@@ -12,9 +12,9 @@ export const createInitialState = (): AuthState => {
     };
   } else {
     return {
-      status: AuthStateStatus.authenticated,
       accessToken,
       refreshToken,
+      status: AuthStateStatus.authenticated,
     };
   }
 };

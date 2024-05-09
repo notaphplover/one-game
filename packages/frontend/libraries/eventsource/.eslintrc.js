@@ -5,4 +5,18 @@ module.exports = {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
+  rules: {
+    '@typescript-eslint/typedef': [
+      'error',
+      {
+        arrayDestructuring: true,
+        arrowParameter: true,
+        memberVariableDeclaration: true,
+        objectDestructuring: true,
+        parameter: true,
+        propertyDeclaration: true,
+        variableDeclaration: true,
+      },
+    ],
+  },
 };

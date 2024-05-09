@@ -1,13 +1,15 @@
-import { getInitialUserState } from '../helpers/getInitialUserState';
 import {
   ActionReducerMapBuilder,
   PayloadAction,
   createSlice,
 } from '@reduxjs/toolkit';
-import type { RootState } from '../store';
+
+import { OK } from '../../../common/http/helpers/httpCodes';
+import { UserMeSerializedResponse } from '../../../common/http/models/UserMeSerializedResponse';
+import { getInitialUserState } from '../helpers/getInitialUserState';
 import { FulfilledUserState, UserState } from '../helpers/models/UserState';
 import { UserStateStatus } from '../helpers/models/UserStateStatus';
-import { UserMeSerializedResponse } from '../../../common/http/models/UserMeSerializedResponse';
+import type { RootState } from '../store';
 import { getUserMe } from '../thunk/getUserMe';
 
 function getUserPendingReducer(): UserState {
@@ -21,7 +23,7 @@ function getUserFulfilledReducer(
   action: PayloadAction<UserMeSerializedResponse>,
 ): UserState {
   switch (action.payload.statusCode) {
-    case 200:
+    case OK:
       return {
         status: UserStateStatus.fulfilled,
         userId: action.payload.body.id,
@@ -42,15 +44,15 @@ function getUserRejectedReducer(): UserState {
 const initialState: UserState = getInitialUserState();
 
 export const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {},
   extraReducers(builder: ActionReducerMapBuilder<UserState>) {
     builder
       .addCase(getUserMe.pending, getUserPendingReducer)
       .addCase(getUserMe.fulfilled, getUserFulfilledReducer)
       .addCase(getUserMe.rejected, getUserRejectedReducer);
   },
+  initialState,
+  name: 'user',
+  reducers: {},
 });
 
 export const selectFulfilledUser = (

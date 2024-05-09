@@ -1,6 +1,6 @@
-import { LoginStatus } from './LoginStatus';
 import { FormFieldsLogin } from './FormFieldsLogin';
 import { FormValidationResult } from './FormValidationResult';
+import { LoginStatus } from './LoginStatus';
 
 export interface UseLoginFormParams {
   email: string;

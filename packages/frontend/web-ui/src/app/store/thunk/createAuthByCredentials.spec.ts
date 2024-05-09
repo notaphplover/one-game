@@ -3,14 +3,14 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../../../common/http/services/HttpService');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');
 
+import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
+import { AuthResponse } from '../../../common/http/models/AuthResponse';
+import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import { httpClient } from '../../../common/http/services/HttpService';
 import {
   CreateAuthByCredentialsParams,
   createAuthByCredentials,
 } from './createAuthByCredentials';
-import { httpClient } from '../../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
-import { AuthResponse } from '../../../common/http/models/AuthResponse';
-import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 
 describe('createAuthByCredentials', () => {
   describe('when called', () => {
@@ -35,11 +35,11 @@ describe('createAuthByCredentials', () => {
       };
 
       authResponseFixture = {
-        headers: {},
         body: {
           accessToken: 'accessToken-fixture',
           refreshToken: 'refreshToken-fixture',
         },
+        headers: {},
         statusCode: 200,
       };
 

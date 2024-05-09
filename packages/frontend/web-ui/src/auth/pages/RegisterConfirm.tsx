@@ -1,4 +1,3 @@
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Alert,
   AlertTitle,
@@ -8,11 +7,13 @@ import {
   Link,
   Typography,
 } from '@mui/material';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
 import { useRegisterConfirm } from '../hooks/useRegisterConfirm';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
-import React from 'react';
 
 export const RegisterConfirm = (): React.JSX.Element => {
   const { status, errorMessage } = useRegisterConfirm();

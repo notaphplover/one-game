@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import {
+  VideogameAssetOutlined,
+  PlaylistAddCheckOutlined,
+  HomeOutlined,
+} from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -17,15 +20,13 @@ import {
   Alert,
   AlertTitle,
 } from '@mui/material';
+import React, { useState } from 'react';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+
+import { CheckingAuth } from '../../auth/components/CheckingAuth';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import {
-  VideogameAssetOutlined,
-  PlaylistAddCheckOutlined,
-  HomeOutlined,
-} from '@mui/icons-material';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
-import { CheckingAuth } from '../../auth/components/CheckingAuth';
 
 export const CreateNewGame = (): React.JSX.Element => {
   const {
