@@ -1,20 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Either } from '../../common/models/Either';
-import { CreateNewGameResult } from '../models/CreateNewGameResult';
-import {
-  selectAuthenticatedAuth,
-  selectAuthToken,
-} from '../../app/store/features/authSlice';
+
+import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppSelector } from '../../app/store/hooks';
-import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
-import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
-import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
-import { getUserMeId } from '../../common/helpers/getUserMeId';
-import { joinGame } from '../../common/helpers/joinGame';
-import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
-import { NUMBER_PLAYERS_MINIMUM } from '../helpers/numberOfPlayersValues';
-import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
-import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
+import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
 import {
   FORBIDDEN_ERROR_MESSAGE,
   HTTP_BAD_REQUEST_ERROR_MESSAGE,
@@ -22,10 +11,28 @@ import {
   UNAUTHORIZED_ERROR_MESSAGE,
   UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
 } from '../../common/helpers/errorMessages';
-import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
-import { useCreateGame } from './useCreateGame';
+import { getUserMeId } from '../../common/helpers/getUserMeId';
+import { joinGame } from '../../common/helpers/joinGame';
+import {
+  BAD_REQUEST,
+  CONFLICT,
+  FORBIDDEN,
+  INVALID_CREDENTIALS,
+  OK,
+  UNAUTHORIZED,
+  UNPROCESSABLE_REQUEST,
+} from '../../common/http/helpers/httpCodes';
+import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
+import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
+import { Either } from '../../common/models/Either';
+import { NUMBER_PLAYERS_MINIMUM } from '../helpers/numberOfPlayersValues';
+import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
+import { CreateNewGameResult } from '../models/CreateNewGameResult';
+import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
+import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
+import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
 import { GameOptions } from '../models/GameOptions';
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { useCreateGame } from './useCreateGame';
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const auth: AuthenticatedAuthState | null = useAppSelector(
@@ -33,16 +40,16 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   );
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
     name: '',
-    players: NUMBER_PLAYERS_MINIMUM,
     options: {
       chainDraw2Draw2Cards: false,
       chainDraw2Draw4Cards: false,
-      chainDraw4Draw4Cards: false,
       chainDraw4Draw2Cards: false,
+      chainDraw4Draw4Cards: false,
       playCardIsMandatory: false,
       playMultipleSameCards: false,
       playWildDraw4IfNoOtherAlternative: true,
     },
+    players: NUMBER_PLAYERS_MINIMUM,
   });
   const [status, setStatus] = useState<CreateNewGameStatus>(
     CreateNewGameStatus.initial,
@@ -54,9 +61,11 @@ export const useCreateNewGame = (): CreateNewGameResult => {
 
   const [gameId, setGameId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [backendErrorUser, setBackendErrorUser] = useState<string | null>(null);
-  const [backendErrorGame, setBackendErrorGame] = useState<string | null>(null);
 
+  const [, setBackendErrorUser] = useState<string | null>(null);
+  const [, setBackendErrorGame] = useState<string | null>(null);
+
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { call: callCreateGame, result: resultCreateGame } = useCreateGame();
 
   function assertFormFieldsCanBeUpdated(
@@ -81,7 +90,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     if (event.target.value.trim() === '') {
       name = undefined;
     } else {
-      name = event.target.value.trim();
+      name = event.target.value;
     }
 
     setFormFields({
@@ -137,7 +146,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       case CreateNewGameStatus.pendingValidation:
         validateForm();
         if (auth !== null) {
-          getUserMe(auth.accessToken);
+          void getUserMe(auth.accessToken);
         }
         break;
       case CreateNewGameStatus.pendingBackend:
@@ -145,7 +154,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
         break;
       case CreateNewGameStatus.backendOK:
         if (auth !== null && gameId !== null && userId !== null) {
-          joinNewGame(auth.accessToken, gameId, userId);
+          void joinNewGame(auth.accessToken, gameId, userId);
         }
         break;
       default:
@@ -203,13 +212,13 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     const responseUser: UserMeSerializedResponse = await getUserMeId(token);
 
     switch (responseUser.statusCode) {
-      case 200:
+      case OK:
         setUserId(responseUser.body.id);
         break;
-      case 401:
+      case UNAUTHORIZED:
         setBackendErrorUser(UNAUTHORIZED_ERROR_MESSAGE);
         break;
-      case 403:
+      case INVALID_CREDENTIALS:
         setBackendErrorUser(INVALID_CREDENTIALS_ERROR_MESSAGE);
         break;
       default:
@@ -232,22 +241,22 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     );
 
     switch (responseJoinGame.statusCode) {
-      case 200:
+      case OK:
         setUserId(responseJoinGame.body.userId);
         break;
-      case 400:
+      case BAD_REQUEST:
         setBackendErrorGame(HTTP_BAD_REQUEST_ERROR_MESSAGE);
         break;
-      case 401:
+      case UNAUTHORIZED:
         setBackendErrorGame(UNAUTHORIZED_ERROR_MESSAGE);
         break;
-      case 403:
+      case FORBIDDEN:
         setBackendErrorGame(FORBIDDEN_ERROR_MESSAGE);
         break;
-      case 409:
+      case CONFLICT:
         setBackendErrorGame(HTTP_CONFLICT_ERROR_MESSAGE);
         break;
-      case 422:
+      case UNPROCESSABLE_REQUEST:
         setBackendErrorGame(UNPROCESSABLE_REQUEST_ERROR_MESSAGE);
         break;
       default:
@@ -255,13 +264,13 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   };
 
   return {
-    formFields,
-    status,
-    notifyFormFieldsFilled,
-    formValidation,
     backendError,
+    formFields,
+    formValidation,
+    notifyFormFieldsFilled,
     setFormFieldName,
-    setFormFieldPlayers,
     setFormFieldOptions,
+    setFormFieldPlayers,
+    status,
   };
 };

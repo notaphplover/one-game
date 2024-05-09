@@ -1,4 +1,5 @@
 import { Response } from '@cornie-js/api-http-client';
+
 import { SerializableResponse } from './SerializedResponse';
 
 export type SerializableResponseUnion<T> = T extends

@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
+
 import { CornieLayout } from '../../common/layout/CornieLayout';
 
 export const AboutUs = (): React.JSX.Element => {
@@ -6,17 +7,17 @@ export const AboutUs = (): React.JSX.Element => {
     <CornieLayout id="about-page" withFooter withNavBar>
       <Grid container>
         <Grid item sx={{ margin: '0 auto', maxWidth: '1200px' }}>
-          <Box component="span" sx={{ p: 10, color: 'primary.dark' }}>
+          <Box component="span" sx={{ color: 'primary.dark', p: 10 }}>
             <Typography
               variant="h3"
               component="h3"
-              sx={{ textAlign: 'justify', lineHeight: 2, fontWeight: 'bold' }}
+              sx={{ fontWeight: 'bold', lineHeight: 2, textAlign: 'justify' }}
             >
               About Us
             </Typography>
             <Typography
               component="p"
-              sx={{ textAlign: 'justify', lineHeight: 2 }}
+              sx={{ lineHeight: 2, textAlign: 'justify' }}
             >
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's standard dummy text

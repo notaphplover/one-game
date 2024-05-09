@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import {
+  ArrowBackIosNewOutlined,
+  ArrowForwardIosOutlined,
+} from '@mui/icons-material';
+import GamesIcon from '@mui/icons-material/Games';
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
   NavigateFunction,
   Link as RouterLink,
   useNavigate,
 } from 'react-router-dom';
+
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { GameList } from '../../game/components/GameList';
-import { useGetGames } from '../hooks/useGetGames';
-import GamesIcon from '@mui/icons-material/Games';
-import {
-  ArrowBackIosNewOutlined,
-  ArrowForwardIosOutlined,
-} from '@mui/icons-material';
 import { GameStatus } from '../../game/models/GameStatus';
+import { useGetGames } from '../hooks/useGetGames';
 import { UseGetGamesParams } from '../hooks/useGetGames/models/UseGetGamesParams';
 
 export const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
@@ -41,8 +42,10 @@ export const HomeWithAuth = (): React.JSX.Element => {
     status: GAME_STATUS_ACTIVE,
   });
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { call: callNonStarted, result: resultNonStarted } = useGetGames();
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { call: callActive, result: resultActive } = useGetGames();
 
   useEffect(() => {

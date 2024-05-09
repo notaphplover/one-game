@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+
 import { createInitialState } from './createInitialState';
 import { AuthState } from './models/AuthState';
 import { AuthStateStatus } from './models/AuthStateStatus';
@@ -71,9 +72,9 @@ describe(createInitialState.name, () => {
 
     it('should return an initial state with accessToken and refreshToken', () => {
       const expected: AuthState = {
-        status: AuthStateStatus.authenticated,
         accessToken: accessTokenFixture,
         refreshToken: refreshTokenFixture,
+        status: AuthStateStatus.authenticated,
       };
 
       expect(result).toStrictEqual(expected);

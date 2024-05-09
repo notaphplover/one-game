@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { VideogameAssetRounded } from '@mui/icons-material';
 import {
   AppBar,
   Toolbar,
@@ -11,7 +10,8 @@ import {
   MenuItem,
   Button,
 } from '@mui/material';
-import { VideogameAssetRounded } from '@mui/icons-material';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 enum PageName {
   aboutUs = 'ABOUT US',
@@ -48,7 +48,7 @@ export const Navbar = (): React.JSX.Element => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { md: 'none', xs: 'flex' } }}>
             <IconButton
               size="large"
               aria-label="account-current-user"
@@ -65,18 +65,18 @@ export const Navbar = (): React.JSX.Element => {
               id="menu-appbar"
               anchorEl={anchorNav}
               anchorOrigin={{
-                vertical: 'bottom',
                 horizontal: 'left',
+                vertical: 'bottom',
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
                 horizontal: 'left',
+                vertical: 'top',
               }}
               open={Boolean(anchorNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'flex', md: 'none' },
+                display: { md: 'none', xs: 'flex' },
               }}
             >
               {Object.values(PageName).map((page: PageName) => (
@@ -105,7 +105,7 @@ export const Navbar = (): React.JSX.Element => {
 
           <Box
             justifyContent="flex-end"
-            sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
+            sx={{ display: { md: 'flex', xs: 'none' }, flexGrow: 1 }}
           >
             {Object.values(PageName).map((page: PageName) => (
               <Button
@@ -113,7 +113,7 @@ export const Navbar = (): React.JSX.Element => {
                 href={getSlug(page)}
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ color: 'white', display: 'block', my: 2 }}
               >
                 {page}
               </Button>

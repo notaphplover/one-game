@@ -2,9 +2,9 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../../../app/store/hooks');
 
-import { buildContext } from './buildContext';
 import { useAppSelector } from '../../../../app/store/hooks';
 import { UseCreateGameContext } from '../models/UseCreateGameContext';
+import { buildContext } from './buildContext';
 
 describe(buildContext.name, () => {
   describe('when called, and useAppSelector returns an authenticated AuthState', () => {

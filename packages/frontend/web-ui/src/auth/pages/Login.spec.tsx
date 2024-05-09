@@ -3,21 +3,24 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../hooks/useLoginForm');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../../app/store/hooks');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useNavigate: jest.fn(),
 }));
 
-import { Login } from './Login';
 import { RenderResult, render } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
-import { useLoginForm } from '../hooks/useLoginForm';
-import { useShowPassword } from '../../common/hooks/useShowPassword';
-import { UseLoginFormParams } from '../models/UseLoginFormResult';
-import { LoginStatus } from '../models/LoginStatus';
-import { useAppSelector } from '../../app/store/hooks';
+
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
+import { useAppSelector } from '../../app/store/hooks';
+import { useShowPassword } from '../../common/hooks/useShowPassword';
+import { useLoginForm } from '../hooks/useLoginForm';
+import { LoginStatus } from '../models/LoginStatus';
+import { UseLoginFormParams } from '../models/UseLoginFormResult';
+import { Login } from './Login';
 
 describe(Login.name, () => {
   let formFieldsFixture: UseLoginFormParams;
@@ -74,9 +77,9 @@ describe(Login.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       (
@@ -141,9 +144,9 @@ describe(Login.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       (
@@ -200,9 +203,9 @@ describe(Login.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       (
@@ -235,9 +238,9 @@ describe(Login.name, () => {
   describe('when called, and user exists and navigate to the next page', () => {
     beforeAll(() => {
       authenticatedAuthStateFixture = {
-        status: AuthStateStatus.authenticated,
         accessToken: 'accessToken-fixture',
         refreshToken: 'refreshToken-fixture',
+        status: AuthStateStatus.authenticated,
       };
 
       (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
@@ -256,9 +259,9 @@ describe(Login.name, () => {
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
-        showPassword: false,
         handleClickShowPassword: handleClickShowPasswordMock,
         handleMouseDownPassword: handleMouseDownPasswordMock,
+        showPassword: false,
       });
 
       (

@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+
+import { CornieAppRoutes } from '../routes/CornieAppRoutes';
 import { store } from '../store/store';
 import { CornieAppTheme } from '../theme/CornieAppTheme';
-import { CornieAppRoutes } from '../routes/CornieAppRoutes';
 
 import '../../scss/app.scss';
 

@@ -1,12 +1,14 @@
 jest.mock('../../app/store/hooks');
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+
 import { RenderResult, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { CornieHome } from './CornieHome';
-import { useAppSelector } from '../../app/store/hooks';
+
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
+import { useAppSelector } from '../../app/store/hooks';
+import { CornieHome } from './CornieHome';
 
 const HOME_PAGE = '#home-page';
 const HOME_PAGE_WITH_AUTH = '#home-page-with-auth';
@@ -50,9 +52,9 @@ describe(CornieHome.name, () => {
 
     beforeAll(() => {
       authenticateAuthStateFixture = {
-        status: AuthStateStatus.authenticated,
         accessToken: 'accessToken-fixture',
         refreshToken: 'refreshToken-fixture',
+        status: AuthStateStatus.authenticated,
       };
 
       (

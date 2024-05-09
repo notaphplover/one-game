@@ -93,18 +93,7 @@ module.exports = {
         skipCompoundAssignments: false,
       },
     ],
-    '@typescript-eslint/typedef': [
-      'error',
-      {
-        arrayDestructuring: true,
-        arrowParameter: true,
-        memberVariableDeclaration: true,
-        objectDestructuring: true,
-        parameter: true,
-        propertyDeclaration: true,
-        variableDeclaration: true,
-      },
-    ],
+    '@typescript-eslint/typedef': ['off'],
     '@typescript-eslint/unified-signatures': 'error',
     'import/default': 'off',
     'import/namespace': 'off',
@@ -154,6 +143,47 @@ module.exports = {
     },
   },
   overrides: [
+    {
+      files: ['**/*.tsx'],
+      rules: {
+        '@typescript-eslint/naming-convention': [
+          'error',
+          {
+            selector: ['classProperty'],
+            format: ['strictCamelCase', 'UPPER_CASE', 'snake_case'],
+            leadingUnderscore: 'allow',
+          },
+          {
+            selector: 'typeParameter',
+            format: ['StrictPascalCase'],
+            prefix: ['T'],
+          },
+          {
+            selector: ['typeLike'],
+            format: ['StrictPascalCase'],
+          },
+          {
+            selector: ['function', 'classMethod'],
+            format: ['strictCamelCase'],
+            leadingUnderscore: 'allow',
+          },
+          {
+            selector: ['parameter'],
+            format: ['strictCamelCase'],
+            leadingUnderscore: 'allow',
+          },
+          {
+            selector: ['variableLike'],
+            format: [
+              'strictCamelCase',
+              'StrictPascalCase',
+              'UPPER_CASE',
+              'snake_case',
+            ],
+          },
+        ],
+      },
+    },
     {
       files: ['**/*.spec.ts'],
       extends: ['plugin:jest/recommended', 'plugin:jest/style'],

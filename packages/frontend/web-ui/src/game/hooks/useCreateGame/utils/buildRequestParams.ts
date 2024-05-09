@@ -1,7 +1,8 @@
-import { HttpApiParams } from '../../../../common/http/models/HttpApiParams';
-import { UseCreateGameContext } from '../models/UseCreateGameContext';
-import { FormFieldsNewGame } from '../../../models/FormFieldsNewGame';
 import { models as apiModels } from '@cornie-js/api-models';
+
+import { HttpApiParams } from '../../../../common/http/models/HttpApiParams';
+import { FormFieldsNewGame } from '../../../models/FormFieldsNewGame';
+import { UseCreateGameContext } from '../models/UseCreateGameContext';
 
 export function buildRequestParams(
   context: UseCreateGameContext,
@@ -26,8 +27,8 @@ function buildBody(params: FormFieldsNewGame): apiModels.GameCreateQueryV1 {
   } else {
     body = {
       gameSlotsAmount: params.players,
-      options: params.options,
       name: params.name,
+      options: params.options,
     };
   }
   return body;

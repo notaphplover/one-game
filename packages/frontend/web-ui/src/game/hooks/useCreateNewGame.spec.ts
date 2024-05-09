@@ -7,27 +7,28 @@ jest.mock('../../app/store/features/authSlice');
 
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
-import { act } from 'react';
-import { useAppSelector } from '../../app/store/hooks';
-import { useCreateGame } from './useCreateGame';
-import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './useCreateGame/utils/unexpectedErrorMessage';
-import { getUserMeId } from '../../common/helpers/getUserMeId';
-import { joinGame } from '../../common/helpers/joinGame';
-import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
-import { useCreateNewGame } from './useCreateNewGame';
-import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
-import { CreateNewGameResult } from '../models/CreateNewGameResult';
-import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
-import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { models as apiModels } from '@cornie-js/api-models';
-import { Either } from '../../common/models/Either';
-import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
-import { FormNewGameValidationErrorResult } from './../models/FormNewGameValidationErrorResult';
-import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
-import { SingleApiCallHookResult } from './../../common/helpers/buildSingleApiCallHook';
-import { GameOptions } from '../models/GameOptions';
+import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { act } from 'react';
+
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
+import { useAppSelector } from '../../app/store/hooks';
+import { getUserMeId } from '../../common/helpers/getUserMeId';
+import { joinGame } from '../../common/helpers/joinGame';
+import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
+import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
+import { Either } from '../../common/models/Either';
+import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
+import { CreateNewGameResult } from '../models/CreateNewGameResult';
+import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
+import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
+import { GameOptions } from '../models/GameOptions';
+import { SingleApiCallHookResult } from './../../common/helpers/buildSingleApiCallHook';
+import { FormNewGameValidationErrorResult } from './../models/FormNewGameValidationErrorResult';
+import { useCreateGame } from './useCreateGame';
+import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './useCreateGame/utils/unexpectedErrorMessage';
+import { useCreateNewGame } from './useCreateNewGame';
 
 describe(useCreateNewGame.name, () => {
   let numberOfPlayersFixture: string;
@@ -45,9 +46,9 @@ describe(useCreateNewGame.name, () => {
     numberOfPlayersFixture = 'error-players';
 
     authenticatedAuthStateFixture = {
-      status: AuthStateStatus.authenticated,
       accessToken: 'accessToken-fixture',
       refreshToken: 'refreshToken-fixture',
+      status: AuthStateStatus.authenticated,
     };
 
     formNewGameValidationErrorResultFixture = {
@@ -112,8 +113,8 @@ describe(useCreateNewGame.name, () => {
       const optionsExpected: GameOptions = {
         chainDraw2Draw2Cards: false,
         chainDraw2Draw4Cards: false,
-        chainDraw4Draw4Cards: false,
         chainDraw4Draw2Cards: false,
+        chainDraw4Draw4Cards: false,
         playCardIsMandatory: false,
         playMultipleSameCards: false,
         playWildDraw4IfNoOtherAlternative: true,
@@ -161,6 +162,7 @@ describe(useCreateNewGame.name, () => {
 
       await waitFor(() => {
         status = renderResult.result.current.status;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(status).toBe(CreateNewGameStatus.validationKO);
       });
 
@@ -254,6 +256,7 @@ describe(useCreateNewGame.name, () => {
 
       await waitFor(() => {
         status = renderResult.result.current.status;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(status).toBe(CreateNewGameStatus.backendOK);
       });
     });
@@ -266,16 +269,16 @@ describe(useCreateNewGame.name, () => {
     it('should called useCreateGame hook', () => {
       const formFieldsNewGameExpected: FormFieldsNewGame = {
         name: '',
-        players: 2,
         options: {
           chainDraw2Draw2Cards: false,
           chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
           chainDraw4Draw2Cards: false,
+          chainDraw4Draw4Cards: false,
           playCardIsMandatory: false,
           playMultipleSameCards: false,
           playWildDraw4IfNoOtherAlternative: true,
         },
+        players: 2,
       };
       expect(singleApiCallHookFixture.call).toHaveBeenCalledTimes(1);
       expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
@@ -340,6 +343,7 @@ describe(useCreateNewGame.name, () => {
       await waitFor(() => {
         status = renderResult.result.current.status;
         backendError = renderResult.result.current.backendError;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(status).toBe(CreateNewGameStatus.backendKO);
       });
     });
@@ -352,16 +356,16 @@ describe(useCreateNewGame.name, () => {
     it('should called useCreateGame hook', () => {
       const formFieldsNewGameExpected: FormFieldsNewGame = {
         name: '',
-        players: 2,
         options: {
           chainDraw2Draw2Cards: false,
           chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
           chainDraw4Draw2Cards: false,
+          chainDraw4Draw4Cards: false,
           playCardIsMandatory: false,
           playMultipleSameCards: false,
           playWildDraw4IfNoOtherAlternative: true,
         },
+        players: 2,
       };
       expect(singleApiCallHookFixture.call).toHaveBeenCalledTimes(1);
       expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(

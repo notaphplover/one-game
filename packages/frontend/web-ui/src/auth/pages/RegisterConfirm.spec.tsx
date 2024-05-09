@@ -4,12 +4,13 @@ jest.mock('../hooks/useRegisterConfirm');
 
 import { RenderResult, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { RegisterConfirm } from './RegisterConfirm';
+
 import {
   UNEXPECTED_ERROR_MESSAGE,
   useRegisterConfirm,
 } from '../hooks/useRegisterConfirm';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
+import { RegisterConfirm } from './RegisterConfirm';
 
 describe(RegisterConfirm.name, () => {
   describe('when called, and useRegisterConfirm() returns a fulfilled status', () => {
@@ -19,8 +20,8 @@ describe(RegisterConfirm.name, () => {
       (
         useRegisterConfirm as jest.Mock<typeof useRegisterConfirm>
       ).mockReturnValueOnce({
-        status: RegisterConfirmStatus.fulfilled,
         errorMessage: null,
+        status: RegisterConfirmStatus.fulfilled,
       });
 
       const renderResult: RenderResult = render(
@@ -56,8 +57,8 @@ describe(RegisterConfirm.name, () => {
       (
         useRegisterConfirm as jest.Mock<typeof useRegisterConfirm>
       ).mockReturnValueOnce({
-        status: RegisterConfirmStatus.rejected,
         errorMessage: UNEXPECTED_ERROR_MESSAGE,
+        status: RegisterConfirmStatus.rejected,
       });
 
       const renderResult: RenderResult = render(

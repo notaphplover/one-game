@@ -1,7 +1,8 @@
-import { Typography, Box } from '@mui/material';
-import { GameListItem } from './GameListItem';
-import { Either } from '../../common/models/Either';
 import { models as apiModels } from '@cornie-js/api-models';
+import { Typography, Box } from '@mui/material';
+
+import { Either } from '../../common/models/Either';
+import { GameListItem } from './GameListItem';
 
 function getNoGamesContent(): React.JSX.Element {
   return (

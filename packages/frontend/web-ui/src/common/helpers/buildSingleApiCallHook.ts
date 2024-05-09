@@ -1,9 +1,10 @@
 import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { useEffect, useState } from 'react';
-import { Either } from '../models/Either';
-import { httpClient } from '../http/services/HttpService';
+
 import { HttpApiParams } from '../http/models/HttpApiParams';
 import { HttpApiResult } from '../http/models/HttpApiResult';
+import { httpClient } from '../http/services/HttpService';
+import { Either } from '../models/Either';
 
 export enum ApiHookStatus {
   idle,
@@ -16,6 +17,7 @@ export interface BuildSingleApiCallHookParams<
   TEndpoint extends keyof HttpClientEndpoints,
   TResult,
 > {
+  endpoint: TEndpoint;
   buildContext(): TContext;
   buildErrorMessage(err: unknown): string;
   buildRequestParams(
@@ -23,12 +25,11 @@ export interface BuildSingleApiCallHookParams<
     params: TParams,
   ): HttpApiParams<TEndpoint>;
   buildResult(httpResponse: HttpApiResult<TEndpoint>): Either<string, TResult>;
-  endpoint: TEndpoint;
 }
 
 export interface SingleApiCallHookResult<TParams, TResult> {
-  call(params: TParams): void;
   result: Either<string, TResult> | null;
+  call(params: TParams): void;
 }
 
 export function buildSingleApiCallHook<
@@ -89,6 +90,7 @@ export function buildSingleApiCallHook<
             setStatus(ApiHookStatus.idle);
           }
           break;
+        default:
       }
     })();
   }, [status, context]);

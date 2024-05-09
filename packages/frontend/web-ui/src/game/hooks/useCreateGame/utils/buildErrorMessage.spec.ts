@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
+
 import { buildErrorMessage } from './buildErrorMessage';
 import { UNEXPECTED_ERROR_MESSAGE } from './unexpectedErrorMessage';
 

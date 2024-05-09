@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import { validateName } from '../../common/helpers/validateName';
-import { validateEmail } from '../../common/helpers/validateEmail';
-import { validatePassword } from '../../common/helpers/validatePassword';
+
 import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
-import { httpClient } from '../../common/http/services/HttpService';
+import { validateEmail } from '../../common/helpers/validateEmail';
+import { validateName } from '../../common/helpers/validateName';
+import { validatePassword } from '../../common/helpers/validatePassword';
 import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
-import { Either } from '../../common/models/Either';
-import { UseRegisterFormParams } from '../models/UseRegisterFormResult';
-import { RegisterStatus } from '../models/RegisterStatus';
-import { FormValidationResult } from '../models/FormValidationResult';
-import { FormFieldsRegister } from '../models/FormFieldsRegister';
+import { BAD_REQUEST, CONFLICT, OK } from '../../common/http/helpers/httpCodes';
 import { RegisterResponse } from '../../common/http/models/RegisterResponse';
 import { RegisterSerializedResponse } from '../../common/http/models/RegisterSerializedResponse';
+import { httpClient } from '../../common/http/services/HttpService';
+import { Either } from '../../common/models/Either';
+import { FormFieldsRegister } from '../models/FormFieldsRegister';
+import { FormValidationResult } from '../models/FormValidationResult';
+import { RegisterStatus } from '../models/RegisterStatus';
+import { UseRegisterFormParams } from '../models/UseRegisterFormResult';
 
 export const INVALID_CREDENTIALS_REG_ERROR_MESSAGE: string =
   'Invalid credentials.';
@@ -22,7 +24,9 @@ export const HTTP_CONFLICT_ERROR_MESSAGE: string = `Cannot register user. There'
 export const useRegisterForm = (initialFormFields: UseRegisterFormParams) => {
   const [formFields, setFormFields] =
     useState<UseRegisterFormParams>(initialFormFields);
-  const [formStatus, setFormStatus] = useState<number>(RegisterStatus.initial);
+  const [formStatus, setFormStatus] = useState<RegisterStatus>(
+    RegisterStatus.initial,
+  );
   const [backendError, setBackendError] = useState<string | null>(null);
   const [formValidation, setFormValidation] = useState<FormValidationResult>(
     {},
@@ -54,7 +58,7 @@ export const useRegisterForm = (initialFormFields: UseRegisterFormParams) => {
         validateFormFields();
         break;
       case RegisterStatus.pendingBackend:
-        createUser(formFields);
+        void createUser(formFields);
         break;
       default:
     }
@@ -117,14 +121,14 @@ export const useRegisterForm = (initialFormFields: UseRegisterFormParams) => {
       await fetchCreateUser(formFields);
 
     switch (response.statusCode) {
-      case 200:
+      case OK:
         setFormStatus(RegisterStatus.backendOK);
         break;
-      case 400:
+      case BAD_REQUEST:
         setBackendError(HTTP_BAD_REQUEST_ERROR_MESSAGE);
         setFormStatus(RegisterStatus.backendKO);
         break;
-      case 409:
+      case CONFLICT:
         setBackendError(HTTP_CONFLICT_ERROR_MESSAGE);
         setFormStatus(RegisterStatus.backendKO);
         break;

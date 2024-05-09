@@ -3,11 +3,11 @@ import { describe, afterAll, beforeAll, expect, it, jest } from '@jest/globals';
 jest.mock('../http/services/HttpService');
 jest.mock('../http/helpers/buildSerializableResponse');
 
-import { getUserMeId } from './getUserMeId';
-import { httpClient } from '../http/services/HttpService';
 import { buildSerializableResponse } from '../http/helpers/buildSerializableResponse';
 import { UserMeResponse } from '../http/models/UserMeResponse';
 import { UserMeSerializedResponse } from '../http/models/UserMeSerializedResponse';
+import { httpClient } from '../http/services/HttpService';
+import { getUserMeId } from './getUserMeId';
 
 describe(getUserMeId.name, () => {
   let tokenFixture: string;
@@ -23,20 +23,20 @@ describe(getUserMeId.name, () => {
 
     beforeAll(async () => {
       userMeResponseFixture = {
-        headers: {},
         body: {
-          name: 'name-fixture',
-          id: 'userId-fixture',
           active: true,
+          id: 'userId-fixture',
+          name: 'name-fixture',
         },
+        headers: {},
         statusCode: 200,
       };
 
       userMeSerializedResponseFixture = {
         body: {
-          name: 'name-fixture',
-          id: 'userId-fixture',
           active: true,
+          id: 'userId-fixture',
+          name: 'name-fixture',
         },
         statusCode: 200,
       };
@@ -72,10 +72,10 @@ describe(getUserMeId.name, () => {
       tokenFixture = '';
 
       userMeResponseFixture = {
-        headers: {},
         body: {
           description: 'error-fixture',
         },
+        headers: {},
         statusCode: 401,
       };
 

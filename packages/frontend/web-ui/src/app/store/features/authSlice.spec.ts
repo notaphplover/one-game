@@ -1,20 +1,22 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import authSlice from './authSlice';
-import { createAuthByToken } from '../thunk/createAuthByToken';
-import {
-  CreateAuthByCredentialsParams,
-  createAuthByCredentials,
-} from '../thunk/createAuthByCredentials';
+
+import { models as apiModels } from '@cornie-js/api-models';
 import { PayloadAction, UnknownAction } from '@reduxjs/toolkit';
+
+import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import { SerializableResponse } from '../../../common/http/models/SerializedResponse';
 import {
   AuthState,
   NonAuthenticatedAuthState,
   PendingAuthState,
 } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
-import { SerializableResponse } from '../../../common/http/models/SerializedResponse';
-import { models as apiModels } from '@cornie-js/api-models';
-import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import {
+  CreateAuthByCredentialsParams,
+  createAuthByCredentials,
+} from '../thunk/createAuthByCredentials';
+import { createAuthByToken } from '../thunk/createAuthByToken';
+import authSlice from './authSlice';
 
 describe('authSlice', () => {
   describe('having no state and no action', () => {
@@ -134,9 +136,9 @@ describe('authSlice', () => {
 
       it('should return a state', () => {
         const expected: AuthState = {
-          status: AuthStateStatus.authenticated,
           accessToken: payloadFixture.body.accessToken,
           refreshToken: payloadFixture.body.refreshToken,
+          status: AuthStateStatus.authenticated,
         };
 
         expect(result).toStrictEqual(expected);
@@ -256,9 +258,9 @@ describe('authSlice', () => {
 
       it('should return a state', () => {
         const expected: AuthState = {
-          status: AuthStateStatus.authenticated,
           accessToken: payloadFixture.body.accessToken,
           refreshToken: payloadFixture.body.refreshToken,
+          status: AuthStateStatus.authenticated,
         };
 
         expect(result).toStrictEqual(expected);

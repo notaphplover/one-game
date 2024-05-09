@@ -1,6 +1,7 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import { cornieTheme } from './cornieTheme';
 import React from 'react';
+
+import { cornieTheme } from './cornieTheme';
 
 interface CornieThemeParams {
   children: React.JSX.Element | React.JSX.Element[];

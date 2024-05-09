@@ -4,10 +4,11 @@ jest.mock('./GameListItem');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { RenderResult, render } from '@testing-library/react';
-import { GameList } from './GameList';
-import { Left, Right } from '../../common/models/Either';
-import { GameListItem } from './GameListItem';
 import React from 'react';
+
+import { Left, Right } from '../../common/models/Either';
+import { GameList } from './GameList';
+import { GameListItem } from './GameListItem';
 
 describe(GameList.name, () => {
   describe('having a null game result with no games', () => {

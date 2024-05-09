@@ -1,4 +1,4 @@
-export type FormFieldsLogin = {
+export interface FormFieldsLogin {
   email: string;
   password: string;
-};
+}

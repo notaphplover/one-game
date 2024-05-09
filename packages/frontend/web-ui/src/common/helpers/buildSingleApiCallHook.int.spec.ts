@@ -1,22 +1,24 @@
 jest.mock('../http/services/HttpService');
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import {
-  BuildSingleApiCallHookParams,
-  SingleApiCallHookResult,
-  buildSingleApiCallHook,
-} from './buildSingleApiCallHook';
-import { httpClient } from '../http/services/HttpService';
+
+import { HttpClient } from '@cornie-js/api-http-client';
 import {
   RenderHookResult,
   act,
   renderHook,
   waitFor,
 } from '@testing-library/react';
-import { HttpApiResult } from '../http/models/HttpApiResult';
+
 import { HttpApiParams } from '../http/models/HttpApiParams';
-import { HttpClient } from '@cornie-js/api-http-client';
+import { HttpApiResult } from '../http/models/HttpApiResult';
+import { httpClient } from '../http/services/HttpService';
 import { Either } from '../models/Either';
+import {
+  BuildSingleApiCallHookParams,
+  SingleApiCallHookResult,
+  buildSingleApiCallHook,
+} from './buildSingleApiCallHook';
 
 type TestContext = void;
 type TestParams = void;
@@ -93,6 +95,7 @@ describe(buildSingleApiCallHook.name, () => {
       });
 
       await waitFor(() => {
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(renderHookResult.result.current.result).not.toBeNull();
       });
     });

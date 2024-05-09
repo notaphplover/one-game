@@ -9,21 +9,25 @@ interface RejectedMeta {
 }
 
 export function isFullfilledPayloadAction<
-  FP,
-  RP,
+  TFulfilledPayload,
+  TRejectedPayload,
   T extends string,
-  FM extends FullfilledMeta,
-  RM extends RejectedMeta,
+  TFulfilledMeta extends FullfilledMeta,
+  TRejectedMeta extends RejectedMeta,
 >(
   payloadAction:
-    | PayloadAction<FP, T, FM, never>
-    | PayloadAction<RP, T, RM, never>,
-): payloadAction is PayloadAction<FP, T, FM, never> {
+    | PayloadAction<TFulfilledPayload, T, TFulfilledMeta, never>
+    | PayloadAction<TRejectedPayload, T, TRejectedMeta, never>,
+): payloadAction is PayloadAction<TFulfilledPayload, T, TFulfilledMeta, never> {
   return (
     (
       payloadAction as
-        | (PayloadAction<FP, T, FM, never> & { meta: FM })
-        | (PayloadAction<RP, T, RM, never> & { meta: RM })
+        | (PayloadAction<TFulfilledPayload, T, TFulfilledMeta, never> & {
+            meta: TFulfilledMeta;
+          })
+        | (PayloadAction<TRejectedPayload, T, TRejectedMeta, never> & {
+            meta: TRejectedMeta;
+          })
     ).meta.requestStatus === 'fulfilled'
   );
 }

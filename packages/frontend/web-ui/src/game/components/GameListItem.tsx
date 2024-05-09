@@ -1,7 +1,8 @@
-import { Link as RouterLink } from 'react-router-dom';
 import { models as apiModels } from '@cornie-js/api-models';
-import { Button, Typography, Link, Box } from '@mui/material';
 import { JoinInnerOutlined, Share } from '@mui/icons-material';
+import { Button, Typography, Link, Box } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { GameStatus } from '../models/GameStatus';
 
 function getChosenButtonGame(gameStatus: GameStatus): React.JSX.Element {

@@ -1,16 +1,17 @@
-import { createInitialState } from './../helpers/createInitialState';
 import {
   ActionReducerMapBuilder,
   PayloadAction,
-  Slice,
   createSlice,
 } from '@reduxjs/toolkit';
-import { createAuthByCredentials } from '../thunk/createAuthByCredentials';
-import { createAuthByToken } from '../thunk/createAuthByToken';
-import { AuthState, AuthenticatedAuthState } from '../helpers/models/AuthState';
+
+import { OK } from '../../../common/http/helpers/httpCodes';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import { AuthState, AuthenticatedAuthState } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import type { RootState } from '../store';
+import { createAuthByCredentials } from '../thunk/createAuthByCredentials';
+import { createAuthByToken } from '../thunk/createAuthByToken';
+import { createInitialState } from './../helpers/createInitialState';
 
 function createAuthPendingReducer(): AuthState {
   return {
@@ -23,11 +24,11 @@ function createAuthFulfilledReducer(
   action: PayloadAction<AuthSerializedResponse>,
 ): AuthState {
   switch (action.payload.statusCode) {
-    case 200:
+    case OK:
       return {
-        status: AuthStateStatus.authenticated,
         accessToken: action.payload.body.accessToken,
         refreshToken: action.payload.body.refreshToken,
+        status: AuthStateStatus.authenticated,
       };
     default:
       return {
@@ -45,9 +46,6 @@ function createAuthRejectedReducer(): AuthState {
 const initialState: AuthState = createInitialState();
 
 export const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {},
   extraReducers(builder: ActionReducerMapBuilder<AuthState>) {
     builder
       .addCase(createAuthByToken.pending, createAuthPendingReducer)
@@ -57,6 +55,9 @@ export const authSlice = createSlice({
       .addCase(createAuthByCredentials.fulfilled, createAuthFulfilledReducer)
       .addCase(createAuthByCredentials.rejected, createAuthRejectedReducer);
   },
+  initialState,
+  name: 'auth',
+  reducers: {},
 });
 
 export const selectAuthToken = (state: RootState): string | null => {
@@ -70,9 +71,9 @@ export const selectAuthenticatedAuth = (
 ): AuthenticatedAuthState | null => {
   return state.auth.status === AuthStateStatus.authenticated
     ? {
-        status: state.auth.status,
         accessToken: state.auth.accessToken,
         refreshToken: state.auth.refreshToken,
+        status: state.auth.status,
       }
     : null;
 };

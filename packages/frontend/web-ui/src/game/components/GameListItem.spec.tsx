@@ -1,8 +1,10 @@
 import { beforeAll, describe, it, expect, afterAll, jest } from '@jest/globals';
+
 import { models as apiModels } from '@cornie-js/api-models';
-import { GameListItem } from './GameListItem';
-import { MemoryRouter } from 'react-router-dom';
 import { RenderResult, render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+
+import { GameListItem } from './GameListItem';
 
 const TEXT_SHARE_BUTTON = 'Share';
 const TEXT_JOIN_BUTTON = 'Join';

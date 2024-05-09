@@ -5,7 +5,7 @@ export const validateConfirmPassword = (
   password: string,
   confirmPassword: string,
 ): Either<string[], undefined> => {
-  let errorMessages: string[] = [];
+  const errorMessages: string[] = [];
 
   if (confirmPassword.length < PASSWORD_MIN_LENGTH) {
     errorMessages.push(

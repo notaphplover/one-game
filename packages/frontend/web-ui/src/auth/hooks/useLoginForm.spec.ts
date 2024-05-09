@@ -6,30 +6,28 @@ jest.mock('../helpers/isFullfilledPayloadAction');
 jest.mock('../../app/store/thunk/createAuthByCredentials');
 jest.mock('../../app/store/hooks');
 
+import { PayloadAction } from '@reduxjs/toolkit';
 import {
   RenderHookResult,
   act,
   renderHook,
   waitFor,
 } from '@testing-library/react';
-import {
-  INVALID_CREDENTIALS_ERROR_MESSAGE,
-  useLoginForm,
-} from './useLoginForm';
+
+import { useAppDispatch } from '../../app/store/hooks';
+import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
+import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
+import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
+import { FormFieldsLogin } from '../models/FormFieldsLogin';
+import { FormValidationResult } from '../models/FormValidationResult';
+import { LoginStatus } from '../models/LoginStatus';
 import {
   UseLoginFormParams,
   UseLoginFormResult,
 } from '../models/UseLoginFormResult';
-import { LoginStatus } from '../models/LoginStatus';
-import { useAppDispatch } from '../../app/store/hooks';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
-import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
-import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
-import { FormFieldsLogin } from '../models/FormFieldsLogin';
-import { FormValidationResult } from '../models/FormValidationResult';
+import { UNAUTHORIZED_ERROR_MESSAGE, useLoginForm } from './useLoginForm';
 
 describe(useLoginForm.name, () => {
   let initialForm: UseLoginFormParams;
@@ -238,6 +236,7 @@ describe(useLoginForm.name, () => {
 
       await waitFor(() => {
         formStatus = result.result.current.formStatus;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(formStatus).toBe(LoginStatus.backendOK);
       });
     });
@@ -328,6 +327,7 @@ describe(useLoginForm.name, () => {
       await waitFor(() => {
         formStatus = result.result.current.formStatus;
         backendError = result.result.current.backendError;
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(formStatus).toBe(LoginStatus.backendKO);
       });
     });
@@ -346,7 +346,7 @@ describe(useLoginForm.name, () => {
       expect(formStatus).toBe(LoginStatus.backendKO);
     });
     it('should return an error message Invalid Credentials', () => {
-      expect(backendError).toBe(INVALID_CREDENTIALS_ERROR_MESSAGE);
+      expect(backendError).toBe(UNAUTHORIZED_ERROR_MESSAGE);
     });
   });
 });

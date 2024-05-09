@@ -1,9 +1,4 @@
-import React, { useEffect } from 'react';
-import {
-  NavigateFunction,
-  Link as RouterLink,
-  useNavigate,
-} from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -16,16 +11,22 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useLoginForm } from '../hooks/useLoginForm';
+import React, { useEffect } from 'react';
+import {
+  NavigateFunction,
+  Link as RouterLink,
+  useNavigate,
+} from 'react-router-dom';
+
+import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { useAppSelector } from '../../app/store/hooks';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingAuth } from '../components/CheckingAuth';
-import { useAppSelector } from '../../app/store/hooks';
+import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
-import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 
 export const Login = (): React.JSX.Element => {
   const {

@@ -3,11 +3,11 @@ import { describe, afterAll, beforeAll, expect, it, jest } from '@jest/globals';
 jest.mock('../http/services/HttpService');
 jest.mock('../http/helpers/buildSerializableResponse');
 
-import { joinGame } from './joinGame';
-import { httpClient } from '../http/services/HttpService';
 import { buildSerializableResponse } from '../http/helpers/buildSerializableResponse';
 import { JoinGameResponse } from '../http/models/JoinGameResponse';
 import { JoinGameSerializedResponse } from '../http/models/JoinGameSerializedResponse';
+import { httpClient } from '../http/services/HttpService';
+import { joinGame } from './joinGame';
 
 describe(joinGame.name, () => {
   let tokenFixture: string;
@@ -27,10 +27,10 @@ describe(joinGame.name, () => {
 
     beforeAll(async () => {
       joinGameResponseFixture = {
-        headers: {},
         body: {
           userId: 'userId-fixture',
         },
+        headers: {},
         statusCode: 200,
       };
 
@@ -71,10 +71,10 @@ describe(joinGame.name, () => {
     beforeAll(async () => {
       tokenFixture = '';
       joinGameResponseFixture = {
-        headers: {},
         body: {
           description: 'error-fixture',
         },
+        headers: {},
         statusCode: 400,
       };
 

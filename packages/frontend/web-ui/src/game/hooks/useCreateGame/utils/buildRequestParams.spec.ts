@@ -1,8 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { buildRequestParams } from './buildRequestParams';
-import { UseCreateGameContext } from '../models/UseCreateGameContext';
+
 import { HttpApiParams } from '../../../../common/http/models/HttpApiParams';
 import { FormFieldsNewGame } from '../../../models/FormFieldsNewGame';
+import { UseCreateGameContext } from '../models/UseCreateGameContext';
+import { buildRequestParams } from './buildRequestParams';
 
 describe(buildRequestParams.name, () => {
   let contextFixture: UseCreateGameContext;
@@ -19,16 +20,16 @@ describe(buildRequestParams.name, () => {
     beforeAll(() => {
       paramsFixture = {
         name: 'name-fixture',
-        players: 2,
         options: {
           chainDraw2Draw2Cards: false,
           chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
           chainDraw4Draw2Cards: false,
+          chainDraw4Draw4Cards: false,
           playCardIsMandatory: false,
           playMultipleSameCards: false,
           playWildDraw4IfNoOtherAlternative: true,
         },
+        players: 2,
       };
     });
 
@@ -62,16 +63,16 @@ describe(buildRequestParams.name, () => {
     beforeAll(() => {
       paramsFixture = {
         name: undefined,
-        players: 2,
         options: {
           chainDraw2Draw2Cards: false,
           chainDraw2Draw4Cards: false,
-          chainDraw4Draw4Cards: false,
           chainDraw4Draw2Cards: false,
+          chainDraw4Draw4Cards: false,
           playCardIsMandatory: false,
           playMultipleSameCards: false,
           playWildDraw4IfNoOtherAlternative: true,
         },
+        players: 2,
       };
     });
 

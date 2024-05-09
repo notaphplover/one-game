@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { httpClient } from '../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
-import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
-import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
-import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
+
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
-import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
-import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
-import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
+import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
+import { buildSerializableResponse } from '../../common/http/helpers/buildSerializableResponse';
+import { OK, UNAUTHORIZED } from '../../common/http/helpers/httpCodes';
+import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
+import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
+import { httpClient } from '../../common/http/services/HttpService';
+import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
+import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
 
 const CODE_QUERY_PARAM: string = 'code';
 export const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error.';
@@ -48,10 +50,10 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
                 await updateUserMe(auth.accessToken);
 
               switch (response.statusCode) {
-                case 200:
+                case OK:
                   setStatus(RegisterConfirmStatus.fulfilled);
                   break;
-                case 401:
+                case UNAUTHORIZED:
                   setErrorMessage(UNAUTHORIZED_ERROR_MESSAGE);
                   setStatus(RegisterConfirmStatus.rejected);
                   break;
@@ -67,6 +69,8 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
             setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
             setStatus(RegisterConfirmStatus.rejected);
           }
+          break;
+        default:
           break;
       }
     })();
@@ -88,7 +92,7 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
   };
 
   return {
-    status,
     errorMessage,
+    status,
   };
 };

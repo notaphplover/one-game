@@ -3,11 +3,11 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../../../common/http/services/HttpService');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');
 
-import { createAuthByToken } from './createAuthByToken';
-import { httpClient } from '../../../common/http/services/HttpService';
 import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
-import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import { AuthResponse } from '../../../common/http/models/AuthResponse';
+import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import { httpClient } from '../../../common/http/services/HttpService';
+import { createAuthByToken } from './createAuthByToken';
 
 describe(createAuthByToken.name, () => {
   describe('when called', () => {
@@ -28,11 +28,11 @@ describe(createAuthByToken.name, () => {
       };
 
       authResponseFixture = {
-        headers: {},
         body: {
           accessToken: 'accessToken-fixture',
           refreshToken: 'refreshToken-fixture',
         },
+        headers: {},
         statusCode: 200,
       };
 

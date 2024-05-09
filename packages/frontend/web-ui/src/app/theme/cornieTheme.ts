@@ -12,33 +12,21 @@ interface CorniePaletteOptions extends PaletteOptions {
 
 const corniePalette: CorniePaletteOptions = {
   primary: {
+    contrastText: '#fff',
+    dark: '#631976',
     light: '#a44fbb',
     main: '#8e24aa',
-    dark: '#631976',
-    contrastText: '#fff',
   },
   secondary: {
+    contrastText: '#000',
+    dark: '#a359b0',
     light: '#ee99fc',
     main: '#ea80fc',
-    dark: '#a359b0',
-    contrastText: '#000',
   },
 };
 
 export const cornieTheme: Theme = createTheme({
-  palette: corniePalette,
   components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root:hover': {
-            '.MuiOutlinedInput-notchedOutline': {
-              borderColor: 'inherit',
-            },
-          },
-        },
-      },
-    },
     MuiFormLabel: {
       defaultProps: {
         style: {
@@ -53,5 +41,17 @@ export const cornieTheme: Theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root:hover': {
+            '.MuiOutlinedInput-notchedOutline': {
+              borderColor: 'inherit',
+            },
+          },
+        },
+      },
+    },
   },
+  palette: corniePalette,
 });

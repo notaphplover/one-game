@@ -1,8 +1,9 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { buildRequestParams } from './buildRequestParams';
+
+import { HttpApiParams } from '../../../../common/http/models/HttpApiParams';
 import { UseGetGamesContext } from '../models/UseGetGamesContext';
 import { UseGetGamesParams } from '../models/UseGetGamesParams';
-import { HttpApiParams } from '../../../../common/http/models/HttpApiParams';
+import { buildRequestParams } from './buildRequestParams';
 
 describe(buildRequestParams.name, () => {
   let contextFixture: UseGetGamesContext;
