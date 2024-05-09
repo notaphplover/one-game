@@ -1,6 +1,10 @@
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import userSlice from './userSlice';
+import { beforeAll, describe, expect, it } from '@jest/globals';
+
+import { models as apiModels } from '@cornie-js/api-models';
 import { PayloadAction, UnknownAction } from '@reduxjs/toolkit';
+
+import { SerializableResponse } from '../../../common/http/models/SerializedResponse';
+import { UserMeSerializedResponse } from '../../../common/http/models/UserMeSerializedResponse';
 import {
   IdleUserState,
   PendingUserState,
@@ -8,9 +12,7 @@ import {
 } from '../helpers/models/UserState';
 import { UserStateStatus } from '../helpers/models/UserStateStatus';
 import { getUserMe } from '../thunk/getUserMe';
-import { UserMeSerializedResponse } from '../../../common/http/models/UserMeSerializedResponse';
-import { SerializableResponse } from '../../../common/http/models/SerializedResponse';
-import { models as apiModels } from '@cornie-js/api-models';
+import userSlice from './userSlice';
 
 describe(userSlice.name, () => {
   describe('having no state and no action', () => {

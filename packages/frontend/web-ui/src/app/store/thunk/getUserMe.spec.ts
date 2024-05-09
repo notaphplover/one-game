@@ -3,11 +3,11 @@ import { describe, afterAll, beforeAll, expect, it, jest } from '@jest/globals';
 jest.mock('../../../common/http/services/HttpService');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');
 
-import { getUserMe } from './getUserMe';
+import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
 import { UserMeResponse } from '../../../common/http/models/UserMeResponse';
 import { UserMeSerializedResponse } from '../../../common/http/models/UserMeSerializedResponse';
 import { httpClient } from '../../../common/http/services/HttpService';
-import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
+import { getUserMe } from './getUserMe';
 
 describe(getUserMe.name, () => {
   describe('when called', () => {
@@ -28,20 +28,20 @@ describe(getUserMe.name, () => {
       };
 
       userMeResponseFixture = {
-        headers: {},
         body: {
-          name: 'name-fixture',
-          id: 'userId-fixture',
           active: true,
+          id: 'userId-fixture',
+          name: 'name-fixture',
         },
+        headers: {},
         statusCode: 200,
       };
 
       userMeSerializedResponseFixture = {
         body: {
-          name: 'name-fixture',
-          id: 'userId-fixture',
           active: true,
+          id: 'userId-fixture',
+          name: 'name-fixture',
         },
         statusCode: 200,
       };
