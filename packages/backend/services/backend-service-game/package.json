@@ -20,7 +20,7 @@
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-monitoring": "workspace:*",
     "fastify": "4.27.0",
-    "glob": "10.3.12",
+    "glob": "10.3.14",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1"
   },
