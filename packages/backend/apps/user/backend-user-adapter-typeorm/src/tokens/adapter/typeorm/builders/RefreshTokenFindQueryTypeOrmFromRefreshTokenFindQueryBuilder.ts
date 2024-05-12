@@ -7,6 +7,7 @@ import {
   ObjectLiteral,
   QueryBuilder,
   SelectQueryBuilder,
+  ValueTransformer,
   WhereExpressionBuilder,
 } from 'typeorm';
 
@@ -29,16 +30,24 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
     refreshTokenFindQuery: RefreshTokenFindQuery,
     queryBuilder: QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
   ): QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder {
-    const gamePropertiesPrefix: string = this._getEntityPrefix(
+    const propertiesPrefix: string = this._getEntityPrefix(
       queryBuilder,
       RefreshTokenDb,
     );
 
     if (refreshTokenFindQuery.active !== undefined) {
+      const transformer: ValueTransformer = this._getSingleValueTransformer(
+        queryBuilder,
+        RefreshTokenDb,
+        'active',
+      );
+
       queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}active = :${RefreshTokenDb.name}active`,
+        `${propertiesPrefix}active = :${RefreshTokenDb.name}active`,
         {
-          [`${RefreshTokenDb.name}active`]: refreshTokenFindQuery.active,
+          [`${RefreshTokenDb.name}active`]: transformer.to(
+            refreshTokenFindQuery.active,
+          ) as unknown,
         },
       );
     }
@@ -46,14 +55,14 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
     if (refreshTokenFindQuery.date !== undefined) {
       queryBuilder = this.#handleDate(
         queryBuilder,
-        gamePropertiesPrefix,
+        propertiesPrefix,
         refreshTokenFindQuery.date,
       );
     }
 
     if (refreshTokenFindQuery.familyId !== undefined) {
       queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}familyId = :${RefreshTokenDb.name}familyId`,
+        `${propertiesPrefix}family = :${RefreshTokenDb.name}familyId`,
         {
           [`${RefreshTokenDb.name}familyId`]: refreshTokenFindQuery.familyId,
         },
@@ -62,7 +71,7 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
 
     if (refreshTokenFindQuery.id !== undefined) {
       queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}id = :${RefreshTokenDb.name}id`,
+        `${propertiesPrefix}id = :${RefreshTokenDb.name}id`,
         {
           [`${RefreshTokenDb.name}id`]: refreshTokenFindQuery.id,
         },
@@ -95,12 +104,12 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
 
   #handleDate(
     queryBuilder: QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder,
-    gamePropertiesPrefix: string,
+    propertiesPrefix: string,
     date: Interval<Date>,
   ): QueryBuilder<RefreshTokenDb> & WhereExpressionBuilder {
     if (date.from !== undefined) {
       queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}dateFrom >= :${RefreshTokenDb.name}dateFrom`,
+        `${propertiesPrefix}createdAt >= :${RefreshTokenDb.name}dateFrom`,
         {
           [`${RefreshTokenDb.name}dateFrom`]: date.from,
         },
@@ -109,7 +118,7 @@ export class RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder
 
     if (date.to !== undefined) {
       queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}dateTo < :${RefreshTokenDb.name}dateTo`,
+        `${propertiesPrefix}createdAt < :${RefreshTokenDb.name}dateTo`,
         {
           [`${RefreshTokenDb.name}dateTo`]: date.to,
         },

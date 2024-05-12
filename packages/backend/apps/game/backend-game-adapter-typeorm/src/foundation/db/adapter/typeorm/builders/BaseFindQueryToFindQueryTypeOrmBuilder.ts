@@ -11,15 +11,15 @@ export abstract class BaseFindQueryToFindQueryTypeOrmBuilder {
     // eslint-disable-next-line @typescript-eslint/ban-types
     entityType: Function,
   ): string {
-    let gamePropertiesPrefix: string;
+    let propertiesPrefix: string;
 
     if (InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
-      gamePropertiesPrefix = `${entityType.name}.`;
+      propertiesPrefix = `${entityType.name}.`;
     } else {
       // No prefix should be used due to https://github.com/typeorm/typeorm/issues/1798
-      gamePropertiesPrefix = '';
+      propertiesPrefix = '';
     }
 
-    return gamePropertiesPrefix;
+    return propertiesPrefix;
   }
 }
