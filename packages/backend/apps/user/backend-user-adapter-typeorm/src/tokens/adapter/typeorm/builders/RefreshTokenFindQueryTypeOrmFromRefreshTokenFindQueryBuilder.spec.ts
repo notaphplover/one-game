@@ -26,7 +26,15 @@ jest.mock('typeorm', () => {
 
 import { RefreshTokenFindQuery } from '@cornie-js/backend-user-domain/tokens';
 import { RefreshTokenFindQueryFixtures } from '@cornie-js/backend-user-domain/tokens/fixtures';
-import { InstanceChecker, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import {
+  DataSource,
+  EntityMetadata,
+  InstanceChecker,
+  ObjectLiteral,
+  SelectQueryBuilder,
+  ValueTransformer,
+} from 'typeorm';
+import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata.js';
 
 import { RefreshTokenDb } from '../models/RefreshTokenDb';
 import { RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder } from './RefreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder';
@@ -42,11 +50,39 @@ describe(
     });
 
     describe('.build', () => {
-      let queryBuilderFixture: jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>;
+      let queryBuilderMock: jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>;
+      let metadataMock: jest.Mocked<EntityMetadata>;
+      let columnMetadataFixture: jest.Mocked<ColumnMetadata>;
+      let transformedValue: unknown;
 
       beforeAll(() => {
-        queryBuilderFixture = {
+        transformedValue = Symbol();
+
+        const valueTransformerMock: jest.Mocked<ValueTransformer> = {
+          to: jest.fn().mockReturnValue(transformedValue),
+        } as Partial<
+          jest.Mocked<ValueTransformer>
+        > as jest.Mocked<ValueTransformer>;
+
+        columnMetadataFixture = {
+          transformer: valueTransformerMock,
+        } as Partial<
+          jest.Mocked<ColumnMetadata>
+        > as jest.Mocked<ColumnMetadata>;
+
+        metadataMock = {
+          findColumnWithPropertyName: jest
+            .fn()
+            .mockReturnValue(columnMetadataFixture),
+        } as Partial<
+          jest.Mocked<EntityMetadata>
+        > as jest.Mocked<EntityMetadata>;
+
+        queryBuilderMock = {
           andWhere: jest.fn().mockReturnThis(),
+          connection: {
+            getMetadata: jest.fn().mockReturnValueOnce(metadataMock),
+          } as Partial<jest.Mocked<DataSource>> as jest.Mocked<DataSource>,
         } as Partial<
           jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>
         > as jest.Mocked<SelectQueryBuilder<RefreshTokenDb>>;
@@ -64,11 +100,11 @@ describe(
         [
           'with active',
           RefreshTokenFindQueryFixtures.withActive,
-          (refreshTokenFindQuery: RefreshTokenFindQuery) => [
+          (_refreshTokenFindQuery: RefreshTokenFindQuery) => [
             [
               `${RefreshTokenDb.name}.active = :${RefreshTokenDb.name}active`,
               {
-                [`${RefreshTokenDb.name}active`]: refreshTokenFindQuery.active,
+                [`${RefreshTokenDb.name}active`]: transformedValue,
               },
             ],
           ],
@@ -78,7 +114,7 @@ describe(
           RefreshTokenFindQueryFixtures.withDateFrom,
           (refreshTokenFindQuery: RefreshTokenFindQuery) => [
             [
-              `${RefreshTokenDb.name}.dateFrom >= :${RefreshTokenDb.name}dateFrom`,
+              `${RefreshTokenDb.name}.createdAt >= :${RefreshTokenDb.name}dateFrom`,
               {
                 [`${RefreshTokenDb.name}dateFrom`]:
                   refreshTokenFindQuery.date?.from,
@@ -91,7 +127,7 @@ describe(
           RefreshTokenFindQueryFixtures.withDateTo,
           (refreshTokenFindQuery: RefreshTokenFindQuery) => [
             [
-              `${RefreshTokenDb.name}.dateTo < :${RefreshTokenDb.name}dateTo`,
+              `${RefreshTokenDb.name}.createdAt < :${RefreshTokenDb.name}dateTo`,
               {
                 [`${RefreshTokenDb.name}dateTo`]:
                   refreshTokenFindQuery.date?.to,
@@ -104,7 +140,7 @@ describe(
           RefreshTokenFindQueryFixtures.withFamilyId,
           (refreshTokenFindQuery: RefreshTokenFindQuery) => [
             [
-              `${RefreshTokenDb.name}.familyId = :${RefreshTokenDb.name}familyId`,
+              `${RefreshTokenDb.name}.family = :${RefreshTokenDb.name}familyId`,
               {
                 [`${RefreshTokenDb.name}familyId`]:
                   refreshTokenFindQuery.familyId,
@@ -152,7 +188,7 @@ describe(
               result =
                 refreshTokenFindQueryTypeOrmFromRefreshTokenFindQueryBuilder.build(
                   refreshTokenFindQueryFixture,
-                  queryBuilderFixture,
+                  queryBuilderMock,
                 );
             });
 
@@ -165,10 +201,10 @@ describe(
             });
 
             it('should call queryBuilder.andWhere()', () => {
-              expect(queryBuilderFixture.andWhere).toHaveBeenCalled();
+              expect(queryBuilderMock.andWhere).toHaveBeenCalled();
               andWhereExpectations.map(
                 ([query, parameters]: [string, ObjectLiteral]) => {
-                  expect(queryBuilderFixture.andWhere).toHaveBeenCalledWith(
+                  expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
                     query,
                     parameters,
                   );
@@ -177,7 +213,7 @@ describe(
             });
 
             it('should return a QueryBuilder', () => {
-              expect(result).toBe(queryBuilderFixture);
+              expect(result).toBe(queryBuilderMock);
             });
           });
         },
