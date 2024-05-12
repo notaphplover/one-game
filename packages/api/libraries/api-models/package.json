@@ -21,7 +21,7 @@
     "jest-mock": "29.7.0",
     "json-schema-to-typescript": "14.0.4",
     "prettier": "3.2.5",
-    "rimraf": "5.0.6",
+    "rimraf": "5.0.7",
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
