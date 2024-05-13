@@ -15,10 +15,10 @@ import { HttpClientEndpointsMethodsBuilder } from './HttpClientEndpointsMethodsB
 import { HttpClientSourceFileBuilder } from './HttpClientSourceFileBuilder';
 
 const HTTP_CLIENT_CLASS_NAME: string = 'HttpClientEndpoints';
-const AXIOS_HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME: string = 'axiosHttpClient';
+const HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME: string = 'internalHttpClient';
 
 export class HttpClientEndpointsClassBuilder {
-  public static axiosHttpBuilderPropertyName: string = '#axiosHttpClient';
+  public static httpClientPropertyName: string = '#internalHttpClient';
 
   readonly #endpointClientMethodsBuilder: HttpClientEndpointsMethodsBuilder;
 
@@ -52,23 +52,23 @@ export class HttpClientEndpointsClassBuilder {
       undefined,
       undefined,
       [
-        this.#buildAxiosHttpClientPrivateProperty(),
+        this.#buildInternalHttpClientPrivateProperty(),
         this.#buildConstructorDeclaration(),
         ...methodDeclarations,
       ],
     );
   }
 
-  #buildAxiosHttpClientPrivateProperty(): ts.ClassElement {
+  #buildInternalHttpClientPrivateProperty(): ts.ClassElement {
     return ts.factory.createPropertyDeclaration(
       [ts.factory.createToken(ts.SyntaxKind.ReadonlyKeyword)],
       ts.factory.createPrivateIdentifier(
-        HttpClientEndpointsClassBuilder.axiosHttpBuilderPropertyName,
+        HttpClientEndpointsClassBuilder.httpClientPropertyName,
       ),
       undefined,
       ts.factory.createTypeReferenceNode(
         ts.factory.createIdentifier(
-          HttpClientSourceFileBuilder.axiosHttpClientClassIdentifier,
+          HttpClientSourceFileBuilder.internalHttpClientClassIdentifier,
         ),
         undefined,
       ),
@@ -83,13 +83,11 @@ export class HttpClientEndpointsClassBuilder {
         ts.factory.createParameterDeclaration(
           undefined,
           undefined,
-          ts.factory.createIdentifier(
-            AXIOS_HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME,
-          ),
+          ts.factory.createIdentifier(HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME),
           undefined,
           ts.factory.createTypeReferenceNode(
             ts.factory.createIdentifier(
-              HttpClientSourceFileBuilder.axiosHttpClientClassIdentifier,
+              HttpClientSourceFileBuilder.internalHttpClientClassIdentifier,
             ),
             undefined,
           ),
@@ -103,12 +101,12 @@ export class HttpClientEndpointsClassBuilder {
               ts.factory.createPropertyAccessExpression(
                 ts.factory.createThis(),
                 ts.factory.createPrivateIdentifier(
-                  HttpClientEndpointsClassBuilder.axiosHttpBuilderPropertyName,
+                  HttpClientEndpointsClassBuilder.httpClientPropertyName,
                 ),
               ),
               ts.factory.createToken(ts.SyntaxKind.EqualsToken),
               ts.factory.createIdentifier(
-                AXIOS_HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME,
+                HTTP_CLIENT_CONSTRUCTOR_ARGUMENT_NAME,
               ),
             ),
           ),

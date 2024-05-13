@@ -1,16 +1,18 @@
-import { AxiosHttpClient } from '../axios/AxiosHttpClient';
+import { InternalHttpClient } from '../internal/InternalHttpClient';
 import { Interceptor } from '../models/Interceptor';
 import { UseInterceptorOptions } from '../models/UseInterceptorOptions';
 import { HttpClientEndpoints } from './HttpClientEndpoints';
 
 export class HttpClient {
-  readonly #axiosHttpClient: AxiosHttpClient;
+  readonly #internalHttpClient: InternalHttpClient;
 
   readonly #httpClientEndpoints: HttpClientEndpoints;
 
   constructor(baseUrl: string) {
-    this.#axiosHttpClient = new AxiosHttpClient(baseUrl);
-    this.#httpClientEndpoints = new HttpClientEndpoints(this.#axiosHttpClient);
+    this.#internalHttpClient = new InternalHttpClient(baseUrl);
+    this.#httpClientEndpoints = new HttpClientEndpoints(
+      this.#internalHttpClient,
+    );
   }
 
   public get endpoints(): HttpClientEndpoints {
@@ -21,6 +23,6 @@ export class HttpClient {
     interceptor: Interceptor,
     useInterceptorOptions?: UseInterceptorOptions,
   ): void {
-    this.#axiosHttpClient.useInterceptor(interceptor, useInterceptorOptions);
+    this.#internalHttpClient.useInterceptor(interceptor, useInterceptorOptions);
   }
 }

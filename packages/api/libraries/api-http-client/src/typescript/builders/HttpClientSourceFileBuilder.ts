@@ -8,7 +8,8 @@ const API_MODELS_MODULE_MODELS_NAMESPACE: string = 'models';
 
 export class HttpClientSourceFileBuilder {
   public static apiModelsNamespaceIdentifier: string = 'apiModels';
-  public static axiosHttpClientClassIdentifier: string = 'AxiosHttpClient';
+  public static internalHttpClientClassIdentifier: string =
+    'InternalHttpClient';
 
   readonly #endpointClientClassBuilder: HttpClientEndpointsClassBuilder;
 
@@ -71,7 +72,7 @@ export class HttpClientSourceFileBuilder {
     );
   }
 
-  #buildAxiosHttpClientImportDeclaration(): ts.ImportDeclaration {
+  #buildInternalHttpClientImportDeclaration(): ts.ImportDeclaration {
     return ts.factory.createImportDeclaration(
       undefined,
       ts.factory.createImportClause(
@@ -81,11 +82,15 @@ export class HttpClientSourceFileBuilder {
           ts.factory.createImportSpecifier(
             false,
             undefined,
-            ts.factory.createIdentifier('AxiosHttpClient'),
+            ts.factory.createIdentifier(
+              HttpClientSourceFileBuilder.internalHttpClientClassIdentifier,
+            ),
           ),
         ]),
       ),
-      ts.factory.createStringLiteral('../axios/AxiosHttpClient'),
+      ts.factory.createStringLiteral(
+        `../internal/${HttpClientSourceFileBuilder.internalHttpClientClassIdentifier}`,
+      ),
       undefined,
     );
   }
@@ -114,7 +119,7 @@ export class HttpClientSourceFileBuilder {
   ): [ts.Statement, ...ts.Statement[]] {
     return [
       this.#buildApiModelsImportDeclaration(),
-      this.#buildAxiosHttpClientImportDeclaration(),
+      this.#buildInternalHttpClientImportDeclaration(),
       this.#buildResponseModelImportDeclaration(),
       this.#endpointClientClassBuilder.build(options),
     ];

@@ -5,12 +5,12 @@
  * the generation script to regenerate this file.
  */
 import { models as apiModels } from '@cornie-js/api-models';
-import { AxiosHttpClient } from '../axios/AxiosHttpClient';
+import { InternalHttpClient } from '../internal/InternalHttpClient';
 import { Response } from '../models/Response';
 export class HttpClientEndpoints {
-  readonly #axiosHttpClient: AxiosHttpClient;
-  constructor(axiosHttpClient: AxiosHttpClient) {
-    this.#axiosHttpClient = axiosHttpClient;
+  readonly #internalHttpClient: InternalHttpClient;
+  constructor(internalHttpClient: InternalHttpClient) {
+    this.#internalHttpClient = internalHttpClient;
   }
   public async createAuth(
     headers: {
@@ -22,7 +22,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'POST',
@@ -42,7 +42,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'POST',
@@ -66,7 +66,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -89,7 +89,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -113,7 +113,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'PATCH',
@@ -136,7 +136,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -161,7 +161,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -187,7 +187,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'POST',
@@ -211,7 +211,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -230,7 +230,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'POST',
@@ -251,7 +251,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, undefined, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'DELETE',
@@ -272,7 +272,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, undefined, 201>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'POST',
@@ -287,7 +287,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, undefined, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'DELETE',
@@ -303,7 +303,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -322,7 +322,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'PATCH',
@@ -344,7 +344,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
@@ -363,7 +363,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: body,
       headers: headers,
       method: 'POST',
@@ -384,7 +384,7 @@ export class HttpClientEndpoints {
     | Response<Record<string, string>, unknown, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
   > {
-    return this.#axiosHttpClient.callEndpoint({
+    return this.#internalHttpClient.callEndpoint({
       body: undefined,
       headers: headers,
       method: 'GET',
