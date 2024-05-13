@@ -17,6 +17,7 @@ import ts from 'typescript';
 
 import { HttpClientMethodsOptions } from '../models/HttpClientMethodsOptions';
 import { OpenApiJsonPointerResolver } from '../resolvers/OpenApiJsonPointerResolver';
+import { HttpClientEndpointsClassBuilder } from './HttpClientEndpointsClassBuilder';
 import { HttpClientSourceFileBuilder } from './HttpClientSourceFileBuilder';
 
 const BODY_PARAMETER_NAME: string = 'body';
@@ -364,13 +365,15 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
       buildParameterName(BODY_PARAMETER_NAME),
     );
 
-    const axiosHttpClientCall: ts.ReturnStatement =
+    const internalHttpClientCall: ts.ReturnStatement =
       ts.factory.createReturnStatement(
         ts.factory.createCallExpression(
           ts.factory.createPropertyAccessExpression(
             ts.factory.createPropertyAccessExpression(
               ts.factory.createThis(),
-              ts.factory.createPrivateIdentifier('#axiosHttpClient'),
+              ts.factory.createPrivateIdentifier(
+                HttpClientEndpointsClassBuilder.httpClientPropertyName,
+              ),
             ),
             ts.factory.createIdentifier('callEndpoint'),
           ),
@@ -406,7 +409,7 @@ ${JSON.stringify(model, undefined, JSON_STRINGIFY_SPACES)}`);
         ),
       );
 
-    return ts.factory.createBlock([axiosHttpClientCall]);
+    return ts.factory.createBlock([internalHttpClientCall]);
   }
 
   #buildNodeTypeFromSchema(
