@@ -33,7 +33,8 @@ export class InternalHttpClient {
     }
 
     if (httpRequest.queryParams !== undefined) {
-      processedUrl += qs.stringify(httpRequest.queryParams, { indices: false });
+      processedUrl +=
+        '?' + qs.stringify(httpRequest.queryParams, { indices: false });
     }
 
     const requestInit: RequestInit = {
