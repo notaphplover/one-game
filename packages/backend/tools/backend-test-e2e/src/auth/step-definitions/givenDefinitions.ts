@@ -12,6 +12,7 @@ import { UserV1Parameter } from '../../user/models/UserV1Parameter';
 import { getUserOrFail } from '../../user/utils/calculations/getUserOrFail';
 import { AuthV2Parameter } from '../models/AuthV2Parameter';
 import { setAuth } from '../utils/actions/setAuth';
+import { getAuthOrFail } from '../utils/calculations/getAuthOrFail';
 import { whenCreateAuthRequestIsSend } from './whenDefinitions';
 
 export async function givenAuthForUser(
@@ -81,10 +82,42 @@ export function givenCreateAuthRequestForUser(
   );
 }
 
+export function givenCreateAuthRequestFromRefreshTokenForUser(
+  this: OneGameApiWorld,
+  userAlias?: string,
+  requestAlias?: string,
+): void {
+  const procesedUserAlias: string = userAlias ?? defaultAlias;
+  const procesedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  const authParameter: AuthV2Parameter =
+    getAuthOrFail.bind(this)(procesedUserAlias);
+
+  const requestParameters: Parameters<HttpClientEndpoints['createAuthV2']> = [
+    {
+      authorization: `Bearer ${authParameter.auth.refreshToken}`,
+    },
+    undefined,
+  ];
+
+  setRequestParameters.bind(this)(
+    'createAuthV2',
+    procesedRequestAlias,
+    requestParameters,
+  );
+}
+
 Given<OneGameApiWorld>(
   'a create auth request for {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
     givenCreateAuthRequestForUser.bind(this)(userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a create auth request from refresh token for {string}',
+  function (this: OneGameApiWorld, userAlias: string): void {
+    givenCreateAuthRequestFromRefreshTokenForUser.bind(this)(userAlias);
   },
 );
 
