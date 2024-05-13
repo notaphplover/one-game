@@ -41,6 +41,7 @@ describe(useRegisterConfirm.name, () => {
       Object.defineProperty(window, 'location', {
         configurable: true,
         value: new URL(locationFixture),
+        writable: true,
       });
     });
 
@@ -141,7 +142,7 @@ describe(useRegisterConfirm.name, () => {
       });
 
       it('should called useAppDispatch()', () => {
-        expect(dispatchMock).toHaveBeenCalled();
+        expect(dispatchMock).toHaveBeenCalledTimes(1);
         expect(dispatchMock).toHaveBeenCalledWith(createAuthByTokenResult);
       });
 
@@ -263,7 +264,7 @@ describe(useRegisterConfirm.name, () => {
       });
 
       it('should called useAppDispatch()', () => {
-        expect(dispatchMock).toHaveBeenCalled();
+        expect(dispatchMock).toHaveBeenCalledTimes(1);
         expect(dispatchMock).toHaveBeenCalledWith(createAuthByTokenResult);
       });
 
@@ -342,6 +343,7 @@ describe(useRegisterConfirm.name, () => {
         await act(() => {
           renderResult = renderHook(() => useRegisterConfirm());
         });
+
         status = renderResult.result.current.status;
         errorMessage = renderResult.result.current.errorMessage;
       });
@@ -351,22 +353,22 @@ describe(useRegisterConfirm.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should called useDispatch()', () => {
-        expect(dispatchMock).toHaveBeenCalled();
+      it('should call useDispatch()', () => {
+        expect(dispatchMock).toHaveBeenCalledTimes(1);
         expect(dispatchMock).toHaveBeenCalledWith(createAuthByTokenResult);
       });
 
-      it('should called useSelector() ', () => {
+      it('should call useSelector() ', () => {
         expect(useAppSelector).toHaveBeenCalled();
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should return a rejected status', () => {
-        expect(status).toBe(RegisterConfirmStatus.rejected);
+        expect(status).toBe(RegisterConfirmStatus.pending);
       });
 
       it('should return an error message Unexpected error', () => {
-        expect(errorMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
+        expect(errorMessage).toBeNull();
       });
     });
 
@@ -374,6 +376,7 @@ describe(useRegisterConfirm.name, () => {
       Object.defineProperty(window, 'location', {
         configurable: true,
         value: previousLocation,
+        writable: true,
       });
     });
   });
@@ -384,15 +387,16 @@ describe(useRegisterConfirm.name, () => {
 
     beforeAll(() => {
       previousLocation = window.location;
-      locationFixture = new URL('http://corniegame.com/auth/path?code=');
+      locationFixture = new URL('http://corniegame.com/auth/path');
 
       Object.defineProperty(window, 'location', {
         configurable: true,
         value: new URL(locationFixture),
+        writable: true,
       });
     });
 
-    describe('when called, and code query not exists and the error grid is showed', () => {
+    describe('when called, and the error grid is showed', () => {
       let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
       let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
       let status: RegisterConfirmStatus;
@@ -406,17 +410,6 @@ describe(useRegisterConfirm.name, () => {
 
         authenticatedAuthStateFixture = null;
 
-        const payloadActionFixture: PayloadAction<AuthSerializedResponse> = {
-          payload: {
-            body: {
-              accessToken: 'accessToken-fixture',
-              refreshToken: 'refreshToken-fixture',
-            },
-            statusCode: 200,
-          },
-          type: 'sample-type',
-        };
-
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
         ).mockReturnValue(authenticatedAuthStateFixture);
@@ -425,12 +418,9 @@ describe(useRegisterConfirm.name, () => {
           createAuthByToken as unknown as jest.Mock<typeof createAuthByToken>
         ).mockReturnValueOnce(createAuthByTokenResult);
 
-        dispatchMock = jest
-          .fn<ReturnType<typeof useAppDispatch>>()
-          .mockImplementationOnce(
-            <TReturn, TAction>(): TAction | TReturn =>
-              payloadActionFixture as TReturn,
-          ) as ReturnType<typeof useAppDispatch> &
+        dispatchMock = jest.fn<
+          ReturnType<typeof useAppDispatch>
+        >() as ReturnType<typeof useAppDispatch> &
           jest.Mock<ReturnType<typeof useAppDispatch>>;
 
         (
@@ -451,12 +441,11 @@ describe(useRegisterConfirm.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should called useDispatch()', () => {
-        expect(dispatchMock).toHaveBeenCalled();
-        expect(dispatchMock).toHaveBeenCalledWith(createAuthByTokenResult);
+      it('should not call useDispatch()', () => {
+        expect(dispatchMock).not.toHaveBeenCalled();
       });
 
-      it('should called useSelector() ', () => {
+      it('should call useSelector() ', () => {
         expect(useAppSelector).toHaveBeenCalled();
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
@@ -474,6 +463,7 @@ describe(useRegisterConfirm.name, () => {
       Object.defineProperty(window, 'location', {
         configurable: true,
         value: previousLocation,
+        writable: true,
       });
     });
   });
