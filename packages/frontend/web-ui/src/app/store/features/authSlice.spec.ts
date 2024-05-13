@@ -15,6 +15,7 @@ import {
   CreateAuthByCredentialsParams,
   createAuthByCredentials,
 } from '../thunk/createAuthByCredentials';
+import { createAuthByRefreshToken } from '../thunk/createAuthByRefreshToken';
 import { createAuthByToken } from '../thunk/createAuthByToken';
 import authSlice from './authSlice';
 
@@ -292,6 +293,124 @@ describe('authSlice', () => {
         payloadFixture,
         'arg-1-fixture',
         createAuthByCredentialsParamsFixture,
+      );
+    });
+
+    describe('when authSlice.reducer() is called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = authSlice.reducer(stateFixture, actionFixture);
+      });
+
+      it('should return a state', () => {
+        const expected: AuthState = {
+          status: AuthStateStatus.nonAuthenticated,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having a non authenticated state and a createAuthByRefreshToken pending action', () => {
+    let stateFixture: NonAuthenticatedAuthState;
+    let actionFixture: PayloadAction<undefined>;
+
+    beforeAll(() => {
+      stateFixture = {
+        status: AuthStateStatus.nonAuthenticated,
+      };
+      actionFixture = createAuthByRefreshToken.pending('arg-1-fixture');
+    });
+
+    describe('when authSlice.reducer() is called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = authSlice.reducer(stateFixture, actionFixture);
+      });
+
+      it('should return a state', () => {
+        const expected: AuthState = {
+          status: AuthStateStatus.pending,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having a pending state and a createAuthByRefreshToken fulfilled action with an HTTP OK status code 200', () => {
+    let stateFixture: PendingAuthState;
+    let actionFixture: PayloadAction<AuthSerializedResponse>;
+    let payloadFixture: SerializableResponse<apiModels.AuthV2, 200>;
+
+    beforeAll(() => {
+      payloadFixture = {
+        body: {
+          accessToken: 'accessToken-fixture',
+          refreshToken: 'refreshToken-fixture',
+        },
+        statusCode: 200,
+      };
+      stateFixture = {
+        status: AuthStateStatus.pending,
+      };
+
+      actionFixture = createAuthByRefreshToken.fulfilled(
+        payloadFixture,
+        'arg-1-fixture',
+      );
+    });
+
+    describe('when authSlice.reducer() is called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = authSlice.reducer(stateFixture, actionFixture);
+      });
+
+      it('should return a state', () => {
+        const expected: AuthState = {
+          accessToken: payloadFixture.body.accessToken,
+          refreshToken: payloadFixture.body.refreshToken,
+          status: AuthStateStatus.authenticated,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+
+      it('should save accessToken and refreshToken in Local Storage', () => {
+        const accessTokenStorage: string | null =
+          window.localStorage.getItem('accessToken');
+        const refreshTokenStorage: string | null =
+          window.localStorage.getItem('refreshToken');
+
+        expect(accessTokenStorage).toBe(payloadFixture.body.accessToken);
+        expect(refreshTokenStorage).toBe(payloadFixture.body.refreshToken);
+      });
+    });
+  });
+
+  describe('having a pending state and a createAuthByRefreshToken fulfilled action with an HTTP BAD REQUEST status code 400', () => {
+    let stateFixture: PendingAuthState;
+    let actionFixture: PayloadAction<AuthSerializedResponse>;
+    let payloadFixture: SerializableResponse<apiModels.ErrorV1, 400>;
+
+    beforeAll(() => {
+      payloadFixture = {
+        body: {
+          description: 'error-fixture',
+        },
+        statusCode: 400,
+      };
+      stateFixture = {
+        status: AuthStateStatus.pending,
+      };
+      actionFixture = createAuthByRefreshToken.fulfilled(
+        payloadFixture,
+        'arg-1-fixture',
       );
     });
 
