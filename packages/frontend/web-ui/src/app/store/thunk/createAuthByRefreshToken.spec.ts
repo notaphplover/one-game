@@ -8,14 +8,12 @@ import { buildSerializableResponse } from '../../../common/http/helpers/buildSer
 import { AuthResponse } from '../../../common/http/models/AuthResponse';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import { httpClient } from '../../../common/http/services/HttpService';
-import { AuthenticatedAuthState } from '../helpers/models/AuthState';
-import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import { useAppSelector } from '../hooks';
 import { createAuthByRefreshToken } from './createAuthByRefreshToken';
 
 describe('createAuthByRefreshToken', () => {
   describe('when called', () => {
-    let authenticatedAuthStateFixture: AuthenticatedAuthState;
+    let refreshTokenFixture: string;
     let dispatchMock: jest.Mock;
     let getStateMock: jest.Mock;
     let extraMock: unknown;
@@ -24,11 +22,7 @@ describe('createAuthByRefreshToken', () => {
     let result: unknown;
 
     beforeAll(async () => {
-      authenticatedAuthStateFixture = {
-        accessToken: 'accessToken-fixture',
-        refreshToken: 'refreshToken-fixture',
-        status: AuthStateStatus.authenticated,
-      };
+      refreshTokenFixture = 'refreshToken-fixture';
 
       dispatchMock = jest.fn();
       getStateMock = jest.fn();
@@ -55,7 +49,7 @@ describe('createAuthByRefreshToken', () => {
 
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValue(authenticatedAuthStateFixture);
+      ).mockReturnValue(refreshTokenFixture);
 
       (
         httpClient.endpoints.createAuthV2 as jest.Mock<
@@ -66,7 +60,7 @@ describe('createAuthByRefreshToken', () => {
         buildSerializableResponse as jest.Mock<typeof buildSerializableResponse>
       ).mockReturnValueOnce(serializableResponseFixture);
 
-      result = await createAuthByRefreshToken()(
+      result = await createAuthByRefreshToken(refreshTokenFixture)(
         dispatchMock,
         getStateMock,
         extraMock,
@@ -101,7 +95,7 @@ describe('createAuthByRefreshToken', () => {
       expect(httpClient.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
       expect(httpClient.endpoints.createAuthV2).toHaveBeenCalledWith(
         {
-          authorization: `Bearer ${authenticatedAuthStateFixture.refreshToken}`,
+          authorization: `Bearer ${refreshTokenFixture}`,
         },
         undefined,
       );

@@ -44,12 +44,11 @@ function createAuthRefreshTokenFulfilledReducer(
 ): AuthState {
   switch (action.payload.statusCode) {
     case OK:
-      window.localStorage.removeItem('accessToken');
       window.localStorage.setItem(
         'accessToken',
         action.payload.body.accessToken,
       );
-      window.localStorage.removeItem('refreshToken');
+
       window.localStorage.setItem(
         'refreshToken',
         action.payload.body.refreshToken,
