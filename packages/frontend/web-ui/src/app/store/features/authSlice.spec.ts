@@ -321,7 +321,10 @@ describe('authSlice', () => {
       stateFixture = {
         status: AuthStateStatus.nonAuthenticated,
       };
-      actionFixture = createAuthByRefreshToken.pending('arg-1-fixture');
+      actionFixture = createAuthByRefreshToken.pending(
+        'arg-1-fixture',
+        'arg-2-fixture',
+      );
     });
 
     describe('when authSlice.reducer() is called', () => {
@@ -361,6 +364,7 @@ describe('authSlice', () => {
       actionFixture = createAuthByRefreshToken.fulfilled(
         payloadFixture,
         'arg-1-fixture',
+        'arg-2-fixture',
       );
     });
 
@@ -411,6 +415,7 @@ describe('authSlice', () => {
       actionFixture = createAuthByRefreshToken.fulfilled(
         payloadFixture,
         'arg-1-fixture',
+        'arg-2-fixture',
       );
     });
 
