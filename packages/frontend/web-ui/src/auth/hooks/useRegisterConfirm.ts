@@ -30,16 +30,32 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
     selectAuthenticatedAuth,
   );
 
+  const handleResponse: (
+    response: RegisterConfirmSerializedResponse,
+  ) => void = (response: RegisterConfirmSerializedResponse): void => {
+    switch (response.statusCode) {
+      case OK:
+        setStatus(RegisterConfirmStatus.fulfilled);
+        break;
+      case UNAUTHORIZED:
+        setErrorMessage(UNAUTHORIZED_ERROR_MESSAGE);
+        setStatus(RegisterConfirmStatus.rejected);
+        break;
+      default:
+        setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        setStatus(RegisterConfirmStatus.rejected);
+    }
+  };
+
   useEffect(() => {
     void (async () => {
       switch (status) {
         case RegisterConfirmStatus.idle:
-          setStatus(RegisterConfirmStatus.pending);
-
           if (codeParam === null) {
-            setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
             setStatus(RegisterConfirmStatus.rejected);
+            setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
           } else {
+            setStatus(RegisterConfirmStatus.pending);
             await dispatch(createAuthByToken(codeParam));
           }
           break;
@@ -49,25 +65,11 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
               const response: RegisterConfirmSerializedResponse =
                 await updateUserMe(auth.accessToken);
 
-              switch (response.statusCode) {
-                case OK:
-                  setStatus(RegisterConfirmStatus.fulfilled);
-                  break;
-                case UNAUTHORIZED:
-                  setErrorMessage(UNAUTHORIZED_ERROR_MESSAGE);
-                  setStatus(RegisterConfirmStatus.rejected);
-                  break;
-                default:
-                  setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
-                  setStatus(RegisterConfirmStatus.rejected);
-              }
+              handleResponse(response);
             } catch (_) {
               setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
               setStatus(RegisterConfirmStatus.rejected);
             }
-          } else {
-            setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
-            setStatus(RegisterConfirmStatus.rejected);
           }
           break;
         default:

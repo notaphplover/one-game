@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   openapi_doc_server:
     image: swaggerapi/swagger-ui:v5.17.9

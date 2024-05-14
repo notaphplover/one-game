@@ -11,3 +11,9 @@ Feature: Create auth
         Given a create auth request for "Bob"
         When the create auth request is sent
         Then the create auth response should contain a valid user auth
+
+    Rule: User auth is created from valid refresh token credentials
+      Scenario: Authenticated user creates an auth
+        Given a create auth request from refresh token for "Bob"
+        When the create auth request is sent
+        Then the create auth response should contain a valid user auth

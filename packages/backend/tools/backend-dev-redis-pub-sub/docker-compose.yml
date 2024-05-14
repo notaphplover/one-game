@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   pubSub:
     image: redis:7-alpine
