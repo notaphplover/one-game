@@ -1,11 +1,11 @@
-import { useSingleApiCall } from '../../../common/hooks/useSingleApiCall';
+import { useSingleAuthorizedApiCall } from '../../../common/hooks/useSingleAuthorizedApiCall';
 import { buildErrorMessage } from './utils/buildErrorMessage';
 import { buildRequestParams } from './utils/buildRequestParams';
 import { buildResult } from './utils/buildResult';
 import { useContext } from './utils/useContext';
 
 export const useGetGames = () =>
-  useSingleApiCall({
+  useSingleAuthorizedApiCall({
     buildErrorMessage,
     buildRequestParams,
     buildResult,
