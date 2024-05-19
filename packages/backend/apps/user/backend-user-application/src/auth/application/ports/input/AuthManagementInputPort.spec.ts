@@ -1153,7 +1153,7 @@ describe(AuthManagementInputPort.name, () => {
         const expected: RefreshTokenFindQuery = {
           active: true,
           date: {
-            from: new Date(refreshTokenJwtPayloadFixture.iat),
+            from: new Date(refreshTokenJwtPayloadFixture.iat * 1000),
           },
           familyId: refreshTokenJwtPayloadFixture.familyId,
           limit: 2,
@@ -1217,7 +1217,7 @@ describe(AuthManagementInputPort.name, () => {
         const expected: RefreshTokenFindQuery = {
           active: true,
           date: {
-            from: new Date(refreshTokenJwtPayloadFixture.iat),
+            from: new Date(refreshTokenJwtPayloadFixture.iat * 1000),
           },
           familyId: refreshTokenJwtPayloadFixture.familyId,
           limit: 2,
@@ -1292,7 +1292,7 @@ describe(AuthManagementInputPort.name, () => {
         const expected: RefreshTokenFindQuery = {
           active: true,
           date: {
-            from: new Date(refreshTokenJwtPayloadFixture.iat),
+            from: new Date(refreshTokenJwtPayloadFixture.iat * 1000),
           },
           familyId: refreshTokenJwtPayloadFixture.familyId,
           limit: 2,
@@ -1397,7 +1397,7 @@ describe(AuthManagementInputPort.name, () => {
         const expected: RefreshTokenFindQuery = {
           active: true,
           date: {
-            from: new Date(refreshTokenJwtPayloadFixture.iat),
+            from: new Date(refreshTokenJwtPayloadFixture.iat * 1000),
           },
           familyId: refreshTokenJwtPayloadFixture.familyId,
           limit: 2,
@@ -1424,7 +1424,7 @@ describe(AuthManagementInputPort.name, () => {
           findQuery: {
             active: true,
             date: {
-              from: new Date(refreshTokenJwtPayloadFixture.iat),
+              from: new Date(refreshTokenJwtPayloadFixture.iat * 1000),
             },
             familyId: refreshTokenJwtPayloadFixture.familyId,
           },
