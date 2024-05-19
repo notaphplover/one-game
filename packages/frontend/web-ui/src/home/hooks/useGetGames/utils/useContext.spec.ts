@@ -4,9 +4,9 @@ jest.mock('../../../../app/store/hooks');
 
 import { useAppSelector } from '../../../../app/store/hooks';
 import { UseGetGamesContext } from '../models/UseGetGamesContext';
-import { buildContext } from './buildContext';
+import { useContext } from './useContext';
 
-describe(buildContext.name, () => {
+describe(useContext.name, () => {
   describe('when called, and useAppSelector returns an authenticated AuthState', () => {
     let tokenFixture: string;
 
@@ -19,7 +19,7 @@ describe(buildContext.name, () => {
         tokenFixture,
       );
 
-      result = buildContext();
+      result = useContext();
     });
 
     afterAll(() => {
@@ -32,8 +32,10 @@ describe(buildContext.name, () => {
     });
 
     it('should return token', () => {
-      const expected: UseGetGamesContext = {
-        token: tokenFixture,
+      const expected: { context: UseGetGamesContext } = {
+        context: {
+          token: tokenFixture,
+        },
       };
 
       expect(result).toStrictEqual(expected);
@@ -48,7 +50,7 @@ describe(buildContext.name, () => {
         null,
       );
 
-      result = buildContext();
+      result = useContext();
     });
 
     afterAll(() => {
@@ -61,8 +63,10 @@ describe(buildContext.name, () => {
     });
 
     it('should return null', () => {
-      const expected: UseGetGamesContext = {
-        token: null,
+      const expected: { context: UseGetGamesContext } = {
+        context: {
+          token: null,
+        },
       };
 
       expect(result).toStrictEqual(expected);
