@@ -36,6 +36,8 @@ import {
   userPersistenceOutputPortSymbol,
 } from '../../../../users/application/ports/output/UserPersistenceOutputPort';
 
+const MS_PER_SECOND: number = 1000;
+
 @Injectable()
 export class AuthManagementInputPort {
   readonly #bcryptHashProviderOutputPort: BcryptHashProviderOutputPort;
@@ -133,7 +135,7 @@ export class AuthManagementInputPort {
     return {
       active: true,
       date: {
-        from: new Date(refreshTokenJwtPayload.iat),
+        from: new Date(refreshTokenJwtPayload.iat * MS_PER_SECOND),
       },
       familyId: refreshTokenJwtPayload.familyId,
     };
