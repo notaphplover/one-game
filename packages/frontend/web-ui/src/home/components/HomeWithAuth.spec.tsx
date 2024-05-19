@@ -1,7 +1,7 @@
 import { beforeAll, afterAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../hooks/useGetGames');
 jest.mock('../../game/components/GameList');
+jest.mock('../../game/hooks/useGetGames');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
@@ -15,8 +15,8 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Either } from '../../common/models/Either';
 import { GameList } from '../../game/components/GameList';
-import { useGetGames } from '../hooks/useGetGames';
-import { UseGetGamesParams } from '../hooks/useGetGames/models/UseGetGamesParams';
+import { useGetGames } from '../../game/hooks/useGetGames';
+import { UseGetGamesParams } from '../../game/hooks/useGetGames/models/UseGetGamesParams';
 import { HomeWithAuth } from './HomeWithAuth';
 
 const NUMBER_TIMES_EXECUTION: number = 2;

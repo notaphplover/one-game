@@ -13,9 +13,9 @@ import {
 
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { GameList } from '../../game/components/GameList';
+import { useGetGames } from '../../game/hooks/useGetGames';
+import { UseGetGamesParams } from '../../game/hooks/useGetGames/models/UseGetGamesParams';
 import { GameStatus } from '../../game/models/GameStatus';
-import { useGetGames } from '../hooks/useGetGames';
-import { UseGetGamesParams } from '../hooks/useGetGames/models/UseGetGamesParams';
 
 export const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
 const GAME_STATUS_ACTIVE: GameStatus = 'active';
