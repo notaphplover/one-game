@@ -16,7 +16,7 @@ import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus'
 import { useAppSelector } from '../../app/store/hooks';
 import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
-import { SingleApiCallResult } from '../../common/helpers/useSingleApiCall';
+import { SingleApiCallResult } from '../../common/hooks/useSingleApiCall';
 import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
 import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
 import { Either } from '../../common/models/Either';
