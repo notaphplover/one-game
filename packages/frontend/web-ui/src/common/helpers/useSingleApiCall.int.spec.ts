@@ -3,22 +3,18 @@ jest.mock('../http/services/HttpService');
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { HttpClient } from '@cornie-js/api-http-client';
-import {
-  RenderHookResult,
-  act,
-  renderHook,
-  waitFor,
-} from '@testing-library/react';
+import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { act } from 'react';
 
 import { HttpApiParams } from '../http/models/HttpApiParams';
 import { HttpApiResult } from '../http/models/HttpApiResult';
 import { httpClient } from '../http/services/HttpService';
 import { Either } from '../models/Either';
 import {
-  BuildSingleApiCallHookParams,
-  SingleApiCallHookResult,
-  buildSingleApiCallHook,
-} from './buildSingleApiCallHook';
+  UseSingleApiCallParams,
+  SingleApiCallResult,
+  useSingleApiCall,
+} from './useSingleApiCall';
 
 type TestContext = void;
 type TestParams = void;
@@ -28,23 +24,18 @@ interface TestResult {
   foo: string;
 }
 
-describe(buildSingleApiCallHook.name, () => {
+describe(useSingleApiCall.name, () => {
   let buildSingleApiCallHookParamsMock: jest.Mocked<
-    BuildSingleApiCallHookParams<
-      TestContext,
-      TestParams,
-      TestEndpoint,
-      TestResult
-    >
+    UseSingleApiCallParams<TestContext, TestParams, TestEndpoint, TestResult>
   >;
 
   beforeAll(() => {
     buildSingleApiCallHookParamsMock = {
-      buildContext: jest.fn(),
       buildErrorMessage: jest.fn(),
       buildRequestParams: jest.fn(),
       buildResult: jest.fn(),
       endpoint: 'createAuth',
+      useContext: jest.fn(),
     };
   });
 
@@ -55,7 +46,7 @@ describe(buildSingleApiCallHook.name, () => {
     let resultFixture: Either<string, TestResult>;
 
     let renderHookResult: RenderHookResult<
-      SingleApiCallHookResult<TestParams, TestResult>,
+      SingleApiCallResult<TestParams, TestResult>,
       unknown
     >;
 
@@ -72,9 +63,9 @@ describe(buildSingleApiCallHook.name, () => {
         },
       };
 
-      buildSingleApiCallHookParamsMock.buildContext.mockReturnValueOnce(
-        contextFixture,
-      );
+      buildSingleApiCallHookParamsMock.useContext.mockReturnValue({
+        context: contextFixture,
+      });
       buildSingleApiCallHookParamsMock.buildRequestParams.mockReturnValueOnce(
         httpApiParamsFixture,
       );
@@ -87,7 +78,7 @@ describe(buildSingleApiCallHook.name, () => {
       ].mockResolvedValueOnce(httpApiResultFixture);
 
       renderHookResult = renderHook(() =>
-        buildSingleApiCallHook(buildSingleApiCallHookParamsMock),
+        useSingleApiCall(buildSingleApiCallHookParamsMock),
       );
 
       act(() => {
@@ -102,6 +93,8 @@ describe(buildSingleApiCallHook.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+
+      buildSingleApiCallHookParamsMock.useContext.mockReset();
     });
 
     it('should return a result', () => {

@@ -1,11 +1,11 @@
 import { selectAuthToken } from '../../../../app/store/features/authSlice';
 import { useAppSelector } from '../../../../app/store/hooks';
-import { UseGetGamesContext } from '../models/UseGetGamesContext';
+import { UseCreateGameContext } from '../models/UseCreateGameContext';
 
-export function buildContext(): UseGetGamesContext {
+export function useContext(): { context: UseCreateGameContext } {
   const token: string | null = useAppSelector(selectAuthToken);
 
   return {
-    token,
+    context: { token },
   };
 }

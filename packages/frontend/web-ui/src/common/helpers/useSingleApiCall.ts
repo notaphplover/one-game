@@ -6,60 +6,55 @@ import { HttpApiResult } from '../http/models/HttpApiResult';
 import { httpClient } from '../http/services/HttpService';
 import { Either } from '../models/Either';
 
-export enum ApiHookStatus {
+export enum ApiCallStatus {
   idle,
   pending,
 }
 
-export interface BuildSingleApiCallHookParams<
+export interface UseSingleApiCallParams<
   TContext,
   TParams,
   TEndpoint extends keyof HttpClientEndpoints,
   TResult,
 > {
   endpoint: TEndpoint;
-  buildContext(): TContext;
   buildErrorMessage(err: unknown): string;
   buildRequestParams(
     context: TContext,
     params: TParams,
   ): HttpApiParams<TEndpoint>;
   buildResult(httpResponse: HttpApiResult<TEndpoint>): Either<string, TResult>;
+  useContext(): { context: TContext };
 }
 
-export interface SingleApiCallHookResult<TParams, TResult> {
+export interface SingleApiCallResult<TParams, TResult> {
   result: Either<string, TResult> | null;
   call(params: TParams): void;
 }
 
-export function buildSingleApiCallHook<
+export function useSingleApiCall<
   TContext,
   TParams,
   TEndpoint extends keyof HttpClientEndpoints,
   TResult,
 >(
-  buildParams: BuildSingleApiCallHookParams<
-    TContext,
-    TParams,
-    TEndpoint,
-    TResult
-  >,
-): SingleApiCallHookResult<TParams, TResult> {
-  const context: TContext = buildParams.buildContext();
+  buildParams: UseSingleApiCallParams<TContext, TParams, TEndpoint, TResult>,
+): SingleApiCallResult<TParams, TResult> {
+  const { context }: { context: TContext } = buildParams.useContext();
 
   const [result, setResult] = useState<Either<string, TResult> | null>(null);
   const [params, setParams] = useState<TParams | null>(null);
-  const [status, setStatus] = useState<ApiHookStatus>(ApiHookStatus.idle);
+  const [status, setStatus] = useState<ApiCallStatus>(ApiCallStatus.idle);
 
   function call(params: TParams): void {
-    if (status !== ApiHookStatus.idle) {
+    if (status !== ApiCallStatus.idle) {
       throw new Error(
         'Unable to call. Reason: a pending request is being handled',
       );
     }
 
     setParams(params);
-    setStatus(ApiHookStatus.pending);
+    setStatus(ApiCallStatus.pending);
   }
 
   async function handleRequest(): Promise<HttpApiResult<TEndpoint>> {
@@ -76,7 +71,7 @@ export function buildSingleApiCallHook<
   useEffect(() => {
     void (async () => {
       switch (status) {
-        case ApiHookStatus.pending:
+        case ApiCallStatus.pending:
           try {
             const httpResult: HttpApiResult<TEndpoint> = await handleRequest();
 
@@ -87,13 +82,13 @@ export function buildSingleApiCallHook<
               value: buildParams.buildErrorMessage(error),
             });
           } finally {
-            setStatus(ApiHookStatus.idle);
+            setStatus(ApiCallStatus.idle);
           }
           break;
         default:
       }
     })();
-  }, [status, context]);
+  }, [status]);
 
   return {
     call,
