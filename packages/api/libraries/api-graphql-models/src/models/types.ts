@@ -521,7 +521,7 @@ export type DirectiveResolverFn<
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> =
   ResolversObject<{
     Card:
       | DrawCard
@@ -534,27 +534,27 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> =
   }>;
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> =
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   ResolversObject<{
     AuthMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
-      passGameTurn: Maybe<RefType['Game']>;
-      playGameCards: Maybe<RefType['Game']>;
+      passGameTurn: Maybe<_RefType['Game']>;
+      playGameCards: Maybe<_RefType['Game']>;
     };
     GameMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
-      passGameTurn: Maybe<RefType['Game']>;
-      playGameCards: Maybe<RefType['Game']>;
+      passGameTurn: Maybe<_RefType['Game']>;
+      playGameCards: Maybe<_RefType['Game']>;
     };
     GameQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
-      gameById: Maybe<RefType['Game']>;
-      myGames: Array<RefType['Game']>;
+      gameById: Maybe<_RefType['Game']>;
+      myGames: Array<_RefType['Game']>;
     };
     UserMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
-      passGameTurn: Maybe<RefType['Game']>;
-      playGameCards: Maybe<RefType['Game']>;
+      passGameTurn: Maybe<_RefType['Game']>;
+      playGameCards: Maybe<_RefType['Game']>;
     };
     UserQuery: Omit<RootQuery, 'gameById' | 'myGames'> & {
-      gameById: Maybe<RefType['Game']>;
-      myGames: Array<RefType['Game']>;
+      gameById: Maybe<_RefType['Game']>;
+      myGames: Array<_RefType['Game']>;
     };
   }>;
 
