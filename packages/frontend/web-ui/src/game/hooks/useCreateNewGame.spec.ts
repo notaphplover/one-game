@@ -16,6 +16,7 @@ import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus'
 import { useAppSelector } from '../../app/store/hooks';
 import { getUserMeId } from '../../common/helpers/getUserMeId';
 import { joinGame } from '../../common/helpers/joinGame';
+import { SingleApiCallResult } from '../../common/hooks/useSingleApiCall';
 import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
 import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
 import { Either } from '../../common/models/Either';
@@ -24,7 +25,6 @@ import { CreateNewGameResult } from '../models/CreateNewGameResult';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { GameOptions } from '../models/GameOptions';
-import { SingleApiCallHookResult } from './../../common/helpers/buildSingleApiCallHook';
 import { FormNewGameValidationErrorResult } from './../models/FormNewGameValidationErrorResult';
 import { useCreateGame } from './useCreateGame';
 import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './useCreateGame/utils/unexpectedErrorMessage';
@@ -37,7 +37,7 @@ describe(useCreateNewGame.name, () => {
   let serializableUserIdFixture: UserMeSerializedResponse;
   let serializableJoinGameFixture: JoinGameSerializedResponse;
   let callNewGameMock: jest.Mock<(params: FormFieldsNewGame) => void>;
-  let singleApiCallHookResultFixture: SingleApiCallHookResult<
+  let singleApiCallHookResultFixture: SingleApiCallResult<
     FormFieldsNewGame,
     apiModels.NonStartedGameV1
   >;
@@ -202,7 +202,7 @@ describe(useCreateNewGame.name, () => {
   describe('when called, and API returns an OK response', () => {
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
     let status: CreateNewGameStatus;
-    let singleApiCallHookFixture: SingleApiCallHookResult<
+    let singleApiCallHookFixture: SingleApiCallResult<
       FormFieldsNewGame,
       apiModels.NonStartedGameV1
     >;
@@ -295,7 +295,7 @@ describe(useCreateNewGame.name, () => {
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
     let backendError: string | null;
     let status: CreateNewGameStatus;
-    let singleApiCallHookFixture: SingleApiCallHookResult<
+    let singleApiCallHookFixture: SingleApiCallResult<
       FormFieldsNewGame,
       apiModels.NonStartedGameV1
     >;

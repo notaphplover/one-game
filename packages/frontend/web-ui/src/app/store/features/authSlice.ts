@@ -95,6 +95,10 @@ export const authSlice = createSlice({
   reducers: {},
 });
 
+export const selectAuth = (state: RootState): AuthState => {
+  return state.auth;
+};
+
 export const selectAuthToken = (state: RootState): string | null => {
   return state.auth.status === AuthStateStatus.authenticated
     ? state.auth.accessToken
