@@ -1,8 +1,8 @@
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
+jest.mock('../../common/helpers/isFullfilledPayloadAction');
 jest.mock('../../common/helpers/validateEmail');
 jest.mock('../../common/helpers/validatePassword');
-jest.mock('../helpers/isFullfilledPayloadAction');
 jest.mock('../../app/store/thunk/createAuthByCredentials');
 jest.mock('../../app/store/hooks');
 
@@ -16,10 +16,10 @@ import {
 
 import { useAppDispatch } from '../../app/store/hooks';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
+import { isFullfilledPayloadAction } from '../../common/helpers/isFullfilledPayloadAction';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
-import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
 import { FormFieldsLogin } from '../models/FormFieldsLogin';
 import { FormValidationResult } from '../models/FormValidationResult';
 import { LoginStatus } from '../models/LoginStatus';

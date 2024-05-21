@@ -2,11 +2,13 @@ import { HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { MutexInterface } from 'async-mutex';
 import { useEffect, useState } from 'react';
 
+import logout from '../../app/store/actions/logout';
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { AppDispatch } from '../../app/store/store';
 import { createAuthByRefreshToken } from '../../app/store/thunk/createAuthByRefreshToken';
-import { UNAUTHORIZED } from '../http/helpers/httpCodes';
+import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
+import { OK, UNAUTHORIZED } from '../http/helpers/httpCodes';
 import { refreshTokenMutex } from '../http/helpers/refresTokenMutex';
 import { HttpApiResult } from '../http/models/HttpApiResult';
 import { httpClient } from '../http/services/HttpService';
@@ -92,7 +94,16 @@ export function useSingleAuthorizedApiCall<
         await refreshTokenMutex.acquire();
 
       try {
-        await dispatch(createAuthByRefreshToken(refreshToken));
+        const payloadAction = await dispatch(
+          createAuthByRefreshToken(refreshToken),
+        );
+
+        if (
+          !isFullfilledPayloadAction(payloadAction) ||
+          payloadAction.payload.statusCode !== OK
+        ) {
+          dispatch(logout());
+        }
       } finally {
         release();
       }
