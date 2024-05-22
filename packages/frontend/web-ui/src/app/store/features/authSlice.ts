@@ -6,6 +6,7 @@ import {
 
 import { OK } from '../../../common/http/helpers/httpCodes';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import logout from '../actions/logout';
 import { AuthState, AuthenticatedAuthState } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import type { RootState } from '../store';
@@ -72,6 +73,12 @@ function createAuthRejectedReducer(): AuthState {
   };
 }
 
+function logoutReducer(): AuthState {
+  return {
+    status: AuthStateStatus.nonAuthenticated,
+  };
+}
+
 const initialState: AuthState = createInitialState();
 
 export const authSlice = createSlice({
@@ -88,7 +95,8 @@ export const authSlice = createSlice({
         createAuthByRefreshToken.fulfilled,
         createAuthRefreshTokenFulfilledReducer,
       )
-      .addCase(createAuthByRefreshToken.rejected, createAuthRejectedReducer);
+      .addCase(createAuthByRefreshToken.rejected, createAuthRejectedReducer)
+      .addCase(logout, logoutReducer);
   },
   initialState,
   name: 'auth',

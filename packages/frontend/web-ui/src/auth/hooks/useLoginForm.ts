@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { useAppDispatch } from '../../app/store/hooks';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
+import { isFullfilledPayloadAction } from '../../common/helpers/isFullfilledPayloadAction';
 import { validateEmail } from '../../common/helpers/validateEmail';
 import { validatePassword } from '../../common/helpers/validatePassword';
 import { OK, UNAUTHORIZED } from '../../common/http/helpers/httpCodes';
 import { Either } from '../../common/models/Either';
-import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction';
 import { FormValidationResult } from '../models/FormValidationResult';
 import {
   UseLoginFormParams,

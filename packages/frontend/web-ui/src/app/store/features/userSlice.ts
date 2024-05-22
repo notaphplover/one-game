@@ -6,6 +6,7 @@ import {
 
 import { OK } from '../../../common/http/helpers/httpCodes';
 import { UserMeSerializedResponse } from '../../../common/http/models/UserMeSerializedResponse';
+import logout from '../actions/logout';
 import { getInitialUserState } from '../helpers/getInitialUserState';
 import { FulfilledUserState, UserState } from '../helpers/models/UserState';
 import { UserStateStatus } from '../helpers/models/UserStateStatus';
@@ -41,6 +42,12 @@ function getUserRejectedReducer(): UserState {
   };
 }
 
+function logoutReducer(): UserState {
+  return {
+    status: UserStateStatus.idle,
+  };
+}
+
 const initialState: UserState = getInitialUserState();
 
 export const userSlice = createSlice({
@@ -48,7 +55,8 @@ export const userSlice = createSlice({
     builder
       .addCase(getUserMe.pending, getUserPendingReducer)
       .addCase(getUserMe.fulfilled, getUserFulfilledReducer)
-      .addCase(getUserMe.rejected, getUserRejectedReducer);
+      .addCase(getUserMe.rejected, getUserRejectedReducer)
+      .addCase(logout, logoutReducer);
   },
   initialState,
   name: 'user',
