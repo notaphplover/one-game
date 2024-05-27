@@ -11,8 +11,8 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:import/errors',
-    'plugin:import/warnings',
     'plugin:import/typescript',
+    'plugin:import/warnings',
   ],
   globals: {
     Atomics: 'readonly',

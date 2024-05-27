@@ -66,12 +66,7 @@ export const userSlice = createSlice({
 export const selectFulfilledUser = (
   state: RootState,
 ): FulfilledUserState | null => {
-  return state.user.status === UserStateStatus.fulfilled
-    ? {
-        status: state.user.status,
-        userId: state.user.userId,
-      }
-    : null;
+  return state.user.status === UserStateStatus.fulfilled ? state.user : null;
 };
 
 export default userSlice;

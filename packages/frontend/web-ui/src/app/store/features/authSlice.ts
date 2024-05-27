@@ -74,6 +74,9 @@ function createAuthRejectedReducer(): AuthState {
 }
 
 function logoutReducer(): AuthState {
+  window.localStorage.removeItem('accessToken');
+  window.localStorage.removeItem('refreshToken');
+
   return {
     status: AuthStateStatus.nonAuthenticated,
   };
@@ -117,11 +120,7 @@ export const selectAuthenticatedAuth = (
   state: RootState,
 ): AuthenticatedAuthState | null => {
   return state.auth.status === AuthStateStatus.authenticated
-    ? {
-        accessToken: state.auth.accessToken,
-        refreshToken: state.auth.refreshToken,
-        status: state.auth.status,
-      }
+    ? state.auth
     : null;
 };
 
