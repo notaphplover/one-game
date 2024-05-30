@@ -11,8 +11,8 @@ import {
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { Login } from '../../auth/pages/Login';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { CheckingGame } from '../components/CheckingGame';
 import { useJoinExistingGame } from '../hooks/useJoinExistingGame';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 
@@ -20,15 +20,15 @@ export const JoinExistingGame = (): React.JSX.Element => {
   const { status, errorMessage } = useJoinExistingGame();
 
   const getJoinExistinGameOkDisplay = (): string => {
-    return 'none';
+    return status === JoinExistingGameStatus.fulfilled ? '' : 'none';
   };
 
   const getJoinExistinGameErrorDisplay = (): string => {
-    return 'none';
+    return status === JoinExistingGameStatus.rejected ? '' : 'none';
   };
 
   if (status === JoinExistingGameStatus.pending) {
-    return <Login />;
+    return <CheckingGame />;
   }
 
   return (
@@ -57,16 +57,17 @@ export const JoinExistingGame = (): React.JSX.Element => {
 
         <Grid item>
           <Box className="box-shadow join-existing-game-grid">
-            <Typography variant="h5" className="register-form-title">
-              {'Game join'}
-            </Typography>
-
             <Grid container>
               <Grid
                 className="join-existing-game-ok"
                 container
                 display={getJoinExistinGameOkDisplay()}
               >
+                <Grid item xs={12}>
+                  <Typography variant="h5" className="join-existing-game-title">
+                    {'Game joined'}
+                  </Typography>
+                </Grid>
                 <Grid item xs={12}>
                   <Box className="join-existing-game-success">
                     <Alert severity="success">
@@ -81,6 +82,11 @@ export const JoinExistingGame = (): React.JSX.Element => {
                 container
                 display={getJoinExistinGameErrorDisplay()}
               >
+                <Grid item xs={12}>
+                  <Typography variant="h5" className="join-existing-game-title">
+                    {'Game not joined'}
+                  </Typography>
+                </Grid>
                 <Grid item xs={12}>
                   <Box className="join-existing-game-error">
                     <Alert severity="error">

@@ -9,6 +9,10 @@
   margin: 0rem 2rem;
 }
 
+.join-existing-game-title {
+  padding-bottom: 1rem;
+}
+
 @media (min-width: var.$sm) {
   .join-existing-game-grid {
     margin: 0;
@@ -18,11 +22,13 @@
 
 .join-existing-game-success {
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
 .join-existing-game-error {
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
