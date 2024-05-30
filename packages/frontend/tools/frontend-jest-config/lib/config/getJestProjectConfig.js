@@ -19,12 +19,14 @@ function getJestProjectConfig(projectName, testMatch, testPathIgnorePatterns) {
         statements: 70,
       },
     },
-    moduleFileExtensions: ['ts', 'js', 'json'],
+    moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx'],
     rootDir: '.',
     roots: [projectRoot],
-    testEnvironment: 'node',
+    setupFiles: ['@cornie-js/frontend-jest-config/setup'],
+    testEnvironment: 'jest-environment-jsdom',
     testMatch: testMatch,
     testPathIgnorePatterns: testPathIgnorePatterns,
+    transform: { '\\.[jt]sx?$': 'babel-jest' },
   };
 
   return projectConfig;

@@ -4,22 +4,17 @@ import getTestMatch from './getTestMatch.js';
 /**
  * @param { !string } projectName Jest project's name
  * @param { !Array<string> } testPathIgnorePatterns Expressions to match to ignored file paths by jest
- * @param { ?string } extension Test extension to match
+ * @param { !Array<string> } extensions Test extension to match
  * @returns @returns { !import("jest").Config } Jest config
  */
 function getJestTsProjectConfig(
   projectName,
   testPathIgnorePatterns,
-  extension,
+  extensions,
 ) {
-  const testMatch = getTestMatch(extension, true);
+  const testMatch = getTestMatch(extensions, true);
 
-  return {
-    ...getJestProjectConfig(projectName, testMatch, testPathIgnorePatterns),
-    transform: {
-      '^.+\\.ts?$': 'ts-jest',
-    },
-  };
+  return getJestProjectConfig(projectName, testMatch, testPathIgnorePatterns);
 }
 
 export default getJestTsProjectConfig;
