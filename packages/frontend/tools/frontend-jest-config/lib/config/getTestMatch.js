@@ -1,19 +1,26 @@
 import projectRoot from './projectRoot.js';
 
 /**
- * @param { !string } testExtension Test extension files
+ * @param { !Array.<string> } testExtensions Test extension files
  * @param { !boolean } isTargetingSource True if test are under the source folder
  * @returns { !Array.<string> }
  */
-function getTestMatch(testExtension, isTargetingSource) {
+function getTestMatch(testExtensions, isTargetingSource) {
   let testMatch;
 
   if (isTargetingSource) {
-    testMatch = [`${projectRoot}/src/**/*${testExtension}`];
+    testMatch = testExtensions.map(
+      (testExtension) => `${projectRoot}/src/**/*${testExtension}`,
+    );
   } else {
     testMatch = [
-      `${projectRoot}/{dist,lib}/*${testExtension}`,
-      `${projectRoot}/{dist,lib}/!(esm)/**/*${testExtension}`,
+      ...testExtensions.map(
+        (testExtension) => `${projectRoot}/{dist,lib}/*${testExtension}`,
+      ),
+      ...testExtensions.map(
+        (testExtension) =>
+          `${projectRoot}/{dist,lib}/!(cjs)/**/*${testExtension}`,
+      ),
     ];
   }
 
