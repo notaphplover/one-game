@@ -76,6 +76,31 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         from: jest.fn().mockReturnThis(),
         getParameters: jest.fn().mockReturnThis(),
         getQuery: jest.fn().mockReturnValue(queryFixture),
+        innerJoin: jest
+          .fn<
+            (
+              subQueryFactory: (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                qb: SelectQueryBuilder<any>,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ) => SelectQueryBuilder<any>,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ) => SelectQueryBuilder<any>
+          >()
+          .mockImplementation(
+            (
+              subQueryFactory: (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                qb: SelectQueryBuilder<any>,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ) => SelectQueryBuilder<any>,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ): SelectQueryBuilder<any> => {
+              subQueryFactory(queryBuilderMock);
+              return queryBuilderMock;
+            },
+          ) as unknown,
+        leftJoin: jest.fn().mockReturnThis(),
         leftJoinAndSelect: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         offset: jest.fn().mockReturnThis(),
@@ -121,9 +146,9 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         it('should call queryBuilder.andWhere()', () => {
           expect(queryBuilderMock.andWhere).toHaveBeenCalled();
           expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
-            `${GameDb.name}.id = :${GameDb.name}id`,
+            `${GameDb.name}.id = :GameDb.id`,
             {
-              [`${GameDb.name}id`]: gameFindQueryFixture.id,
+              [`GameDb.id`]: gameFindQueryFixture.id,
             },
           );
         });
@@ -165,6 +190,39 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
           (
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReset();
+        });
+
+        it('should call queryBuilder.subQuery()', () => {
+          expect(queryBuilderMock.subQuery).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.subQuery).toHaveBeenCalledWith();
+        });
+
+        it('should call queryBuilder.select()', () => {
+          expect(queryBuilderMock.select).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.select).toHaveBeenCalledWith(
+            '"GameSlotDb".game_Id',
+          );
+        });
+
+        it('should call queryBuilder.distinct()', () => {
+          expect(queryBuilderMock.distinct).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.distinct).toHaveBeenCalledWith(true);
+        });
+
+        it('should call queryBuilder.from()', () => {
+          expect(queryBuilderMock.from).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.from).toHaveBeenCalledWith(
+            GameSlotDb,
+            'GameSlotDb',
+          );
+        });
+
+        it('should call queryBuilder.leftJoin()', () => {
+          expect(queryBuilderMock.leftJoinAndSelect).toHaveBeenCalledTimes(1);
+          expect(queryBuilderMock.leftJoinAndSelect).toHaveBeenCalledWith(
+            'GameDb.gameSlotsDb',
+            'GameSlotDbJoined',
+          );
         });
 
         it('should call gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock.build()', () => {
@@ -302,9 +360,9 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         it('should call queryBuilder.andWhere()', () => {
           expect(queryBuilderMock.andWhere).toHaveBeenCalled();
           expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
-            `${GameDb.name}.currentPlayingSlotIndex = :${GameDb.name}currentPlayingSlotIndex`,
+            `${GameDb.name}.currentPlayingSlotIndex = :GameDb.currentPlayingSlotIndex`,
             {
-              [`${GameDb.name}currentPlayingSlotIndex`]:
+              [`GameDb.currentPlayingSlotIndex`]:
                 gameFindQueryFixture.state?.currentPlayingSlotIndex,
             },
           );
@@ -348,9 +406,9 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
         it('should call queryBuilder.andWhere()', () => {
           expect(queryBuilderMock.andWhere).toHaveBeenCalled();
           expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
-            `${GameDb.name}.status = :${GameDb.name}status`,
+            `${GameDb.name}.status = :GameDb.status`,
             {
-              [`${GameDb.name}status`]: gameFindQueryFixture.status,
+              [`GameDb.status`]: gameFindQueryFixture.status,
             },
           );
         });
