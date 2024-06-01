@@ -1,85 +1,100 @@
+import { models as apiModels } from '@cornie-js/api-models';
 import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
 } from '@mui/icons-material';
 import GamesIcon from '@mui/icons-material/Games';
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   NavigateFunction,
   Link as RouterLink,
   useNavigate,
 } from 'react-router-dom';
 
+import { selectAuthToken } from '../../app/store/features/authSlice';
+import { useAppSelector } from '../../app/store/hooks';
+import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { Either } from '../../common/models/Either';
 import { GameList } from '../../game/components/GameList';
-import { useGetGames } from '../../game/hooks/useGetGames';
-import { UseGetGamesParams } from '../../game/hooks/useGetGames/models/UseGetGamesParams';
 import { GameStatus } from '../../game/models/GameStatus';
 
-export const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
+const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
 const GAME_STATUS_ACTIVE: GameStatus = 'active';
-export const PAGE_SIZE: number = 3;
-export const ONE_PAGE: number = 1;
+const PAGE_SIZE: number = 3;
+const ONE_PAGE: number = 1;
 
-interface GetGamesParams extends UseGetGamesParams {
-  status: string;
-  page: number;
-  pageSize: number;
+function useGetGamesV1Mine(
+  accessToken: string | null,
+  page: number,
+  status: string,
+): { result: Either<string, apiModels.GameArrayV1> | null } {
+  const { data, error, isLoading } = cornieApi.useGetGamesV1MineQuery({
+    params: [
+      {
+        authorization: `Bearer ${accessToken}`,
+      },
+      {
+        page: page.toString(),
+        pageSize: PAGE_SIZE.toString(),
+        status,
+      },
+    ],
+  });
+
+  const result: Either<string, apiModels.GameArrayV1> | null = isLoading
+    ? null
+    : data === undefined
+      ? {
+          isRight: false,
+          value: error?.message ?? '',
+        }
+      : {
+          isRight: true,
+          value: data,
+        };
+
+  return { result };
 }
 
 export const HomeWithAuth = (): React.JSX.Element => {
+  const [nonStartedPage, setNonStartedPage] = useState<number>(1);
+  const [activePage, setActivePage] = useState<number>(1);
+  const accessToken = useAppSelector(selectAuthToken);
+
+  const { result: nonStartedGamesResult } = useGetGamesV1Mine(
+    accessToken,
+    nonStartedPage,
+    GAME_STATUS_NON_STARTED,
+  );
+
+  const { result: activeGamesResult } = useGetGamesV1Mine(
+    accessToken,
+    activePage,
+    GAME_STATUS_ACTIVE,
+  );
+
   const navigate: NavigateFunction = useNavigate();
-
-  const [paramsNonStarted, setParamsNonStarted] = useState<GetGamesParams>({
-    page: 1,
-    pageSize: PAGE_SIZE,
-    status: GAME_STATUS_NON_STARTED,
-  });
-  const [paramsActive, setParamsActive] = useState<GetGamesParams>({
-    page: 1,
-    pageSize: PAGE_SIZE,
-    status: GAME_STATUS_ACTIVE,
-  });
-
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { call: callNonStarted, result: resultNonStarted } = useGetGames();
-
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { call: callActive, result: resultActive } = useGetGames();
-
-  useEffect(() => {
-    callNonStarted(paramsNonStarted);
-  }, [paramsNonStarted]);
-
-  useEffect(() => {
-    callActive(paramsActive);
-  }, [paramsActive]);
 
   const onNextPageNonStarted = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (
-      resultNonStarted?.isRight === true &&
-      resultNonStarted.value.length > 0
+      nonStartedGamesResult?.isRight === true &&
+      nonStartedGamesResult.value.length > 0
     ) {
-      setParamsNonStarted({
-        ...paramsNonStarted,
-        page: paramsNonStarted.page + ONE_PAGE,
-      });
+      setNonStartedPage(nonStartedPage + ONE_PAGE);
     }
   };
 
   const onPreviousPageNonStarted = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (resultNonStarted?.isRight === true) {
-      const previousPage: number = paramsNonStarted.page - ONE_PAGE;
+    if (nonStartedGamesResult?.isRight === true) {
+      const previousPage: number = nonStartedPage - ONE_PAGE;
       if (previousPage >= ONE_PAGE) {
-        setParamsNonStarted({
-          ...paramsNonStarted,
-          page: previousPage,
-        });
+        setNonStartedPage(previousPage);
       }
     }
   };
@@ -87,24 +102,21 @@ export const HomeWithAuth = (): React.JSX.Element => {
   const onNextPageActive = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (resultActive?.isRight === true && resultActive.value.length > 0) {
-      setParamsActive({
-        ...paramsActive,
-        page: paramsActive.page + ONE_PAGE,
-      });
+    if (
+      activeGamesResult?.isRight === true &&
+      activeGamesResult.value.length > 0
+    ) {
+      setActivePage(activePage + ONE_PAGE);
     }
   };
 
   const onPreviousPageActive = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (resultActive?.isRight === true) {
-      const previousPage: number = paramsActive.page - ONE_PAGE;
+    if (activeGamesResult?.isRight === true) {
+      const previousPage: number = activePage - ONE_PAGE;
       if (previousPage >= ONE_PAGE) {
-        setParamsActive({
-          ...paramsActive,
-          page: previousPage,
-        });
+        setActivePage(previousPage);
       }
     }
   };
@@ -142,7 +154,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
               Pending Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              <GameList gamesResult={resultNonStarted} />
+              <GameList gamesResult={nonStartedGamesResult} />
               <Box component="div" className="home-auth-pagination">
                 <Button
                   type="button"
@@ -166,7 +178,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
               Active Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              <GameList gamesResult={resultActive} />
+              <GameList gamesResult={activeGamesResult} />
               <Box component="div" className="home-auth-pagination">
                 <Button
                   type="button"
