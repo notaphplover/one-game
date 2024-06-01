@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
@@ -15,6 +16,7 @@ import { GameDb } from './GameDb';
 })
 @Unique('game_slot_game_id_position_key', ['game', 'position'])
 @Unique('game_slot_game_id_user_id_key', ['game', 'userId'])
+@Index('game_slot_user_id_idx', ['userId'])
 export class GameSlotDb {
   @Column({
     name: 'cards',
