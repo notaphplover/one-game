@@ -1,11 +1,14 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { models as apiModels } from '@cornie-js/api-models';
+import { AppErrorKind } from '@cornie-js/frontend-common';
 import { BaseQueryApi } from '@reduxjs/toolkit/query';
-import { Mutex } from 'async-mutex';
+import { Mutex, MutexInterface } from 'async-mutex';
 
 import { SerializableAppError } from '../../foundation/error/SerializableAppError';
 import { QueryReturnValue } from '../../foundation/http/models/QueryReturnValue';
 import { AuthorizedEndpointsOptions } from '../models/AuthorizedEndpointsOptions';
+import { CreateAuthV2Args } from '../models/CreateAuthV2Args';
 import { authorizedApiCall } from './authorizedApiCall';
 
 interface TestResult {
@@ -22,21 +25,30 @@ describe(authorizedApiCall.name, () => {
       args: unknown[],
     ) => Promise<QueryReturnValue<TestResult, SerializableAppError, never>>
   >;
+
+  let mutexReleaserMock: jest.Mock<MutexInterface.Releaser>;
+
   let optionsMock: jest.Mocked<AuthorizedEndpointsOptions<TestState>>;
 
   beforeAll(() => {
     callMock = jest.fn();
+
+    mutexReleaserMock = jest.fn();
+
     optionsMock = {
       createAuthV2: jest.fn(),
       login: jest.fn(),
       logout: jest.fn(),
       mutex: {
         acquire: jest.fn(),
+        isLocked: jest.fn(),
         release: jest.fn(),
-        waitForUnlock: jest.fn(),
+        waitForUnlock: jest.fn().mockReturnValue(Promise.resolve(undefined)),
       } as Partial<jest.Mocked<Mutex>> as jest.Mocked<Mutex>,
       selectRefreshToken: jest.fn(),
     };
+
+    optionsMock.mutex.acquire.mockResolvedValue(mutexReleaserMock);
   });
 
   describe('when called', () => {
@@ -90,6 +102,11 @@ describe(authorizedApiCall.name, () => {
           jest.clearAllMocks();
         });
 
+        it('should call options.mutex.waitForUnlock()', () => {
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenCalledTimes(1);
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenCalledWith();
+        });
+
         it('should call call()', () => {
           expect(callMock).toHaveBeenCalledTimes(1);
           expect(callMock).toHaveBeenCalledWith(argsFixture);
@@ -102,6 +119,183 @@ describe(authorizedApiCall.name, () => {
             never
           > = {
             data: callResultFixture,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+
+      describe('when authorizedApiCallResult is returns result with missing credentials error and mutex is locked ', () => {
+        let secondCallResultFixture: TestResult;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          secondCallResultFixture = {
+            foo: 'bar',
+          };
+
+          optionsMock.mutex.isLocked.mockReturnValueOnce(true);
+
+          callMock
+            .mockResolvedValueOnce({
+              error: {
+                kind: AppErrorKind.missingCredentials,
+                message: 'sample message',
+              },
+            })
+            .mockResolvedValueOnce({
+              data: secondCallResultFixture,
+            });
+
+          result = await authorizedApiCallResult(argsFixture, apiMock);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call options.mutex.waitForUnlock()', () => {
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenCalledTimes(2);
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenNthCalledWith(1);
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenNthCalledWith(2);
+        });
+
+        it('should call call()', () => {
+          expect(callMock).toHaveBeenCalledTimes(2);
+          expect(callMock).toHaveBeenNthCalledWith(1, argsFixture);
+          expect(callMock).toHaveBeenNthCalledWith(2, argsFixture);
+        });
+
+        it('should call options.mutex.isLocked()', () => {
+          expect(optionsMock.mutex.isLocked).toHaveBeenCalledTimes(1);
+          expect(optionsMock.mutex.isLocked).toHaveBeenCalledWith();
+        });
+
+        it('should return QueryReturnValue', () => {
+          const expected: QueryReturnValue<
+            TestResult,
+            SerializableAppError,
+            never
+          > = {
+            data: secondCallResultFixture,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+
+      describe('when authorizedApiCallResult is returns result with missing credentials error and mutex is not locked and createAuthV2 returns data', () => {
+        let authV2Fixture: apiModels.AuthV2;
+        let refreshTokenFixture: string;
+
+        let secondCallResultFixture: TestResult;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          authV2Fixture = {
+            accessToken: 'access-token',
+            refreshToken: 'refresh-token',
+          };
+          refreshTokenFixture = 'refresh-token';
+
+          secondCallResultFixture = {
+            foo: 'bar',
+          };
+
+          optionsMock.mutex.isLocked.mockReturnValueOnce(false);
+
+          optionsMock.selectRefreshToken.mockReturnValueOnce(
+            refreshTokenFixture,
+          );
+
+          optionsMock.createAuthV2.mockResolvedValueOnce({
+            data: authV2Fixture,
+          });
+
+          callMock
+            .mockResolvedValueOnce({
+              error: {
+                kind: AppErrorKind.missingCredentials,
+                message: 'sample message',
+              },
+            })
+            .mockResolvedValueOnce({
+              data: secondCallResultFixture,
+            });
+
+          result = await authorizedApiCallResult(argsFixture, apiMock);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call options.mutex.waitForUnlock()', () => {
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenCalledTimes(2);
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenNthCalledWith(1);
+          expect(optionsMock.mutex.waitForUnlock).toHaveBeenNthCalledWith(2);
+        });
+
+        it('should call call()', () => {
+          expect(callMock).toHaveBeenCalledTimes(2);
+          expect(callMock).toHaveBeenNthCalledWith(1, argsFixture);
+          expect(callMock).toHaveBeenNthCalledWith(2, argsFixture);
+        });
+
+        it('should call options.mutex.isLocked()', () => {
+          expect(optionsMock.mutex.isLocked).toHaveBeenCalledTimes(1);
+          expect(optionsMock.mutex.isLocked).toHaveBeenCalledWith();
+        });
+
+        it('should call api.getState()', () => {
+          expect(apiMock.getState).toHaveBeenCalledTimes(1);
+          expect(apiMock.getState).toHaveBeenCalledWith();
+        });
+
+        it('should call options.selectRefreshToken()', () => {
+          expect(optionsMock.selectRefreshToken).toHaveBeenCalledTimes(1);
+          expect(optionsMock.selectRefreshToken).toHaveBeenCalledWith(
+            stateFixture,
+          );
+        });
+
+        it('should call options.mutex.acquire()', () => {
+          expect(optionsMock.mutex.acquire).toHaveBeenCalledTimes(1);
+          expect(optionsMock.mutex.acquire).toHaveBeenCalledWith();
+        });
+
+        it('should call options.createAuthV2()', () => {
+          const expected: CreateAuthV2Args = {
+            refreshToken: refreshTokenFixture,
+          };
+
+          expect(optionsMock.createAuthV2).toHaveBeenCalledTimes(1);
+          expect(optionsMock.createAuthV2).toHaveBeenCalledWith(expected);
+        });
+
+        it('should call options.login()', () => {
+          expect(optionsMock.login).toHaveBeenCalledTimes(1);
+          expect(optionsMock.login).toHaveBeenCalledWith(authV2Fixture);
+        });
+
+        it('should call api.dispatch()', () => {
+          expect(apiMock.dispatch).toHaveBeenCalledTimes(1);
+        });
+
+        it('should call release()', () => {
+          expect(mutexReleaserMock).toHaveBeenCalledTimes(1);
+          expect(mutexReleaserMock).toHaveBeenCalledWith();
+        });
+
+        it('should return QueryReturnValue', () => {
+          const expected: QueryReturnValue<
+            TestResult,
+            SerializableAppError,
+            never
+          > = {
+            data: secondCallResultFixture,
           };
 
           expect(result).toStrictEqual(expected);
