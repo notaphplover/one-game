@@ -1,45 +1,8 @@
-import getJestJsProjectConfig from './config/getJestJsProjectConfig.js';
-import getJestTsProjectConfig from './config/getJestTsProjectConfig.js';
+import getJsGlobalConfig from './config/getJsGlobalConfig.js';
+import getTsGlobalConfig from './config/getTsGlobalConfig.js';
 
-const jsUnitProject = getJestJsProjectConfig(
-  'Unit',
-  ['.int.spec.js'],
-  '.spec.js',
-);
+const babelJsGlobalConfig = getJsGlobalConfig();
 
-const jsIntegrationProject = getJestJsProjectConfig(
-  'Integration',
-  [],
-  '.int.spec.js',
-);
+const babelTsGlobalConfig = getTsGlobalConfig();
 
-/** @type {!import("@jest/types").Config.InitialOptions} */
-const jsGlobalConfig = {
-  passWithNoTests: true,
-  projects: [jsIntegrationProject, jsUnitProject],
-};
-
-const tsUnitProject = getJestTsProjectConfig(
-  'Unit',
-  ['.int.spec.ts'],
-  '.spec.ts',
-);
-
-const tsIntegrationProject = getJestTsProjectConfig(
-  'Integration',
-  [],
-  '.int.spec.ts',
-);
-
-/** @type {!import("@jest/types").Config.InitialOptions} */
-const tsGlobalConfig = {
-  passWithNoTests: true,
-  projects: [tsIntegrationProject, tsUnitProject],
-};
-
-export {
-  getJestJsProjectConfig,
-  getJestTsProjectConfig,
-  jsGlobalConfig,
-  tsGlobalConfig,
-};
+export { babelJsGlobalConfig, babelTsGlobalConfig };

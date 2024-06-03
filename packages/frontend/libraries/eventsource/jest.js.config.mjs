@@ -1,3 +1,3 @@
-import { jsGlobalConfig } from '@cornie-js/frontend-jest-config';
+import { jsGlobalConfig } from '@cornie-js/backend-jest-config';
 
 export default jsGlobalConfig;

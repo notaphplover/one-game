@@ -53,60 +53,67 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
       GameDb,
     );
 
-    if (InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
-      queryBuilder = queryBuilder.leftJoinAndSelect(
-        `${gamePropertiesPrefix}gameSlotsDb`,
-        `${GameSlotDb.name}Joined`,
-      );
-    }
-
-    if (gameFindQuery.id !== undefined) {
-      queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}id = :${GameDb.name}id`,
-        {
-          [`${GameDb.name}id`]: gameFindQuery.id,
-        },
-      );
-    }
-
-    if (gameFindQuery.limit !== undefined) {
-      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
-      queryBuilder = queryBuilder.limit(gameFindQuery.limit);
-    }
-
-    if (gameFindQuery.gameSlotFindQuery !== undefined) {
+    if (this.#isPaginatedQuery(gameFindQuery)) {
       this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
 
-      queryBuilder = this.#findByGameSlotFindQuery(
-        gameFindQuery.gameSlotFindQuery,
-        queryBuilder as SelectQueryBuilder<GameDb>,
-      );
-    }
+      const gameIdsAlias: string = `${GameDb.name}Ids`;
+      const gameIdsPropertyPrefix: string = `${gameIdsAlias}.`;
 
-    if (gameFindQuery.state !== undefined) {
-      if (gameFindQuery.state.currentPlayingSlotIndex !== undefined) {
-        queryBuilder = queryBuilder.andWhere(
-          `${gamePropertiesPrefix}currentPlayingSlotIndex = :${GameDb.name}currentPlayingSlotIndex`,
-          {
-            [`${GameDb.name}currentPlayingSlotIndex`]:
-              gameFindQuery.state.currentPlayingSlotIndex,
+      queryBuilder = queryBuilder
+        .innerJoin(
+          (
+            gameIdsQueryBuilder: SelectQueryBuilder<GameDb>,
+          ): SelectQueryBuilder<GameDb> => {
+            gameIdsQueryBuilder = gameIdsQueryBuilder
+              .subQuery()
+              .select(`"${gameIdsAlias}".id`)
+              .distinct(true)
+              .from(GameDb, gameIdsAlias)
+              .leftJoin(
+                `${gameIdsPropertyPrefix}gameSlotsDb`,
+                `${GameSlotDb.name}IdsJoined`,
+              );
+
+            gameIdsQueryBuilder = this.#applyGameFindQueryFilters(
+              gameIdsPropertyPrefix,
+              gameFindQuery,
+              gameIdsQueryBuilder,
+            );
+
+            if (gameFindQuery.limit !== undefined) {
+              gameIdsQueryBuilder = gameIdsQueryBuilder.limit(
+                gameFindQuery.limit,
+              );
+            }
+
+            if (gameFindQuery.offset !== undefined) {
+              gameIdsQueryBuilder = gameIdsQueryBuilder.offset(
+                gameFindQuery.offset,
+              );
+            }
+
+            return gameIdsQueryBuilder;
           },
+          gameIdsAlias,
+          `"${gameIdsAlias}".id = "GameDb".id`,
+        )
+        .leftJoinAndSelect(
+          `${gamePropertiesPrefix}gameSlotsDb`,
+          `${GameSlotDb.name}Joined`,
+        );
+    } else {
+      if (InstanceChecker.isSelectQueryBuilder(queryBuilder)) {
+        queryBuilder = queryBuilder.leftJoinAndSelect(
+          `${gamePropertiesPrefix}gameSlotsDb`,
+          `${GameSlotDb.name}Joined`,
         );
       }
-    }
 
-    if (gameFindQuery.status !== undefined) {
-      queryBuilder = queryBuilder.andWhere(
-        `${gamePropertiesPrefix}status = :${GameDb.name}status`,
-        {
-          [`${GameDb.name}status`]: gameFindQuery.status,
-        },
+      queryBuilder = this.#applyGameFindQueryFilters(
+        gamePropertiesPrefix,
+        gameFindQuery,
+        queryBuilder,
       );
-    }
-
-    if (gameFindQuery.offset !== undefined) {
-      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
-      queryBuilder = queryBuilder.offset(gameFindQuery.offset);
     }
 
     return queryBuilder;
@@ -124,9 +131,10 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
   }
 
   #findByGameSlotFindQuery(
+    gamePropertiesPrefix: string,
     gameSlotFindQuery: GameSlotFindQuery,
     selectQueryBuilder: SelectQueryBuilder<GameDb>,
-  ): SelectQueryBuilder<GameDb> {
+  ): QueryBuilder<GameDb> & WhereExpressionBuilder {
     let subQueryBuilder: SelectQueryBuilder<GameSlotDb> = selectQueryBuilder
       .subQuery()
       .select(`"${GameSlotDb.name}".game_Id`)
@@ -140,11 +148,70 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
       ) as SelectQueryBuilder<GameSlotDb>;
 
     selectQueryBuilder = selectQueryBuilder.andWhere(
-      `${GameDb.name}.id IN (${subQueryBuilder.getQuery()})`,
+      `${gamePropertiesPrefix}id IN (${subQueryBuilder.getQuery()})`,
     );
 
     selectQueryBuilder.setParameters(subQueryBuilder.getParameters());
 
-    return selectQueryBuilder;
+    return selectQueryBuilder as QueryBuilder<GameDb> & WhereExpressionBuilder;
+  }
+
+  #applyGameFindQueryFilters<
+    T extends QueryBuilder<GameDb> & WhereExpressionBuilder,
+  >(
+    gamePropertiesPrefix: string,
+    gameFindQuery: GameFindQuery,
+    queryBuilder: T,
+  ): T {
+    let queryBuilderResult: QueryBuilder<GameDb> & WhereExpressionBuilder =
+      queryBuilder;
+
+    if (gameFindQuery.id !== undefined) {
+      queryBuilderResult = queryBuilderResult.andWhere(
+        `${gamePropertiesPrefix}id = :${gamePropertiesPrefix}id`,
+        {
+          [`${gamePropertiesPrefix}id`]: gameFindQuery.id,
+        },
+      );
+    }
+
+    if (gameFindQuery.gameSlotFindQuery !== undefined) {
+      this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilderResult);
+
+      queryBuilderResult = this.#findByGameSlotFindQuery(
+        gamePropertiesPrefix,
+        gameFindQuery.gameSlotFindQuery,
+        queryBuilderResult as SelectQueryBuilder<GameDb>,
+      );
+    }
+
+    if (gameFindQuery.state !== undefined) {
+      if (gameFindQuery.state.currentPlayingSlotIndex !== undefined) {
+        queryBuilderResult = queryBuilderResult.andWhere(
+          `${gamePropertiesPrefix}currentPlayingSlotIndex = :${gamePropertiesPrefix}currentPlayingSlotIndex`,
+          {
+            [`${gamePropertiesPrefix}currentPlayingSlotIndex`]:
+              gameFindQuery.state.currentPlayingSlotIndex,
+          },
+        );
+      }
+    }
+
+    if (gameFindQuery.status !== undefined) {
+      queryBuilderResult = queryBuilderResult.andWhere(
+        `${gamePropertiesPrefix}status = :${gamePropertiesPrefix}status`,
+        {
+          [`${gamePropertiesPrefix}status`]: gameFindQuery.status,
+        },
+      );
+    }
+
+    return queryBuilderResult as T;
+  }
+
+  #isPaginatedQuery(gameFindQuery: GameFindQuery): boolean {
+    return (
+      gameFindQuery.limit !== undefined || gameFindQuery.offset !== undefined
+    );
   }
 }

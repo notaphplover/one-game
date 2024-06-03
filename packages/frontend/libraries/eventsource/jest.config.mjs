@@ -1,3 +1,3 @@
-import { tsGlobalConfig } from '@cornie-js/frontend-jest-config';
+import { tsGlobalConfig } from '@cornie-js/backend-jest-config';
 
 export default tsGlobalConfig;
