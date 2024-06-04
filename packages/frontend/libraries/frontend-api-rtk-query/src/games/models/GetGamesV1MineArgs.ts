@@ -1,5 +1,5 @@
-import { HttpApiParams } from '../../foundation/http/models/HttpApiParams';
+import { HttpApiParamsWithNoHeaders } from '../../foundation/http/models/HttpApiParamsWithNoHeaders';
 
 export interface GetGamesV1MineArgs {
-  params: HttpApiParams<'getGamesMine'>;
+  params: HttpApiParamsWithNoHeaders<'getGamesMine'>;
 }

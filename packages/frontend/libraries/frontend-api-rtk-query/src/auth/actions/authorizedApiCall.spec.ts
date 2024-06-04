@@ -20,6 +20,7 @@ interface TestState {
 }
 
 describe(authorizedApiCall.name, () => {
+  let accessTokenFixture: string;
   let callMock: jest.Mock<
     (
       args: unknown[],
@@ -31,6 +32,7 @@ describe(authorizedApiCall.name, () => {
   let optionsMock: jest.Mocked<AuthorizedEndpointsOptions<TestState>>;
 
   beforeAll(() => {
+    accessTokenFixture = 'access-token-fixture';
     callMock = jest.fn();
 
     mutexReleaserMock = jest.fn();
@@ -45,10 +47,12 @@ describe(authorizedApiCall.name, () => {
         release: jest.fn(),
         waitForUnlock: jest.fn().mockReturnValue(Promise.resolve(undefined)),
       } as Partial<jest.Mocked<Mutex>> as jest.Mocked<Mutex>,
+      selectAccessToken: jest.fn(),
       selectRefreshToken: jest.fn(),
     };
 
     optionsMock.mutex.acquire.mockResolvedValue(mutexReleaserMock);
+    optionsMock.selectAccessToken.mockReturnValue(accessTokenFixture);
   });
 
   describe('when called', () => {
@@ -109,7 +113,11 @@ describe(authorizedApiCall.name, () => {
 
         it('should call call()', () => {
           expect(callMock).toHaveBeenCalledTimes(1);
-          expect(callMock).toHaveBeenCalledWith(argsFixture);
+          expect(callMock).toHaveBeenCalledWith(
+            argsFixture,
+            apiMock,
+            accessTokenFixture,
+          );
         });
 
         it('should return QueryReturnValue', () => {
@@ -163,8 +171,18 @@ describe(authorizedApiCall.name, () => {
 
         it('should call call()', () => {
           expect(callMock).toHaveBeenCalledTimes(2);
-          expect(callMock).toHaveBeenNthCalledWith(1, argsFixture);
-          expect(callMock).toHaveBeenNthCalledWith(2, argsFixture);
+          expect(callMock).toHaveBeenNthCalledWith(
+            1,
+            argsFixture,
+            apiMock,
+            accessTokenFixture,
+          );
+          expect(callMock).toHaveBeenNthCalledWith(
+            2,
+            argsFixture,
+            apiMock,
+            accessTokenFixture,
+          );
         });
 
         it('should call options.mutex.isLocked()', () => {
@@ -240,8 +258,18 @@ describe(authorizedApiCall.name, () => {
 
         it('should call call()', () => {
           expect(callMock).toHaveBeenCalledTimes(2);
-          expect(callMock).toHaveBeenNthCalledWith(1, argsFixture);
-          expect(callMock).toHaveBeenNthCalledWith(2, argsFixture);
+          expect(callMock).toHaveBeenNthCalledWith(
+            1,
+            argsFixture,
+            apiMock,
+            accessTokenFixture,
+          );
+          expect(callMock).toHaveBeenNthCalledWith(
+            2,
+            argsFixture,
+            apiMock,
+            accessTokenFixture,
+          );
         });
 
         it('should call options.mutex.isLocked()', () => {
@@ -250,7 +278,7 @@ describe(authorizedApiCall.name, () => {
         });
 
         it('should call api.getState()', () => {
-          expect(apiMock.getState).toHaveBeenCalledTimes(1);
+          expect(apiMock.getState).toHaveBeenCalledTimes(3);
           expect(apiMock.getState).toHaveBeenCalledWith();
         });
 
