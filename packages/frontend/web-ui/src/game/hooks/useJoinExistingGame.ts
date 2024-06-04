@@ -53,8 +53,8 @@ export const useJoinExistingGame = (): UseJoinExistingGameResult => {
             if (user === null && auth !== null) {
               await dispatch(getUserMe(auth.accessToken));
             }
+            setStatus(JoinExistingGameStatus.pending);
           }
-          setStatus(JoinExistingGameStatus.pending);
           break;
         case JoinExistingGameStatus.pending:
           if (user !== null && auth !== null && gameIdParam !== null) {

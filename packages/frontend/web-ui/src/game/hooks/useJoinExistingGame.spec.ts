@@ -12,7 +12,7 @@ import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { RenderHookResult, renderHook } from '@testing-library/react';
 import { act } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -301,7 +301,7 @@ describe(useJoinExistingGame.name, () => {
           singleApiCallHookResultFixture,
         );
 
-        await waitFor(() => {
+        await act(async () => {
           renderHook(() => useJoinExistingGame());
         });
       });
