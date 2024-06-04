@@ -28,11 +28,6 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
 
-export interface StateType {
-  state: { key: string };
-  search: string;
-}
-
 export const Login = (): React.JSX.Element => {
   const {
     backendError,
