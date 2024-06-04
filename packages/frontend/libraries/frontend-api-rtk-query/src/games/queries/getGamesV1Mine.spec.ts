@@ -13,69 +13,68 @@ import { SerializableAppError } from '../../foundation/error/SerializableAppErro
 import { HttpApiResult } from '../../foundation/http/models/HttpApiResult';
 import {
   BAD_REQUEST,
-  FORBIDDEN,
   OK,
   UNAUTHORIZED,
 } from '../../foundation/http/models/httpCodes';
 import { QueryReturnValue } from '../../foundation/http/models/QueryReturnValue';
-import { CreateGamesV1Args } from '../models/CreateGamesV1Args';
-import { createGamesV1 } from './createGamesV1';
+import { GetGamesV1MineArgs } from '../models/GetGamesV1MineArgs';
+import { getGamesV1Mine } from './getGamesV1Mine';
 
-describe(createGamesV1.name, () => {
+describe(getGamesV1Mine.name, () => {
   describe('having an httpClient', () => {
     let httpClientMock: jest.Mocked<HttpClient>;
 
-    let createGamesV1Function: (
-      args: CreateGamesV1Args,
+    let getGamesV1MineFunction: (
+      args: GetGamesV1MineArgs,
       api: BaseQueryApi,
       accessToken: string | null,
     ) => Promise<
-      QueryReturnValue<apiModels.NonStartedGameV1, SerializableAppError, never>
+      QueryReturnValue<apiModels.GameArrayV1, SerializableAppError, never>
     >;
 
     beforeAll(() => {
       httpClientMock = {
         endpoints: {
-          createGame: jest.fn(),
+          getGamesMine: jest.fn(),
         } as Partial<
           jest.Mocked<HttpClientEndpoints>
         > as jest.Mocked<HttpClientEndpoints>,
       } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
-      createGamesV1Function = createGamesV1(httpClientMock);
+      getGamesV1MineFunction = getGamesV1Mine(httpClientMock);
     });
 
     describe('having args, api, and accessToken', () => {
-      let argsFixture: CreateGamesV1Args;
+      let argsFixture: GetGamesV1MineArgs;
       let apiFixture: BaseQueryApi;
       let accessTokenFixture: string;
 
       beforeAll(() => {
         argsFixture = {
-          params: [Symbol() as unknown as apiModels.GameCreateQueryV1],
+          params: [Symbol() as unknown as Record<string, string>],
         };
         apiFixture = Symbol() as unknown as BaseQueryApi;
         accessTokenFixture = 'access-token-fixture';
       });
 
-      describe('when called, and httpClient.endpoints.createGame() returns a CreateGamesV1Result with 200 http status code', () => {
-        let resultFixture: HttpApiResult<'createGame'> &
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a CreateGamesV1Result with 200 http status code', () => {
+        let resultFixture: HttpApiResult<'getGamesMine'> &
           Response<Record<string, string>, unknown, typeof OK>;
 
         let result: unknown;
 
         beforeAll(async () => {
           resultFixture = {
-            body: Symbol() as unknown as apiModels.NonStartedGameV1,
+            body: Symbol() as unknown as apiModels.GameArrayV1,
             headers: {},
             statusCode: OK,
           };
 
-          httpClientMock.endpoints.createGame.mockResolvedValueOnce(
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce(
             resultFixture,
           );
 
-          result = await createGamesV1Function(
+          result = await getGamesV1MineFunction(
             argsFixture,
             apiFixture,
             accessTokenFixture,
@@ -86,9 +85,11 @@ describe(createGamesV1.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.endpoints.createGame()', () => {
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             {
               authorization: `Bearer ${accessTokenFixture}`,
             },
@@ -98,7 +99,7 @@ describe(createGamesV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.GameV1,
+            apiModels.GameArrayV1,
             SerializableAppError,
             never
           > = {
@@ -109,8 +110,8 @@ describe(createGamesV1.name, () => {
         });
       });
 
-      describe('when called, and httpClient.endpoints.createGame() returns a CreateGamesV1Result with 400 http status code', () => {
-        let resultFixture: HttpApiResult<'createGame'> &
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a CreateGamesV1Result with 400 http status code', () => {
+        let resultFixture: HttpApiResult<'getGamesMine'> &
           Response<Record<string, string>, unknown, typeof BAD_REQUEST>;
 
         let result: unknown;
@@ -122,11 +123,11 @@ describe(createGamesV1.name, () => {
             statusCode: BAD_REQUEST,
           };
 
-          httpClientMock.endpoints.createGame.mockResolvedValueOnce(
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce(
             resultFixture,
           );
 
-          result = await createGamesV1Function(
+          result = await getGamesV1MineFunction(
             argsFixture,
             apiFixture,
             accessTokenFixture,
@@ -137,9 +138,11 @@ describe(createGamesV1.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.endpoints.createGame()', () => {
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             {
               authorization: `Bearer ${accessTokenFixture}`,
             },
@@ -149,7 +152,7 @@ describe(createGamesV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.GameV1,
+            apiModels.GameArrayV1,
             SerializableAppError,
             never
           > = {
@@ -163,8 +166,8 @@ describe(createGamesV1.name, () => {
         });
       });
 
-      describe('when called, and httpClient.endpoints.createGame() returns a CreateGamesV1Result with 401 http status code', () => {
-        let resultFixture: HttpApiResult<'createGame'> &
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a CreateGamesV1Result with 401 http status code', () => {
+        let resultFixture: HttpApiResult<'getGamesMine'> &
           Response<Record<string, string>, unknown, typeof UNAUTHORIZED>;
 
         let result: unknown;
@@ -176,11 +179,11 @@ describe(createGamesV1.name, () => {
             statusCode: UNAUTHORIZED,
           };
 
-          httpClientMock.endpoints.createGame.mockResolvedValueOnce(
+          httpClientMock.endpoints.getGamesMine.mockResolvedValueOnce(
             resultFixture,
           );
 
-          result = await createGamesV1Function(
+          result = await getGamesV1MineFunction(
             argsFixture,
             apiFixture,
             accessTokenFixture,
@@ -191,9 +194,11 @@ describe(createGamesV1.name, () => {
           jest.clearAllMocks();
         });
 
-        it('should call httpClient.endpoints.createGame()', () => {
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledWith(
+        it('should call httpClient.endpoints.getGamesMine()', () => {
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(httpClientMock.endpoints.getGamesMine).toHaveBeenCalledWith(
             {
               authorization: `Bearer ${accessTokenFixture}`,
             },
@@ -203,66 +208,12 @@ describe(createGamesV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.GameV1,
+            apiModels.GameArrayV1,
             SerializableAppError,
             never
           > = {
             error: {
               kind: AppErrorKind.missingCredentials,
-              message: resultFixture.body.description,
-            },
-          };
-
-          expect(result).toStrictEqual(expected);
-        });
-      });
-
-      describe('when called, and httpClient.endpoints.createGame() returns a CreateGamesV1Result with 403 http status code', () => {
-        let resultFixture: HttpApiResult<'createGame'> &
-          Response<Record<string, string>, unknown, typeof FORBIDDEN>;
-
-        let result: unknown;
-
-        beforeAll(async () => {
-          resultFixture = {
-            body: Symbol() as unknown as apiModels.ErrorV1,
-            headers: {},
-            statusCode: FORBIDDEN,
-          };
-
-          httpClientMock.endpoints.createGame.mockResolvedValueOnce(
-            resultFixture,
-          );
-
-          result = await createGamesV1Function(
-            argsFixture,
-            apiFixture,
-            accessTokenFixture,
-          );
-        });
-
-        afterAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should call httpClient.endpoints.createGame()', () => {
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledTimes(1);
-          expect(httpClientMock.endpoints.createGame).toHaveBeenCalledWith(
-            {
-              authorization: `Bearer ${accessTokenFixture}`,
-            },
-            ...argsFixture.params,
-          );
-        });
-
-        it('should return QueryReturnValue', () => {
-          const expected: QueryReturnValue<
-            apiModels.GameV1,
-            SerializableAppError,
-            never
-          > = {
-            error: {
-              kind: AppErrorKind.invalidCredentials,
               message: resultFixture.body.description,
             },
           };
