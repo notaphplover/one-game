@@ -12,8 +12,6 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import { selectAuthToken } from '../../app/store/features/authSlice';
-import { useAppSelector } from '../../app/store/hooks';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { Either } from '../../common/models/Either';
@@ -26,15 +24,11 @@ const PAGE_SIZE: number = 3;
 const ONE_PAGE: number = 1;
 
 function useGetGamesV1Mine(
-  accessToken: string | null,
   page: number,
   status: string,
 ): { result: Either<string, apiModels.GameArrayV1> | null } {
   const { data, error, isLoading } = cornieApi.useGetGamesV1MineQuery({
     params: [
-      {
-        authorization: `Bearer ${accessToken}`,
-      },
       {
         page: page.toString(),
         pageSize: PAGE_SIZE.toString(),
@@ -61,16 +55,13 @@ function useGetGamesV1Mine(
 export const HomeWithAuth = (): React.JSX.Element => {
   const [nonStartedPage, setNonStartedPage] = useState<number>(1);
   const [activePage, setActivePage] = useState<number>(1);
-  const accessToken = useAppSelector(selectAuthToken);
 
   const { result: nonStartedGamesResult } = useGetGamesV1Mine(
-    accessToken,
     nonStartedPage,
     GAME_STATUS_NON_STARTED,
   );
 
   const { result: activeGamesResult } = useGetGamesV1Mine(
-    accessToken,
     activePage,
     GAME_STATUS_ACTIVE,
   );

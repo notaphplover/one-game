@@ -18,5 +18,6 @@ export interface AuthorizedEndpointsOptions<TState> {
     payload: undefined;
     type: string;
   };
+  selectAccessToken: (state: TState) => string | null;
   selectRefreshToken: (state: TState) => string | null;
 }
