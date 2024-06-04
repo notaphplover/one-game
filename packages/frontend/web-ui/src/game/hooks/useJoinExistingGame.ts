@@ -45,7 +45,6 @@ export const useJoinExistingGame = (): UseJoinExistingGameResult => {
           if (gameIdParam === null) {
             setStatus(JoinExistingGameStatus.rejected);
             setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
-            break;
           } else {
             if (auth === null) {
               navigate(buildLoginPageUrl(url.toString()));
