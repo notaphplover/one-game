@@ -10,6 +10,8 @@ import { AuthorizedEndpointsOptions } from '../models/AuthorizedEndpointsOptions
 export function authorizedApiCall<TArg, TResult, TState>(
   call: (
     args: TArg,
+    api: BaseQueryApi,
+    accessToken: string | null,
   ) => Promise<QueryReturnValue<TResult, SerializableAppError, never>>,
   options: AuthorizedEndpointsOptions<TState>,
 ): (
@@ -23,7 +25,11 @@ export function authorizedApiCall<TArg, TResult, TState>(
     await options.mutex.waitForUnlock();
 
     const result: QueryReturnValue<TResult, SerializableAppError, never> =
-      await call(args);
+      await call(
+        args,
+        api,
+        options.selectAccessToken(api.getState() as TState),
+      );
 
     if (
       result.error !== undefined &&
@@ -65,7 +71,11 @@ export function authorizedApiCall<TArg, TResult, TState>(
         await options.mutex.waitForUnlock();
       }
 
-      return call(args);
+      return call(
+        args,
+        api,
+        options.selectAccessToken(api.getState() as TState),
+      );
     } else {
       return result;
     }

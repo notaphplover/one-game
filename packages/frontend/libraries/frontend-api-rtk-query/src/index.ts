@@ -30,6 +30,7 @@ export interface BuildApiOptions<TState> {
       payload: undefined;
       type: string;
     };
+    selectAccessToken: (state: TState) => string | null;
     selectRefreshToken: (state: TState) => string | null;
   };
 }
@@ -46,6 +47,7 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
     login: options.store.login,
     logout: options.store.logout,
     mutex: new Mutex(),
+    selectAccessToken: options.store.selectAccessToken,
     selectRefreshToken: options.store.selectRefreshToken,
   };
 

@@ -1,6 +1,7 @@
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/frontend-common';
+import { BaseQueryApi } from '@reduxjs/toolkit/query';
 
 import { SerializableAppError } from '../../foundation/error/SerializableAppError';
 import { HttpApiResult } from '../../foundation/http/models/HttpApiResult';
@@ -18,16 +19,25 @@ export function getGamesV1Mine(
   httpClient: HttpClient,
 ): (
   args: GetGamesV1MineArgs,
+  api: BaseQueryApi,
+  accessToken: string | null,
 ) => Promise<
   QueryReturnValue<apiModels.GameArrayV1, SerializableAppError, never>
 > {
   return async (
     args: GetGamesV1MineArgs,
+    _api: BaseQueryApi,
+    accessToken: string | null,
   ): Promise<
     QueryReturnValue<apiModels.GameArrayV1, SerializableAppError, never>
   > => {
     const httpResponse: GetGamesMineResult =
-      await httpClient.endpoints.getGamesMine(...args.params);
+      await httpClient.endpoints.getGamesMine(
+        {
+          authorization: `Bearer ${accessToken}`,
+        },
+        ...args.params,
+      );
 
     switch (httpResponse.statusCode) {
       case OK:

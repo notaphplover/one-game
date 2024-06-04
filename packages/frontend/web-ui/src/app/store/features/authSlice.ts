@@ -1,3 +1,4 @@
+import { models as apiModels } from '@cornie-js/api-models';
 import {
   ActionReducerMapBuilder,
   PayloadAction,
@@ -6,6 +7,7 @@ import {
 
 import { OK } from '../../../common/http/helpers/httpCodes';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
+import login from '../actions/login';
 import logout from '../actions/logout';
 import { AuthState, AuthenticatedAuthState } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
@@ -73,6 +75,17 @@ function createAuthRejectedReducer(): AuthState {
   };
 }
 
+function loginReducer(
+  _state: AuthState,
+  action: PayloadAction<apiModels.AuthV2>,
+): AuthState {
+  return {
+    accessToken: action.payload.accessToken,
+    refreshToken: action.payload.refreshToken,
+    status: AuthStateStatus.authenticated,
+  };
+}
+
 function logoutReducer(): AuthState {
   window.localStorage.removeItem('accessToken');
   window.localStorage.removeItem('refreshToken');
@@ -99,6 +112,7 @@ export const authSlice = createSlice({
         createAuthRefreshTokenFulfilledReducer,
       )
       .addCase(createAuthByRefreshToken.rejected, createAuthRejectedReducer)
+      .addCase(login, loginReducer)
       .addCase(logout, logoutReducer);
   },
   initialState,
@@ -121,6 +135,12 @@ export const selectAuthenticatedAuth = (
 ): AuthenticatedAuthState | null => {
   return state.auth.status === AuthStateStatus.authenticated
     ? state.auth
+    : null;
+};
+
+export const selectRefreshToken = (state: RootState): string | null => {
+  return state.auth.status === AuthStateStatus.authenticated
+    ? state.auth.refreshToken
     : null;
 };
 
