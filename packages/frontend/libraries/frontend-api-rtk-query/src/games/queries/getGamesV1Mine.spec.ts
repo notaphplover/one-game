@@ -57,7 +57,7 @@ describe(getGamesV1Mine.name, () => {
         accessTokenFixture = 'access-token-fixture';
       });
 
-      describe('when called, and httpClient.endpoints.getGamesMine() returns a CreateGamesV1Result with 200 http status code', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a GetGamesV1MineResult with 200 http status code', () => {
         let resultFixture: HttpApiResult<'getGamesMine'> &
           Response<Record<string, string>, unknown, typeof OK>;
 
@@ -110,7 +110,7 @@ describe(getGamesV1Mine.name, () => {
         });
       });
 
-      describe('when called, and httpClient.endpoints.getGamesMine() returns a CreateGamesV1Result with 400 http status code', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a GetGamesV1MineResult with 400 http status code', () => {
         let resultFixture: HttpApiResult<'getGamesMine'> &
           Response<Record<string, string>, unknown, typeof BAD_REQUEST>;
 
@@ -166,7 +166,7 @@ describe(getGamesV1Mine.name, () => {
         });
       });
 
-      describe('when called, and httpClient.endpoints.getGamesMine() returns a CreateGamesV1Result with 401 http status code', () => {
+      describe('when called, and httpClient.endpoints.getGamesMine() returns a GetGamesV1MineResult with 401 http status code', () => {
         let resultFixture: HttpApiResult<'getGamesMine'> &
           Response<Record<string, string>, unknown, typeof UNAUTHORIZED>;
 
