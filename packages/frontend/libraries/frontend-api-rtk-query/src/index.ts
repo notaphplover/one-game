@@ -14,7 +14,9 @@ import { CreateAuthV2Args } from './auth/models/CreateAuthV2Args';
 import { createAuthV2 } from './auth/mutations/createAuthV2';
 import { SerializableAppError } from './foundation/error/SerializableAppError';
 import { QueryReturnValue } from './foundation/http/models/QueryReturnValue';
+import { CreateGamesV1Args } from './games/models/CreateGamesV1Args';
 import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
+import { createGamesV1 } from './games/mutations/createGamesV1';
 import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
 
 export type { CreateAuthV2Args, SerializableAppError };
@@ -62,6 +64,15 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
     ) => ({
       createAuthV2: build.mutation<apiModels.AuthV2, CreateAuthV2Args>({
         queryFn: createAuthV2Fn,
+      }),
+      createGamesV1: build.mutation<
+        apiModels.NonStartedGameV1,
+        CreateGamesV1Args
+      >({
+        queryFn: authorizedApiCall(
+          createGamesV1(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
       }),
       getGamesV1Mine: build.query<apiModels.GameArrayV1, GetGamesV1MineArgs>({
         queryFn: authorizedApiCall(
