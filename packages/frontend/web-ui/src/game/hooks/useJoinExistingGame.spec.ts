@@ -102,11 +102,16 @@ describe(useJoinExistingGame.name, () => {
 
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture);
 
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
+        (useJoinGame as jest.Mock<typeof useJoinGame>)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture);
 
         (
           getUserMe as unknown as jest.Mock<typeof getUserMe>
@@ -133,30 +138,6 @@ describe(useJoinExistingGame.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
         // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderHook(() => useJoinExistingGame());
@@ -174,11 +155,13 @@ describe(useJoinExistingGame.name, () => {
 
       it('should call useAppSelector() six times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(6);
-        expect(useAppSelector).toHaveBeenNthCalledWith(6, expect.any(Function));
+        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should call useJoinGame() three times', () => {
         expect(useJoinGame).toHaveBeenCalledTimes(3);
+        expect(useJoinGame).toHaveBeenNthCalledWith(1);
+        expect(useJoinGame).toHaveBeenNthCalledWith(2);
         expect(useJoinGame).toHaveBeenNthCalledWith(3);
       });
 
@@ -224,11 +207,16 @@ describe(useJoinExistingGame.name, () => {
 
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture);
 
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
+        (useJoinGame as jest.Mock<typeof useJoinGame>)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture);
 
         (
           getUserMe as unknown as jest.Mock<typeof getUserMe>
@@ -255,30 +243,6 @@ describe(useJoinExistingGame.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
         result = renderHook(() => useJoinExistingGame());
 
         await waitFor(() => {
@@ -300,11 +264,13 @@ describe(useJoinExistingGame.name, () => {
 
       it('should call useAppSelector() six times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(6);
-        expect(useAppSelector).toHaveBeenNthCalledWith(6, expect.any(Function));
+        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should call useJoinGame() three times', () => {
         expect(useJoinGame).toHaveBeenCalledTimes(3);
+        expect(useJoinGame).toHaveBeenNthCalledWith(1);
+        expect(useJoinGame).toHaveBeenNthCalledWith(2);
         expect(useJoinGame).toHaveBeenNthCalledWith(3);
       });
 
@@ -359,11 +325,19 @@ describe(useJoinExistingGame.name, () => {
 
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture);
 
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
+        (useJoinGame as jest.Mock<typeof useJoinGame>)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture);
 
         (
           getUserMe as unknown as jest.Mock<typeof getUserMe>
@@ -434,11 +408,14 @@ describe(useJoinExistingGame.name, () => {
 
       it('should call useAppSelector() eight times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(8);
-        expect(useAppSelector).toHaveBeenNthCalledWith(8, expect.any(Function));
+        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should call useJoinGame() four times', () => {
         expect(useJoinGame).toHaveBeenCalledTimes(4);
+        expect(useJoinGame).toHaveBeenNthCalledWith(1);
+        expect(useJoinGame).toHaveBeenNthCalledWith(2);
+        expect(useJoinGame).toHaveBeenNthCalledWith(3);
         expect(useJoinGame).toHaveBeenNthCalledWith(4);
       });
 
@@ -499,11 +476,19 @@ describe(useJoinExistingGame.name, () => {
 
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture);
 
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
+        (useJoinGame as jest.Mock<typeof useJoinGame>)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture);
 
         (
           getUserMe as unknown as jest.Mock<typeof getUserMe>
@@ -530,30 +515,6 @@ describe(useJoinExistingGame.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
         // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderResult = renderHook(() => useJoinExistingGame());
@@ -574,11 +535,14 @@ describe(useJoinExistingGame.name, () => {
 
       it('should call useAppSelector() eight times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(8);
-        expect(useAppSelector).toHaveBeenNthCalledWith(8, expect.any(Function));
+        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should call useJoinGame() four times', () => {
         expect(useJoinGame).toHaveBeenCalledTimes(4);
+        expect(useJoinGame).toHaveBeenNthCalledWith(1);
+        expect(useJoinGame).toHaveBeenNthCalledWith(2);
+        expect(useJoinGame).toHaveBeenNthCalledWith(3);
         expect(useJoinGame).toHaveBeenNthCalledWith(4);
       });
 
@@ -663,11 +627,13 @@ describe(useJoinExistingGame.name, () => {
 
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
+          .mockReturnValueOnce(userFixture)
+          .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture);
 
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
+        (useJoinGame as jest.Mock<typeof useJoinGame>)
+          .mockReturnValueOnce(singleApiCallHookResultFixture)
+          .mockReturnValueOnce(singleApiCallHookResultFixture);
 
         (
           getUserMe as unknown as jest.Mock<typeof getUserMe>
@@ -694,30 +660,6 @@ describe(useJoinExistingGame.name, () => {
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
 
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
-        );
-
         // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
           renderResult = renderHook(() => useJoinExistingGame());
@@ -738,11 +680,12 @@ describe(useJoinExistingGame.name, () => {
 
       it('should call useAppSelector() four times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(4);
-        expect(useAppSelector).toHaveBeenNthCalledWith(4, expect.any(Function));
+        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
       it('should call useJoinGame() twice', () => {
         expect(useJoinGame).toHaveBeenCalledTimes(2);
+        expect(useJoinGame).toHaveBeenNthCalledWith(1);
         expect(useJoinGame).toHaveBeenNthCalledWith(2);
       });
 
