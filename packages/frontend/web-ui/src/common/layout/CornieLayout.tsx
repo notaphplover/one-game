@@ -1,8 +1,12 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
+import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { useAppSelector } from '../../app/store/hooks';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
+import { NavbarWithAuth } from '../components/NavbarWithAuth';
 
 function getLayoutBoxClassName(params: CornieLayoutParams): string {
   const layoutBoxClassNames = ['bkg-layout'];
@@ -25,7 +29,17 @@ interface CornieLayoutParams {
 }
 
 export const CornieLayout = (params: CornieLayoutParams): React.JSX.Element => {
-  const navbar = params.withNavBar ?? false ? <Navbar /> : undefined;
+  const auth: AuthenticatedAuthState | null = useAppSelector(
+    selectAuthenticatedAuth,
+  );
+
+  let navbar: React.JSX.Element | undefined;
+
+  if (auth !== null) {
+    navbar = params.withNavBar ?? false ? <NavbarWithAuth /> : undefined;
+  } else {
+    navbar = params.withNavBar ?? false ? <Navbar /> : undefined;
+  }
   const footer = params.withFooter ?? false ? <Footer /> : undefined;
 
   return (

@@ -1,11 +1,14 @@
 import { afterAll, beforeAll, describe, expect, jest, it } from '@jest/globals';
 
 jest.mock('../hooks/useRegisterForm');
+jest.mock('../../app/store/hooks');
 jest.mock('../../common/hooks/useShowPassword');
 
 import { RenderResult, fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { useAppSelector } from '../../app/store/hooks';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { useRegisterForm } from '../hooks/useRegisterForm';
 import { FormValidationResult } from '../models/FormValidationResult';
@@ -15,6 +18,7 @@ import { Register } from './Register';
 
 describe(Register.name, () => {
   let formFieldsFixture: UseRegisterFormParams;
+  let authFixture: AuthenticatedAuthState | null;
 
   let notifyFormFieldsFilledMock: jest.Mock<() => void>;
   let setFormFieldMock: jest.Mock<
@@ -35,6 +39,8 @@ describe(Register.name, () => {
       name: 'name fixture',
       password: 'password-fixture',
     };
+
+    authFixture = null;
 
     notifyFormFieldsFilledMock = jest.fn();
     setFormFieldMock = jest.fn();
@@ -67,6 +73,10 @@ describe(Register.name, () => {
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
+
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
 
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
@@ -150,6 +160,10 @@ describe(Register.name, () => {
         setFormField: setFormFieldMock,
       });
 
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
+
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
@@ -228,6 +242,10 @@ describe(Register.name, () => {
         setFormField: setFormFieldMock,
       });
 
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
+
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
@@ -276,6 +294,10 @@ describe(Register.name, () => {
         setFormField: setFormFieldMock,
       });
 
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
+
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
       ).mockReturnValueOnce({
@@ -319,6 +341,10 @@ describe(Register.name, () => {
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormField: setFormFieldMock,
       });
+
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
 
       (
         useShowPassword as jest.Mock<typeof useShowPassword>
