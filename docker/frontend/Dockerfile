@@ -9,7 +9,7 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 COPY ./docker/frontend/env/.env.production ./packages/frontend/web-ui
-RUN pnpm run build --filter=web-ui
+RUN pnpm run build --filter=@cornie-js/web-ui
 RUN mkdir -p /prod/web-ui
 RUN cp -r ./packages/frontend/web-ui/dist /prod/web-ui
 
