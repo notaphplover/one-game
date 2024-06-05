@@ -8,24 +8,24 @@ FROM base as backendserviceuserbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
-RUN pnpm run build --filter=backend-service-user
-RUN pnpm deploy --filter=backend-service-user --prod /prod/backend-service-user
+RUN pnpm run build --filter=@cornie-js/backend-service-user
+RUN pnpm deploy --filter=@cornie-js/backend-service-user --prod /prod/backend-service-user
 COPY ./.npmrc /prod/backend-service-user
 
 FROM base as backendservicegamebuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
-RUN pnpm run build --filter=backend-service-game
-RUN pnpm deploy --filter=backend-service-game --prod /prod/backend-service-game
+RUN pnpm run build --filter=@cornie-js/backend-service-game
+RUN pnpm deploy --filter=@cornie-js/backend-service-game --prod /prod/backend-service-game
 COPY ./.npmrc /prod/backend-service-game
 
 FROM base as backendservicegatewaybuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
-RUN pnpm run build --filter=backend-service-gateway
-RUN pnpm deploy --filter=backend-service-gateway --prod /prod/backend-service-gateway
+RUN pnpm run build --filter=@cornie-js/backend-service-gateway
+RUN pnpm deploy --filter=@cornie-js/backend-service-gateway --prod /prod/backend-service-gateway
 COPY ./.npmrc /prod/backend-service-gateway
 
 FROM base AS backendserviceuser
