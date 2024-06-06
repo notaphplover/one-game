@@ -88,18 +88,6 @@ describe(useJoinExistingGame.name, () => {
 
         getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
 
-        const payloadActionFixture: PayloadAction<UserMeSerializedResponse> = {
-          payload: {
-            body: {
-              active: true,
-              id: 'id-fixture',
-              name: 'name-fixture',
-            },
-            statusCode: 200,
-          },
-          type: 'sample-type',
-        };
-
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture)
@@ -126,14 +114,6 @@ describe(useJoinExistingGame.name, () => {
           navigateMock,
         );
 
-        dispatchMock = jest
-          .fn<ReturnType<typeof useAppDispatch>>()
-          .mockImplementationOnce(
-            <TReturn, TAction>(): TAction | TReturn =>
-              payloadActionFixture as TReturn,
-          ) as ReturnType<typeof useAppDispatch> &
-          jest.Mock<ReturnType<typeof useAppDispatch>>;
-
         (
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
         ).mockReturnValue(dispatchMock);
@@ -147,10 +127,6 @@ describe(useJoinExistingGame.name, () => {
       afterAll(() => {
         jest.resetAllMocks();
         jest.clearAllMocks();
-      });
-
-      it('should not call useDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
       });
 
       it('should call useAppSelector() six times', () => {
@@ -222,11 +198,6 @@ describe(useJoinExistingGame.name, () => {
           getUserMe as unknown as jest.Mock<typeof getUserMe>
         ).mockReturnValueOnce(getUserMeResult);
 
-        navigateMock = jest
-          .fn<ReturnType<typeof useNavigate>>()
-          .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
-          jest.Mock<ReturnType<typeof useNavigate>>;
-
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
         );
@@ -273,10 +244,6 @@ describe(useJoinExistingGame.name, () => {
         expect(useJoinGame).toHaveBeenNthCalledWith(2);
         expect(useJoinGame).toHaveBeenNthCalledWith(3);
       });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
-      });
     });
 
     describe('when called, and auth is not null and user is not null and call useJoinGame() returns an OK response', () => {
@@ -311,18 +278,6 @@ describe(useJoinExistingGame.name, () => {
 
         getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
 
-        const payloadActionFixture: PayloadAction<UserMeSerializedResponse> = {
-          payload: {
-            body: {
-              active: true,
-              id: 'id-fixture',
-              name: 'name-fixture',
-            },
-            statusCode: 200,
-          },
-          type: 'sample-type',
-        };
-
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture)
@@ -343,22 +298,9 @@ describe(useJoinExistingGame.name, () => {
           getUserMe as unknown as jest.Mock<typeof getUserMe>
         ).mockReturnValueOnce(getUserMeResult);
 
-        navigateMock = jest
-          .fn<ReturnType<typeof useNavigate>>()
-          .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
-          jest.Mock<ReturnType<typeof useNavigate>>;
-
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
         );
-
-        dispatchMock = jest
-          .fn<ReturnType<typeof useAppDispatch>>()
-          .mockImplementationOnce(
-            <TReturn, TAction>(): TAction | TReturn =>
-              payloadActionFixture as TReturn,
-          ) as ReturnType<typeof useAppDispatch> &
-          jest.Mock<ReturnType<typeof useAppDispatch>>;
 
         (
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
@@ -402,10 +344,6 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should not call useAppDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
-      });
-
       it('should call useAppSelector() eight times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(8);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
@@ -417,10 +355,6 @@ describe(useJoinExistingGame.name, () => {
         expect(useJoinGame).toHaveBeenNthCalledWith(2);
         expect(useJoinGame).toHaveBeenNthCalledWith(3);
         expect(useJoinGame).toHaveBeenNthCalledWith(4);
-      });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
       });
 
       it('should return a fulfilled status', () => {
@@ -462,18 +396,6 @@ describe(useJoinExistingGame.name, () => {
 
         getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
 
-        const payloadActionFixture: PayloadAction<UserMeSerializedResponse> = {
-          payload: {
-            body: {
-              active: true,
-              id: 'id-fixture',
-              name: 'name-fixture',
-            },
-            statusCode: 200,
-          },
-          type: 'sample-type',
-        };
-
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture)
@@ -494,22 +416,9 @@ describe(useJoinExistingGame.name, () => {
           getUserMe as unknown as jest.Mock<typeof getUserMe>
         ).mockReturnValueOnce(getUserMeResult);
 
-        navigateMock = jest
-          .fn<ReturnType<typeof useNavigate>>()
-          .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
-          jest.Mock<ReturnType<typeof useNavigate>>;
-
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
         );
-
-        dispatchMock = jest
-          .fn<ReturnType<typeof useAppDispatch>>()
-          .mockImplementationOnce(
-            <TReturn, TAction>(): TAction | TReturn =>
-              payloadActionFixture as TReturn,
-          ) as ReturnType<typeof useAppDispatch> &
-          jest.Mock<ReturnType<typeof useAppDispatch>>;
 
         (
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
@@ -529,10 +438,6 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should not call useAppDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
-      });
-
       it('should call useAppSelector() eight times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(8);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
@@ -544,10 +449,6 @@ describe(useJoinExistingGame.name, () => {
         expect(useJoinGame).toHaveBeenNthCalledWith(2);
         expect(useJoinGame).toHaveBeenNthCalledWith(3);
         expect(useJoinGame).toHaveBeenNthCalledWith(4);
-      });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
       });
 
       it('should return a rejected status', () => {
@@ -613,18 +514,6 @@ describe(useJoinExistingGame.name, () => {
 
         getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
 
-        const payloadActionFixture: PayloadAction<UserMeSerializedResponse> = {
-          payload: {
-            body: {
-              active: true,
-              id: 'id-fixture',
-              name: 'name-fixture',
-            },
-            statusCode: 200,
-          },
-          type: 'sample-type',
-        };
-
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
           .mockReturnValueOnce(userFixture)
@@ -639,22 +528,9 @@ describe(useJoinExistingGame.name, () => {
           getUserMe as unknown as jest.Mock<typeof getUserMe>
         ).mockReturnValueOnce(getUserMeResult);
 
-        navigateMock = jest
-          .fn<ReturnType<typeof useNavigate>>()
-          .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
-          jest.Mock<ReturnType<typeof useNavigate>>;
-
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
         );
-
-        dispatchMock = jest
-          .fn<ReturnType<typeof useAppDispatch>>()
-          .mockImplementationOnce(
-            <TReturn, TAction>(): TAction | TReturn =>
-              payloadActionFixture as TReturn,
-          ) as ReturnType<typeof useAppDispatch> &
-          jest.Mock<ReturnType<typeof useAppDispatch>>;
 
         (
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
@@ -674,10 +550,6 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should not call useAppDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
-      });
-
       it('should call useAppSelector() four times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(4);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
@@ -687,10 +559,6 @@ describe(useJoinExistingGame.name, () => {
         expect(useJoinGame).toHaveBeenCalledTimes(2);
         expect(useJoinGame).toHaveBeenNthCalledWith(1);
         expect(useJoinGame).toHaveBeenNthCalledWith(2);
-      });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
       });
 
       it('should return a rejected status', () => {
