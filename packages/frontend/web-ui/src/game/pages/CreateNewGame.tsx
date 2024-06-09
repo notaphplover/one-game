@@ -34,7 +34,7 @@ export const CreateNewGame = (): React.JSX.Element => {
     status,
     notifyFormFieldsFilled,
     formValidation,
-    backendError,
+    errorMessage,
     setFormFieldName,
     setFormFieldPlayers,
     setFormFieldOptions,
@@ -64,15 +64,16 @@ export const CreateNewGame = (): React.JSX.Element => {
 
   const isTextFieldDisabled = (): boolean => {
     return (
-      status === CreateNewGameStatus.backendOK ||
-      status === CreateNewGameStatus.pendingBackend ||
-      status === CreateNewGameStatus.pendingValidation
+      status !== CreateNewGameStatus.initial &&
+      status !== CreateNewGameStatus.formValidationError
     );
   };
 
   if (
-    status === CreateNewGameStatus.pendingValidation ||
-    status === CreateNewGameStatus.pendingBackend
+    status !== CreateNewGameStatus.initial &&
+    status !== CreateNewGameStatus.formValidationError &&
+    status !== CreateNewGameStatus.backendError &&
+    status !== CreateNewGameStatus.done
   ) {
     return <CheckingAuth />;
   }
@@ -276,12 +277,12 @@ export const CreateNewGame = (): React.JSX.Element => {
               </Grid>
             </Grid>
 
-            <Grid container display={backendError !== null ? '' : 'none'}>
+            <Grid container display={errorMessage !== null ? '' : 'none'}>
               <Grid item xs={12}>
                 <Box className="form-new-game-error">
                   <Alert severity="error">
                     <AlertTitle>Error</AlertTitle>
-                    {backendError}
+                    {errorMessage}
                   </Alert>
                 </Box>
               </Grid>
@@ -289,7 +290,7 @@ export const CreateNewGame = (): React.JSX.Element => {
 
             <Grid
               container
-              display={status === CreateNewGameStatus.backendOK ? '' : 'none'}
+              display={status === CreateNewGameStatus.done ? '' : 'none'}
             >
               <Grid item xs={12}>
                 <Box className="form-new-game-success">
@@ -303,7 +304,7 @@ export const CreateNewGame = (): React.JSX.Element => {
 
             <Grid
               container
-              display={status === CreateNewGameStatus.backendOK ? '' : 'none'}
+              display={status === CreateNewGameStatus.done ? '' : 'none'}
             >
               <Grid item xs={12}>
                 <Box className="new-game-form-button">
@@ -323,7 +324,7 @@ export const CreateNewGame = (): React.JSX.Element => {
 
             <Grid
               container
-              display={status === CreateNewGameStatus.backendOK ? 'none' : ''}
+              display={status === CreateNewGameStatus.done ? 'none' : ''}
             >
               <Grid item xs={12}>
                 <Box className="new-game-form-button">
