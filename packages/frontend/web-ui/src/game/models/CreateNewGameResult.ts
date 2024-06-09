@@ -8,7 +8,7 @@ export interface CreateNewGameResult {
   status: CreateNewGameStatus;
   notifyFormFieldsFilled: () => void;
   formValidation: Either<FormNewGameValidationErrorResult, undefined>;
-  backendError: string | null;
+  errorMessage: string | null;
   setFormFieldName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setFormFieldPlayers: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setFormFieldOptions: (event: React.ChangeEvent<HTMLInputElement>) => void;

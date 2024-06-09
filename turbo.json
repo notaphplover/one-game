@@ -113,5 +113,6 @@
       "inputs": ["dist/**", "lib/**"],
       "outputs": []
     }
-  }
+  },
+  "ui": "tui"
 }

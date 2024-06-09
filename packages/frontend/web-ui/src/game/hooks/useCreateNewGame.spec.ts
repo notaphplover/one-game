@@ -1,93 +1,78 @@
+jest.mock('../../common/http/services/cornieApi');
 jest.mock('../helpers/validateNumberOfPlayers');
-jest.mock('../../common/helpers/joinGame');
-jest.mock('../../common/helpers/getUserMeId');
-jest.mock('./useCreateGame');
-jest.mock('../../app/store/hooks');
-jest.mock('../../app/store/features/authSlice');
 
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { QueryStatus } from '@reduxjs/toolkit/query';
 import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
 
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
-import { useAppSelector } from '../../app/store/hooks';
-import { getUserMeId } from '../../common/helpers/getUserMeId';
-import { joinGame } from '../../common/helpers/joinGame';
-import { SingleApiCallResult } from '../../common/hooks/useSingleApiCall';
-import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
-import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
-import { Either } from '../../common/models/Either';
+import { cornieApi } from '../../common/http/services/cornieApi';
+import { Either, Left } from '../../common/models/Either';
 import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
 import { CreateNewGameResult } from '../models/CreateNewGameResult';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { GameOptions } from '../models/GameOptions';
 import { FormNewGameValidationErrorResult } from './../models/FormNewGameValidationErrorResult';
-import { useCreateGame } from './useCreateGame';
-import { HTTP_BAD_REQUEST_ERROR_MESSAGE } from './useCreateGame/utils/unexpectedErrorMessage';
 import { useCreateNewGame } from './useCreateNewGame';
 
 describe(useCreateNewGame.name, () => {
-  let numberOfPlayersFixture: string;
-  let authenticatedAuthStateFixture: AuthenticatedAuthState;
-  let formNewGameValidationErrorResultFixture: FormNewGameValidationErrorResult;
-  let serializableUserIdFixture: UserMeSerializedResponse;
-  let serializableJoinGameFixture: JoinGameSerializedResponse;
-  let callNewGameMock: jest.Mock<(params: FormFieldsNewGame) => void>;
-  let singleApiCallHookResultFixture: SingleApiCallResult<
-    FormFieldsNewGame,
-    apiModels.NonStartedGameV1
-  >;
+  describe('when called()', () => {
+    let useGetUsersV1MeQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
+    >;
+    let useCreateGamesV1MutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateGamesV1Mutation>
+    >;
+    let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
+    >;
 
-  beforeAll(() => {
-    numberOfPlayersFixture = 'error-players';
-
-    authenticatedAuthStateFixture = {
-      accessToken: 'accessToken-fixture',
-      refreshToken: 'refreshToken-fixture',
-      status: AuthStateStatus.authenticated,
-    };
-
-    formNewGameValidationErrorResultFixture = {
-      numberOfPlayers: numberOfPlayersFixture,
-    };
-
-    serializableUserIdFixture = {
-      body: {
-        active: true,
-        id: 'id-fixture',
-        name: 'name-fixture',
-      },
-      statusCode: 200,
-    };
-
-    serializableJoinGameFixture = {
-      body: {
-        userId: 'user-id-fixture',
-      },
-      statusCode: 200,
-    };
-
-    callNewGameMock = jest.fn();
-
-    singleApiCallHookResultFixture = {
-      call: callNewGameMock,
-      result: null,
-    };
-  });
-
-  describe('when called, on initialize values', () => {
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
     let formFieldsNewGame: FormFieldsNewGame;
     let statusNewGame: CreateNewGameStatus;
 
     beforeAll(() => {
-      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValueOnce(
-        singleApiCallHookResultFixture,
-      );
+      useGetUsersV1MeQueryResultMock = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
+      useCreateGamesV1MutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      useCreateGamesV1SlotsMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      (
+        cornieApi.useGetUsersV1MeQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeQuery
+        >
+      ).mockReturnValueOnce(useGetUsersV1MeQueryResultMock);
+      (
+        cornieApi.useCreateGamesV1Mutation as jest.Mock<
+          typeof cornieApi.useCreateGamesV1Mutation
+        >
+      ).mockReturnValueOnce(useCreateGamesV1MutationResultMock);
+      (
+        cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
+          typeof cornieApi.useCreateGamesV1SlotsMutation
+        >
+      ).mockReturnValueOnce(useCreateGamesV1SlotsMutationResultMock);
 
       renderResult = renderHook(() => useCreateNewGame());
 
@@ -99,17 +84,41 @@ describe(useCreateNewGame.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should initialize values on name', () => {
-      const nameExpected: string = '';
-      expect(formFieldsNewGame.name).toStrictEqual(nameExpected);
+    it('should call cornieApi.useGetUsersV1MeQuery()', () => {
+      const expectedParams: Parameters<typeof cornieApi.useGetUsersV1MeQuery> =
+        [
+          {
+            params: [],
+          },
+        ];
+
+      expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledWith(
+        ...expectedParams,
+      );
     });
 
-    it('should initialize values on players', () => {
+    it('should call cornieApi.useCreateGamesV1Mutation()', () => {
+      expect(cornieApi.useCreateGamesV1Mutation).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useCreateGamesV1Mutation).toHaveBeenCalledWith();
+    });
+
+    it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
+      expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
+    });
+
+    it('should have initial name value', () => {
+      const expectedName: string = '';
+      expect(formFieldsNewGame.name).toStrictEqual(expectedName);
+    });
+
+    it('should have initial players amount', () => {
       const playersExpected: number = 2;
       expect(formFieldsNewGame.players).toStrictEqual(playersExpected);
     });
 
-    it('should initialize values on options', () => {
+    it('should have initial options', () => {
       const optionsExpected: GameOptions = {
         chainDraw2Draw2Cards: false,
         chainDraw2Draw4Cards: false,
@@ -122,37 +131,78 @@ describe(useCreateNewGame.name, () => {
       expect(formFieldsNewGame.options).toStrictEqual(optionsExpected);
     });
 
-    it('should initialize values on status', () => {
+    it('should have initial status', () => {
       expect(statusNewGame).toBe(CreateNewGameStatus.initial);
     });
   });
 
-  describe('when called, and players input value is not correct', () => {
+  describe('when called, and validateNumberOfPlayers() returns Left', () => {
+    let useGetUsersV1MeQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
+    >;
+    let useCreateGamesV1MutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateGamesV1Mutation>
+    >;
+    let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
+    >;
+    let validateNumberOfPlayersErrorFixture: Left<string>;
+
     let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
     let status: CreateNewGameStatus;
     let formValidation: Either<FormNewGameValidationErrorResult, undefined>;
 
     beforeAll(async () => {
+      useGetUsersV1MeQueryResultMock = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
+      useCreateGamesV1MutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      useCreateGamesV1SlotsMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      (
+        cornieApi.useGetUsersV1MeQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeQuery
+        >
+      ).mockReturnValue(useGetUsersV1MeQueryResultMock);
+      (
+        cornieApi.useCreateGamesV1Mutation as jest.Mock<
+          typeof cornieApi.useCreateGamesV1Mutation
+        >
+      ).mockReturnValue(useCreateGamesV1MutationResultMock);
+      (
+        cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
+          typeof cornieApi.useCreateGamesV1SlotsMutation
+        >
+      ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
+
+      validateNumberOfPlayersErrorFixture = {
+        isRight: false,
+        value: 'error-fixture',
+      };
+
       (
         validateNumberOfPlayers as jest.Mock<typeof validateNumberOfPlayers>
-      ).mockReturnValueOnce({
-        isRight: false,
-        value: numberOfPlayersFixture,
-      });
-
-      (
-        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValue(authenticatedAuthStateFixture);
-
-      (getUserMeId as jest.Mock<typeof getUserMeId>).mockResolvedValueOnce(
-        serializableUserIdFixture,
-      );
-
-      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValue(
-        singleApiCallHookResultFixture,
-      );
+      ).mockReturnValueOnce(validateNumberOfPlayersErrorFixture);
 
       renderResult = renderHook(() => useCreateNewGame());
+
       const notifyFormFieldsFilled: () => void =
         renderResult.result.current.notifyFormFieldsFilled;
 
@@ -163,7 +213,7 @@ describe(useCreateNewGame.name, () => {
       await waitFor(() => {
         status = renderResult.result.current.status;
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(status).toBe(CreateNewGameStatus.validationKO);
+        expect(status).toBe(CreateNewGameStatus.formValidationError);
       });
 
       formValidation = renderResult.result.current.formValidation;
@@ -172,6 +222,30 @@ describe(useCreateNewGame.name, () => {
     afterAll(() => {
       jest.clearAllMocks();
       jest.resetAllMocks();
+    });
+
+    it('should call cornieApi.useGetUsersV1MeQuery()', () => {
+      const expectedParams: Parameters<typeof cornieApi.useGetUsersV1MeQuery> =
+        [
+          {
+            params: [],
+          },
+        ];
+
+      expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledTimes(3);
+      expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledWith(
+        ...expectedParams,
+      );
+    });
+
+    it('should call cornieApi.useCreateGamesV1Mutation()', () => {
+      expect(cornieApi.useCreateGamesV1Mutation).toHaveBeenCalledTimes(3);
+      expect(cornieApi.useCreateGamesV1Mutation).toHaveBeenCalledWith();
+    });
+
+    it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
+      expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(3);
+      expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
     });
 
     it('should have been called validateNumberOfPlayers once', () => {
@@ -189,39 +263,150 @@ describe(useCreateNewGame.name, () => {
         unknown
       > = {
         isRight: false,
-        value: formNewGameValidationErrorResultFixture,
+        value: {
+          numberOfPlayers: validateNumberOfPlayersErrorFixture.value,
+        },
       };
       expect(formValidation).toStrictEqual(resultValidation);
     });
 
     it('should return an status validation KO', () => {
-      expect(status).toBe(CreateNewGameStatus.validationKO);
+      expect(status).toBe(CreateNewGameStatus.formValidationError);
     });
   });
 
   describe('when called, and API returns an OK response', () => {
-    let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
-    let status: CreateNewGameStatus;
-    let singleApiCallHookFixture: SingleApiCallResult<
-      FormFieldsNewGame,
-      apiModels.NonStartedGameV1
+    let gameV1Fixture: apiModels.NonStartedGameV1;
+    let gameV1SlotFixture: apiModels.NonStartedGameSlotV1;
+
+    let useGetUsersV1MeQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
+    >;
+    let useCreateGamesV1MutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateGamesV1Mutation>
+    >;
+    let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
     >;
 
+    let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
+    let status: CreateNewGameStatus;
+
     beforeAll(async () => {
-      singleApiCallHookFixture = {
-        call: callNewGameMock,
-        result: {
-          isRight: true,
-          value: {
-            id: 'id-fixture',
-            name: 'name-fixture',
-            state: {
-              slots: [{ userId: 'userId-fixture' }],
-              status: 'nonStarted',
-            },
-          },
+      gameV1Fixture = {
+        id: 'id-fixture',
+        name: 'name-fixture',
+        state: {
+          slots: [{ userId: 'userId-fixture' }],
+          status: 'nonStarted',
         },
       };
+
+      gameV1SlotFixture = {
+        userId: 'userId-fixture',
+      };
+
+      const userV1Fixture: apiModels.UserV1 = {
+        active: true,
+        id: 'userId-fixture',
+        name: 'name fixture',
+      };
+
+      useGetUsersV1MeQueryResultMock = {
+        data: userV1Fixture,
+        error: false,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
+      useCreateGamesV1MutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      const [triggerCreateGamesMock] = useCreateGamesV1MutationResultMock;
+
+      triggerCreateGamesMock.mockImplementation(
+        (): ReturnType<typeof triggerCreateGamesMock> => {
+          const gamePayload: Awaited<
+            ReturnType<typeof triggerCreateGamesMock>
+          > = {
+            data: gameV1Fixture,
+            error: undefined,
+          };
+
+          useCreateGamesV1MutationResultMock = [
+            triggerCreateGamesMock,
+            {
+              data: gameV1Fixture,
+              reset: jest.fn(),
+              status: QueryStatus.fulfilled,
+            },
+          ];
+
+          return Promise.resolve(gamePayload) as ReturnType<
+            typeof triggerCreateGamesMock
+          >;
+        },
+      );
+
+      useCreateGamesV1SlotsMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      const [triggerCreateGamesSlotMock] =
+        useCreateGamesV1SlotsMutationResultMock;
+
+      triggerCreateGamesSlotMock.mockImplementation(
+        (): ReturnType<typeof triggerCreateGamesSlotMock> => {
+          const gameSlotPayload: Awaited<
+            ReturnType<typeof triggerCreateGamesSlotMock>
+          > = {
+            data: gameV1SlotFixture,
+            error: undefined,
+          };
+
+          useCreateGamesV1SlotsMutationResultMock = [
+            triggerCreateGamesSlotMock,
+            {
+              data: gameV1SlotFixture,
+              reset: jest.fn(),
+              status: QueryStatus.fulfilled,
+            },
+          ];
+
+          return Promise.resolve(gameSlotPayload) as ReturnType<
+            typeof triggerCreateGamesSlotMock
+          >;
+        },
+      );
+
+      (
+        cornieApi.useGetUsersV1MeQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeQuery
+        >
+      ).mockReturnValue(useGetUsersV1MeQueryResultMock);
+      (
+        cornieApi.useCreateGamesV1Mutation as jest.Mock<
+          typeof cornieApi.useCreateGamesV1Mutation
+        >
+      )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .mockImplementation((): any => useCreateGamesV1MutationResultMock);
+      (
+        cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
+          typeof cornieApi.useCreateGamesV1SlotsMutation
+        >
+      )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .mockImplementation((): any => useCreateGamesV1SlotsMutationResultMock);
 
       (
         validateNumberOfPlayers as jest.Mock<typeof validateNumberOfPlayers>
@@ -229,22 +414,6 @@ describe(useCreateNewGame.name, () => {
         isRight: true,
         value: undefined,
       });
-
-      (
-        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValue(authenticatedAuthStateFixture);
-
-      (getUserMeId as jest.Mock<typeof getUserMeId>).mockResolvedValueOnce(
-        serializableUserIdFixture,
-      );
-
-      (joinGame as jest.Mock<typeof joinGame>).mockResolvedValueOnce(
-        serializableJoinGameFixture,
-      );
-
-      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValue(
-        singleApiCallHookFixture,
-      );
 
       renderResult = renderHook(() => useCreateNewGame());
       const notifyFormFieldsFilled: () => void =
@@ -257,7 +426,7 @@ describe(useCreateNewGame.name, () => {
       await waitFor(() => {
         status = renderResult.result.current.status;
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(status).toBe(CreateNewGameStatus.backendOK);
+        expect(status).toBe(CreateNewGameStatus.done);
       });
     });
 
@@ -266,119 +435,32 @@ describe(useCreateNewGame.name, () => {
       jest.resetAllMocks();
     });
 
-    it('should called useCreateGame hook', () => {
-      const formFieldsNewGameExpected: FormFieldsNewGame = {
-        name: '',
-        options: {
-          chainDraw2Draw2Cards: false,
-          chainDraw2Draw4Cards: false,
-          chainDraw4Draw2Cards: false,
-          chainDraw4Draw4Cards: false,
-          playCardIsMandatory: false,
-          playMultipleSameCards: false,
-          playWildDraw4IfNoOtherAlternative: true,
-        },
-        players: 2,
-      };
-      expect(singleApiCallHookFixture.call).toHaveBeenCalledTimes(1);
-      expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
-        formFieldsNewGameExpected,
+    it('should call cornieApi.useGetUsersV1MeQuery()', () => {
+      const expectedParams: Parameters<typeof cornieApi.useGetUsersV1MeQuery> =
+        [
+          {
+            params: [],
+          },
+        ];
+
+      expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledTimes(7);
+      expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledWith(
+        ...expectedParams,
       );
+    });
+
+    it('should call cornieApi.useCreateGamesV1Mutation()', () => {
+      expect(cornieApi.useCreateGamesV1Mutation).toHaveBeenCalledTimes(7);
+      expect(cornieApi.useCreateGamesV1Mutation).toHaveBeenCalledWith();
+    });
+
+    it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
+      expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(7);
+      expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
     });
 
     it('should return an status backend OK', () => {
-      expect(status).toBe(CreateNewGameStatus.backendOK);
-    });
-  });
-
-  describe('when called, and API returns a non OK response', () => {
-    let renderResult: RenderHookResult<CreateNewGameResult, unknown>;
-    let backendError: string | null;
-    let status: CreateNewGameStatus;
-    let singleApiCallHookFixture: SingleApiCallResult<
-      FormFieldsNewGame,
-      apiModels.NonStartedGameV1
-    >;
-
-    beforeAll(async () => {
-      singleApiCallHookFixture = {
-        call: callNewGameMock,
-        result: {
-          isRight: false,
-          value: HTTP_BAD_REQUEST_ERROR_MESSAGE,
-        },
-      };
-
-      (
-        validateNumberOfPlayers as jest.Mock<typeof validateNumberOfPlayers>
-      ).mockReturnValueOnce({
-        isRight: true,
-        value: undefined,
-      });
-
-      (
-        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValue(authenticatedAuthStateFixture);
-
-      (getUserMeId as jest.Mock<typeof getUserMeId>).mockResolvedValueOnce(
-        serializableUserIdFixture,
-      );
-
-      (joinGame as jest.Mock<typeof joinGame>).mockResolvedValueOnce(
-        serializableJoinGameFixture,
-      );
-
-      (useCreateGame as jest.Mock<typeof useCreateGame>).mockReturnValue(
-        singleApiCallHookFixture,
-      );
-
-      renderResult = renderHook(() => useCreateNewGame());
-      const notifyFormFieldsFilled: () => void =
-        renderResult.result.current.notifyFormFieldsFilled;
-
-      act(() => {
-        notifyFormFieldsFilled();
-      });
-
-      await waitFor(() => {
-        status = renderResult.result.current.status;
-        backendError = renderResult.result.current.backendError;
-        // eslint-disable-next-line jest/no-standalone-expect
-        expect(status).toBe(CreateNewGameStatus.backendKO);
-      });
-    });
-
-    afterAll(() => {
-      jest.clearAllMocks();
-      jest.resetAllMocks();
-    });
-
-    it('should called useCreateGame hook', () => {
-      const formFieldsNewGameExpected: FormFieldsNewGame = {
-        name: '',
-        options: {
-          chainDraw2Draw2Cards: false,
-          chainDraw2Draw4Cards: false,
-          chainDraw4Draw2Cards: false,
-          chainDraw4Draw4Cards: false,
-          playCardIsMandatory: false,
-          playMultipleSameCards: false,
-          playWildDraw4IfNoOtherAlternative: true,
-        },
-        players: 2,
-      };
-      expect(singleApiCallHookFixture.call).toHaveBeenCalledTimes(1);
-      expect(singleApiCallHookFixture.call).toHaveBeenCalledWith(
-        formFieldsNewGameExpected,
-      );
-    });
-
-    it('should return an status backend KO', () => {
-      expect(status).toBe(CreateNewGameStatus.backendKO);
-    });
-
-    it('should return an backend error', () => {
-      expect(backendError).toBe(HTTP_BAD_REQUEST_ERROR_MESSAGE);
+      expect(status).toBe(CreateNewGameStatus.done);
     });
   });
 });
