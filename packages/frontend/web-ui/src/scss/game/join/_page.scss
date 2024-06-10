@@ -1,0 +1,37 @@
+@use '../../base/variables' as var;
+
+.join-existing-game-grid {
+  background-color: var(--cg-text-primary);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--cg-bkg-primary-light);
+  padding: 3rem;
+  margin: 0rem 2rem;
+}
+
+.join-existing-game-title {
+  padding-bottom: 1rem;
+}
+
+@media (min-width: var.$sm) {
+  .join-existing-game-grid {
+    margin: 0;
+    max-width: 450px;
+  }
+}
+
+.join-existing-game-success {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.join-existing-game-error {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.join-existing-game-grid .return-cornie-button {
+  margin-top: 2rem;
+}

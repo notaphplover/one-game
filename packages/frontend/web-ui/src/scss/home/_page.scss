@@ -74,6 +74,10 @@
 }
 
 .home-auth-container-games {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 330px;
   border: 1px solid var(--cg-bkg-primary-dark);
   border-radius: 10px;
   background-color: var(--cg-bkg-primary-dark);

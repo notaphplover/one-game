@@ -56,11 +56,21 @@ export const Login = (): React.JSX.Element => {
     selectAuthenticatedAuth,
   );
 
+  const getRedirectTo = (): string | null => {
+    return new URL(window.location.href).searchParams.get('redirectTo');
+  };
+
   useEffect(() => {
     if (formStatus === LoginStatus.backendOK && auth !== null) {
       window.localStorage.setItem('accessToken', auth.accessToken);
       window.localStorage.setItem('refreshToken', auth.refreshToken);
-      navigate('/', { replace: true });
+
+      const redirectTo: string | null = getRedirectTo();
+      if (redirectTo === null) {
+        navigate('/', { replace: true });
+      } else {
+        window.location.href = redirectTo;
+      }
     }
   }, [formStatus, auth]);
 
