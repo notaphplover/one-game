@@ -36,10 +36,6 @@ import { UNAUTHORIZED_ERROR_MESSAGE } from './useJoinGame/utils/unexpectedErrorM
 
 describe(useJoinExistingGame.name, () => {
   let callJoinGameMock: jest.Mock<(params: UseJoinGameParams) => void>;
-  let singleApiCallHookResultFixture: SingleApiCallResult<
-    UseJoinGameParams,
-    apiModels.NonStartedGameSlotV1
-  >;
 
   let dispatchMock: ReturnType<typeof useAppDispatch> &
     jest.Mock<ReturnType<typeof useAppDispatch>>;
@@ -49,6 +45,16 @@ describe(useJoinExistingGame.name, () => {
 
   beforeAll(() => {
     callJoinGameMock = jest.fn();
+
+    dispatchMock = jest.fn<ReturnType<typeof useAppDispatch>>() as ReturnType<
+      typeof useAppDispatch
+    > &
+      jest.Mock<ReturnType<typeof useAppDispatch>>;
+
+    navigateMock = jest.fn<ReturnType<typeof useNavigate>>() as ReturnType<
+      typeof useNavigate
+    > &
+      jest.Mock<ReturnType<typeof useNavigate>>;
   });
 
   describe('having a window with location.href with gameId query', () => {
@@ -72,6 +78,10 @@ describe(useJoinExistingGame.name, () => {
       let getUserMeResult: ReturnType<typeof getUserMe>;
       let authFixture: AuthenticatedAuthState | null;
       let userFixture: FulfilledUserState;
+      let singleApiCallHookResultFixture: SingleApiCallResult<
+        UseJoinGameParams,
+        apiModels.NonStartedGameSlotV1
+      >;
 
       beforeAll(async () => {
         authFixture = null;
@@ -105,10 +115,7 @@ describe(useJoinExistingGame.name, () => {
           getUserMe as unknown as jest.Mock<typeof getUserMe>
         ).mockReturnValueOnce(getUserMeResult);
 
-        navigateMock = jest
-          .fn<ReturnType<typeof useNavigate>>()
-          .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
-          jest.Mock<ReturnType<typeof useNavigate>>;
+        navigateMock.mockReturnValue(undefined);
 
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
@@ -127,6 +134,10 @@ describe(useJoinExistingGame.name, () => {
       afterAll(() => {
         jest.resetAllMocks();
         jest.clearAllMocks();
+      });
+
+      it('should not call useDispatch()', () => {
+        expect(dispatchMock).not.toHaveBeenCalled();
       });
 
       it('should call useAppSelector() six times', () => {
@@ -151,6 +162,10 @@ describe(useJoinExistingGame.name, () => {
       let getUserMeResult: ReturnType<typeof getUserMe>;
       let authFixture: AuthenticatedAuthState;
       let userFixture: FulfilledUserState | null;
+      let singleApiCallHookResultFixture: SingleApiCallResult<
+        UseJoinGameParams,
+        apiModels.NonStartedGameSlotV1
+      >;
       let result: RenderHookResult<UseJoinExistingGameResult, unknown>;
 
       beforeAll(async () => {
@@ -202,13 +217,10 @@ describe(useJoinExistingGame.name, () => {
           navigateMock,
         );
 
-        dispatchMock = jest
-          .fn<ReturnType<typeof useAppDispatch>>()
-          .mockImplementationOnce(
-            <TReturn, TAction>(): TAction | TReturn =>
-              payloadActionFixture as TReturn,
-          ) as ReturnType<typeof useAppDispatch> &
-          jest.Mock<ReturnType<typeof useAppDispatch>>;
+        dispatchMock.mockImplementationOnce(
+          <TReturn, TAction>(): TAction | TReturn =>
+            payloadActionFixture as TReturn,
+        );
 
         (
           useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
@@ -228,17 +240,21 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
+      it('should not call navigate()', () => {
+        expect(navigateMock).not.toHaveBeenCalled();
+      });
+
       it('should call useAppDispatch()', () => {
         expect(dispatchMock).toHaveBeenCalledTimes(1);
         expect(dispatchMock).toHaveBeenCalledWith(getUserMeResult);
       });
 
-      it('should call useAppSelector() six times', () => {
+      it('should call useAppSelector()', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(6);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
-      it('should call useJoinGame() three times', () => {
+      it('should call useJoinGame()', () => {
         expect(useJoinGame).toHaveBeenCalledTimes(3);
         expect(useJoinGame).toHaveBeenNthCalledWith(1);
         expect(useJoinGame).toHaveBeenNthCalledWith(2);
@@ -253,6 +269,10 @@ describe(useJoinExistingGame.name, () => {
       let status: JoinExistingGameStatus;
       let authFixture: AuthenticatedAuthState;
       let userFixture: FulfilledUserState;
+      let singleApiCallHookResultFixture: SingleApiCallResult<
+        UseJoinGameParams,
+        apiModels.NonStartedGameSlotV1
+      >;
 
       beforeAll(async () => {
         authFixture = {
@@ -344,6 +364,14 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
+      it('should not call useAppDispatch()', () => {
+        expect(dispatchMock).not.toHaveBeenCalled();
+      });
+
+      it('should not call navigate()', () => {
+        expect(navigateMock).not.toHaveBeenCalled();
+      });
+
       it('should call useAppSelector() eight times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(8);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
@@ -373,6 +401,10 @@ describe(useJoinExistingGame.name, () => {
       let status: JoinExistingGameStatus;
       let authFixture: AuthenticatedAuthState;
       let userFixture: FulfilledUserState;
+      let singleApiCallHookResultFixture: SingleApiCallResult<
+        UseJoinGameParams,
+        apiModels.NonStartedGameSlotV1
+      >;
 
       beforeAll(async () => {
         authFixture = {
@@ -438,6 +470,14 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
+      it('should not call useAppDispatch()', () => {
+        expect(dispatchMock).not.toHaveBeenCalled();
+      });
+
+      it('should not call navigate()', () => {
+        expect(navigateMock).not.toHaveBeenCalled();
+      });
+
       it('should call useAppSelector() eight times', () => {
         expect(useAppSelector).toHaveBeenCalledTimes(8);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
@@ -472,6 +512,10 @@ describe(useJoinExistingGame.name, () => {
   describe('having a window with location.href without gameId query', () => {
     let previousLocation: Location;
     let locationFixture: URL;
+    let singleApiCallHookResultFixture: SingleApiCallResult<
+      UseJoinGameParams,
+      apiModels.NonStartedGameSlotV1
+    >;
 
     beforeAll(() => {
       previousLocation = window.location;
@@ -548,6 +592,14 @@ describe(useJoinExistingGame.name, () => {
       afterAll(() => {
         jest.resetAllMocks();
         jest.clearAllMocks();
+      });
+
+      it('should not call useAppDispatch()', () => {
+        expect(dispatchMock).not.toHaveBeenCalled();
+      });
+
+      it('should not call navigate()', () => {
+        expect(navigateMock).not.toHaveBeenCalled();
       });
 
       it('should call useAppSelector() four times', () => {
