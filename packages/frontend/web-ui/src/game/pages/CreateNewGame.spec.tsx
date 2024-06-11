@@ -115,7 +115,7 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        backendError: null,
+        errorMessage: null,
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
@@ -151,7 +151,7 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        backendError: null,
+        errorMessage: null,
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
@@ -220,7 +220,7 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        backendError: null,
+        errorMessage: null,
         formFields: formFieldsFixture,
         formValidation: {
           isRight: false,
@@ -232,7 +232,7 @@ describe(CreateNewGame.name, () => {
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
-        status: CreateNewGameStatus.validationKO,
+        status: CreateNewGameStatus.formValidationError,
       });
 
       renderResult = render(
@@ -266,14 +266,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        backendError: backendErrorFixture,
+        errorMessage: backendErrorFixture,
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
-        status: CreateNewGameStatus.backendKO,
+        status: CreateNewGameStatus.backendError,
       });
 
       (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
@@ -317,14 +317,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        backendError: null,
+        errorMessage: null,
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
-        status: CreateNewGameStatus.backendOK,
+        status: CreateNewGameStatus.done,
       });
 
       renderResult = render(
@@ -341,14 +341,14 @@ describe(CreateNewGame.name, () => {
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
-        backendError: null,
+        errorMessage: null,
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
-        status: CreateNewGameStatus.backendOK,
+        status: CreateNewGameStatus.done,
       });
 
       fireEvent.click(formCornieHomeButton);

@@ -1,29 +1,8 @@
+import { models as apiModels } from '@cornie-js/api-models';
+import { QueryStatus } from '@reduxjs/toolkit/query';
 import { useEffect, useState } from 'react';
 
-import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { useAppSelector } from '../../app/store/hooks';
-import { HTTP_CONFLICT_ERROR_MESSAGE } from '../../auth/hooks/useRegisterForm';
-import {
-  FORBIDDEN_ERROR_MESSAGE,
-  HTTP_BAD_REQUEST_ERROR_MESSAGE,
-  INVALID_CREDENTIALS_ERROR_MESSAGE,
-  UNAUTHORIZED_ERROR_MESSAGE,
-  UNPROCESSABLE_REQUEST_ERROR_MESSAGE,
-} from '../../common/helpers/errorMessages';
-import { getUserMeId } from '../../common/helpers/getUserMeId';
-import { joinGame } from '../../common/helpers/joinGame';
-import {
-  BAD_REQUEST,
-  CONFLICT,
-  FORBIDDEN,
-  INVALID_CREDENTIALS,
-  OK,
-  UNAUTHORIZED,
-  UNPROCESSABLE_REQUEST,
-} from '../../common/http/helpers/httpCodes';
-import { JoinGameSerializedResponse } from '../../common/http/models/JoinGameSerializedResponse';
-import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
+import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
 import { NUMBER_PLAYERS_MINIMUM } from '../helpers/numberOfPlayersValues';
 import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
@@ -32,12 +11,33 @@ import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 import { FormFieldsNewGame } from '../models/FormFieldsNewGame';
 import { FormNewGameValidationErrorResult } from '../models/FormNewGameValidationErrorResult';
 import { GameOptions } from '../models/GameOptions';
-import { useCreateGame } from './useCreateGame';
+
+const UNEXPECTED_ERROR_MESSAGE: string =
+  'Unexpected error. Please try again later';
+
+function useGetUsersV1Me(): {
+  result: Either<string, apiModels.UserV1> | null;
+} {
+  const { data, error, isLoading } = cornieApi.useGetUsersV1MeQuery({
+    params: [],
+  });
+
+  const result: Either<string, apiModels.UserV1> | null = isLoading
+    ? null
+    : data === undefined
+      ? {
+          isRight: false,
+          value: error?.message ?? '',
+        }
+      : {
+          isRight: true,
+          value: data,
+        };
+
+  return { result };
+}
 
 export const useCreateNewGame = (): CreateNewGameResult => {
-  const auth: AuthenticatedAuthState | null = useAppSelector(
-    selectAuthenticatedAuth,
-  );
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
     name: '',
     options: {
@@ -57,25 +57,24 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const [formValidation, setFormValidation] = useState<
     Either<FormNewGameValidationErrorResult, undefined>
   >({ isRight: true, value: undefined });
-  const [backendError, setBackendError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [gameId, setGameId] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
 
-  const [, setBackendErrorUser] = useState<string | null>(null);
-  const [, setBackendErrorGame] = useState<string | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { call: callCreateGame, result: resultCreateGame } = useCreateGame();
+  const { result: usersV1MeResult } = useGetUsersV1Me();
+  const [triggerCreateGame, gameCreatedResult] =
+    cornieApi.useCreateGamesV1Mutation();
+  const [triggerCreateGameSlot, gameSlotCreatedResult] =
+    cornieApi.useCreateGamesV1SlotsMutation();
 
   function assertFormFieldsCanBeUpdated(
     status: CreateNewGameStatus,
   ): asserts status is
     | CreateNewGameStatus.initial
-    | CreateNewGameStatus.validationKO {
+    | CreateNewGameStatus.formValidationError {
     if (
       status !== CreateNewGameStatus.initial &&
-      status !== CreateNewGameStatus.validationKO
+      status !== CreateNewGameStatus.formValidationError
     ) {
       throw new Error('Unexpected form state at setFormField');
     }
@@ -136,51 +135,96 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     });
   };
 
+  const createGame = () => {
+    const gameCreateQuery: apiModels.GameCreateQueryV1 = {
+      gameSlotsAmount: formFields.players,
+      options: formFields.options,
+    };
+
+    if (formFields.name !== undefined) {
+      gameCreateQuery.name = formFields.name;
+    }
+
+    void triggerCreateGame({
+      params: [gameCreateQuery],
+    });
+  };
+
+  const joinGame = (usersV1MeResult: Either<string, apiModels.UserV1>) => {
+    if (!usersV1MeResult.isRight || gameId === null) {
+      setStatus(CreateNewGameStatus.backendError);
+      setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+      return;
+    }
+
+    const gameSlotCreateQuery: apiModels.GameIdSlotCreateQueryV1 = {
+      userId: usersV1MeResult.value.id,
+    };
+
+    void triggerCreateGameSlot({
+      params: [
+        {
+          gameId,
+        },
+        gameSlotCreateQuery,
+      ],
+    });
+  };
+
   const notifyFormFieldsFilled = (): void => {
-    setStatus(CreateNewGameStatus.pendingValidation);
-    setBackendError(null);
+    setStatus(CreateNewGameStatus.validatingForm);
+    setErrorMessage(null);
   };
 
   useEffect(() => {
     switch (status) {
-      case CreateNewGameStatus.pendingValidation:
+      case CreateNewGameStatus.validatingForm:
         validateForm();
-        if (auth !== null) {
-          void getUserMe(auth.accessToken);
-        }
         break;
-      case CreateNewGameStatus.pendingBackend:
-        callCreateGame(formFields);
+      case CreateNewGameStatus.formValidated:
+        setStatus(CreateNewGameStatus.creatingGame);
+        createGame();
         break;
-      case CreateNewGameStatus.backendOK:
-        if (auth !== null && gameId !== null && userId !== null) {
-          void joinNewGame(auth.accessToken, gameId, userId);
+      case CreateNewGameStatus.gameCreated:
+        if (usersV1MeResult !== null) {
+          setStatus(CreateNewGameStatus.joiningGame);
+          joinGame(usersV1MeResult);
         }
         break;
       default:
     }
-  }, [status]);
+  }, [status, usersV1MeResult]);
 
   useEffect(() => {
-    if (
-      resultCreateGame !== null &&
-      status === CreateNewGameStatus.pendingBackend
-    ) {
-      if (resultCreateGame.isRight) {
-        setStatus(CreateNewGameStatus.backendOK);
-        setGameId(resultCreateGame.value.id);
-      } else {
-        setStatus(CreateNewGameStatus.backendKO);
-        setBackendError(resultCreateGame.value);
-      }
+    switch (gameCreatedResult.status) {
+      case QueryStatus.fulfilled:
+        setStatus(CreateNewGameStatus.gameCreated);
+        setGameId(gameCreatedResult.data.id);
+        break;
+      case QueryStatus.rejected:
+        setStatus(CreateNewGameStatus.backendError);
+        setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        break;
+      default:
+        break;
     }
-  }, [resultCreateGame, status]);
+  }, [gameCreatedResult]);
+
+  useEffect(() => {
+    switch (gameSlotCreatedResult.status) {
+      case QueryStatus.fulfilled:
+        setStatus(CreateNewGameStatus.done);
+        break;
+      case QueryStatus.rejected:
+        setStatus(CreateNewGameStatus.backendError);
+        setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        break;
+      default:
+        break;
+    }
+  }, [gameSlotCreatedResult]);
 
   const validateForm = (): void => {
-    if (status !== CreateNewGameStatus.pendingValidation) {
-      throw new Error('Unexpected form state at validateForm');
-    }
-
     const formValidationValue: FormNewGameValidationErrorResult = {};
 
     const numberOfPlayersValidation: Either<string, undefined> =
@@ -195,76 +239,18 @@ export const useCreateNewGame = (): CreateNewGameResult => {
         isRight: true,
         value: undefined,
       });
-      setStatus(CreateNewGameStatus.pendingBackend);
+      setStatus(CreateNewGameStatus.formValidated);
     } else {
       setFormValidation({
         isRight: false,
         value: formValidationValue,
       });
-      setStatus(CreateNewGameStatus.validationKO);
-    }
-  };
-
-  const getUserMe = async (token: string): Promise<void> => {
-    if (status !== CreateNewGameStatus.pendingValidation) {
-      throw new Error('Unexpected form state at createGame');
-    }
-    const responseUser: UserMeSerializedResponse = await getUserMeId(token);
-
-    switch (responseUser.statusCode) {
-      case OK:
-        setUserId(responseUser.body.id);
-        break;
-      case UNAUTHORIZED:
-        setBackendErrorUser(UNAUTHORIZED_ERROR_MESSAGE);
-        break;
-      case INVALID_CREDENTIALS:
-        setBackendErrorUser(INVALID_CREDENTIALS_ERROR_MESSAGE);
-        break;
-      default:
-    }
-  };
-
-  const joinNewGame = async (
-    token: string,
-    gameId: string,
-    userId: string,
-  ): Promise<void> => {
-    if (status !== CreateNewGameStatus.backendOK) {
-      throw new Error('Unexpected form state at createGame');
-    }
-
-    const responseJoinGame: JoinGameSerializedResponse = await joinGame(
-      token,
-      gameId,
-      userId,
-    );
-
-    switch (responseJoinGame.statusCode) {
-      case OK:
-        setUserId(responseJoinGame.body.userId);
-        break;
-      case BAD_REQUEST:
-        setBackendErrorGame(HTTP_BAD_REQUEST_ERROR_MESSAGE);
-        break;
-      case UNAUTHORIZED:
-        setBackendErrorGame(UNAUTHORIZED_ERROR_MESSAGE);
-        break;
-      case FORBIDDEN:
-        setBackendErrorGame(FORBIDDEN_ERROR_MESSAGE);
-        break;
-      case CONFLICT:
-        setBackendErrorGame(HTTP_CONFLICT_ERROR_MESSAGE);
-        break;
-      case UNPROCESSABLE_REQUEST:
-        setBackendErrorGame(UNPROCESSABLE_REQUEST_ERROR_MESSAGE);
-        break;
-      default:
+      setStatus(CreateNewGameStatus.formValidationError);
     }
   };
 
   return {
-    backendError,
+    errorMessage,
     formFields,
     formValidation,
     notifyFormFieldsFilled,
