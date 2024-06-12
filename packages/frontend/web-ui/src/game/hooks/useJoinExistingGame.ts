@@ -1,21 +1,42 @@
+import { models as apiModels } from '@cornie-js/api-models';
+import { QueryStatus } from '@reduxjs/toolkit/query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
-import { selectFulfilledUser } from '../../app/store/features/userSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { FulfilledUserState } from '../../app/store/helpers/models/UserState';
-import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
-import { getUserMe } from '../../app/store/thunk/getUserMe';
+import { useAppSelector } from '../../app/store/hooks';
+import { cornieApi } from '../../common/http/services/cornieApi';
+import { Either } from '../../common/models/Either';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
-import { useJoinGame } from './useJoinGame';
-import { UseJoinGameParams } from './useJoinGame/models/UseJoinGameParams';
 
-export const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error.';
+export const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error';
 
 function buildLoginPageUrl(redirectTo: string): string {
   return `/auth/login?redirectTo=${redirectTo}`;
+}
+
+function useGetUsersV1Me(): {
+  result: Either<string, apiModels.UserV1> | null;
+} {
+  const { data, error, isLoading } = cornieApi.useGetUsersV1MeQuery({
+    params: [],
+  });
+
+  const result: Either<string, apiModels.UserV1> | null = isLoading
+    ? null
+    : data === undefined
+      ? {
+          isRight: false,
+          value: error?.message ?? '',
+        }
+      : {
+          isRight: true,
+          value: data,
+        };
+
+  return { result };
 }
 
 export const useJoinExistingGame = (): UseJoinExistingGameResult => {
@@ -27,16 +48,15 @@ export const useJoinExistingGame = (): UseJoinExistingGameResult => {
   const url: URL = new URL(window.location.href);
   const gameIdParam: string | null = url.searchParams.get('gameId');
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const auth: AuthenticatedAuthState | null = useAppSelector(
     selectAuthenticatedAuth,
   );
-  const user: FulfilledUserState | null = useAppSelector(selectFulfilledUser);
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { call: callJoinGame, result: resultJoinGame } = useJoinGame();
+  const { result: usersV1MeResult } = useGetUsersV1Me();
+  const [triggerCreateGameSlot, gameSlotCreatedResult] =
+    cornieApi.useCreateGamesV1SlotsMutation();
 
   useEffect(() => {
     void (async () => {
@@ -49,36 +69,47 @@ export const useJoinExistingGame = (): UseJoinExistingGameResult => {
             if (auth === null) {
               navigate(buildLoginPageUrl(url.toString()));
             }
-            if (user === null && auth !== null) {
-              await dispatch(getUserMe(auth.accessToken));
-            }
             setStatus(JoinExistingGameStatus.pending);
           }
           break;
         case JoinExistingGameStatus.pending:
-          if (user !== null && auth !== null && gameIdParam !== null) {
-            const paramGameId: UseJoinGameParams = {
-              gameId: gameIdParam,
-            };
-            callJoinGame(paramGameId);
-          }
-          setStatus(JoinExistingGameStatus.pendingBackend);
-          break;
-        case JoinExistingGameStatus.pendingBackend:
-          if (resultJoinGame !== null) {
-            if (resultJoinGame.isRight) {
-              setStatus(JoinExistingGameStatus.fulfilled);
+          if (
+            usersV1MeResult !== null &&
+            auth !== null &&
+            gameIdParam !== null
+          ) {
+            if (usersV1MeResult.isRight) {
+              void triggerCreateGameSlot({
+                params: [
+                  { gameId: gameIdParam },
+                  { userId: usersV1MeResult.value.id },
+                ],
+              });
+
+              setStatus(JoinExistingGameStatus.pendingBackend);
             } else {
+              setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
               setStatus(JoinExistingGameStatus.rejected);
-              setErrorMessage(resultJoinGame.value);
             }
           }
           break;
         default:
-          break;
       }
     })();
-  }, [status, resultJoinGame]);
+  }, [status, usersV1MeResult]);
+
+  useEffect(() => {
+    switch (gameSlotCreatedResult.status) {
+      case QueryStatus.fulfilled:
+        setStatus(JoinExistingGameStatus.fulfilled);
+        break;
+      case QueryStatus.rejected:
+        setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        setStatus(JoinExistingGameStatus.rejected);
+        break;
+      default:
+    }
+  }, [gameSlotCreatedResult]);
 
   return {
     errorMessage,
