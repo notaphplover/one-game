@@ -15,7 +15,7 @@ export const CornieAppRoutes = (): React.JSX.Element => {
       {/* Cornie App */}
       <Route path="/about" element={<AboutUsRoutes />} />
       <Route path="/*" element={<HomeRoutes />} />
-      <Route path="/game/*" element={<GameRoutes />} />
+      <Route path="/games/*" element={<GameRoutes />} />
     </Routes>
   );
 };

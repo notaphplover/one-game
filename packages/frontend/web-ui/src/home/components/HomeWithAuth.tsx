@@ -114,7 +114,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
 
   const onCreateNewGame = (event: React.FormEvent) => {
     event.preventDefault();
-    navigate('/game', { replace: true });
+    navigate('/games', { replace: true });
   };
 
   return (
@@ -126,7 +126,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
         <Grid container>
           <Grid item xs={12}>
             <Box component="div" className="home-auth-button-container">
-              <Link component={RouterLink} to="/game/">
+              <Link component={RouterLink} to="/games/">
                 <Button
                   type="button"
                   aria-pressed="true"

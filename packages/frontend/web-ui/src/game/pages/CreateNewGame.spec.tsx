@@ -1,4 +1,5 @@
 jest.mock('../hooks/useCreateNewGame');
+jest.mock('../../app/store/hooks');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
@@ -17,6 +18,9 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
+import { useAppSelector } from '../../app/store/hooks';
 import { Either } from '../../common/models/Either';
 import {
   NUMBER_PLAYERS_MAXIMUM,
@@ -31,6 +35,7 @@ import { CreateNewGame } from './CreateNewGame';
 
 describe(CreateNewGame.name, () => {
   let formFieldsFixture: FormFieldsNewGame;
+  let authFixture: AuthenticatedAuthState | null;
 
   let notifyFormFieldsFilledMock: jest.Mock<() => void>;
   let setFormFieldNameMock: jest.Mock<
@@ -61,6 +66,12 @@ describe(CreateNewGame.name, () => {
         playWildDraw4IfNoOtherAlternative: true,
       },
       players: NUMBER_PLAYERS_MINIMUM,
+    };
+
+    authFixture = {
+      accessToken: 'accessToken-fixture',
+      refreshToken: 'refreshToken-fixture',
+      status: AuthStateStatus.authenticated,
     };
 
     notifyFormFieldsFilledMock = jest.fn();
@@ -96,6 +107,10 @@ describe(CreateNewGame.name, () => {
         playMultipleSameCards: true,
         playWildDraw4IfNoOtherAlternative: false,
       };
+
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
 
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
@@ -198,6 +213,10 @@ describe(CreateNewGame.name, () => {
         players: 0,
       };
 
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
+
       (
         useCreateNewGame as jest.Mock<typeof useCreateNewGame>
       ).mockReturnValueOnce({
@@ -257,6 +276,10 @@ describe(CreateNewGame.name, () => {
         status: CreateNewGameStatus.backendError,
       });
 
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
+      );
+
       renderResult = render(
         <MemoryRouter>
           <CreateNewGame />
@@ -285,6 +308,10 @@ describe(CreateNewGame.name, () => {
     beforeAll(async () => {
       (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
         navigateMock,
+      );
+
+      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
+        authFixture,
       );
 
       (
