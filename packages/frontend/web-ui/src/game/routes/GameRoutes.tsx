@@ -7,7 +7,7 @@ export const GameRoutes = (): React.JSX.Element => {
   return (
     <Routes>
       <Route path="/" element={<CreateNewGame />} />
-      <Route path="joinGame" element={<JoinExistingGame />} />
+      <Route path="join" element={<JoinExistingGame />} />
     </Routes>
   );
 };
