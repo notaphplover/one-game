@@ -1,6 +1,5 @@
-jest.mock('./useJoinGame');
 jest.mock('../../app/store/hooks');
-jest.mock('../../app/store/thunk/getUserMe');
+jest.mock('../../common/http/services/cornieApi');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
@@ -11,46 +10,24 @@ jest.mock('react-router-dom', () => ({
 import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { PayloadAction } from '@reduxjs/toolkit';
+import { QueryStatus } from '@reduxjs/toolkit/query';
 import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
-import { FulfilledUserState } from '../../app/store/helpers/models/UserState';
-import { UserStateStatus } from '../../app/store/helpers/models/UserStateStatus';
-import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
-import { getUserMe } from '../../app/store/thunk/getUserMe';
-import { SingleApiCallResult } from '../../common/hooks/useSingleApiCall';
-import { UserMeSerializedResponse } from '../../common/http/models/UserMeSerializedResponse';
+import { useAppSelector } from '../../app/store/hooks';
+import { cornieApi } from '../../common/http/services/cornieApi';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
-import {
-  UNEXPECTED_ERROR_MESSAGE,
-  useJoinExistingGame,
-} from './useJoinExistingGame';
-import { useJoinGame } from './useJoinGame';
-import { UseJoinGameParams } from './useJoinGame/models/UseJoinGameParams';
-import { UNAUTHORIZED_ERROR_MESSAGE } from './useJoinGame/utils/unexpectedErrorMessage';
+import { useJoinExistingGame } from './useJoinExistingGame';
 
 describe(useJoinExistingGame.name, () => {
-  let callJoinGameMock: jest.Mock<(params: UseJoinGameParams) => void>;
-
-  let dispatchMock: ReturnType<typeof useAppDispatch> &
-    jest.Mock<ReturnType<typeof useAppDispatch>>;
-
   let navigateMock: ReturnType<typeof useNavigate> &
     jest.Mock<ReturnType<typeof useNavigate>>;
 
   beforeAll(() => {
-    callJoinGameMock = jest.fn();
-
-    dispatchMock = jest.fn<ReturnType<typeof useAppDispatch>>() as ReturnType<
-      typeof useAppDispatch
-    > &
-      jest.Mock<ReturnType<typeof useAppDispatch>>;
-
     navigateMock = jest.fn<ReturnType<typeof useNavigate>>() as ReturnType<
       typeof useNavigate
     > &
@@ -58,13 +35,15 @@ describe(useJoinExistingGame.name, () => {
   });
 
   describe('having a window with location.href with gameId query', () => {
+    let gameIdFixture: string;
     let previousLocation: Location;
     let locationFixture: URL;
 
     beforeAll(() => {
+      gameIdFixture = 'gameId';
       previousLocation = window.location;
       locationFixture = new URL(
-        'http://corniegame.com/game/joinGame?gameId=gameId',
+        `http://corniegame.com/game/joinGame?gameId=${gameIdFixture}`,
       );
 
       Object.defineProperty(window, 'location', {
@@ -74,56 +53,52 @@ describe(useJoinExistingGame.name, () => {
       });
     });
 
-    describe('when called, and auth is null and use navigate to go to Login page', () => {
-      let getUserMeResult: ReturnType<typeof getUserMe>;
-      let authFixture: AuthenticatedAuthState | null;
-      let userFixture: FulfilledUserState;
-      let singleApiCallHookResultFixture: SingleApiCallResult<
-        UseJoinGameParams,
-        apiModels.NonStartedGameSlotV1
+    describe('when called, and selectAuthenticatedAuth() returns null', () => {
+      let useGetUsersV1MeQueryResultMock: jest.Mocked<
+        ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
       >;
+      let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
+        ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
+      >;
+      let authFixture: AuthenticatedAuthState | null;
 
       beforeAll(async () => {
+        useGetUsersV1MeQueryResultMock = {
+          data: undefined,
+          error: undefined,
+          isLoading: false,
+          refetch: jest.fn(),
+        };
+
+        useCreateGamesV1SlotsMutationResultMock = [
+          jest.fn(),
+          {
+            reset: jest.fn(),
+            status: QueryStatus.uninitialized,
+          },
+        ];
+
         authFixture = null;
-
-        userFixture = {
-          status: UserStateStatus.fulfilled,
-          userId: 'userId-fixture',
-        };
-
-        singleApiCallHookResultFixture = {
-          call: callJoinGameMock,
-          result: null,
-        };
-
-        getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
 
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture);
-
+          .mockReturnValueOnce(authFixture);
         (
-          getUserMe as unknown as jest.Mock<typeof getUserMe>
-        ).mockReturnValueOnce(getUserMeResult);
+          cornieApi.useGetUsersV1MeQuery as jest.Mock<
+            typeof cornieApi.useGetUsersV1MeQuery
+          >
+        ).mockReturnValue(useGetUsersV1MeQueryResultMock);
+        (
+          cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
+            typeof cornieApi.useCreateGamesV1SlotsMutation
+          >
+        ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
 
         navigateMock.mockReturnValue(undefined);
 
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
+        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
           navigateMock,
         );
-
-        (
-          useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
-        ).mockReturnValue(dispatchMock);
 
         // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
@@ -132,24 +107,39 @@ describe(useJoinExistingGame.name, () => {
       });
 
       afterAll(() => {
-        jest.resetAllMocks();
         jest.clearAllMocks();
       });
 
-      it('should not call useDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
-      });
-
-      it('should call useAppSelector() six times', () => {
-        expect(useAppSelector).toHaveBeenCalledTimes(6);
+      it('should call useAppSelector()', () => {
+        expect(useAppSelector).toHaveBeenCalledTimes(2);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
-      it('should call useJoinGame() three times', () => {
-        expect(useJoinGame).toHaveBeenCalledTimes(3);
-        expect(useJoinGame).toHaveBeenNthCalledWith(1);
-        expect(useJoinGame).toHaveBeenNthCalledWith(2);
-        expect(useJoinGame).toHaveBeenNthCalledWith(3);
+      it('should call useNavigate()', () => {
+        expect(useNavigate).toHaveBeenCalledTimes(2);
+        expect(useNavigate).toHaveBeenCalledWith();
+      });
+
+      it('should call cornieApi.useGetUsersV1MeQuery()', () => {
+        const expectedParams: Parameters<
+          typeof cornieApi.useGetUsersV1MeQuery
+        > = [
+          {
+            params: [],
+          },
+        ];
+
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledTimes(2);
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledWith(
+          ...expectedParams,
+        );
+      });
+
+      it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
+        expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(
+          2,
+        );
+        expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
       });
 
       it('should call navigate() to the Login page', () => {
@@ -158,15 +148,18 @@ describe(useJoinExistingGame.name, () => {
       });
     });
 
-    describe('when called, and user is null and call getUserMe() returns a OK response', () => {
-      let getUserMeResult: ReturnType<typeof getUserMe>;
-      let authFixture: AuthenticatedAuthState;
-      let userFixture: FulfilledUserState | null;
-      let singleApiCallHookResultFixture: SingleApiCallResult<
-        UseJoinGameParams,
-        apiModels.NonStartedGameSlotV1
+    describe('when called, and selectAuthenticatedAuth() returns Auth and cornieApi.useGetUsersV1MeQuery() returns user data and cornieApi.useCreateGamesV1SlotsMutation() returns game slot data', () => {
+      let useGetUsersV1MeQueryResultMock: jest.Mocked<
+        ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
       >;
-      let result: RenderHookResult<UseJoinExistingGameResult, unknown>;
+      let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
+        ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
+      >;
+      let authFixture: AuthenticatedAuthState | null;
+      let gameV1SlotFixture: apiModels.GameSlotV1;
+      let userFixture: apiModels.UserV1;
+
+      let renderResult: RenderHookResult<UseJoinExistingGameResult, unknown>;
 
       beforeAll(async () => {
         authFixture = {
@@ -175,63 +168,91 @@ describe(useJoinExistingGame.name, () => {
           status: AuthStateStatus.authenticated,
         };
 
-        userFixture = null;
-
-        singleApiCallHookResultFixture = {
-          call: callJoinGameMock,
-          result: null,
+        gameV1SlotFixture = {
+          cardsAmount: 7,
+          userId: 'user-id-fixture',
         };
 
-        getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
+        userFixture = {
+          active: true,
+          id: 'user-id-fixture',
+          name: 'user-name-fixture',
+        };
 
-        const payloadActionFixture: PayloadAction<UserMeSerializedResponse> = {
-          payload: {
-            body: {
-              active: true,
-              id: 'id-fixture',
-              name: 'name-fixture',
-            },
-            statusCode: 200,
+        useGetUsersV1MeQueryResultMock = {
+          data: userFixture,
+          error: undefined,
+          isLoading: false,
+          refetch: jest.fn(),
+        };
+
+        useCreateGamesV1SlotsMutationResultMock = [
+          jest.fn(),
+          {
+            reset: jest.fn(),
+            status: QueryStatus.uninitialized,
           },
-          type: 'sample-type',
-        };
+        ];
 
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
+        const [triggerCreateGamesSlotMock] =
+          useCreateGamesV1SlotsMutationResultMock;
 
-        (useJoinGame as jest.Mock<typeof useJoinGame>)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture);
+        triggerCreateGamesSlotMock.mockImplementation(
+          (): ReturnType<typeof triggerCreateGamesSlotMock> => {
+            const gameSlotPayload: Awaited<
+              ReturnType<typeof triggerCreateGamesSlotMock>
+            > = {
+              data: gameV1SlotFixture,
+              error: undefined,
+            };
+
+            useCreateGamesV1SlotsMutationResultMock = [
+              triggerCreateGamesSlotMock,
+              {
+                data: gameV1SlotFixture,
+                reset: jest.fn(),
+                status: QueryStatus.fulfilled,
+              },
+            ];
+
+            return Promise.resolve(gameSlotPayload) as ReturnType<
+              typeof triggerCreateGamesSlotMock
+            >;
+          },
+        );
 
         (
-          getUserMe as unknown as jest.Mock<typeof getUserMe>
-        ).mockReturnValueOnce(getUserMeResult);
+          useAppSelector as unknown as jest.Mock<typeof useAppSelector>
+        ).mockReturnValue(authFixture);
 
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
+        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
           navigateMock,
         );
 
-        dispatchMock.mockImplementationOnce(
-          <TReturn, TAction>(): TAction | TReturn =>
-            payloadActionFixture as TReturn,
-        );
+        (
+          cornieApi.useGetUsersV1MeQuery as jest.Mock<
+            typeof cornieApi.useGetUsersV1MeQuery
+          >
+        ).mockReturnValue(useGetUsersV1MeQueryResultMock);
 
         (
-          useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
-        ).mockReturnValue(dispatchMock);
+          cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
+            typeof cornieApi.useCreateGamesV1SlotsMutation
+          >
+        ).mockImplementation(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (): any => useCreateGamesV1SlotsMutationResultMock,
+        );
 
-        result = renderHook(() => useJoinExistingGame());
+        await act(async () => {
+          renderResult = renderHook(() => useJoinExistingGame());
+        });
 
         await waitFor(() => {
-          const status: JoinExistingGameStatus = result.result.current.status;
+          const status: JoinExistingGameStatus =
+            renderResult.result.current.status;
           // eslint-disable-next-line jest/no-standalone-expect
-          expect(status).toStrictEqual(JoinExistingGameStatus.pendingBackend);
+          expect(status).toStrictEqual(JoinExistingGameStatus.fulfilled);
         });
       });
 
@@ -242,261 +263,68 @@ describe(useJoinExistingGame.name, () => {
 
       it('should not call navigate()', () => {
         expect(navigateMock).not.toHaveBeenCalled();
-      });
-
-      it('should call useAppDispatch()', () => {
-        expect(dispatchMock).toHaveBeenCalledTimes(1);
-        expect(dispatchMock).toHaveBeenCalledWith(getUserMeResult);
       });
 
       it('should call useAppSelector()', () => {
-        expect(useAppSelector).toHaveBeenCalledTimes(6);
+        expect(useAppSelector).toHaveBeenCalledTimes(4);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
       });
 
-      it('should call useJoinGame()', () => {
-        expect(useJoinGame).toHaveBeenCalledTimes(3);
-        expect(useJoinGame).toHaveBeenNthCalledWith(1);
-        expect(useJoinGame).toHaveBeenNthCalledWith(2);
-        expect(useJoinGame).toHaveBeenNthCalledWith(3);
-      });
-    });
-
-    describe('when called, and auth is not null and user is not null and call useJoinGame() returns an OK response', () => {
-      let getUserMeResult: ReturnType<typeof getUserMe>;
-      let errorMessage: string | null;
-      let renderResult: RenderHookResult<UseJoinExistingGameResult, unknown>;
-      let status: JoinExistingGameStatus;
-      let authFixture: AuthenticatedAuthState;
-      let userFixture: FulfilledUserState;
-      let singleApiCallHookResultFixture: SingleApiCallResult<
-        UseJoinGameParams,
-        apiModels.NonStartedGameSlotV1
-      >;
-
-      beforeAll(async () => {
-        authFixture = {
-          accessToken: 'accesToken-fixture',
-          refreshToken: 'refreshToken-fixture',
-          status: AuthStateStatus.authenticated,
-        };
-
-        userFixture = {
-          status: UserStateStatus.fulfilled,
-          userId: 'userId-fixture',
-        };
-
-        singleApiCallHookResultFixture = {
-          call: callJoinGameMock,
-          result: {
-            isRight: true,
-            value: {
-              userId: 'userId-fixture',
-            },
+      it('should call cornieApi.useGetUsersV1MeQuery()', () => {
+        const expectedParams: Parameters<
+          typeof cornieApi.useGetUsersV1MeQuery
+        > = [
+          {
+            params: [],
           },
-        };
+        ];
 
-        getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture);
-
-        (
-          getUserMe as unknown as jest.Mock<typeof getUserMe>
-        ).mockReturnValueOnce(getUserMeResult);
-
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
-          navigateMock,
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledTimes(4);
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenNthCalledWith(
+          1,
+          ...expectedParams,
         );
-
-        (
-          useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
-        ).mockReturnValue(dispatchMock);
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenNthCalledWith(
+          2,
+          ...expectedParams,
         );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenNthCalledWith(
+          3,
+          ...expectedParams,
         );
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>).mockReturnValueOnce(
-          singleApiCallHookResultFixture,
+        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenNthCalledWith(
+          4,
+          ...expectedParams,
         );
-
-        // eslint-disable-next-line @typescript-eslint/await-thenable
-        await act(() => {
-          renderResult = renderHook(() => useJoinExistingGame());
-        });
-
-        status = renderResult.result.current.status;
-        errorMessage = renderResult.result.current.errorMessage;
       });
 
-      afterAll(() => {
-        jest.resetAllMocks();
-        jest.clearAllMocks();
+      it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
+        expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(
+          4,
+        );
+        expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
       });
 
-      it('should not call useAppDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
+      it('should call triggerCreateGameSlotMock()', () => {
+        const [triggerCreateGamesSlotMock] =
+          useCreateGamesV1SlotsMutationResultMock;
+
+        const expectedParams: Parameters<typeof triggerCreateGamesSlotMock> = [
+          {
+            params: [{ gameId: gameIdFixture }, { userId: userFixture.id }],
+          },
+        ];
+
+        expect(triggerCreateGamesSlotMock).toHaveBeenCalledTimes(1);
+        expect(triggerCreateGamesSlotMock).toHaveBeenCalledWith(
+          ...expectedParams,
+        );
       });
 
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
-      });
-
-      it('should call useAppSelector() eight times', () => {
-        expect(useAppSelector).toHaveBeenCalledTimes(8);
-        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
-      });
-
-      it('should call useJoinGame() four times', () => {
-        expect(useJoinGame).toHaveBeenCalledTimes(4);
-        expect(useJoinGame).toHaveBeenNthCalledWith(1);
-        expect(useJoinGame).toHaveBeenNthCalledWith(2);
-        expect(useJoinGame).toHaveBeenNthCalledWith(3);
-        expect(useJoinGame).toHaveBeenNthCalledWith(4);
-      });
-
-      it('should return a fulfilled status', () => {
+      it('should have fullfilled status', () => {
+        const status: JoinExistingGameStatus =
+          renderResult.result.current.status;
         expect(status).toBe(JoinExistingGameStatus.fulfilled);
-      });
-
-      it('should return a null error message', () => {
-        expect(errorMessage).toBeNull();
-      });
-    });
-
-    describe('when called, and auth is not null and user is not null and call useJoinGame() returns an non OK response', () => {
-      let getUserMeResult: ReturnType<typeof getUserMe>;
-      let errorMessage: string | null;
-      let renderResult: RenderHookResult<UseJoinExistingGameResult, unknown>;
-      let status: JoinExistingGameStatus;
-      let authFixture: AuthenticatedAuthState;
-      let userFixture: FulfilledUserState;
-      let singleApiCallHookResultFixture: SingleApiCallResult<
-        UseJoinGameParams,
-        apiModels.NonStartedGameSlotV1
-      >;
-
-      beforeAll(async () => {
-        authFixture = {
-          accessToken: 'accesToken-fixture',
-          refreshToken: 'refreshToken-fixture',
-          status: AuthStateStatus.authenticated,
-        };
-
-        userFixture = {
-          status: UserStateStatus.fulfilled,
-          userId: 'userId-fixture',
-        };
-
-        singleApiCallHookResultFixture = {
-          call: callJoinGameMock,
-          result: {
-            isRight: false,
-            value: UNAUTHORIZED_ERROR_MESSAGE,
-          },
-        };
-
-        getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture);
-
-        (
-          getUserMe as unknown as jest.Mock<typeof getUserMe>
-        ).mockReturnValueOnce(getUserMeResult);
-
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
-          navigateMock,
-        );
-
-        (
-          useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
-        ).mockReturnValue(dispatchMock);
-
-        // eslint-disable-next-line @typescript-eslint/await-thenable
-        await act(() => {
-          renderResult = renderHook(() => useJoinExistingGame());
-        });
-
-        status = renderResult.result.current.status;
-        errorMessage = renderResult.result.current.errorMessage;
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
-        jest.clearAllMocks();
-      });
-
-      it('should not call useAppDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
-      });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
-      });
-
-      it('should call useAppSelector() eight times', () => {
-        expect(useAppSelector).toHaveBeenCalledTimes(8);
-        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
-      });
-
-      it('should call useJoinGame() four times', () => {
-        expect(useJoinGame).toHaveBeenCalledTimes(4);
-        expect(useJoinGame).toHaveBeenNthCalledWith(1);
-        expect(useJoinGame).toHaveBeenNthCalledWith(2);
-        expect(useJoinGame).toHaveBeenNthCalledWith(3);
-        expect(useJoinGame).toHaveBeenNthCalledWith(4);
-      });
-
-      it('should return a rejected status', () => {
-        expect(status).toBe(JoinExistingGameStatus.rejected);
-      });
-
-      it('should return an error message', () => {
-        expect(errorMessage).toStrictEqual(UNAUTHORIZED_ERROR_MESSAGE);
       });
     });
 
@@ -512,10 +340,6 @@ describe(useJoinExistingGame.name, () => {
   describe('having a window with location.href without gameId query', () => {
     let previousLocation: Location;
     let locationFixture: URL;
-    let singleApiCallHookResultFixture: SingleApiCallResult<
-      UseJoinGameParams,
-      apiModels.NonStartedGameSlotV1
-    >;
 
     beforeAll(() => {
       previousLocation = window.location;
@@ -528,60 +352,58 @@ describe(useJoinExistingGame.name, () => {
       });
     });
 
-    describe('when called, and the error grid is showed', () => {
-      let getUserMeResult: ReturnType<typeof getUserMe>;
+    describe('when called', () => {
+      let useGetUsersV1MeQueryResultMock: jest.Mocked<
+        ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
+      >;
+      let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
+        ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
+      >;
+      let authFixture: AuthenticatedAuthState;
       let errorMessage: string | null;
       let renderResult: RenderHookResult<UseJoinExistingGameResult, unknown>;
       let status: JoinExistingGameStatus;
-      let authFixture: AuthenticatedAuthState;
-      let userFixture: FulfilledUserState;
 
       beforeAll(async () => {
+        useGetUsersV1MeQueryResultMock = {
+          data: undefined,
+          error: undefined,
+          isLoading: false,
+          refetch: jest.fn(),
+        };
+
+        useCreateGamesV1SlotsMutationResultMock = [
+          jest.fn(),
+          {
+            reset: jest.fn(),
+            status: QueryStatus.uninitialized,
+          },
+        ];
+
         authFixture = {
           accessToken: 'accesToken-fixture',
           refreshToken: 'refreshToken-fixture',
           status: AuthStateStatus.authenticated,
         };
 
-        userFixture = {
-          status: UserStateStatus.fulfilled,
-          userId: 'userId-fixture',
-        };
-
-        singleApiCallHookResultFixture = {
-          call: callJoinGameMock,
-          result: {
-            isRight: false,
-            value: UNAUTHORIZED_ERROR_MESSAGE,
-          },
-        };
-
-        getUserMeResult = Symbol() as unknown as ReturnType<typeof getUserMe>;
-
         (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
           .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(userFixture);
-
-        (useJoinGame as jest.Mock<typeof useJoinGame>)
-          .mockReturnValueOnce(singleApiCallHookResultFixture)
-          .mockReturnValueOnce(singleApiCallHookResultFixture);
-
+          .mockReturnValueOnce(authFixture);
         (
-          getUserMe as unknown as jest.Mock<typeof getUserMe>
-        ).mockReturnValueOnce(getUserMeResult);
-
+          cornieApi.useGetUsersV1MeQuery as jest.Mock<
+            typeof cornieApi.useGetUsersV1MeQuery
+          >
+        ).mockReturnValue(useGetUsersV1MeQueryResultMock);
+        (
+          cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
+            typeof cornieApi.useCreateGamesV1SlotsMutation
+          >
+        ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
         );
 
-        (
-          useAppDispatch as unknown as jest.Mock<typeof useAppDispatch>
-        ).mockReturnValue(dispatchMock);
-
-        // eslint-disable-next-line @typescript-eslint/await-thenable
-        await act(() => {
+        await act(async () => {
           renderResult = renderHook(() => useJoinExistingGame());
         });
 
@@ -594,23 +416,13 @@ describe(useJoinExistingGame.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should not call useAppDispatch()', () => {
-        expect(dispatchMock).not.toHaveBeenCalled();
-      });
-
       it('should not call navigate()', () => {
         expect(navigateMock).not.toHaveBeenCalled();
       });
 
-      it('should call useAppSelector() four times', () => {
-        expect(useAppSelector).toHaveBeenCalledTimes(4);
+      it('should call useAppSelector()', () => {
+        expect(useAppSelector).toHaveBeenCalledTimes(2);
         expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
-      });
-
-      it('should call useJoinGame() twice', () => {
-        expect(useJoinGame).toHaveBeenCalledTimes(2);
-        expect(useJoinGame).toHaveBeenNthCalledWith(1);
-        expect(useJoinGame).toHaveBeenNthCalledWith(2);
       });
 
       it('should return a rejected status', () => {
@@ -618,7 +430,7 @@ describe(useJoinExistingGame.name, () => {
       });
 
       it('should return an error message Unexpected error', () => {
-        expect(errorMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
+        expect(errorMessage).toBe('Unexpected error');
       });
     });
 
