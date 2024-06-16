@@ -26,7 +26,12 @@ import { UpdateUsersV1MeArgs } from './users/models/UpdateUsersV1MeArgs';
 import { updateUsersV1Me } from './users/mutations/updateUsersV1Me';
 import { getUsersV1Me } from './users/queries/getUsersV1Me';
 
-export type { CreateAuthV2Args, SerializableAppError };
+export type {
+  CreateAuthV2Args,
+  GetUsersV1MeArgs,
+  SerializableAppError,
+  UpdateUsersV1MeArgs,
+};
 
 export { ApiTag };
 
