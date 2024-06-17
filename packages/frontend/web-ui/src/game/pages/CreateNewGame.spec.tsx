@@ -354,6 +354,7 @@ describe(CreateNewGame.name, () => {
       fireEvent.click(formCornieHomeButton);
 
       await waitFor(() => {
+        // eslint-disable-next-line jest/no-standalone-expect
         expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
       });
     });

@@ -9,7 +9,7 @@ import { useJoinExistingGame } from '../hooks/useJoinExistingGame';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { JoinExistingGame } from './JoinExistingGame';
 
-describe.only(JoinExistingGame.name, () => {
+describe(JoinExistingGame.name, () => {
   describe('when called, and useJoinExistingGame returns a fulfilled status', () => {
     let joinExistingGameOkGridDisplayValue: string;
 

@@ -1,5 +1,9 @@
 @use '../../base/variables' as var;
 
+.bkg-register {
+  min-height: 100vh;
+}
+
 .register-form-grid {
   background-color: var(--cg-text-primary);
   border-radius: 10px;

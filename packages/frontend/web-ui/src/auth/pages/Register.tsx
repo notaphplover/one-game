@@ -68,7 +68,7 @@ export const Register = () => {
   return (
     <CornieLayout>
       <Grid
-        className="bkg-layout"
+        className="bkg-register"
         container
         spacing={0}
         direction="column"

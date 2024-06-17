@@ -9,7 +9,10 @@ import { QueryStatus } from '@reduxjs/toolkit/query';
 import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
 
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
+import {
+  UseQueryStateResult,
+  mapUseQueryHookResult,
+} from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
 import { UserInfoStatus } from '../models/UserInfoStatus';
@@ -154,6 +157,8 @@ describe(useUserInfo.name, () => {
           updateUser: expect.any(Function) as unknown as (
             userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
           ) => void,
+          useGetUsersV1MeQueryResult:
+            useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
           usersV1MeResult: usersV1MeResultFixture,
         };
 
@@ -246,6 +251,8 @@ describe(useUserInfo.name, () => {
         updateUser: expect.any(Function) as unknown as (
           userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
         ) => void,
+        useGetUsersV1MeQueryResult:
+          useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
         usersV1MeResult: usersV1MeResultFixture,
       };
 
@@ -346,6 +353,8 @@ describe(useUserInfo.name, () => {
         updateUser: expect.any(Function) as unknown as (
           userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
         ) => void,
+        useGetUsersV1MeQueryResult:
+          useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
         usersV1MeResult: usersV1MeResultFixture,
       };
 
@@ -450,6 +459,8 @@ describe(useUserInfo.name, () => {
         updateUser: expect.any(Function) as unknown as (
           userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
         ) => void,
+        useGetUsersV1MeQueryResult:
+          useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
         usersV1MeResult: usersV1MeResultFixture,
       };
 

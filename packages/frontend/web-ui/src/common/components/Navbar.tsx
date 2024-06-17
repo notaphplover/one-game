@@ -35,7 +35,7 @@ const NAVBAR_PAGE_NAME_TO_PAGE_SLUG_MAP: { [TPage in NavbarPageName]: string } =
   {
     [NavbarPageName.login]: '/auth/login',
     [NavbarPageName.register]: '/auth/register',
-    [NavbarPageName.user]: '/user',
+    [NavbarPageName.user]: '/users/me',
     [NavbarPageName.logout]: '/',
   };
 

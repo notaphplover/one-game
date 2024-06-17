@@ -185,7 +185,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.spec.ts'],
+      files: ['**/*.spec.{ts,tsx}'],
       extends: ['plugin:jest/recommended', 'plugin:jest/style'],
       rules: {
         '@typescript-eslint/unbound-method': 'off',
