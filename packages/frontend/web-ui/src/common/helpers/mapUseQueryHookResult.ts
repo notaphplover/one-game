@@ -4,7 +4,7 @@ import { SerializedError } from '@reduxjs/toolkit';
 import { Either } from '../models/Either';
 
 export interface UseQueryStateResult<TResult> {
-  data?: TResult;
+  data?: TResult | undefined;
   error?: SerializableAppError | SerializedError | undefined;
   isLoading: boolean;
 }
