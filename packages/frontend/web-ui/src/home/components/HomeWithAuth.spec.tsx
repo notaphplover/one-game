@@ -174,7 +174,8 @@ describe(HomeWithAuth.name, () => {
         fireEvent.click(buttonNewGame);
 
         await waitFor(() => {
-          expect(screen.getByRole('button', { pressed: true }));
+          // eslint-disable-next-line jest/no-standalone-expect
+          expect(screen.getByRole('button', { pressed: true })).toBeDefined();
         });
       });
 
