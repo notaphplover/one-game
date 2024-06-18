@@ -13,6 +13,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { buildMailClientOptions } from '../../../../foundation/mail/adapter/nest/calculations/buildMailClientOptions';
 import { DeleteUserV1EmailCodeRequestNestController } from '../controllers/DeleteUserV1EmailCodeRequestNestController';
 import { DeleteUserV1MeHttpRequestNestController } from '../controllers/DeleteUserV1MeHttpRequestNestController';
+import { GetUserV1MeDetailHttpRequestNestController } from '../controllers/GetUserV1MeDetailHttpRequestNestController';
 import { GetUserV1MeHttpRequestNestController } from '../controllers/GetUserV1MeHttpRequestNestController';
 import { GetUserV1UserIdHttpRequestNestController } from '../controllers/GetUserV1UserIdHttpRequestNestController';
 import { PatchUserV1MeHttpRequestNestController } from '../controllers/PatchUserV1MeHttpRequestNestController';
@@ -26,6 +27,7 @@ const dbModuleOptions: DbModuleOptions = buildDbModuleOptions();
     // mind the order
     DeleteUserV1EmailCodeRequestNestController,
     DeleteUserV1MeHttpRequestNestController,
+    GetUserV1MeDetailHttpRequestNestController,
     GetUserV1MeHttpRequestNestController,
     GetUserV1UserIdHttpRequestNestController,
     PatchUserV1MeHttpRequestNestController,
