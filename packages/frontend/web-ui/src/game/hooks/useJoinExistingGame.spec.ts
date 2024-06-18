@@ -1,4 +1,5 @@
 jest.mock('../../app/store/hooks');
+jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
@@ -18,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
+import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
@@ -94,6 +96,13 @@ describe(useJoinExistingGame.name, () => {
           >
         ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
 
+        (
+          mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+        ).mockReturnValue({
+          isRight: false,
+          value: '',
+        });
+
         navigateMock.mockReturnValue(undefined);
 
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
@@ -140,6 +149,13 @@ describe(useJoinExistingGame.name, () => {
           2,
         );
         expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
+      });
+
+      it('should call mapUseQueryHookResult()', () => {
+        expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
+        expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+          useGetUsersV1MeQueryResultMock,
+        );
       });
 
       it('should call navigate() to the Login page', () => {
@@ -220,6 +236,13 @@ describe(useJoinExistingGame.name, () => {
             >;
           },
         );
+
+        (
+          mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+        ).mockReturnValue({
+          isRight: true,
+          value: userFixture,
+        });
 
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
@@ -321,6 +344,26 @@ describe(useJoinExistingGame.name, () => {
         );
       });
 
+      it('should call mapUseQueryHookResult()', () => {
+        expect(mapUseQueryHookResult).toHaveBeenCalledTimes(4);
+        expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+          1,
+          useGetUsersV1MeQueryResultMock,
+        );
+        expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+          2,
+          useGetUsersV1MeQueryResultMock,
+        );
+        expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+          3,
+          useGetUsersV1MeQueryResultMock,
+        );
+        expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+          4,
+          useGetUsersV1MeQueryResultMock,
+        );
+      });
+
       it('should have fullfilled status', () => {
         const status: JoinExistingGameStatus =
           renderResult.result.current.status;
@@ -399,6 +442,14 @@ describe(useJoinExistingGame.name, () => {
             typeof cornieApi.useCreateGamesV1SlotsMutation
           >
         ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
+
+        (
+          mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+        ).mockReturnValue({
+          isRight: false,
+          value: '',
+        });
+
         (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
           navigateMock,
         );

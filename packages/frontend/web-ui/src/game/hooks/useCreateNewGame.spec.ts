@@ -1,3 +1,4 @@
+jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
 jest.mock('../helpers/validateNumberOfPlayers');
 
@@ -8,6 +9,7 @@ import { QueryStatus } from '@reduxjs/toolkit/query';
 import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
 
+import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either, Left } from '../../common/models/Either';
 import { validateNumberOfPlayers } from '../helpers/validateNumberOfPlayers';
@@ -74,6 +76,10 @@ describe(useCreateNewGame.name, () => {
         >
       ).mockReturnValueOnce(useCreateGamesV1SlotsMutationResultMock);
 
+      (
+        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+      ).mockReturnValueOnce(null);
+
       renderResult = renderHook(() => useCreateNewGame());
 
       formFieldsNewGame = renderResult.result.current.formFields;
@@ -106,6 +112,13 @@ describe(useCreateNewGame.name, () => {
     it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
       expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(1);
       expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+        useGetUsersV1MeQueryResultMock,
+      );
     });
 
     it('should have initial name value', () => {
@@ -192,6 +205,13 @@ describe(useCreateNewGame.name, () => {
         >
       ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
 
+      (
+        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+      ).mockReturnValue({
+        isRight: false,
+        value: '',
+      });
+
       validateNumberOfPlayersErrorFixture = {
         isRight: false,
         value: 'error-fixture',
@@ -246,6 +266,13 @@ describe(useCreateNewGame.name, () => {
     it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
       expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(3);
       expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(3);
+      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+        useGetUsersV1MeQueryResultMock,
+      );
     });
 
     it('should have been called validateNumberOfPlayers once', () => {
@@ -409,6 +436,13 @@ describe(useCreateNewGame.name, () => {
         .mockImplementation((): any => useCreateGamesV1SlotsMutationResultMock);
 
       (
+        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+      ).mockReturnValue({
+        isRight: true,
+        value: userV1Fixture,
+      });
+
+      (
         validateNumberOfPlayers as jest.Mock<typeof validateNumberOfPlayers>
       ).mockReturnValueOnce({
         isRight: true,
@@ -457,6 +491,13 @@ describe(useCreateNewGame.name, () => {
     it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
       expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(7);
       expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(7);
+      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+        useGetUsersV1MeQueryResultMock,
+      );
     });
 
     it('should return an status backend OK', () => {
