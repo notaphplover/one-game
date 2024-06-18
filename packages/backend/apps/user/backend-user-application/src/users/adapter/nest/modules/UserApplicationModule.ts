@@ -9,6 +9,7 @@ import { PasswordResetMailDeliveryOptionsFromUserBuilder } from '../../../applic
 import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builders/UserCodeCreateQueryFromUserBuilder';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/builders/UserCreateQueryFromUserCreateQueryV1Builder';
+import { UserDetailV1FromUserBuilder } from '../../../application/builders/UserDetailV1FromUserBuilder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/builders/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
@@ -17,6 +18,7 @@ import { UserCodeCreatedEventHandler } from '../../../application/handlers/UserC
 import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';
 import { UserUpdatedEventHandler } from '../../../application/handlers/UserUpdatedEventHandler';
 import { UserCodeManagementInputPort } from '../../../application/ports/input/UserCodeManagementInputPort';
+import { UserDetailManagementInputPort } from '../../../application/ports/input/UserDetailManagementInputPort';
 import { UserManagementInputPort } from '../../../application/ports/input/UserManagementInputPort';
 
 @Module({})
@@ -27,7 +29,11 @@ export class UserApplicationModule {
     >,
   ): DynamicModule {
     return {
-      exports: [UserCodeManagementInputPort, UserManagementInputPort],
+      exports: [
+        UserCodeManagementInputPort,
+        UserDetailManagementInputPort,
+        UserManagementInputPort,
+      ],
       global: false,
       imports: [
         ...(imports ?? []),
@@ -48,6 +54,8 @@ export class UserApplicationModule {
         UserCodeManagementInputPort,
         UserCreatedEventHandler,
         UserCreateQueryFromUserCreateQueryV1Builder,
+        UserDetailManagementInputPort,
+        UserDetailV1FromUserBuilder,
         UserManagementInputPort,
         UserUpdatedEventHandler,
         UserUpdateQueryFromUserMeUpdateQueryV1Builder,
