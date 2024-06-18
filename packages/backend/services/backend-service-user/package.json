@@ -29,7 +29,7 @@
     "@cornie-js/process-manager": "workspace:*",
     "@jest/globals": "29.7.0",
     "@types/glob": "8.1.0",
-    "@types/node": "20.14.3",
+    "@types/node": "20.14.4",
     "@typescript-eslint/eslint-plugin": "7.13.1",
     "@typescript-eslint/parser": "7.13.1",
     "dotenv-cli": "7.4.2",
