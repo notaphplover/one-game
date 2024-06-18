@@ -32,7 +32,8 @@ export type TypesV1 =
   | NonStartedGameStateV1
   | UserCreateQueryV1
   | UserMeUpdateQueryV1
-  | UserV1;
+  | UserV1
+  | UserDetailV1;
 export type AuthCreateQueryV1 =
   | CodeAuthCreateQueryV1
   | EmailPasswordAuthCreateQueryV1;
@@ -212,6 +213,9 @@ export interface UserV1 {
   active: boolean;
   id: string;
   name: string;
+}
+export interface UserDetailV1 {
+  email: string;
 }
 export interface CodeAuthCreateQueryV2 {
   code: string;

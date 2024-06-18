@@ -5,6 +5,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
 import { DeleteUserV1EmailCodeRequestController } from '../../../application/controllers/DeleteUserV1EmailCodeRequestController';
 import { DeleteUserV1MeHttpRequestController } from '../../../application/controllers/DeleteUserV1MeHttpRequestController';
+import { GetUserV1MeDetailHttpRequestController } from '../../../application/controllers/GetUserV1MeDetailHttpRequestController';
 import { GetUserV1MeHttpRequestController } from '../../../application/controllers/GetUserV1MeHttpRequestController';
 import { GetUserV1UserIdHttpRequestController } from '../../../application/controllers/GetUserV1UserIdHttpRequestController';
 import { PatchUserV1MeHttpRequestController } from '../../../application/controllers/PatchUserV1MeHttpRequestController';
@@ -32,6 +33,7 @@ export class UserHttpApiModule {
         DeleteUserV1EmailCodeRequestController,
         DeleteUserV1MeHttpRequestController,
         GetUserV1MeHttpRequestController,
+        GetUserV1MeDetailHttpRequestController,
         GetUserV1UserIdHttpRequestController,
         PatchUserV1MeHttpRequestController,
         PostUserV1EmailCodeRequestController,
@@ -51,6 +53,7 @@ export class UserHttpApiModule {
         DeleteUserV1EmailCodeRequestParamHandler,
         DeleteUserV1MeHttpRequestController,
         DeleteUserV1MeRequestParamHandler,
+        GetUserV1MeDetailHttpRequestController,
         GetUserV1MeHttpRequestController,
         GetUserV1MeRequestParamHandler,
         GetUserV1UserIdHttpRequestController,

@@ -4,14 +4,12 @@ import { User } from '@cornie-js/backend-user-domain/users';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UserV1FromUserBuilder
-  implements Builder<apiModels.UserV1, [User]>
+export class UserDetailV1FromUserBuilder
+  implements Builder<apiModels.UserDetailV1, [User]>
 {
-  public build(user: User): apiModels.UserV1 {
+  public build(user: User): apiModels.UserDetailV1 {
     return {
-      active: user.active,
-      id: user.id,
-      name: user.name,
+      email: user.email,
     };
   }
 }
