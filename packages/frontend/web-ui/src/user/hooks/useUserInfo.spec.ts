@@ -9,28 +9,40 @@ import { QueryStatus } from '@reduxjs/toolkit/query';
 import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
 
-import {
-  UseQueryStateResult,
-  mapUseQueryHookResult,
-} from '../../common/helpers/mapUseQueryHookResult';
+import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { Either } from '../../common/models/Either';
+import { Either, Right } from '../../common/models/Either';
 import { UserInfoStatus } from '../models/UserInfoStatus';
-import { UseUserInfoResult, useUserInfo } from './useUserInfo';
+import { UseUserInfoResult } from '../models/UseUserInfoResult';
+import { useUserInfo } from './useUserInfo';
 
 describe(useUserInfo.name, () => {
   describe('when called', () => {
+    let useGetUsersV1MeDetailQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeDetailQuery>
+    >;
     let useGetUsersV1MeQueryResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
     >;
     let useUpdateUsersV1MeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useUpdateUsersV1MeMutation>
     >;
+    let usersV1MeDetailResultFixture: Either<
+      string,
+      apiModels.UserDetailV1
+    > | null;
     let usersV1MeResultFixture: Either<string, apiModels.UserV1> | null;
 
     let renderResult: RenderHookResult<UseUserInfoResult, unknown>;
 
     beforeAll(() => {
+      useGetUsersV1MeDetailQueryResultMock = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
       useGetUsersV1MeQueryResultMock = {
         data: undefined,
         error: undefined,
@@ -46,11 +58,19 @@ describe(useUserInfo.name, () => {
         },
       ];
 
+      usersV1MeDetailResultFixture = null;
+
       usersV1MeResultFixture = null;
 
+      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+        .mockReturnValueOnce(usersV1MeDetailResultFixture)
+        .mockReturnValueOnce(usersV1MeResultFixture);
+
       (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-      ).mockReturnValueOnce(usersV1MeResultFixture);
+        cornieApi.useGetUsersV1MeDetailQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeDetailQuery
+        >
+      ).mockReturnValue(useGetUsersV1MeDetailQueryResultMock);
 
       (
         cornieApi.useGetUsersV1MeQuery as jest.Mock<
@@ -73,9 +93,15 @@ describe(useUserInfo.name, () => {
       let userMeUpdateQueryV1Fixture: apiModels.UserMeUpdateQueryV1;
 
       beforeAll(async () => {
+        (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+          .mockReturnValueOnce(usersV1MeDetailResultFixture)
+          .mockReturnValueOnce(usersV1MeResultFixture);
+
         (
-          mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-        ).mockReturnValueOnce(usersV1MeResultFixture);
+          cornieApi.useGetUsersV1MeDetailQuery as jest.Mock<
+            typeof cornieApi.useGetUsersV1MeDetailQuery
+          >
+        ).mockReturnValue(useGetUsersV1MeDetailQueryResultMock);
 
         (
           cornieApi.useGetUsersV1MeQuery as jest.Mock<
@@ -113,6 +139,21 @@ describe(useUserInfo.name, () => {
         jest.clearAllMocks();
       });
 
+      it('should call cornieApi.useGetUsersV1MeDetailQuery()', () => {
+        const expectedParams: Parameters<
+          typeof cornieApi.useGetUsersV1MeDetailQuery
+        > = [
+          {
+            params: [],
+          },
+        ];
+
+        expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledTimes(1);
+        expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledWith(
+          ...expectedParams,
+        );
+      });
+
       it('should call cornieApi.useGetUsersV1MeQuery()', () => {
         const expectedParams: Parameters<
           typeof cornieApi.useGetUsersV1MeQuery
@@ -134,8 +175,13 @@ describe(useUserInfo.name, () => {
       });
 
       it('should call mapUseQueryHookResult()', () => {
-        expect(mapUseQueryHookResult).toHaveBeenCalledTimes(1);
-        expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+        expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
+        expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+          1,
+          useGetUsersV1MeDetailQueryResultMock,
+        );
+        expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+          2,
           useGetUsersV1MeQueryResultMock,
         );
       });
@@ -157,9 +203,8 @@ describe(useUserInfo.name, () => {
           updateUser: expect.any(Function) as unknown as (
             userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
           ) => void,
-          useGetUsersV1MeQueryResult:
-            useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
-          usersV1MeResult: usersV1MeResultFixture,
+          userDetailV1: null,
+          userV1: null,
         };
 
         expect(renderResult.result.current).toStrictEqual(expected);
@@ -168,17 +213,31 @@ describe(useUserInfo.name, () => {
   });
 
   describe('when called, and mapUseQueryHookResult() returns null', () => {
+    let useGetUsersV1MeDetailQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeDetailQuery>
+    >;
     let useGetUsersV1MeQueryResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
     >;
     let useUpdateUsersV1MeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useUpdateUsersV1MeMutation>
     >;
+    let usersV1MeDetailResultFixture: Either<
+      string,
+      apiModels.UserDetailV1
+    > | null;
     let usersV1MeResultFixture: Either<string, apiModels.UserV1> | null;
 
     let renderResult: RenderHookResult<UseUserInfoResult, unknown>;
 
     beforeAll(() => {
+      useGetUsersV1MeDetailQueryResultMock = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
       useGetUsersV1MeQueryResultMock = {
         data: undefined,
         error: undefined,
@@ -194,11 +253,19 @@ describe(useUserInfo.name, () => {
         },
       ];
 
+      usersV1MeDetailResultFixture = null;
+
       usersV1MeResultFixture = null;
 
+      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+        .mockReturnValueOnce(usersV1MeDetailResultFixture)
+        .mockReturnValueOnce(usersV1MeResultFixture);
+
       (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-      ).mockReturnValueOnce(usersV1MeResultFixture);
+        cornieApi.useGetUsersV1MeDetailQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeDetailQuery
+        >
+      ).mockReturnValue(useGetUsersV1MeDetailQueryResultMock);
 
       (
         cornieApi.useGetUsersV1MeQuery as jest.Mock<
@@ -217,6 +284,21 @@ describe(useUserInfo.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+    });
+
+    it('should call cornieApi.useGetUsersV1MeDetailQuery()', () => {
+      const expectedParams: Parameters<
+        typeof cornieApi.useGetUsersV1MeDetailQuery
+      > = [
+        {
+          params: [],
+        },
+      ];
+
+      expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledWith(
+        ...expectedParams,
+      );
     });
 
     it('should call cornieApi.useGetUsersV1MeQuery()', () => {
@@ -239,8 +321,13 @@ describe(useUserInfo.name, () => {
     });
 
     it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(1);
-      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        1,
+        useGetUsersV1MeDetailQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        2,
         useGetUsersV1MeQueryResultMock,
       );
     });
@@ -251,9 +338,8 @@ describe(useUserInfo.name, () => {
         updateUser: expect.any(Function) as unknown as (
           userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
         ) => void,
-        useGetUsersV1MeQueryResult:
-          useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
-        usersV1MeResult: usersV1MeResultFixture,
+        userDetailV1: null,
+        userV1: null,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);
@@ -261,17 +347,31 @@ describe(useUserInfo.name, () => {
   });
 
   describe('when called, and mapUseQueryHookResult() returns Left', () => {
+    let useGetUsersV1MeDetailQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeDetailQuery>
+    >;
     let useGetUsersV1MeQueryResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
     >;
     let useUpdateUsersV1MeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useUpdateUsersV1MeMutation>
     >;
+    let usersV1MeDetailResultFixture: Either<
+      string,
+      apiModels.UserDetailV1
+    > | null;
     let usersV1MeResultFixture: Either<string, apiModels.UserV1> | null;
 
     let renderResult: RenderHookResult<UseUserInfoResult, unknown>;
 
     beforeAll(() => {
+      useGetUsersV1MeDetailQueryResultMock = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
       useGetUsersV1MeQueryResultMock = {
         data: undefined,
         error: undefined,
@@ -287,22 +387,33 @@ describe(useUserInfo.name, () => {
         },
       ];
 
+      usersV1MeDetailResultFixture = {
+        isRight: false,
+        value: 'error-message-fixture',
+      };
+
       usersV1MeResultFixture = {
         isRight: false,
         value: 'error-message-fixture',
       };
 
       (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+        .mockReturnValueOnce(usersV1MeDetailResultFixture)
         .mockReturnValueOnce(usersV1MeResultFixture)
+        .mockReturnValueOnce(usersV1MeDetailResultFixture)
         .mockReturnValueOnce(usersV1MeResultFixture);
+
+      (
+        cornieApi.useGetUsersV1MeDetailQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeDetailQuery
+        >
+      ).mockReturnValue(useGetUsersV1MeDetailQueryResultMock);
 
       (
         cornieApi.useGetUsersV1MeQuery as jest.Mock<
           typeof cornieApi.useGetUsersV1MeQuery
         >
-      )
-        .mockReturnValue(useGetUsersV1MeQueryResultMock)
-        .mockReturnValue(useGetUsersV1MeQueryResultMock);
+      ).mockReturnValue(useGetUsersV1MeQueryResultMock);
 
       (
         cornieApi.useUpdateUsersV1MeMutation as jest.Mock<
@@ -319,6 +430,21 @@ describe(useUserInfo.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+    });
+
+    it('should call cornieApi.useGetUsersV1MeDetailQuery()', () => {
+      const expectedParams: Parameters<
+        typeof cornieApi.useGetUsersV1MeDetailQuery
+      > = [
+        {
+          params: [],
+        },
+      ];
+
+      expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledTimes(2);
+      expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledWith(
+        ...expectedParams,
+      );
     });
 
     it('should call cornieApi.useGetUsersV1MeQuery()', () => {
@@ -341,8 +467,21 @@ describe(useUserInfo.name, () => {
     });
 
     it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(4);
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        1,
+        useGetUsersV1MeDetailQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        2,
+        useGetUsersV1MeQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        3,
+        useGetUsersV1MeDetailQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        4,
         useGetUsersV1MeQueryResultMock,
       );
     });
@@ -353,9 +492,8 @@ describe(useUserInfo.name, () => {
         updateUser: expect.any(Function) as unknown as (
           userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
         ) => void,
-        useGetUsersV1MeQueryResult:
-          useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
-        usersV1MeResult: usersV1MeResultFixture,
+        userDetailV1: null,
+        userV1: null,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);
@@ -363,17 +501,28 @@ describe(useUserInfo.name, () => {
   });
 
   describe('when called, and mapUseQueryHookResult() returns Right', () => {
+    let useGetUsersV1MeDetailQueryResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useGetUsersV1MeDetailQuery>
+    >;
     let useGetUsersV1MeQueryResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
     >;
     let useUpdateUsersV1MeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useUpdateUsersV1MeMutation>
     >;
-    let usersV1MeResultFixture: Either<string, apiModels.UserV1> | null;
+    let usersV1MeDetailResultFixture: Right<apiModels.UserDetailV1>;
+    let usersV1MeResultFixture: Right<apiModels.UserV1>;
 
     let renderResult: RenderHookResult<UseUserInfoResult, unknown>;
 
     beforeAll(() => {
+      useGetUsersV1MeDetailQueryResultMock = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        refetch: jest.fn(),
+      };
+
       useGetUsersV1MeQueryResultMock = {
         data: undefined,
         error: undefined,
@@ -388,6 +537,13 @@ describe(useUserInfo.name, () => {
           status: QueryStatus.uninitialized,
         },
       ];
+
+      usersV1MeDetailResultFixture = {
+        isRight: true,
+        value: {
+          email: 'email-fixture',
+        },
+      };
 
       usersV1MeResultFixture = {
         isRight: true,
@@ -399,16 +555,22 @@ describe(useUserInfo.name, () => {
       };
 
       (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+        .mockReturnValueOnce(usersV1MeDetailResultFixture)
         .mockReturnValueOnce(usersV1MeResultFixture)
+        .mockReturnValueOnce(usersV1MeDetailResultFixture)
         .mockReturnValueOnce(usersV1MeResultFixture);
 
       (
         cornieApi.useGetUsersV1MeQuery as jest.Mock<
           typeof cornieApi.useGetUsersV1MeQuery
         >
-      )
-        .mockReturnValue(useGetUsersV1MeQueryResultMock)
-        .mockReturnValue(useGetUsersV1MeQueryResultMock);
+      ).mockReturnValue(useGetUsersV1MeQueryResultMock);
+
+      (
+        cornieApi.useGetUsersV1MeDetailQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeDetailQuery
+        >
+      ).mockReturnValue(useGetUsersV1MeDetailQueryResultMock);
 
       (
         cornieApi.useUpdateUsersV1MeMutation as jest.Mock<
@@ -425,6 +587,21 @@ describe(useUserInfo.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+    });
+
+    it('should call cornieApi.useGetUsersV1MeDetailQuery()', () => {
+      const expectedParams: Parameters<
+        typeof cornieApi.useGetUsersV1MeDetailQuery
+      > = [
+        {
+          params: [],
+        },
+      ];
+
+      expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledTimes(2);
+      expect(cornieApi.useGetUsersV1MeDetailQuery).toHaveBeenCalledWith(
+        ...expectedParams,
+      );
     });
 
     it('should call cornieApi.useGetUsersV1MeQuery()', () => {
@@ -447,8 +624,21 @@ describe(useUserInfo.name, () => {
     });
 
     it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(4);
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        1,
+        useGetUsersV1MeDetailQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        2,
+        useGetUsersV1MeQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        3,
+        useGetUsersV1MeDetailQueryResultMock,
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        4,
         useGetUsersV1MeQueryResultMock,
       );
     });
@@ -459,9 +649,8 @@ describe(useUserInfo.name, () => {
         updateUser: expect.any(Function) as unknown as (
           userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
         ) => void,
-        useGetUsersV1MeQueryResult:
-          useGetUsersV1MeQueryResultMock as unknown as UseQueryStateResult<apiModels.UserV1>,
-        usersV1MeResult: usersV1MeResultFixture,
+        userDetailV1: usersV1MeDetailResultFixture.value,
+        userV1: usersV1MeResultFixture.value,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);

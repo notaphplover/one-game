@@ -11,9 +11,19 @@ describe(mapUseQueryHookResult.name, () => {
     [string, UseQueryStateResult<unknown>, Either<string, unknown> | null]
   >([
     [
+      'with isFetching true',
+      {
+        error: undefined,
+        isFetching: true,
+        isLoading: false,
+      },
+      null,
+    ],
+    [
       'with isLoading true',
       {
         error: undefined,
+        isFetching: false,
         isLoading: true,
       },
       null,
@@ -23,11 +33,12 @@ describe(mapUseQueryHookResult.name, () => {
       {
         data: undefined,
         error: undefined,
+        isFetching: false,
         isLoading: false,
       },
       {
-        isRight: false,
-        value: '',
+        isRight: true,
+        value: undefined,
       },
     ],
     [
@@ -37,6 +48,7 @@ describe(mapUseQueryHookResult.name, () => {
         error: {
           message: 'message-fixture',
         },
+        isFetching: false,
         isLoading: false,
       },
       {
@@ -49,6 +61,7 @@ describe(mapUseQueryHookResult.name, () => {
       {
         data: { foo: 'bar' },
         error: undefined,
+        isFetching: false,
         isLoading: false,
       },
       {

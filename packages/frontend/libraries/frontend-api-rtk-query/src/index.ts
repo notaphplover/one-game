@@ -25,6 +25,7 @@ import { GetUsersV1MeArgs } from './users/models/GetUsersV1MeArgs';
 import { UpdateUsersV1MeArgs } from './users/models/UpdateUsersV1MeArgs';
 import { updateUsersV1Me } from './users/mutations/updateUsersV1Me';
 import { getUsersV1Me } from './users/queries/getUsersV1Me';
+import { getUsersV1MeDetail } from './users/queries/getUsersV1MeDetail';
 
 export type {
   CreateAuthV2Args,
@@ -114,6 +115,14 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
           authorizedEndpointsOptions,
         ),
       }),
+      getUsersV1MeDetail: build.query<apiModels.UserDetailV1, GetUsersV1MeArgs>(
+        {
+          queryFn: authorizedApiCall(
+            getUsersV1MeDetail(options.httpClient),
+            authorizedEndpointsOptions,
+          ),
+        },
+      ),
       updateUsersV1Me: build.mutation<apiModels.UserV1, UpdateUsersV1MeArgs>({
         invalidatesTags: (result: apiModels.UserV1 | undefined) =>
           result === undefined ? [] : [{ id: result.id, type: ApiTag.users }],

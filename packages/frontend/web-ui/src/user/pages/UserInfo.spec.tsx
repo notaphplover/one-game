@@ -14,7 +14,7 @@ import { UserInfoStatus } from '../models/UserInfoStatus';
 import { UserInfo } from './UserInfo';
 
 describe(UserInfo, () => {
-  describe('when called, and useUserInfo() returns status fetchingUser and usersV1MeResult null', () => {
+  describe('when called, and useUserInfo() returns status fetchingUser', () => {
     let authFixture: AuthenticatedAuthState | null;
 
     let useUserInfoResultFixture: jest.Mocked<ReturnType<typeof useUserInfo>>;
@@ -26,10 +26,8 @@ describe(UserInfo, () => {
       useUserInfoResultFixture = {
         status: UserInfoStatus.fetchingUser,
         updateUser: jest.fn(),
-        useGetUsersV1MeQueryResult: {
-          isLoading: true,
-        },
-        usersV1MeResult: null,
+        userDetailV1: null,
+        userV1: null,
       };
 
       (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
@@ -70,6 +68,7 @@ describe(UserInfo, () => {
 
   describe('when called, and useUserInfo() returns status idle and usersV1MeResult Right', () => {
     let authFixture: AuthenticatedAuthState | null;
+    let emailFixture: string;
     let nameFixture: string;
     let useUserInfoResultFixture: jest.Mocked<ReturnType<typeof useUserInfo>>;
 
@@ -77,7 +76,12 @@ describe(UserInfo, () => {
 
     beforeAll(async () => {
       authFixture = null;
+      emailFixture = 'email-fixture';
       nameFixture = 'name-fixture';
+
+      const userDetailV1Fixture: apiModels.UserDetailV1 = {
+        email: emailFixture,
+      };
 
       const userV1Fixture: apiModels.UserV1 = {
         active: true,
@@ -88,14 +92,8 @@ describe(UserInfo, () => {
       useUserInfoResultFixture = {
         status: UserInfoStatus.idle,
         updateUser: jest.fn(),
-        useGetUsersV1MeQueryResult: {
-          data: userV1Fixture,
-          isLoading: false,
-        },
-        usersV1MeResult: {
-          isRight: true,
-          value: userV1Fixture,
-        },
+        userDetailV1: userDetailV1Fixture,
+        userV1: userV1Fixture,
       };
 
       (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(

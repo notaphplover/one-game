@@ -331,6 +331,22 @@ export class HttpClientEndpoints {
       urlParameters: undefined,
     });
   }
+  public async getUserMeDetail(headers: {
+    [key: string]: string;
+  }): Promise<
+    | Response<Record<string, string>, apiModels.UserDetailV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
+  > {
+    return this.#internalHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      path: '/v1/users/me/detail',
+      queryParams: undefined,
+      urlParameters: undefined,
+    });
+  }
   public async getUser(
     headers: {
       [key: string]: string;
