@@ -588,6 +588,34 @@ paths:
       tags:
         - User
 
+  /v1/users/me/detail:
+    get:
+      summary: Get current user detail
+      operationId: getUserMeDetail
+      responses:
+        '200':
+          description: User detail found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/users/user-detail.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '403':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - accessToken: []
+      tags:
+        - User
+
   /v1/users/{userId}:
     get:
       summary: Get a user by ID
