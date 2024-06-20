@@ -17,14 +17,15 @@ import { UserInfoStatus } from '../models/UserInfoStatus';
 export const UserInfo = () => {
   const [name, setName] = useState<string>();
 
-  const { status, updateUser, useGetUsersV1MeQueryResult, usersV1MeResult } =
-    useUserInfo();
+  const { status, updateUser, userDetailV1, userV1 } = useUserInfo();
+
+  const email: string | null = userDetailV1?.email ?? null;
 
   useEffect(() => {
-    if (usersV1MeResult !== null && usersV1MeResult.isRight) {
-      setName(usersV1MeResult.value.name);
+    if (status === UserInfoStatus.idle) {
+      setName(userV1.name);
     }
-  }, [useGetUsersV1MeQueryResult]);
+  }, [userV1]);
 
   const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (status === UserInfoStatus.idle) {
@@ -68,6 +69,19 @@ export const UserInfo = () => {
 
               <form>
                 <Grid container>
+                  <Grid item xs={12}>
+                    <TextField
+                      className="form-text-fieldset"
+                      data-testid="user-info-form-text-email"
+                      disabled={true}
+                      fullWidth
+                      label="Email"
+                      name="email"
+                      placeholder="email"
+                      type="text"
+                      value={email ?? ''}
+                    />
+                  </Grid>
                   <Grid item xs={12}>
                     <TextField
                       autoFocus

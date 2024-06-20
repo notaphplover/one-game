@@ -7,6 +7,7 @@ export const cornieApi: jest.Mocked<typeof originalCornieApi> = {
   useCreateGamesV1Mutation: jest.fn(),
   useCreateGamesV1SlotsMutation: jest.fn(),
   useGetGamesV1MineQuery: jest.fn(),
+  useGetUsersV1MeDetailQuery: jest.fn(),
   useGetUsersV1MeQuery: jest.fn(),
   useUpdateUsersV1MeMutation: jest.fn(),
 } as Partial<jest.Mocked<typeof originalCornieApi>> as jest.Mocked<
