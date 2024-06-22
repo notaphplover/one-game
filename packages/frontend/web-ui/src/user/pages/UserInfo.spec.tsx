@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
+jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../hooks/useUserInfo');
 
 import { models as apiModels } from '@cornie-js/api-models';
