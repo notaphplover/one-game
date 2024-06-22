@@ -10,11 +10,14 @@ import {
 import { useEffect, useState } from 'react';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { UserInfoStatus } from '../models/UserInfoStatus';
 
 export const UserInfo = () => {
+  useRedirectUnauthorized();
+
   const [name, setName] = useState<string>();
 
   const { status, updateUser, userDetailV1, userV1 } = useUserInfo();
