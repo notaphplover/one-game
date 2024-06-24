@@ -1,0 +1,114 @@
+import { beforeAll, describe, expect, it } from '@jest/globals';
+
+import { models as apiModels } from '@cornie-js/api-models';
+import { RenderResult, render } from '@testing-library/react';
+import { ReactNode } from 'react';
+
+import { BaseGameListItem } from './BaseGameListItem';
+
+describe(BaseGameListItem.name, () => {
+  describe('having a game with no name', () => {
+    let gameV1Fixture: apiModels.GameV1;
+
+    beforeAll(() => {
+      gameV1Fixture = {
+        id: 'id-fixture',
+        state: {
+          slots: [],
+          status: 'nonStarted',
+        },
+      };
+    });
+
+    describe('when called', () => {
+      let expectedButtonTextValue: string;
+
+      let buttonTextValue: string | null | undefined;
+      let gameListTextValue: string | null | undefined;
+
+      beforeAll(() => {
+        expectedButtonTextValue = 'Mock content';
+
+        const button: ReactNode = (
+          <div className="button-mock">{expectedButtonTextValue}</div>
+        );
+
+        const renderResult: RenderResult = render(
+          <BaseGameListItem button={button} game={gameV1Fixture} />,
+        );
+
+        const buttonTextNode: ChildNode | undefined =
+          renderResult.container.querySelector('.button-mock')?.childNodes[0];
+
+        buttonTextValue = buttonTextNode?.nodeValue;
+
+        const gamesListTextNode: ChildNode | undefined =
+          renderResult.container.querySelector('.game-list-item-text')
+            ?.childNodes[0];
+
+        gameListTextValue = gamesListTextNode?.nodeValue;
+      });
+
+      it('should render a button', () => {
+        expect(buttonTextValue).toStrictEqual(expectedButtonTextValue);
+      });
+
+      it('should render game text', () => {
+        expect(gameListTextValue).toBe('--');
+      });
+    });
+  });
+
+  describe('having a game name', () => {
+    let gameV1Fixture: apiModels.GameV1;
+
+    beforeAll(() => {
+      gameV1Fixture = {
+        id: 'id-fixture',
+        name: 'name-fixture',
+        state: {
+          slots: [],
+          status: 'nonStarted',
+        },
+      };
+    });
+
+    describe('when called', () => {
+      let expectedButtonTextValue: string;
+
+      let buttonTextValue: string | null | undefined;
+      let gameListItemTextValue: string | null | undefined;
+
+      beforeAll(() => {
+        expectedButtonTextValue = 'Mock content';
+
+        const button: ReactNode = (
+          <div className="button-mock">{expectedButtonTextValue}</div>
+        );
+
+        const renderResult: RenderResult = render(
+          <BaseGameListItem button={button} game={gameV1Fixture} />,
+        );
+
+        const buttonTextNode: ChildNode | undefined =
+          renderResult.container.querySelector('.button-mock')?.childNodes[0];
+
+        buttonTextValue = buttonTextNode?.nodeValue;
+
+        const gameListItemTextNode: ChildNode | undefined =
+          renderResult.container.querySelector('.game-list-item-text')
+            ?.childNodes[0];
+
+        gameListItemTextValue = gameListItemTextNode?.nodeValue;
+      });
+
+      it('should render a button', () => {
+        expect(buttonTextValue).toStrictEqual(expectedButtonTextValue);
+      });
+
+      it('should render game text', () => {
+        expect(gameListItemTextValue).toBe(gameV1Fixture.name);
+      });
+    });
+  });
+});
