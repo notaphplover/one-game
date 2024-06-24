@@ -1,0 +1,8 @@
+.snackbar > div.MuiSnackbarContent-root {
+  background-color: var(--cg-bkg-secondary-dark);
+  border: 2px solid var(--cg-bkg-primary-dark);
+  box-shadow: 0 2px 4px 0 var(--cg-bkg-primary-dark);
+  border-radius: 10px;
+  color: var(--cg-text-primary);
+  font-weight: bold;
+}
