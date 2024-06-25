@@ -19,6 +19,12 @@
   padding: 1rem;
 }
 
+.game-list-item .game-list-item-button:hover {
+  background-color: var(--cg-bkg-secondary-main);
+  font-weight: bold;
+  color: var(--cg-btn-third-txt);
+}
+
 .game-list-item .game-list-item-text {
   color: var(--cg-text-primary);
   text-align: center;
