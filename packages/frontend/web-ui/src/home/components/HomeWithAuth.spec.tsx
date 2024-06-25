@@ -2,7 +2,8 @@ import { beforeAll, afterAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
 jest.mock('../../common/http/services/cornieApi');
-jest.mock('../../game/components/GameList');
+jest.mock('../../game/components/ActiveGameList');
+jest.mock('../../game/components/NonStartedGameList');
 
 import {
   RenderResult,
@@ -15,10 +16,9 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/store/hooks';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { GameList } from '../../game/components/GameList';
+import { ActiveGameList } from '../../game/components/ActiveGameList';
+import { NonStartedGameList } from '../../game/components/NonStartedGameList';
 import { HomeWithAuth } from './HomeWithAuth';
-
-const NUMBER_TIMES_EXECUTION: number = 2;
 
 describe(HomeWithAuth.name, () => {
   let accessTokenFixture: string;
@@ -27,165 +27,210 @@ describe(HomeWithAuth.name, () => {
     accessTokenFixture = 'access-token-fixture';
   });
 
-  describe('useGetGames', () => {
-    describe('when called,', () => {
-      let expectedGameListFixture: ChildNode;
-      let gameListFixture: React.JSX.Element;
+  describe('when called,', () => {
+    let expectedActiveGameListFixture: ChildNode;
+    let expectedNonStartedGameListFixture: ChildNode;
+    let activeGameListFixture: React.JSX.Element;
+    let nonStartedGameListFixture: React.JSX.Element;
 
-      let gameListComponent: unknown;
+    let activeGameListComponent: unknown;
+    let nonStartedGameListComponent: unknown;
 
-      beforeAll(() => {
-        (
-          useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-        ).mockReturnValue(accessTokenFixture);
+    beforeAll(() => {
+      (
+        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
+      ).mockReturnValue(accessTokenFixture);
 
-        (
-          cornieApi.useGetGamesV1MineQuery as jest.Mock<
-            typeof cornieApi.useGetGamesV1MineQuery
-          >
-        )
-          .mockReturnValueOnce({
-            data: undefined,
-            error: undefined,
-            isLoading: true,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            refetch: jest.fn<any>(),
-          })
-          .mockReturnValueOnce({
-            data: undefined,
-            error: undefined,
-            isLoading: true,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            refetch: jest.fn<any>(),
-          });
+      (
+        cornieApi.useGetGamesV1MineQuery as jest.Mock<
+          typeof cornieApi.useGetGamesV1MineQuery
+        >
+      )
+        .mockReturnValueOnce({
+          data: undefined,
+          error: undefined,
+          isLoading: true,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          refetch: jest.fn<any>(),
+        })
+        .mockReturnValueOnce({
+          data: undefined,
+          error: undefined,
+          isLoading: true,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          refetch: jest.fn<any>(),
+        });
 
-        gameListFixture = <div className="game-list-mock">Game list mock</div>;
+      activeGameListFixture = (
+        <div className="active-game-list-fixture">Active game list mock</div>
+      );
 
-        (GameList as jest.Mock<typeof GameList>).mockReturnValueOnce(
-          gameListFixture,
-        );
+      nonStartedGameListFixture = (
+        <div className="non-started-game-list-fixture">
+          Non started game list mock
+        </div>
+      );
 
-        expectedGameListFixture = render(gameListFixture).container
-          .childNodes[0] as ChildNode;
+      (ActiveGameList as jest.Mock<typeof ActiveGameList>).mockReturnValueOnce(
+        activeGameListFixture,
+      );
 
-        const renderResult: RenderResult = render(
-          <MemoryRouter>
-            <HomeWithAuth />
-          </MemoryRouter>,
-        );
+      (
+        NonStartedGameList as jest.Mock<typeof NonStartedGameList>
+      ).mockReturnValueOnce(nonStartedGameListFixture);
 
-        gameListComponent =
-          renderResult.container.querySelector('.game-list-mock');
-      });
+      expectedActiveGameListFixture = render(activeGameListFixture).container
+        .childNodes[0] as ChildNode;
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+      expectedNonStartedGameListFixture = render(nonStartedGameListFixture)
+        .container.childNodes[0] as ChildNode;
 
-      it('should call GameList() twice', () => {
-        expect(GameList).toHaveBeenCalledTimes(NUMBER_TIMES_EXECUTION);
-        expect(GameList).toHaveBeenNthCalledWith(
-          1,
-          {
-            gamesResult: null,
-          },
-          {},
-        );
-        expect(GameList).toHaveBeenNthCalledWith(
-          NUMBER_TIMES_EXECUTION,
-          {
-            gamesResult: null,
-          },
-          {},
-        );
-      });
+      const renderResult: RenderResult = render(
+        <MemoryRouter>
+          <HomeWithAuth />
+        </MemoryRouter>,
+      );
 
-      it('should render a game list', () => {
-        expect(gameListComponent).toStrictEqual(expectedGameListFixture);
+      activeGameListComponent = renderResult.container.querySelector(
+        '.active-game-list-fixture',
+      );
+
+      nonStartedGameListComponent = renderResult.container.querySelector(
+        '.non-started-game-list-fixture',
+      );
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should call ActiveGameList()', () => {
+      expect(ActiveGameList).toHaveBeenCalledTimes(1);
+      expect(ActiveGameList).toHaveBeenCalledWith(
+        {
+          gamesResult: null,
+        },
+        {},
+      );
+    });
+
+    it('should call NonStartedGameList()', () => {
+      expect(NonStartedGameList).toHaveBeenCalledTimes(1);
+      expect(NonStartedGameList).toHaveBeenCalledWith(
+        {
+          gamesResult: null,
+        },
+        {},
+      );
+    });
+
+    it('should render an active game list', () => {
+      expect(activeGameListComponent).toStrictEqual(
+        expectedActiveGameListFixture,
+      );
+    });
+
+    it('should render a non started game list', () => {
+      expect(nonStartedGameListComponent).toStrictEqual(
+        expectedNonStartedGameListFixture,
+      );
+    });
+  });
+
+  describe('when called, and the button New Game is pressed', () => {
+    let activeGameListFixture: React.JSX.Element;
+    let nonStartedGameListFixture: React.JSX.Element;
+    let buttonNewGame: Element;
+
+    let renderResult: RenderResult;
+
+    beforeAll(async () => {
+      (
+        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
+      ).mockReturnValue(accessTokenFixture);
+
+      (
+        cornieApi.useGetGamesV1MineQuery as jest.Mock<
+          typeof cornieApi.useGetGamesV1MineQuery
+        >
+      )
+        .mockReturnValueOnce({
+          data: undefined,
+          error: undefined,
+          isLoading: true,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          refetch: jest.fn<any>(),
+        })
+        .mockReturnValueOnce({
+          data: undefined,
+          error: undefined,
+          isLoading: true,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          refetch: jest.fn<any>(),
+        });
+
+      activeGameListFixture = (
+        <div className="active-game-list-fixture">Active game list fixture</div>
+      );
+
+      nonStartedGameListFixture = (
+        <div className="non-started-game-list-fixture">
+          Non started game list fixture
+        </div>
+      );
+
+      (ActiveGameList as jest.Mock<typeof ActiveGameList>).mockReturnValueOnce(
+        activeGameListFixture,
+      );
+
+      (
+        NonStartedGameList as jest.Mock<typeof NonStartedGameList>
+      ).mockReturnValueOnce(nonStartedGameListFixture);
+
+      renderResult = render(
+        <MemoryRouter>
+          <HomeWithAuth />
+        </MemoryRouter>,
+      );
+
+      buttonNewGame = renderResult.container.querySelector(
+        '.home-auth-button-new-game',
+      ) as Element;
+
+      (
+        cornieApi.useGetGamesV1MineQuery as jest.Mock<
+          typeof cornieApi.useGetGamesV1MineQuery
+        >
+      )
+        .mockReturnValueOnce({
+          data: undefined,
+          error: undefined,
+          isLoading: true,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          refetch: jest.fn<any>(),
+        })
+        .mockReturnValueOnce({
+          data: undefined,
+          error: undefined,
+          isLoading: true,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          refetch: jest.fn<any>(),
+        });
+
+      fireEvent.click(buttonNewGame);
+
+      await waitFor(() => {
+        // eslint-disable-next-line jest/no-standalone-expect
+        expect(screen.getByRole('button', { pressed: true })).toBeDefined();
       });
     });
 
-    describe('when called, and the button New Game is pressed', () => {
-      let renderResult: RenderResult;
-      let gameListFixture: React.JSX.Element;
-      let buttonNewGame: Element;
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
 
-      beforeAll(async () => {
-        (
-          useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-        ).mockReturnValue(accessTokenFixture);
-
-        (
-          cornieApi.useGetGamesV1MineQuery as jest.Mock<
-            typeof cornieApi.useGetGamesV1MineQuery
-          >
-        )
-          .mockReturnValueOnce({
-            data: undefined,
-            error: undefined,
-            isLoading: true,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            refetch: jest.fn<any>(),
-          })
-          .mockReturnValueOnce({
-            data: undefined,
-            error: undefined,
-            isLoading: true,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            refetch: jest.fn<any>(),
-          });
-
-        gameListFixture = <div className="game-list-mock">Game list mock</div>;
-
-        (GameList as jest.Mock<typeof GameList>).mockReturnValueOnce(
-          gameListFixture,
-        );
-
-        renderResult = render(
-          <MemoryRouter>
-            <HomeWithAuth />
-          </MemoryRouter>,
-        );
-
-        buttonNewGame = renderResult.container.querySelector(
-          '.home-auth-button-new-game',
-        ) as Element;
-
-        (
-          cornieApi.useGetGamesV1MineQuery as jest.Mock<
-            typeof cornieApi.useGetGamesV1MineQuery
-          >
-        )
-          .mockReturnValueOnce({
-            data: undefined,
-            error: undefined,
-            isLoading: true,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            refetch: jest.fn<any>(),
-          })
-          .mockReturnValueOnce({
-            data: undefined,
-            error: undefined,
-            isLoading: true,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            refetch: jest.fn<any>(),
-          });
-
-        fireEvent.click(buttonNewGame);
-
-        await waitFor(() => {
-          // eslint-disable-next-line jest/no-standalone-expect
-          expect(screen.getByRole('button', { pressed: true })).toBeDefined();
-        });
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should press the new game button', () => {
-        expect(screen.getByRole('button', { pressed: true })).toBeTruthy();
-      });
+    it('should press the new game button', () => {
+      expect(screen.getByRole('button', { pressed: true })).toBeTruthy();
     });
   });
 });
