@@ -15,7 +15,8 @@ import {
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { Either } from '../../common/models/Either';
-import { GameList } from '../../game/components/GameList';
+import { ActiveGameList } from '../../game/components/ActiveGameList';
+import { NonStartedGameList } from '../../game/components/NonStartedGameList';
 import { GameStatus } from '../../game/models/GameStatus';
 
 const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
@@ -145,7 +146,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
               Pending Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              <GameList gamesResult={nonStartedGamesResult} />
+              <NonStartedGameList gamesResult={nonStartedGamesResult} />
               <Box component="div" className="home-auth-pagination">
                 <Button
                   type="button"
@@ -169,7 +170,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
               Active Games
             </Typography>
             <Box component="div" className="home-auth-container-games">
-              <GameList gamesResult={activeGamesResult} />
+              <ActiveGameList gamesResult={activeGamesResult} />
               <Box component="div" className="home-auth-pagination">
                 <Button
                   type="button"
