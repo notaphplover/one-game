@@ -15,7 +15,7 @@ import { UserCreateQueryTypeOrmFromUserCreateQueryBuilder } from '../../typeorm/
 import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../../typeorm/builders/UserFindQueryTypeOrmFromUserFindQueryBuilder';
 import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from '../../typeorm/builders/UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
 import { UserFromUserDbBuilder } from '../../typeorm/builders/UserFromUserDbBuilder';
-import { UserUpdateQueryFromUserSetQueryTypeOrmBuilder } from '../../typeorm/builders/UserUpdateQueryFromUserSetQueryTypeOrmBuilder';
+import { UserSetQueryTypeOrmFromUserUpdateQueryBuilder } from '../../typeorm/builders/UserSetQueryTypeOrmFromUserUpdateQueryBuilder';
 import { UserCodeDb } from '../../typeorm/models/UserCodeDb';
 import { UserDb } from '../../typeorm/models/UserDb';
 import { CreateUserCodeTypeOrmService } from '../../typeorm/services/CreateUserCodeTypeOrmService';
@@ -63,7 +63,7 @@ export class UserDbModule {
           provide: userPersistenceOutputPortSymbol,
           useClass: UserPersistenceTypeOrmAdapter,
         },
-        UserUpdateQueryFromUserSetQueryTypeOrmBuilder,
+        UserSetQueryTypeOrmFromUserUpdateQueryBuilder,
       ],
     };
   }

@@ -5,4 +5,5 @@ export interface UserUpdateQuery {
 
   readonly active?: true;
   readonly name?: string;
+  readonly passwordHash?: string;
 }

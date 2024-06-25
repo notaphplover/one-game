@@ -38,4 +38,11 @@ export class UserUpdateQueryFixtures {
       name: '',
     };
   }
+
+  public static get withPasswordHash(): UserUpdateQuery {
+    return {
+      ...UserUpdateQueryFixtures.any,
+      passwordHash: 'hash',
+    };
+  }
 }

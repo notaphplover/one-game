@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from '../builders/UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
-import { UserUpdateQueryFromUserSetQueryTypeOrmBuilder } from '../builders/UserUpdateQueryFromUserSetQueryTypeOrmBuilder';
+import { UserSetQueryTypeOrmFromUserUpdateQueryBuilder } from '../builders/UserSetQueryTypeOrmFromUserUpdateQueryBuilder';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
@@ -26,8 +26,8 @@ export class UpdateUserTypeOrmService extends UpdateTypeOrmService<
       UserDb,
       UserUpdateQuery
     >,
-    @Inject(UserUpdateQueryFromUserSetQueryTypeOrmBuilder)
-    userUpdateQueryFromUserSetQueryTypeOrmBuilder: Builder<
+    @Inject(UserSetQueryTypeOrmFromUserUpdateQueryBuilder)
+    userSetQueryTypeOrmFromUserUpdateQueryBuilder: Builder<
       QueryDeepPartialEntity<UserDb>,
       [UserUpdateQuery]
     >,
@@ -35,7 +35,7 @@ export class UpdateUserTypeOrmService extends UpdateTypeOrmService<
     super(
       repository,
       userFindQueryTypeOrmFromUserUpdateQueryBuilder,
-      userUpdateQueryFromUserSetQueryTypeOrmBuilder,
+      userSetQueryTypeOrmFromUserUpdateQueryBuilder,
     );
   }
 }
