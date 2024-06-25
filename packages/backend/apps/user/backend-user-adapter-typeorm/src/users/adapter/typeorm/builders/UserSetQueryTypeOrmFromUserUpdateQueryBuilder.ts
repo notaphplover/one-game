@@ -6,7 +6,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class UserUpdateQueryFromUserSetQueryTypeOrmBuilder
+export class UserSetQueryTypeOrmFromUserUpdateQueryBuilder
   implements Builder<QueryDeepPartialEntity<UserDb>, [UserUpdateQuery]>
 {
   public build(
@@ -20,6 +20,10 @@ export class UserUpdateQueryFromUserSetQueryTypeOrmBuilder
 
     if (userUpdateQuery.name !== undefined) {
       userSetQueryTypeOrm.name = userUpdateQuery.name;
+    }
+
+    if (userUpdateQuery.passwordHash !== undefined) {
+      userSetQueryTypeOrm.passwordHash = userUpdateQuery.passwordHash;
     }
 
     return userSetQueryTypeOrm;
