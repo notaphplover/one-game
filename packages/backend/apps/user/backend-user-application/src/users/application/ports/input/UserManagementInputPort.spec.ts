@@ -37,7 +37,7 @@ describe(UserManagementInputPort.name, () => {
   >;
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
   let userUpdateQueryFromUserMeUpdateQueryV1BuilderMock: jest.Mocked<
-    Builder<UserUpdateQuery, [apiModels.UserMeUpdateQueryV1, UuidContext]>
+    BuilderAsync<UserUpdateQuery, [apiModels.UserMeUpdateQueryV1, UuidContext]>
   >;
   let userV1FromUserBuilderMock: jest.Mocked<Builder<apiModels.UserV1, [User]>>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
@@ -331,7 +331,7 @@ describe(UserManagementInputPort.name, () => {
         userUpdateQueryFixture = UserUpdateQueryFixtures.any;
         userV1Fixture = UserV1Fixtures.any;
 
-        userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build.mockReturnValueOnce(
+        userUpdateQueryFromUserMeUpdateQueryV1BuilderMock.build.mockResolvedValueOnce(
           userUpdateQueryFixture,
         );
 
