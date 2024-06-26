@@ -1,18 +1,27 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { UserUpdateQuery } from '@cornie-js/backend-user-domain/users';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
+import { BcryptHashProviderOutputPort } from '../../../foundation/hash/application/ports/output/BcryptHashProviderOutputPort';
 import { UserMeUpdateQueryV1Fixtures } from '../fixtures/UserMeUpdateQueryV1Fixtures';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from './UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 
 describe(UserUpdateQueryFromUserMeUpdateQueryV1Builder, () => {
+  let bcryptHashProviderOutputPortMock: jest.Mocked<BcryptHashProviderOutputPort>;
+
   let userUpdateQueryFromUserMeUpdateQueryV1Builder: UserUpdateQueryFromUserMeUpdateQueryV1Builder;
 
   beforeAll(() => {
+    bcryptHashProviderOutputPortMock = { hash: jest.fn() } as Partial<
+      jest.Mocked<BcryptHashProviderOutputPort>
+    > as jest.Mocked<BcryptHashProviderOutputPort>;
+
     userUpdateQueryFromUserMeUpdateQueryV1Builder =
-      new UserUpdateQueryFromUserMeUpdateQueryV1Builder();
+      new UserUpdateQueryFromUserMeUpdateQueryV1Builder(
+        bcryptHashProviderOutputPortMock,
+      );
   });
 
   describe('.build', () => {
@@ -28,15 +37,19 @@ describe(UserUpdateQueryFromUserMeUpdateQueryV1Builder, () => {
 
         let result: unknown;
 
-        beforeAll(() => {
+        beforeAll(async () => {
           uuidContextFixture = {
             uuid: '83073aec-b81b-4107-97f9-baa46de5dd40',
           };
 
-          result = userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
+          result = await userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
             userMeUpdateQueryV1Fixture,
             uuidContextFixture,
           );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
         });
 
         it('should return a UserUpdateQuery', () => {
@@ -65,15 +78,19 @@ describe(UserUpdateQueryFromUserMeUpdateQueryV1Builder, () => {
 
         let result: unknown;
 
-        beforeAll(() => {
+        beforeAll(async () => {
           uuidContextFixture = {
             uuid: '83073aec-b81b-4107-97f9-baa46de5dd40',
           };
 
-          result = userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
+          result = await userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
             userMeUpdateQueryV1Fixture,
             uuidContextFixture,
           );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
         });
 
         it('should return a UserUpdateQuery', () => {

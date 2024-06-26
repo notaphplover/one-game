@@ -43,7 +43,7 @@ export class UserManagementInputPort {
     [apiModels.UserCreateQueryV1, UuidContext]
   >;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
-  readonly #userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
+  readonly #userUpdateQueryFromUserMeUpdateQueryV1Builder: BuilderAsync<
     UserUpdateQuery,
     [apiModels.UserMeUpdateQueryV1, UuidContext]
   >;
@@ -65,7 +65,7 @@ export class UserManagementInputPort {
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
     @Inject(UserUpdateQueryFromUserMeUpdateQueryV1Builder)
-    userUpdateQueryFromUserMeUpdateQueryV1Builder: Builder<
+    userUpdateQueryFromUserMeUpdateQueryV1Builder: BuilderAsync<
       UserUpdateQuery,
       [apiModels.UserMeUpdateQueryV1, UuidContext]
     >,
@@ -139,7 +139,7 @@ export class UserManagementInputPort {
     userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
   ): Promise<apiModels.UserV1> {
     const userUpdateQuery: UserUpdateQuery =
-      this.#userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
+      await this.#userUpdateQueryFromUserMeUpdateQueryV1Builder.build(
         userMeUpdateQueryV1,
         {
           uuid: id,

@@ -208,6 +208,7 @@ export interface UserCreateQueryV1 {
 export interface UserMeUpdateQueryV1 {
   active?: true;
   name?: string;
+  password?: string;
 }
 export interface UserV1 {
   active: boolean;
