@@ -2,18 +2,140 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { useEffect, useState } from 'react';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
+import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
+import { validateName } from '../../common/helpers/validateName';
+import { validatePassword } from '../../common/helpers/validatePassword';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
 import { UserInfoStatus } from '../models/UserInfoStatus';
-import { UseUserInfoResult } from '../models/UseUserInfoResult';
+import { UseUserInfoActions } from '../models/UseUserInfoActions';
+import {
+  BaseUserInfoFormFields,
+  UseUserInfoData,
+} from '../models/UseUserInfoData';
+import { UserInfoFormValidationResult } from '../pages/UserInfo';
 
-export const useUserInfo = (): UseUserInfoResult => {
-  const [result, setResult] = useState<UseUserInfoResult>({
+export const useUserInfo = (): [UseUserInfoData, UseUserInfoActions] => {
+  const [userV1, setUserV1] = useState<apiModels.UserV1 | null>(null);
+
+  const [userInfoData, setUserInfoData] = useState<UseUserInfoData>({
+    form: {
+      fields: {
+        confirmPassword: null,
+        email: null,
+        name: null,
+        password: null,
+      },
+      validation: {},
+    },
     status: UserInfoStatus.fetchingUser,
-    updateUser,
-    userDetailV1: null,
-    userV1: null,
   });
+
+  const updateForm = (fields: BaseUserInfoFormFields): void => {
+    const updatedUserInfoData: UseUserInfoData = { ...userInfoData };
+
+    updatedUserInfoData.form = {
+      fields,
+      validation: { ...userInfoData.form.validation },
+    };
+
+    setUserInfoData(updatedUserInfoData);
+  };
+
+  const onConfirmPasswordChanged = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    updateForm({
+      ...userInfoData.form.fields,
+      confirmPassword: event.currentTarget.value,
+    });
+  };
+
+  function onNameChanged(event: React.ChangeEvent<HTMLInputElement>): void {
+    updateForm({
+      ...userInfoData.form.fields,
+      name: event.currentTarget.value,
+    });
+  }
+
+  function onPasswordChanged(event: React.ChangeEvent<HTMLInputElement>): void {
+    updateForm({
+      ...userInfoData.form.fields,
+      password: event.currentTarget.value,
+    });
+  }
+
+  function onSubmit(event: React.FormEvent): void {
+    event.preventDefault();
+
+    if (userInfoData.status !== UserInfoStatus.idle) {
+      return;
+    }
+
+    const formValidation: UserInfoFormValidationResult = {};
+
+    const userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1 = {};
+
+    if (userInfoData.form.fields.confirmPassword !== null) {
+      const passwordValidation: Either<string[], undefined> =
+        validateConfirmPassword(
+          userInfoData.form.fields.password,
+          userInfoData.form.fields.confirmPassword,
+        );
+
+      if (!passwordValidation.isRight) {
+        formValidation.confirmPassword = passwordValidation.value.join(' ');
+      }
+    }
+
+    if (userInfoData.form.fields.name !== null) {
+      const nameValidation: Either<string, undefined> = validateName(
+        userInfoData.form.fields.name,
+      );
+
+      if (nameValidation.isRight) {
+        userMeUpdateQueryV1.name = userInfoData.form.fields.name;
+      } else {
+        formValidation.name = nameValidation.value;
+      }
+    }
+
+    if (userInfoData.form.fields.password !== null) {
+      const passwordValidation: Either<string, undefined> = validatePassword(
+        userInfoData.form.fields.password,
+      );
+
+      if (passwordValidation.isRight) {
+        userMeUpdateQueryV1.password = userInfoData.form.fields.password;
+      } else {
+        formValidation.password = passwordValidation.value;
+      }
+    }
+
+    if (Object.keys(formValidation).length === 0) {
+      setUserInfoData({
+        form: {
+          fields: {
+            ...userInfoData.form.fields,
+          },
+          validation: formValidation,
+        },
+        status: userInfoData.status,
+      });
+
+      updateUser(userMeUpdateQueryV1);
+    } else {
+      setUserInfoData({
+        form: {
+          fields: {
+            ...userInfoData.form.fields,
+          },
+          validation: formValidation,
+        },
+        status: UserInfoStatus.idle,
+      });
+    }
+  }
 
   const [triggerUpdateUser] = cornieApi.useUpdateUsersV1MeMutation();
 
@@ -36,11 +158,12 @@ export const useUserInfo = (): UseUserInfoResult => {
   function updateUser(
     userMeUpdateQueryV1: apiModels.UserMeUpdateQueryV1,
   ): void {
-    setResult({
+    setUserInfoData({
+      form: {
+        fields: { ...userInfoData.form.fields },
+        validation: { ...userInfoData.form.validation },
+      },
       status: UserInfoStatus.updatingUser,
-      updateUser,
-      userDetailV1: result.userDetailV1,
-      userV1: result.userV1,
     });
 
     void triggerUpdateUser({
@@ -51,22 +174,52 @@ export const useUserInfo = (): UseUserInfoResult => {
   useEffect(() => {
     if (usersV1MeResult !== null && usersV1MeDetailResult !== null) {
       if (usersV1MeResult.isRight && usersV1MeDetailResult.isRight) {
-        setResult({
+        setUserInfoData({
+          form: {
+            fields: {
+              ...userInfoData.form.fields,
+              email: usersV1MeDetailResult.value.email,
+              name: usersV1MeResult.value.name,
+            },
+            validation: { ...userInfoData.form.validation },
+          },
           status: UserInfoStatus.idle,
-          updateUser,
-          userDetailV1: usersV1MeDetailResult.value,
-          userV1: usersV1MeResult.value,
         });
+        setUserV1(usersV1MeResult.value);
       } else {
-        setResult({
+        setUserInfoData({
+          form: {
+            fields: { ...userInfoData.form.fields },
+            validation: { ...userInfoData.form.validation },
+          },
           status: UserInfoStatus.userFetchError,
-          updateUser,
-          userDetailV1: null,
-          userV1: null,
         });
+        setUserV1(null);
       }
     }
   }, [useGetUsersV1MeQueryResult, useGetUsersV1MeDetailQueryResult]);
 
-  return result;
+  useEffect(() => {
+    if (userInfoData.status === UserInfoStatus.idle && userV1 !== null) {
+      setUserInfoData({
+        form: {
+          fields: { ...userInfoData.form.fields, name: userV1.name },
+          validation: { ...userInfoData.form.validation },
+        },
+        status: userInfoData.status,
+      });
+    }
+  }, [userV1]);
+
+  return [
+    userInfoData,
+    {
+      handlers: {
+        onConfirmPasswordChanged,
+        onNameChanged,
+        onPasswordChanged,
+        onSubmit,
+      },
+    },
+  ];
 };
