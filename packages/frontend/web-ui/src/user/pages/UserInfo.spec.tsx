@@ -24,12 +24,28 @@ describe(UserInfo, () => {
 
     beforeAll(() => {
       authFixture = null;
-      useUserInfoResultFixture = {
-        status: UserInfoStatus.fetchingUser,
-        updateUser: jest.fn(),
-        userDetailV1: null,
-        userV1: null,
-      };
+      useUserInfoResultFixture = [
+        {
+          form: {
+            fields: {
+              confirmPassword: null,
+              email: null,
+              name: null,
+              password: null,
+            },
+            validation: {},
+          },
+          status: UserInfoStatus.fetchingUser,
+        },
+        {
+          handlers: {
+            onConfirmPasswordChanged: jest.fn(),
+            onNameChanged: jest.fn(),
+            onPasswordChanged: jest.fn(),
+            onSubmit: jest.fn(),
+          },
+        },
+      ];
 
       (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
         authFixture,
@@ -90,20 +106,36 @@ describe(UserInfo, () => {
         name: nameFixture,
       };
 
-      useUserInfoResultFixture = {
-        status: UserInfoStatus.idle,
-        updateUser: jest.fn(),
-        userDetailV1: userDetailV1Fixture,
-        userV1: userV1Fixture,
-      };
+      useUserInfoResultFixture = [
+        {
+          form: {
+            fields: {
+              confirmPassword: null,
+              email: userDetailV1Fixture.email,
+              name: userV1Fixture.name,
+              password: null,
+            },
+            validation: {},
+          },
+          status: UserInfoStatus.idle,
+        },
+        {
+          handlers: {
+            onConfirmPasswordChanged: jest.fn(),
+            onNameChanged: jest.fn(),
+            onPasswordChanged: jest.fn(),
+            onSubmit: jest.fn(),
+          },
+        },
+      ];
 
       (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
         authFixture,
       );
 
-      (useUserInfo as jest.Mock<typeof useUserInfo>)
-        .mockReturnValueOnce(useUserInfoResultFixture)
-        .mockReturnValueOnce(useUserInfoResultFixture);
+      (useUserInfo as jest.Mock<typeof useUserInfo>).mockReturnValueOnce(
+        useUserInfoResultFixture,
+      );
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -124,7 +156,7 @@ describe(UserInfo, () => {
     });
 
     it('should call useUserInfo()', () => {
-      expect(useUserInfo).toHaveBeenCalledTimes(2);
+      expect(useUserInfo).toHaveBeenCalledTimes(1);
       expect(useUserInfo).toHaveBeenCalledWith();
     });
 

@@ -2,7 +2,7 @@ import { Either } from '../models/Either';
 import { PASSWORD_MIN_LENGTH } from './passwordMinLength';
 
 export const validateConfirmPassword = (
-  password: string,
+  password: string | null | undefined,
   confirmPassword: string,
 ): Either<string[], undefined> => {
   const errorMessages: string[] = [];
@@ -13,7 +13,7 @@ export const validateConfirmPassword = (
     );
   }
 
-  if (password.trim() !== confirmPassword.trim()) {
+  if ((password ?? '').trim() !== confirmPassword.trim()) {
     errorMessages.push('Confirm password must match the password.');
   }
 
