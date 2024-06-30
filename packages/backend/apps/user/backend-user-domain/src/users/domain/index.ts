@@ -8,6 +8,7 @@ import { IsValidUserCreateQuerySpec } from './specs/IsValidUserCreateQuerySpec';
 import { IsValidUserUpdateQuerySpec } from './specs/IsValidUserUpdateQuerySpec';
 import { UserCanCreateAuthSpec } from './specs/UserCanCreateAuthSpec';
 import { UserCode } from './valueObjects/UserCode';
+import { UserCodeKind } from './valueObjects/UserCodeKind';
 
 export type {
   User,
@@ -23,4 +24,5 @@ export {
   IsValidUserCreateQuerySpec,
   IsValidUserUpdateQuerySpec,
   UserCanCreateAuthSpec,
+  UserCodeKind,
 };

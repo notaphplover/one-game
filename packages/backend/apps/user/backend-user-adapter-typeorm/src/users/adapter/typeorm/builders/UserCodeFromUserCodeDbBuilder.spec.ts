@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { UserCode } from '@cornie-js/backend-user-domain/users';
+import { UserCode, UserCodeKind } from '@cornie-js/backend-user-domain/users';
 
 import { UserCodeDbFixtures } from '../fixtures/UserCodeDbFixtures';
 import { UserCodeDb } from '../models/UserCodeDb';
@@ -30,6 +30,7 @@ describe(UserCodeFromUserDbCodeBuilder.name, () => {
       it('should return a UserCode', () => {
         const expected: UserCode = {
           code: userCodeDbFixture.code,
+          kind: UserCodeKind.registerConfirm,
           userId: userCodeDbFixture.userId,
         };
 

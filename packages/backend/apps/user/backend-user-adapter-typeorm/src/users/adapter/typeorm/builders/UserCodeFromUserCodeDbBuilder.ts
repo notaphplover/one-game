@@ -1,5 +1,5 @@
 import { Builder } from '@cornie-js/backend-common';
-import { UserCode } from '@cornie-js/backend-user-domain/users';
+import { UserCode, UserCodeKind } from '@cornie-js/backend-user-domain/users';
 import { Injectable } from '@nestjs/common';
 
 import { UserCodeDb } from '../models/UserCodeDb';
@@ -11,6 +11,7 @@ export class UserCodeFromUserDbCodeBuilder
   public build(userCodeDb: UserCodeDb): UserCode {
     return {
       code: userCodeDb.code,
+      kind: UserCodeKind.registerConfirm,
       userId: userCodeDb.userId,
     };
   }
