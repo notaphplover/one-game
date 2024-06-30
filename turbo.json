@@ -63,8 +63,7 @@
     "serve": {
       "cache": false,
       "dependsOn": ["build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
+      "env": [
         "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
         "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
         "ONE_JS_TEST_E2E_DOT_ENV_PATH",
@@ -79,8 +78,7 @@
     "start:e2e": {
       "cache": false,
       "dependsOn": ["build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
+      "env": [
         "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
         "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
         "ONE_JS_TEST_E2E_DOT_ENV_PATH",
@@ -93,8 +91,7 @@
     },
     "test:e2e": {
       "cache": false,
-      "inputs": [
-        "$TURBO_DEFAULT$",
+      "env": [
         "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
         "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
         "ONE_JS_TEST_E2E_DOT_ENV_PATH",
@@ -104,8 +101,7 @@
     "test:e2e:js": {
       "cache": false,
       "dependsOn": ["build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
+      "env": [
         "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
         "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
         "ONE_JS_TEST_E2E_DOT_ENV_PATH",
