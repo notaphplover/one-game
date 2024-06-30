@@ -30,6 +30,7 @@ export type TypesV1 =
   | GameUpdatedMessageEventV1
   | GameV1
   | NonStartedGameStateV1
+  | UserCodeCreateQueryV1
   | UserCreateQueryV1
   | UserMeUpdateQueryV1
   | UserV1
@@ -199,6 +200,9 @@ export interface GameSpecV1 {
   gameId: string;
   gameSlotsAmount: number;
   options: GameOptionsV1;
+}
+export interface UserCodeCreateQueryV1 {
+  kind: 'registerConfirm' | 'resetPassword';
 }
 export interface UserCreateQueryV1 {
   email: string;
