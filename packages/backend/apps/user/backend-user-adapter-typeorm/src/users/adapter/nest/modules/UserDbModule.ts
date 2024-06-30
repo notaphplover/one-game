@@ -11,6 +11,8 @@ import { UserPersistenceTypeOrmAdapter } from '../../typeorm/adapters/UserPersis
 import { UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder } from '../../typeorm/builders/UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder';
 import { UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder } from '../../typeorm/builders/UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder';
 import { UserCodeFromUserDbCodeBuilder } from '../../typeorm/builders/UserCodeFromUserCodeDbBuilder';
+import { UserCodeKindDbFromUserCodeKindBuilder } from '../../typeorm/builders/UserCodeKindDbFromUserCodeKindBuilder';
+import { UserCodeKindFromUserCodeKindDbBuilder } from '../../typeorm/builders/UserCodeKindFromUserCodeKindDbBuilder';
 import { UserCreateQueryTypeOrmFromUserCreateQueryBuilder } from '../../typeorm/builders/UserCreateQueryTypeOrmFromUserCreateQueryBuilder';
 import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../../typeorm/builders/UserFindQueryTypeOrmFromUserFindQueryBuilder';
 import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from '../../typeorm/builders/UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
@@ -51,6 +53,8 @@ export class UserDbModule {
         UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder,
         UserCodeFindQueryTypeOrmFromUserCodeFindQueryBuilder,
         UserCodeFromUserDbCodeBuilder,
+        UserCodeKindDbFromUserCodeKindBuilder,
+        UserCodeKindFromUserCodeKindDbBuilder,
         UserCreateQueryTypeOrmFromUserCreateQueryBuilder,
         UserFindQueryTypeOrmFromUserFindQueryBuilder,
         UserFindQueryTypeOrmFromUserUpdateQueryBuilder,
