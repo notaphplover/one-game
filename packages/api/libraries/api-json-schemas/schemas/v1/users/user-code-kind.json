@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/users/user-code-kind.json",
+  "title": "UserCodeKindV1",
+  "enum": ["registerConfirm", "resetPassword"],
+  "type": "string"
+}

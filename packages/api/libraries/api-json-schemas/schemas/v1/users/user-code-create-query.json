@@ -6,8 +6,7 @@
   "additionalProperties": false,
   "properties": {
     "kind": {
-      "enum": ["registerConfirm", "resetPassword"],
-      "type": "string"
+      "$ref": "https://onegame.schemas/api/v1/users/user-code-kind.json"
     }
   },
   "required": ["kind"]
