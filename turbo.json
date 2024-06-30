@@ -103,7 +103,14 @@
     },
     "test:e2e:js": {
       "cache": false,
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_TEST_E2E_DOT_ENV_PATH",
+        "ONE_JS_USER_SERVICE_DOT_ENV_PATH"
+      ]
     },
     "test:integration:js": {
       "dependsOn": ["build"],
