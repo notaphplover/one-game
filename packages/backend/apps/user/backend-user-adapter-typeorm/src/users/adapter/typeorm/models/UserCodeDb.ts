@@ -8,6 +8,7 @@ import {
   RelationId,
 } from 'typeorm';
 
+import { UserCodeKindDb } from './UserCodeKindDb';
 import { UserDb } from './UserDb';
 
 @Entity({
@@ -28,6 +29,14 @@ export class UserCodeDb {
     type: 'varchar',
   })
   public readonly id!: string;
+
+  @Column({
+    length: 255,
+    name: 'kind',
+    nullable: true,
+    type: 'varchar',
+  })
+  public readonly kind!: UserCodeKindDb | null;
 
   @OneToOne(() => UserDb, { nullable: false })
   @JoinColumn({ name: 'user_id' })
