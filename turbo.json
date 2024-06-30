@@ -63,6 +63,13 @@
     "serve": {
       "cache": false,
       "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_TEST_E2E_DOT_ENV_PATH",
+        "ONE_JS_USER_SERVICE_DOT_ENV_PATH"
+      ],
       "persistent": true
     },
     "serve:docker": {
@@ -71,14 +78,28 @@
     },
     "start:e2e": {
       "cache": false,
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_TEST_E2E_DOT_ENV_PATH",
+        "ONE_JS_USER_SERVICE_DOT_ENV_PATH"
+      ]
     },
     "test": {
       "inputs": ["src/**/*.ts"],
       "outputs": []
     },
     "test:e2e": {
-      "cache": false
+      "cache": false,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "ONE_JS_GAME_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_GATEWAY_SERVICE_DOT_ENV_PATH",
+        "ONE_JS_TEST_E2E_DOT_ENV_PATH",
+        "ONE_JS_USER_SERVICE_DOT_ENV_PATH"
+      ]
     },
     "test:e2e:js": {
       "cache": false,
