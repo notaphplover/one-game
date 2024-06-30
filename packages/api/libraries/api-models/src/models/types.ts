@@ -31,6 +31,7 @@ export type TypesV1 =
   | GameV1
   | NonStartedGameStateV1
   | UserCodeCreateQueryV1
+  | UserCodeKindV1
   | UserCreateQueryV1
   | UserMeUpdateQueryV1
   | UserV1
@@ -63,6 +64,7 @@ export type GameSlotV1 =
   | NonStartedGameSlotV1;
 export type GameSpecArrayV1 = GameSpecV1[];
 export type GameSpecSortOptionV1 = 'gameIds';
+export type UserCodeKindV1 = 'registerConfirm' | 'resetPassword';
 export type TypesV2 = AuthCreateQueryV2 | AuthV2 | GameEventV2;
 export type AuthCreateQueryV2 = CodeAuthCreateQueryV2 | LoginAuthCreateQueryV2;
 export type GameEventV2 =
@@ -202,7 +204,7 @@ export interface GameSpecV1 {
   options: GameOptionsV1;
 }
 export interface UserCodeCreateQueryV1 {
-  kind: 'registerConfirm' | 'resetPassword';
+  kind: UserCodeKindV1;
 }
 export interface UserCreateQueryV1 {
   email: string;

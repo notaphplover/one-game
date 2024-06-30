@@ -57,6 +57,7 @@ export enum ApiSchemaId {
   TypesV1 = 'https://onegame.schemas/api/v1/types.json',
   TypesV2 = 'https://onegame.schemas/api/v2/types.json',
   UserCodeCreateQueryV1 = 'https://onegame.schemas/api/v1/users/user-code-create-query.json',
+  UserCodeKindV1 = 'https://onegame.schemas/api/v1/users/user-code-kind.json',
   UserCreateQueryV1 = 'https://onegame.schemas/api/v1/users/user-create-query.json',
   UserDetailV1 = 'https://onegame.schemas/api/v1/users/user-detail.json',
   UserMeUpdateQueryV1 = 'https://onegame.schemas/api/v1/users/user-me-update-query.json',

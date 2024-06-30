@@ -17,6 +17,7 @@ import { GetUserV1MeRequestParamHandler } from '../../../application/handlers/Ge
 import { GetUserV1UserIdRequestParamHandler } from '../../../application/handlers/GetUserV1UserIdRequestParamHandler';
 import { PatchUserV1MeRequestBodyParamHandler } from '../../../application/handlers/PatchUserV1MeRequestBodyParamHandler';
 import { PatchUserV1MeRequestParamHandler } from '../../../application/handlers/PatchUserV1MeRequestParamHandler';
+import { PostUserV1EmailCodeRequestBodyParamHandler } from '../../../application/handlers/PostUserV1EmailCodeRequestBodyParamHandler';
 import { PostUserV1EmailCodeRequestParamHandler } from '../../../application/handlers/PostUserV1EmailCodeRequestParamHandler';
 import { PostUserV1RequestParamHandler } from '../../../application/handlers/PostUserV1RequestParamHandler';
 import { UserApplicationModule } from './UserApplicationModule';
@@ -62,6 +63,7 @@ export class UserHttpApiModule {
         PatchUserV1MeRequestBodyParamHandler,
         PatchUserV1MeRequestParamHandler,
         PostUserV1EmailCodeRequestController,
+        PostUserV1EmailCodeRequestBodyParamHandler,
         PostUserV1EmailCodeRequestParamHandler,
         PostUserV1HttpRequestController,
         PostUserV1RequestParamHandler,
