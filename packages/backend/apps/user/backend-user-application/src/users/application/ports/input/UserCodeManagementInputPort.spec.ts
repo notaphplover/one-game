@@ -6,6 +6,7 @@ import {
   User,
   UserCode,
   UserCodeFindQuery,
+  UserCodeKind,
 } from '@cornie-js/backend-user-domain/users';
 import {
   UserCodeFixtures,
@@ -60,6 +61,7 @@ describe(UserCodeManagementInputPort.name, () => {
 
     describe('when called', () => {
       let userCodeFixture: UserCode;
+      let userCodeKindFixture: UserCodeKind;
       let userCodeStringFixture: string;
       let uuidFixture: string;
 
@@ -67,6 +69,7 @@ describe(UserCodeManagementInputPort.name, () => {
 
       beforeAll(async () => {
         userCodeFixture = UserCodeFixtures.any;
+        userCodeKindFixture = UserCodeKind.resetPassword;
         userCodeStringFixture = 'code-fixture';
         uuidFixture = 'uuid-fixture';
 
@@ -78,7 +81,10 @@ describe(UserCodeManagementInputPort.name, () => {
           userCodeFixture,
         );
 
-        result = await userCodeManagementInputPort.createFromUser(userFixture);
+        result = await userCodeManagementInputPort.createFromUser(
+          userFixture,
+          userCodeKindFixture,
+        );
       });
 
       afterAll(() => {

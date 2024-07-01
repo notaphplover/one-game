@@ -7,7 +7,7 @@ import {
   ResponseWithBody,
   SingleEntityPostResponseBuilder,
 } from '@cornie-js/backend-http';
-import { User } from '@cornie-js/backend-user-domain/users';
+import { User, UserCodeKind } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { PostUserV1EmailCodeRequestParamHandler } from '../handlers/PostUserV1EmailCodeRequestParamHandler';
@@ -16,14 +16,14 @@ import { UserCodeManagementInputPort } from '../ports/input/UserCodeManagementIn
 @Injectable()
 export class PostUserV1EmailCodeRequestController extends HttpRequestController<
   Request,
-  [User],
+  [User, UserCodeKind],
   undefined
 > {
   readonly #userCodeManagementInputPort: UserCodeManagementInputPort;
 
   constructor(
     @Inject(PostUserV1EmailCodeRequestParamHandler)
-    requestParamHandler: Handler<[Request], [User]>,
+    requestParamHandler: Handler<[Request], [User, UserCodeKind]>,
     @Inject(SingleEntityPostResponseBuilder)
     responseBuilder: Builder<Response, [undefined]>,
     @Inject(ErrorV1ResponseFromErrorBuilder)
@@ -43,7 +43,10 @@ export class PostUserV1EmailCodeRequestController extends HttpRequestController<
     this.#userCodeManagementInputPort = userCodeManagementInputPort;
   }
 
-  protected async _handleUseCase(user: User): Promise<undefined> {
-    await this.#userCodeManagementInputPort.createFromUser(user);
+  protected async _handleUseCase(
+    user: User,
+    userCodeKind: UserCodeKind,
+  ): Promise<undefined> {
+    await this.#userCodeManagementInputPort.createFromUser(user, userCodeKind);
   }
 }

@@ -20,6 +20,7 @@ export class UserCodeCreateQueryFromUserBuilder
     return {
       code: context.userCode,
       id: context.uuid,
+      kind: context.kind,
       userId: user.id,
     };
   }

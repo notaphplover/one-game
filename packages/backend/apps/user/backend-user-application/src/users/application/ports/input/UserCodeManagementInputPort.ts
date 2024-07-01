@@ -8,6 +8,7 @@ import {
   UserCode,
   UserCodeCreateQuery,
   UserCodeFindQuery,
+  UserCodeKind,
 } from '@cornie-js/backend-user-domain/users';
 import { Inject } from '@nestjs/common';
 
@@ -42,10 +43,14 @@ export class UserCodeManagementInputPort {
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
-  public async createFromUser(user: User): Promise<void> {
+  public async createFromUser(
+    user: User,
+    userCodeKind: UserCodeKind,
+  ): Promise<void> {
     const userCodeCreateQuery: UserCodeCreateQuery = {
       code: this.#randomHexStringBuilder.build(USER_CODE_LENGHT),
       id: this.#uuidProviderOutputPort.generateV4(),
+      kind: userCodeKind,
       userId: user.id,
     };
 
