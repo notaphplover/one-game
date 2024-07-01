@@ -41,12 +41,12 @@ describe(UserCodeCreatedEventHandler.name, () => {
   });
 
   describe('.handle', () => {
-    describe('having a UserCodeCreatedEvent with a non active user', () => {
+    describe('having a UserCodeCreatedEvent with a registerConform UserCode', () => {
       let userCodeCreatedEventFixture: UserCodeCreatedEvent;
 
       beforeAll(() => {
         userCodeCreatedEventFixture =
-          UserCodeCreatedEventFixtures.withUserWithActiveFalse;
+          UserCodeCreatedEventFixtures.withUserCodeWithKindRegisterConfirm;
       });
 
       describe('when called', () => {
@@ -102,12 +102,12 @@ describe(UserCodeCreatedEventHandler.name, () => {
       });
     });
 
-    describe('having a UserCodeCreatedEvent with an active user', () => {
+    describe('having a UserCodeCreatedEvent with a resetPassword UserCode', () => {
       let userCodeCreatedEventFixture: UserCodeCreatedEvent;
 
       beforeAll(() => {
         userCodeCreatedEventFixture =
-          UserCodeCreatedEventFixtures.withUserWithActiveTrue;
+          UserCodeCreatedEventFixtures.withUserCodeWithKindResetPassword;
       });
 
       describe('when called', () => {

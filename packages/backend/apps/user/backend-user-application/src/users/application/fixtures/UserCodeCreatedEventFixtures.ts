@@ -13,17 +13,17 @@ export class UserCodeCreatedEventFixtures {
     };
   }
 
-  public static get withUserWithActiveFalse(): UserCodeCreatedEvent {
+  public static get withUserCodeWithKindRegisterConfirm(): UserCodeCreatedEvent {
     return {
-      user: UserFixtures.withActiveFalse,
-      userCode: UserCodeFixtures.any,
+      user: UserFixtures.any,
+      userCode: UserCodeFixtures.withKindRegisterConfirm,
     };
   }
 
-  public static get withUserWithActiveTrue(): UserCodeCreatedEvent {
+  public static get withUserCodeWithKindResetPassword(): UserCodeCreatedEvent {
     return {
-      user: UserFixtures.withActiveTrue,
-      userCode: UserCodeFixtures.any,
+      user: UserFixtures.any,
+      userCode: UserCodeFixtures.withKindResetPassword,
     };
   }
 }
