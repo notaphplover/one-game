@@ -10,6 +10,7 @@ import {
   User,
   UserCode,
   UserCodeCreateQuery,
+  UserCodeKind,
 } from '@cornie-js/backend-user-domain/users';
 import {
   UserCodeCreateQueryFixtures,
@@ -126,6 +127,7 @@ describe(UserCreatedEventHandler.name, () => {
 
       it('should call userCodeCreateQueryFromUserBuilder.build()', () => {
         const expectedContext: UserCodeContext & UuidContext = {
+          kind: UserCodeKind.registerConfirm,
           userCode: userCodeCodeFixture,
           uuid: uuidFixture,
         };

@@ -1,8 +1,18 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind } from '@cornie-js/backend-common';
-import { Request } from '@cornie-js/backend-http';
-import { User, UserFindQuery } from '@cornie-js/backend-user-domain/users';
+import { models as apiModels } from '@cornie-js/api-models';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
+import { Request, RequestWithBody } from '@cornie-js/backend-http';
+import {
+  User,
+  UserCodeKind,
+  UserFindQuery,
+} from '@cornie-js/backend-user-domain/users';
 import { UserFixtures } from '@cornie-js/backend-user-domain/users/fixtures';
 
 import { UserPersistenceOutputPort } from '../ports/output/UserPersistenceOutputPort';
@@ -11,6 +21,12 @@ import { PostUserV1EmailCodeRequestParamHandler } from './PostUserV1EmailCodeReq
 
 describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
   let userPersistenceOutputPortMock: jest.Mocked<UserPersistenceOutputPort>;
+  let postUserV1EmailCodeRequestBodyParamHandlerMock: jest.Mocked<
+    Handler<[RequestWithBody], [apiModels.UserCodeCreateQueryV1]>
+  >;
+  let userCodeKindFromUserCodeKindV1BuilderMock: jest.Mocked<
+    Builder<UserCodeKind, [apiModels.UserCodeKindV1]>
+  >;
 
   let postUserV1EmailCodeRequestParamHandler: PostUserV1EmailCodeRequestParamHandler;
 
@@ -21,8 +37,20 @@ describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
       jest.Mocked<UserPersistenceOutputPort>
     > as jest.Mocked<UserPersistenceOutputPort>;
 
+    postUserV1EmailCodeRequestBodyParamHandlerMock = {
+      handle: jest.fn(),
+    };
+
+    userCodeKindFromUserCodeKindV1BuilderMock = {
+      build: jest.fn(),
+    };
+
     postUserV1EmailCodeRequestParamHandler =
-      new PostUserV1EmailCodeRequestParamHandler(userPersistenceOutputPortMock);
+      new PostUserV1EmailCodeRequestParamHandler(
+        userPersistenceOutputPortMock,
+        postUserV1EmailCodeRequestBodyParamHandlerMock,
+        userCodeKindFromUserCodeKindV1BuilderMock,
+      );
   });
 
   describe('.handle', () => {
@@ -159,8 +187,93 @@ describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
           );
         });
 
-        it('should return an array with a User', () => {
-          expect(result).toStrictEqual([userFixture]);
+        it('should return an array with a User and UserCodeKind', () => {
+          const expectedUserCodeKind: UserCodeKind =
+            UserCodeKind.registerConfirm;
+
+          expect(result).toStrictEqual([userFixture, expectedUserCodeKind]);
+        });
+      });
+    });
+
+    describe('having a Request with body with email url parameter', () => {
+      let emailFixture: string;
+      let requestFixture: RequestWithBody;
+
+      beforeAll(() => {
+        emailFixture = 'mail@example.com';
+
+        requestFixture = {
+          body: {
+            foo: 'bar',
+          },
+          headers: {},
+          query: {},
+          urlParameters: {
+            [BaseUserV1EmailCodeRequestParamHandler.emailUrlParameter]:
+              emailFixture,
+          },
+        };
+      });
+
+      describe('when called, and userPersistenceOutputPort.findOne() returns User', () => {
+        let userCodeCreateQueryV1Fixture: apiModels.UserCodeCreateQueryV1;
+        let userFixture: User;
+        let userCodeKindFixture: UserCodeKind;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          userCodeCreateQueryV1Fixture = {
+            kind: 'resetPassword',
+          };
+          userFixture = UserFixtures.any;
+          userCodeKindFixture = UserCodeKind.resetPassword;
+
+          postUserV1EmailCodeRequestBodyParamHandlerMock.handle.mockResolvedValueOnce(
+            [userCodeCreateQueryV1Fixture],
+          );
+
+          userPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            userFixture,
+          );
+
+          userCodeKindFromUserCodeKindV1BuilderMock.build.mockReturnValueOnce(
+            userCodeKindFixture,
+          );
+
+          result =
+            await postUserV1EmailCodeRequestParamHandler.handle(requestFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call postUserV1EmailCodeRequestBodyParamHandler.handle()', () => {
+          expect(
+            postUserV1EmailCodeRequestBodyParamHandlerMock.handle,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            postUserV1EmailCodeRequestBodyParamHandlerMock.handle,
+          ).toHaveBeenCalledWith(requestFixture);
+        });
+
+        it('should call userPersistenceOutputPort.findOne()', () => {
+          const expectedUserFindQuery: UserFindQuery = {
+            email: emailFixture,
+          };
+
+          expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(userPersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+            expectedUserFindQuery,
+          );
+        });
+
+        it('should return an array with a User and UserCodeKind', () => {
+          expect(result).toStrictEqual([userFixture, userCodeKindFixture]);
         });
       });
     });

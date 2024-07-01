@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import {
   User,
   UserCodeCreateQuery,
+  UserCodeKind,
 } from '@cornie-js/backend-user-domain/users';
 import { UserFixtures } from '@cornie-js/backend-user-domain/users/fixtures';
 
@@ -25,6 +26,7 @@ describe(UserCodeCreateQueryFromUserBuilder.name, () => {
     beforeAll(() => {
       userFixture = UserFixtures.any;
       contextFixture = {
+        kind: UserCodeKind.resetPassword,
         userCode: 'code fixture',
         uuid: 'uuid fixture',
       };
@@ -44,6 +46,7 @@ describe(UserCodeCreateQueryFromUserBuilder.name, () => {
         const expected: UserCodeCreateQuery = {
           code: contextFixture.userCode,
           id: contextFixture.uuid,
+          kind: contextFixture.kind,
           userId: userFixture.id,
         };
 

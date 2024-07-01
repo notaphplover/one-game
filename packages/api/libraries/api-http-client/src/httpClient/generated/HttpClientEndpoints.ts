@@ -268,12 +268,13 @@ export class HttpClientEndpoints {
       [key: string]: string;
       email: string;
     },
+    body: apiModels.UserCodeCreateQueryV1 | undefined,
   ): Promise<
     | Response<Record<string, string>, undefined, 201>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
   > {
     return this.#internalHttpClient.callEndpoint({
-      body: undefined,
+      body: body,
       headers: headers,
       method: 'POST',
       path: '/v1/users/email/{email}/code',

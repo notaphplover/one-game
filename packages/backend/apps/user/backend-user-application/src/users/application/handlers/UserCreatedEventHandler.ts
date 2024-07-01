@@ -12,6 +12,7 @@ import {
   User,
   UserCode,
   UserCodeCreateQuery,
+  UserCodeKind,
 } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -89,6 +90,7 @@ export class UserCreatedEventHandler
   async #createUserCode(userCreatedEvent: UserCreatedEvent): Promise<UserCode> {
     const userCodeCreateQuery: UserCodeCreateQuery =
       this.#userCodeCreateQueryFromUserBuilder.build(userCreatedEvent.user, {
+        kind: UserCodeKind.registerConfirm,
         userCode: this.#randomHexStringBuilder.build(USER_CODE_LENGHT),
         uuid: this.#uuidProviderOutputPort.generateV4(),
       });
