@@ -4,7 +4,11 @@ import {
   mailDeliveryOutputPortSymbol,
 } from '@cornie-js/backend-application-mail';
 import { Builder, Handler } from '@cornie-js/backend-common';
-import { User, UserCode } from '@cornie-js/backend-user-domain/users';
+import {
+  User,
+  UserCode,
+  UserCodeKind,
+} from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { PasswordResetMailDeliveryOptionsFromUserBuilder } from '../builders/PasswordResetMailDeliveryOptionsFromUserBuilder';
@@ -51,18 +55,21 @@ export class UserCodeCreatedEventHandler
   ): Promise<void> {
     let mailDeliveryOptions: MailDeliveryOptions;
 
-    if (userCodeCreatedEvent.user.active) {
-      mailDeliveryOptions =
-        this.#passwordResetMailDeliveryOptionsFromUserBuilder.build(
-          userCodeCreatedEvent.user,
-          userCodeCreatedEvent.userCode,
-        );
-    } else {
-      mailDeliveryOptions =
-        this.#userActivationMailDeliveryOptionsFromUserBuilder.build(
-          userCodeCreatedEvent.user,
-          userCodeCreatedEvent.userCode,
-        );
+    switch (userCodeCreatedEvent.userCode.kind) {
+      case UserCodeKind.registerConfirm:
+        mailDeliveryOptions =
+          this.#userActivationMailDeliveryOptionsFromUserBuilder.build(
+            userCodeCreatedEvent.user,
+            userCodeCreatedEvent.userCode,
+          );
+        break;
+      case UserCodeKind.resetPassword:
+        mailDeliveryOptions =
+          this.#passwordResetMailDeliveryOptionsFromUserBuilder.build(
+            userCodeCreatedEvent.user,
+            userCodeCreatedEvent.userCode,
+          );
+        break;
     }
 
     await this.#mailDeliveryOutputPort.send(mailDeliveryOptions);

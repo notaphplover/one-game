@@ -11,4 +11,22 @@ export class UserCodeFixtures {
 
     return fixture;
   }
+
+  public static get withKindRegisterConfirm(): UserCode {
+    const fixture: UserCode = {
+      ...UserCodeFixtures.any,
+      kind: UserCodeKind.registerConfirm,
+    };
+
+    return fixture;
+  }
+
+  public static get withKindResetPassword(): UserCode {
+    const fixture: UserCode = {
+      ...UserCodeFixtures.any,
+      kind: UserCodeKind.resetPassword,
+    };
+
+    return fixture;
+  }
 }
