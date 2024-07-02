@@ -5,8 +5,9 @@ import {
   Response,
   ResponseWithBody,
   Request,
-  RequestFromFastifyRequestBuilder,
   ErrorV1ResponseFromErrorBuilder,
+  RequestWithOptionalBodyFromFastifyRequestBuilder,
+  RequestWithBody,
 } from '@cornie-js/backend-http';
 import {
   BaseUserV1EmailCodeRequestParamHandler,
@@ -20,8 +21,8 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 )
 export class PostUserV1EmailCodeRequestNestController extends HttpNestFastifyController<Request> {
   constructor(
-    @Inject(RequestFromFastifyRequestBuilder)
-    requestBuilder: Builder<Request, [FastifyRequest]>,
+    @Inject(RequestWithOptionalBodyFromFastifyRequestBuilder)
+    requestBuilder: Builder<Request | RequestWithBody, [FastifyRequest]>,
     @Inject(PostUserV1EmailCodeRequestController)
     requestController: Handler<[Request], Response | ResponseWithBody<unknown>>,
     @Inject(ErrorV1ResponseFromErrorBuilder)

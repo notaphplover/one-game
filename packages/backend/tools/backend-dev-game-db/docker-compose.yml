@@ -5,10 +5,17 @@ services:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=game_service_db
+    networks:
+      - one_game
     ports:
       - '5433:5432'
     volumes:
       - db:/var/lib/postgresql/data
+
+networks:
+  one_game:
+    name: one_game_network
+
 volumes:
   db:
     driver: local
