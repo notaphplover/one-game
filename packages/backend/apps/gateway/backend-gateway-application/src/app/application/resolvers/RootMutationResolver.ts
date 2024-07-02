@@ -75,7 +75,7 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationCreateGameArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<Partial<graphqlModels.NonStartedGame>> {
+  ): Promise<graphqlModels.ResolversTypes['NonStartedGame']> {
     return this.#gameMutationResolver.createGame(parent, args, context, info);
   }
 
@@ -121,7 +121,7 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationPassGameTurnArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<Partial<graphqlModels.Game> | null> {
+  ): Promise<graphqlModels.Maybe<graphqlModels.ResolversTypes['Game']>> {
     return this.#gameMutationResolver.passGameTurn(parent, args, context, info);
   }
 
@@ -130,7 +130,7 @@ export class RootMutationResolver
     args: graphqlModels.GameMutationPlayGameCardsArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<Partial<graphqlModels.Game> | null> {
+  ): Promise<graphqlModels.Maybe<graphqlModels.ResolversTypes['Game']>> {
     return this.#gameMutationResolver.playGameCards(
       parent,
       args,
