@@ -56,6 +56,7 @@ export function givenCreateUserRequest(
 
 export function givenCreateCodeRequestForUser(
   this: OneGameApiWorld,
+  userCodekKind: apiModels.UserCodeKindV1,
   userAlias?: string,
   requestAlias?: string,
 ): void {
@@ -72,7 +73,9 @@ export function givenCreateCodeRequestForUser(
     {
       email: userParameter.userCreateQuery.email,
     },
-    undefined,
+    {
+      kind: userCodekKind,
+    },
   ];
 
   setRequestParameters.bind(this)(
@@ -109,7 +112,7 @@ export function givenDeleteCodeRequestForUser(
   );
 }
 
-export async function givenUser(
+async function givenNonActiveUser(
   this: OneGameApiWorld,
   requestAlias?: string,
   userAlias?: string,
@@ -136,6 +139,24 @@ export async function givenUser(
     );
   }
 
+  const userParameter: UserV1Parameter = {
+    user: createUserResponse.body,
+    userCreateQuery: userCreateQueryV1,
+  };
+
+  setUser.bind(this)(processedUserAlias, userParameter);
+}
+
+export async function givenUser(
+  this: OneGameApiWorld,
+  requestAlias?: string,
+  userAlias?: string,
+): Promise<void> {
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+  const processedUserAlias: string = userAlias ?? defaultAlias;
+
+  await givenNonActiveUser.bind(this)(requestAlias, userAlias);
+
   await whenCreateCodeAuthRequestIsSendFromUserActivationMail.bind(this)(
     requestAlias,
   );
@@ -149,7 +170,7 @@ export async function givenUser(
 
   if (createCodeAuthResponse.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected auth to be created, an unexpected ${createUserResponse.statusCode} status code was received instead`,
+      `Expected auth to be created, an unexpected ${createCodeAuthResponse.statusCode} status code was received instead`,
     );
   }
 
@@ -198,9 +219,12 @@ export async function givenUser(
     );
   }
 
+  const previousUserParameter: UserV1Parameter =
+    getUserOrFail.bind(this)(processedUserAlias);
+
   const userParameter: UserV1Parameter = {
     user: getUserMeResponse.body,
-    userCreateQuery: userCreateQueryV1,
+    userCreateQuery: previousUserParameter.userCreateQuery,
   };
 
   setUser.bind(this)(processedUserAlias, userParameter);
@@ -303,20 +327,29 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
-  'a create user code request for {string}',
-  function (this: OneGameApiWorld, userAlias: string): void {
-    givenCreateCodeRequestForUser.bind(this)(userAlias);
+  'a {userCodeKind} create user code request for {string}',
+  function (
+    this: OneGameApiWorld,
+    userCodeKind: apiModels.UserCodeKindV1,
+    userAlias: string,
+  ): void {
+    givenCreateCodeRequestForUser.bind(this)(userCodeKind, userAlias);
   },
 );
 
 Given<OneGameApiWorld>(
-  'a create user code request for {string} as {string}',
+  'a {userCodeKind} create user code request for {string} as {string}',
   function (
     this: OneGameApiWorld,
+    userCodeKind: apiModels.UserCodeKindV1,
     userAlias: string,
     requestAlias: string,
   ): void {
-    givenCreateCodeRequestForUser.bind(this)(userAlias, requestAlias);
+    givenCreateCodeRequestForUser.bind(this)(
+      userCodeKind,
+      userAlias,
+      requestAlias,
+    );
   },
 );
 
@@ -338,6 +371,20 @@ Given<OneGameApiWorld>(
   'a delete user code request for {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
     givenDeleteCodeRequestForUser.bind(this)(userAlias);
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a non active user',
+  async function (this: OneGameApiWorld): Promise<void> {
+    await givenNonActiveUser.bind(this)();
+  },
+);
+
+Given<OneGameApiWorld>(
+  'a non active user {string}',
+  async function (this: OneGameApiWorld, userAlias: string): Promise<void> {
+    await givenNonActiveUser.bind(this)(userAlias, userAlias);
   },
 );
 
