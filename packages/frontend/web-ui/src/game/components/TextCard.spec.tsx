@@ -6,7 +6,6 @@ import { TextCard, TextCardOptions } from './TextCard';
 
 describe(TextCard.name, () => {
   let textCardOptionsMock: TextCardOptions;
-  let valueCard: string | null | undefined;
 
   beforeAll(() => {
     textCardOptionsMock = {
@@ -17,6 +16,7 @@ describe(TextCard.name, () => {
 
   describe('when called', () => {
     let existingCardColorClassName: string;
+    let valueCard: string | null | undefined;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
