@@ -1,10 +1,17 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+  Spec,
+} from '@cornie-js/backend-common';
 import {
   User,
   UserCode,
+  UserCodeCreateQuery,
   UserCodeFindQuery,
   UserCodeKind,
 } from '@cornie-js/backend-user-domain/users';
@@ -19,6 +26,7 @@ import { UserCodeManagementInputPort } from './UserCodeManagementInputPort';
 
 describe(UserCodeManagementInputPort.name, () => {
   let randomHexStringBuilderMock: jest.Mocked<Builder<string, [number]>>;
+  let userCanCreateCodeSpecMock: jest.Mocked<Spec<[User, UserCodeCreateQuery]>>;
   let userCodeCreatedEventHandlerMock: jest.Mocked<
     Handler<[UserCodeCreatedEvent], void>
   >;
@@ -30,6 +38,9 @@ describe(UserCodeManagementInputPort.name, () => {
   beforeAll(() => {
     randomHexStringBuilderMock = {
       build: jest.fn(),
+    };
+    userCanCreateCodeSpecMock = {
+      isSatisfiedBy: jest.fn(),
     };
     userCodeCreatedEventHandlerMock = {
       handle: jest.fn(),
@@ -46,6 +57,7 @@ describe(UserCodeManagementInputPort.name, () => {
 
     userCodeManagementInputPort = new UserCodeManagementInputPort(
       randomHexStringBuilderMock,
+      userCanCreateCodeSpecMock,
       userCodeCreatedEventHandlerMock,
       userCodePersistenceOutputPortMock,
       uuidProviderOutputPortMock,
@@ -59,7 +71,54 @@ describe(UserCodeManagementInputPort.name, () => {
       userFixture = UserFixtures.any;
     });
 
-    describe('when called', () => {
+    describe('when called, and userCanCreateCodeSpec.isSatisfiedBy() returns false', () => {
+      let userCodeKindFixture: UserCodeKind;
+      let userCodeStringFixture: string;
+      let uuidFixture: string;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userCodeKindFixture = UserCodeKind.resetPassword;
+        userCodeStringFixture = 'code-fixture';
+        uuidFixture = 'uuid-fixture';
+
+        uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
+        randomHexStringBuilderMock.build.mockReturnValueOnce(
+          userCodeStringFixture,
+        );
+        userCanCreateCodeSpecMock.isSatisfiedBy.mockReturnValueOnce(false);
+
+        try {
+          await userCodeManagementInputPort.createFromUser(
+            userFixture,
+            userCodeKindFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should not call userCodeCreatedEventHandler.handle()', () => {
+        expect(userCodeCreatedEventHandlerMock.handle).not.toHaveBeenCalled();
+      });
+
+      it('should throw an AppError of kind unprocessableOperation', () => {
+        const expected: Partial<AppError> = {
+          kind: AppErrorKind.unprocessableOperation,
+          message: 'Unable to generate user code given the actual user state',
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(expect.objectContaining(expected));
+      });
+    });
+
+    describe('when called, and userCanCreateCodeSpec.isSatisfiedBy() returns true', () => {
       let userCodeFixture: UserCode;
       let userCodeKindFixture: UserCodeKind;
       let userCodeStringFixture: string;
@@ -77,6 +136,7 @@ describe(UserCodeManagementInputPort.name, () => {
         randomHexStringBuilderMock.build.mockReturnValueOnce(
           userCodeStringFixture,
         );
+        userCanCreateCodeSpecMock.isSatisfiedBy.mockReturnValueOnce(true);
         userCodePersistenceOutputPortMock.create.mockResolvedValueOnce(
           userCodeFixture,
         );

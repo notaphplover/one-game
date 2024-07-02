@@ -2,9 +2,16 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+  Spec,
+} from '@cornie-js/backend-common';
 import {
   User,
+  UserCanCreateCodeSpec,
   UserCode,
   UserCodeCreateQuery,
   UserCodeFindQuery,
@@ -23,6 +30,7 @@ import {
 
 export class UserCodeManagementInputPort {
   readonly #randomHexStringBuilder: Builder<string, [number]>;
+  readonly #userCanCreateCodeSpec: Spec<[User, UserCodeCreateQuery]>;
   readonly #userCodeCreatedEventHandler: Handler<[UserCodeCreatedEvent], void>;
   readonly #userCodePersistenceOutputPort: UserCodePersistenceOutputPort;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
@@ -30,6 +38,8 @@ export class UserCodeManagementInputPort {
   constructor(
     @Inject(RandomHexStringBuilder)
     randomHexStringBuilder: Builder<string, [number]>,
+    @Inject(UserCanCreateCodeSpec)
+    userCanCreateCodeSpec: Spec<[User, UserCodeCreateQuery]>,
     @Inject(UserCodeCreatedEventHandler)
     userCodeCreatedEventHandler: Handler<[UserCodeCreatedEvent], void>,
     @Inject(userCodePersistenceOutputPortSymbol)
@@ -38,6 +48,7 @@ export class UserCodeManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#randomHexStringBuilder = randomHexStringBuilder;
+    this.#userCanCreateCodeSpec = userCanCreateCodeSpec;
     this.#userCodeCreatedEventHandler = userCodeCreatedEventHandler;
     this.#userCodePersistenceOutputPort = userCodePersistenceOutputPort;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
@@ -53,6 +64,13 @@ export class UserCodeManagementInputPort {
       kind: userCodeKind,
       userId: user.id,
     };
+
+    if (!this.#userCanCreateCodeSpec.isSatisfiedBy(user, userCodeCreateQuery)) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        'Unable to generate user code given the actual user state',
+      );
+    }
 
     const userCode: UserCode =
       await this.#userCodePersistenceOutputPort.create(userCodeCreateQuery);
