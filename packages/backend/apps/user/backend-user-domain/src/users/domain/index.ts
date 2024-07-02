@@ -7,6 +7,7 @@ import { UserUpdateQuery } from './query/UserUpdateQuery';
 import { IsValidUserCreateQuerySpec } from './specs/IsValidUserCreateQuerySpec';
 import { IsValidUserUpdateQuerySpec } from './specs/IsValidUserUpdateQuerySpec';
 import { UserCanCreateAuthSpec } from './specs/UserCanCreateAuthSpec';
+import { UserCanCreateCodeSpec } from './specs/UserCanCreateCodeSpec';
 import { UserCode } from './valueObjects/UserCode';
 import { UserCodeKind } from './valueObjects/UserCodeKind';
 
@@ -24,5 +25,6 @@ export {
   IsValidUserCreateQuerySpec,
   IsValidUserUpdateQuerySpec,
   UserCanCreateAuthSpec,
+  UserCanCreateCodeSpec,
   UserCodeKind,
 };
