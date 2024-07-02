@@ -8,6 +8,7 @@ import { StringModule } from '../../../../foundation/string/adapter/nest/StringM
 import { PasswordResetMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/PasswordResetMailDeliveryOptionsFromUserBuilder';
 import { UserActivationMailDeliveryOptionsFromUserBuilder } from '../../../application/builders/UserActivationMailDeliveryOptionsFromUserBuilder';
 import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builders/UserCodeCreateQueryFromUserBuilder';
+import { UserCodeKindFromUserCodeKindV1Builder } from '../../../application/builders/UserCodeKindFromUserCodeKindV1Builder';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/builders/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserDetailV1FromUserBuilder } from '../../../application/builders/UserDetailV1FromUserBuilder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/builders/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
@@ -30,6 +31,7 @@ export class UserApplicationModule {
   ): DynamicModule {
     return {
       exports: [
+        UserCodeKindFromUserCodeKindV1Builder,
         UserCodeManagementInputPort,
         UserDetailManagementInputPort,
         UserManagementInputPort,
@@ -51,6 +53,7 @@ export class UserApplicationModule {
         UserActivationMailDeliveryOptionsFromUserBuilder,
         UserCodeCreatedEventHandler,
         UserCodeCreateQueryFromUserBuilder,
+        UserCodeKindFromUserCodeKindV1Builder,
         UserCodeManagementInputPort,
         UserCreatedEventHandler,
         UserCreateQueryFromUserCreateQueryV1Builder,
