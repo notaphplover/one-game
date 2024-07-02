@@ -10,4 +10,22 @@ export class UserCodeCreateQueryFixtures {
       userId: '83073aec-b81b-4107-97f9-baa46de5dd40',
     };
   }
+
+  public static get withKindRegisterConfirm(): UserCodeCreateQuery {
+    const fixture: UserCodeCreateQuery = {
+      ...UserCodeCreateQueryFixtures.any,
+      kind: UserCodeKind.registerConfirm,
+    };
+
+    return fixture;
+  }
+
+  public static get withKindResetPassword(): UserCodeCreateQuery {
+    const fixture: UserCodeCreateQuery = {
+      ...UserCodeCreateQueryFixtures.any,
+      kind: UserCodeKind.resetPassword,
+    };
+
+    return fixture;
+  }
 }
