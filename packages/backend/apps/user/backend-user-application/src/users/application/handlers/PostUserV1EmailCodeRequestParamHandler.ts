@@ -4,6 +4,7 @@ import { Request, RequestWithBody } from '@cornie-js/backend-http';
 import { User, UserCodeKind } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { UserCodeKindFromUserCodeKindV1Builder } from '../builders/UserCodeKindFromUserCodeKindV1Builder';
 import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
@@ -34,7 +35,7 @@ export class PostUserV1EmailCodeRequestParamHandler
       [RequestWithBody],
       [apiModels.UserCodeCreateQueryV1]
     >,
-    @Inject()
+    @Inject(UserCodeKindFromUserCodeKindV1Builder)
     userCodeKindFromUserCodeKindV1Builder: Builder<
       UserCodeKind,
       [apiModels.UserCodeKindV1]
