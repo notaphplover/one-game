@@ -28,8 +28,6 @@ describe(BaseCard.name, () => {
         '.blue-card',
       ) as HTMLElement;
 
-      console.log(cardColor);
-
       existingCardColorClassName = window
         .getComputedStyle(cardColor)
         .getPropertyValue('display');
