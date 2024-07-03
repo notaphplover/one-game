@@ -41,7 +41,7 @@ export class RootQueryResolver
     args: graphqlModels.GameQueryGameByIdArgs,
     context: Context,
     info: GraphQLResolveInfo,
-  ): Promise<Partial<graphqlModels.Game | null>> {
+  ): Promise<graphqlModels.Maybe<graphqlModels.ResolversTypes['Game']>> {
     return this.#gameQueryResolver.gameById(parent, args, context, info);
   }
 

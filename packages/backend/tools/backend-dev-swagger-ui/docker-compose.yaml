@@ -4,7 +4,13 @@ services:
     environment:
       - SHOW_COMMON_EXTENSIONS=true
       - SWAGGER_JSON=/schemas/one-game.yaml
+    networks:
+      - one_game
     ports:
       - 8080:8080
     volumes:
       - ./node_modules/@cornie-js/api-openapi-schema/schemas/generated/one-game.yaml:/schemas/one-game.yaml
+
+networks:
+  one_game:
+    name: one_game_network

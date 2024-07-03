@@ -3,9 +3,12 @@ services:
     build:
       context: .
       dockerfile: docker/maildev.Dockerfile
+    networks:
+      - one_game
     ports:
       - 1080:1080
       - 1025:1025
-volumes:
-  db:
-    driver: local
+
+networks:
+  one_game:
+    name: one_game_network

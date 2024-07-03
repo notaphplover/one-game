@@ -530,17 +530,31 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> =
       | SkipCard
       | WildCard
       | WildDraw4Card;
-    Game: ActiveGame | FinishedGame | NonStartedGame;
+    Game:
+      | (Omit<ActiveGame, 'spec' | 'state'> & {
+          spec: _RefType['GameSpec'];
+          state: _RefType['ActiveGameState'];
+        })
+      | (Omit<FinishedGame, 'spec'> & { spec: _RefType['GameSpec'] })
+      | (Omit<NonStartedGame, 'spec'> & { spec: _RefType['GameSpec'] });
   }>;
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   ResolversObject<{
-    AuthMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
+    AuthMutation: Omit<
+      RootMutation,
+      'createGame' | 'passGameTurn' | 'playGameCards'
+    > & {
+      createGame: _RefType['NonStartedGame'];
       passGameTurn: Maybe<_RefType['Game']>;
       playGameCards: Maybe<_RefType['Game']>;
     };
-    GameMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
+    GameMutation: Omit<
+      RootMutation,
+      'createGame' | 'passGameTurn' | 'playGameCards'
+    > & {
+      createGame: _RefType['NonStartedGame'];
       passGameTurn: Maybe<_RefType['Game']>;
       playGameCards: Maybe<_RefType['Game']>;
     };
@@ -548,7 +562,11 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
       gameById: Maybe<_RefType['Game']>;
       myGames: Array<_RefType['Game']>;
     };
-    UserMutation: Omit<RootMutation, 'passGameTurn' | 'playGameCards'> & {
+    UserMutation: Omit<
+      RootMutation,
+      'createGame' | 'passGameTurn' | 'playGameCards'
+    > & {
+      createGame: _RefType['NonStartedGame'];
       passGameTurn: Maybe<_RefType['Game']>;
       playGameCards: Maybe<_RefType['Game']>;
     };
@@ -560,7 +578,12 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  ActiveGame: ResolverTypeWrapper<ActiveGame>;
+  ActiveGame: ResolverTypeWrapper<
+    Omit<ActiveGame, 'spec' | 'state'> & {
+      spec: ResolversTypes['GameSpec'];
+      state: ResolversTypes['ActiveGameState'];
+    }
+  >;
   ActiveGameSlot: ResolverTypeWrapper<ActiveGameSlot>;
   ActiveGameState: ResolverTypeWrapper<
     Omit<ActiveGameState, 'currentCard'> & {
@@ -580,7 +603,9 @@ export type ResolversTypes = ResolversObject<{
   DrawCardKind: DrawCardKind;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
   FindMyGamesInput: FindMyGamesInput;
-  FinishedGame: ResolverTypeWrapper<FinishedGame>;
+  FinishedGame: ResolverTypeWrapper<
+    Omit<FinishedGame, 'spec'> & { spec: ResolversTypes['GameSpec'] }
+  >;
   FinishedGameSlot: ResolverTypeWrapper<FinishedGameSlot>;
   FinishedGameState: ResolverTypeWrapper<FinishedGameState>;
   FinishedGameStateStatus: FinishedGameStateStatus;
@@ -601,10 +626,16 @@ export type ResolversTypes = ResolversObject<{
     ResolversInterfaceTypes<ResolversTypes>['GameQuery']
   >;
   GameSlotCreateInput: GameSlotCreateInput;
-  GameSpec: ResolverTypeWrapper<GameSpec>;
+  GameSpec: ResolverTypeWrapper<
+    Omit<GameSpec, 'cardSpecs'> & {
+      cardSpecs: Array<ResolversTypes['GameCardSpec']>;
+    }
+  >;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  NonStartedGame: ResolverTypeWrapper<NonStartedGame>;
+  NonStartedGame: ResolverTypeWrapper<
+    Omit<NonStartedGame, 'spec'> & { spec: ResolversTypes['GameSpec'] }
+  >;
   NonStartedGameSlot: ResolverTypeWrapper<NonStartedGameSlot>;
   NonStartedGameState: ResolverTypeWrapper<NonStartedGameState>;
   NonStartedGameStateStatus: NonStartedGameStateStatus;
@@ -635,7 +666,10 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  ActiveGame: ActiveGame;
+  ActiveGame: Omit<ActiveGame, 'spec' | 'state'> & {
+    spec: ResolversParentTypes['GameSpec'];
+    state: ResolversParentTypes['ActiveGameState'];
+  };
   ActiveGameSlot: ActiveGameSlot;
   ActiveGameState: Omit<ActiveGameState, 'currentCard'> & {
     currentCard: ResolversParentTypes['Card'];
@@ -648,7 +682,9 @@ export type ResolversParentTypes = ResolversObject<{
   DrawCard: DrawCard;
   EmailPasswordAuthCreateInput: EmailPasswordAuthCreateInput;
   FindMyGamesInput: FindMyGamesInput;
-  FinishedGame: FinishedGame;
+  FinishedGame: Omit<FinishedGame, 'spec'> & {
+    spec: ResolversParentTypes['GameSpec'];
+  };
   FinishedGameSlot: FinishedGameSlot;
   FinishedGameState: FinishedGameState;
   Game: ResolversUnionTypes<ResolversParentTypes>['Game'];
@@ -663,10 +699,14 @@ export type ResolversParentTypes = ResolversObject<{
   GamePlayCardsInput: GamePlayCardsInput;
   GameQuery: ResolversInterfaceTypes<ResolversParentTypes>['GameQuery'];
   GameSlotCreateInput: GameSlotCreateInput;
-  GameSpec: GameSpec;
+  GameSpec: Omit<GameSpec, 'cardSpecs'> & {
+    cardSpecs: Array<ResolversParentTypes['GameCardSpec']>;
+  };
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
-  NonStartedGame: NonStartedGame;
+  NonStartedGame: Omit<NonStartedGame, 'spec'> & {
+    spec: ResolversParentTypes['GameSpec'];
+  };
   NonStartedGameSlot: NonStartedGameSlot;
   NonStartedGameState: NonStartedGameState;
   NormalCard: NormalCard;
