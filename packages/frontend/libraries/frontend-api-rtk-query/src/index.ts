@@ -21,14 +21,20 @@ import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
 import { createGamesV1 } from './games/mutations/createGamesV1';
 import { createGamesV1Slots } from './games/mutations/createGamesV1Slots';
 import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
+import { CreateUsersV1Args } from './users/models/CreateUsersV1Args';
+import { CreateUsersV1EmailCodeArgs } from './users/models/CreateUsersV1EmailCodeArgs';
 import { GetUsersV1MeArgs } from './users/models/GetUsersV1MeArgs';
 import { UpdateUsersV1MeArgs } from './users/models/UpdateUsersV1MeArgs';
+import { createUsersV1 } from './users/mutations/createUsersV1';
+import { createUsersV1EmailCode } from './users/mutations/createUsersV1EmailCode';
 import { updateUsersV1Me } from './users/mutations/updateUsersV1Me';
 import { getUsersV1Me } from './users/queries/getUsersV1Me';
 import { getUsersV1MeDetail } from './users/queries/getUsersV1MeDetail';
 
 export type {
   CreateAuthV2Args,
+  CreateUsersV1Args,
+  CreateUsersV1EmailCodeArgs,
   GetUsersV1MeArgs,
   SerializableAppError,
   UpdateUsersV1MeArgs,
@@ -98,6 +104,15 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
           createGamesV1Slots(options.httpClient),
           authorizedEndpointsOptions,
         ),
+      }),
+      createUsersV1: build.mutation<apiModels.UserV1, CreateUsersV1Args>({
+        queryFn: createUsersV1(options.httpClient),
+      }),
+      createUsersV1EmailCode: build.mutation<
+        undefined,
+        CreateUsersV1EmailCodeArgs
+      >({
+        queryFn: createUsersV1EmailCode(options.httpClient),
       }),
       getGamesV1Mine: build.query<apiModels.GameArrayV1, GetGamesV1MineArgs>({
         queryFn: authorizedApiCall(
