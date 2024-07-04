@@ -514,6 +514,12 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '422':
+          description: Unprocessable operation. This is likely to happen if no user with the email address provided is found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
       tags:
         - User
 

@@ -1,5 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import { Request, RequestWithBody } from '@cornie-js/backend-http';
 import { User, UserCodeKind } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
@@ -50,7 +55,20 @@ export class PostUserV1EmailCodeRequestParamHandler
   }
 
   public async handle(request: Request): Promise<[User, UserCodeKind]> {
-    const user: User = await this._getUserByRequestOrThrow(request);
+    let user: User;
+
+    try {
+      user = await this._getUserByRequestOrThrow(request);
+    } catch (error: unknown) {
+      if (AppError.isAppErrorOfKind(error, AppErrorKind.entityNotFound)) {
+        throw new AppError(
+          AppErrorKind.unprocessableOperation,
+          'Unable to permorm operation: user not found',
+        );
+      } else {
+        throw error;
+      }
+    }
 
     return [user, await this.#extractUserCodeKind(request)];
   }
