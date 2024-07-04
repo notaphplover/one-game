@@ -144,8 +144,8 @@ describe(PostUserV1EmailCodeRequestParamHandler.name, () => {
 
         it('should throw an Error', () => {
           const expectedErrorProperties: Partial<AppError> = {
-            kind: AppErrorKind.entityNotFound,
-            message: 'User not found',
+            kind: AppErrorKind.unprocessableOperation,
+            message: 'Unable to permorm operation: user not found',
           };
 
           expect(result).toStrictEqual(
