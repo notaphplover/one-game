@@ -16,7 +16,7 @@ describe(TextCard.name, () => {
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
-    let valueCard: string | null | undefined;
+    let cardValue: string | null | undefined;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
@@ -34,7 +34,7 @@ describe(TextCard.name, () => {
         textCardOptionsFixture.colorClass,
       );
 
-      valueCard = cardColor.firstChild?.textContent;
+      cardValue = cardColor.firstChild?.textContent;
     });
 
     afterAll(() => {
@@ -46,7 +46,7 @@ describe(TextCard.name, () => {
     });
 
     it('should show a card with value 4', () => {
-      expect(valueCard).toBe(textCardOptionsFixture.text);
+      expect(cardValue).toBe(textCardOptionsFixture.text);
     });
   });
 });

@@ -25,7 +25,7 @@ describe(NormalCard.name, () => {
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
-    let valueCard: string | null | undefined;
+    let cardValue: string | null | undefined;
 
     beforeAll(() => {
       (
@@ -43,7 +43,7 @@ describe(NormalCard.name, () => {
       isExpectedClassNameInCard =
         cardColor.classList.contains(classNameFixture);
 
-      valueCard = cardColor.firstChild?.textContent;
+      cardValue = cardColor.firstChild?.textContent;
     });
 
     afterAll(() => {
@@ -59,7 +59,7 @@ describe(NormalCard.name, () => {
     });
 
     it('should show a card with value 4', () => {
-      expect(valueCard).toBe(normalCardOptionsFixture.card.number.toString());
+      expect(cardValue).toBe(normalCardOptionsFixture.card.number.toString());
     });
   });
 });

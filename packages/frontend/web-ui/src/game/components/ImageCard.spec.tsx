@@ -10,13 +10,13 @@ describe(ImageCard.name, () => {
   beforeAll(() => {
     imageCardOptionsFixture = {
       colorClass: 'blue-card',
-      image: '/src/app/images/favicon.ico',
+      image: '/assets/image.png',
     };
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
-    let valueImageCard: string | null | undefined;
+    let imageSourceUrl: string | null | undefined;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
@@ -34,7 +34,7 @@ describe(ImageCard.name, () => {
         imageCardOptionsFixture.colorClass,
       );
 
-      valueImageCard = renderResult.container
+      imageSourceUrl = renderResult.container
         .querySelector('img')
         ?.getAttribute('src');
     });
@@ -48,7 +48,7 @@ describe(ImageCard.name, () => {
     });
 
     it('should show a card with src image', () => {
-      expect(valueImageCard).toBe(imageCardOptionsFixture.image);
+      expect(imageSourceUrl).toBe(imageCardOptionsFixture.image);
     });
   });
 });
