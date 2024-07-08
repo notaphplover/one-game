@@ -15,7 +15,7 @@ describe(TextCard.name, () => {
   });
 
   describe('when called', () => {
-    let existingCardColorClassName: boolean;
+    let isExpectedClassNameInCard: boolean;
     let valueCard: string | null | undefined;
 
     beforeAll(() => {
@@ -30,7 +30,7 @@ describe(TextCard.name, () => {
         '.cornie-base-card-inner-content',
       ) as HTMLElement;
 
-      existingCardColorClassName = cardColor.classList.contains(
+      isExpectedClassNameInCard = cardColor.classList.contains(
         textCardOptionsFixture.colorClass,
       );
 
@@ -42,7 +42,7 @@ describe(TextCard.name, () => {
     });
 
     it('should contain a div with a blue-card className', () => {
-      expect(existingCardColorClassName).toBe(true);
+      expect(isExpectedClassNameInCard).toBe(true);
     });
 
     it('should show a card with value 4', () => {
