@@ -5,14 +5,14 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { getCardColorClassName } from './getCardColorClassName';
 
 describe(getCardColorClassName.name, () => {
-  let colorMock: apiModels.CardColorV1;
+  let colorFixture: apiModels.CardColorV1;
 
   describe('having a color with value blue', () => {
     let result: string;
 
     beforeAll(() => {
-      colorMock = 'blue';
-      result = getCardColorClassName(colorMock);
+      colorFixture = 'blue';
+      result = getCardColorClassName(colorFixture);
     });
 
     afterAll(() => {
@@ -28,8 +28,8 @@ describe(getCardColorClassName.name, () => {
     let result: string;
 
     beforeAll(() => {
-      colorMock = 'red';
-      result = getCardColorClassName(colorMock);
+      colorFixture = 'red';
+      result = getCardColorClassName(colorFixture);
     });
 
     afterAll(() => {
@@ -45,8 +45,8 @@ describe(getCardColorClassName.name, () => {
     let result: string;
 
     beforeAll(() => {
-      colorMock = 'green';
-      result = getCardColorClassName(colorMock);
+      colorFixture = 'green';
+      result = getCardColorClassName(colorFixture);
     });
 
     afterAll(() => {
@@ -62,8 +62,8 @@ describe(getCardColorClassName.name, () => {
     let result: string;
 
     beforeAll(() => {
-      colorMock = 'yellow';
-      result = getCardColorClassName(colorMock);
+      colorFixture = 'yellow';
+      result = getCardColorClassName(colorFixture);
     });
 
     afterAll(() => {

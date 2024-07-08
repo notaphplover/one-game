@@ -5,34 +5,34 @@ import { RenderResult, render } from '@testing-library/react';
 import { ImageCard, ImageCardOptions } from './ImageCard';
 
 describe(ImageCard.name, () => {
-  let imageCardOptionsMock: ImageCardOptions;
+  let imageCardOptionsFixture: ImageCardOptions;
 
   beforeAll(() => {
-    imageCardOptionsMock = {
+    imageCardOptionsFixture = {
       colorClass: 'blue-card',
       image: '/src/app/images/favicon.ico',
     };
   });
 
   describe('when called', () => {
-    let existingCardColorClassName: string;
+    let existingCardColorClassName: boolean;
     let valueImageCard: string | null | undefined;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
         <ImageCard
-          colorClass={imageCardOptionsMock.colorClass}
-          image={imageCardOptionsMock.image}
+          colorClass={imageCardOptionsFixture.colorClass}
+          image={imageCardOptionsFixture.image}
         ></ImageCard>,
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(
-        '.blue-card',
+        '.cornie-base-card-inner-content',
       ) as HTMLElement;
 
-      existingCardColorClassName = window
-        .getComputedStyle(cardColor)
-        .getPropertyValue('display');
+      existingCardColorClassName = cardColor.classList.contains(
+        imageCardOptionsFixture.colorClass,
+      );
 
       valueImageCard = renderResult.container
         .querySelector('img')
@@ -43,12 +43,12 @@ describe(ImageCard.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should show a card with background blue', () => {
-      expect(existingCardColorClassName).not.toBe('none');
+    it('should contain a div with a blue-card className', () => {
+      expect(existingCardColorClassName).toBe(true);
     });
 
     it('should show a card with src image', () => {
-      expect(valueImageCard).toBe('/src/app/images/favicon.ico');
+      expect(valueImageCard).toBe(imageCardOptionsFixture.image);
     });
   });
 });

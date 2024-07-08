@@ -8,38 +8,40 @@ import { getCardColorClassName } from '../helpers/getCardColorClassName';
 import { NormalCard, NormalCardOptions } from './NormalCard';
 
 describe(NormalCard.name, () => {
-  let normalCardOptionsMock: NormalCardOptions;
+  let normalCardOptionsFixture: NormalCardOptions;
+  let classNameFixture: string;
 
   beforeAll(() => {
-    normalCardOptionsMock = {
+    normalCardOptionsFixture = {
       card: {
         color: 'blue',
         kind: 'normal',
         number: 4,
       },
     };
+
+    classNameFixture = 'blue-card';
   });
 
   describe('when called', () => {
-    let existingCardColorClassName: string;
+    let existingCardColorClassName: boolean;
     let valueCard: string | null | undefined;
 
     beforeAll(() => {
       (
         getCardColorClassName as jest.Mock<typeof getCardColorClassName>
-      ).mockReturnValueOnce('blue-card');
+      ).mockReturnValueOnce(classNameFixture);
 
       const renderResult: RenderResult = render(
-        <NormalCard card={normalCardOptionsMock.card}></NormalCard>,
+        <NormalCard card={normalCardOptionsFixture.card}></NormalCard>,
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(
-        '.blue-card',
+        '.cornie-base-card-inner-content',
       ) as HTMLElement;
 
-      existingCardColorClassName = window
-        .getComputedStyle(cardColor)
-        .getPropertyValue('display');
+      existingCardColorClassName =
+        cardColor.classList.contains(classNameFixture);
 
       valueCard = cardColor.firstChild?.textContent;
     });
@@ -52,12 +54,12 @@ describe(NormalCard.name, () => {
       expect(getCardColorClassName).toHaveBeenCalledTimes(1);
     });
 
-    it('should show a card with background blue', () => {
-      expect(existingCardColorClassName).not.toBe('none');
+    it('should contain a div with a blue-card className', () => {
+      expect(existingCardColorClassName).toBe(true);
     });
 
     it('should show a card with value 4', () => {
-      expect(valueCard).toBe('4');
+      expect(valueCard).toBe(normalCardOptionsFixture.card.number.toString());
     });
   });
 });

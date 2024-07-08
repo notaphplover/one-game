@@ -6,39 +6,38 @@ import { BaseCard } from './BaseCard';
 
 describe(BaseCard.name, () => {
   let childrenMock: jest.Mock<() => React.JSX.Element | React.JSX.Element[]>;
-  let colorClassMock: string;
+  let colorClassFixture: string;
 
   beforeAll(() => {
     childrenMock = jest.fn();
-    colorClassMock = 'blue-card';
+    colorClassFixture = 'blue-card';
   });
 
   describe('when called', () => {
-    let existingCardColorClassName: string;
+    let existingCardColorClassName: boolean;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
         <BaseCard
           children={childrenMock()}
-          colorClass={colorClassMock}
+          colorClass={colorClassFixture}
         ></BaseCard>,
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(
-        '.blue-card',
+        '.cornie-base-card-inner-content',
       ) as HTMLElement;
 
-      existingCardColorClassName = window
-        .getComputedStyle(cardColor)
-        .getPropertyValue('display');
+      existingCardColorClassName =
+        cardColor.classList.contains(colorClassFixture);
     });
 
     afterAll(() => {
       jest.clearAllMocks();
     });
 
-    it('should show a card with background blue', () => {
-      expect(existingCardColorClassName).not.toBe('none');
+    it('should contain a div with a blue-card className', () => {
+      expect(existingCardColorClassName).toBe(true);
     });
   });
 });
