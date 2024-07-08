@@ -272,6 +272,7 @@ export class HttpClientEndpoints {
   ): Promise<
     | Response<Record<string, string>, undefined, 201>
     | Response<Record<string, string>, apiModels.ErrorV1, 409>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
     return this.#internalHttpClient.callEndpoint({
       body: body,

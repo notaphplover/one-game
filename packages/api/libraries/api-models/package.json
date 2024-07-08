@@ -9,7 +9,7 @@
     "@jest/globals": "29.7.0",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
-    "@types/node": "20.14.9",
+    "@types/node": "20.14.10",
     "@typescript-eslint/eslint-plugin": "7.15.0",
     "@typescript-eslint/parser": "7.15.0",
     "eslint": "8.57.0",
@@ -21,7 +21,7 @@
     "jest-mock": "29.7.0",
     "json-schema-to-typescript": "14.1.0",
     "prettier": "3.3.2",
-    "rimraf": "5.0.7",
+    "rimraf": "5.0.8",
     "ts-jest": "29.1.5",
     "ts-node": "10.9.2",
     "typescript": "5.5.3"
