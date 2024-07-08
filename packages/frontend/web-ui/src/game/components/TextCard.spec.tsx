@@ -15,8 +15,8 @@ describe(TextCard.name, () => {
   });
 
   describe('when called', () => {
-    let existingCardColorClassName: boolean;
-    let valueCard: string | null | undefined;
+    let isExpectedClassNameInCard: boolean;
+    let cardValue: string | null | undefined;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
@@ -30,11 +30,11 @@ describe(TextCard.name, () => {
         '.cornie-base-card-inner-content',
       ) as HTMLElement;
 
-      existingCardColorClassName = cardColor.classList.contains(
+      isExpectedClassNameInCard = cardColor.classList.contains(
         textCardOptionsFixture.colorClass,
       );
 
-      valueCard = cardColor.firstChild?.textContent;
+      cardValue = cardColor.firstChild?.textContent;
     });
 
     afterAll(() => {
@@ -42,11 +42,11 @@ describe(TextCard.name, () => {
     });
 
     it('should contain a div with a blue-card className', () => {
-      expect(existingCardColorClassName).toBe(true);
+      expect(isExpectedClassNameInCard).toBe(true);
     });
 
     it('should show a card with value 4', () => {
-      expect(valueCard).toBe(textCardOptionsFixture.text);
+      expect(cardValue).toBe(textCardOptionsFixture.text);
     });
   });
 });

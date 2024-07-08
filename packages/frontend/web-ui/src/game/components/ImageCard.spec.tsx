@@ -10,13 +10,13 @@ describe(ImageCard.name, () => {
   beforeAll(() => {
     imageCardOptionsFixture = {
       colorClass: 'blue-card',
-      image: '/src/app/images/favicon.ico',
+      image: '/assets/image.png',
     };
   });
 
   describe('when called', () => {
-    let existingCardColorClassName: boolean;
-    let valueImageCard: string | null | undefined;
+    let isExpectedClassNameInCard: boolean;
+    let imageSourceUrl: string | null | undefined;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
@@ -30,11 +30,11 @@ describe(ImageCard.name, () => {
         '.cornie-base-card-inner-content',
       ) as HTMLElement;
 
-      existingCardColorClassName = cardColor.classList.contains(
+      isExpectedClassNameInCard = cardColor.classList.contains(
         imageCardOptionsFixture.colorClass,
       );
 
-      valueImageCard = renderResult.container
+      imageSourceUrl = renderResult.container
         .querySelector('img')
         ?.getAttribute('src');
     });
@@ -44,11 +44,11 @@ describe(ImageCard.name, () => {
     });
 
     it('should contain a div with a blue-card className', () => {
-      expect(existingCardColorClassName).toBe(true);
+      expect(isExpectedClassNameInCard).toBe(true);
     });
 
     it('should show a card with src image', () => {
-      expect(valueImageCard).toBe(imageCardOptionsFixture.image);
+      expect(imageSourceUrl).toBe(imageCardOptionsFixture.image);
     });
   });
 });
