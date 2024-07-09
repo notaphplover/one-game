@@ -16,7 +16,6 @@ import { UserV1FromUserBuilder } from '../../../application/builders/UserV1FromU
 import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
 import { UpdateUserUseCaseHandler } from '../../../application/handlers/UpdateUserUseCaseHandler';
 import { UserCodeCreatedEventHandler } from '../../../application/handlers/UserCodeCreatedEventHandler';
-import { UserCreatedEventHandler } from '../../../application/handlers/UserCreatedEventHandler';
 import { UserUpdatedEventHandler } from '../../../application/handlers/UserUpdatedEventHandler';
 import { UserCodeManagementInputPort } from '../../../application/ports/input/UserCodeManagementInputPort';
 import { UserDetailManagementInputPort } from '../../../application/ports/input/UserDetailManagementInputPort';
@@ -55,7 +54,6 @@ export class UserApplicationModule {
         UserCodeCreateQueryFromUserBuilder,
         UserCodeKindFromUserCodeKindV1Builder,
         UserCodeManagementInputPort,
-        UserCreatedEventHandler,
         UserCreateQueryFromUserCreateQueryV1Builder,
         UserDetailManagementInputPort,
         UserDetailV1FromUserBuilder,

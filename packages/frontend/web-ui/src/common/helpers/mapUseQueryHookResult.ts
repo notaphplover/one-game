@@ -6,14 +6,17 @@ import { Either } from '../models/Either';
 export interface UseQueryStateResult<TResult> {
   data?: TResult | undefined;
   error?: SerializableAppError | SerializedError | undefined;
-  isFetching: boolean;
+  isFetching?: boolean;
   isLoading: boolean;
+  isUninitialized?: boolean;
 }
 
 export function mapUseQueryHookResult<TResult>(
   result: UseQueryStateResult<TResult | undefined>,
 ): Either<string, TResult> | null {
-  return result.isLoading || result.isFetching
+  return result.isLoading ||
+    result?.isFetching === true ||
+    result?.isUninitialized === true
     ? null
     : result.error === undefined
       ? {

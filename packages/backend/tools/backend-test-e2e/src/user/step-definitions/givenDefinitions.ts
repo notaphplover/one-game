@@ -17,6 +17,7 @@ import { UserV1Parameter } from '../models/UserV1Parameter';
 import { setUser } from '../utils/actions/setUser';
 import { getUserOrFail } from '../utils/calculations/getUserOrFail';
 import {
+  whenCreateUserCodeRequestIsSend,
   whenCreateUserRequestIsSend,
   whenDeleteUserCodeRequestIsSend,
   whenGetUserMeRequestIsSend,
@@ -156,6 +157,14 @@ export async function givenUser(
   const processedUserAlias: string = userAlias ?? defaultAlias;
 
   await givenNonActiveUser.bind(this)(requestAlias, userAlias);
+
+  givenCreateCodeRequestForUser.bind(this)(
+    'registerConfirm',
+    userAlias,
+    requestAlias,
+  );
+
+  await whenCreateUserCodeRequestIsSend.bind(this)(requestAlias);
 
   await whenCreateCodeAuthRequestIsSendFromUserActivationMail.bind(this)(
     requestAlias,
