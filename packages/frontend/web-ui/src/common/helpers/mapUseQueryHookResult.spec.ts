@@ -29,6 +29,15 @@ describe(mapUseQueryHookResult.name, () => {
       null,
     ],
     [
+      'with isLoading false and result.data.isUninitialized true',
+      {
+        error: undefined,
+        isLoading: false,
+        isUninitialized: true,
+      },
+      null,
+    ],
+    [
       'with isLoading false and result.data undefined and error undefined',
       {
         data: undefined,
