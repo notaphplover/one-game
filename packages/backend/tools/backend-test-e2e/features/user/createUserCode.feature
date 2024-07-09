@@ -11,9 +11,7 @@ Feature: Create user code
 
         Given a "register confirm" create user code request for "Bob" as "first"
         And a "register confirm" create user code request for "Bob" as "second"
-        And a delete user code request for "Bob"
-        When the delete user code request is sent
-        And the create user code request as "first" is sent
+        When the create user code request as "first" is sent
         And the create user code request as "second" is sent
         Then the create user code response as "first" should be successful
         And the create user code response as "second" should fail due to a conflict
