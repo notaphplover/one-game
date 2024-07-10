@@ -1,18 +1,37 @@
 jest.mock('../helpers/getCardColorClassName');
-jest.mock('../helpers/getImageCard');
+jest.mock('../helpers/getImageCardUrl');
+jest.mock('../../app/images/cards/draw.svg', () => 'draw-url-fixture', {
+  virtual: true,
+});
+jest.mock('../../app/images/cards/reverse.svg', () => 'reverse-url-fixture', {
+  virtual: true,
+});
+jest.mock('../../app/images/cards/skip.svg', () => 'skip-url-fixture', {
+  virtual: true,
+});
+jest.mock('../../app/images/cards/wild.svg', () => 'wild-url-fixture', {
+  virtual: true,
+});
+jest.mock(
+  '../../app/images/cards/wildDraw4.svg',
+  () => 'wild-draw-4-url-fixture',
+  {
+    virtual: true,
+  },
+);
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { RenderResult, render } from '@testing-library/react';
 
+import drawCardImageUrl from '../../app/images/cards/draw.svg';
 import { getCardColorClassName } from '../helpers/getCardColorClassName';
-import { getImageCard } from '../helpers/getImageCard';
+import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { DrawCard, DrawCardOptions } from './DrawCard';
 
 describe(DrawCard.name, () => {
   let drawCardOptionsFixture: DrawCardOptions;
   let classNameFixture: string;
-  let imagePathFixture: string;
 
   beforeAll(() => {
     drawCardOptionsFixture = {
@@ -23,21 +42,20 @@ describe(DrawCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
-    imagePathFixture = '/src/app/images/draw.ico';
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
-    let valueImageCard: string | null | undefined;
+    let imageSourceUrl: string | null | undefined;
 
     beforeAll(() => {
       (
         getCardColorClassName as jest.Mock<typeof getCardColorClassName>
       ).mockReturnValueOnce(classNameFixture);
 
-      (getImageCard as jest.Mock<typeof getImageCard>).mockReturnValueOnce(
-        imagePathFixture,
-      );
+      (
+        getImageCardUrl as jest.Mock<typeof getImageCardUrl>
+      ).mockReturnValueOnce(drawCardImageUrl);
 
       const renderResult: RenderResult = render(
         <DrawCard card={drawCardOptionsFixture.card}></DrawCard>,
@@ -50,7 +68,7 @@ describe(DrawCard.name, () => {
       isExpectedClassNameInCard =
         cardColor.classList.contains(classNameFixture);
 
-      valueImageCard = cardColor.querySelector('img')?.getAttribute('src');
+      imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
     });
 
     afterAll(() => {
@@ -61,8 +79,8 @@ describe(DrawCard.name, () => {
       expect(getCardColorClassName).toHaveBeenCalledTimes(1);
     });
 
-    it('should have been called getImageCard once', () => {
-      expect(getImageCard).toHaveBeenCalledTimes(1);
+    it('should have been called getImageCardUrl once', () => {
+      expect(getImageCardUrl).toHaveBeenCalledTimes(1);
     });
 
     it('should contain a div with a blue-card className', () => {
@@ -70,7 +88,7 @@ describe(DrawCard.name, () => {
     });
 
     it('should show a card with src image', () => {
-      expect(valueImageCard).toStrictEqual(imagePathFixture);
+      expect(imageSourceUrl).toStrictEqual(drawCardImageUrl);
     });
   });
 });

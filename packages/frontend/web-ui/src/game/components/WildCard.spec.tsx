@@ -1,15 +1,34 @@
-jest.mock('../helpers/getImageCard');
+jest.mock('../helpers/getImageCardUrl');
+jest.mock('../../app/images/cards/draw.svg', () => 'draw-url-fixture', {
+  virtual: true,
+});
+jest.mock('../../app/images/cards/reverse.svg', () => 'reverse-url-fixture', {
+  virtual: true,
+});
+jest.mock('../../app/images/cards/skip.svg', () => 'skip-url-fixture', {
+  virtual: true,
+});
+jest.mock('../../app/images/cards/wild.svg', () => 'wild-url-fixture', {
+  virtual: true,
+});
+jest.mock(
+  '../../app/images/cards/wildDraw4.svg',
+  () => 'wild-draw-4-url-fixture',
+  {
+    virtual: true,
+  },
+);
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { RenderResult, render } from '@testing-library/react';
 
-import { getImageCard } from '../helpers/getImageCard';
+import wildCardImageUrl from '../../app/images/cards/wild.svg';
+import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { WildCard, WildCardOptions } from './WildCard';
 
 describe(WildCard.name, () => {
   let wildCardOptionsFixture: WildCardOptions;
-  let imagePathFixture: string;
 
   beforeAll(() => {
     wildCardOptionsFixture = {
@@ -18,18 +37,16 @@ describe(WildCard.name, () => {
       },
       colorClass: 'white-color',
     };
-
-    imagePathFixture = '/src/app/images/wild.ico';
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
-    let valueImageCard: string | null | undefined;
+    let imageSourceUrl: string | null | undefined;
 
     beforeAll(() => {
-      (getImageCard as jest.Mock<typeof getImageCard>).mockReturnValueOnce(
-        imagePathFixture,
-      );
+      (
+        getImageCardUrl as jest.Mock<typeof getImageCardUrl>
+      ).mockReturnValueOnce(wildCardImageUrl);
 
       const renderResult: RenderResult = render(
         <WildCard
@@ -46,7 +63,7 @@ describe(WildCard.name, () => {
         wildCardOptionsFixture.colorClass,
       );
 
-      valueImageCard = cardColor.querySelector('img')?.getAttribute('src');
+      imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
     });
 
     afterAll(() => {
@@ -54,7 +71,7 @@ describe(WildCard.name, () => {
     });
 
     it('should have been called getImageCard once', () => {
-      expect(getImageCard).toHaveBeenCalledTimes(1);
+      expect(getImageCardUrl).toHaveBeenCalledTimes(1);
     });
 
     it('should contain a div with a white-color className', () => {
@@ -62,7 +79,7 @@ describe(WildCard.name, () => {
     });
 
     it('should show a card with src image', () => {
-      expect(valueImageCard).toStrictEqual(imagePathFixture);
+      expect(imageSourceUrl).toStrictEqual(wildCardImageUrl);
     });
   });
 });

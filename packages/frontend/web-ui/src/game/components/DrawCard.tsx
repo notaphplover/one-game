@@ -1,7 +1,7 @@
 import { models as apiModels } from '@cornie-js/api-models';
 
 import { getCardColorClassName } from '../helpers/getCardColorClassName';
-import { getImageCard } from '../helpers/getImageCard';
+import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { ImageCard } from './ImageCard';
 
 export interface DrawCardOptions {
@@ -11,7 +11,7 @@ export interface DrawCardOptions {
 export const DrawCard = (params: DrawCardOptions) => {
   return (
     <ImageCard
-      image={getImageCard(params.card.kind)}
+      image={getImageCardUrl(params.card)}
       colorClass={getCardColorClassName(params.card.color)}
     ></ImageCard>
   );

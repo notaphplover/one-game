@@ -1,6 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
 
-import { getImageCard } from '../helpers/getImageCard';
+import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { ImageCard } from './ImageCard';
 
 export interface WildDraw4CardOptions {
@@ -11,7 +11,7 @@ export interface WildDraw4CardOptions {
 export const WildDraw4Card = (params: WildDraw4CardOptions) => {
   return (
     <ImageCard
-      image={getImageCard(params.card.kind)}
+      image={getImageCardUrl(params.card)}
       colorClass={params.colorClass}
     ></ImageCard>
   );
