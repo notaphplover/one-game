@@ -34,7 +34,7 @@
     "prettier": "3.3.2",
     "pprof-format": "2.1.0",
     "rimraf": "6.0.0",
-    "ts-jest": "29.2.0",
+    "ts-jest": "29.2.1",
     "ts-node": "10.9.2",
     "typescript": "5.5.3"
   },
