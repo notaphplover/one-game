@@ -17,12 +17,10 @@ import {
   TransactionProvisionOutputPort,
   transactionProvisionOutputPortSymbol,
 } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
-import { UserCreatedEvent } from '../models/UserCreatedEvent';
 import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
 } from '../ports/output/UserPersistenceOutputPort';
-import { UserCreatedEventHandler } from './UserCreatedEventHandler';
 
 @Injectable()
 export class CreateUserUseCaseHandler
@@ -33,7 +31,6 @@ export class CreateUserUseCaseHandler
     string[]
   >;
   readonly #transactionProvisionOutputPort: TransactionProvisionOutputPort;
-  readonly #userCreatedEventHandler: Handler<[UserCreatedEvent], void>;
   readonly #userPersistenceOutputPort: UserPersistenceOutputPort;
 
   constructor(
@@ -41,14 +38,11 @@ export class CreateUserUseCaseHandler
     isValidUserCreateQuerySpec: ReportBasedSpec<[UserCreateQuery], string[]>,
     @Inject(transactionProvisionOutputPortSymbol)
     transactionProvisionOutputPort: TransactionProvisionOutputPort,
-    @Inject(UserCreatedEventHandler)
-    userCreatedEventHandler: Handler<[UserCreatedEvent], void>,
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
   ) {
     this.#isValidUserCreateQuerySpec = isValidUserCreateQuerySpec;
     this.#transactionProvisionOutputPort = transactionProvisionOutputPort;
-    this.#userCreatedEventHandler = userCreatedEventHandler;
     this.#userPersistenceOutputPort = userPersistenceOutputPort;
   }
 
@@ -62,12 +56,6 @@ export class CreateUserUseCaseHandler
       userCreateQuery,
       transactionWrapper,
     );
-
-    await this.#userCreatedEventHandler.handle({
-      transactionWrapper,
-      user,
-      userCreateQuery,
-    });
 
     await transactionWrapper.tryCommit();
 
