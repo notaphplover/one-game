@@ -1,7 +1,0 @@
-<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">
-  <rect width="50" height="80" x="30" y="20" stroke-width="1.5" rx="1" stroke="black" fill="green" />
-  <rect width="50" height="80" x="80" y="20" stroke-width="1.5" stroke="black" fill="red" />
-  <rect width="50" height="80" x="30" y="101" stroke-width="1.5" stroke="black" fill="yellow" />
-  <rect width="50" height="80" x="80" y="101" stroke-width="1.5" stroke="black" fill="blue" />
-  <text x="30" y="130" fill="pink" stroke="black" stroke-width="2.5" font-weight="bold" font-size="92">+4</text>  
-</svg>

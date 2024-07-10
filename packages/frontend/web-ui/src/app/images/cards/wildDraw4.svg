@@ -1,0 +1,7 @@
+<svg width="100" height="150" xmlns="http://www.w3.org/2000/svg">
+  <rect width="40" height="60" x="10" y="15" stroke-width="1.5" rx="1" stroke="black" fill="green" />
+  <rect width="40" height="60" x="50" y="15" stroke-width="1.5" stroke="black" fill="red" />
+  <rect width="40" height="60" x="10" y="75" stroke-width="1.5" stroke="black" fill="blue" />
+  <rect width="40" height="60" x="50" y="75" stroke-width="1.5" stroke="black" fill="yellow" />
+  <text x="8" y="100" fill="purple" stroke="white" stroke-width="2.5" font-weight="bold" font-size="75">+4</text>  
+</svg>

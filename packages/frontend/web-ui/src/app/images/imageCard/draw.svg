@@ -1,4 +1,0 @@
-<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">
-  <rect width="125" height="175" x="10" y="10" rx="20" ry="20" stroke-width="10" stroke="#a905b6" fill="none" />
-  <text x="15" y="130" fill="#a905b6" stroke="#a905b6" stroke-width="2.5" font-weight="bold" font-size="100">+2</text>
-</svg>
