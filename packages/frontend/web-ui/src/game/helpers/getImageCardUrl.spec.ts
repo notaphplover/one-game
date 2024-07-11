@@ -129,4 +129,37 @@ describe(getImageCardUrl.name, () => {
       expect(result).toStrictEqual(wildDraw4CardImageUrl);
     });
   });
+
+  describe('having a kind with value normal', () => {
+    let errorResult: unknown;
+
+    beforeAll(() => {
+      cardFixture = {
+        color: 'blue',
+        kind: 'normal',
+        number: 5,
+      };
+
+      try {
+        getImageCardUrl(cardFixture);
+      } catch (error: unknown) {
+        errorResult = error;
+      }
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should throw an error', () => {
+      const expectedErrorProperties: Partial<Error> = {
+        message: 'Unexpected card kind at getImageCardUrl',
+      };
+
+      expect(errorResult).toBeInstanceOf(Error);
+      expect(errorResult).toStrictEqual(
+        expect.objectContaining(expectedErrorProperties),
+      );
+    });
+  });
 });

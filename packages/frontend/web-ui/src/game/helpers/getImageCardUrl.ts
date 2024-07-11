@@ -13,9 +13,6 @@ export function getImageCardUrl(card: apiModels.CardV1): string {
     case 'draw':
       imageUrl = drawCardImageUrl;
       break;
-    case 'normal':
-      imageUrl = '';
-      break;
     case 'reverse':
       imageUrl = reverseCardImageUrl;
       break;
@@ -28,6 +25,8 @@ export function getImageCardUrl(card: apiModels.CardV1): string {
     case 'wildDraw4':
       imageUrl = wildDraw4CardImageUrl;
       break;
+    default:
+      throw new Error('Unexpected card kind at getImageCardUrl');
   }
 
   return imageUrl;
