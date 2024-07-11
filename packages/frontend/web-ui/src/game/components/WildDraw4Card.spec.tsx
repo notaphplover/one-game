@@ -1,19 +1,6 @@
-jest.mock('../helpers/getImageCardUrl');
-jest.mock('../../app/images/cards/draw.svg', () => 'draw-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/reverse.svg', () => 'reverse-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/skip.svg', () => 'skip-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/wild.svg', () => 'wild-url-fixture', {
-  virtual: true,
-});
 jest.mock(
-  '../../app/images/cards/wildDraw4.svg',
-  () => 'wild-draw-4-url-fixture',
+  '../helpers/getImageCardUrl',
+  () => ({ getImageCardUrl: jest.fn() }),
   {
     virtual: true,
   },
@@ -23,12 +10,12 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { RenderResult, render } from '@testing-library/react';
 
-import wildDraw4CardImageUrl from '../../app/images/cards/wildDraw4.svg';
 import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { WildDraw4Card, WildDraw4CardOptions } from './WildDraw4Card';
 
 describe(WildDraw4Card.name, () => {
   let wildDraw4CardOptionsFixture: WildDraw4CardOptions;
+  let imageUrlFixture: string;
 
   beforeAll(() => {
     wildDraw4CardOptionsFixture = {
@@ -37,6 +24,8 @@ describe(WildDraw4Card.name, () => {
       },
       colorClass: 'white-color',
     };
+
+    imageUrlFixture = 'image-url-fixture';
   });
 
   describe('when called', () => {
@@ -46,7 +35,7 @@ describe(WildDraw4Card.name, () => {
     beforeAll(() => {
       (
         getImageCardUrl as jest.Mock<typeof getImageCardUrl>
-      ).mockReturnValueOnce(wildDraw4CardImageUrl);
+      ).mockReturnValueOnce(imageUrlFixture);
 
       const renderResult: RenderResult = render(
         <WildDraw4Card
@@ -79,7 +68,7 @@ describe(WildDraw4Card.name, () => {
     });
 
     it('should show a card with src image', () => {
-      expect(imageSourceUrl).toStrictEqual(wildDraw4CardImageUrl);
+      expect(imageSourceUrl).toStrictEqual(imageUrlFixture);
     });
   });
 });

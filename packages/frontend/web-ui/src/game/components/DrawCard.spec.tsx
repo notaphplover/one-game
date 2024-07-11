@@ -1,20 +1,7 @@
 jest.mock('../helpers/getCardColorClassName');
-jest.mock('../helpers/getImageCardUrl');
-jest.mock('../../app/images/cards/draw.svg', () => 'draw-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/reverse.svg', () => 'reverse-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/skip.svg', () => 'skip-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/wild.svg', () => 'wild-url-fixture', {
-  virtual: true,
-});
 jest.mock(
-  '../../app/images/cards/wildDraw4.svg',
-  () => 'wild-draw-4-url-fixture',
+  '../helpers/getImageCardUrl',
+  () => ({ getImageCardUrl: jest.fn() }),
   {
     virtual: true,
   },
@@ -24,7 +11,6 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { RenderResult, render } from '@testing-library/react';
 
-import drawCardImageUrl from '../../app/images/cards/draw.svg';
 import { getCardColorClassName } from '../helpers/getCardColorClassName';
 import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { DrawCard, DrawCardOptions } from './DrawCard';
@@ -32,6 +18,7 @@ import { DrawCard, DrawCardOptions } from './DrawCard';
 describe(DrawCard.name, () => {
   let drawCardOptionsFixture: DrawCardOptions;
   let classNameFixture: string;
+  let imageUrlFixture: string;
 
   beforeAll(() => {
     drawCardOptionsFixture = {
@@ -42,6 +29,7 @@ describe(DrawCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
+    imageUrlFixture = 'image-url-fixture';
   });
 
   describe('when called', () => {
@@ -55,7 +43,7 @@ describe(DrawCard.name, () => {
 
       (
         getImageCardUrl as jest.Mock<typeof getImageCardUrl>
-      ).mockReturnValueOnce(drawCardImageUrl);
+      ).mockReturnValueOnce(imageUrlFixture);
 
       const renderResult: RenderResult = render(
         <DrawCard card={drawCardOptionsFixture.card}></DrawCard>,
@@ -88,7 +76,7 @@ describe(DrawCard.name, () => {
     });
 
     it('should show a card with src image', () => {
-      expect(imageSourceUrl).toStrictEqual(drawCardImageUrl);
+      expect(imageSourceUrl).toStrictEqual(imageUrlFixture);
     });
   });
 });

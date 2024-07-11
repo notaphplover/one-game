@@ -1,20 +1,7 @@
 jest.mock('../helpers/getCardColorClassName');
-jest.mock('../helpers/getImageCardUrl');
-jest.mock('../../app/images/cards/draw.svg', () => 'draw-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/reverse.svg', () => 'reverse-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/skip.svg', () => 'skip-url-fixture', {
-  virtual: true,
-});
-jest.mock('../../app/images/cards/wild.svg', () => 'wild-url-fixture', {
-  virtual: true,
-});
 jest.mock(
-  '../../app/images/cards/wildDraw4.svg',
-  () => 'wild-draw-4-url-fixture',
+  '../helpers/getImageCardUrl',
+  () => ({ getImageCardUrl: jest.fn() }),
   {
     virtual: true,
   },
@@ -24,7 +11,6 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { RenderResult, render } from '@testing-library/react';
 
-import skipCardImageUrl from '../../app/images/cards/skip.svg';
 import { getCardColorClassName } from '../helpers/getCardColorClassName';
 import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { SkipCard, SkipCardOptions } from './SkipCard';
@@ -32,6 +18,7 @@ import { SkipCard, SkipCardOptions } from './SkipCard';
 describe(SkipCard.name, () => {
   let skipCardOptionsFixture: SkipCardOptions;
   let classNameFixture: string;
+  let imageUrlFixture: string;
 
   beforeAll(() => {
     skipCardOptionsFixture = {
@@ -42,6 +29,7 @@ describe(SkipCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
+    imageUrlFixture = 'image-url-fixture';
   });
 
   describe('when called', () => {
@@ -55,7 +43,7 @@ describe(SkipCard.name, () => {
 
       (
         getImageCardUrl as jest.Mock<typeof getImageCardUrl>
-      ).mockReturnValueOnce(skipCardImageUrl);
+      ).mockReturnValueOnce(imageUrlFixture);
 
       const renderResult: RenderResult = render(
         <SkipCard card={skipCardOptionsFixture.card}></SkipCard>,
@@ -88,7 +76,7 @@ describe(SkipCard.name, () => {
     });
 
     it('should show a card with src image', () => {
-      expect(imageSourceUrl).toStrictEqual(skipCardImageUrl);
+      expect(imageSourceUrl).toStrictEqual(imageUrlFixture);
     });
   });
 });
