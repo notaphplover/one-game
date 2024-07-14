@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -d ./data/bookkeeper ] && [ -d ./data/zookeeper ]; then
+  exit 0
+fi
+
+if [ "$UID" != 0 ]; then
+
+  echo "\"@cornie-js/backend-dev-apache-pulsar\" package requires admin privilege to setup docker volumes"
+
+  exec sudo "$0" "$@"
+fi
+
+# https://pulsar.apache.org/docs/3.3.x/getting-started-docker-compose/#step-2-create-a-pulsar-cluster
+
+sudo mkdir -p ./data/zookeeper ./data/bookkeeper
+sudo chown -R 10000 data
