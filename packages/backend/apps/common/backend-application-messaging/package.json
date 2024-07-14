@@ -1,0 +1,42 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Backend messaging application package",
+  "dependencies": {
+    "@nestjs/common": "10.3.10"
+  },
+  "devDependencies": {
+    "@jest/globals": "29.7.0",
+    "@typescript-eslint/eslint-plugin": "7.16.0",
+    "@typescript-eslint/parser": "7.16.0",
+    "eslint": "8.57.0",
+    "eslint-import-resolver-typescript": "3.6.1",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "28.6.0",
+    "eslint-plugin-prettier": "5.1.3",
+    "prettier": "3.3.3",
+    "rimraf": "6.0.1",
+    "typescript": "5.5.3"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "main": "lib/index.js",
+  "name": "@cornie-js/backend-application-messaging",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "build:clean": "rimraf lib",
+    "format": "prettier --write ./src/**/*.ts",
+    "lint": "eslint --ext ts --ignore-path .gitignore ./src",
+    "prebuild": "pnpm run build:clean"
+  },
+  "version": "0.1.0"
+}
