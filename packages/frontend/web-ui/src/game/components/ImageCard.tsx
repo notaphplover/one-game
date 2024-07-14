@@ -11,7 +11,7 @@ export const ImageCard = (params: ImageCardOptions) => {
   return (
     <BaseCard colorClass={params.colorClass}>
       <Box component="div" className="cornie-base-card-image">
-        <img src={`${params.image}`} />
+        <img src={params.image} />
       </Box>
     </BaseCard>
   );
