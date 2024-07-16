@@ -8,15 +8,14 @@ import { MessageSendOptions } from './mail/application/models/MessageSendOptions
 import {
   MessageSendOutputPort,
   messageSendOutputPortSymbol,
-} from './mail/application/ports/output/MailDeliveryOutputPort';
+} from './mail/application/ports/output/MessageSendOutputPort';
 
 export type {
   MessageDeliveryDelaySchedule,
   MessageDeliveryOptions,
   MessageDeliverySchedule,
-  MessageDeliveryScheduleKind,
   MessageSendOptions,
   MessageSendOutputPort,
 };
 
-export { messageSendOutputPortSymbol };
+export { MessageDeliveryScheduleKind, messageSendOutputPortSymbol };
