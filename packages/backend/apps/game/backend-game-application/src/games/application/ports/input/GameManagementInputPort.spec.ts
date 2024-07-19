@@ -1,7 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { Builder, Handler } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Handler,
+} from '@cornie-js/backend-common';
 import { Game, GameFindQuery } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,
@@ -23,6 +28,7 @@ describe(GameManagementInputPort.name, () => {
   let createGameUseCaseHandlerMock: jest.Mocked<
     Handler<[apiModels.GameCreateQueryV1], apiModels.GameV1>
   >;
+  let gameIdAutoUpdateHandlerMock: jest.Mocked<Handler<[string], void>>;
   let gameIdDrawCardsQueryV1HandlerMock: jest.Mocked<
     Handler<[string, apiModels.GameIdDrawCardsQueryV1, apiModels.UserV1], void>
   >;
@@ -39,6 +45,9 @@ describe(GameManagementInputPort.name, () => {
 
   beforeAll(() => {
     createGameUseCaseHandlerMock = {
+      handle: jest.fn(),
+    };
+    gameIdAutoUpdateHandlerMock = {
       handle: jest.fn(),
     };
     gameIdDrawCardsQueryV1HandlerMock = {
@@ -62,6 +71,7 @@ describe(GameManagementInputPort.name, () => {
 
     gameManagementInputPort = new GameManagementInputPort(
       createGameUseCaseHandlerMock,
+      gameIdAutoUpdateHandlerMock,
       gameIdDrawCardsQueryV1HandlerMock,
       gameIdPassTurnQueryV1HandlerMock,
       gameIdPlayCardsQueryV1HandlerMock,
@@ -202,6 +212,114 @@ describe(GameManagementInputPort.name, () => {
       });
 
       it('should return a gameV1', () => {
+        expect(result).toBe(gameV1Fixture);
+      });
+    });
+  });
+
+  describe('.updateGameWithAutoPlay', () => {
+    let gameIdFixture: string;
+
+    beforeAll(() => {
+      gameIdFixture = 'gameIdFixture';
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns undefined', () => {
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameIdAutoUpdateHandlerMock.handle.mockResolvedValueOnce(undefined);
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
+
+        try {
+          await gameManagementInputPort.updateGameWithAutoPlay(gameIdFixture);
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameIdAutoUpdateHandler.handle()', () => {
+        expect(gameIdAutoUpdateHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(gameIdAutoUpdateHandlerMock.handle).toHaveBeenCalledWith(
+          gameIdFixture,
+        );
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expected: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should throw AppError', () => {
+        const expected: Partial<AppError> = {
+          kind: AppErrorKind.unknown,
+          message: `Expecting game "${gameIdFixture}" to be found`,
+        };
+
+        expect(result).toStrictEqual(expect.objectContaining(expected));
+      });
+    });
+
+    describe('when called, and gamePersistenceOutputPort.findOne() returns Game', () => {
+      let gameFixture: Game;
+      let gameV1Fixture: apiModels.GameV1;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameFixture = ActiveGameFixtures.any;
+        gameV1Fixture = ActiveGameV1Fixtures.any;
+
+        gameIdAutoUpdateHandlerMock.handle.mockResolvedValueOnce(undefined);
+        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+          gameFixture,
+        );
+        gameV1FromGameBuilderMock.build.mockReturnValueOnce(gameV1Fixture);
+
+        result =
+          await gameManagementInputPort.updateGameWithAutoPlay(gameIdFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call gameIdAutoUpdateHandler.handle()', () => {
+        expect(gameIdAutoUpdateHandlerMock.handle).toHaveBeenCalledTimes(1);
+        expect(gameIdAutoUpdateHandlerMock.handle).toHaveBeenCalledWith(
+          gameIdFixture,
+        );
+      });
+
+      it('should call gamePersistenceOutputPort.findOne()', () => {
+        const expected: GameFindQuery = {
+          id: gameIdFixture,
+        };
+
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
+        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+          expected,
+        );
+      });
+
+      it('should call gameV1FromGameBuilder.build()', () => {
+        expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(gameV1FromGameBuilderMock.build).toHaveBeenCalledWith(
+          gameFixture,
+        );
+      });
+
+      it('should return GameV1', () => {
         expect(result).toBe(gameV1Fixture);
       });
     });
