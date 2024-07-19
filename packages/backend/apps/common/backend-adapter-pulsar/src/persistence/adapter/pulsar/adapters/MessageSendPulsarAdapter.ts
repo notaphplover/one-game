@@ -1,19 +1,22 @@
 import {
   MessageDeliveryScheduleKind,
   MessageSendOptions,
+  MessageSendOutputPort,
 } from '@cornie-js/backend-application-messaging';
 import { Injectable } from '@nestjs/common';
 import { Producer, ProducerMessage } from 'pulsar-client';
 
 @Injectable()
-export class PulsarPublisher<TMessage> {
+export class MessageSendPulsarAdapter implements MessageSendOutputPort {
   readonly #producer: Producer;
 
   constructor(producer: Producer) {
     this.#producer = producer;
   }
 
-  public async send(options: MessageSendOptions<TMessage>): Promise<void> {
+  public async send<TMessage>(
+    options: MessageSendOptions<TMessage>,
+  ): Promise<void> {
     const producerMessage: ProducerMessage = {
       data: this._bufferFromMessage(options.data),
     };
@@ -23,11 +26,11 @@ export class PulsarPublisher<TMessage> {
     await this.#producer.send(producerMessage);
   }
 
-  protected _bufferFromMessage(message: TMessage): Buffer {
+  protected _bufferFromMessage<TMessage>(message: TMessage): Buffer {
     return Buffer.from(JSON.stringify(message), 'utf-8');
   }
 
-  #handleDeliveryOptions(
+  #handleDeliveryOptions<TMessage>(
     producerMessage: ProducerMessage,
     options: MessageSendOptions<TMessage>,
   ): void {
