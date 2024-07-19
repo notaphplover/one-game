@@ -12,6 +12,7 @@ import { GameDrawService } from '../../domain/services/GameDrawService';
 import { GameService } from '../../domain/services/GameService';
 import { CardCanBePlayedSpec } from '../../domain/specs/CardCanBePlayedSpec';
 import { CurrentPlayerCanPlayCardsSpec } from '../../domain/specs/CurrentPlayerCanPlayCardsSpec';
+import { CurrentPlayerMustPlayCardsIfPossibleSpec } from '../../domain/specs/CurrentPlayerMustPlayCardsIfPossibleSpec';
 import { GameCanHoldMoreGameSlotsSpec } from '../../domain/specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from '../../domain/specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { GameEventsCanBeObservedSpec } from '../../domain/specs/GameEventsCanBeObservedSpec';
@@ -26,6 +27,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     CardCanBePlayedSpec,
     CardsFromCurrentSlotOfActiveGameBuilder,
     CurrentPlayerCanPlayCardsSpec,
+    CurrentPlayerMustPlayCardsIfPossibleSpec,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
     GameCardsEffectUpdateQueryFromGameBuilder,
@@ -47,6 +49,7 @@ import { PlayerCanUpdateGameSpec } from '../../domain/specs/PlayerCanUpdateGameS
     CardsFromActiveGameSlotBuilder,
     CardsFromCurrentSlotOfActiveGameBuilder,
     CurrentPlayerCanPlayCardsSpec,
+    CurrentPlayerMustPlayCardsIfPossibleSpec,
     GameCanHoldMoreGameSlotsSpec,
     GameCanHoldOnlyOneMoreGameSlotSpec,
     GameCardsEffectUpdateQueryFromGameBuilder,

@@ -23,6 +23,7 @@ import { GameUpdateQuery } from './query/GameUpdateQuery';
 import { GameDrawService } from './services/GameDrawService';
 import { GameService } from './services/GameService';
 import { CurrentPlayerCanPlayCardsSpec } from './specs/CurrentPlayerCanPlayCardsSpec';
+import { CurrentPlayerMustPlayCardsIfPossibleSpec } from './specs/CurrentPlayerMustPlayCardsIfPossibleSpec';
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { GameEventsCanBeObservedSpec } from './specs/GameEventsCanBeObservedSpec';
@@ -72,6 +73,8 @@ export type {
 
 export {
   CardsFromCurrentSlotOfActiveGameBuilder,
+  CurrentPlayerCanPlayCardsSpec,
+  CurrentPlayerMustPlayCardsIfPossibleSpec,
   GameCanHoldMoreGameSlotsSpec,
   GameCanHoldOnlyOneMoreGameSlotSpec,
   GameCardsEffectUpdateQueryFromGameBuilder,
@@ -88,7 +91,6 @@ export {
   IsValidGameCreateQuerySpec,
   PlayerCanDrawCardsSpec,
   PlayerCanPassTurnSpec,
-  CurrentPlayerCanPlayCardsSpec,
   PlayerCanUpdateGameSpec,
   StartGameUpdateQueryFromGameBuilder,
 };
