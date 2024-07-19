@@ -1,4 +1,5 @@
 import { AreCardsEqualsSpec } from './specs/AreCardsEqualsSpec';
+import { CardRequiresColorChoiceSpec } from './specs/CardRequiresColorChoiceSpec';
 import { BaseCard } from './valueObjects/BaseCard';
 import { Card } from './valueObjects/Card';
 import { CardColor } from './valueObjects/CardColor';
@@ -11,7 +12,7 @@ import { SkipCard } from './valueObjects/SkipCard';
 import { WildCard } from './valueObjects/WildCard';
 import { WildDraw4Card } from './valueObjects/WildDraw4Card';
 
-export { AreCardsEqualsSpec, CardColor, CardKind };
+export { AreCardsEqualsSpec, CardRequiresColorChoiceSpec, CardColor, CardKind };
 
 export type {
   BaseCard,
