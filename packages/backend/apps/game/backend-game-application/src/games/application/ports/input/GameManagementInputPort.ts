@@ -10,6 +10,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { GameV1FromGameBuilder } from '../../builders/GameV1FromGameBuilder';
 import { CreateGameUseCaseHandler } from '../../handlers/CreateGameUseCaseHandler';
+import { GameIdAutoUpdateHandler } from '../../handlers/GameIdAutoUpdateHandler';
 import { GameIdDrawCardsQueryV1Handler } from '../../handlers/GameIdDrawCardsQueryV1Handler';
 import { GameIdPassTurnQueryV1Handler } from '../../handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../handlers/GameIdPlayCardsQueryV1Handler';
@@ -24,6 +25,7 @@ export class GameManagementInputPort {
     [apiModels.GameCreateQueryV1],
     apiModels.GameV1
   >;
+  readonly #gameIdAutoUpdateHandler: Handler<[string], void>;
   readonly #gameIdDrawCardsQueryV1Handler: Handler<
     [string, apiModels.GameIdDrawCardsQueryV1, apiModels.UserV1],
     void
@@ -45,6 +47,8 @@ export class GameManagementInputPort {
       [apiModels.GameCreateQueryV1],
       apiModels.GameV1
     >,
+    @Inject(GameIdAutoUpdateHandler)
+    gameIdAutoUpdateHandler: Handler<[string], void>,
     @Inject(GameIdDrawCardsQueryV1Handler)
     gameIdDrawCardsQueryV1Handler: Handler<
       [string, apiModels.GameIdDrawCardsQueryV1, apiModels.UserV1],
@@ -66,6 +70,7 @@ export class GameManagementInputPort {
     gamePersistenceOutputPort: GamePersistenceOutputPort,
   ) {
     this.#createGameUseCaseHandler = createGameUseCaseHandler;
+    this.#gameIdAutoUpdateHandler = gameIdAutoUpdateHandler;
     this.#gameIdDrawCardsQueryV1Handler = gameIdDrawCardsQueryV1Handler;
     this.#gameIdPassTurnQueryV1Handler = gameIdPassTurnQueryV1Handler;
     this.#gameIdPlayCardsQueryV1Handler = gameIdPlayCardsQueryV1Handler;
@@ -99,6 +104,12 @@ export class GameManagementInputPort {
     } else {
       return this.#gameV1FromGameBuilder.build(game);
     }
+  }
+
+  public async updateGameWithAutoPlay(id: string): Promise<apiModels.GameV1> {
+    await this.#gameIdAutoUpdateHandler.handle(id);
+
+    return this.#getGameOrThrow(id);
   }
 
   public async updateOne(
