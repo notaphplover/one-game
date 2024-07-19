@@ -1,4 +1,3 @@
 #!/bin/bash
-. "$(dirname "$0")/_/husky.sh"
 
-pnpm exec commitlint --config "$(dirname "$0")/../config/commitlint/commitlint.config.js" --edit ""
+pnpm exec commitlint --config "$(dirname "$0")/../../config/commitlint/commitlint.config.js" --edit ""

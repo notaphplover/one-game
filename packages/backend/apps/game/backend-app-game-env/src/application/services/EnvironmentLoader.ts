@@ -46,6 +46,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       ONE_JS_GAME_SERVICE_PORT: port(),
       ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST: host(),
       ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT: port(),
+      ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_TOPIC_URL: url(),
+      ONE_JS_GAME_SERVICE_PULSAR_SERVICE_URL: url(),
       ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS: json(),
     });
 
@@ -71,6 +73,9 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       port: rawEnvironment.ONE_JS_GAME_SERVICE_PORT,
       pubSubRedisHost: rawEnvironment.ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST,
       pubSubRedisPort: rawEnvironment.ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT,
+      pulsarGameTurnSignalTopicUrl:
+        rawEnvironment.ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_TOPIC_URL,
+      pulsarServiceUrl: rawEnvironment.ONE_JS_GAME_SERVICE_PULSAR_SERVICE_URL,
       typeOrmDatasourceOptions:
         rawEnvironment.ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS,
     };

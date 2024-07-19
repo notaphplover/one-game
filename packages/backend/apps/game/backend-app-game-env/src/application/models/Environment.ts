@@ -18,5 +18,7 @@ export interface Environment {
   port: number;
   pubSubRedisHost: string;
   pubSubRedisPort: number;
+  pulsarGameTurnSignalTopicUrl: string;
+  pulsarServiceUrl: string;
   typeOrmDatasourceOptions: Record<string, unknown>;
 }
