@@ -1,10 +1,14 @@
 import { UuidModule } from '@cornie-js/backend-app-uuid';
-import { GameDomainModule } from '@cornie-js/backend-game-domain';
+import {
+  CardDomainModule,
+  GameDomainModule,
+} from '@cornie-js/backend-game-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
 import { GameActionApplicationModule } from '../../../../gameActions/adapter/nest/modules/GameActionApplicationModule';
 import { GameSnapshotApplicationModule } from '../../../../gameSnapshots/adapter/nest/modules/GameSnapshotApplicationModule';
+import { UserModule } from '../../../../users/adapter/nest/modules/UserModule';
 import { ActiveGameSlotV1FromActiveGameSlotBuilder } from '../../../application/builders/ActiveGameSlotV1FromActiveGameSlotBuilder';
 import { FinishedGameSlotV1FromFinishedGameSlotBuilder } from '../../../application/builders/FinishedGameSlotV1FromFinishedGameSlotBuilder';
 import { GameActionCreateQueryFromGameUpdateEventBuilder } from '../../../application/builders/GameActionCreateQueryFromGameUpdateEventBuilder';
@@ -25,7 +29,9 @@ import { GameSpecV1FromGameSpecBuilder } from '../../../application/builders/Gam
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
 import { MessageEventV2FromGameMessageEventBuilder } from '../../../application/builders/MessageEventV2FromGameMessageEventBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
+import { RandomGameIdPlayCardsQueryV1FromActiveGameBuilder } from '../../../application/builders/RandomGameIdPlayCardsQueryV1FromActiveGameBuilder';
 import { CreateGameUseCaseHandler } from '../../../application/handlers/CreateGameUseCaseHandler';
+import { GameIdAutoUpdateHandler } from '../../../application/handlers/GameIdAutoUpdateHandler';
 import { GameIdDrawCardsQueryV1Handler } from '../../../application/handlers/GameIdDrawCardsQueryV1Handler';
 import { GameIdPassTurnQueryV1Handler } from '../../../application/handlers/GameIdPassTurnQueryV1Handler';
 import { GameIdPlayCardsQueryV1Handler } from '../../../application/handlers/GameIdPlayCardsQueryV1Handler';
@@ -54,10 +60,12 @@ export class GameApplicationModule {
       global: false,
       imports: [
         ...(imports ?? []),
+        CardDomainModule,
         CardModule,
         GameActionApplicationModule.forRootAsync(imports),
         GameDomainModule,
         GameSnapshotApplicationModule.forRootAsync(imports),
+        UserModule,
         UuidModule,
       ],
       module: GameApplicationModule,
@@ -74,6 +82,7 @@ export class GameApplicationModule {
         GameDirectionV1FromGameDirectionBuilder,
         GameEventsManagementInputPort,
         GameEventV2FromGameMessageEventBuilder,
+        GameIdAutoUpdateHandler,
         GameIdDrawCardsQueryV1Handler,
         GameIdPassTurnQueryV1Handler,
         GameIdPlayCardsQueryV1Handler,
@@ -93,6 +102,7 @@ export class GameApplicationModule {
         MessageEventV2FromGameMessageEventBuilder,
         NonStartedGameFilledEventHandler,
         NonStartedGameSlotV1FromNonStartedGameSlotBuilder,
+        RandomGameIdPlayCardsQueryV1FromActiveGameBuilder,
       ],
     };
   }
