@@ -1,0 +1,20 @@
+# Typescript compiled files
+/lib/**
+
+# node modules
+/node_modules/
+
+# test coverage reports
+/coverage
+
+# Stryker reports
+/reports
+
+# Stryker temp files
+/stryker-tmp
+
+# Turborepo files
+.turbo/
+
+# env file
+.env
