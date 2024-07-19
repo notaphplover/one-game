@@ -6,11 +6,12 @@ services:
   zookeeper:
     image: apachepulsar/pulsar:3.3.0
     container_name: zookeeper
-    #restart: on-failure
+    restart: on-failure
     networks:
       - pulsar
     volumes:
       - ./data/zookeeper:/pulsar/data/zookeeper
+      - ./scripts/zookeper_health:/pulsar/bin/zookeper_health
     environment:
       - metadataStoreUrl=zk:zookeeper:2181
       - PULSAR_MEM=-Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m
@@ -19,10 +20,12 @@ services:
              bin/generate-zookeeper-config.sh conf/zookeeper.conf && \
              exec bin/pulsar zookeeper"
     healthcheck:
-      test: ["CMD", "bin/pulsar-zookeeper-ruok.sh"]
+    # The script is broken in the latest version, waiting for a new release
+    #  test: ["CMD", "bin/pulsar-zookeeper-ruok.sh"]
+      test: ["CMD", "bin/zookeper_health"]
       interval: 10s
       timeout: 5s
-      retries: 30
+      retries: 10
 
   # Init cluster metadata
   pulsar-init:
@@ -46,7 +49,7 @@ services:
   bookie:
     image: apachepulsar/pulsar:3.3.0
     container_name: bookie
-    #restart: on-failure
+    restart: on-failure
     networks:
       - pulsar
     environment:
@@ -72,7 +75,7 @@ services:
     image: apachepulsar/pulsar:3.3.0
     container_name: broker
     hostname: broker
-    #restart: on-failure
+    restart: on-failure
     networks:
       - pulsar
     environment:
