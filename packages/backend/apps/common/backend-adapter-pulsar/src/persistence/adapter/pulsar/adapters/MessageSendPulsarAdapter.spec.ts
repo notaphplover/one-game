@@ -6,19 +6,19 @@ import {
 } from '@cornie-js/backend-application-messaging';
 import { Producer, ProducerMessage } from 'pulsar-client';
 
-import { PulsarPublisher } from './PulsarPublisher';
+import { MessageSendPulsarAdapter } from './MessageSendPulsarAdapter';
 
-describe(PulsarPublisher.name, () => {
+describe(MessageSendPulsarAdapter.name, () => {
   let producerMock: jest.Mocked<Producer>;
 
-  let pulsarPublisher: PulsarPublisher<unknown>;
+  let messageSendPulsarAdapter: MessageSendPulsarAdapter;
 
   beforeAll(() => {
     producerMock = {
       send: jest.fn(),
     } as Partial<jest.Mocked<Producer>> as jest.Mocked<Producer>;
 
-    pulsarPublisher = new PulsarPublisher(producerMock);
+    messageSendPulsarAdapter = new MessageSendPulsarAdapter(producerMock);
   });
 
   describe('.send', () => {
@@ -35,7 +35,9 @@ describe(PulsarPublisher.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
-          result = await pulsarPublisher.send(messageSendOptionsFixture);
+          result = await messageSendPulsarAdapter.send(
+            messageSendOptionsFixture,
+          );
         });
 
         afterAll(() => {
@@ -76,7 +78,9 @@ describe(PulsarPublisher.name, () => {
         let result: unknown;
 
         beforeAll(async () => {
-          result = await pulsarPublisher.send(messageSendOptionsFixture);
+          result = await messageSendPulsarAdapter.send(
+            messageSendOptionsFixture,
+          );
         });
 
         afterAll(() => {
