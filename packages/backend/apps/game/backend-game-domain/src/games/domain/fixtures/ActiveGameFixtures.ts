@@ -48,6 +48,18 @@ export class ActiveGameFixtures {
     };
   }
 
+  public static get withCurrentTurnCardsPlayedTrue(): ActiveGame {
+    const anyFixture: ActiveGame = ActiveGameFixtures.any;
+
+    return {
+      ...anyFixture,
+      state: {
+        ...anyFixture.state,
+        currentTurnCardsPlayed: true,
+      },
+    };
+  }
+
   public static get withCurrentDrawBlueCardAndDrawCountTwo(): ActiveGame {
     const anyActiveGameFixture: ActiveGame = ActiveGameFixtures.any;
     const drawCardFixture: DrawCard = CardFixtures.drawBlueCard;
