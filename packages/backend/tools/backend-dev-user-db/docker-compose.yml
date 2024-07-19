@@ -14,6 +14,7 @@ services:
 
 networks:
   one_game:
+    external: true
     name: one_game_network
 
 volumes:
