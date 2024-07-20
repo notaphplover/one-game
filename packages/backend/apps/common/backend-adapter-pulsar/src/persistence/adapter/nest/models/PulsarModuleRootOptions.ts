@@ -20,7 +20,6 @@ export interface PulsarModuleRootOptions {
   inject?: (InjectionToken | OptionalFactoryDependency)[];
   provide: {
     consumers: boolean;
-    producers: boolean;
   };
   useFactory: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
