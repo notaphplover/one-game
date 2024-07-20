@@ -15,6 +15,7 @@ import { GameMiddleware } from './middlewares/GameMiddleware';
 import { BaseGameMessageEvent } from './models/BaseGameMessageEvent';
 import { GameMessageEvent } from './models/GameMessageEvent';
 import { GameMessageEventKind } from './models/GameMessageEventKind';
+import { GameTurnEndSignalMessage } from './models/GameTurnEndSignalMessage';
 import { GameUpdatedMessageEvent } from './models/GameUpdatedMessageEvent';
 import {
   GameEventsSubscriptionOutputPort,
@@ -32,6 +33,10 @@ import {
   GameSpecPersistenceOutputPort,
   gameSpecPersistenceOutputPortSymbol,
 } from './ports/output/GameSpecPersistenceOutputPort';
+import {
+  GameTurnEndSignalMessageSendOutputPort,
+  gameTurnEndSignalMessageSendOutputPortSymbol,
+} from './ports/output/GameTurnEndSignalMessageSendOutputPort';
 
 export type {
   BaseGameMessageEvent,
@@ -40,6 +45,8 @@ export type {
   GamePersistenceOutputPort,
   GameSlotPersistenceOutputPort,
   GameSpecPersistenceOutputPort,
+  GameTurnEndSignalMessage,
+  GameTurnEndSignalMessageSendOutputPort,
   GameUpdatedMessageEvent,
 };
 
@@ -51,6 +58,7 @@ export {
   gamePersistenceOutputPortSymbol,
   gameSpecPersistenceOutputPortSymbol,
   gameSlotPersistenceOutputPortSymbol,
+  gameTurnEndSignalMessageSendOutputPortSymbol,
   GetGameGameIdEventsV2SseController,
   GetGameGameIdSlotSlotIdCardsV1RequestController,
   GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
