@@ -1,6 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
+import {
+  MessageDeliveryScheduleKind,
+  MessageSendOptions,
+} from '@cornie-js/backend-application-messaging';
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import {
   GameAction,
@@ -11,7 +15,7 @@ import {
   GameActionFixtures,
 } from '@cornie-js/backend-game-domain/gameActions/fixtures';
 import {
-  Game,
+  ActiveGame,
   GameFindQuery,
   GameUpdateQuery,
 } from '@cornie-js/backend-game-domain/games';
@@ -22,9 +26,11 @@ import { GameActionPersistenceOutputPort } from '../../../gameActions/applicatio
 import { ActiveGameUpdatedEventFixtures } from '../fixtures/ActiveGameUpdatedEventFixtures';
 import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
+import { GameTurnEndSignalMessage } from '../models/GameTurnEndSignalMessage';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 import { GameEventsSubscriptionOutputPort } from '../ports/output/GameEventsSubscriptionOutputPort';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
+import { GameTurnEndSignalMessageSendOutputPort } from '../ports/output/GameTurnEndSignalMessageSendOutputPort';
 import { GameUpdatedEventHandler } from './GameUpdatedEventHandler';
 
 describe(GameUpdatedEventHandler.name, () => {
@@ -34,6 +40,7 @@ describe(GameUpdatedEventHandler.name, () => {
   let gameActionPersistenceOutputPortMock: jest.Mocked<GameActionPersistenceOutputPort>;
   let gameEventsSubscriptionOutputPortMock: jest.Mocked<GameEventsSubscriptionOutputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
+  let gameTurnEndSignalMessageSendOutputPortMock: jest.Mocked<GameTurnEndSignalMessageSendOutputPort>;
   let uuidProviderOutputPortMock: jest.Mocked<UuidProviderOutputPort>;
 
   let gameUpdatedEventHandler: GameUpdatedEventHandler;
@@ -58,6 +65,9 @@ describe(GameUpdatedEventHandler.name, () => {
     } as Partial<
       jest.Mocked<GamePersistenceOutputPort>
     > as jest.Mocked<GamePersistenceOutputPort>;
+    gameTurnEndSignalMessageSendOutputPortMock = {
+      send: jest.fn(),
+    };
     uuidProviderOutputPortMock = {
       generateV4: jest.fn(),
     };
@@ -67,168 +77,212 @@ describe(GameUpdatedEventHandler.name, () => {
       gameActionPersistenceOutputPortMock,
       gameEventsSubscriptionOutputPortMock,
       gamePersistenceOutputPortMock,
+      gameTurnEndSignalMessageSendOutputPortMock,
       uuidProviderOutputPortMock,
     );
   });
 
   describe('.handle', () => {
-    let gameUpdatedEventFixture: ActiveGameUpdatedEvent;
+    describe('having a GameUpdatedEvent with kind turnPass', () => {
+      let gameUpdatedEventFixture: ActiveGameUpdatedEvent;
 
-    beforeAll(() => {
-      gameUpdatedEventFixture = ActiveGameUpdatedEventFixtures.anyTurnPassEvent;
-    });
-
-    describe('when called, and gamePersistenceOutputPort.findOne() returns undefined', () => {
-      let result: unknown;
-
-      beforeAll(async () => {
-        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(undefined);
-
-        try {
-          await gameUpdatedEventHandler.handle(gameUpdatedEventFixture);
-        } catch (error: unknown) {
-          result = error;
-        }
+      beforeAll(() => {
+        gameUpdatedEventFixture =
+          ActiveGameUpdatedEventFixtures.anyTurnPassEvent;
       });
 
-      afterAll(() => {
-        jest.clearAllMocks();
+      describe('when called, and gamePersistenceOutputPort.findOne() returns undefined', () => {
+        let result: unknown;
+
+        beforeAll(async () => {
+          gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            undefined,
+          );
+
+          try {
+            await gameUpdatedEventHandler.handle(gameUpdatedEventFixture);
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gamePersistenceOutputPort.findOne()', () => {
+          const expected: GameFindQuery = {
+            id: gameUpdatedEventFixture.gameBeforeUpdate.id,
+          };
+
+          expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+            expected,
+            gameUpdatedEventFixture.transactionWrapper,
+          );
+        });
+
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: AppErrorKind.unknown,
+            message: `Game "${gameUpdatedEventFixture.gameBeforeUpdate.id}" not found`,
+          };
+
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
       });
 
-      it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expected: GameFindQuery = {
-          id: gameUpdatedEventFixture.gameBeforeUpdate.id,
-        };
+      describe('when called, and gamePersistenceOutputPort.findOne() returns an ActiveGame', () => {
+        let uuidFixture: string;
+        let gameActionCreateQueryFixture: GameActionCreateQuery;
+        let gameActionFixture: GameAction;
+        let gameFixture: ActiveGame;
 
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expected,
-          gameUpdatedEventFixture.transactionWrapper,
-        );
-      });
+        let result: unknown;
 
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.unknown,
-          message: `Game "${gameUpdatedEventFixture.gameBeforeUpdate.id}" not found`,
-        };
+        beforeAll(async () => {
+          uuidFixture = 'uuid-fixture';
+          gameActionCreateQueryFixture =
+            GameActionCreateQueryFixtures.withKindPassTurn;
+          gameActionFixture = GameActionFixtures.any;
+          gameFixture = ActiveGameFixtures.any;
 
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
+          uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(
+            uuidFixture,
+          );
+          gameActionCreateQueryFromGameUpdateEventBuilderMock.build.mockReturnValueOnce(
+            gameActionCreateQueryFixture,
+          );
+          gameActionPersistenceOutputPortMock.create.mockResolvedValueOnce(
+            gameActionFixture,
+          );
 
-    describe('when called, and gamePersistenceOutputPort.findOne() returns a Game', () => {
-      let uuidFixture: string;
-      let gameActionCreateQueryFixture: GameActionCreateQuery;
-      let gameActionFixture: GameAction;
-      let gameFixture: Game;
+          gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
+            gameFixture,
+          );
 
-      let result: unknown;
+          gameTurnEndSignalMessageSendOutputPortMock.send.mockResolvedValueOnce(
+            undefined,
+          );
 
-      beforeAll(async () => {
-        uuidFixture = 'uuid-fixture';
-        gameActionCreateQueryFixture =
-          GameActionCreateQueryFixtures.withKindPassTurn;
-        gameActionFixture = GameActionFixtures.any;
-        gameFixture = ActiveGameFixtures.any;
+          result = await gameUpdatedEventHandler.handle(
+            gameUpdatedEventFixture,
+          );
+        });
 
-        uuidProviderOutputPortMock.generateV4.mockReturnValueOnce(uuidFixture);
-        gameActionCreateQueryFromGameUpdateEventBuilderMock.build.mockReturnValueOnce(
-          gameActionCreateQueryFixture,
-        );
-        gameActionPersistenceOutputPortMock.create.mockResolvedValueOnce(
-          gameActionFixture,
-        );
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
 
-        gamePersistenceOutputPortMock.findOne.mockResolvedValueOnce(
-          gameFixture,
-        );
+        it('should call gamePersistenceOutputPort.findOne()', () => {
+          const expectedGameFindQuery: GameFindQuery = {
+            id: gameUpdatedEventFixture.gameBeforeUpdate.id,
+          };
 
-        result = await gameUpdatedEventHandler.handle(gameUpdatedEventFixture);
-      });
+          expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
+            expectedGameFindQuery,
+            gameUpdatedEventFixture.transactionWrapper,
+          );
+        });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+        it('should call uuidProviderOutputPort.generateV4()', () => {
+          expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(
+            1,
+          );
+          expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
+        });
 
-      it('should call gamePersistenceOutputPort.findOne()', () => {
-        const expectedGameFindQuery: GameFindQuery = {
-          id: gameUpdatedEventFixture.gameBeforeUpdate.id,
-        };
+        it('should call gameActionCreateQueryFromGameUpdateEventBuilder.build()', () => {
+          const uuidContext: UuidContext = {
+            uuid: uuidFixture,
+          };
 
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.findOne).toHaveBeenCalledWith(
-          expectedGameFindQuery,
-          gameUpdatedEventFixture.transactionWrapper,
-        );
-      });
+          expect(
+            gameActionCreateQueryFromGameUpdateEventBuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameActionCreateQueryFromGameUpdateEventBuilderMock.build,
+          ).toHaveBeenCalledWith(gameUpdatedEventFixture, uuidContext);
+        });
 
-      it('should call uuidProviderOutputPort.generateV4()', () => {
-        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledTimes(1);
-        expect(uuidProviderOutputPortMock.generateV4).toHaveBeenCalledWith();
-      });
+        it('should call gameActionPersistenceOutputPort.create()', () => {
+          expect(
+            gameActionPersistenceOutputPortMock.create,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameActionPersistenceOutputPortMock.create,
+          ).toHaveBeenCalledWith(
+            gameActionCreateQueryFixture,
+            gameUpdatedEventFixture.transactionWrapper,
+          );
+        });
 
-      it('should call gameActionCreateQueryFromGameUpdateEventBuilder.build()', () => {
-        const uuidContext: UuidContext = {
-          uuid: uuidFixture,
-        };
+        it('should call gamePersistenceOutputPort.update()', () => {
+          const expected: GameUpdateQuery = {
+            gameFindQuery: {
+              id: gameActionFixture.gameId,
+            },
+            lastGameActionId: gameActionFixture.id,
+          };
 
-        expect(
-          gameActionCreateQueryFromGameUpdateEventBuilderMock.build,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameActionCreateQueryFromGameUpdateEventBuilderMock.build,
-        ).toHaveBeenCalledWith(gameUpdatedEventFixture, uuidContext);
-      });
+          expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
+          expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
+            expected,
+            gameUpdatedEventFixture.transactionWrapper,
+          );
+        });
 
-      it('should call gameActionPersistenceOutputPort.create()', () => {
-        expect(
-          gameActionPersistenceOutputPortMock.create,
-        ).toHaveBeenCalledTimes(1);
-        expect(gameActionPersistenceOutputPortMock.create).toHaveBeenCalledWith(
-          gameActionCreateQueryFixture,
-          gameUpdatedEventFixture.transactionWrapper,
-        );
-      });
+        it('should call gameEventsSubscriptionOutputPort.publishV2()', () => {
+          const expected: GameUpdatedMessageEvent = {
+            game: gameFixture,
+            gameAction: gameActionFixture,
+            kind: GameMessageEventKind.gameUpdated,
+          };
 
-      it('should call gamePersistenceOutputPort.update()', () => {
-        const expected: GameUpdateQuery = {
-          gameFindQuery: {
-            id: gameActionFixture.gameId,
-          },
-          lastGameActionId: gameActionFixture.id,
-        };
+          expect(
+            gameEventsSubscriptionOutputPortMock.publishV2,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameEventsSubscriptionOutputPortMock.publishV2,
+          ).toHaveBeenCalledWith(
+            gameUpdatedEventFixture.gameBeforeUpdate.id,
+            expected,
+          );
+        });
 
-        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledTimes(1);
-        expect(gamePersistenceOutputPortMock.update).toHaveBeenCalledWith(
-          expected,
-          gameUpdatedEventFixture.transactionWrapper,
-        );
-      });
+        it('should call gameTurnEndSignalMessageSendOutputPort.send()', () => {
+          const expected: MessageSendOptions<GameTurnEndSignalMessage> = {
+            data: {
+              gameId: gameFixture.id,
+              turn: gameFixture.state.turn,
+            },
+            delivery: {
+              schedule: {
+                delayMs: 30000,
+                kind: MessageDeliveryScheduleKind.delay,
+              },
+            },
+          };
 
-      it('should call gameEventsSubscriptionOutputPort.publishV2()', () => {
-        const expected: GameUpdatedMessageEvent = {
-          game: gameFixture,
-          gameAction: gameActionFixture,
-          kind: GameMessageEventKind.gameUpdated,
-        };
+          expect(
+            gameTurnEndSignalMessageSendOutputPortMock.send,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameTurnEndSignalMessageSendOutputPortMock.send,
+          ).toHaveBeenCalledWith(expected);
+        });
 
-        expect(
-          gameEventsSubscriptionOutputPortMock.publishV2,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameEventsSubscriptionOutputPortMock.publishV2,
-        ).toHaveBeenCalledWith(
-          gameUpdatedEventFixture.gameBeforeUpdate.id,
-          expected,
-        );
-      });
-
-      it('should resolve to undefined', () => {
-        expect(result).toBeUndefined();
+        it('should resolve to undefined', () => {
+          expect(result).toBeUndefined();
+        });
       });
     });
   });

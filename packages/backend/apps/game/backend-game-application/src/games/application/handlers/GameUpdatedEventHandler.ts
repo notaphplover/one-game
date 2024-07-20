@@ -2,6 +2,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
+import { MessageDeliveryScheduleKind } from '@cornie-js/backend-application-messaging';
 import {
   AppError,
   AppErrorKind,
@@ -12,8 +13,18 @@ import {
   GameAction,
   GameActionCreateQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
-import { Game, GameUpdateQuery } from '@cornie-js/backend-game-domain/games';
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Game,
+  GameStatus,
+  GameUpdateQuery,
+} from '@cornie-js/backend-game-domain/games';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  LoggerService,
+  Optional,
+} from '@nestjs/common';
 
 import { UuidContext } from '../../../foundation/common/application/models/UuidContext';
 import {
@@ -22,6 +33,7 @@ import {
 } from '../../../gameActions/application/ports/output/GameActionPersistenceOutputPort';
 import { GameActionCreateQueryFromGameUpdateEventBuilder } from '../builders/GameActionCreateQueryFromGameUpdateEventBuilder';
 import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
+import { ActiveGameUpdatedEventKind } from '../models/ActiveGameUpdatedEventKind';
 import { GameMessageEventKind } from '../models/GameMessageEventKind';
 import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 import {
@@ -32,6 +44,12 @@ import {
   GamePersistenceOutputPort,
   gamePersistenceOutputPortSymbol,
 } from '../ports/output/GamePersistenceOutputPort';
+import {
+  GameTurnEndSignalMessageSendOutputPort,
+  gameTurnEndSignalMessageSendOutputPortSymbol,
+} from '../ports/output/GameTurnEndSignalMessageSendOutputPort';
+
+const GAME_TURN_SIGNAL_DELAY_MS: number = 30000;
 
 @Injectable()
 export class GameUpdatedEventHandler
@@ -44,6 +62,10 @@ export class GameUpdatedEventHandler
   readonly #gameActionPersistenceOutputPort: GameActionPersistenceOutputPort;
   readonly #gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort;
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
+  readonly #gameTurnEndSignalMessageSendOutputPort:
+    | GameTurnEndSignalMessageSendOutputPort
+    | undefined;
+  readonly #logger: LoggerService;
   readonly #uuidProviderOutputPort: UuidProviderOutputPort;
 
   constructor(
@@ -58,6 +80,11 @@ export class GameUpdatedEventHandler
     gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
+    @Optional()
+    @Inject(gameTurnEndSignalMessageSendOutputPortSymbol)
+    gameTurnEndSignalMessageSendOutputPort:
+      | GameTurnEndSignalMessageSendOutputPort
+      | undefined,
     @Inject(uuidProviderOutputPortSymbol)
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
@@ -66,6 +93,9 @@ export class GameUpdatedEventHandler
     this.#gameActionPersistenceOutputPort = gameActionPersistenceOutputPort;
     this.#gameEventsSubscriptionOutputPort = gameEventsSubscriptionOutputPort;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
+    this.#gameTurnEndSignalMessageSendOutputPort =
+      gameTurnEndSignalMessageSendOutputPort;
+    this.#logger = new Logger(GameUpdatedEventHandler.name);
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
@@ -89,6 +119,10 @@ export class GameUpdatedEventHandler
     await this.#updateLastGameActionId(gameAction, gameUpdatedEvent);
 
     await this.#publishGameUpdatedMessageEvent(game, gameAction);
+
+    if (gameUpdatedEvent.kind === ActiveGameUpdatedEventKind.turnPass) {
+      await this.#sendGameTurnEndSignal(game);
+    }
   }
 
   async #createGameAction(
@@ -123,6 +157,42 @@ export class GameUpdatedEventHandler
       game.id,
       gameUpdatedMessageEvent,
     );
+  }
+
+  async #sendGameTurnEndSignal(game: Game): Promise<void> {
+    if (game.state.status !== GameStatus.active) {
+      throw new AppError(
+        AppErrorKind.unknown,
+        'Unexpected non active game when sending game turn end signal',
+      );
+    }
+
+    if (this.#gameTurnEndSignalMessageSendOutputPort !== undefined) {
+      this.#logger.log(
+        `Detected end of turn ${game.state.turn} of game "${game.id}", sending signal...`,
+      );
+
+      await this.#gameTurnEndSignalMessageSendOutputPort.send({
+        data: {
+          gameId: game.id,
+          turn: game.state.turn,
+        },
+        delivery: {
+          schedule: {
+            delayMs: GAME_TURN_SIGNAL_DELAY_MS,
+            kind: MessageDeliveryScheduleKind.delay,
+          },
+        },
+      });
+
+      this.#logger.log(
+        `End of turn signal sent for game "${game.id}" (at turn ${game.state.turn})`,
+      );
+    } else {
+      this.#logger.log(
+        `Detected end of turn ${game.state.turn} of game "${game.id}", no signal is sent`,
+      );
+    }
   }
 
   async #updateLastGameActionId(
