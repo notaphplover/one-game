@@ -42,6 +42,7 @@ export class GamePulsarModule {
     return {
       exports: moduleExports,
       global: false,
+      imports: [...(options.imports ?? [])],
       module: GamePulsarModule,
       providers: moduleProviders,
     };
