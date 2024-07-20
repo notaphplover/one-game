@@ -11,7 +11,7 @@ import { MessageSendPulsarAdapter } from './MessageSendPulsarAdapter';
 describe(MessageSendPulsarAdapter.name, () => {
   let producerMock: jest.Mocked<Producer>;
 
-  let messageSendPulsarAdapter: MessageSendPulsarAdapter;
+  let messageSendPulsarAdapter: MessageSendPulsarAdapter<unknown>;
 
   beforeAll(() => {
     producerMock = {

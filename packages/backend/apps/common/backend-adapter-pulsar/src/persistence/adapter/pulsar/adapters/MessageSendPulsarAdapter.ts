@@ -7,16 +7,16 @@ import { Injectable } from '@nestjs/common';
 import { Producer, ProducerMessage } from 'pulsar-client';
 
 @Injectable()
-export class MessageSendPulsarAdapter implements MessageSendOutputPort {
+export class MessageSendPulsarAdapter<TMessage>
+  implements MessageSendOutputPort<TMessage>
+{
   readonly #producer: Producer;
 
   constructor(producer: Producer) {
     this.#producer = producer;
   }
 
-  public async send<TMessage>(
-    options: MessageSendOptions<TMessage>,
-  ): Promise<void> {
+  public async send(options: MessageSendOptions<TMessage>): Promise<void> {
     const producerMessage: ProducerMessage = {
       data: this._bufferFromMessage(options.data),
     };
@@ -26,11 +26,11 @@ export class MessageSendPulsarAdapter implements MessageSendOutputPort {
     await this.#producer.send(producerMessage);
   }
 
-  protected _bufferFromMessage<TMessage>(message: TMessage): Buffer {
+  protected _bufferFromMessage(message: TMessage): Buffer {
     return Buffer.from(JSON.stringify(message), 'utf-8');
   }
 
-  #handleDeliveryOptions<TMessage>(
+  #handleDeliveryOptions(
     producerMessage: ProducerMessage,
     options: MessageSendOptions<TMessage>,
   ): void {
