@@ -1,4 +1,5 @@
 import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
+import { GamePulsarModule } from '@cornie-js/backend-game-adapter-pulsar';
 import {
   DbModule,
   GameDbModule,
@@ -10,6 +11,7 @@ import { Module } from '@nestjs/common';
 
 import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
+import { buildGamePulsarModuleRootOptions } from '../../../../foundation/pulsar/adapter/ioredis/calculations/buildGamePulsarModuleRootOptions';
 import { buildIoredisModuleOptions } from '../../../../foundation/redis/adapter/ioredis/calculations/buildIoredisModuleOptions';
 import { GetEventsGamesGameIdV2RequestNestController } from '../controllers/GetEventsGamesGameIdV2RequestNestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
@@ -40,6 +42,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
       GameActionDbModule.forRootAsync(buildDbModuleOptions()),
       GameDbModule.forRootAsync(buildDbModuleOptions()),
       GameIoredisModule.forRootAsync(buildIoredisModuleOptions()),
+      GamePulsarModule.forRootAsync(buildGamePulsarModuleRootOptions()),
       GameSnapshotDbModule.forRootAsync(buildDbModuleOptions()),
     ]),
     HttpModule,
