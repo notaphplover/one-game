@@ -1,11 +1,10 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { Client, Consumer, Producer } from 'pulsar-client';
+import { Client, Consumer } from 'pulsar-client';
 
 import { PulsarClientOptions } from '../../pulsar/models/PulsarClientOptions';
 import { pulsarClientSymbol } from '../models/pulsarClientSymbol';
 import { pulsarConsumersMapSymbol } from '../models/pulsarConsumersMapSymbol';
 import { PulsarModuleRootOptions } from '../models/PulsarModuleRootOptions';
-import { pulsarProducersMapSymbol } from '../models/pulsarProducersMapSymbol';
 
 const pulsarOptionsSymbol: symbol = Symbol.for('pulsarOptions');
 
@@ -42,37 +41,6 @@ function provideConsumers(
   }
 }
 
-function provideProducers(
-  options: PulsarModuleRootOptions,
-  moduleExports: symbol[],
-  moduleProviders: Provider[],
-): void {
-  if (options.provide.producers) {
-    moduleProviders.push({
-      inject: [pulsarOptionsSymbol, pulsarClientSymbol],
-      provide: pulsarProducersMapSymbol,
-      useFactory: async (
-        options: PulsarClientOptions,
-        client: Client,
-      ): Promise<Map<string, Producer>> =>
-        new Map(
-          await Promise.all(
-            options.topics.map(
-              async (topic: string): Promise<[string, Producer]> => [
-                topic,
-                await client.createProducer({
-                  topic,
-                }),
-              ],
-            ),
-          ),
-        ),
-    });
-
-    moduleExports.push(pulsarProducersMapSymbol);
-  }
-}
-
 @Module({})
 export class PulsarModule {
   public static forRootAsync(options: PulsarModuleRootOptions): DynamicModule {
@@ -95,7 +63,6 @@ export class PulsarModule {
     ];
 
     provideConsumers(options, moduleExports, moduleProviders);
-    provideProducers(options, moduleExports, moduleProviders);
 
     return {
       exports: moduleExports,
