@@ -5,18 +5,15 @@ import {
   EnvironmentService,
   EnvModule,
 } from '@cornie-js/backend-app-game-env';
-import { GamePulsarModuleRootOptions } from '@cornie-js/backend-game-adapter-pulsar';
+import { GamePulsarModuleOptions } from '@cornie-js/backend-game-adapter-pulsar';
 
-export function buildGamePulsarModuleRootOptions(): GamePulsarModuleRootOptions {
+export function buildGamePulsarModuleOptions(): GamePulsarModuleOptions {
   return {
     imports: [
       EnvModule,
       PulsarModule.forRootAsync({
         imports: [EnvModule],
         inject: [EnvironmentService],
-        provide: {
-          consumers: false,
-        },
         useFactory: (
           environmentService: EnvironmentService,
         ): PulsarClientOptions => {
@@ -24,14 +21,9 @@ export function buildGamePulsarModuleRootOptions(): GamePulsarModuleRootOptions 
 
           return {
             serviceUrl: env.pulsarServiceUrl,
-            topics: [],
           };
         },
       }),
     ],
-    provide: {
-      consumers: false,
-      producers: true,
-    },
   };
 }
