@@ -45,6 +45,7 @@ jobs:
         with:
           path: |
             ./packages
+            !./packages/backend/tools/backend-dev-apache-pulsar/data
           key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
           restore-keys: |
             ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
