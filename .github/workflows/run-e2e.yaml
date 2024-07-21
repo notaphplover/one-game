@@ -29,6 +29,7 @@ jobs:
       - name: Run e2e tests
         run: pnpm run test:e2e:js
         env:
+          ONE_JS_GAME_SERVICE_DOT_ENV_PATH: e2e.env
           ONE_JS_TEST_E2E_DOT_ENV_PATH: e2e.env
 
       - name: Remove services with e2e config
