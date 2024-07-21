@@ -50,6 +50,7 @@
     "migrations:run": "turbo run migrations:run",
     "prepare": "husky && turbo telemetry disable",
     "preserve:api:rest:dependencies": "./docker/scripts/bootstrap",
+    "prestart:e2e": "./docker/scripts/bootstrap",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
     "serve:api:graphql": "pnpm run serve:api:rest --filter=@cornie-js/backend-service-gateway",
     "serve:api:rest": "pnpm run serve:api:rest:dependencies --filter=@cornie-js/backend-service-user --filter=@cornie-js/backend-service-game",
