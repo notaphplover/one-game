@@ -1,50 +1,76 @@
 import { pulsarClientSymbol } from '@cornie-js/backend-adapter-pulsar';
 import { gameTurnEndSignalMessageSendOutputPortSymbol } from '@cornie-js/backend-game-application/games';
-import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { Client, Producer } from 'pulsar-client';
+import { DynamicModule, Module } from '@nestjs/common';
+import { Client, Consumer, Producer } from 'pulsar-client';
 
 import { EnvironmentService } from '../../../../../../backend-app-game-env/lib';
 import { GameTurnEndSignalMessageSendPulsarAdapter } from '../../pulsar/adapters/GameTurnEndSignalMessageSendPulsarAdapter';
-import { GamePulsarModuleRootOptions } from '../models/GamePulsarModuleRootOptions';
+import { GameTurnEndSignalMessageConsumer } from '../../pulsar/consumers/GameTurnEndSignalMessageConsumer';
+import { GamePulsarModuleOptions } from '../models/GamePulsarModuleRootOptions';
+import { gameTurnEndSignalConsumerSymbol } from '../models/gameTurnEndSignalConsumerSymbol';
 import { gameTurnEndSignalProducerSymbol } from '../models/gameTurnEndSignalProducerSymbol';
 
 @Module({})
 export class GamePulsarModule {
-  public static forRootAsync(
-    options: GamePulsarModuleRootOptions,
+  public static forConsumersAsync(
+    options: GamePulsarModuleOptions,
   ): DynamicModule {
-    const moduleExports: symbol[] = [];
-    const moduleProviders: Provider[] = [];
-
-    if (options.provide.producers) {
-      moduleProviders.push({
-        inject: [EnvironmentService, pulsarClientSymbol],
-        provide: gameTurnEndSignalProducerSymbol,
-        useFactory: async (
-          environmentService: EnvironmentService,
-          client: Client,
-        ): Promise<Producer> => {
-          return client.createProducer({
-            topic:
-              environmentService.getEnvironment().pulsarGameTurnSignalTopicUrl,
-          });
-        },
-      });
-
-      moduleProviders.push({
-        provide: gameTurnEndSignalMessageSendOutputPortSymbol,
-        useClass: GameTurnEndSignalMessageSendPulsarAdapter,
-      });
-
-      moduleExports.push(gameTurnEndSignalMessageSendOutputPortSymbol);
-    }
-
     return {
-      exports: moduleExports,
+      exports: [GameTurnEndSignalMessageConsumer],
       global: false,
       imports: [...(options.imports ?? [])],
       module: GamePulsarModule,
-      providers: moduleProviders,
+      providers: [
+        {
+          inject: [EnvironmentService, pulsarClientSymbol],
+          provide: gameTurnEndSignalConsumerSymbol,
+          useFactory: async (
+            environmentService: EnvironmentService,
+            client: Client,
+          ): Promise<Consumer> => {
+            const topic: string =
+              environmentService.getEnvironment().pulsarGameTurnSignalTopicUrl;
+
+            return client.subscribe({
+              subscription: `subscription-${topic}`,
+              subscriptionType: 'Shared',
+              topic,
+            });
+          },
+        },
+        GameTurnEndSignalMessageConsumer,
+      ],
+    };
+  }
+
+  public static forProducersAsync(
+    options: GamePulsarModuleOptions,
+  ): DynamicModule {
+    return {
+      exports: [gameTurnEndSignalMessageSendOutputPortSymbol],
+      global: false,
+      imports: [...(options.imports ?? [])],
+      module: GamePulsarModule,
+      providers: [
+        {
+          inject: [EnvironmentService, pulsarClientSymbol],
+          provide: gameTurnEndSignalProducerSymbol,
+          useFactory: async (
+            environmentService: EnvironmentService,
+            client: Client,
+          ): Promise<Producer> => {
+            return client.createProducer({
+              topic:
+                environmentService.getEnvironment()
+                  .pulsarGameTurnSignalTopicUrl,
+            });
+          },
+        },
+        {
+          provide: gameTurnEndSignalMessageSendOutputPortSymbol,
+          useClass: GameTurnEndSignalMessageSendPulsarAdapter,
+        },
+      ],
     };
   }
 }

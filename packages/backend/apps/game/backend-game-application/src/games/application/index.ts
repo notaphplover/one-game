@@ -17,6 +17,7 @@ import { GameMessageEvent } from './models/GameMessageEvent';
 import { GameMessageEventKind } from './models/GameMessageEventKind';
 import { GameTurnEndSignalMessage } from './models/GameTurnEndSignalMessage';
 import { GameUpdatedMessageEvent } from './models/GameUpdatedMessageEvent';
+import { GameManagementInputPort } from './ports/input/GameManagementInputPort';
 import {
   GameEventsSubscriptionOutputPort,
   gameEventsSubscriptionOutputPortSymbol,
@@ -53,6 +54,7 @@ export type {
 export {
   GameEventsChannelFromGameIdBuilder,
   gameEventsSubscriptionOutputPortSymbol,
+  GameManagementInputPort,
   GameMessageEventKind,
   GameMiddleware,
   gamePersistenceOutputPortSymbol,

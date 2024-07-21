@@ -18,9 +18,6 @@ export interface PulsarModuleRootOptions {
     | ForwardReference<any>
   )[];
   inject?: (InjectionToken | OptionalFactoryDependency)[];
-  provide: {
-    consumers: boolean;
-  };
   useFactory: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...args: any[]
