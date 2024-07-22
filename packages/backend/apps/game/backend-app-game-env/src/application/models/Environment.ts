@@ -3,6 +3,8 @@ import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 export interface Environment {
   apiBackendServiceSecret: string;
   apiBaseUrl: string;
+  consumerHost: string;
+  consumerPort: number;
   corsOrigins: string[];
   grafanaPyroscopeEnabled: boolean;
   grafanaPyroscopeUrl: string;

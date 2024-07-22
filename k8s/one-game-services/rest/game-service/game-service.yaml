@@ -57,6 +57,16 @@ spec:
               configMapKeyRef:
                 name: rest-api-config
                 key: cors-origins
+          - name: ONE_JS_GAME_CONSUMER_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: consumer-host
+          - name: ONE_JS_GAME_CONSUMER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: consumer-port
           - name: ONE_JS_GAME_SERVICE_HOST
             valueFrom:
               configMapKeyRef:
@@ -67,6 +77,16 @@ spec:
               configMapKeyRef:
                 name: game-service-config
                 key: port
+          - name: ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_TOPIC_URL
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: pulsar-game-turn-signal-topic-url
+          - name: ONE_JS_GAME_SERVICE_PULSAR_SERVICE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: pulsar-service-url
           - name: ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS
             valueFrom:
               secretKeyRef:

@@ -3,6 +3,8 @@ import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 export interface EnvironmentRaw extends Record<string, unknown> {
   ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: string;
   ONE_JS_GAME_API_BASE_URL: string;
+  ONE_JS_GAME_CONSUMER_HOST: string;
+  ONE_JS_GAME_CONSUMER_PORT: number;
   ONE_JS_GAME_SERVICE_CORS_ORIGINS: string[];
   ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_ENABLED: boolean;
   ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_URL: string;

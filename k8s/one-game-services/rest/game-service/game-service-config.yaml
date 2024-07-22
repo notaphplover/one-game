@@ -5,6 +5,9 @@ metadata:
   namespace: one-game
 data:
 
+  consumer-host: '0.0.0.0'
+  consumer-port: 4002
+
   grafana.pyroscope-enabled: 'false'
   grafana.pyroscope-url: http://pyroscope:4040
   grafana.tracer-enabled: 'false'
@@ -13,6 +16,9 @@ data:
   host: '0.0.0.0'
 
   port: '3002'
+
+  pulsar-game-turn-signal-topic-url: persistent://public/default/game-turn-signal
+  pulsar-service-url: pulsar://pulsar:6650
 
   redis.host: game-redis-cluster-leader
   redis.port: '6379'
