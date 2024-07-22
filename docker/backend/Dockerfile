@@ -4,6 +4,14 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+FROM base as backendconsumergamebuild
+COPY . /usr/src/app
+WORKDIR /usr/src/app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+RUN pnpm run build --filter=@cornie-js/backend-consumer-game
+RUN pnpm deploy --filter=@cornie-js/backend-consumer-game --prod /prod/backend-consumer-game
+COPY ./.npmrc /prod/backend-consumer-game
+
 FROM base as backendserviceuserbuild
 COPY . /usr/src/app
 WORKDIR /usr/src/app
@@ -27,6 +35,12 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm run build --filter=@cornie-js/backend-service-gateway
 RUN pnpm deploy --filter=@cornie-js/backend-service-gateway --prod /prod/backend-service-gateway
 COPY ./.npmrc /prod/backend-service-gateway
+
+FROM base AS backendconsumergame
+COPY --from=backendconsumergamebuild /prod/backend-consumer-game /prod/backend-consumer-game
+WORKDIR /prod/backend-consumer-game
+EXPOSE 3002
+CMD [ "pnpm", "serve" ]
 
 FROM base AS backendserviceuser
 COPY --from=backendserviceuserbuild /prod/backend-service-user /prod/backend-service-user

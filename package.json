@@ -43,6 +43,7 @@
     "close:e2e": "turbo run close:e2e",
     "commit": "commit",
     "docker:build:game": "docker build . -f ./docker/backend/Dockerfile --target backendservicegame --tag one-game-backend-service-game:latest",
+    "docker:build:game:consumer": "docker build . -f ./docker/backend/Dockerfile --target backendconsumergame --tag one-game-backend-consumer-game:latest",
     "docker:build:user": "docker build . -f ./docker/backend/Dockerfile --target backendserviceuser --tag one-game-backend-service-user:latest",
     "docker:build:web-ui": "docker build . -f ./docker/frontend/Dockerfile --target frontendservicewebui --tag one-game-frontend-service-web-ui:latest",
     "format": "turbo run format",
