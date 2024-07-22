@@ -29,6 +29,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
     const rawEnvironment: EnvironmentRaw = cleanEnv(env, {
       ONE_JS_GAME_API_BACKEND_SERVICE_SECRET: str(),
       ONE_JS_GAME_API_BASE_URL: url(),
+      ONE_JS_GAME_CONSUMER_HOST: host(),
+      ONE_JS_GAME_CONSUMER_PORT: port(),
       ONE_JS_GAME_SERVICE_CORS_ORIGINS: json(),
       ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_ENABLED: bool(),
       ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_URL: url(),
@@ -55,6 +57,8 @@ export class EnvironmentLoader extends EnvLoader<Environment> {
       apiBackendServiceSecret:
         rawEnvironment.ONE_JS_GAME_API_BACKEND_SERVICE_SECRET,
       apiBaseUrl: rawEnvironment.ONE_JS_GAME_API_BASE_URL,
+      consumerHost: rawEnvironment.ONE_JS_GAME_CONSUMER_HOST,
+      consumerPort: rawEnvironment.ONE_JS_GAME_CONSUMER_PORT,
       corsOrigins: rawEnvironment.ONE_JS_GAME_SERVICE_CORS_ORIGINS,
       grafanaPyroscopeEnabled:
         rawEnvironment.ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_ENABLED,
