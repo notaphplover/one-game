@@ -9,7 +9,7 @@ export abstract class PulsarConsumer<TMessage> {
     this.#consumer = consumer;
   }
 
-  protected async _handleMessages(): Promise<void> {
+  public async handleMessages(): Promise<void> {
     while (this.#consumer.isConnected()) {
       let pulsarMessage: Message;
 

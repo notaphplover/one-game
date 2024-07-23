@@ -1,7 +1,8 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { Client } from 'pulsar-client';
 
 import { PulsarClientOptions } from '../../pulsar/models/PulsarClientOptions';
+import { PulsarShutdownService } from '../../pulsar/services/PulsarShutdownService';
 import { pulsarClientSymbol } from '../models/pulsarClientSymbol';
 import { PulsarModuleRootOptions } from '../models/PulsarModuleRootOptions';
 
@@ -29,6 +30,7 @@ export class PulsarModule {
               serviceUrl: options.serviceUrl,
             }),
         },
+        PulsarShutdownService,
       ],
     };
   }
