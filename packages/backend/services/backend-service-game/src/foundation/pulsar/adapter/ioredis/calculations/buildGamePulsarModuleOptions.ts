@@ -1,5 +1,7 @@
-import { PulsarModule } from '@cornie-js/backend-adapter-pulsar';
-import { PulsarClientOptions } from '@cornie-js/backend-adapter-pulsar/lib/persistence/adapter/pulsar/models/PulsarClientOptions';
+import {
+  PulsarClientOptions,
+  PulsarModule,
+} from '@cornie-js/backend-adapter-pulsar';
 import {
   Environment,
   EnvironmentService,
