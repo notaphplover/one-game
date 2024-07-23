@@ -18,18 +18,12 @@ import { Consumer, Message } from 'pulsar-client';
 
 import { GameTurnEndSignalMessageConsumer } from './GameTurnEndSignalMessageConsumer';
 
-class GameTurnEndSignalMessageConsumerTest extends GameTurnEndSignalMessageConsumer {
-  public async handleMessages(): Promise<void> {
-    return this._handleMessages();
-  }
-}
-
 describe(GameTurnEndSignalMessageConsumer.name, () => {
   let consumerMock: jest.Mocked<Consumer>;
   let gameManagementInputPortMock: jest.Mocked<GameManagementInputPort>;
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
 
-  let gameTurnEndSignalMessageConsumer: GameTurnEndSignalMessageConsumerTest;
+  let gameTurnEndSignalMessageConsumer: GameTurnEndSignalMessageConsumer;
 
   beforeAll(() => {
     consumerMock = {
@@ -49,7 +43,7 @@ describe(GameTurnEndSignalMessageConsumer.name, () => {
       jest.Mocked<GamePersistenceOutputPort>
     > as jest.Mocked<GamePersistenceOutputPort>;
 
-    gameTurnEndSignalMessageConsumer = new GameTurnEndSignalMessageConsumerTest(
+    gameTurnEndSignalMessageConsumer = new GameTurnEndSignalMessageConsumer(
       consumerMock,
       gameManagementInputPortMock,
       gamePersistenceOutputPortMock,

@@ -5,7 +5,7 @@
   },
   "description": "Backend GRaphQL gateway service for one-game-js",
   "dependencies": {
-    "@apollo/server": "4.10.4",
+    "@apollo/server": "4.10.5",
     "@as-integrations/fastify": "2.1.1",
     "@cornie-js/api-graphql-models": "workspace:*",
     "@cornie-js/api-graphql-schemas-provider": "workspace:*",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@cornie-js/process-manager": "workspace:*",
     "@jest/globals": "29.7.0",
-    "@types/node": "20.14.11",
+    "@types/node": "20.14.12",
     "@typescript-eslint/eslint-plugin": "7.17.0",
     "@typescript-eslint/parser": "7.17.0",
     "eslint": "8.57.0",
