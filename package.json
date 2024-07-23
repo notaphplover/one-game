@@ -54,7 +54,7 @@
     "prestart:e2e": "./docker/scripts/bootstrap",
     "serve": "trap '' INT TERM; turbo run serve --concurrency=9000",
     "serve:api:graphql": "pnpm run serve:api:rest --filter=@cornie-js/backend-service-gateway",
-    "serve:api:rest": "pnpm run serve:api:rest:dependencies --filter=@cornie-js/backend-service-user --filter=@cornie-js/backend-service-game",
+    "serve:api:rest": "pnpm run serve:api:rest:dependencies --filter=@cornie-js/backend-consumer-game --filter=@cornie-js/backend-service-user --filter=@cornie-js/backend-service-game",
     "serve:api:rest:dependencies": "pnpm run serve --filter=@cornie-js/backend-maildev --filter=@cornie-js/backend-dev-apache-pulsar --filter=@cornie-js/backend-dev-redis-pub-sub --filter=@cornie-js/backend-dev-user-db --filter=@cornie-js/backend-dev-game-db --filter=@cornie-js/backend-dev-proxy",
     "serve:api:rest:docker": "turbo run serve:docker --filter=@cornie-js/backend-service-user --filter=@cornie-js/backend-service-game",
     "serve:api:rest:docs": "pnpm run serve --filter=@cornie-js/backend-dev-swagger-ui",
