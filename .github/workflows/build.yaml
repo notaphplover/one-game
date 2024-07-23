@@ -44,8 +44,17 @@ jobs:
         id: ts-build-cache
         with:
           path: |
-            ./packages
-            !./packages/backend/tools/backend-dev-apache-pulsar/data
+            ./packages/api/libraries/*
+            ./packages/api/tools/*
+            ./packages/backend/apps/*/*
+            ./packages/backend/libraries/*
+            ./packages/backend/services/*
+            ./packages/backend/tools/*
+            ./packages/frontend/*
+            ./packages/frontend/libraries/*
+            ./packages/frontend/tools/*
+            ./packages/tools/*
+            !./packages/backend/tools/backend-dev-apache-pulsar
           key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
           restore-keys: |
             ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
@@ -76,7 +85,17 @@ jobs:
         id: ts-build-cache
         with:
           path: |
-            ./packages
+            ./packages/api/libraries/*
+            ./packages/api/tools/*
+            ./packages/backend/apps/*/*
+            ./packages/backend/libraries/*
+            ./packages/backend/services/*
+            ./packages/backend/tools/*
+            ./packages/frontend/*
+            ./packages/frontend/libraries/*
+            ./packages/frontend/tools/*
+            ./packages/tools/*
+            !./packages/backend/tools/backend-dev-apache-pulsar
           key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
           restore-keys: |
             ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}

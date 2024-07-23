@@ -1,7 +1,9 @@
+import { PulsarConsumer } from '@cornie-js/backend-adapter-pulsar';
 import {
   Environment,
   EnvironmentService,
 } from '@cornie-js/backend-app-game-env';
+import { GameTurnEndSignalMessageConsumer } from '@cornie-js/backend-game-adapter-pulsar';
 import helmet from '@fastify/helmet';
 import { ConsoleLogger, INestApplication, LoggerService } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -33,13 +35,23 @@ async function bootstrap() {
   const environmentService: EnvironmentService =
     nestApplication.get(EnvironmentService);
 
+  const consumers: PulsarConsumer<unknown>[] = [
+    nestApplication.get(GameTurnEndSignalMessageConsumer),
+  ];
+
   const environment: Environment = environmentService.getEnvironment();
 
   registerSignalHandlers(nestApplication, logger);
 
   const port: number = environment.consumerPort;
 
-  await nestApplication.listen(port, environment.consumerHost);
+  await Promise.all([
+    nestApplication.listen(port, environment.host),
+    ...consumers.map(
+      async (consumer: PulsarConsumer<unknown>): Promise<void> =>
+        consumer.handleMessages(),
+    ),
+  ]);
 
   logger.log(`Application is running on: ${await nestApplication.getUrl()}`);
 }
