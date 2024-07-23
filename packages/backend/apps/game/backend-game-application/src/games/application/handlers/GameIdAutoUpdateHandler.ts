@@ -86,6 +86,7 @@ export class GameIdAutoUpdateHandler implements Handler<[string], void> {
       apiModels.GameIdPlayCardsQueryV1 | undefined,
       [ActiveGame, GameOptions]
     >,
+    @Inject(UserManagementInputPort)
     userManagementInputPort: UserManagementInputPort,
   ) {
     this.#currentPlayerMustPlayCardsIfPossibleSpec =
