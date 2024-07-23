@@ -16,10 +16,6 @@ class PulsarConsumerTest extends PulsarConsumer<unknown> {
     this.#handleMessageMock = handleMessageMock;
   }
 
-  public async handleMessages(): Promise<void> {
-    return this._handleMessages();
-  }
-
   protected override async _handleMessage(message: unknown): Promise<void> {
     return this.#handleMessageMock(message);
   }
