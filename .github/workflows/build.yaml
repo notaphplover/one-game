@@ -44,8 +44,7 @@ jobs:
         id: ts-build-cache
         with:
           path: |
-            ./packages
-            ./packages/backend/tools/backend-dev-apache-pulsar/*
+            ./packages/**
             !./packages/backend/tools/backend-dev-apache-pulsar/data
           key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
           restore-keys: |
@@ -77,8 +76,7 @@ jobs:
         id: ts-build-cache
         with:
           path: |
-            ./packages
-            ./packages/backend/tools/backend-dev-apache-pulsar/*
+            ./packages/**
             !./packages/backend/tools/backend-dev-apache-pulsar/data
           key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
           restore-keys: |
