@@ -1,10 +1,11 @@
-FROM node:20.10.0-alpine as base
+FROM node:20.10.0-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-FROM base as backendconsumergamebuild
+FROM base AS backendconsumergamebuild
+RUN apk update && apk upgrade && apk add bash
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
@@ -12,7 +13,8 @@ RUN pnpm run build --filter=@cornie-js/backend-consumer-game
 RUN pnpm deploy --filter=@cornie-js/backend-consumer-game --prod /prod/backend-consumer-game
 COPY ./.npmrc /prod/backend-consumer-game
 
-FROM base as backendserviceuserbuild
+FROM base AS backendserviceuserbuild
+RUN apk update && apk upgrade && apk add bash
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
@@ -20,7 +22,8 @@ RUN pnpm run build --filter=@cornie-js/backend-service-user
 RUN pnpm deploy --filter=@cornie-js/backend-service-user --prod /prod/backend-service-user
 COPY ./.npmrc /prod/backend-service-user
 
-FROM base as backendservicegamebuild
+FROM base AS backendservicegamebuild
+RUN apk update && apk upgrade && apk add bash
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
@@ -28,7 +31,8 @@ RUN pnpm run build --filter=@cornie-js/backend-service-game
 RUN pnpm deploy --filter=@cornie-js/backend-service-game --prod /prod/backend-service-game
 COPY ./.npmrc /prod/backend-service-game
 
-FROM base as backendservicegatewaybuild
+FROM base AS backendservicegatewaybuild
+RUN apk update && apk upgrade && apk add bash
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
