@@ -1,3 +1,5 @@
 #!/bin/bash
 
-pnpm exec commitlint --config "$(dirname "$0")/../../config/commitlint/commitlint.config.js" --edit ""
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+pnpm exec commitlint --config "$SCRIPT_DIR/config/commitlint/commitlint.config.js" --edit ""
