@@ -19,6 +19,13 @@ spec:
             name: rest-service-user
             port:
               number: 3001
+      - path: /v2/auth
+        pathType: Prefix
+        backend:
+          service:
+            name: rest-service-user
+            port:
+              number: 3001
       - path: /v1/events/games
         pathType: Prefix
         backend:

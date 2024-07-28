@@ -6,7 +6,7 @@ metadata:
 data:
 
   consumer-host: '0.0.0.0'
-  consumer-port: 4002
+  consumer-port: '4002'
 
   grafana.pyroscope-enabled: 'false'
   grafana.pyroscope-url: http://pyroscope:4040
@@ -18,7 +18,7 @@ data:
   port: '3002'
 
   pulsar-game-turn-signal-topic-url: persistent://public/default/game-turn-signal
-  pulsar-service-url: pulsar://pulsar:6650
+  pulsar-service-url: pulsar://pulsar-proxy:6650
 
   redis.host: game-redis-cluster-leader
   redis.port: '6379'

@@ -7,22 +7,10 @@ A kubernetes config is provided to deploy all the services.
 - `kubectl` version 1.28 or later.
 - `helm` version 3.10 or later.
 - k8s server should have [redis-operator](https://github.com/OT-CONTAINER-KIT/redis-operator) installed.
+- k8s server should have a cnpg/cloudnative-pg operator installed
+- k8s server should have an apache pulsar chart installed.
 
-Consider the following script to install them:
-
-```bash
-
-helm repo add ot-helm https://ot-container-kit.github.io/helm-charts/
-helm repo add cnpg https://cloudnative-pg.github.io/charts
-
-helm repo update
-
-helm upgrade --install cnpg cnpg/cloudnative-pg \
-    --namespace cnpg-system --create-namespace --wait
-
-helm upgrade --install redis-operator ot-helm/redis-operator \
-    --namespace ot-operators --create-namespace --wait
-```
+Consider the `k8s/setup-minikube/setup_minikube` script as reference to setup all these operators.
 
 ### Why not use the official redis k8s operator?
 

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+function detect_cmd_or_throw() {
+  if ! command -v $1 &> /dev/null
+  then
+      echo "command $1 not found, exiting with non zero code..."
+      exit 1
+  fi
+}
+
+function install_pulsar_helm_chart() {
+  echo "Installing apache pulsar helm chart..."
+
+  git clone https://github.com/apache/pulsar-helm-chart
+
+  cd pulsar-helm-chart
+
+  git pull
+
+  ./scripts/pulsar/prepare_helm_release.sh \
+    -n one-game \
+    -k pulsar \
+    -c
+
+  cd ..
+
+  helm install \
+    --values config/values-minikube.yaml \
+    --namespace one-game \
+    pulsar apache/pulsar
+}
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+cd "$SCRIPT_DIR"
+
+detect_cmd_or_throw git
+detect_cmd_or_throw helm
+detect_cmd_or_throw kubectl
+detect_cmd_or_throw minikube
+
+echo "Setting helm repositories"
+
+helm repo add ot-helm https://ot-container-kit.github.io/helm-charts/
+helm repo add cnpg https://cloudnative-pg.github.io/charts
+helm repo add apache https://pulsar.apache.org/charts
+
+helm repo update
+
+echo "Starting minikube..."
+
+minikube start
+
+echo "Installing postgresql operator"
+
+helm upgrade --install cnpg cnpg/cloudnative-pg \
+    --namespace cnpg-system --create-namespace --wait
+
+echo "Installing redis operator"
+
+helm upgrade --install redis-operator ot-helm/redis-operator \
+    --namespace ot-operators --create-namespace --wait
+
+install_pulsar_helm_chart
