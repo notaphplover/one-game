@@ -51,6 +51,9 @@ echo "Starting minikube..."
 
 minikube start
 
+minikube addons enable ingress
+minikube addons enable metrics-server
+
 echo "Installing postgresql operator"
 
 helm upgrade --install cnpg cnpg/cloudnative-pg \
