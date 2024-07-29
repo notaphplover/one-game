@@ -13,6 +13,7 @@ import {
   NonStartedGame,
   PlayerCanUpdateGameSpec,
 } from '@cornie-js/backend-game-domain/games';
+import { Logger, LoggerService } from '@nestjs/common';
 
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';
 import { ActiveGameUpdatedEvent } from '../models/ActiveGameUpdatedEvent';
@@ -26,6 +27,7 @@ export abstract class GameIdUpdateQueryV1Handler<
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
   readonly #gameUpdatedEventHandler: Handler<[ActiveGameUpdatedEvent], void>;
+  readonly #logger: LoggerService;
   readonly #playerCanUpdateGameSpec: PlayerCanUpdateGameSpec;
   readonly #transactionProvisionOutputPort: TransactionProvisionOutputPort;
 
@@ -39,6 +41,7 @@ export abstract class GameIdUpdateQueryV1Handler<
     this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
     this.#gameUpdatedEventHandler = gameUpdatedEventHandler;
+    this.#logger = new Logger(GameIdUpdateQueryV1Handler.name);
     this.#playerCanUpdateGameSpec = playerCanUpdateGameSpec;
     this.#transactionProvisionOutputPort = transactionProvisionOutputPort;
   }
@@ -48,12 +51,19 @@ export abstract class GameIdUpdateQueryV1Handler<
     gameIdUpdateQueryV1: TQuery,
     userV1: apiModels.UserV1,
   ): Promise<void> {
+    this.#logger.log(`Performing validations for game update query v1:
+${JSON.stringify(gameIdUpdateQueryV1)}`);
+
     const [game, gameSpec]: [ActiveGame, GameSpec] =
       await this.#getActiveGameAndSpecOrThrow(gameId);
 
     this.#checkRightPlayer(game, gameIdUpdateQueryV1, userV1);
 
     this._checkUnprocessableOperation(game, gameSpec, gameIdUpdateQueryV1);
+
+    this.#logger
+      .log(`Proceeding to apply database updates for game update query v1:
+      ${JSON.stringify(gameIdUpdateQueryV1)}`);
 
     await using transactionWrapper: TransactionWrapper =
       await this.#transactionProvisionOutputPort.provide();
@@ -69,6 +79,9 @@ export abstract class GameIdUpdateQueryV1Handler<
     await this.#gameUpdatedEventHandler.handle(gameUpdatedEvent);
 
     await transactionWrapper.tryCommit();
+
+    this.#logger.log(`Applied database updates for game update query v1:
+      ${JSON.stringify(gameIdUpdateQueryV1)}`);
   }
 
   protected async _getUpdatedGame(
