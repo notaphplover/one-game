@@ -3,146 +3,141 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: rest-service-user
-  name: rest-service-user
+    app: rest-consumer-game
+  name: rest-consumer-game
   namespace: one-game
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rest-service-user
+      app: rest-consumer-game
   template:
     metadata:
       labels:
-        app: rest-service-user
+        app: rest-consumer-game
     spec:
       containers:
-      - image: one-game-backend-service-user:latest
+      - image: one-game-backend-consumer-game:latest
         imagePullPolicy: Never
         env:
-          - name: ONE_JS_USER_SERVICE_DOT_ENV_ENABLED
+          - name: ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED
             value: 'false'
-          - name: ONE_JS_USER_SERVICE_JWT_ALGORITHM
+          - name: ONE_JS_GAME_SERVICE_JWT_ALGORITHM
             valueFrom:
               configMapKeyRef:
                 name: rest-api-config
                 key: jwt.algorithm
-          - name: ONE_JS_USER_SERVICE_JWT_AUDIENCE
+          - name: ONE_JS_GAME_SERVICE_JWT_AUDIENCE
             valueFrom:
               configMapKeyRef:
                 name: rest-api-config
                 key: jwt.audience
-          - name: ONE_JS_USER_SERVICE_JWT_EXPIRATION_MS
+          - name: ONE_JS_GAME_SERVICE_JWT_EXPIRATION_MS
             valueFrom:
               configMapKeyRef:
                 name: rest-api-config
                 key: jwt.expiration-ms
-          - name: ONE_JS_USER_SERVICE_JWT_ISSUER
+          - name: ONE_JS_GAME_SERVICE_JWT_ISSUER
             valueFrom:
               configMapKeyRef:
                 name: rest-api-config
                 key: jwt.issuer
-          - name: ONE_JS_USER_SERVICE_JWT_PRIVATE_KEY
+          - name: ONE_JS_GAME_SERVICE_JWT_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
                 name: rest-api-secret
                 key: jwt.private
-          - name: ONE_JS_USER_SERVICE_JWT_PUBLIC_KEY
+          - name: ONE_JS_GAME_SERVICE_JWT_PUBLIC_KEY
             valueFrom:
               secretKeyRef:
                 name: rest-api-secret
                 key: jwt.public
-          - name: ONE_JS_USER_SERVICE_CORS_ORIGINS
+          - name: ONE_JS_GAME_SERVICE_CORS_ORIGINS
             valueFrom:
               configMapKeyRef:
                 name: rest-api-config
                 key: cors-origins
-          - name: ONE_JS_USER_SERVICE_HOST
+          - name: ONE_JS_GAME_CONSUMER_HOST
             valueFrom:
               configMapKeyRef:
-                name: user-service-config
+                name: game-service-config
+                key: consumer-host
+          - name: ONE_JS_GAME_CONSUMER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: consumer-port
+          - name: ONE_JS_GAME_SERVICE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
                 key: host
-          - name: ONE_JS_USER_SERVICE_PORT
+          - name: ONE_JS_GAME_SERVICE_PORT
             valueFrom:
               configMapKeyRef:
-                name: user-service-config
+                name: game-service-config
                 key: port
-          - name: ONE_JS_USER_SERVICE_TYPEORM_DATASOURCE_OPTIONS
+          - name: ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_TOPIC_URL
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: pulsar-game-turn-signal-topic-url
+          - name: ONE_JS_GAME_SERVICE_PULSAR_SERVICE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: pulsar-service-url
+          - name: ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS
             valueFrom:
               secretKeyRef:
-                name: user-service-secret
+                name: game-service-secret
                 key: typeorm.config
-          - name: ONE_JS_USER_API_BACKEND_SERVICE_SECRET
+          - name: ONE_JS_GAME_API_BACKEND_SERVICE_SECRET
             valueFrom:
               secretKeyRef:
                 name: rest-api-secret
                 key: backend.service-secret
-          - name: ONE_JS_USER_API_BASE_URL
+          - name: ONE_JS_GAME_API_BASE_URL
             valueFrom:
               configMapKeyRef:
                 name: rest-api-config
                 key: api.base-url
-          - name: ONE_JS_USER_FRONTEND_BASE_URL
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_ENABLED
             valueFrom:
               configMapKeyRef:
-                name: user-service-config
-                key: frontent.base-url
-          - name: ONE_JS_USER_SERVICE_MAIL_DEFAULT_ADDRESS
-            valueFrom:
-              secretKeyRef:
-                name: user-service-secret
-                key: mail.default-address
-          - name: ONE_JS_USER_SERVICE_MAIL_HOST
-            valueFrom:
-              secretKeyRef:
-                name: user-service-secret
-                key: mail.host
-          - name: ONE_JS_USER_SERVICE_MAIL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: user-service-secret
-                key: mail.password
-          - name: ONE_JS_USER_SERVICE_MAIL_PORT
-            valueFrom:
-              secretKeyRef:
-                name: user-service-secret
-                key: mail.port
-          - name: ONE_JS_USER_SERVICE_MAIL_USER
-            valueFrom:
-              secretKeyRef:
-                name: user-service-secret
-                key: mail.user
-          - name: ONE_JS_USER_SERVICE_MAIL_USE_TLS
-            valueFrom:
-              secretKeyRef:
-                name: user-service-secret
-                key: mail.use-tls
-          - name: ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_ENABLED
-            valueFrom:
-              configMapKeyRef:
-                name: user-service-config
+                name: game-service-config
                 key: grafana.pyroscope-enabled
-          - name: ONE_JS_USER_SERVICE_GRAFANA_PYROSCOPE_URL
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_PYROSCOPE_URL
             valueFrom:
               configMapKeyRef:
-                name: user-service-config
+                name: game-service-config
                 key: grafana.pyroscope-url
-          - name: ONE_JS_USER_SERVICE_GRAFANA_TRACE_ENABLED
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_TRACE_ENABLED
             valueFrom:
               configMapKeyRef:
-                name: user-service-config
+                name: game-service-config
                 key: grafana.tracer-enabled
-          - name: ONE_JS_USER_SERVICE_GRAFANA_TRACE_URL
+          - name: ONE_JS_GAME_SERVICE_GRAFANA_TRACE_URL
             valueFrom:
               configMapKeyRef:
-                name: user-service-config
+                name: game-service-config
                 key: grafana.tracer-url
-        name: rest-service-user
+          - name: ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: redis.host
+          - name: ONE_JS_GAME_SERVICE_PUB_SUB_REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: game-service-config
+                key: redis.port
+        name: rest-consumer-game
         readinessProbe:
           failureThreshold: 3
           httpGet:
             path: /v1/ready
-            port: 3001
+            port: 4002
             scheme: HTTP
           initialDelaySeconds: 10
           periodSeconds: 30
@@ -154,10 +149,10 @@ spec:
           periodSeconds: 30
           successThreshold: 1
           tcpSocket:
-            port: 3001
+            port: 4002
           timeoutSeconds: 1
         ports:
-        - containerPort: 3001
+        - containerPort: 4002
           name: http
           protocol: TCP
         resources:
@@ -169,14 +164,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rest-service-user
+  name: rest-consumer-game
   namespace: one-game
 spec:
   ports:
-    - port: 3001
+    - port: 4002
       protocol: TCP
       targetPort: http
   selector:
-    app: rest-service-user
+    app: rest-consumer-game
   sessionAffinity: None
   type: LoadBalancer
