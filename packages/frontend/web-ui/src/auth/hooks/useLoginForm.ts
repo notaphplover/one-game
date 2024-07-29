@@ -47,7 +47,8 @@ export const useLoginForm = (
   const setFormField = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (
       formStatus !== LoginStatus.initial &&
-      formStatus !== LoginStatus.validationKO
+      formStatus !== LoginStatus.validationKO &&
+      formStatus !== LoginStatus.backendKO
     ) {
       throw new Error('Unexpected form state at setFormField');
     }
