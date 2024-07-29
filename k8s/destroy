@@ -18,6 +18,8 @@ kubectl delete \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service.secret.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/redis-cluster.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service-migration.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-consumer.yaml \
+  -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-consumer-autoscaling.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/game-service/game-service-autoscaling.yaml \
   -f "$SCRIPT_DIR"/one-game-services/rest/user-service/db/db-cluster-auth.secret.yaml \
