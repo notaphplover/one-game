@@ -1,4 +1,5 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
+import { Logger, LoggerService } from '@nestjs/common';
 
 import { Request } from '../models/Request';
 import { RequestWithBody } from '../models/RequestWithBody';
@@ -12,6 +13,7 @@ export abstract class HttpRequestController<
   TUseCaseResult = unknown,
 > implements Handler<[TRequest], Response | ResponseWithBody<unknown>>
 {
+  readonly #logger: LoggerService;
   readonly #requestParamHandler: Handler<[TRequest], TUseCaseParams>;
   readonly #responseBuilder: Builder<
     Response | ResponseWithBody<TUseCaseResult>,
@@ -35,6 +37,7 @@ export abstract class HttpRequestController<
     >,
     middlewarePipeline?: MiddlewarePipeline,
   ) {
+    this.#logger = new Logger(HttpRequestController.name);
     this.#requestParamHandler = requestParamHandler;
     this.#responseBuilder = responseBuilder;
     this.#responseFromErrorBuilder = responseFromErrorBuilder;
@@ -51,6 +54,8 @@ export abstract class HttpRequestController<
 
       return response;
     } catch (error: unknown) {
+      this.#logger.error(`Unexpected error while processing request: 
+        ${this.#stringifyError(error)}`);
       return this.#responseFromErrorBuilder.build(error);
     }
   }
@@ -68,6 +73,10 @@ export abstract class HttpRequestController<
       this.#responseBuilder.build(useCaseResult);
 
     return response;
+  }
+
+  #stringifyError(error: unknown): string {
+    return JSON.stringify(error, Object.getOwnPropertyNames(error));
   }
 
   protected abstract _handleUseCase(
