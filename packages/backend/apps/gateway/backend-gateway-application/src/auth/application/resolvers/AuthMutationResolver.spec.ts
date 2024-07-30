@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import { models as graphqlModels } from '@cornie-js/api-graphql-models';
 import { HttpClient, HttpClientEndpoints } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import { AppError, AppErrorKind } from '@cornie-js/backend-common';
@@ -16,7 +17,7 @@ describe(AuthMutationResolver.name, () => {
   beforeAll(() => {
     httpClientMock = {
       endpoints: {
-        createAuth: jest.fn(),
+        createAuthV2: jest.fn(),
       } as Partial<jest.Mocked<HttpClientEndpoints>>,
     } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;
 
@@ -30,15 +31,16 @@ describe(AuthMutationResolver.name, () => {
       codeFixture = 'code-fixture';
     });
 
-    describe('when called, and httpClient.endpoints.createAuth() returns an OK response', () => {
-      let authV1: apiModels.AuthV1;
+    describe('when called, and httpClient.endpoints.createAuthV2() returns an OK response', () => {
+      let authV2Fixture: apiModels.AuthV2;
       let contextFixture: Context;
 
       let result: unknown;
 
       beforeAll(async () => {
-        authV1 = {
-          jwt: 'jwt fixture',
+        authV2Fixture = {
+          accessToken: 'access token fixture',
+          refreshToken: 'refresh token fixture',
         };
 
         contextFixture = {
@@ -51,8 +53,8 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
-          body: authV1,
+        httpClientMock.endpoints.createAuthV2.mockResolvedValueOnce({
+          body: authV2Fixture,
           headers: {},
           statusCode: HttpStatus.OK,
         });
@@ -72,24 +74,30 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.endpoints.createAuth()', () => {
-        const expectedBody: apiModels.AuthCreateQueryV1 = {
+      it('should call httpClient.endpoints.createAuthV2()', () => {
+        const expectedBody: apiModels.AuthCreateQueryV2 = {
           code: codeFixture,
+          kind: 'code',
         };
 
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
       });
 
-      it('should return AuthV1', () => {
-        expect(result).toBe(authV1);
+      it('should return Auth', () => {
+        const expected: graphqlModels.Auth = {
+          ...authV2Fixture,
+          jwt: authV2Fixture.accessToken,
+        };
+
+        expect(result).toStrictEqual(expected);
       });
     });
 
-    describe('when called, and httpClient.endpoints.createAuth() returns an BAD_REQUEST response', () => {
+    describe('when called, and httpClient.endpoints.createAuthV2() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -110,7 +118,7 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
+        httpClientMock.endpoints.createAuthV2.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.BAD_REQUEST,
@@ -135,13 +143,14 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.endpoints.createAuth()', () => {
-        const expectedBody: apiModels.AuthCreateQueryV1 = {
+      it('should call httpClient.endpoints.createAuthV2()', () => {
+        const expectedBody: apiModels.AuthCreateQueryV2 = {
           code: codeFixture,
+          kind: 'code',
         };
 
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
@@ -170,15 +179,16 @@ describe(AuthMutationResolver.name, () => {
       passwordFixture = 'password-fixture';
     });
 
-    describe('when called, and httpClient.endpoints.createAuth() returns an OK response', () => {
-      let authV1: apiModels.AuthV1;
+    describe('when called, and httpClient.endpoints.createAuthV2() returns an OK response', () => {
+      let authV2Fixture: apiModels.AuthV2;
       let contextFixture: Context;
 
       let result: unknown;
 
       beforeAll(async () => {
-        authV1 = {
-          jwt: 'jwt fixture',
+        authV2Fixture = {
+          accessToken: 'access token fixture',
+          refreshToken: 'refresh token fixture',
         };
 
         contextFixture = {
@@ -191,8 +201,8 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
-          body: authV1,
+        httpClientMock.endpoints.createAuthV2.mockResolvedValueOnce({
+          body: authV2Fixture,
           headers: {},
           statusCode: HttpStatus.OK,
         });
@@ -213,25 +223,31 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.endpoints.createAuth()', () => {
-        const expectedBody: apiModels.AuthCreateQueryV1 = {
+      it('should call httpClient.endpoints.createAuthV2()', () => {
+        const expectedBody: apiModels.AuthCreateQueryV2 = {
           email: emailFixture,
+          kind: 'login',
           password: passwordFixture,
         };
 
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );
       });
 
-      it('should return AuthV1', () => {
-        expect(result).toBe(authV1);
+      it('should return Auth', () => {
+        const expected: graphqlModels.Auth = {
+          ...authV2Fixture,
+          jwt: authV2Fixture.accessToken,
+        };
+
+        expect(result).toStrictEqual(expected);
       });
     });
 
-    describe('when called, and httpClient.endpoints.createAuth() returns an BAD_REQUEST response', () => {
+    describe('when called, and httpClient.endpoints.createAuthV2() returns an BAD_REQUEST response', () => {
       let errorV1: apiModels.ErrorV1;
       let contextFixture: Context;
 
@@ -252,7 +268,7 @@ describe(AuthMutationResolver.name, () => {
           },
         } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.createAuth.mockResolvedValueOnce({
+        httpClientMock.endpoints.createAuthV2.mockResolvedValueOnce({
           body: errorV1,
           headers: {},
           statusCode: HttpStatus.BAD_REQUEST,
@@ -278,14 +294,15 @@ describe(AuthMutationResolver.name, () => {
         jest.clearAllMocks();
       });
 
-      it('should call httpClient.endpoints.createAuth()', () => {
-        const expectedBody: apiModels.AuthCreateQueryV1 = {
+      it('should call httpClient.endpoints.createAuthV2()', () => {
+        const expectedBody: apiModels.AuthCreateQueryV2 = {
           email: emailFixture,
+          kind: 'login',
           password: passwordFixture,
         };
 
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.createAuth).toHaveBeenCalledWith(
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.createAuthV2).toHaveBeenCalledWith(
           contextFixture.request.headers,
           expectedBody,
         );

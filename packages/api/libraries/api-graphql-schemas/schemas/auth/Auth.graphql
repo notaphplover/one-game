@@ -1,3 +1,5 @@
 type Auth {
-  jwt: String!
+  accessToken: String!
+  jwt: String! @deprecated(reason: "property jwt is deprecated. Use accessToken instead.")
+  refreshToken: String!
 }

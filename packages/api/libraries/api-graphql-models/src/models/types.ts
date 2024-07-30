@@ -73,7 +73,10 @@ export type ActiveGameStateStatus = 'active';
 
 export type Auth = {
   __typename?: 'Auth';
+  accessToken: Scalars['String']['output'];
+  /** @deprecated property jwt is deprecated. Use accessToken instead. */
   jwt: Scalars['String']['output'];
+  refreshToken: Scalars['String']['output'];
 };
 
 export type AuthMutation = {
@@ -788,7 +791,9 @@ export type AuthResolvers<
   ParentType extends
     ResolversParentTypes['Auth'] = ResolversParentTypes['Auth'],
 > = ResolversObject<{
+  accessToken: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   jwt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  refreshToken: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
