@@ -1,27 +1,7 @@
-# Changelog
-All notable changes to this project will be documented in this file.
+---
+"@cornie-js/openapi-utils": minor
+---
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
-
-<!--
-## [UNRELEASED]
-
-### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security
-### Docs
--->
-
-
-
-
-## [UNRELEASED]
-
-### Added
 - Added `HttpStatusCode`.
 - Added `HttpStatusCodeWildCard`.
 - Added `OpenApi3Dot1CallbackObject`.
@@ -68,6 +48,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `OpenApi3Dot1TagObject`.
 - Added `OpenApi3Dot1XmlObject`.
 - Added `traverseOpenApiObjectJsonSchemas`.
-
-
-
