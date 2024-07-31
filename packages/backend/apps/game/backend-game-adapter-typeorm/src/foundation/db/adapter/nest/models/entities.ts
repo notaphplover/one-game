@@ -5,7 +5,7 @@ import { GameSpecDb } from '../../../../../games/adapter/typeorm/models/GameSpec
 import { GameInitialSnapshotDb } from '../../../../../gameSnapshots/adapter/typeorm/models/GameInitialSnapshotDb';
 import { GameInitialSnapshotSlotDb } from '../../../../../gameSnapshots/adapter/typeorm/models/GameInitialSnapshotSlotDb';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const typeOrmEntities: Function[] = [
   GameActionDb,
   GameDb,
