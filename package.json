@@ -22,7 +22,7 @@
     "@cornie-js/frontend-typescript-config": "workspace:*",
     "husky": "9.1.4",
     "lint-staged": "15.2.7",
-    "turbo": "2.0.10"
+    "turbo": "2.0.11"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
