@@ -72,7 +72,7 @@ export class ResolveApiSchemaHttpReferenceUseCase {
             if (typeof chunk === 'string') {
               bufs.push(Buffer.from(chunk));
             } else {
-              reject('Unable to process chunk!');
+              reject(new Error('Unable to process chunk!'));
             }
           }
         });

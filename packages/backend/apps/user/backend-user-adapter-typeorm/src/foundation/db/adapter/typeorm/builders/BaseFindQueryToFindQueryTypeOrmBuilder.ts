@@ -10,7 +10,7 @@ import {
 export abstract class BaseFindQueryToFindQueryTypeOrmBuilder {
   protected _getEntityPrefix(
     queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     entityType: Function,
   ): string {
     let propertiesPrefix: string;
@@ -27,7 +27,7 @@ export abstract class BaseFindQueryToFindQueryTypeOrmBuilder {
 
   protected _getSingleValueTransformer(
     queryBuilder: QueryBuilder<ObjectLiteral> & WhereExpressionBuilder,
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     entityType: Function,
     propertyName: string,
   ): ValueTransformer {
