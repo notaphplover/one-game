@@ -5,7 +5,7 @@
   },
   "description": "Backend api models",
   "devDependencies": {
-    "@apidevtools/json-schema-ref-parser": "11.6.4",
+    "@apidevtools/json-schema-ref-parser": "11.7.0",
     "@jest/globals": "29.7.0",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
@@ -22,7 +22,7 @@
     "json-schema-to-typescript": "15.0.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
-    "ts-jest": "29.2.3",
+    "ts-jest": "29.2.4",
     "ts-node": "10.9.2",
     "typescript": "5.5.4"
   },

@@ -12,9 +12,9 @@
   "devDependencies": {
     "@jest/globals": "29.7.0",
     "@cornie-js/json-schema-utils": "workspace:*",
-    "@stryker-mutator/core": "8.2.6",
-    "@stryker-mutator/jest-runner": "8.2.6",
-    "@stryker-mutator/typescript-checker": "8.2.6",
+    "@stryker-mutator/core": "8.3.0",
+    "@stryker-mutator/jest-runner": "8.3.0",
+    "@stryker-mutator/typescript-checker": "8.3.0",
     "@types/node": "20.14.13",
     "@typescript-eslint/eslint-plugin": "8.0.0",
     "@typescript-eslint/parser": "8.0.0",
@@ -27,7 +27,7 @@
     "jest-mock": "29.7.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
-    "ts-jest": "29.2.3",
+    "ts-jest": "29.2.4",
     "ts-node": "10.9.2",
     "typescript": "5.5.4"
   },
