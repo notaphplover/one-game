@@ -10,11 +10,11 @@ import {
   AuthRequestContextHolder,
   NumericRequestQueryParseOptions,
   Request,
+  requestContextProperty,
   RequestQueryParseFailure,
   RequestQueryParseFailureKind,
   RequestService,
   UserAuth,
-  requestContextProperty,
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';

@@ -13,11 +13,11 @@ import {
   ActiveGame,
   ActiveGameSlot,
   GameFindQuery,
+  GameService,
   GameSpec,
   GameSpecFindQuery,
   GameUpdateQuery,
   NonStartedGame,
-  GameService,
 } from '@cornie-js/backend-game-domain/games';
 import {
   ActiveGameFixtures,

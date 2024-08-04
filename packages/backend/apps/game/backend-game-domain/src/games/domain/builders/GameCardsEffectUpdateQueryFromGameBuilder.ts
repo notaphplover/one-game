@@ -69,7 +69,7 @@ export class GameCardsEffectUpdateQueryFromGameBuilder
   }
 
   #isColored(card: Card): card is Card & ColoredCard {
-    return (card as ColoredCard).color !== undefined;
+    return (card as Partial<ColoredCard>).color !== undefined;
   }
 
   #isReverse(card: Card): card is ReverseCard {

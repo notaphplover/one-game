@@ -60,7 +60,6 @@ export class CurrentPlayerCanPlayCardsSpec
     }
 
     return (
-      cards !== undefined &&
       this.#areCardsEqualsSpec.isSatisfiedBy(...cards) &&
       this.#cardCanBePlayedSpec.isSatisfiedBy(card, activeGame, gameOptions)
     );
@@ -116,7 +115,7 @@ export class CurrentPlayerCanPlayCardsSpec
     if (activeGameSlot === undefined) {
       throw new AppError(
         AppErrorKind.unknown,
-        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
+        `Game slot at position "${slotIndex.toString()}" not found for game "${game.id}"`,
       );
     }
 

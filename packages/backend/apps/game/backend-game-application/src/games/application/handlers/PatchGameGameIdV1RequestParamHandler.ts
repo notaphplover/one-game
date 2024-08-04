@@ -4,8 +4,8 @@ import {
   Auth,
   AuthKind,
   AuthRequestContextHolder,
-  RequestWithBody,
   requestContextProperty,
+  RequestWithBody,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 

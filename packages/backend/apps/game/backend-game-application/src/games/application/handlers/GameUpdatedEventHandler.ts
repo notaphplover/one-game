@@ -169,7 +169,7 @@ export class GameUpdatedEventHandler
 
     if (this.#gameTurnEndSignalMessageSendOutputPort !== undefined) {
       this.#logger.log(
-        `Detected end of turn ${game.state.turn} of game "${game.id}", sending signal...`,
+        `Detected end of turn ${game.state.turn.toString()} of game "${game.id}", sending signal...`,
       );
 
       await this.#gameTurnEndSignalMessageSendOutputPort.send({
@@ -186,11 +186,11 @@ export class GameUpdatedEventHandler
       });
 
       this.#logger.log(
-        `End of turn signal sent for game "${game.id}" (at turn ${game.state.turn})`,
+        `End of turn signal sent for game "${game.id}" (at turn ${game.state.turn.toString()})`,
       );
     } else {
       this.#logger.log(
-        `Detected end of turn ${game.state.turn} of game "${game.id}", no signal is sent`,
+        `Detected end of turn ${game.state.turn.toString()} of game "${game.id}", no signal is sent`,
       );
     }
   }

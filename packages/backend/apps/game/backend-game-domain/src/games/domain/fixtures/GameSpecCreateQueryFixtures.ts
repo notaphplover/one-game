@@ -1,6 +1,6 @@
-import { GameOptionsCreateQueryFixtures } from '.';
 import { GameSpecCreateQuery } from '../query/GameSpecCreateQuery';
 import { GameCardSpecFixtures } from './GameCardSpecFixtures';
+import { GameOptionsCreateQueryFixtures } from './GameOptionsCreateQueryFixtures';
 
 export class GameSpecCreateQueryFixtures {
   public static get any(): GameSpecCreateQuery {

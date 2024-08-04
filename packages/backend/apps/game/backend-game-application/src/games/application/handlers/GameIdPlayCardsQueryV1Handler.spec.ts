@@ -5,9 +5,9 @@
 const disposeSymbol: unique symbol = Symbol('Symbol.dispose');
 const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
 
-(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
+(Symbol as Writable<Partial<SymbolConstructor>>).asyncDispose ??=
   asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
-(Symbol as Writable<SymbolConstructor>).dispose ??=
+(Symbol as Writable<Partial<SymbolConstructor>>).dispose ??=
   disposeSymbol as unknown as SymbolConstructor['dispose'];
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
@@ -21,7 +21,7 @@ import {
   Writable,
 } from '@cornie-js/backend-common';
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
-import { CardColor, Card } from '@cornie-js/backend-game-domain/cards';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
 import {
   ActiveGame,

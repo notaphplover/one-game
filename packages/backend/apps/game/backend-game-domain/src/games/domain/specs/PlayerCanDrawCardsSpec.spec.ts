@@ -147,7 +147,7 @@ describe(PlayerCanDrawCardsSpec.name, () => {
             const expectedProperties: Partial<AppError> = {
               kind: AppErrorKind.unknown,
               message: expect.stringContaining(
-                `Game slot ${gameSlotIndex} not found`,
+                `Game slot ${gameSlotIndex.toString()} not found`,
               ) as unknown as string,
             };
 

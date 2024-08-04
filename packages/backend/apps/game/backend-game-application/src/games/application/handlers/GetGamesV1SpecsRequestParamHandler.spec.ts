@@ -14,9 +14,9 @@ import {
   AuthKind,
   AuthRequestContextHolder,
   Request,
-  RequestService,
   requestContextProperty,
   RequestQueryParseFailureKind,
+  RequestService,
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';

@@ -30,7 +30,9 @@ describe(GameEventsChannelFromGameIdBuilder.name, () => {
       });
 
       it('should return a channel', () => {
-        expect(result).toBe(`v${versionFixture}/games/${gameIdFixture}`);
+        expect(result).toBe(
+          `v${versionFixture.toString()}/games/${gameIdFixture}`,
+        );
       });
     });
   });

@@ -37,7 +37,7 @@ export class GameService {
     if (gameSlot === undefined) {
       throw new AppError(
         AppErrorKind.unknown,
-        `Expecting a game slot at index "${index}", none found instead.`,
+        `Expecting a game slot at index "${index.toString()}", none found instead.`,
       );
     }
 
@@ -137,7 +137,7 @@ export class GameService {
   }
 
   public isColored(card: Card): card is Card & ColoredCard {
-    return (card as ColoredCard).color !== undefined;
+    return (card as Partial<ColoredCard>).color !== undefined;
   }
 
   #getRandomColor(): CardColor {

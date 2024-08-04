@@ -11,6 +11,6 @@ export class CardRequiresColorChoiceSpec implements Spec<[Card]> {
   }
 
   #isColored(card: Card): card is Card & ColoredCard {
-    return (card as ColoredCard).color !== undefined;
+    return (card as Partial<ColoredCard>).color !== undefined;
   }
 }

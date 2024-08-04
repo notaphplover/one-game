@@ -8,11 +8,6 @@ import {
   PassTurnGameAction,
   PlayCardsGameAction,
 } from '@cornie-js/backend-game-domain/gameActions';
-import {
-  ActiveGame,
-  Game,
-  GameStatus,
-} from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardV1FromCardBuilder } from '../../../cards/application/builders/CardV1FromCardBuilder';
@@ -84,9 +79,5 @@ export class GameEventV2FromGameActionBuilder
       nextPlayingSlotIndex: gameAction.nextPlayingSlotIndex,
       position: gameAction.position,
     };
-  }
-
-  #isActiveGame(game: Game): game is ActiveGame {
-    return game.state.status === GameStatus.active;
   }
 }

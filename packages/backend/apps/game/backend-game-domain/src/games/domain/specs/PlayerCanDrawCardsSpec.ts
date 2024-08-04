@@ -31,7 +31,7 @@ export class PlayerCanDrawCardsSpec
     if (gameSlot === undefined) {
       throw new AppError(
         AppErrorKind.unknown,
-        `Game slot ${gameSlotIndex} not found at game ${activeGame.id}`,
+        `Game slot ${gameSlotIndex.toString()} not found at game ${activeGame.id}`,
       );
     }
 

@@ -21,7 +21,6 @@ export class JwtModule {
     };
 
     if (options.imports !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       module.imports = options.imports;
     }
 

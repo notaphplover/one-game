@@ -5,9 +5,9 @@
 const disposeSymbol: unique symbol = Symbol('Symbol.dispose');
 const asyncDisposeSymbol: unique symbol = Symbol('Symbol.asyncDispose');
 
-(Symbol as Writable<SymbolConstructor>).asyncDispose ??=
+(Symbol as Writable<Partial<SymbolConstructor>>).asyncDispose ??=
   asyncDisposeSymbol as unknown as SymbolConstructor['asyncDispose'];
-(Symbol as Writable<SymbolConstructor>).dispose ??=
+(Symbol as Writable<Partial<SymbolConstructor>>).dispose ??=
   disposeSymbol as unknown as SymbolConstructor['dispose'];
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
@@ -35,9 +35,9 @@ import {
 import {
   ActiveGameFixtures,
   ActiveGameSlotFixtures,
+  GameDrawMutationFixtures,
   GameSpecFixtures,
   GameUpdateQueryFixtures,
-  GameDrawMutationFixtures,
 } from '@cornie-js/backend-game-domain/games/fixtures';
 
 import { TransactionProvisionOutputPort } from '../../../foundation/db/application/ports/output/TransactionProvisionOutputPort';

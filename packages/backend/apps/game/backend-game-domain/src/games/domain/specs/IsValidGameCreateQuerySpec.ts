@@ -24,7 +24,7 @@ export class IsValidGameCreateQuerySpec
       gamemeCreateQuery.spec.gameSlotsAmount > MAX_GAME_SLOTS_AMOUNT
     ) {
       errors.push(
-        `Expecting a game slots amount between ${MIN_GAME_SLOTS_AMOUNT} and ${MAX_GAME_SLOTS_AMOUNT}`,
+        `Expecting a game slots amount between ${MIN_GAME_SLOTS_AMOUNT.toString()} and ${MAX_GAME_SLOTS_AMOUNT.toString()}`,
       );
     }
 
