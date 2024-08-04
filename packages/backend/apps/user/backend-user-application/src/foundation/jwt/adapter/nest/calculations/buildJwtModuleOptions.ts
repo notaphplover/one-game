@@ -3,9 +3,9 @@ import {
   JwtServiceOptions,
 } from '@cornie-js/backend-app-jwt';
 import {
-  EnvModule,
   Environment,
   EnvironmentService,
+  EnvModule,
 } from '@cornie-js/backend-app-user-env';
 
 export function buildJwtModuleOptions(): JwtModuleOptions {
