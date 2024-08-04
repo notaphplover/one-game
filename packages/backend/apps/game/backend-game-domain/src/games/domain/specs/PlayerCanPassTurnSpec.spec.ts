@@ -60,7 +60,7 @@ describe(PlayerCanPassTurnSpec.name, () => {
           const expectedProperties: Partial<AppError> = {
             kind: AppErrorKind.unknown,
             message: expect.stringContaining(
-              `Game slot ${gameSlotIndexFixture} not found`,
+              `Game slot ${gameSlotIndexFixture.toString()} not found`,
             ) as unknown as string,
           };
 

@@ -200,7 +200,7 @@ export class GameSlotManagementInputPort {
     if (gameSlot === undefined) {
       throw new AppError(
         AppErrorKind.entityNotFound,
-        `Game slot at position "${slotIndex}" not found for game "${game.id}"`,
+        `Game slot at position "${slotIndex.toString()}" not found for game "${game.id}"`,
       );
     }
 

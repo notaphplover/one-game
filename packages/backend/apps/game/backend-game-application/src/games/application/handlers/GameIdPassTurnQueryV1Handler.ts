@@ -8,11 +8,11 @@ import {
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import {
   ActiveGame,
+  GamePassTurnUpdateQueryFromGameBuilder,
   GameSpec,
   GameUpdateQuery,
   PlayerCanPassTurnSpec,
   PlayerCanUpdateGameSpec,
-  GamePassTurnUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 

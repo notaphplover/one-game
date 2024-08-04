@@ -1,7 +1,7 @@
 import {
-  EnvModule,
   Environment,
   EnvironmentService,
+  EnvModule,
 } from '@cornie-js/backend-app-game-env';
 import {
   JwtModuleOptions,

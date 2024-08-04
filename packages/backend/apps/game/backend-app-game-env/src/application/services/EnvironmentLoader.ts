@@ -3,7 +3,7 @@ import process from 'node:process';
 import { EnvLoader } from '@cornie-js/backend-env';
 import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 import { Injectable } from '@nestjs/common';
-import { cleanEnv, json, port, str, num, url, bool, host } from 'envalid';
+import { bool, cleanEnv, host, json, num, port, str, url } from 'envalid';
 
 import { Environment } from '../models/Environment';
 import { EnvironmentRaw } from '../models/EnvironmentRaw';

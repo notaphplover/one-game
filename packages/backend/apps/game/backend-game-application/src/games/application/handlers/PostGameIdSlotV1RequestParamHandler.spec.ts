@@ -7,8 +7,8 @@ import { NonStartedGameFixtures } from '@cornie-js/backend-game-domain/games/fix
 import {
   AuthKind,
   AuthRequestContextHolder,
-  RequestWithBody,
   requestContextProperty,
+  RequestWithBody,
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';

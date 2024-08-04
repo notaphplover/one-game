@@ -47,7 +47,7 @@ export class GameActionManagementInputPort {
     if (previousGameActions.length > MAX_PREVIOUS_GAME_ACTIONS) {
       throw new AppError(
         AppErrorKind.unprocessableOperation,
-        `Unable to retrieve more than ${MAX_PREVIOUS_GAME_ACTIONS} previous game actions`,
+        `Unable to retrieve more than ${MAX_PREVIOUS_GAME_ACTIONS.toString()} previous game actions`,
       );
     }
 

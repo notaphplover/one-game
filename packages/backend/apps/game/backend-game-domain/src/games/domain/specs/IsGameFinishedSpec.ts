@@ -21,7 +21,7 @@ export class IsGameFinishedSpec implements Spec<[ActiveGame]> {
     if (gameSlot === undefined) {
       throw new AppError(
         AppErrorKind.unknown,
-        `Expecting a game slot at index "${index}", none found instead.`,
+        `Expecting a game slot at index "${index.toString()}", none found instead.`,
       );
     }
 
