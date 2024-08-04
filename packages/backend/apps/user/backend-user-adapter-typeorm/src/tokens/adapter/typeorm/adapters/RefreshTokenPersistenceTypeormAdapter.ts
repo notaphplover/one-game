@@ -1,8 +1,8 @@
 import { TransactionWrapper } from '@cornie-js/backend-db/application';
 import { RefreshTokenPersistenceOutputPort } from '@cornie-js/backend-user-application/tokens';
 import {
-  RefreshTokenCreateQuery,
   RefreshToken,
+  RefreshTokenCreateQuery,
   RefreshTokenFindQuery,
   RefreshTokenUpdateQuery,
 } from '@cornie-js/backend-user-domain/tokens';
