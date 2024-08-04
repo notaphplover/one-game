@@ -13,7 +13,7 @@ async function runPendingMigrations(): Promise<void> {
       await runPendingMigrationsAttempt();
 
       return;
-    } catch (error: unknown) {
+    } catch (_error: unknown) {
       console.log(
         `An error happened while running pending migrations. Attemp: ${i}.`,
       );

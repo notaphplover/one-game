@@ -66,7 +66,7 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
                 await updateUserMe(auth.accessToken);
 
               handleResponse(response);
-            } catch (_) {
+            } catch (_error: unknown) {
               setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
               setStatus(RegisterConfirmStatus.rejected);
             }

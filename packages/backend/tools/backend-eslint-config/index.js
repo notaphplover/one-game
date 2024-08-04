@@ -117,7 +117,15 @@ function buildBaseConfig() {
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
-        { argsIgnorePattern: '^_' },
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
       ],
       'simple-import-sort/imports': [
         'error',
@@ -172,5 +180,7 @@ export default tseslint.config(
       'jest/valid-title': 'off',
     },
   },
-  eslintPrettierConfig,
+  /** @type {import('typescript-eslint').ConfigWithExtends} */ (
+    eslintPrettierConfig
+  ),
 );
