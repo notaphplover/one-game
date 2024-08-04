@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import path from 'path';
+import path from 'node:path';
 
 import { JsonRootSchema202012 } from '@cornie-js/json-schema-utils';
 import { glob } from 'glob';
