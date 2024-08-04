@@ -86,8 +86,8 @@ function checkDuplicatedIdsAndNames(
     ].join(', ');
 
     throw new Error(
-      `Found ${duplicatedIdSet.size} duplicated ids (${duplicatedIdsStringified}).
-Found ${duplicatedNamesSet.size} duplicated names (${duplicatedNamesStringified}).`,
+      `Found ${duplicatedIdSet.size.toString()} duplicated ids (${duplicatedIdsStringified}).
+Found ${duplicatedNamesSet.size.toString()} duplicated names (${duplicatedNamesStringified}).`,
     );
   }
 }
