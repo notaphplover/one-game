@@ -94,7 +94,7 @@ export class InternalHttpClient {
       return;
     }
 
-    const statusCodes: number[] = Array.isArray(options?.status)
+    const statusCodes: number[] = Array.isArray(options.status)
       ? options.status
       : [options.status];
 

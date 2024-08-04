@@ -1,4 +1,3 @@
-/* eslint-disable import/order */
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import * as jestMock from 'jest-mock';

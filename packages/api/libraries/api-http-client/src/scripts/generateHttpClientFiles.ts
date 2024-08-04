@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises';
-import path from 'path';
-import { argv } from 'process';
+import path from 'node:path';
+import { argv } from 'node:process';
 
 import * as prettierConfig from '@cornie-js/backend-prettier-config';
 import { OpenApi3Dot1Object } from '@cornie-js/openapi-utils';

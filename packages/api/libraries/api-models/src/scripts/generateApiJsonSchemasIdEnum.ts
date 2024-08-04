@@ -1,6 +1,6 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { argv } from 'process';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { argv } from 'node:process';
 
 import { readApiJsonSchemas } from '@cornie-js/api-json-schemas-provider';
 import * as prettierConfig from '@cornie-js/backend-prettier-config';
