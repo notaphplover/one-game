@@ -6,8 +6,8 @@ import {
   AuthRequestContextHolder,
   BackendServiceAuth,
   Request,
-  UserAuth,
   requestContextProperty,
+  UserAuth,
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../fixtures/UserV1Fixtures';

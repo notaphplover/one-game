@@ -1,4 +1,4 @@
-import { SchemaId, models as apiModels } from '@cornie-js/api-models';
+import { models as apiModels, SchemaId } from '@cornie-js/api-models';
 import { ApiJsonSchemasValidationProvider } from '@cornie-js/backend-api-validators';
 import { Inject, Injectable } from '@nestjs/common';
 

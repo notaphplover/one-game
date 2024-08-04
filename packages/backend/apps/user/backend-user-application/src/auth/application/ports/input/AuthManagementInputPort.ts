@@ -291,7 +291,8 @@ export class AuthManagementInputPort {
     authCreateQueryV1: apiModels.AuthCreateQueryV1,
   ): authCreateQueryV1 is apiModels.CodeAuthCreateQueryV1 {
     return (
-      (authCreateQueryV1 as apiModels.CodeAuthCreateQueryV1).code !== undefined
+      (authCreateQueryV1 as Partial<apiModels.CodeAuthCreateQueryV1>).code !==
+      undefined
     );
   }
 

@@ -2,15 +2,15 @@ import { EnvLoader } from '@cornie-js/backend-env';
 import { JwtAlgorithm } from '@cornie-js/backend-jwt';
 import { Injectable } from '@nestjs/common';
 import {
-  cleanEnv,
-  json,
-  port,
-  str,
-  num,
   bool,
-  url,
+  cleanEnv,
   email,
   host,
+  json,
+  num,
+  port,
+  str,
+  url,
 } from 'envalid';
 
 import { Environment } from '../models/Environment';

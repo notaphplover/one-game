@@ -6,9 +6,9 @@ import {
   AuthKind,
   AuthRequestContextHolder,
   BackendServiceAuth,
+  requestContextProperty,
   RequestWithBody,
   UserAuth,
-  requestContextProperty,
 } from '@cornie-js/backend-http';
 
 import { UserMeUpdateQueryV1Fixtures } from '../fixtures/UserMeUpdateQueryV1Fixtures';
