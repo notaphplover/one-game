@@ -2,9 +2,9 @@ import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
 import { GamePulsarModule } from '@cornie-js/backend-game-adapter-pulsar';
 import {
   DbModule,
+  GameActionDbModule,
   GameDbModule,
   GameSnapshotDbModule,
-  GameActionDbModule,
 } from '@cornie-js/backend-game-adapter-typeorm';
 import { GameHttpApiModule as GameHttpApiApplicationModule } from '@cornie-js/backend-game-application';
 import { Module } from '@nestjs/common';

@@ -1,4 +1,4 @@
-import { EnvModule, EnvironmentService } from '@cornie-js/backend-app-game-env';
+import { EnvironmentService, EnvModule } from '@cornie-js/backend-app-game-env';
 import { DbModuleOptions } from '@cornie-js/backend-game-adapter-typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 

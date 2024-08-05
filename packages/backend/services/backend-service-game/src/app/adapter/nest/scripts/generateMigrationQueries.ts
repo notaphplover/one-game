@@ -1,4 +1,4 @@
-import { EnvModule, EnvironmentService } from '@cornie-js/backend-app-game-env';
+import { EnvironmentService, EnvModule } from '@cornie-js/backend-app-game-env';
 import { generateMigrationQueries as generateTypeOrmMigrationQueries } from '@cornie-js/backend-game-adapter-typeorm';
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';

@@ -1,7 +1,7 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
-  PatchGameV1GameIdHttpRequestController,
   PatchGameGameIdV1RequestParamHandler,
+  PatchGameV1GameIdHttpRequestController,
 } from '@cornie-js/backend-game-application/games';
 import {
   ErrorV1ResponseFromErrorBuilder,
