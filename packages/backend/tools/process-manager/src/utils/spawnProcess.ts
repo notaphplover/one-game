@@ -1,4 +1,4 @@
-import { ChildProcess, SpawnOptions, spawn } from 'node:child_process';
+import { ChildProcess, spawn, SpawnOptions } from 'node:child_process';
 
 export interface SpawnProcessOptions {
   args?: string[];
