@@ -1,9 +1,9 @@
 import { MailModule } from '@cornie-js/backend-adapter-nodemailer';
 import {
-  UserDbModule,
   DbModule,
   DbModuleOptions,
   TokenDbModule,
+  UserDbModule,
 } from '@cornie-js/backend-user-adapter-typeorm';
 import { UserHttpApiModule as UserHttpApiApplicationModule } from '@cornie-js/backend-user-application';
 import { Module } from '@nestjs/common';

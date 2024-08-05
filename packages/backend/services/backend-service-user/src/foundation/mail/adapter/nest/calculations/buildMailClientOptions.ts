@@ -1,8 +1,8 @@
 import { MailModuleOptions } from '@cornie-js/backend-adapter-nodemailer';
 import {
-  EnvModule,
   Environment,
   EnvironmentService,
+  EnvModule,
 } from '@cornie-js/backend-app-user-env';
 import { MailClientOptions } from '@cornie-js/backend-application-mail';
 
