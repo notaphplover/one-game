@@ -4,6 +4,7 @@ import { Response } from '../models/Response';
 import { ResponseWithBody } from '../models/ResponseWithBody';
 import { JsonResponseBuilder } from './JsonResponseBuilder';
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export class SingleEntityGetResponseBuilder<TModel> extends JsonResponseBuilder<
   [TModel | undefined]
 > {

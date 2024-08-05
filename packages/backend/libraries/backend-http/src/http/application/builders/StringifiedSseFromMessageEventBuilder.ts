@@ -14,7 +14,9 @@ export class StringifiedSseFromMessageEventBuilder
     const stringifiedId: string =
       messageEvent.id === undefined ? '' : `id: ${messageEvent.id}\n`;
     const stringifiedRetry: string =
-      messageEvent.retry === undefined ? '' : `retry: ${messageEvent.retry}\n`;
+      messageEvent.retry === undefined
+        ? ''
+        : `retry: ${messageEvent.retry.toString()}\n`;
     const stringifiedData: string = this.#stringifyData(messageEvent.data);
 
     return (

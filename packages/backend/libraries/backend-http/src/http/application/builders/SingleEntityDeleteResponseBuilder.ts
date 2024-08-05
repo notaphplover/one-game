@@ -5,6 +5,7 @@ import { ResponseWithBody } from '../models/ResponseWithBody';
 import { JsonResponseBuilder } from './JsonResponseBuilder';
 
 export class SingleEntityDeleteResponseBuilder<
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   TModel,
 > extends JsonResponseBuilder<[TModel | undefined]> {
   public build(

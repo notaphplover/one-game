@@ -1,7 +1,7 @@
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+
 import http from 'node:http';
 import net from 'node:net';
-
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder, Either, Handler } from '@cornie-js/backend-common';
 import { FastifyReply, FastifyRequest } from 'fastify';
