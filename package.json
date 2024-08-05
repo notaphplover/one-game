@@ -15,7 +15,6 @@
     "@cornie-js/backend-scripts": "workspace:*",
     "@cornie-js/backend-stryker-config": "workspace:*",
     "@cornie-js/backend-typescript-config": "workspace:*",
-    "@cornie-js/eslint-config-backend": "workspace:*",
     "@cornie-js/eslint-config-frontend": "workspace:*",
     "@cornie-js/frontend-jest-config": "workspace:*",
     "@cornie-js/frontend-prettier-config": "workspace:*",
