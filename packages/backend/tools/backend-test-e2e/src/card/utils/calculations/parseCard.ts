@@ -30,7 +30,9 @@ function parseCardColor(
     case YELLOW_COLOR:
       return [CardColor.yellow, 'yellow'];
     default:
-      throw new Error(`Unexpected card color "${stringifiedCardColor}"`);
+      throw new Error(
+        `Unexpected card color "${stringifiedCardColor ?? 'unknown'}"`,
+      );
   }
 }
 

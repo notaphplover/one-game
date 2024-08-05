@@ -1,7 +1,7 @@
 import { GameIoredisModule } from '@cornie-js/backend-game-adapter-ioredis';
 import {
-  GameActionDbModule,
   DbModule,
+  GameActionDbModule,
   GameDbModule,
   GameSnapshotDbModule,
 } from '@cornie-js/backend-game-adapter-typeorm';
