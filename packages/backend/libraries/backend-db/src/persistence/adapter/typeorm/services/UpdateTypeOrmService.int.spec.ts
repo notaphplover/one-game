@@ -1,8 +1,7 @@
-import path from 'path';
-
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { BuilderAsync } from '@cornie-js/backend-common';
+import path from 'path';
 import {
   Column,
   ColumnType,

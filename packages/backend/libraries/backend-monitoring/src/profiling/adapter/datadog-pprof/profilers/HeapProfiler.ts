@@ -1,4 +1,4 @@
-import { SourceMapper, heap } from '@datadog/pprof';
+import { heap, SourceMapper } from '@datadog/pprof';
 import { Profile } from 'pprof-format';
 
 import { ProfileExport } from '../modules/ProfileExporter';

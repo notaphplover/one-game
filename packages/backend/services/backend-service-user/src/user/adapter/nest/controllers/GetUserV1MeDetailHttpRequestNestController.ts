@@ -1,12 +1,12 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
 import {
+  ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
   HttpNestFastifyController,
-  Response,
-  ResponseWithBody,
   Request,
   RequestFromFastifyRequestBuilder,
-  ErrorV1ResponseFromErrorBuilder,
+  Response,
+  ResponseWithBody,
 } from '@cornie-js/backend-http';
 import { GetUserV1MeDetailHttpRequestController } from '@cornie-js/backend-user-application/users';
 import { Controller, Get, Inject, Req, Res } from '@nestjs/common';

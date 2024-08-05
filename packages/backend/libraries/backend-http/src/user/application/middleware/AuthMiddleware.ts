@@ -66,8 +66,9 @@ export abstract class AuthMiddleware<
     request: Request | RequestWithBody,
   ): asserts request is Request & RequestContextHolder {
     if (
-      (request as Request & RequestContextHolder)[requestContextProperty] ===
-      undefined
+      (request as Request & Partial<RequestContextHolder>)[
+        requestContextProperty
+      ] === undefined
     ) {
       (request as Request & RequestContextHolder)[requestContextProperty] = {};
     }

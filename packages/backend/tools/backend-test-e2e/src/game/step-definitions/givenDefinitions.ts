@@ -281,7 +281,7 @@ export async function givenGameForPlayersWithUserCredentials(
 
   if (response.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected game to be created, an unexpected ${response.statusCode} status code was received instead`,
+      `Expected game to be created, an unexpected ${response.statusCode.toString()} status code was received instead`,
     );
   }
 
@@ -513,7 +513,7 @@ async function updateGameParameter(
 
   if (response.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected game to be found, an unexpected ${response.statusCode} status code was received instead`,
+      `Expected game to be found, an unexpected ${response.statusCode.toString()} status code was received instead`,
     );
   }
 

@@ -52,7 +52,7 @@ export class InsertTypeOrmPostgresService<
     return (
       value !== null &&
       typeof value === 'object' &&
-      (value as QueryFailedError).driverError !== undefined
+      (value as Partial<QueryFailedError>).driverError !== undefined
     );
   }
 

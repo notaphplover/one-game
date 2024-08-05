@@ -394,7 +394,7 @@ describe(RequestService.name, () => {
             isRight: false,
             value: {
               errors: [
-                `Expected value to be less or equal ${requestQueryParseOptionsFixture.max}`,
+                `Expected value to be less or equal ${(requestQueryParseOptionsFixture.max as number).toString()}`,
               ],
               kind: RequestQueryParseFailureKind.invalidValue,
             },
@@ -442,7 +442,7 @@ describe(RequestService.name, () => {
             isRight: false,
             value: {
               errors: [
-                `Expected value to be greater or equal ${requestQueryParseOptionsFixture.min}`,
+                `Expected value to be greater or equal ${(requestQueryParseOptionsFixture.min as number).toString()}`,
               ],
               kind: RequestQueryParseFailureKind.invalidValue,
             },

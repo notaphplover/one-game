@@ -19,7 +19,6 @@ export function setPendingResponse<TEndpoint extends keyof HttpClientEndpoints>(
   if (endpointResponsesMap === undefined) {
     endpointResponsesMap = {};
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.responses[endpoint] = endpointResponsesMap;
   }
 

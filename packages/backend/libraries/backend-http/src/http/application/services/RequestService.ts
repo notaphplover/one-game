@@ -100,14 +100,14 @@ export class RequestService {
     if (options.max !== undefined) {
       constraints.push([
         (value: number): boolean => value <= (options.max as number),
-        `Expected value to be less or equal ${options.max}`,
+        `Expected value to be less or equal ${options.max.toString()}`,
       ]);
     }
 
     if (options.min !== undefined) {
       constraints.push([
         (value: number): boolean => value >= (options.min as number),
-        `Expected value to be greater or equal ${options.min}`,
+        `Expected value to be greater or equal ${options.min.toString()}`,
       ]);
     }
 

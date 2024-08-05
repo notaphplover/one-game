@@ -32,7 +32,7 @@ describe(HttpStatusCodeFromErrorBuilder.name, () => {
           );
         });
 
-        it(`should return "${expectedResult}" HTTP status code`, () => {
+        it(`should return "${expectedResult.toString()}" HTTP status code`, () => {
           expect(result).toBe(expectedResult);
         });
       });

@@ -41,7 +41,7 @@ export async function givenAuthForUser(
 
   if (response.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected user auth to be created, an unexpected ${response.statusCode} status code was received instead`,
+      `Expected user auth to be created, an unexpected ${response.statusCode.toString()} status code was received instead`,
     );
   }
 

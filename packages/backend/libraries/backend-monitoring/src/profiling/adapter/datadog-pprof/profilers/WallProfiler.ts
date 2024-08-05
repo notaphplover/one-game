@@ -32,7 +32,6 @@ export class WallProfiler implements Profiler<WallProfilerStartArgs> {
       this.#lastProfiledAt = new Date();
       this.#lastSamplingIntervalMicros = args.samplingDurationMs;
 
-      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
       const options: TimeProfilerOptions = {
         durationMillis: args.samplingDurationMs,
         intervalMicros: args.samplingIntervalMicros,

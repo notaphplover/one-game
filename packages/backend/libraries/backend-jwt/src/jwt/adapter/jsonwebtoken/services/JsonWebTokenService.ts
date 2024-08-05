@@ -33,9 +33,7 @@ export class JsonWebTokenService {
     };
   }
 
-  public async create<TToken extends Record<string, unknown>>(
-    payload: TToken,
-  ): Promise<string> {
+  public async create(payload: Record<string, unknown>): Promise<string> {
     try {
       return await this.#promisifyJwtSign(payload);
     } catch (error: unknown) {
@@ -61,9 +59,7 @@ export class JsonWebTokenService {
     }
   }
 
-  async #promisifyJwtSign<TToken extends Record<string, unknown>>(
-    payload: TToken,
-  ): Promise<string> {
+  async #promisifyJwtSign(payload: Record<string, unknown>): Promise<string> {
     return new Promise(
       (
         resolve: (value: string) => void,

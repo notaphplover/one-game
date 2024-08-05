@@ -1,8 +1,7 @@
-import { IncomingHttpHeaders } from 'http';
-
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
+import { IncomingHttpHeaders } from 'http';
 
 import { Request } from '../../../application/models/Request';
 

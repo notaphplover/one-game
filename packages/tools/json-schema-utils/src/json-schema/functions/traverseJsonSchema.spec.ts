@@ -2,8 +2,8 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { JsonRootSchema202012Fixtures } from '../../json-schema/fixtures/JsonRootSchema202012Fixtures';
 import {
-  JsonSchema202012,
   JsonRootSchema202012Object,
+  JsonSchema202012,
 } from '../../json-schema/models/JsonSchema202012';
 import { TraverseJsonSchemaCallbackParams } from '../../json-schema/models/TraverseJsonSchemaCallbackParams';
 import { traverseJsonSchema } from './traverseJsonSchema';
@@ -150,7 +150,7 @@ describe(traverseJsonSchema.name, () => {
         for (const [subschemaIndex, subschema] of schemaArrays.entries()) {
           const expectedTraverseJsonSchemaCallbackParams: TraverseJsonSchemaCallbackParams =
             {
-              jsonPointer: `/${schemaKey}/${subschemaIndex}`,
+              jsonPointer: `/${schemaKey}/${subschemaIndex.toString()}`,
               parentJsonPointer: '',
               parentSchema: schemaFixture,
               schema: subschema,

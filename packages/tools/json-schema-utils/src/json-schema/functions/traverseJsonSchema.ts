@@ -111,7 +111,7 @@ function traverseDirectChildSchemaArray(
   for (const [index, schema] of childSchemas.entries()) {
     const traverseChildSchemaCallbackParams: TraverseJsonSchemaCallbackParams =
       {
-        jsonPointer: `${params.jsonPointer}/${escapeJsonPtr(key)}/${index}`,
+        jsonPointer: `${params.jsonPointer}/${escapeJsonPtr(key)}/${index.toString()}`,
         parentJsonPointer: params.jsonPointer,
         parentSchema: params.schema,
         schema,

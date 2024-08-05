@@ -136,7 +136,7 @@ async function givenNonActiveUser(
 
   if (createUserResponse.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected user to be created, an unexpected ${createUserResponse.statusCode} status code was received instead`,
+      `Expected user to be created, an unexpected ${createUserResponse.statusCode.toString()} status code was received instead`,
     );
   }
 
@@ -179,7 +179,7 @@ export async function givenUser(
 
   if (createCodeAuthResponse.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected auth to be created, an unexpected ${createCodeAuthResponse.statusCode} status code was received instead`,
+      `Expected auth to be created, an unexpected ${createCodeAuthResponse.statusCode.toString()} status code was received instead`,
     );
   }
 
@@ -224,7 +224,7 @@ export async function givenUser(
 
   if (getUserMeResponse.statusCode !== HttpStatus.OK) {
     throw new Error(
-      `Expected user to be retrieved, an unexpected ${getUserMeResponse.statusCode} status code was received instead`,
+      `Expected user to be retrieved, an unexpected ${getUserMeResponse.statusCode.toString()} status code was received instead`,
     );
   }
 

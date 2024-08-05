@@ -1,4 +1,4 @@
-import { EnvModule, EnvironmentService } from '@cornie-js/backend-app-user-env';
+import { EnvironmentService, EnvModule } from '@cornie-js/backend-app-user-env';
 import { runMigrations } from '@cornie-js/backend-user-adapter-typeorm';
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -15,7 +15,7 @@ async function runPendingMigrations(): Promise<void> {
       return;
     } catch (_error: unknown) {
       console.log(
-        `An error happened while running pending migrations. Attemp: ${i}.`,
+        `An error happened while running pending migrations. Attemp: ${i.toString()}.`,
       );
 
       await sleep(SLEEP_MS_PER_ATTEMPT);

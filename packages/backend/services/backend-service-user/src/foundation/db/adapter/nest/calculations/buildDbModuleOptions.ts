@@ -1,4 +1,4 @@
-import { EnvModule, EnvironmentService } from '@cornie-js/backend-app-user-env';
+import { EnvironmentService, EnvModule } from '@cornie-js/backend-app-user-env';
 import { DbModuleOptions } from '@cornie-js/backend-user-adapter-typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
