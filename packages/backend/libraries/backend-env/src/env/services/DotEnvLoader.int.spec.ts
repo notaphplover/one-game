@@ -1,8 +1,8 @@
+import { beforeAll, describe, expect, it } from '@jest/globals';
+
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-
-import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { DotEnvLoader } from './DotEnvLoader';
 
