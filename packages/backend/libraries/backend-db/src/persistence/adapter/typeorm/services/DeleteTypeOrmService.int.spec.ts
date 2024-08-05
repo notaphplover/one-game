@@ -1,7 +1,6 @@
-import path from 'path';
-
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+import path from 'path';
 import {
   Column,
   ColumnType,

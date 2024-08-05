@@ -1,12 +1,12 @@
 import { Builder, BuilderAsync } from '@cornie-js/backend-common';
 import {
-  Repository,
+  FindOptionsWhere,
+  InsertQueryBuilder,
   InsertResult,
   ObjectLiteral,
-  InsertQueryBuilder,
   QueryRunner,
+  Repository,
   SelectQueryBuilder,
-  FindOptionsWhere,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
@@ -151,7 +151,6 @@ export class InsertTypeOrmService<
 
     if (Array.isArray(typeOrmQuery)) {
       if (typeOrmQuery.length === 1) {
-        // eslint-disable-next-line @typescript-eslint/typedef
         [singleInsertQueryTypeOrm] = typeOrmQuery as [
           QueryDeepPartialEntity<TModelDb>,
         ];
