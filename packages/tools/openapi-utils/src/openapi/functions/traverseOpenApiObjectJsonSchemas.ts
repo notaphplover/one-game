@@ -191,7 +191,7 @@ export function traverseOpenApi3Dot1OperationObjectJsonSchemas(
 }
 
 export function traverseOpenApi3Dot1ResponsesObjectJsonSchemas(
-  openApi3Dot1ResponsesBodyObject: OpenApi3Dot1ResponsesObject,
+  openApi3Dot1ResponsesBodyObject: OpenApi3Dot1ResponsesObject | undefined,
   callback: (params: TraverseJsonSchemaCallbackParams) => void,
 ): void {
   if (openApi3Dot1ResponsesBodyObject !== undefined) {
@@ -288,7 +288,8 @@ function isOpenApi3Dot1RequestBodyObject(
     | OpenApi3Dot1ReferenceObject,
 ): openApi3Dot1RequestBodyOrReferenceObject is OpenApi3Dot1RequestBodyObject {
   return (
-    (openApi3Dot1RequestBodyOrReferenceObject as OpenApi3Dot1RequestBodyObject)
-      .content !== undefined
+    (
+      openApi3Dot1RequestBodyOrReferenceObject as Partial<OpenApi3Dot1RequestBodyObject>
+    ).content !== undefined
   );
 }
