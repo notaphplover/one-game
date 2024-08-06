@@ -64,7 +64,6 @@
     "format": "prettier --write ./src/**/*.ts",
     "lint": "eslint ./src",
     "prebuild": "pnpm run build:clean",
-    "prestart:e2e": "ONE_JS_GAME_SERVICE_DOT_ENV_PATH=e2e.env pnpm run migrations:run",
     "serve": "trap '' INT TERM; node --import ./lib/app/adapter/nest/scripts/trace.mjs lib/app/adapter/nest/scripts/bootstrap.js",
     "serve:docker": "./docker-run",
     "serve:ts": "trap '' INT TERM; ts-node src/app/adapter/nest/scripts/bootstrap.ts",
