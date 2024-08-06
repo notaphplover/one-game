@@ -20,7 +20,9 @@ jobs:
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
+          commit: "chore: bump package versions"
           publish: pnpm run release
+          title: "[Changesets] Bump package versions"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
