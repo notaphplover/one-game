@@ -7,6 +7,7 @@ on:
 jobs:
   publish:
     name: Bump package versions and publish to npm.
+    environment: CI
     runs-on: ubuntu-latest
     steps:
 
