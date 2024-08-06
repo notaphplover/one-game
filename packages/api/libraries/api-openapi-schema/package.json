@@ -48,7 +48,7 @@
     "test:uncommitted": "pnpm run test --changedSince=HEAD",
     "test:unit:js": "pnpm run test:js --selectProjects Unit"
   },
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependencies": {
     "clone-deep": "4.0.1"
   }
