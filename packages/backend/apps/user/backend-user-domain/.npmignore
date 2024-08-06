@@ -4,7 +4,13 @@
 !lib/**/*.d.ts
 lib/**/*.spec.d.ts
 
-.eslintrc.js
-pnpm-lock.yaml
-tsconfig.dev.json
+.lintstagedrc.json
+eslint.config.mjs
+jest.config.mjs
+jest.config.stryker.mjs
+jest.js.config.mjs
+prettier.config.mjs
+stryker.config.mjs
 tsconfig.json
+tsconfig.cjs.json
+tsconfig.esm.json
