@@ -17,6 +17,12 @@ jobs:
 
       - uses: ./.github/actions/setup
 
+      - id: create_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ vars.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
@@ -24,5 +30,5 @@ jobs:
           publish: pnpm run release
           title: "[Changesets] Bump package versions"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
