@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: rest-service-game-migration
-        image: one-game-backend-service-game:latest
+        image: robertopintosl/one-game-backend-service-game:latest
         imagePullPolicy: Never
         command: ["pnpm",  "migrations:run"]
         env:

@@ -25,4 +25,4 @@ pnpm exec dotenv -- bash -c 'docker run \
   -e ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_TOPIC_URL="$ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_TOPIC_URL" \
   -e ONE_JS_GAME_SERVICE_PULSAR_SERVICE_URL="$ONE_JS_GAME_SERVICE_PULSAR_SERVICE_URL" \
   -e ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS="$ONE_JS_GAME_SERVICE_TYPEORM_DATASOURCE_OPTIONS" \
-  --network=host one-game-backend-consumer-game:latest'
+  --network=host robertopintosl/one-game-backend-consumer-game:latest'
