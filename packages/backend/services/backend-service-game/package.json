@@ -46,7 +46,10 @@
     "node": "^20.0.0",
     "pnpm": "^9.0.0"
   },
-  "os": ["darwin", "linux"],
+  "os": [
+    "darwin",
+    "linux"
+  ],
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
   "name": "@cornie-js/backend-service-game",
@@ -79,5 +82,5 @@
     "test:uncommitted": "pnpm run test --changedSince=HEAD",
     "test:unit:js": "pnpm run test:js --selectProjects Unit"
   },
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
