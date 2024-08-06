@@ -17,7 +17,7 @@ spec:
         app: rest-service-game
     spec:
       containers:
-      - image: one-game-backend-service-game:latest
+      - image: robertopintosl/one-game-backend-service-game:latest
         imagePullPolicy: Never
         env:
           - name: ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED

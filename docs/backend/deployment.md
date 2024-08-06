@@ -33,11 +33,12 @@ minikube addons enable ingress
 minikube addons enable metrics-server
 ```
 
-You might want to deploy containers using local docker images, such as `one-game-backend-service-user:latest`. Asuming you have build the local [docker image](./docker-images.md), consider importing then through minikube:
+You might want to deploy containers using local docker images, such as `robertopintosl/one-game-backend-service-user:latest`. Asuming you have build the local [docker image](./docker-images.md), consider importing then through minikube:
 
 ```bash
-minikube image load one-game-backend-service-user:latest
-minikube image load one-game-backend-service-game:latest
+minikube image load robertopintosl/one-game-backend-service-user:latest
+minikube image load robertopintosl/one-game-backend-consumer-game:latest
+minikube image load robertopintosl/one-game-backend-service-game:latest
 ```
 
 Assuming you want to locally deploy services through minikube, consider `minikube tunnel` to provide external ips to exposed services.
