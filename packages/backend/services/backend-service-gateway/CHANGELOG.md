@@ -1,0 +1,36 @@
+# @cornie-js/backend-service-gateway
+
+## 0.2.0
+
+### Minor Changes
+
+- 166a6f6: - Added `createAuthByCode` mutation.
+  - Added `createAuthByCredentials` mutation.
+  - Added `createGame` mutation.
+  - Added `createGameSlot` mutation.
+  - Added `createUser` mutation.
+  - Added `deleteUserMe` mutation.
+  - Added `passGameTurn` mutation.
+  - Added `playGameCards` mutation.
+  - Added `updateUserMe` mutation.
+  - Added `gameById` query.
+  - Added `myGames` query.
+  - Added `userById` query.
+  - Added `userMe` query.
+
+### Patch Changes
+
+- Updated dependencies [a40a8c2]
+- Updated dependencies [a40a8c2]
+- Updated dependencies [a40a8c2]
+- Updated dependencies [a40a8c2]
+- Updated dependencies [a40a8c2]
+- Updated dependencies [a40a8c2]
+- Updated dependencies [361bf53]
+  - @cornie-js/backend-common@0.2.0
+  - @cornie-js/backend-gateway-env@0.2.0
+  - @cornie-js/api-graphql-schemas-provider@0.2.0
+  - @cornie-js/backend-graphql@0.2.0
+  - @cornie-js/backend-http@0.2.0
+  - @cornie-js/backend-gateway-application@0.2.0
+  - @cornie-js/api-graphql-models@0.2.0
