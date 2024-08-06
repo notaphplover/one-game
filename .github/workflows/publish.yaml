@@ -22,6 +22,8 @@ jobs:
         with:
           app_id: ${{ env.GH_APP_ID }}
           private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+        env:
+          GH_APP_ID: ${{ vars.GH_APP_ID }}
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
