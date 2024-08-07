@@ -1,5 +1,11 @@
 # @cornie-js/backend-consumer-game
 
+## 0.3.0
+
+### Minor Changes
+
+- 0a8261b: Added cornie-js-game-consumer-bootstrap bin script
+
 ## 0.2.0
 
 ### Minor Changes

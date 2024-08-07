@@ -1,5 +1,12 @@
 # @cornie-js/backend-service-user
 
+## 0.3.0
+
+### Minor Changes
+
+- ba1c512: Added cornie-js-user-service-bootstrap bin script
+- ba1c512: Added cornie-js-user-service-run-migrations bin script
+
 ## 0.2.0
 
 ### Minor Changes
