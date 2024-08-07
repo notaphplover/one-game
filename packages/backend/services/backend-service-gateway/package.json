@@ -1,5 +1,8 @@
 {
   "author": "Multiple authors",
+  "bin": {
+    "cornie-js-gateway-service-bootstrap": "./bin/bootstrap.mjs"
+  },
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
