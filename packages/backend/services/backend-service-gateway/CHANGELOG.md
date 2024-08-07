@@ -1,5 +1,11 @@
 # @cornie-js/backend-service-gateway
 
+## 0.3.0
+
+### Minor Changes
+
+- 8cfdd75: Added cornie-js-gateway-service-bootstrap bin script
+
 ## 0.2.0
 
 ### Minor Changes

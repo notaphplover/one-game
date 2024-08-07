@@ -1,5 +1,12 @@
 # @cornie-js/backend-service-game
 
+## 0.3.0
+
+### Minor Changes
+
+- 18b221c: Added cornie-js-game-service-bootstrap bin script
+- 18b221c: Added cornie-js-game-service-run-migrations bin script
+
 ## 0.2.0
 
 ### Minor Changes
