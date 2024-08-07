@@ -1,5 +1,9 @@
 {
   "author": "Multiple authors",
+  "bin": {
+    "cornie-js-user-service-bootstrap": "./bin/bootstrap.mjs",
+    "cornie-js-user-service-run-migrations": "./bin/run-migrations.mjs"
+  },
   "bugs": {
     "url": "https://github.com/notaphplover/one-game/issues"
   },
