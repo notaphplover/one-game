@@ -121,6 +121,23 @@ export class GameMutationResolver
     }
   }
 
+  public async drawGameCards(
+    _: unknown,
+    args: graphqlModels.GameMutationDrawGameCardsArgs,
+    context: Context,
+  ): Promise<Partial<graphqlModels.Game> | null> {
+    const gamePassTurnQueryV1: apiModels.GameIdDrawCardsQueryV1 = {
+      kind: 'drawCards',
+      slotIndex: args.gameDrawCardsInput.slotIndex,
+    };
+
+    return this.#handleUpdateGameV1(
+      context.request.headers,
+      args.gameId,
+      gamePassTurnQueryV1,
+    );
+  }
+
   public async passGameTurn(
     _: unknown,
     args: graphqlModels.GameMutationPassGameTurnArgs,

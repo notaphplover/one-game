@@ -6,6 +6,7 @@
 #import GameCreateInput from './games/GameCreateInput.graphql'
 #import GameMutation from './games/GameMutation.graphql'
 #import GameSlotCreateInput from './games/GameSlotCreateInput.graphql'
+#import GameDrawCardsInput from './games/GameDrawCardsInput.graphql'
 #import GamePassTurnInput from './games/GamePassTurnInput.graphql'
 #import GamePlayCardsInput from './games/GamePlayCardsInput.graphql'
 #import GameQuery from './games/GameQuery.graphql'
@@ -26,6 +27,7 @@ type RootMutation implements AuthMutation & GameMutation & UserMutation {
   createGameSlot(gameSlotCreateInput: GameSlotCreateInput!): NonStartedGameSlot!
   createUser(userCreateInput: UserCreateInput!): User!
   deleteUserMe: Void
+  drawGameCards(gameId: ID!, gameDrawCardsInput: GameDrawCardsInput!): Game
   passGameTurn(gameId: ID!, gamePassTurnInput: GamePassTurnInput!): Game
   playGameCards(gameId: ID!, gamePlayCardsInput: GamePlayCardsInput!): Game
   updateUserMe(userUpdateInput: UserUpdateInput!): User!
