@@ -1,5 +1,11 @@
 # @cornie-js/backend-gateway-application
 
+## 0.3.0
+
+### Minor Changes
+
+- 6ae6a9b: Updated RootMutationResolver with drawGameCards.
+
 ## 0.2.0
 
 ### Minor Changes
