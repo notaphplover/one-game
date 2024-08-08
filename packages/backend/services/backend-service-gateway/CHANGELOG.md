@@ -1,5 +1,19 @@
 # @cornie-js/backend-service-gateway
 
+## 0.4.0
+
+### Minor Changes
+
+- 6ae6a9b: Updated RootMutation with drawGameCards
+
+### Patch Changes
+
+- Updated dependencies [6ae6a9b]
+- Updated dependencies [6ae6a9b]
+  - @cornie-js/backend-gateway-application@0.3.0
+  - @cornie-js/api-graphql-models@0.3.0
+  - @cornie-js/api-graphql-schemas-provider@0.2.1
+
 ## 0.3.0
 
 ### Minor Changes
