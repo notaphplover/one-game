@@ -1,0 +1,3 @@
+input GameDrawCardsInput {
+  slotIndex: Int!
+}

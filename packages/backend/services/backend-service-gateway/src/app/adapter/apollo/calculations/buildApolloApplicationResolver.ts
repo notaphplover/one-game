@@ -46,6 +46,11 @@ export function buildApolloApplicationResolver(
         graphQlErrorFromErrorBuilder,
         applicationResolver.RootMutation.deleteUserMe,
       ),
+      drawGameCards: buildApolloResolver(
+        applicationResolver.RootMutation,
+        graphQlErrorFromErrorBuilder,
+        applicationResolver.RootMutation.drawGameCards,
+      ),
       passGameTurn: buildApolloResolver(
         applicationResolver.RootMutation,
         graphQlErrorFromErrorBuilder,

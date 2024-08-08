@@ -34,6 +34,7 @@ function buildTestTuples(): [
   > = {
     createGame: jest.fn(),
     createGameSlot: jest.fn(),
+    drawGameCards: jest.fn(),
     passGameTurn: jest.fn(),
     playGameCards: jest.fn(),
   } as Partial<
@@ -90,6 +91,11 @@ function buildTestTuples(): [
       'deleteUserMe',
       rootMutationResolver.deleteUserMe.bind(rootMutationResolver),
       userMutationMock.deleteUserMe as jest.Mock,
+    ],
+    [
+      'drawGameCards',
+      rootMutationResolver.drawGameCards.bind(rootMutationResolver),
+      gameMutationMock.drawGameCards as jest.Mock,
     ],
     [
       'passGameTurn',

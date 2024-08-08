@@ -116,6 +116,20 @@ export class RootMutationResolver
     );
   }
 
+  public async drawGameCards(
+    parent: graphqlModels.RootMutation,
+    args: graphqlModels.GameMutationDrawGameCardsArgs,
+    context: Context,
+    info: GraphQLResolveInfo,
+  ): Promise<graphqlModels.Maybe<graphqlModels.ResolversTypes['Game']>> {
+    return this.#gameMutationResolver.drawGameCards(
+      parent,
+      args,
+      context,
+      info,
+    );
+  }
+
   public async passGameTurn(
     parent: graphqlModels.RootMutation,
     args: graphqlModels.GameMutationPassGameTurnArgs,

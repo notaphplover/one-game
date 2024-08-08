@@ -368,6 +368,244 @@ describe(GameMutationResolver.name, () => {
     );
   });
 
+  describe('.drawGameCards', () => {
+    let gameIdFixture: string;
+    let slotIndexFixture: number;
+
+    beforeAll(() => {
+      slotIndexFixture = 2;
+      gameIdFixture = 'game-id-fixture';
+    });
+
+    describe('when called, and httpClient.endpoints.updateGame() returns an OK response', () => {
+      let gameV1Fixture: apiModels.NonStartedGameV1;
+      let gameGraphQlFixture: graphqlModels.Game;
+
+      let contextFixture: Context;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        gameV1Fixture = Symbol() as unknown as apiModels.NonStartedGameV1;
+        gameGraphQlFixture = Symbol() as unknown as graphqlModels.Game;
+
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
+
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
+          body: gameV1Fixture,
+          headers: {},
+          statusCode: HttpStatus.OK,
+        });
+
+        gameGraphQlFromGameV1BuilderMock.build.mockReturnValueOnce(
+          gameGraphQlFixture,
+        );
+
+        result = await gameMutationResolver.drawGameCards(
+          undefined,
+          {
+            gameDrawCardsInput: {
+              slotIndex: slotIndexFixture,
+            },
+            gameId: gameIdFixture,
+          },
+          contextFixture,
+        );
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.endpoints.updateGame()', () => {
+        const expectedBody: apiModels.GameIdDrawCardsQueryV1 = {
+          kind: 'drawCards',
+          slotIndex: slotIndexFixture,
+        };
+
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
+          contextFixture.request.headers,
+          {
+            gameId: gameIdFixture,
+          },
+          expectedBody,
+        );
+      });
+
+      it('should call gameGraphQlFromGameV1Builder.build()', () => {
+        expect(gameGraphQlFromGameV1BuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(gameGraphQlFromGameV1BuilderMock.build).toHaveBeenCalledWith(
+          gameV1Fixture,
+        );
+      });
+
+      it('should return GraphQl Game', () => {
+        expect(result).toBe(gameGraphQlFixture);
+      });
+    });
+
+    describe('when called, and httpClient.endpoints.updateGame() returns an UNAUTHORIZED response', () => {
+      let errorV1: apiModels.ErrorV1;
+      let contextFixture: Context;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        errorV1 = {
+          description: 'error description fixture',
+        };
+
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
+
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
+          body: errorV1,
+          headers: {},
+          statusCode: HttpStatus.UNAUTHORIZED,
+        });
+
+        try {
+          await gameMutationResolver.drawGameCards(
+            undefined,
+            {
+              gameDrawCardsInput: {
+                slotIndex: slotIndexFixture,
+              },
+              gameId: gameIdFixture,
+            },
+            contextFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.endpoints.updateGame()', () => {
+        const expectedBody: apiModels.GameIdDrawCardsQueryV1 = {
+          kind: 'drawCards',
+          slotIndex: slotIndexFixture,
+        };
+
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
+          contextFixture.request.headers,
+          {
+            gameId: gameIdFixture,
+          },
+          expectedBody,
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.missingCredentials,
+          message: errorV1.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+
+    describe('when called, and httpClient.endpoints.updateGame() returns an FORBIDDEN response', () => {
+      let errorV1: apiModels.ErrorV1;
+      let contextFixture: Context;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        errorV1 = {
+          description: 'error description fixture',
+        };
+
+        contextFixture = {
+          request: {
+            headers: {
+              foo: 'bar',
+            },
+            query: {},
+            urlParameters: {},
+          },
+        } as Partial<Context> as Context;
+
+        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
+          body: errorV1,
+          headers: {},
+          statusCode: HttpStatus.FORBIDDEN,
+        });
+
+        try {
+          await gameMutationResolver.drawGameCards(
+            undefined,
+            {
+              gameDrawCardsInput: {
+                slotIndex: slotIndexFixture,
+              },
+              gameId: gameIdFixture,
+            },
+            contextFixture,
+          );
+        } catch (error: unknown) {
+          result = error;
+        }
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call httpClient.endpoints.updateGame()', () => {
+        const expectedBody: apiModels.GameIdDrawCardsQueryV1 = {
+          kind: 'drawCards',
+          slotIndex: slotIndexFixture,
+        };
+
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
+          contextFixture.request.headers,
+          {
+            gameId: gameIdFixture,
+          },
+          expectedBody,
+        );
+      });
+
+      it('should throw an AppError', () => {
+        const expectedErrorProperties: Partial<AppError> = {
+          kind: AppErrorKind.invalidCredentials,
+          message: errorV1.description,
+        };
+
+        expect(result).toBeInstanceOf(AppError);
+        expect(result).toStrictEqual(
+          expect.objectContaining(expectedErrorProperties),
+        );
+      });
+    });
+  });
+
   describe('.passGameTurn', () => {
     let gameIdFixture: string;
     let slotIndexFixture: number;
