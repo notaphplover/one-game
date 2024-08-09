@@ -1,3 +1,3 @@
-import config from '@cornie-js/backend-prettier-config';
+import config from '@cornie-js/frontend-prettier-config';
 
 export default config;
