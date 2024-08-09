@@ -13,7 +13,7 @@ export const validateNumberOfPlayers = (
   ) {
     return {
       isRight: false,
-      value: `Invalid number of players. It must be from ${NUMBER_PLAYERS_MINIMUM} to ${NUMBER_PLAYERS_MAXIMUM} players.`,
+      value: `Invalid number of players. It must be from ${NUMBER_PLAYERS_MINIMUM.toString()} to ${NUMBER_PLAYERS_MAXIMUM.toString()} players.`,
     };
   } else {
     return {

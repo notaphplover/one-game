@@ -1,4 +1,4 @@
-import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../common/helpers/isFullfilledPayloadAction');
 jest.mock('../../common/helpers/validateEmail');
@@ -8,9 +8,9 @@ jest.mock('../../app/store/hooks');
 
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
-  RenderHookResult,
   act,
   renderHook,
+  RenderHookResult,
   waitFor,
 } from '@testing-library/react';
 
@@ -210,6 +210,7 @@ describe(useLoginForm.name, () => {
       dispatchMock = jest
         .fn<ReturnType<typeof useAppDispatch>>()
         .mockImplementationOnce(
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
           <TReturn, TAction>(): TAction | TReturn =>
             payloadActionFixture as TReturn,
         ) as ReturnType<typeof useAppDispatch> &
@@ -300,6 +301,7 @@ describe(useLoginForm.name, () => {
       dispatchMock = jest
         .fn<ReturnType<typeof useAppDispatch>>()
         .mockImplementationOnce(
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
           <TReturn, TAction>(): TAction | TReturn =>
             payloadActionFixture as TReturn,
         ) as ReturnType<typeof useAppDispatch> &

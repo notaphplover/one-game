@@ -9,7 +9,7 @@ export const validateConfirmPassword = (
 
   if (confirmPassword.length < PASSWORD_MIN_LENGTH) {
     errorMessages.push(
-      `Password must be of minimum ${PASSWORD_MIN_LENGTH} characters length.`,
+      `Password must be of minimum ${PASSWORD_MIN_LENGTH.toString()} characters length.`,
     );
   }
 

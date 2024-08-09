@@ -7,8 +7,8 @@ import GamesIcon from '@mui/icons-material/Games';
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { useState } from 'react';
 import {
-  NavigateFunction,
   Link as RouterLink,
+  NavigateFunction,
   useNavigate,
 } from 'react-router-dom';
 

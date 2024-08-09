@@ -7,13 +7,13 @@ import { BaseGameListItem } from './BaseGameListItem';
 
 export interface NonStartedGameListItemOptions {
   game: apiModels.GameV1;
-  onButtonClick?: MouseEventHandler<Element>;
+  onButtonClick?: MouseEventHandler;
 }
 
 async function copyTextToClipboard(
   text: string,
   event: MouseEvent,
-  onButtonClick?: MouseEventHandler<Element>,
+  onButtonClick?: MouseEventHandler,
 ): Promise<void> {
   await navigator.clipboard.writeText(text);
 

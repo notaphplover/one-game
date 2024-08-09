@@ -171,7 +171,7 @@ export const Register = () => {
                       name="confirmPassword"
                       value={form.fields.confirmPassword}
                       onChange={handlers.onConfirmPasswordChanged}
-                      error={form.fields.confirmPassword !== undefined}
+                      error={form.validation.confirmPassword !== undefined}
                       helperText={form.validation.confirmPassword}
                     />
                   </Grid>

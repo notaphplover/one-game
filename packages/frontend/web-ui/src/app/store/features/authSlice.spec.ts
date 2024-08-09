@@ -12,8 +12,8 @@ import {
 } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import {
-  CreateAuthByCredentialsParams,
   createAuthByCredentials,
+  CreateAuthByCredentialsParams,
 } from '../thunk/createAuthByCredentials';
 import { createAuthByRefreshToken } from '../thunk/createAuthByRefreshToken';
 import { createAuthByToken } from '../thunk/createAuthByToken';

@@ -2,8 +2,8 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { Either } from '../models/Either';
 import {
-  UseQueryStateResult,
   mapUseQueryHookResult,
+  UseQueryStateResult,
 } from './mapUseQueryHookResult';
 
 describe(mapUseQueryHookResult.name, () => {

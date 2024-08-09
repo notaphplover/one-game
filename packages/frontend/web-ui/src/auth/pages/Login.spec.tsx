@@ -3,14 +3,14 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../hooks/useLoginForm');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../../app/store/hooks');
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
 jest.mock('react-router-dom', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useNavigate: jest.fn(),
 }));
 
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
@@ -61,8 +61,8 @@ describe(Login.name, () => {
   });
 
   describe('when called, on an initial state', () => {
-    let inputEmail: string;
-    let inputPassword: string;
+    let inputEmail: string | null;
+    let inputPassword: string | null;
 
     beforeAll(() => {
       (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValueOnce({
@@ -94,15 +94,15 @@ describe(Login.name, () => {
 
       const formEmailTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-login-email')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      inputEmail = formEmailTextFieldInput.value;
+      inputEmail = formEmailTextFieldInput?.value ?? null;
 
       const formPasswordTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-login-password')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      inputPassword = formPasswordTextFieldInput.value;
+      inputPassword = formPasswordTextFieldInput?.value ?? null;
     });
 
     afterAll(() => {
@@ -161,15 +161,15 @@ describe(Login.name, () => {
 
       const formEmailTextFieldParagraph: Text | null =
         (renderResult.container.querySelector('.form-login-email')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
-      pErrorEmail = formEmailTextFieldParagraph?.textContent;
+      pErrorEmail = formEmailTextFieldParagraph?.textContent ?? null;
 
       const formPasswordTextFieldParagraph: Text | null =
         (renderResult.container.querySelector('.form-login-password')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
-      pErrorPassword = formPasswordTextFieldParagraph?.textContent;
+      pErrorPassword = formPasswordTextFieldParagraph?.textContent ?? null;
     });
 
     afterAll(() => {
@@ -220,9 +220,9 @@ describe(Login.name, () => {
 
       const formErrorMessageAlertMessage: Text | null =
         (renderResult.container.querySelector('.MuiAlert-message')
-          ?.childNodes[1] as Text) ?? null;
+          ?.childNodes[1] as Text | undefined) ?? null;
 
-      pErrorBackend = formErrorMessageAlertMessage.textContent;
+      pErrorBackend = formErrorMessageAlertMessage?.textContent ?? null;
     });
 
     afterAll(() => {

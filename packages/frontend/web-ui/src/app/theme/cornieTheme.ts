@@ -1,8 +1,8 @@
 import { Theme } from '@emotion/react';
 import {
+  createTheme,
   PaletteOptions,
   SimplePaletteColorOptions,
-  createTheme,
 } from '@mui/material/styles';
 
 interface CorniePaletteOptions extends PaletteOptions {

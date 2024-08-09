@@ -15,8 +15,8 @@ export function mapUseQueryHookResult<TResult>(
   result: UseQueryStateResult<TResult | undefined>,
 ): Either<string, TResult> | null {
   return result.isLoading ||
-    result?.isFetching === true ||
-    result?.isUninitialized === true
+    result.isFetching === true ||
+    result.isUninitialized === true
     ? null
     : result.error === undefined
       ? {
@@ -25,6 +25,6 @@ export function mapUseQueryHookResult<TResult>(
         }
       : {
           isRight: false,
-          value: result.error?.message ?? '',
+          value: result.error.message ?? '',
         };
 }

@@ -64,7 +64,12 @@ function buildBaseConfig() {
         },
         {
           selector: ['variableLike'],
-          format: ['strictCamelCase', 'UPPER_CASE', 'snake_case'],
+          format: [
+            'strictCamelCase',
+            'StrictPascalCase',
+            'UPPER_CASE',
+            'snake_case',
+          ],
         },
       ],
       '@typescript-eslint/no-duplicate-type-constituents': 'off',

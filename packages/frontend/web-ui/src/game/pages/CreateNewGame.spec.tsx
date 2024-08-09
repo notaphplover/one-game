@@ -1,6 +1,6 @@
 jest.mock('../hooks/useCreateNewGame');
 jest.mock('../../app/store/hooks');
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
 jest.mock('react-router-dom', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
@@ -10,9 +10,9 @@ jest.mock('react-router-dom', () => ({
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import {
-  RenderResult,
   fireEvent,
   render,
+  RenderResult,
   screen,
   waitFor,
 } from '@testing-library/react';
@@ -93,8 +93,8 @@ describe(CreateNewGame.name, () => {
 
   describe('when called, on an initial state', () => {
     let renderResult: RenderResult;
-    let inputName: string | undefined;
-    let inputPlayers: number;
+    let inputName: string | undefined | null;
+    let inputPlayers: number | null;
     let inputOptions: GameOptions;
 
     beforeAll(async () => {
@@ -133,15 +133,18 @@ describe(CreateNewGame.name, () => {
 
       const formNameTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-name-new-game')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      inputName = formNameTextFieldInput.value;
+      inputName = formNameTextFieldInput?.value ?? null;
 
       const formPlayersTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-players-new-game')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      inputPlayers = parseInt(formPlayersTextFieldInput.value);
+      inputPlayers =
+        formPlayersTextFieldInput?.value === undefined
+          ? null
+          : parseInt(formPlayersTextFieldInput.value);
 
       const formOptionsButton: Element | null =
         renderResult.container.querySelector(
@@ -196,7 +199,7 @@ describe(CreateNewGame.name, () => {
   describe('when called, and players value is invalid and error is displayed', () => {
     let renderResult: RenderResult;
     let pErrorPlayers: string | null;
-    const playersErrorFixture = `Invalid number of players. It must be from ${NUMBER_PLAYERS_MINIMUM} to ${NUMBER_PLAYERS_MAXIMUM} players.`;
+    const playersErrorFixture = `Invalid number of players. It must be from ${NUMBER_PLAYERS_MINIMUM.toString()} to ${NUMBER_PLAYERS_MAXIMUM.toString()} players.`;
 
     beforeAll(async () => {
       formFieldsFixture = {
@@ -243,9 +246,9 @@ describe(CreateNewGame.name, () => {
 
       const formPlayersTextParagraph: Text | null =
         (renderResult.container.querySelector('.form-players-new-game')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
-      pErrorPlayers = formPlayersTextParagraph.textContent;
+      pErrorPlayers = formPlayersTextParagraph?.textContent ?? null;
     });
 
     afterAll(() => {
@@ -288,9 +291,9 @@ describe(CreateNewGame.name, () => {
 
       const formErrorMessageAlertMessage: Text | null =
         (renderResult.container.querySelector('.MuiAlert-message')
-          ?.childNodes[1] as Text) ?? null;
+          ?.childNodes[1] as Text | undefined) ?? null;
 
-      pErrorBackend = formErrorMessageAlertMessage.textContent;
+      pErrorBackend = formErrorMessageAlertMessage?.textContent ?? null;
     });
 
     afterAll(() => {

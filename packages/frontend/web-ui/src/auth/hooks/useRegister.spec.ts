@@ -13,7 +13,7 @@ import {
   CreateUsersV1EmailCodeArgs,
 } from '@cornie-js/frontend-api-rtk-query';
 import { QueryStatus } from '@reduxjs/toolkit/query';
-import { RenderHookResult, renderHook } from '@testing-library/react';
+import { renderHook, RenderHookResult } from '@testing-library/react';
 import React, { act } from 'react';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
@@ -160,7 +160,7 @@ describe(useRegister.name, () => {
     let emailFixture: string;
     let nameFixture: string;
     let passwordFixture: string;
-    let eventMock: jest.Mocked<React.FormEvent<Element>>;
+    let eventMock: jest.Mocked<React.FormEvent>;
 
     let renderResult: RenderHookResult<
       [UseRegisterData, UseRegisterActions],
@@ -191,9 +191,9 @@ describe(useRegister.name, () => {
 
       eventMock = {
         preventDefault: jest.fn(),
-      } as Partial<jest.Mocked<React.FormEvent<Element>>> as jest.Mocked<
-        React.FormEvent<Element>
-      >;
+      } as Partial<
+        jest.Mocked<React.FormEvent>
+      > as jest.Mocked<React.FormEvent>;
 
       (
         mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
@@ -312,7 +312,7 @@ describe(useRegister.name, () => {
       act(() => {
         const [, actions] = renderResult.result.current;
 
-        const onSubmit: (event: React.FormEvent<Element>) => void =
+        const onSubmit: (event: React.FormEvent) => void =
           actions.handlers.onSubmit;
 
         onSubmit(eventMock);

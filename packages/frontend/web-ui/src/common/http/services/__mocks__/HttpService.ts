@@ -9,6 +9,9 @@ const endpointMethods: (keyof HttpClientEndpoints)[] = Reflect.ownKeys(
 ) as (keyof HttpClientEndpoints)[];
 
 export function buildHttpClientMock(): jest.Mocked<HttpClient> {
+  const initialHttpClient: jest.Mocked<HttpClientEndpoints> =
+    {} as jest.Mocked<HttpClientEndpoints>;
+
   return {
     endpoints: endpointMethods.reduce<jest.Mocked<HttpClientEndpoints>>(
       (
@@ -21,7 +24,7 @@ export function buildHttpClientMock(): jest.Mocked<HttpClient> {
 
         return endpoints;
       },
-      {} as jest.Mocked<HttpClientEndpoints>,
+      initialHttpClient,
     ),
     useInterceptor: jest.fn(),
   } as Partial<jest.Mocked<HttpClient>> as jest.Mocked<HttpClient>;

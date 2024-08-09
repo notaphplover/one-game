@@ -19,7 +19,7 @@ jest.mock('./WildDraw4Card', () => ({ WildDraw4Card: jest.fn() }), {
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 
 import { Card, CardOptions } from './Card';
 import { DrawCard } from './DrawCard';

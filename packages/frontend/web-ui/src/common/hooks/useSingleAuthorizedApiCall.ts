@@ -14,8 +14,8 @@ import { HttpApiResult } from '../http/models/HttpApiResult';
 import { httpClient } from '../http/services/HttpService';
 import { Either } from '../models/Either';
 import {
-  UseSingleApiCallParams,
   SingleApiCallResult,
+  UseSingleApiCallParams,
 } from './useSingleApiCall';
 
 export enum ApiCallStatus {

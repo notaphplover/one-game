@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import { ReactNode } from 'react';
 
 import { BaseGameListItem } from './BaseGameListItem';

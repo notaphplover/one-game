@@ -1,7 +1,7 @@
 import {
   ActionReducerMapBuilder,
-  PayloadAction,
   createSlice,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 
 import { OK } from '../../../common/http/helpers/httpCodes';
