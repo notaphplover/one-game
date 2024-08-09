@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('./BaseGameListItem');
 
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import React, { MouseEventHandler } from 'react';
 
 import { BaseGameListItem, BaseGameListItemOptions } from './BaseGameListItem';
@@ -50,7 +50,7 @@ describe(NonStartedGameListItem.name, () => {
         <NonStartedGameListItem
           game={nonStartedGameListItemOptionsMock.game}
           onButtonClick={
-            nonStartedGameListItemOptionsMock.onButtonClick as MouseEventHandler<Element>
+            nonStartedGameListItemOptionsMock.onButtonClick as MouseEventHandler
           }
         />,
       );

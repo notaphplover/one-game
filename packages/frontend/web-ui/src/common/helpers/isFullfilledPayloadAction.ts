@@ -16,16 +16,16 @@ export function isFullfilledPayloadAction<
   TRejectedMeta extends RejectedMeta,
 >(
   payloadAction:
-    | PayloadAction<TFulfilledPayload, T, TFulfilledMeta, never>
-    | PayloadAction<TRejectedPayload, T, TRejectedMeta, never>,
-): payloadAction is PayloadAction<TFulfilledPayload, T, TFulfilledMeta, never> {
+    | PayloadAction<TFulfilledPayload, T, TFulfilledMeta>
+    | PayloadAction<TRejectedPayload, T, TRejectedMeta>,
+): payloadAction is PayloadAction<TFulfilledPayload, T, TFulfilledMeta> {
   return (
     (
       payloadAction as
-        | (PayloadAction<TFulfilledPayload, T, TFulfilledMeta, never> & {
+        | (PayloadAction<TFulfilledPayload, T, TFulfilledMeta> & {
             meta: TFulfilledMeta;
           })
-        | (PayloadAction<TRejectedPayload, T, TRejectedMeta, never> & {
+        | (PayloadAction<TRejectedPayload, T, TRejectedMeta> & {
             meta: TRejectedMeta;
           })
     ).meta.requestStatus === 'fulfilled'

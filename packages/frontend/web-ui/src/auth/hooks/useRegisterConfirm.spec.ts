@@ -6,7 +6,7 @@ jest.mock('../../app/store/hooks');
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { PayloadAction } from '@reduxjs/toolkit';
-import { RenderHookResult, renderHook } from '@testing-library/react';
+import { renderHook, RenderHookResult } from '@testing-library/react';
 import { act } from 'react';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
@@ -118,6 +118,7 @@ describe(useRegisterConfirm.name, () => {
         dispatchMock = jest
           .fn<ReturnType<typeof useAppDispatch>>()
           .mockImplementationOnce(
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
             <TReturn, TAction>(): TAction | TReturn =>
               payloadActionFixture as TReturn,
           ) as ReturnType<typeof useAppDispatch> &
@@ -240,6 +241,7 @@ describe(useRegisterConfirm.name, () => {
         dispatchMock = jest
           .fn<ReturnType<typeof useAppDispatch>>()
           .mockImplementationOnce(
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
             <TReturn, TAction>(): TAction | TReturn =>
               payloadActionFixture as TReturn,
           ) as ReturnType<typeof useAppDispatch> &
@@ -330,6 +332,7 @@ describe(useRegisterConfirm.name, () => {
         dispatchMock = jest
           .fn<ReturnType<typeof useAppDispatch>>()
           .mockImplementationOnce(
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
             <TReturn, TAction>(): TAction | TReturn =>
               payloadActionFixture as TReturn,
           ) as ReturnType<typeof useAppDispatch> &

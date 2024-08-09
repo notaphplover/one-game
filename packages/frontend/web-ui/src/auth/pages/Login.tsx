@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import {
-  NavigateFunction,
   Link as RouterLink,
+  NavigateFunction,
   useNavigate,
 } from 'react-router-dom';
 
@@ -142,8 +142,8 @@ export const Login = (): React.JSX.Element => {
                       name="email"
                       value={formFields.email}
                       onChange={setFormField}
-                      error={formValidation?.email !== undefined}
-                      helperText={formValidation?.email}
+                      error={formValidation.email !== undefined}
+                      helperText={formValidation.email}
                     />
                   </Grid>
                   <Grid item xs={12}>

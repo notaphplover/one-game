@@ -8,8 +8,8 @@ import { AuthResponse } from '../../../common/http/models/AuthResponse';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import { httpClient } from '../../../common/http/services/HttpService';
 import {
-  CreateAuthByCredentialsParams,
   createAuthByCredentials,
+  CreateAuthByCredentialsParams,
 } from './createAuthByCredentials';
 
 describe('createAuthByCredentials', () => {

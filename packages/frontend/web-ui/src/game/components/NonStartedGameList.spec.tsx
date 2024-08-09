@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('./BaseGameList');
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
 
 import { BaseGameList, BaseGameListOptions } from './BaseGameList';

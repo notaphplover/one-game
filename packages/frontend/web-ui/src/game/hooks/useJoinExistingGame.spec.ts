@@ -1,18 +1,18 @@
 jest.mock('../../app/store/hooks');
 jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
 jest.mock('react-router-dom', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
   useNavigate: jest.fn(),
 }));
 
-import { describe, expect, jest, it, beforeAll, afterAll } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { QueryStatus } from '@reduxjs/toolkit/query';
-import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, RenderHookResult, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { describe, afterAll, beforeAll, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../../common/http/services/HttpService');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');

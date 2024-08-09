@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { RenderHookResult, renderHook } from '@testing-library/react';
+import { renderHook, RenderHookResult } from '@testing-library/react';
 import { act } from 'react';
 
 import useConsecutiveSnackbars, {

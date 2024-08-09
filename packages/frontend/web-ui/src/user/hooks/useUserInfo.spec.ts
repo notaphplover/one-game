@@ -9,7 +9,7 @@ jest.mock('../../common/http/services/cornieApi');
 import { models as apiModels } from '@cornie-js/api-models';
 import { UpdateUsersV1MeArgs } from '@cornie-js/frontend-api-rtk-query';
 import { QueryStatus } from '@reduxjs/toolkit/query';
-import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, RenderHookResult, waitFor } from '@testing-library/react';
 import React, { act } from 'react';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
@@ -114,14 +114,14 @@ describe(useUserInfo.name, () => {
       let confirmPasswordFixture: string;
       let nameFixture: string;
       let passwordFixture: string;
-      let eventMock: jest.Mocked<React.FormEvent<Element>>;
+      let eventMock: jest.Mocked<React.FormEvent>;
 
       beforeAll(async () => {
         eventMock = {
           preventDefault: jest.fn(),
-        } as Partial<jest.Mocked<React.FormEvent<Element>>> as jest.Mocked<
-          React.FormEvent<Element>
-        >;
+        } as Partial<
+          jest.Mocked<React.FormEvent>
+        > as jest.Mocked<React.FormEvent>;
 
         (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
           .mockReturnValueOnce(usersV1MeDetailResultFixture)
@@ -238,7 +238,7 @@ describe(useUserInfo.name, () => {
         act(() => {
           const [, actions] = renderResult.result.current;
 
-          const onSubmit: (event: React.FormEvent<Element>) => void =
+          const onSubmit: (event: React.FormEvent) => void =
             actions.handlers.onSubmit;
 
           onSubmit(eventMock);

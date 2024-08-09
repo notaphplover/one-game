@@ -9,7 +9,7 @@ jest.mock(
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 
 import { getCardColorClassName } from '../helpers/getCardColorClassName';
 import { getImageCardUrl } from '../helpers/getImageCardUrl';

@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
 jest.mock('../../common/http/services/cornieApi');
@@ -6,9 +6,9 @@ jest.mock('../../game/components/ActiveGameList');
 jest.mock('../../game/components/NonStartedGameList');
 
 import {
-  RenderResult,
   fireEvent,
   render,
+  RenderResult,
   screen,
   waitFor,
 } from '@testing-library/react';

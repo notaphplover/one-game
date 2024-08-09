@@ -3,7 +3,7 @@ jest.mock('../http/services/HttpService');
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { HttpClient } from '@cornie-js/api-http-client';
-import { RenderHookResult, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, RenderHookResult, waitFor } from '@testing-library/react';
 import { act } from 'react';
 
 import { HttpApiParams } from '../http/models/HttpApiParams';
@@ -11,13 +11,13 @@ import { HttpApiResult } from '../http/models/HttpApiResult';
 import { httpClient } from '../http/services/HttpService';
 import { Either } from '../models/Either';
 import {
-  UseSingleApiCallParams,
   SingleApiCallResult,
   useSingleApiCall,
+  UseSingleApiCallParams,
 } from './useSingleApiCall';
 
-type TestContext = void;
-type TestParams = void;
+type TestContext = undefined;
+type TestParams = undefined;
 type TestEndpoint = 'createAuth';
 
 interface TestResult {

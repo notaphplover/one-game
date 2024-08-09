@@ -1,5 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Typography, Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { Either } from '../../common/models/Either';
 

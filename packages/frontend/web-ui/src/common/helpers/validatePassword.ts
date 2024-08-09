@@ -7,7 +7,7 @@ export const validatePassword = (
   if (password.length < PASSWORD_MIN_LENGTH) {
     return {
       isRight: false,
-      value: `Password must be of minimum ${PASSWORD_MIN_LENGTH} characters length`,
+      value: `Password must be of minimum ${PASSWORD_MIN_LENGTH.toString()} characters length`,
     };
   } else {
     return {

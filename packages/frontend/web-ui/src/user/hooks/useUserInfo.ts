@@ -88,16 +88,14 @@ export const useUserInfo = (): [UseUserInfoData, UseUserInfoActions] => {
       }
     }
 
-    if (userInfoData.form.fields.name !== null) {
-      const nameValidation: Either<string, undefined> = validateName(
-        userInfoData.form.fields.name,
-      );
+    const nameValidation: Either<string, undefined> = validateName(
+      userInfoData.form.fields.name,
+    );
 
-      if (nameValidation.isRight) {
-        userMeUpdateQueryV1.name = userInfoData.form.fields.name;
-      } else {
-        formValidation.name = nameValidation.value;
-      }
+    if (nameValidation.isRight) {
+      userMeUpdateQueryV1.name = userInfoData.form.fields.name;
+    } else {
+      formValidation.name = nameValidation.value;
     }
 
     if (userInfoData.form.fields.password !== null) {

@@ -1,10 +1,10 @@
-import { afterAll, beforeAll, describe, expect, jest, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../hooks/useRegister');
 
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
@@ -38,10 +38,10 @@ describe(Register.name, () => {
   describe('when called, and useRegister returns result with status idle', () => {
     let useRegisterResultFixture: jest.Mocked<ReturnType<typeof useRegister>>;
 
-    let nameInputValue: string;
-    let emailInputValue: string;
-    let passwordInputValue: string;
-    let confirmPasswordInputValue: string;
+    let nameInputValue: string | null;
+    let emailInputValue: string | null;
+    let passwordInputValue: string | null;
+    let confirmPasswordInputValue: string | null;
 
     let nameErrorValue: string | null;
     let emailErrorValue: string | null;
@@ -102,52 +102,53 @@ describe(Register.name, () => {
 
       const nameFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-register-name')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      nameInputValue = nameFieldInput.value;
+      nameInputValue = nameFieldInput?.value ?? null;
 
       const nameFieldParagraph: Text | null =
         (renderResult.container.querySelector('.form-register-name')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
-      nameErrorValue = nameFieldParagraph?.textContent;
+      nameErrorValue = nameFieldParagraph?.textContent ?? null;
 
       const formEmailTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-register-email')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      emailInputValue = formEmailTextFieldInput.value;
+      emailInputValue = formEmailTextFieldInput?.value ?? null;
 
       const formEmailTextFieldParagraph: Text | null =
         (renderResult.container.querySelector('.form-register-email')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
-      emailErrorValue = formEmailTextFieldParagraph?.textContent;
+      emailErrorValue = formEmailTextFieldParagraph?.textContent ?? null;
 
       const formPasswordTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-register-password')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      passwordInputValue = formPasswordTextFieldInput.value;
+      passwordInputValue = formPasswordTextFieldInput?.value ?? null;
 
       const formPasswordTextFieldParagraph: Text | null =
         (renderResult.container.querySelector('.form-register-password')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
-      passwordErrorValue = formPasswordTextFieldParagraph?.textContent;
+      passwordErrorValue = formPasswordTextFieldParagraph?.textContent ?? null;
 
       const formConfirmPasswordTextFieldInput: HTMLInputElement | null =
         (renderResult.container.querySelector('.form-register-confirm-password')
-          ?.childNodes[1]?.firstChild as HTMLInputElement) ?? null;
+          ?.childNodes[1]?.firstChild as HTMLInputElement | undefined) ?? null;
 
-      confirmPasswordInputValue = formConfirmPasswordTextFieldInput.value;
+      confirmPasswordInputValue =
+        formConfirmPasswordTextFieldInput?.value ?? null;
 
       const formConfirmPasswordTextFieldParagraph: Text | null =
         (renderResult.container.querySelector('.form-register-confirm-password')
-          ?.childNodes[2]?.firstChild as Text) ?? null;
+          ?.childNodes[2]?.firstChild as Text | undefined) ?? null;
 
       confirmPasswordErrorValue =
-        formConfirmPasswordTextFieldParagraph?.textContent;
+        formConfirmPasswordTextFieldParagraph?.textContent ?? null;
     });
 
     afterAll(() => {
@@ -257,9 +258,10 @@ describe(Register.name, () => {
 
       const formMessageAlertMessage: Text | null =
         (renderResult.container.querySelector('.form-register-success')
-          ?.childNodes[0]?.childNodes[1]?.lastChild as Text) ?? null;
+          ?.childNodes[0]?.childNodes[1]?.lastChild as Text | undefined) ??
+        null;
 
-      userCreateOk = formMessageAlertMessage.textContent;
+      userCreateOk = formMessageAlertMessage?.textContent ?? null;
     });
 
     afterAll(() => {

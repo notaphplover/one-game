@@ -8,7 +8,7 @@ jest.mock(
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { RenderResult, render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 
 import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { WildDraw4Card, WildDraw4CardOptions } from './WildDraw4Card';

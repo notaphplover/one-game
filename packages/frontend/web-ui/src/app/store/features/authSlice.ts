@@ -1,15 +1,15 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import {
   ActionReducerMapBuilder,
-  PayloadAction,
   createSlice,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 
 import { OK } from '../../../common/http/helpers/httpCodes';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import login from '../actions/login';
 import logout from '../actions/logout';
-import { AuthState, AuthenticatedAuthState } from '../helpers/models/AuthState';
+import { AuthenticatedAuthState, AuthState } from '../helpers/models/AuthState';
 import { AuthStateStatus } from '../helpers/models/AuthStateStatus';
 import type { RootState } from '../store';
 import { createAuthByCredentials } from '../thunk/createAuthByCredentials';

@@ -1,24 +1,24 @@
 import {
-  VideogameAssetOutlined,
-  PlaylistAddCheckOutlined,
   HomeOutlined,
+  PlaylistAddCheckOutlined,
+  VideogameAssetOutlined,
 } from '@mui/icons-material';
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   FormGroup,
   Grid,
   TextField,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
-  Alert,
-  AlertTitle,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
@@ -116,7 +116,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                     name="players"
                     value={formFields.players}
                     onChange={setFormFieldPlayers}
-                    error={formValidation.isRight === false}
+                    error={!formValidation.isRight}
                     helperText={formValidation.value?.numberOfPlayers}
                   />
                 </Grid>

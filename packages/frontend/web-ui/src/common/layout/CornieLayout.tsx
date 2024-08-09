@@ -9,7 +9,7 @@ function getLayoutBoxClassName(params: CornieLayoutParams): string {
 
   if (params.withFooter === true) {
     const additionalClass =
-      params.withNavBar ?? false ? 'fixed-navbar-footer' : 'fixed-footer';
+      (params.withNavBar ?? false) ? 'fixed-navbar-footer' : 'fixed-footer';
 
     layoutBoxClassNames.push(additionalClass);
   }
@@ -25,8 +25,8 @@ interface CornieLayoutParams {
 }
 
 export const CornieLayout = (params: CornieLayoutParams): React.JSX.Element => {
-  const navbar = params.withNavBar ?? false ? <Navbar /> : undefined;
-  const footer = params.withFooter ?? false ? <Footer /> : undefined;
+  const navbar = (params.withNavBar ?? false) ? <Navbar /> : undefined;
+  const footer = (params.withFooter ?? false) ? <Footer /> : undefined;
 
   return (
     <Box

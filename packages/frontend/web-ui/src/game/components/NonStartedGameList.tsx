@@ -17,7 +17,9 @@ export interface NonStartedGameListOptions {
 function buildGameItemBuilder(
   enqueue: (messageContent: string) => void,
 ): (game: apiModels.GameV1, key: number) => React.JSX.Element {
-  const onClick: () => void = () => enqueue(SNACKBAR_MESSAGE_CONTENT);
+  const onClick: () => void = () => {
+    enqueue(SNACKBAR_MESSAGE_CONTENT);
+  };
 
   return (game: apiModels.GameV1, key: number) => (
     <NonStartedGameListItem key={key} game={game} onButtonClick={onClick} />
