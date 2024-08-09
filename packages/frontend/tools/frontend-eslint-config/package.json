@@ -1,0 +1,29 @@
+{
+  "author": "Multiple authors",
+  "bugs": {
+    "url": "https://github.com/notaphplover/one-game/issues"
+  },
+  "description": "Frontend ESLint config for frontend packages",
+  "devDependencies": {
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-jest": "28.8.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "typescript-eslint": "8.0.1"
+  },
+  "peerDependencies": {
+    "@eslint/js": "^9.2.0"
+  },
+  "exports": {
+    ".": "./index.js"
+  },
+  "homepage": "https://github.com/notaphplover/one-game#readme",
+  "license": "See license in \"LICENSE\" file",
+  "name": "@cornie-js/frontend-eslint-config",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notaphplover/one-game.git"
+  },
+  "type": "module"
+}
