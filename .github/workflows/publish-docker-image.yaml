@@ -1,6 +1,6 @@
 name: publish-docker-image
 concurrency: 
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{github.event.inputs.image}}-${{ github.ref }}
   cancel-in-progress: true
 on:
   workflow_dispatch:
