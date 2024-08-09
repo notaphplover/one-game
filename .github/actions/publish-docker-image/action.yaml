@@ -1,0 +1,49 @@
+name: Publish Docker image
+description: Reusable action to build and push docker images
+
+inputs:
+  docker-image:
+    description: 'Docker image name'
+    required: true
+  docker-password:
+    description: 'Docker hub password'
+    required: true
+  docker-username:
+    description: 'Docker hub username'
+    required: true
+  npm-build-script:
+    description: 'npm build script to be called'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - uses: pnpm/action-setup@v3
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 9
+        run_install: false
+
+    - name: build docker image
+      run: pnpm run $NPM_SCRIPT
+      shell: bash
+      env:
+        NPM_SCRIPT: ${{ inputs.npm-build-script }}
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+
+    - name: push docker image
+      run: docker push $DOCKER_IMAGE --all-tags
+      shell: bash
+      env:
+        DOCKER_IMAGE: ${{ inputs.docker-image }}

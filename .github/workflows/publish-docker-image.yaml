@@ -1,0 +1,39 @@
+name: publish-docker-service-user-image
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        type: choice
+        description: Docker image to be published
+        options:
+          - Game consumer
+          - Game service
+          - User service
+jobs:
+  publish:
+    env:
+      DOCKER_IMAGE: >
+        ${{ fromJson('{
+          "Game consumer": "robertopintosl/one-game-backend-consumer-game",
+          "Game service": "robertopintosl/one-game-backend-service-game",
+          "User service": "robertopintosl/one-game-backend-service-user"
+        }')[github.event.inputs.environment] }}
+      NPM_BUILD_SCRIPT: >
+        ${{ fromJson('{
+          "Game consumer": "docker:build:game:consumer:npm",
+          "Game service": "docker:build:game:service:npm",
+          "User service": "docker:build:user:service:npm"
+        }')[github.event.inputs.environment] }}
+    name: Build and publish image
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: ./.github/actions/publish-docker-image
+        with:
+          docker-image: ${{ env.DOCKER_IMAGE }}
+          docker-password: ${{ secrets.DOCKER_TOKEN }}
+          docker-username: ${{ vars.DOCKER_USERNAME }}
+          npm-build-script: ${{ env.NPM_BUILD_SCRIPT }}
