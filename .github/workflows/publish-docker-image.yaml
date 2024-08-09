@@ -1,4 +1,4 @@
-name: publish-docker-service-user-image
+name: publish-docker-image
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
