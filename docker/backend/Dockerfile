@@ -63,3 +63,15 @@ COPY --from=backendservicegatewaybuild /prod/backend-service-gateway /prod/backe
 WORKDIR /prod/backend-service-gateway
 EXPOSE 3003
 CMD [ "pnpm", "serve" ]
+
+FROM base AS npmbackendconsumergame
+RUN pnpm i -g --prod @cornie-js/backend-consumer-game@0.3.0
+CMD [ "cornie-js-game-consumer-bootstrap" ]
+
+FROM base AS npmbackendservicegame
+RUN pnpm i -g --prod @cornie-js/backend-service-game@0.3.0
+CMD [ "cornie-js-game-service-bootstrap" ]
+
+FROM base AS npmbackendserviceuser
+RUN pnpm i -g --prod @cornie-js/backend-service-user@0.3.0
+CMD [ "cornie-js-user-service-bootstrap" ]
