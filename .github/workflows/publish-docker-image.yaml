@@ -1,4 +1,4 @@
-name: publish-docker-service-user-image
+name: publish-docker-image
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -28,8 +28,14 @@ jobs:
           "User service": "docker:build:user:service:npm"
         }')[github.event.inputs.environment] }}
     name: Build and publish image
+    environment: CI
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: ./.github/actions/publish-docker-image
         with:
