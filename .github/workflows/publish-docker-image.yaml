@@ -20,13 +20,13 @@ jobs:
           "Game consumer": "robertopintosl/one-game-backend-consumer-game",
           "Game service": "robertopintosl/one-game-backend-service-game",
           "User service": "robertopintosl/one-game-backend-service-user"
-        }')[github.event.inputs.environment] }}
+        }')[github.event.inputs.image] }}
       NPM_BUILD_SCRIPT: >
         ${{ fromJson('{
           "Game consumer": "docker:build:game:consumer:npm",
           "Game service": "docker:build:game:service:npm",
           "User service": "docker:build:user:service:npm"
-        }')[github.event.inputs.environment] }}
+        }')[github.event.inputs.image] }}
     name: Build and publish image
     environment: CI
     runs-on: ubuntu-latest
