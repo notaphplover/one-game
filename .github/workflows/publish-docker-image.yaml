@@ -28,6 +28,7 @@ jobs:
           "User service": "docker:build:user:service:npm"
         }')[github.event.inputs.environment] }}
     name: Build and publish image
+    environment: CI
     runs-on: ubuntu-latest
     steps:
 
