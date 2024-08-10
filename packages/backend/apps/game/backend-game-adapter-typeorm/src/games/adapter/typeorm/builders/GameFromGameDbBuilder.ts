@@ -130,6 +130,7 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
 
     return {
       id: gameDb.id,
+      isPublic: gameDb.isPublic,
       name: gameDb.name,
       state: {
         currentCard: this.#cardBuilder.build(gameDb.currentCard),
@@ -167,6 +168,7 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
   ): FinishedGame {
     return {
       id: gameDb.id,
+      isPublic: gameDb.isPublic,
       name: gameDb.name,
       state: {
         slots: gameSlots,
@@ -181,6 +183,7 @@ export class GameFromGameDbBuilder implements Builder<Game, [GameDb]> {
   ): NonStartedGame {
     return {
       id: gameDb.id,
+      isPublic: gameDb.isPublic,
       name: gameDb.name,
       state: {
         slots: gameSlots,

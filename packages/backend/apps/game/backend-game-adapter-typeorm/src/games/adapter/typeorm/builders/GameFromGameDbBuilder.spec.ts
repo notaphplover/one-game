@@ -119,6 +119,7 @@ describe(GameFromGameDbBuilder.name, () => {
       it('should return a NonStartedGame', () => {
         const expected: NonStartedGame = {
           id: gameDbFixture.id,
+          isPublic: gameDbFixture.isPublic,
           name: gameDbFixture.name,
           state: {
             slots: [gameSlotFixture],
@@ -179,6 +180,7 @@ describe(GameFromGameDbBuilder.name, () => {
       it('should return a NonStartedGame with sorted game slots', () => {
         const expected: NonStartedGame = {
           id: gameDbFixture.id,
+          isPublic: gameDbFixture.isPublic,
           name: gameDbFixture.name,
           state: {
             slots: [firstGameSlotFixture, secondGameSlotFixture],
@@ -239,6 +241,7 @@ describe(GameFromGameDbBuilder.name, () => {
       it('should return a FinishedGame with sorted game slots', () => {
         const expected: FinishedGame = {
           id: gameDbFixture.id,
+          isPublic: gameDbFixture.isPublic,
           name: gameDbFixture.name,
           state: {
             slots: [firstGameSlotFixture, secondGameSlotFixture],
@@ -336,6 +339,7 @@ describe(GameFromGameDbBuilder.name, () => {
       it('should return an ActiveGame', () => {
         const expected: ActiveGame = {
           id: gameDbFixture.id,
+          isPublic: gameDbFixture.isPublic,
           name: gameDbFixture.name,
           state: {
             currentCard: cardFixture,
@@ -449,6 +453,7 @@ describe(GameFromGameDbBuilder.name, () => {
       it('should return an ActiveGame', () => {
         const expected: ActiveGame = {
           id: gameDbFixture.id,
+          isPublic: gameDbFixture.isPublic,
           name: gameDbFixture.name,
           state: {
             currentCard: cardFixture,
