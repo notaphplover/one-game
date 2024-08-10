@@ -49,7 +49,7 @@ describe(GameCreateQueryTypeOrmFromGameCreateQueryBuilder.name, () => {
             discardPile: '[]',
             gameSlotsAmount: gameCreateQueryFixture.spec.gameSlotsAmount,
             id: gameCreateQueryFixture.id,
-            isPublic: false,
+            isPublic: gameCreateQueryFixture.isPublic,
             name: gameCreateQueryFixture.name as string,
             status: GameStatusDb.nonStarted,
           };
@@ -91,7 +91,7 @@ describe(GameCreateQueryTypeOrmFromGameCreateQueryBuilder.name, () => {
             discardPile: '[]',
             gameSlotsAmount: gameCreateQueryFixture.spec.gameSlotsAmount,
             id: gameCreateQueryFixture.id,
-            isPublic: false,
+            isPublic: gameCreateQueryFixture.isPublic,
             name: null,
             status: GameStatusDb.nonStarted,
           };

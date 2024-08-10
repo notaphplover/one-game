@@ -6,6 +6,7 @@ export class GameCreateQueryFixtures {
   public static get any(): GameCreateQuery {
     const fixture: GameCreateQuery = {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      isPublic: false,
       name: undefined,
       spec: GameSpecCreateQueryFixtures.any,
     };

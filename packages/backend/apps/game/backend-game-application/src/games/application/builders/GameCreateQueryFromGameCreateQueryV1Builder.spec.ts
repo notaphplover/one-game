@@ -106,6 +106,7 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
       it('should return apiModels.GameSpecV1', () => {
         const expected: GameCreateQuery = {
           id: gameCreateQueryContextFixture.uuid,
+          isPublic: false,
           name: gameCreateQueryV1Fixture.name,
           spec: {
             cards: [gameCardSpecFixture],

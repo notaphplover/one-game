@@ -6,6 +6,7 @@ export class NonStartedGameFixtures {
   public static get any(): NonStartedGame {
     const fixture: NonStartedGame = {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      isPublic: false,
       name: 'Game name',
       state: {
         slots: [NonStartedGameSlotFixtures.withPositionZero],

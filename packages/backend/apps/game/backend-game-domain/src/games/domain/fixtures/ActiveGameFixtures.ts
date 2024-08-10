@@ -15,6 +15,7 @@ export class ActiveGameFixtures {
   public static get any(): ActiveGame {
     return {
       id: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
+      isPublic: false,
       name: 'Game name',
       state: {
         currentCard: CardFixtures.any,
