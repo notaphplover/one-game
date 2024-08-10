@@ -25,6 +25,7 @@ export class GameCreateQueryTypeOrmFromGameCreateQueryBuilder
       discardPile: discardPileStringified,
       gameSlotsAmount: gameCreateQuery.spec.gameSlotsAmount,
       id: gameCreateQuery.id,
+      isPublic: false,
       name: gameCreateQuery.name ?? null,
       status: GameStatusDb.nonStarted,
     };
