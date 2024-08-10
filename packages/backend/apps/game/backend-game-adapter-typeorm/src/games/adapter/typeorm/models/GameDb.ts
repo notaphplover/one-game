@@ -115,6 +115,7 @@ export class GameDb {
 
   @Column({
     name: 'is_public',
+    transformer: new NumberToBooleanTransformer(),
     type: 'smallint',
     width: 1,
   })
