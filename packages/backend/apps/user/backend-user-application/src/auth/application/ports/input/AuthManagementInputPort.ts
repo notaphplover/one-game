@@ -73,27 +73,6 @@ export class AuthManagementInputPort {
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
   }
 
-  public async create(
-    authCreateQueryV1: apiModels.AuthCreateQueryV1,
-  ): Promise<apiModels.AuthV1> {
-    let user: User;
-
-    if (this.#isCodeAuthCreateQueryV1(authCreateQueryV1)) {
-      user = await this.#getUserFromCodeAuthCreateQuery(authCreateQueryV1.code);
-    } else {
-      user = await this.#getUserFromEmailPasswordAuthCreateQuery(
-        authCreateQueryV1.email,
-        authCreateQueryV1.password,
-      );
-    }
-
-    const jwt: string = await this.#generateAccessToken(user);
-
-    return {
-      jwt,
-    };
-  }
-
   public async createByQueryV2(
     authCreateQueryV2: apiModels.AuthCreateQueryV2,
   ): Promise<apiModels.AuthV2> {
@@ -285,15 +264,6 @@ export class AuthManagementInputPort {
     }
 
     return user;
-  }
-
-  #isCodeAuthCreateQueryV1(
-    authCreateQueryV1: apiModels.AuthCreateQueryV1,
-  ): authCreateQueryV1 is apiModels.CodeAuthCreateQueryV1 {
-    return (
-      (authCreateQueryV1 as Partial<apiModels.CodeAuthCreateQueryV1>).code !==
-      undefined
-    );
   }
 
   async #persistRefreshToken(

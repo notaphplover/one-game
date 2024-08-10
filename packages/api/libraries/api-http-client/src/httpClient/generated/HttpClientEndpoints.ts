@@ -12,25 +12,6 @@ export class HttpClientEndpoints {
   constructor(internalHttpClient: InternalHttpClient) {
     this.#internalHttpClient = internalHttpClient;
   }
-  public async createAuth(
-    headers: {
-      [key: string]: string;
-    },
-    body: apiModels.AuthCreateQueryV1,
-  ): Promise<
-    | Response<Record<string, string>, apiModels.AuthV1, 200>
-    | Response<Record<string, string>, apiModels.ErrorV1, 400>
-    | Response<Record<string, string>, apiModels.ErrorV1, 401>
-  > {
-    return this.#internalHttpClient.callEndpoint({
-      body: body,
-      headers: headers,
-      method: 'POST',
-      path: '/v1/auth',
-      queryParams: undefined,
-      urlParameters: undefined,
-    });
-  }
   public async createGame(
     headers: {
       [key: string]: string;

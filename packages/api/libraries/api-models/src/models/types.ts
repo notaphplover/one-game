@@ -7,8 +7,6 @@
 
 export type Types = TypesV1 | TypesV2;
 export type TypesV1 =
-  | AuthCreateQueryV1
-  | AuthV1
   | CardArrayV1
   | CardV1
   | ErrorV1
@@ -36,9 +34,6 @@ export type TypesV1 =
   | UserMeUpdateQueryV1
   | UserV1
   | UserDetailV1;
-export type AuthCreateQueryV1 =
-  | CodeAuthCreateQueryV1
-  | EmailPasswordAuthCreateQueryV1;
 export type CardV1 =
   | DrawCardV1
   | NormalCardV1
@@ -72,16 +67,6 @@ export type GameEventV2 =
   | CardsPlayedGameEventV2
   | TurnPassedGameEventV2;
 
-export interface CodeAuthCreateQueryV1 {
-  code: string;
-}
-export interface EmailPasswordAuthCreateQueryV1 {
-  email: string;
-  password: string;
-}
-export interface AuthV1 {
-  jwt: string;
-}
 export interface DrawCardV1 {
   color: CardColorV1;
   kind: 'draw';
