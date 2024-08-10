@@ -18,7 +18,7 @@ import {
 
 type TestContext = undefined;
 type TestParams = undefined;
-type TestEndpoint = 'createAuth';
+type TestEndpoint = 'createAuthV2';
 
 interface TestResult {
   foo: string;
@@ -34,7 +34,7 @@ describe(useSingleApiCall.name, () => {
       buildErrorMessage: jest.fn(),
       buildRequestParams: jest.fn(),
       buildResult: jest.fn(),
-      endpoint: 'createAuth',
+      endpoint: 'createAuthV2',
       useContext: jest.fn(),
     };
   });
