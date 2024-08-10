@@ -138,16 +138,19 @@ export interface FinishedGameSlotV1 {
 }
 export interface ActiveGameV1 {
   id: string;
+  isPublic: boolean;
   name?: string;
   state: ActiveGameStateV1;
 }
 export interface FinishedGameV1 {
   id: string;
+  isPublic: boolean;
   name?: string;
   state: FinishedGameStateV1;
 }
 export interface NonStartedGameV1 {
   id: string;
+  isPublic: boolean;
   name?: string;
   state: NonStartedGameStateV1;
 }
@@ -164,6 +167,7 @@ export interface GameCardSpecV1 {
 }
 export interface GameCreateQueryV1 {
   gameSlotsAmount: number;
+  isPublic?: boolean;
   name?: string;
   options: GameOptionsV1;
 }

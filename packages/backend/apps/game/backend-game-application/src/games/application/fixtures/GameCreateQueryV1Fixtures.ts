@@ -9,4 +9,19 @@ export class GameCreateQueryV1Fixtures {
       options: GameOptionsV1Fixtures.any,
     };
   }
+
+  public static get withIsPublicTrue(): apiModels.GameCreateQueryV1 {
+    return {
+      ...GameCreateQueryV1Fixtures.any,
+      isPublic: true,
+    };
+  }
+
+  public static get withNoIsPublic(): apiModels.GameCreateQueryV1 {
+    const fixture: apiModels.GameCreateQueryV1 = GameCreateQueryV1Fixtures.any;
+
+    delete fixture.isPublic;
+
+    return fixture;
+  }
 }

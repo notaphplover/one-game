@@ -14,6 +14,7 @@ describe(ActiveGameListItem.name, () => {
   beforeAll(() => {
     gameFixture = {
       id: 'id',
+      isPublic: false,
       state: {
         slots: [],
         status: 'nonStarted',

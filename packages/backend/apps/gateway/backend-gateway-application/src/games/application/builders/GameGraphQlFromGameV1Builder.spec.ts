@@ -19,6 +19,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         activeGameV1Fixture = {
           id: 'id-fixture',
+          isPublic: false,
           state: {
             status: 'active',
           } as apiModels.ActiveGameStateV1,
@@ -50,6 +51,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         activeGameV1Fixture = {
           id: 'id-fixture',
+          isPublic: false,
           name: 'name fixture',
           state: {
             status: 'active',
@@ -82,6 +84,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         finishedGameV1Fixture = {
           id: 'id-fixture',
+          isPublic: false,
           state: {
             status: 'finished',
           } as apiModels.FinishedGameStateV1,
@@ -113,6 +116,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         finishedGameV1Fixture = {
           id: 'id-fixture',
+          isPublic: false,
           state: {
             status: 'finished',
           } as apiModels.FinishedGameStateV1,
@@ -144,6 +148,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         nonStartedGameV1Fixture = {
           id: 'id-fixture',
+          isPublic: false,
           state: {
             status: 'nonStarted',
           } as apiModels.NonStartedGameStateV1,
@@ -175,6 +180,7 @@ describe(GameGraphQlFromGameV1Builder.name, () => {
       beforeAll(() => {
         nonStartedGameV1Fixture = {
           id: 'id-fixture',
+          isPublic: false,
           state: {
             status: 'nonStarted',
           } as apiModels.NonStartedGameStateV1,

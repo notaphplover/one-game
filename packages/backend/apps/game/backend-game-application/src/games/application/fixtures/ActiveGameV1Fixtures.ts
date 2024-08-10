@@ -7,6 +7,7 @@ export class ActiveGameV1Fixtures {
   public static get any(): apiModels.ActiveGameV1 {
     return {
       id: '6fbcdb6c-b03c-4754-94c1-9f664f036cde',
+      isPublic: false,
       state: {
         currentCard: CardV1Fixtures.any,
         currentColor: 'blue',
