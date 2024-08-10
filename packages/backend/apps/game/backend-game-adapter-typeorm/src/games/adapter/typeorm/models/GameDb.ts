@@ -114,6 +114,13 @@ export class GameDb {
   public readonly id!: string;
 
   @Column({
+    name: 'is_public',
+    type: 'smallint',
+    width: 1,
+  })
+  public readonly isPublic!: boolean;
+
+  @Column({
     name: 'game_slots_amount',
     nullable: false,
     type: 'smallint',
