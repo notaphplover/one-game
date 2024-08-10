@@ -13,6 +13,7 @@ describe(BaseGameListItem.name, () => {
     beforeAll(() => {
       gameV1Fixture = {
         id: 'id-fixture',
+        isPublic: false,
         state: {
           slots: [],
           status: 'nonStarted',
@@ -65,6 +66,7 @@ describe(BaseGameListItem.name, () => {
     beforeAll(() => {
       gameV1Fixture = {
         id: 'id-fixture',
+        isPublic: false,
         name: 'name-fixture',
         state: {
           slots: [],

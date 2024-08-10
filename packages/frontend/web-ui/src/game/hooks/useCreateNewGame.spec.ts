@@ -322,6 +322,7 @@ describe(useCreateNewGame.name, () => {
     beforeAll(async () => {
       gameV1Fixture = {
         id: 'id-fixture',
+        isPublic: false,
         name: 'name-fixture',
         state: {
           slots: [{ userId: 'userId-fixture' }],

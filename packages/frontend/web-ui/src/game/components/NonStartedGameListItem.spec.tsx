@@ -18,6 +18,7 @@ describe(NonStartedGameListItem.name, () => {
     nonStartedGameListItemOptionsMock = {
       game: {
         id: 'id-fixture',
+        isPublic: false,
         name: 'name-fixture',
         state: {
           slots: [],

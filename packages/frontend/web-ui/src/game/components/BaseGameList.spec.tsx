@@ -86,6 +86,7 @@ describe(BaseGameList.name, () => {
     beforeAll(() => {
       gameFixture = {
         id: 'id-fixture',
+        isPublic: false,
         state: {
           slots: [],
           status: 'nonStarted',
