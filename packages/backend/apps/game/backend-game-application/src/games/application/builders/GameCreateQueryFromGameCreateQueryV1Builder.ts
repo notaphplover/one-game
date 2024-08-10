@@ -56,7 +56,7 @@ export class GameCreateQueryFromGameCreateQueryV1Builder
 
     return {
       id: context.uuid,
-      isPublic: false,
+      isPublic: gameCreateQueryV1.isPublic ?? false,
       name: gameCreateQueryV1.name,
       spec: {
         cards: this.#gameService.getInitialCardsSpec(),

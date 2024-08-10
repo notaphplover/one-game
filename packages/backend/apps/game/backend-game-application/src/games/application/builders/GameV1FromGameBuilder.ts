@@ -108,6 +108,7 @@ export class GameV1FromGameBuilder
   #buildActiveGameV1(game: ActiveGame): apiModels.ActiveGameV1 {
     const gameV1: apiModels.ActiveGameV1 = {
       id: game.id,
+      isPublic: game.isPublic,
       state: {
         currentCard: this.#cardV1FromCardBuilder.build(game.state.currentCard),
         currentColor: this.#cardColorV1FromCardColorBuilder.build(
@@ -138,6 +139,7 @@ export class GameV1FromGameBuilder
   #buildFinishedGameV1(game: FinishedGame): apiModels.FinishedGameV1 {
     const gameV1: apiModels.FinishedGameV1 = {
       id: game.id,
+      isPublic: game.isPublic,
       state: {
         slots: game.state.slots.map((gameSlot: FinishedGameSlot) =>
           this.#finishedGameSlotV1FromFinishedGameSlotBuilder.build(gameSlot),
@@ -156,6 +158,7 @@ export class GameV1FromGameBuilder
   #buildNonStartedGameV1(game: NonStartedGame): apiModels.NonStartedGameV1 {
     const gameV1: apiModels.NonStartedGameV1 = {
       id: game.id,
+      isPublic: game.isPublic,
       state: {
         slots: game.state.slots.map((gameSlot: NonStartedGameSlot) =>
           this.#nonStartedGameSlotV1FromNonStartedGameSlotBuilder.build(

@@ -166,6 +166,7 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.ActiveGameV1 = {
             id: gameFixture.id,
+            isPublic: gameFixture.isPublic,
             name: gameFixture.name as string,
             state: {
               currentCard: cardV1Fixture,
@@ -273,6 +274,7 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.ActiveGameV1 = {
             id: gameFixture.id,
+            isPublic: gameFixture.isPublic,
             state: {
               currentCard: cardV1Fixture,
               currentColor: cardColorV1Fixture,
@@ -339,6 +341,7 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.FinishedGameV1 = {
             id: gameFixture.id,
+            isPublic: gameFixture.isPublic,
             name: gameFixture.name as string,
             state: {
               slots: [finishedGameSlotV1Fixture],
@@ -400,6 +403,7 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.FinishedGameV1 = {
             id: gameFixture.id,
+            isPublic: gameFixture.isPublic,
             state: {
               slots: [finishedGameSlotV1Fixture],
               status: 'finished',
@@ -457,6 +461,7 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.NonStartedGameV1 = {
             id: gameFixture.id,
+            isPublic: gameFixture.isPublic,
             name: gameFixture.name as string,
             state: {
               slots: [nonStartedGameSlotV1Fixture],
@@ -518,6 +523,7 @@ describe(GameV1FromGameBuilder.name, () => {
         it('should return a GameV1', () => {
           const expected: apiModels.NonStartedGameV1 = {
             id: gameFixture.id,
+            isPublic: gameFixture.isPublic,
             state: {
               slots: [nonStartedGameSlotV1Fixture],
               status: 'nonStarted',

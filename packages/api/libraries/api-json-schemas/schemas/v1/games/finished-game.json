@@ -8,6 +8,9 @@
     "id": {
       "type": "string"
     },
+    "isPublic": {
+      "type": "boolean"
+    },
     "name": {
       "type": "string"
     },
@@ -17,6 +20,7 @@
   },
   "required": [
     "id",
+    "isPublic",
     "state"
   ]
 }

@@ -8,6 +8,9 @@
     "gameSlotsAmount": {
       "type": "integer"
     },
+    "isPublic": {
+      "type": "boolean"
+    },
     "name": {
       "type": "string"
     },

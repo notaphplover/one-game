@@ -46,78 +46,157 @@ describe(GameCreateQueryFromGameCreateQueryV1Builder.name, () => {
   });
 
   describe('.build', () => {
-    let gameCreateQueryV1Fixture: apiModels.GameCreateQueryV1;
-
-    beforeAll(() => {
-      gameCreateQueryV1Fixture = GameCreateQueryV1Fixtures.any;
-    });
-
-    describe('when called', () => {
-      let gameCardSpecFixture: GameCardSpec;
-      let gameCreateQueryContextFixture: GameCreateQueryContext;
-      let gameOptionsCreateQueryFixture: GameOptionsCreateQuery;
-
-      let result: unknown;
+    describe('having a GameCreateQueryV1 with no isPublic property', () => {
+      let gameCreateQueryV1Fixture: apiModels.GameCreateQueryV1;
 
       beforeAll(() => {
-        gameCardSpecFixture = GameCardSpecFixtures.any;
-        gameCreateQueryContextFixture = GameCreateQueryContextFixtures.any;
-        gameOptionsCreateQueryFixture = GameOptionsCreateQueryFixtures.any;
-
-        gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build.mockReturnValueOnce(
-          gameOptionsCreateQueryFixture,
-        );
-        gameServiceMock.getInitialCardsSpec.mockReturnValueOnce([
-          gameCardSpecFixture,
-        ]);
-
-        result = gameCreateQueryFromGameCreateQueryV1Builder.build(
-          gameCreateQueryV1Fixture,
-          gameCreateQueryContextFixture,
-        );
+        gameCreateQueryV1Fixture = GameCreateQueryV1Fixtures.withNoIsPublic;
       });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+      describe('when called', () => {
+        let gameCardSpecFixture: GameCardSpec;
+        let gameCreateQueryContextFixture: GameCreateQueryContext;
+        let gameOptionsCreateQueryFixture: GameOptionsCreateQuery;
 
-      it('should call gameOptionsCreateQueryFromGameOptionsV1Builder.build()', () => {
-        const expectedContext: GameOptionsCreateQueryContext = {
-          gameId: gameCreateQueryContextFixture.uuid,
-          uuid: gameCreateQueryContextFixture.gameOptionsId,
-        };
+        let result: unknown;
 
-        expect(
-          gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
-        ).toHaveBeenCalledTimes(1);
-        expect(
-          gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
-        ).toHaveBeenCalledWith(
-          gameCreateQueryV1Fixture.options,
-          expectedContext,
-        );
-      });
+        beforeAll(() => {
+          gameCardSpecFixture = GameCardSpecFixtures.any;
+          gameCreateQueryContextFixture = GameCreateQueryContextFixtures.any;
+          gameOptionsCreateQueryFixture = GameOptionsCreateQueryFixtures.any;
 
-      it('should call gameServiceMock.getInitialCardsSpec()', () => {
-        expect(gameServiceMock.getInitialCardsSpec).toHaveBeenCalledTimes(1);
-        expect(gameServiceMock.getInitialCardsSpec).toHaveBeenCalledWith();
-      });
+          gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build.mockReturnValueOnce(
+            gameOptionsCreateQueryFixture,
+          );
+          gameServiceMock.getInitialCardsSpec.mockReturnValueOnce([
+            gameCardSpecFixture,
+          ]);
 
-      it('should return apiModels.GameSpecV1', () => {
-        const expected: GameCreateQuery = {
-          id: gameCreateQueryContextFixture.uuid,
-          isPublic: false,
-          name: gameCreateQueryV1Fixture.name,
-          spec: {
-            cards: [gameCardSpecFixture],
+          result = gameCreateQueryFromGameCreateQueryV1Builder.build(
+            gameCreateQueryV1Fixture,
+            gameCreateQueryContextFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameOptionsCreateQueryFromGameOptionsV1Builder.build()', () => {
+          const expectedContext: GameOptionsCreateQueryContext = {
             gameId: gameCreateQueryContextFixture.uuid,
-            gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
-            id: gameCreateQueryContextFixture.gameSpecId,
-            options: gameOptionsCreateQueryFixture,
-          },
-        };
+            uuid: gameCreateQueryContextFixture.gameOptionsId,
+          };
 
-        expect(result).toStrictEqual(expected);
+          expect(
+            gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
+          ).toHaveBeenCalledWith(
+            gameCreateQueryV1Fixture.options,
+            expectedContext,
+          );
+        });
+
+        it('should call gameServiceMock.getInitialCardsSpec()', () => {
+          expect(gameServiceMock.getInitialCardsSpec).toHaveBeenCalledTimes(1);
+          expect(gameServiceMock.getInitialCardsSpec).toHaveBeenCalledWith();
+        });
+
+        it('should return apiModels.GameSpecV1', () => {
+          const expected: GameCreateQuery = {
+            id: gameCreateQueryContextFixture.uuid,
+            isPublic: false,
+            name: gameCreateQueryV1Fixture.name,
+            spec: {
+              cards: [gameCardSpecFixture],
+              gameId: gameCreateQueryContextFixture.uuid,
+              gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
+              id: gameCreateQueryContextFixture.gameSpecId,
+              options: gameOptionsCreateQueryFixture,
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a GameCreateQueryV1 with isPublic property', () => {
+      let gameCreateQueryV1Fixture: apiModels.GameCreateQueryV1;
+
+      beforeAll(() => {
+        gameCreateQueryV1Fixture = GameCreateQueryV1Fixtures.withIsPublicTrue;
+      });
+
+      describe('when called', () => {
+        let gameCardSpecFixture: GameCardSpec;
+        let gameCreateQueryContextFixture: GameCreateQueryContext;
+        let gameOptionsCreateQueryFixture: GameOptionsCreateQuery;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          gameCardSpecFixture = GameCardSpecFixtures.any;
+          gameCreateQueryContextFixture = GameCreateQueryContextFixtures.any;
+          gameOptionsCreateQueryFixture = GameOptionsCreateQueryFixtures.any;
+
+          gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build.mockReturnValueOnce(
+            gameOptionsCreateQueryFixture,
+          );
+          gameServiceMock.getInitialCardsSpec.mockReturnValueOnce([
+            gameCardSpecFixture,
+          ]);
+
+          result = gameCreateQueryFromGameCreateQueryV1Builder.build(
+            gameCreateQueryV1Fixture,
+            gameCreateQueryContextFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call gameOptionsCreateQueryFromGameOptionsV1Builder.build()', () => {
+          const expectedContext: GameOptionsCreateQueryContext = {
+            gameId: gameCreateQueryContextFixture.uuid,
+            uuid: gameCreateQueryContextFixture.gameOptionsId,
+          };
+
+          expect(
+            gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            gameOptionsCreateQueryFromGameOptionsV1BuilderMock.build,
+          ).toHaveBeenCalledWith(
+            gameCreateQueryV1Fixture.options,
+            expectedContext,
+          );
+        });
+
+        it('should call gameServiceMock.getInitialCardsSpec()', () => {
+          expect(gameServiceMock.getInitialCardsSpec).toHaveBeenCalledTimes(1);
+          expect(gameServiceMock.getInitialCardsSpec).toHaveBeenCalledWith();
+        });
+
+        it('should return apiModels.GameSpecV1', () => {
+          const expected: GameCreateQuery = {
+            id: gameCreateQueryContextFixture.uuid,
+            isPublic: gameCreateQueryV1Fixture.isPublic as boolean,
+            name: gameCreateQueryV1Fixture.name,
+            spec: {
+              cards: [gameCardSpecFixture],
+              gameId: gameCreateQueryContextFixture.uuid,
+              gameSlotsAmount: gameCreateQueryV1Fixture.gameSlotsAmount,
+              id: gameCreateQueryContextFixture.gameSpecId,
+              options: gameOptionsCreateQueryFixture,
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
       });
     });
   });

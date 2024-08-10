@@ -6,6 +6,7 @@ export class NonStartedGameV1Fixtures {
   public static get any(): apiModels.NonStartedGameV1 {
     const fixture: apiModels.NonStartedGameV1 = {
       id: '6fbcdb6c-b03c-4754-94c1-9f664f036cde',
+      isPublic: false,
       state: {
         slots: [NonStartedGameSlotV1Fixtures.any],
         status: 'nonStarted',
