@@ -175,6 +175,15 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
       );
     }
 
+    if (gameFindQuery.isPublic !== undefined) {
+      queryBuilderResult = queryBuilderResult.andWhere(
+        `${gamePropertiesPrefix}isPublic = :${gamePropertiesPrefix}isPublic`,
+        {
+          [`${gamePropertiesPrefix}isPublic`]: gameFindQuery.isPublic,
+        },
+      );
+    }
+
     if (gameFindQuery.gameSlotFindQuery !== undefined) {
       this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilderResult);
 

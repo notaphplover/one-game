@@ -14,6 +14,13 @@ export class GameFindQueryFixtures {
     };
   }
 
+  public static get withIsPublic(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      isPublic: false,
+    };
+  }
+
   public static get withGameSlotFindQuery(): GameFindQuery {
     return {
       ...GameFindQueryFixtures.any,

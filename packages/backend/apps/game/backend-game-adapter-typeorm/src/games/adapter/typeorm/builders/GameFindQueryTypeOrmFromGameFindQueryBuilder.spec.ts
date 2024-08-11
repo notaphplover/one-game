@@ -159,6 +159,51 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
       });
     });
 
+    describe('having a GameFindQuery with isPublic', () => {
+      let gameFindQueryFixture: GameFindQuery;
+
+      beforeAll(() => {
+        gameFindQueryFixture = GameFindQueryFixtures.withIsPublic;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReturnValue(true);
+
+          result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
+            gameFindQueryFixture,
+            queryBuilderMock,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+
+          (
+            InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
+          ).mockReset();
+        });
+
+        it('should call queryBuilder.andWhere()', () => {
+          expect(queryBuilderMock.andWhere).toHaveBeenCalled();
+          expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
+            `${GameDb.name}.isPublic = :GameDb.isPublic`,
+            {
+              [`GameDb.isPublic`]: gameFindQueryFixture.isPublic,
+            },
+          );
+        });
+
+        it('should return a QueryBuilder', () => {
+          expect(result).toBe(queryBuilderMock);
+        });
+      });
+    });
+
     describe('having a GameFindQuery with GameSlotFindQuery', () => {
       let gameFindQueryFixture: GameFindQuery;
 
