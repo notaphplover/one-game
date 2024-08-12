@@ -6,7 +6,7 @@
   "description": "Backend game domain package",
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
-    "@nestjs/common": "10.3.10"
+    "@nestjs/common": "10.4.0"
   },
   "devDependencies": {
     "@eslint/js": "9.9.0",
