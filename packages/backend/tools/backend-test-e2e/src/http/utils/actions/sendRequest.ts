@@ -5,6 +5,7 @@ import { OneGameApiWorld } from '../../models/OneGameApiWorld';
 import { getRequestParametersOrFail } from '../calculations/getRequestOrFail';
 import { setPendingResponse } from './setPendingResponse';
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export async function sendRequest<TEndpoint extends keyof HttpClientEndpoints>(
   this: OneGameApiWorld,
   endpoint: TEndpoint,
