@@ -13,7 +13,7 @@ import {
 import { Inject } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { GetGameV1MineRequestParamHandler } from '../handlers/GetGameV1MineRequestParamHandler';
+import { GetGamesV1MineRequestParamHandler } from '../handlers/GetGamesV1MineRequestParamHandler';
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
 export class GetGameV1MineHttpRequestController extends HttpRequestController<
@@ -24,7 +24,7 @@ export class GetGameV1MineHttpRequestController extends HttpRequestController<
   readonly #gameManagementInputPort: GameManagementInputPort;
 
   constructor(
-    @Inject(GetGameV1MineRequestParamHandler)
+    @Inject(GetGamesV1MineRequestParamHandler)
     requestParamHandler: Handler<[Request], [GameFindQuery]>,
     @Inject(MultipleEntitiesGetResponseBuilder)
     responseBuilder: Builder<

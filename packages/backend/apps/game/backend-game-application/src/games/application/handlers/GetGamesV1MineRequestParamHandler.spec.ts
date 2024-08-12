@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { AppError, AppErrorKind, Left } from '@cornie-js/backend-common';
+import {
+  AppError,
+  AppErrorKind,
+  Builder,
+  Left,
+} from '@cornie-js/backend-common';
 import {
   GameFindQuery,
   GameStatus,
@@ -18,21 +23,28 @@ import {
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
-import { GetGameV1MineRequestParamHandler } from './GetGameV1MineRequestParamHandler';
+import { GetGamesV1MineRequestParamHandler } from './GetGamesV1MineRequestParamHandler';
 
-describe(GetGameV1MineRequestParamHandler.name, () => {
+describe(GetGamesV1MineRequestParamHandler.name, () => {
+  let gameStatusFromGameV1StatusBuilderMock: jest.Mocked<
+    Builder<GameStatus, [string]>
+  >;
   let requestServiceMock: jest.Mocked<RequestService>;
 
-  let getGameV1MineRequestParamHandler: GetGameV1MineRequestParamHandler;
+  let getGameV1MineRequestParamHandler: GetGamesV1MineRequestParamHandler;
 
   beforeAll(() => {
+    gameStatusFromGameV1StatusBuilderMock = {
+      build: jest.fn(),
+    };
     requestServiceMock = {
       composeErrorMessages: jest.fn(),
       tryParseIntegerQuery: jest.fn(),
       tryParseStringQuery: jest.fn(),
     } as Partial<jest.Mocked<RequestService>> as jest.Mocked<RequestService>;
 
-    getGameV1MineRequestParamHandler = new GetGameV1MineRequestParamHandler(
+    getGameV1MineRequestParamHandler = new GetGamesV1MineRequestParamHandler(
+      gameStatusFromGameV1StatusBuilderMock,
       requestServiceMock,
     );
   });
@@ -44,7 +56,7 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
       requestFixture = {
         headers: {},
         query: {
-          [GetGameV1MineRequestParamHandler.pageQueryParam]: '0',
+          [GetGamesV1MineRequestParamHandler.pageQueryParam]: '0',
         },
         [requestContextProperty]: {
           auth: {
@@ -101,12 +113,12 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+          name: GetGamesV1MineRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+          name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -137,9 +149,12 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
           1,
         );
         expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledWith([
-          [failureFixture, GetGameV1MineRequestParamHandler.pageQueryParam],
-          [failureFixture, GetGameV1MineRequestParamHandler.pageSizeQueryParam],
-          [failureFixture, GetGameV1MineRequestParamHandler.statusQueryParam],
+          [failureFixture, GetGamesV1MineRequestParamHandler.pageQueryParam],
+          [
+            failureFixture,
+            GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+          ],
+          [failureFixture, GetGamesV1MineRequestParamHandler.statusQueryParam],
         ]);
       });
 
@@ -159,14 +174,16 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
     describe('when called, and requestService returns query values', () => {
       let pageFixture: number;
       let pageSizeFixture: number;
-      let gameStatusFixture: string;
+      let gameStatusV1Fixture: string;
+      let gameStatusFixture: GameStatus;
 
       let result: unknown;
 
       beforeAll(async () => {
         pageFixture = 2;
         pageSizeFixture = 10;
-        gameStatusFixture = 'active';
+        gameStatusV1Fixture = 'active';
+        gameStatusFixture = GameStatus.active;
 
         requestServiceMock.tryParseIntegerQuery
           .mockReturnValueOnce({
@@ -176,8 +193,12 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
           .mockReturnValueOnce({ isRight: true, value: pageSizeFixture });
         requestServiceMock.tryParseStringQuery.mockReturnValueOnce({
           isRight: true,
-          value: gameStatusFixture,
+          value: gameStatusV1Fixture,
         });
+
+        gameStatusFromGameV1StatusBuilderMock.build.mockReturnValueOnce(
+          gameStatusFixture,
+        );
 
         result = await getGameV1MineRequestParamHandler.handle(requestFixture);
       });
@@ -190,12 +211,12 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+          name: GetGamesV1MineRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+          name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -229,14 +250,16 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
           },
           limit: pageSizeFixture,
           offset: (pageFixture - 1) * pageSizeFixture,
-          status: GameStatus.active,
+          status: gameStatusFixture,
         };
 
         expect(result).toStrictEqual([expected]);
       });
     });
 
-    describe('when called, and requestService returns invalid game status', () => {
+    describe('when called, and gameStatusFromGameV1StatusBuilderMock.build() throws an AppError of kind contractViolation', () => {
+      let appErrorMessageFixture: string;
+      let errorFixture: string;
       let pageFixture: number;
       let pageSizeFixture: number;
       let gameStatusFixture: string;
@@ -244,6 +267,8 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
       let result: unknown;
 
       beforeAll(async () => {
+        appErrorMessageFixture = 'app-error-message-fixture';
+        errorFixture = 'error-fixture';
         pageFixture = 2;
         pageSizeFixture = 10;
         gameStatusFixture = 'invalid-game-status-fixture';
@@ -258,6 +283,19 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
           isRight: true,
           value: gameStatusFixture,
         });
+
+        gameStatusFromGameV1StatusBuilderMock.build.mockImplementationOnce(
+          () => {
+            throw new AppError(
+              AppErrorKind.contractViolation,
+              appErrorMessageFixture,
+            );
+          },
+        );
+
+        requestServiceMock.composeErrorMessages.mockReturnValueOnce([
+          errorFixture,
+        ]);
 
         try {
           await getGameV1MineRequestParamHandler.handle(requestFixture);
@@ -274,12 +312,12 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGameV1MineRequestParamHandler.pageQueryParam,
+          name: GetGamesV1MineRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+          name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -305,14 +343,45 @@ describe(GetGameV1MineRequestParamHandler.name, () => {
         );
       });
 
+      it('should call requestService.composeErrorMessages()', () => {
+        expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledWith([
+          [
+            {
+              isRight: true,
+              value: pageFixture,
+            },
+            GetGamesV1MineRequestParamHandler.pageQueryParam,
+          ],
+          [
+            {
+              isRight: true,
+              value: pageSizeFixture,
+            },
+            GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+          ],
+          [
+            {
+              isRight: false,
+              value: {
+                errors: [appErrorMessageFixture],
+                kind: RequestQueryParseFailureKind.invalidValue,
+              },
+            },
+            GetGamesV1MineRequestParamHandler.statusQueryParam,
+          ],
+        ]);
+      });
+
       it('should throw an AppError', () => {
         const expectedErrorProperties: Partial<AppError> = {
           kind: AppErrorKind.contractViolation,
-          message: expect.stringContaining(
-            'query to be one of the following values',
-          ) as unknown as string,
+          message: expect.stringContaining(errorFixture) as unknown as string,
         };
 
+        expect(result).toBeInstanceOf(AppError);
         expect(result).toStrictEqual(
           expect.objectContaining(expectedErrorProperties),
         );

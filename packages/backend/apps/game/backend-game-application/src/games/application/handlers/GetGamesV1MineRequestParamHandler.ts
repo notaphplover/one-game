@@ -1,7 +1,7 @@
-import { models as apiModels } from '@cornie-js/api-models';
 import {
   AppError,
   AppErrorKind,
+  Builder,
   Either,
   Handler,
   Writable,
@@ -22,13 +22,7 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-const GAME_V1_STATE_STATUS_TO_GAME_STATUS_MAP: {
-  [TKey in apiModels.GameV1['state']['status']]: GameStatus;
-} & { [key: string]: GameStatus } = {
-  active: GameStatus.active,
-  finished: GameStatus.finished,
-  nonStarted: GameStatus.nonStarted,
-};
+import { GameStatusFromGameV1StatusBuilder } from '../builders/GameStatusFromGameV1StatusBuilder';
 
 const DEFAULT_PAGE_VALUE: number = 1;
 const DEFAULT_PAGE_SIZE_VALUE: number = 10;
@@ -37,16 +31,24 @@ const MIN_PAGE_VALUE: number = 1;
 const MIN_PAGE_SIZE_VALUE: number = 1;
 
 @Injectable()
-export class GetGameV1MineRequestParamHandler
+export class GetGamesV1MineRequestParamHandler
   implements Handler<[Request & AuthRequestContextHolder], [GameFindQuery]>
 {
   public static pageQueryParam: string = 'page';
   public static pageSizeQueryParam: string = 'pageSize';
   public static statusQueryParam: string = 'status';
 
+  readonly #gameStatusFromGameV1StatusBuilder: Builder<GameStatus, [string]>;
+
   readonly #requestService: RequestService;
 
-  constructor(@Inject(RequestService) requestService: RequestService) {
+  constructor(
+    @Inject(GameStatusFromGameV1StatusBuilder)
+    gameStatusFromGameV1StatusBuilder: Builder<GameStatus, [string]>,
+    @Inject(RequestService)
+    requestService: RequestService,
+  ) {
+    this.#gameStatusFromGameV1StatusBuilder = gameStatusFromGameV1StatusBuilder;
     this.#requestService = requestService;
   }
 
@@ -85,9 +87,9 @@ export class GetGameV1MineRequestParamHandler
       Either<RequestQueryParseFailure, unknown>,
       string,
     ][] = [
-      [parsedPage, GetGameV1MineRequestParamHandler.pageQueryParam],
-      [parsedPageSize, GetGameV1MineRequestParamHandler.pageSizeQueryParam],
-      [parsedStatus, GetGameV1MineRequestParamHandler.statusQueryParam],
+      [parsedPage, GetGamesV1MineRequestParamHandler.pageQueryParam],
+      [parsedPageSize, GetGamesV1MineRequestParamHandler.pageSizeQueryParam],
+      [parsedStatus, GetGamesV1MineRequestParamHandler.statusQueryParam],
     ];
 
     const errors: string[] =
@@ -99,34 +101,12 @@ export class GetGameV1MineRequestParamHandler
     );
   }
 
-  #buildStatus(gameStatusStringified: string): GameStatus {
-    const gameStatusOrUndefined: GameStatus | undefined =
-      GAME_V1_STATE_STATUS_TO_GAME_STATUS_MAP[gameStatusStringified];
-
-    if (gameStatusOrUndefined === undefined) {
-      const expectedValues: string[] = Object.keys(
-        GAME_V1_STATE_STATUS_TO_GAME_STATUS_MAP,
-      );
-
-      throw new AppError(
-        AppErrorKind.contractViolation,
-        `Expected "${
-          GetGameV1MineRequestParamHandler.statusQueryParam
-        }" query to be one of the following values: ${expectedValues.join(
-          ',',
-        )}`,
-      );
-    }
-
-    return gameStatusOrUndefined;
-  }
-
   #getParsedPage(request: Request): Either<RequestQueryParseFailure, number> {
     return this.#requestService.tryParseIntegerQuery(request, {
       default: DEFAULT_PAGE_VALUE,
       isMultiple: false,
       min: MIN_PAGE_VALUE,
-      name: GetGameV1MineRequestParamHandler.pageQueryParam,
+      name: GetGamesV1MineRequestParamHandler.pageQueryParam,
     });
   }
 
@@ -138,7 +118,7 @@ export class GetGameV1MineRequestParamHandler
       isMultiple: false,
       max: MAX_PAGE_SIZE_VALUE,
       min: MIN_PAGE_SIZE_VALUE,
-      name: GetGameV1MineRequestParamHandler.pageSizeQueryParam,
+      name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
     });
   }
 
@@ -148,14 +128,11 @@ export class GetGameV1MineRequestParamHandler
     const parsedStatus: Either<RequestQueryParseFailure, string> =
       this.#requestService.tryParseStringQuery(request, {
         isMultiple: false,
-        name: GetGameV1MineRequestParamHandler.statusQueryParam,
+        name: GetGamesV1MineRequestParamHandler.statusQueryParam,
       });
 
     if (parsedStatus.isRight) {
-      return {
-        isRight: true,
-        value: this.#buildStatus(parsedStatus.value),
-      };
+      return this.#getParsedStatusFromStringGameStatusV1(parsedStatus.value);
     }
 
     if (parsedStatus.value.kind === RequestQueryParseFailureKind.notFound) {
@@ -166,6 +143,36 @@ export class GetGameV1MineRequestParamHandler
     }
 
     return parsedStatus;
+  }
+
+  #getParsedStatusFromStringGameStatusV1(
+    stringGameStatus: string,
+  ): Either<RequestQueryParseFailure, GameStatus | undefined> {
+    try {
+      const gameStatus: GameStatus =
+        this.#gameStatusFromGameV1StatusBuilder.build(stringGameStatus);
+
+      return {
+        isRight: true,
+        value: gameStatus,
+      };
+    } catch (error: unknown) {
+      if (AppError.isAppErrorOfKind(error, AppErrorKind.contractViolation)) {
+        return {
+          isRight: false,
+          value: {
+            errors: [error.message],
+            kind: RequestQueryParseFailureKind.invalidValue,
+          },
+        };
+      } else {
+        throw new AppError(
+          AppErrorKind.unknown,
+          'Unexpected error found while parsing game status',
+          { cause: error },
+        );
+      }
+    }
   }
 
   #parseUserId(request: AuthRequestContextHolder): string {
