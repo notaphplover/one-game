@@ -26,6 +26,7 @@ import { GameSlotCreateQueryFromGameSlotCreateQueryV1Builder } from '../../../ap
 import { GameSlotV1FromGameSlotBuilder } from '../../../application/builders/GameSlotV1FromGameSlotBuilder';
 import { GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder } from '../../../application/builders/GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder';
 import { GameSpecV1FromGameSpecBuilder } from '../../../application/builders/GameSpecV1FromGameSpecBuilder';
+import { GameStatusFromGameV1StatusBuilder } from '../../../application/builders/GameStatusFromGameV1StatusBuilder';
 import { GameV1FromGameBuilder } from '../../../application/builders/GameV1FromGameBuilder';
 import { MessageEventV2FromGameMessageEventBuilder } from '../../../application/builders/MessageEventV2FromGameMessageEventBuilder';
 import { NonStartedGameSlotV1FromNonStartedGameSlotBuilder } from '../../../application/builders/NonStartedGameSlotV1FromNonStartedGameSlotBuilder';
@@ -56,6 +57,7 @@ export class GameApplicationModule {
         GameSlotManagementInputPort,
         GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder,
         GameSpecManagementInputPort,
+        GameStatusFromGameV1StatusBuilder,
       ],
       global: false,
       imports: [
@@ -97,6 +99,7 @@ export class GameApplicationModule {
         GameSlotCreateQueryFromGameSlotCreateQueryV1Builder,
         GameSlotV1FromGameSlotBuilder,
         GameSpecFindQuerySortOptionFromGameSpecSortOptionV1Builder,
+        GameStatusFromGameV1StatusBuilder,
         GameUpdatedEventHandler,
         GameV1FromGameBuilder,
         MessageEventV2FromGameMessageEventBuilder,
