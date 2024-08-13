@@ -20,6 +20,67 @@ components:
 
 paths:
   /v1/games:
+    get:
+      summary: Get games
+      operationId: getGames
+      parameters:
+        - in: query
+          name: isPublic
+          required: false
+          schema:
+            type: boolean
+          description: visibility of the games to be found
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+          description: status of the games to be found
+        - in: query
+          name: page
+          required: false
+          schema:
+            minimum: 1
+            type: number
+          description: pagination number
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: number
+          description: pagination size
+      responses:
+        '200':
+          description: Games found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/games/game-array.json'
+        '400':
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - accessToken: []
+      tags:
+        - Game
+
     post:
       summary: Create a game
       operationId: createGame
