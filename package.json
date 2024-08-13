@@ -21,7 +21,7 @@
     "@cornie-js/frontend-prettier-config": "workspace:*",
     "@cornie-js/frontend-typescript-config": "workspace:*",
     "husky": "9.1.4",
-    "lint-staged": "15.2.8",
+    "lint-staged": "15.2.9",
     "turbo": "2.0.12"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
