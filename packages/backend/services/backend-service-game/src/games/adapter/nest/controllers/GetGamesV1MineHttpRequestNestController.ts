@@ -13,7 +13,7 @@ import { Controller, Get, Inject, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 @Controller('v1/games')
-export class GetGameV1MineHttpRequestNestController extends HttpNestFastifyController<Request> {
+export class GetGamesV1MineHttpRequestNestController extends HttpNestFastifyController<Request> {
   constructor(
     @Inject(RequestFromFastifyRequestBuilder)
     requestBuilder: Builder<Request, [FastifyRequest]>,
