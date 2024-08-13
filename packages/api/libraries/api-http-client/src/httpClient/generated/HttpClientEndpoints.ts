@@ -12,6 +12,32 @@ export class HttpClientEndpoints {
   constructor(internalHttpClient: InternalHttpClient) {
     this.#internalHttpClient = internalHttpClient;
   }
+  public async getGames(
+    headers: {
+      [key: string]: string;
+    },
+    query: {
+      [key: string]: string | string[];
+      isPublic?: string | string[];
+      status?: string | string[];
+      page?: string | string[];
+      pageSize?: string | string[];
+    },
+  ): Promise<
+    | Response<Record<string, string>, apiModels.GameArrayV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 400>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
+  > {
+    return this.#internalHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      path: '/v1/games',
+      queryParams: query,
+      urlParameters: undefined,
+    });
+  }
   public async createGame(
     headers: {
       [key: string]: string;

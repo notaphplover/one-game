@@ -1,3 +1,4 @@
+import { GameDomainModule } from '@cornie-js/backend-game-domain';
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { AuthModule } from '../../../../auth/adapter/nest/modules/AuthModule';
@@ -18,6 +19,7 @@ import { GetGameGameIdEventsV2RequestParamHandler } from '../../../application/h
 import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from '../../../application/handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
 import { GetGamesV1GameIdRequestParamHandler } from '../../../application/handlers/GetGamesV1GameIdRequestParamHandler';
 import { GetGamesV1MineRequestParamHandler } from '../../../application/handlers/GetGamesV1MineRequestParamHandler';
+import { GetGamesV1RequestParamHandler } from '../../../application/handlers/GetGamesV1RequestParamHandler';
 import { GetGamesV1SpecsRequestParamHandler } from '../../../application/handlers/GetGamesV1SpecsRequestParamHandler';
 import { PatchGameGameIdV1RequestBodyParamHandler } from '../../../application/handlers/PatchGameGameIdV1RequestBodyParamHandler';
 import { PatchGameGameIdV1RequestParamHandler } from '../../../application/handlers/PatchGameGameIdV1RequestParamHandler';
@@ -53,6 +55,7 @@ export class GameHttpApiModule {
         AuthModule,
         GameActionApplicationModule.forRootAsync(gameImports),
         GameApplicationModule.forRootAsync(gameImports),
+        GameDomainModule,
         JsonSchemaModule,
         HttpModule,
       ],
@@ -68,6 +71,7 @@ export class GameHttpApiModule {
         GetGamesV1HttpRequestController,
         GetGamesV1MineHttpRequestController,
         GetGamesV1MineRequestParamHandler,
+        GetGamesV1RequestParamHandler,
         GetGamesV1SpecsHttpRequestController,
         GetGamesV1SpecsRequestParamHandler,
         GetGameV1GameIdHttpRequestController,
