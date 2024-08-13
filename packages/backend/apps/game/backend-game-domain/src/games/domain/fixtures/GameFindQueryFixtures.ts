@@ -1,3 +1,5 @@
+import { Writable } from '@cornie-js/backend-common';
+
 import { GameFindQuery } from '../query/GameFindQuery';
 import { GameStatus } from '../valueObjects/GameStatus';
 import { GameSlotFindQueryFixtures } from './GameSlotFindQueryFixtures';
@@ -19,6 +21,28 @@ export class GameFindQueryFixtures {
       ...GameFindQueryFixtures.any,
       isPublic: false,
     };
+  }
+
+  public static get withIsPublicFalse(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      isPublic: false,
+    };
+  }
+
+  public static get withIsPublicTrue(): GameFindQuery {
+    return {
+      ...GameFindQueryFixtures.any,
+      isPublic: true,
+    };
+  }
+
+  public static get withNoIsPublic(): GameFindQuery {
+    const fixture: Writable<GameFindQuery> = GameFindQueryFixtures.any;
+
+    delete fixture.isPublic;
+
+    return fixture;
   }
 
   public static get withGameSlotFindQuery(): GameFindQuery {

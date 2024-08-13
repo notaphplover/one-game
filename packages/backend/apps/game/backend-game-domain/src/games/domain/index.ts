@@ -27,6 +27,7 @@ import { CurrentPlayerMustPlayCardsIfPossibleSpec } from './specs/CurrentPlayerM
 import { GameCanHoldMoreGameSlotsSpec } from './specs/GameCanHoldMoreGameSlotsSpec';
 import { GameCanHoldOnlyOneMoreGameSlotSpec } from './specs/GameCanHoldOnlyOneMoreGameSlotSpec';
 import { GameEventsCanBeObservedSpec } from './specs/GameEventsCanBeObservedSpec';
+import { GamesCanBeFoundByUserSpec } from './specs/GamesCanBeFoundByUserSpec';
 import { IsGameFinishedSpec } from './specs/IsGameFinishedSpec';
 import { IsValidGameCreateQuerySpec } from './specs/IsValidGameCreateQuerySpec';
 import { PlayerCanDrawCardsSpec } from './specs/PlayerCanDrawCardsSpec';
@@ -84,6 +85,7 @@ export {
   GameEventsCanBeObservedSpec,
   GamePassTurnUpdateQueryFromGameBuilder,
   GamePlayCardsUpdateQueryFromGameBuilder,
+  GamesCanBeFoundByUserSpec,
   GameService,
   GameSpecFindQuerySortOption,
   GameStatus,
