@@ -1,4 +1,4 @@
-import { Either, Left } from '@cornie-js/backend-common';
+import { Either, Left, Right } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 
 import { Request } from '../models/Request';
@@ -59,15 +59,11 @@ export class RequestService {
       .flat();
   }
 
-  public tryParseStringQuery<TMultiple extends boolean>(
+  public tryParseBooleanQuery<TMultiple extends boolean>(
     request: Request,
-    options: RequestQueryParseOptions<string, TMultiple>,
-  ): Either<RequestQueryParseFailure, ParsedValue<string, TMultiple>> {
-    return this.#tryParseQuery(
-      request,
-      options,
-      (value: string): string => value,
-    );
+    options: RequestQueryParseOptions<boolean, TMultiple>,
+  ): Either<RequestQueryParseFailure, ParsedValue<boolean, TMultiple>> {
+    return this.#tryParseBooleanQuery(request, options);
   }
 
   public tryParseIntegerQuery<TMultiple extends boolean>(
@@ -89,6 +85,20 @@ export class RequestService {
       request,
       options,
       this.#buildNumericConstraintsWithErrors(options),
+    );
+  }
+
+  public tryParseStringQuery<TMultiple extends boolean>(
+    request: Request,
+    options: RequestQueryParseOptions<string, TMultiple>,
+  ): Either<RequestQueryParseFailure, ParsedValue<string, TMultiple>> {
+    return this.#tryParseQuery(
+      request,
+      options,
+      (value: string): Either<string, string> => ({
+        isRight: true,
+        value,
+      }),
     );
   }
 
@@ -160,6 +170,38 @@ export class RequestService {
     return errors;
   }
 
+  #parseBooleanValue(value: string): Either<string, boolean> {
+    switch (value) {
+      case 'true':
+        return {
+          isRight: true,
+          value: true,
+        };
+      case 'false':
+        return {
+          isRight: true,
+          value: false,
+        };
+      default:
+        return {
+          isRight: false,
+          value: 'Expected "true" or "false" boolean values',
+        };
+    }
+  }
+
+  #tryParseBooleanQuery<TMultiple extends boolean>(
+    request: Request,
+    options: RequestQueryParseOptions<boolean, TMultiple>,
+  ): Either<RequestQueryParseFailure, ParsedValue<boolean, TMultiple>> {
+    return this.#tryParseQuery(
+      request,
+      options,
+      (value: string): Either<string, boolean> =>
+        this.#parseBooleanValue(value),
+    );
+  }
+
   #tryParseNumericQuery<TMultiple extends boolean>(
     request: Request,
     options: NumericRequestQueryParseOptions<TMultiple>,
@@ -168,7 +210,14 @@ export class RequestService {
     const result: Either<
       RequestQueryParseFailure,
       ParsedValue<number, TMultiple>
-    > = this.#tryParseQuery(request, options, parseFloat);
+    > = this.#tryParseQuery(
+      request,
+      options,
+      (value: string): Either<string, number> => ({
+        isRight: true,
+        value: parseFloat(value),
+      }),
+    );
 
     if (!result.isRight) {
       return result;
@@ -212,7 +261,7 @@ export class RequestService {
   #tryParseQuery<T, TMultiple extends boolean>(
     request: Request,
     options: RequestQueryParseOptions<T, TMultiple>,
-    cast: (value: string) => T,
+    cast: (value: string) => Either<string, T>,
   ): Either<RequestQueryParseFailure, ParsedValue<T, TMultiple>> {
     const queryValue: string | string[] | undefined =
       request.query[options.name];
@@ -231,7 +280,7 @@ export class RequestService {
   #parseMultipleQueryValue<T, TMultiple extends boolean>(
     queryValue: string[],
     options: RequestQueryParseOptions<T, TMultiple>,
-    cast: (value: string) => T,
+    cast: (value: string) => Either<string, T>,
   ): Either<RequestQueryParseFailure, ParsedValue<T, TMultiple>> {
     if (options.isMultiple === false) {
       return {
@@ -242,27 +291,63 @@ export class RequestService {
         },
       };
     } else {
-      return {
-        isRight: true,
-        value: queryValue.map(cast) as ParsedValue<T, TMultiple>,
-      };
+      const castResults: Either<string, T>[] = queryValue.map(cast);
+
+      if (
+        castResults.every(
+          (castResult: Either<string, T>): castResult is Right<T> =>
+            castResult.isRight,
+        )
+      ) {
+        return {
+          isRight: true,
+          value: castResults.map(
+            (castResult: Right<T>): T => castResult.value,
+          ) as ParsedValue<T, TMultiple>,
+        };
+      } else {
+        return {
+          isRight: false,
+          value: {
+            errors: castResults
+              .filter(
+                (castResult: Either<string, T>): castResult is Left<string> =>
+                  !castResult.isRight,
+              )
+              .map((castResult: Left<string>) => castResult.value),
+            kind: RequestQueryParseFailureKind.invalidValue,
+          },
+        };
+      }
     }
   }
 
   #parseSingleQueryValue<T, TMultiple extends boolean>(
     queryValue: string,
     options: RequestQueryParseOptions<T, TMultiple>,
-    cast: (value: string) => T,
+    cast: (value: string) => Either<string, T>,
   ): Either<RequestQueryParseFailure, ParsedValue<T, TMultiple>> {
-    if (options.isMultiple === true) {
-      return {
-        isRight: true,
-        value: [cast(queryValue)] as ParsedValue<T, TMultiple>,
-      };
+    const castResult: Either<string, T> = cast(queryValue);
+
+    if (castResult.isRight) {
+      if (options.isMultiple === true) {
+        return {
+          isRight: true,
+          value: [castResult.value] as ParsedValue<T, TMultiple>,
+        };
+      } else {
+        return {
+          isRight: true,
+          value: castResult.value as ParsedValue<T, TMultiple>,
+        };
+      }
     } else {
       return {
-        isRight: true,
-        value: cast(queryValue) as ParsedValue<T, TMultiple>,
+        isRight: false,
+        value: {
+          errors: [castResult.value],
+          kind: RequestQueryParseFailureKind.invalidValue,
+        },
       };
     }
   }

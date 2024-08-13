@@ -55,9 +55,7 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
     beforeAll(() => {
       requestFixture = {
         headers: {},
-        query: {
-          [GetGamesV1MineRequestParamHandler.pageQueryParam]: '0',
-        },
+        query: {},
         [requestContextProperty]: {
           auth: {
             jwtPayload: {
