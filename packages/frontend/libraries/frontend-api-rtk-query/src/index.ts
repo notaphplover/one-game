@@ -2,8 +2,8 @@ import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
 import {
   BaseQueryFn,
-  EndpointBuilder,
   createApi,
+  EndpointBuilder,
   fakeBaseQuery,
 } from '@reduxjs/toolkit/query/react';
 import { Mutex } from 'async-mutex';
@@ -74,7 +74,6 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
     selectRefreshToken: options.store.selectRefreshToken,
   };
 
-  // eslint-disable-next-line @typescript-eslint/typedef
   const api = createApi({
     baseQuery: fakeBaseQuery<SerializableAppError>(),
     endpoints: (

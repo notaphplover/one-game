@@ -35,7 +35,7 @@ export function createGamesV1(
     const httpResponse: CreateGamesV1Result =
       await httpClient.endpoints.createGame(
         {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken ?? ''}`,
         },
         ...args.params,
       );

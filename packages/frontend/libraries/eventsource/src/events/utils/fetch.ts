@@ -1,4 +1,4 @@
-import { ParseSseStreamParams, parse } from './parse';
+import { parse, ParseSseStreamParams } from './parse';
 
 const HTTP_STATUS_OK: number = 200;
 const EVENT_STREAM_MIME_TYPE: string = 'text/event-stream';
@@ -74,7 +74,7 @@ async function genericFetchSse(params: GenericFetchSseParams): Promise<void> {
   ) {
     return params.fail(
       new Error(
-        `Unexpected response. Expecting a "${HTTP_STATUS_OK}" "${EVENT_STREAM_MIME_TYPE}" response`,
+        `Unexpected response. Expecting a "${HTTP_STATUS_OK.toString()}" "${EVENT_STREAM_MIME_TYPE}" response`,
       ),
     );
   }

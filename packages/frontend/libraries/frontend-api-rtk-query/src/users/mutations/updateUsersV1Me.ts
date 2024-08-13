@@ -32,7 +32,7 @@ export function updateUsersV1Me(
     const httpResponse: UpdateUsersV1MeResult =
       await httpClient.endpoints.updateUserMe(
         {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken ?? ''}`,
         },
         ...args.params,
       );

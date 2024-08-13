@@ -34,7 +34,7 @@ export function getGamesV1Mine(
     const httpResponse: GetGamesMineResult =
       await httpClient.endpoints.getGamesMine(
         {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken ?? ''}`,
         },
         ...args.params,
       );

@@ -1,6 +1,6 @@
-import http from 'node:http';
-
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+
+import http from 'node:http';
 
 import express from 'express';
 
@@ -65,11 +65,12 @@ describe(EventSource.name, () => {
   describe('.onmessage', () => {
     describe('when called, and messages are received', () => {
       let onMessageMock: jest.Mock<EventHandler<MessageEvent<unknown>>>;
-
       let eventSource: EventSource;
 
       beforeAll(async () => {
-        eventSource = new EventSource(`http://localhost:${PORT}/sse`);
+        eventSource = new EventSource(
+          `http://localhost:${PORT.toString()}/sse`,
+        );
 
         await new Promise<void>((resolve: () => void) => {
           onMessageMock = jest
@@ -137,11 +138,12 @@ describe(EventSource.name, () => {
   describe('.onopen', () => {
     describe('when called, and conection is opened', () => {
       let onOpenMock: EventHandler<Event>;
-
       let eventSource: EventSource;
 
       beforeAll(async () => {
-        eventSource = new EventSource(`http://localhost:${PORT}/sse`);
+        eventSource = new EventSource(
+          `http://localhost:${PORT.toString()}/sse`,
+        );
 
         await new Promise<void>((resolve: () => void) => {
           onOpenMock = jest

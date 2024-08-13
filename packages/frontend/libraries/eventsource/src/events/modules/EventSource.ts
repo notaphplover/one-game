@@ -260,7 +260,9 @@ export class EventSource implements EventTarget {
         return true;
       },
       buildRequest,
-      fail: async () => this.#close(),
+      fail: async () => {
+        this.#close();
+      },
       getRetryMs: () => this.#retryMs,
       onOpen: () => {
         this.#readyState = EventSource.OPEN;
