@@ -16,9 +16,9 @@ import { buildIoredisModuleOptions } from '../../../../foundation/redis/adapter/
 import { GetEventsGamesGameIdV2RequestNestController } from '../controllers/GetEventsGamesGameIdV2RequestNestController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
 import { GetGamesV1GameIdSpecHttpRequestNestController } from '../controllers/GetGamesV1GameIdSpecHttpRequestNestController';
+import { GetGamesV1MineHttpRequestNestController } from '../controllers/GetGamesV1MineHttpRequestNestController';
 import { GetGamesV1SpecsHttpRequestNestController } from '../controllers/GetGamesV1SpecsHttpRequestNestController';
 import { GetGameV1GameIdHttpRequestNestController } from '../controllers/GetGameV1GameIdHttpRequestNestController';
-import { GetGameV1MineHttpRequestNestController } from '../controllers/GetGameV1MineHttpRequestNestController';
 import { PatchGameV1GameIdHttpRequestNestController } from '../controllers/PatchGameV1GameIdHttpRequestNestController';
 import { PostGameIdSlotV1HttpRequestNestController } from '../controllers/PostGameIdSlotV1HttpRequestNestController';
 import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1HttpRequestNestController';
@@ -28,7 +28,7 @@ import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1Ht
     // Mind the order
     GetEventsGamesGameIdV2RequestNestController,
     GetGamesV1SpecsHttpRequestNestController,
-    GetGameV1MineHttpRequestNestController,
+    GetGamesV1MineHttpRequestNestController,
     GetGamesV1GameIdSpecHttpRequestNestController,
     GetGameV1GameIdHttpRequestNestController,
     GetGameGameIdSlotSlotIdCardsV1RequestNestController,
