@@ -155,7 +155,7 @@ function setMessageEventField(
   switch (fieldName) {
     case 'data':
       messageEventFields.data =
-        messageEventFields.data ?? '' + content ?? '' + LINE_FEED;
+        (messageEventFields.data ?? '') + (content ?? '') + LINE_FEED;
       break;
     case 'event':
       messageEventFields.event = content ?? '';
