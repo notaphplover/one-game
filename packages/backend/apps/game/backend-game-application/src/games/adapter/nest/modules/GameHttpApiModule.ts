@@ -7,9 +7,10 @@ import { GameActionApplicationModule } from '../../../../gameActions/adapter/nes
 import { GetGameGameIdEventsV2SseController } from '../../../application/controllers/GetGameGameIdEventsV2SseController';
 import { GetGameGameIdSlotSlotIdCardsV1RequestController } from '../../../application/controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
 import { GetGamesV1GameIdSpecHttpRequestController } from '../../../application/controllers/GetGamesV1GameIdSpecHttpRequestController';
+import { GetGamesV1HttpRequestController } from '../../../application/controllers/GetGamesV1HttpRequestController';
+import { GetGamesV1MineHttpRequestController } from '../../../application/controllers/GetGamesV1MineHttpRequestController';
 import { GetGamesV1SpecsHttpRequestController } from '../../../application/controllers/GetGamesV1SpecsHttpRequestController';
 import { GetGameV1GameIdHttpRequestController } from '../../../application/controllers/GetGameV1GameIdHttpRequestController';
-import { GetGameV1MineHttpRequestController } from '../../../application/controllers/GetGameV1MineHttpRequestController';
 import { PatchGameV1GameIdHttpRequestController } from '../../../application/controllers/PatchGameV1GameIdHttpRequestController';
 import { PostGameIdSlotV1HttpRequestController } from '../../../application/controllers/PostGameIdSlotV1HttpRequestController';
 import { PostGameV1HttpRequestController } from '../../../application/controllers/PostGameV1HttpRequestController';
@@ -37,10 +38,11 @@ export class GameHttpApiModule {
       exports: [
         GetGameGameIdEventsV2SseController,
         GetGameGameIdSlotSlotIdCardsV1RequestController,
-        GetGamesV1SpecsHttpRequestController,
         GetGamesV1GameIdSpecHttpRequestController,
+        GetGamesV1HttpRequestController,
+        GetGamesV1MineHttpRequestController,
+        GetGamesV1SpecsHttpRequestController,
         GetGameV1GameIdHttpRequestController,
-        GetGameV1MineHttpRequestController,
         PatchGameV1GameIdHttpRequestController,
         PostGameIdSlotV1HttpRequestController,
         PostGameV1HttpRequestController,
@@ -61,13 +63,14 @@ export class GameHttpApiModule {
         GetGameGameIdEventsV2SseController,
         GetGameGameIdSlotSlotIdCardsV1RequestController,
         GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
+        GetGamesV1GameIdRequestParamHandler,
+        GetGamesV1GameIdSpecHttpRequestController,
+        GetGamesV1HttpRequestController,
+        GetGamesV1MineHttpRequestController,
+        GetGamesV1MineRequestParamHandler,
         GetGamesV1SpecsHttpRequestController,
         GetGamesV1SpecsRequestParamHandler,
-        GetGamesV1GameIdSpecHttpRequestController,
         GetGameV1GameIdHttpRequestController,
-        GetGamesV1GameIdRequestParamHandler,
-        GetGameV1MineHttpRequestController,
-        GetGamesV1MineRequestParamHandler,
         PatchGameGameIdV1RequestBodyParamHandler,
         PatchGameGameIdV1RequestParamHandler,
         PatchGameV1GameIdHttpRequestController,

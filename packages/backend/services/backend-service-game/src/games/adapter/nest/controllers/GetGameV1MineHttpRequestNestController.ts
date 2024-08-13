@@ -1,5 +1,5 @@
 import { Builder, Handler } from '@cornie-js/backend-common';
-import { GetGameV1MineHttpRequestController } from '@cornie-js/backend-game-application/games';
+import { GetGamesV1MineHttpRequestController } from '@cornie-js/backend-game-application/games';
 import {
   ErrorV1ResponseFromErrorBuilder,
   FastifyReplyFromResponseBuilder,
@@ -17,7 +17,7 @@ export class GetGameV1MineHttpRequestNestController extends HttpNestFastifyContr
   constructor(
     @Inject(RequestFromFastifyRequestBuilder)
     requestBuilder: Builder<Request, [FastifyRequest]>,
-    @Inject(GetGameV1MineHttpRequestController)
+    @Inject(GetGamesV1MineHttpRequestController)
     requestController: Handler<[Request], Response | ResponseWithBody<unknown>>,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     responseFromErrorBuilder: Builder<
