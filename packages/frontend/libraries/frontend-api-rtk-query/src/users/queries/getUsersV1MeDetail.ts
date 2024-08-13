@@ -34,7 +34,7 @@ export function getUsersV1MeDetail(
     const httpResponse: GetUsersV1MineResult =
       await httpClient.endpoints.getUserMeDetail(
         {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken ?? ''}`,
         },
         ...args.params,
       );

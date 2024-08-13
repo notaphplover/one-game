@@ -41,7 +41,7 @@ export function createGamesV1Slots(
     const httpResponse: CreateGamesV1SlotsResult =
       await httpClient.endpoints.createGameSlot(
         {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken ?? ''}`,
         },
         ...args.params,
       );
