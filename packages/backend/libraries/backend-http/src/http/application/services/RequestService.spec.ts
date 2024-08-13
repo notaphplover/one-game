@@ -18,6 +18,342 @@ describe(RequestService.name, () => {
     requestService = new RequestService();
   });
 
+  describe('.tryParseBooleanQuery', () => {
+    describe('having a Request with no query value and options with default value', () => {
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        requestQueryParseOptionsFixture = {
+          default: true,
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Right with the default value', () => {
+          const expected: Right<boolean | boolean[]> = {
+            isRight: true,
+            value: requestQueryParseOptionsFixture.default as
+              | boolean
+              | boolean[],
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with no query value and options with no default value', () => {
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        requestQueryParseOptionsFixture = {
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {},
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Left with the default value', () => {
+          const expected: Left<RequestQueryParseFailure> = {
+            isRight: false,
+            value: {
+              errors: ['Expecting value, but none found'],
+              kind: RequestQueryParseFailureKind.notFound,
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with "true" single query value', () => {
+      let queryValueFixture: string | string[];
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        queryValueFixture = 'true';
+        requestQueryParseOptionsFixture = {
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {
+            [requestQueryParseOptionsFixture.name]: queryValueFixture,
+          },
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Right with the parsed value', () => {
+          const expected: Right<boolean | boolean[]> = {
+            isRight: true,
+            value: true,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with "false" single query value', () => {
+      let queryValueFixture: string | string[];
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        queryValueFixture = 'false';
+        requestQueryParseOptionsFixture = {
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {
+            [requestQueryParseOptionsFixture.name]: queryValueFixture,
+          },
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Right with the parsed value', () => {
+          const expected: Right<boolean | boolean[]> = {
+            isRight: true,
+            value: false,
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with invalid single query value', () => {
+      let queryValueFixture: string | string[];
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        queryValueFixture = 'invalid-boolean-fixture';
+        requestQueryParseOptionsFixture = {
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {
+            [requestQueryParseOptionsFixture.name]: queryValueFixture,
+          },
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Left with errors', () => {
+          const expected: Left<RequestQueryParseFailure> = {
+            isRight: false,
+            value: {
+              errors: ['Expected "true" or "false" boolean values'],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with multiple value and options with isMultiple false', () => {
+      let queryValueFixture: string | string[];
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        queryValueFixture = ['true'];
+        requestQueryParseOptionsFixture = {
+          isMultiple: false,
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {
+            [requestQueryParseOptionsFixture.name]: queryValueFixture,
+          },
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Left with the default value', () => {
+          const expected: Left<RequestQueryParseFailure> = {
+            isRight: false,
+            value: {
+              errors: ['Expected a single value, multiple ones were found'],
+              kind: RequestQueryParseFailureKind.invalidValue,
+            },
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with single value and options with isMultiple true', () => {
+      let queryValueFixture: string;
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        queryValueFixture = 'true';
+        requestQueryParseOptionsFixture = {
+          isMultiple: true,
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {
+            [requestQueryParseOptionsFixture.name]: queryValueFixture,
+          },
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Right with the parsed value', () => {
+          const expected: Right<boolean | boolean[]> = {
+            isRight: true,
+            value: [true],
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+
+    describe('having a Request with multiple query value', () => {
+      let queryValueFixture: string | string[];
+      let requestQueryParseOptionsFixture: RequestQueryParseOptions<boolean>;
+      let requestFixture: Request;
+
+      beforeAll(() => {
+        queryValueFixture = ['true'];
+        requestQueryParseOptionsFixture = {
+          name: 'foo',
+        };
+
+        requestFixture = {
+          headers: {},
+          query: {
+            [requestQueryParseOptionsFixture.name]: queryValueFixture,
+          },
+          urlParameters: {},
+        };
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = requestService.tryParseBooleanQuery(
+            requestFixture,
+            requestQueryParseOptionsFixture,
+          );
+        });
+
+        it('should return a Right with the parsed value', () => {
+          const expected: Right<boolean | boolean[]> = {
+            isRight: true,
+            value: [true],
+          };
+
+          expect(result).toStrictEqual(expected);
+        });
+      });
+    });
+  });
+
   describe('.tryParseStringQuery', () => {
     describe('having a Request with no query value and options with default value', () => {
       let requestQueryParseOptionsFixture: RequestQueryParseOptions<string>;
