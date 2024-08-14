@@ -1,13 +1,13 @@
-import { DeleteUserV1EmailCodeRequestController } from './controllers/DeleteUserV1EmailCodeRequestController';
-import { DeleteUserV1MeHttpRequestController } from './controllers/DeleteUserV1MeHttpRequestController';
-import { GetUserV1MeDetailHttpRequestController } from './controllers/GetUserV1MeDetailHttpRequestController';
-import { GetUserV1MeHttpRequestController } from './controllers/GetUserV1MeHttpRequestController';
-import { GetUserV1UserIdHttpRequestController } from './controllers/GetUserV1UserIdHttpRequestController';
-import { PatchUserV1MeHttpRequestController } from './controllers/PatchUserV1MeHttpRequestController';
-import { PostUserV1EmailCodeRequestController } from './controllers/PostUserV1EmailCodeRequestController';
-import { PostUserV1HttpRequestController } from './controllers/PostUserV1HttpRequestController';
-import { BaseUserV1EmailCodeRequestParamHandler } from './handlers/BaseUserV1EmailCodeRequestParamHandler';
-import { GetUserV1UserIdRequestParamHandler } from './handlers/GetUserV1UserIdRequestParamHandler';
+import { DeleteV1UsersEmailCodeRequestController } from './controllers/DeleteV1UsersEmailCodeRequestController';
+import { DeleteV1UsersMeHttpRequestController } from './controllers/DeleteV1UsersMeHttpRequestController';
+import { GetV1UsersMeDetailHttpRequestController } from './controllers/GetV1UsersMeDetailHttpRequestController';
+import { GetV1UsersMeHttpRequestController } from './controllers/GetV1UsersMeHttpRequestController';
+import { GetV1UsersUserIdHttpRequestController } from './controllers/GetV1UsersUserIdHttpRequestController';
+import { PatchV1UsersMeHttpRequestController } from './controllers/PatchV1UsersMeHttpRequestController';
+import { PostV1UsersEmailCodeRequestController } from './controllers/PostV1UsersEmailCodeRequestController';
+import { PostV1UsersHttpRequestController } from './controllers/PostV1UsersHttpRequestController';
+import { BaseV1UsersEmailCodeRequestParamHandler } from './handlers/BaseV1UsersEmailCodeRequestParamHandler';
+import { GetV1UsersUserIdRequestParamHandler } from './handlers/GetV1UsersUserIdRequestParamHandler';
 import {
   UserCodePersistenceOutputPort,
   userCodePersistenceOutputPortSymbol,
@@ -18,16 +18,16 @@ import {
 } from './ports/output/UserPersistenceOutputPort';
 
 export {
-  BaseUserV1EmailCodeRequestParamHandler,
-  DeleteUserV1EmailCodeRequestController,
-  DeleteUserV1MeHttpRequestController,
-  GetUserV1MeDetailHttpRequestController,
-  GetUserV1MeHttpRequestController,
-  GetUserV1UserIdHttpRequestController,
-  GetUserV1UserIdRequestParamHandler,
-  PatchUserV1MeHttpRequestController,
-  PostUserV1EmailCodeRequestController,
-  PostUserV1HttpRequestController,
+  BaseV1UsersEmailCodeRequestParamHandler,
+  DeleteV1UsersEmailCodeRequestController,
+  DeleteV1UsersMeHttpRequestController,
+  GetV1UsersMeDetailHttpRequestController,
+  GetV1UsersMeHttpRequestController,
+  GetV1UsersUserIdHttpRequestController,
+  GetV1UsersUserIdRequestParamHandler,
+  PatchV1UsersMeHttpRequestController,
+  PostV1UsersEmailCodeRequestController,
+  PostV1UsersHttpRequestController,
   userCodePersistenceOutputPortSymbol,
   userPersistenceOutputPortSymbol,
 };

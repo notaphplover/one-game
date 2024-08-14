@@ -11,12 +11,12 @@ import { Module } from '@nestjs/common';
 import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { buildMailClientOptions } from '../../../../foundation/mail/adapter/nest/calculations/buildMailClientOptions';
-import { PostAuthV2HttpRequestNestController } from '../controllers/PostAuthV2HttpRequestNestController';
+import { PostV2AuthHttpRequestNestController } from '../controllers/PostV2AuthHttpRequestNestController';
 
 const dbModuleOptions: DbModuleOptions = buildDbModuleOptions();
 
 @Module({
-  controllers: [PostAuthV2HttpRequestNestController],
+  controllers: [PostV2AuthHttpRequestNestController],
   imports: [
     AuthHttpApiApplicationModule.forRootAsync([
       DbModule.forTransaction(),
