@@ -11,28 +11,28 @@ import { Module } from '@nestjs/common';
 import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/calculations/buildDbModuleOptions';
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { buildMailClientOptions } from '../../../../foundation/mail/adapter/nest/calculations/buildMailClientOptions';
-import { DeleteUserV1EmailCodeRequestNestController } from '../controllers/DeleteUserV1EmailCodeRequestNestController';
-import { DeleteUserV1MeHttpRequestNestController } from '../controllers/DeleteUserV1MeHttpRequestNestController';
-import { GetUserV1MeDetailHttpRequestNestController } from '../controllers/GetUserV1MeDetailHttpRequestNestController';
-import { GetUserV1MeHttpRequestNestController } from '../controllers/GetUserV1MeHttpRequestNestController';
-import { GetUserV1UserIdHttpRequestNestController } from '../controllers/GetUserV1UserIdHttpRequestNestController';
-import { PatchUserV1MeHttpRequestNestController } from '../controllers/PatchUserV1MeHttpRequestNestController';
-import { PostUserV1EmailCodeRequestNestController } from '../controllers/PostUserV1EmailCodeRequestNestController';
-import { PostUserV1HttpRequestNestController } from '../controllers/PostUserV1HttpRequestNestController';
+import { DeleteV1UsersEmailCodeRequestNestController } from '../controllers/DeleteV1UsersEmailCodeRequestNestController';
+import { DeleteV1UsersMeHttpRequestNestController } from '../controllers/DeleteV1UsersMeHttpRequestNestController';
+import { GetV1UsersMeDetailHttpRequestNestController } from '../controllers/GetV1UsersMeDetailHttpRequestNestController';
+import { GetV1UsersMeHttpRequestNestController } from '../controllers/GetV1UsersMeHttpRequestNestController';
+import { GetV1UsersUserIdHttpRequestNestController } from '../controllers/GetV1UsersUserIdHttpRequestNestController';
+import { PatchV1UsersMeHttpRequestNestController } from '../controllers/PatchV1UsersMeHttpRequestNestController';
+import { PostV1UsersEmailCodeRequestNestController } from '../controllers/PostV1UsersEmailCodeRequestNestController';
+import { PostV1UsersHttpRequestNestController } from '../controllers/PostV1UsersHttpRequestNestController';
 
 const dbModuleOptions: DbModuleOptions = buildDbModuleOptions();
 
 @Module({
   controllers: [
     // mind the order
-    DeleteUserV1EmailCodeRequestNestController,
-    DeleteUserV1MeHttpRequestNestController,
-    GetUserV1MeDetailHttpRequestNestController,
-    GetUserV1MeHttpRequestNestController,
-    GetUserV1UserIdHttpRequestNestController,
-    PatchUserV1MeHttpRequestNestController,
-    PostUserV1EmailCodeRequestNestController,
-    PostUserV1HttpRequestNestController,
+    DeleteV1UsersEmailCodeRequestNestController,
+    DeleteV1UsersMeHttpRequestNestController,
+    GetV1UsersMeDetailHttpRequestNestController,
+    GetV1UsersMeHttpRequestNestController,
+    GetV1UsersUserIdHttpRequestNestController,
+    PatchV1UsersMeHttpRequestNestController,
+    PostV1UsersEmailCodeRequestNestController,
+    PostV1UsersHttpRequestNestController,
   ],
   imports: [
     UserHttpApiApplicationModule.forRootAsync([

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { GetReadyV1HttpRequestNestController } from '../controllers/GetReadyV1HttpRequestNestController';
+import { GetV1ReadyHttpRequestNestController } from '../controllers/GetV1ReadyHttpRequestNestController';
 
 @Module({
-  controllers: [GetReadyV1HttpRequestNestController],
+  controllers: [GetV1ReadyHttpRequestNestController],
 })
 export class StatusHttpApiModule {}

@@ -13,30 +13,30 @@ import { buildDbModuleOptions } from '../../../../foundation/db/adapter/nest/cal
 import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/HttpModule';
 import { buildGamePulsarModuleOptions } from '../../../../foundation/pulsar/adapter/ioredis/calculations/buildGamePulsarModuleOptions';
 import { buildIoredisModuleOptions } from '../../../../foundation/redis/adapter/ioredis/calculations/buildIoredisModuleOptions';
-import { GetEventsGamesGameIdV2RequestNestController } from '../controllers/GetEventsGamesGameIdV2RequestNestController';
-import { GetGameGameIdSlotSlotIdCardsV1RequestNestController } from '../controllers/GetGameGameIdSlotSlotIdCardsV1RequestNestController';
-import { GetGamesV1GameIdSpecHttpRequestNestController } from '../controllers/GetGamesV1GameIdSpecHttpRequestNestController';
-import { GetGamesV1HttpRequestNestController } from '../controllers/GetGamesV1HttpRequestNestController';
-import { GetGamesV1MineHttpRequestNestController } from '../controllers/GetGamesV1MineHttpRequestNestController';
-import { GetGamesV1SpecsHttpRequestNestController } from '../controllers/GetGamesV1SpecsHttpRequestNestController';
-import { GetGameV1GameIdHttpRequestNestController } from '../controllers/GetGameV1GameIdHttpRequestNestController';
-import { PatchGameV1GameIdHttpRequestNestController } from '../controllers/PatchGameV1GameIdHttpRequestNestController';
-import { PostGameIdSlotV1HttpRequestNestController } from '../controllers/PostGameIdSlotV1HttpRequestNestController';
-import { PostGameV1HttpRequestNestController } from '../controllers/PostGameV1HttpRequestNestController';
+import { GetV1GamesGameIdHttpRequestNestController } from '../controllers/GetV1GamesGameIdHttpRequestNestController';
+import { GetV1GamesGameIdSlotSlotIdCardsRequestNestController } from '../controllers/GetV1GamesGameIdSlotSlotIdCardsRequestNestController';
+import { GetV1GamesGameIdSpecHttpRequestNestController } from '../controllers/GetV1GamesGameIdSpecHttpRequestNestController';
+import { GetV1GamesHttpRequestNestController } from '../controllers/GetV1GamesHttpRequestNestController';
+import { GetV1GamesMineHttpRequestNestController } from '../controllers/GetV1GamesMineHttpRequestNestController';
+import { GetV1GamesSpecsHttpRequestNestController } from '../controllers/GetV1GamesSpecsHttpRequestNestController';
+import { GetV2EventsGamesGameIdRequestNestController } from '../controllers/GetV2EventsGamesGameIdRequestNestController';
+import { PatchV1GamesGameIdHttpRequestNestController } from '../controllers/PatchV1GamesGameIdHttpRequestNestController';
+import { PostV1GamesHttpRequestNestController } from '../controllers/PostV1GamesHttpRequestNestController';
+import { PostV1GamesIdSlotHttpRequestNestController } from '../controllers/PostV1GamesIdSlotHttpRequestNestController';
 
 @Module({
   controllers: [
     // Mind the order
-    GetEventsGamesGameIdV2RequestNestController,
-    GetGamesV1SpecsHttpRequestNestController,
-    GetGamesV1HttpRequestNestController,
-    GetGamesV1MineHttpRequestNestController,
-    GetGamesV1GameIdSpecHttpRequestNestController,
-    GetGameV1GameIdHttpRequestNestController,
-    GetGameGameIdSlotSlotIdCardsV1RequestNestController,
-    PatchGameV1GameIdHttpRequestNestController,
-    PostGameV1HttpRequestNestController,
-    PostGameIdSlotV1HttpRequestNestController,
+    GetV2EventsGamesGameIdRequestNestController,
+    GetV1GamesSpecsHttpRequestNestController,
+    GetV1GamesHttpRequestNestController,
+    GetV1GamesMineHttpRequestNestController,
+    GetV1GamesGameIdSpecHttpRequestNestController,
+    GetV1GamesGameIdHttpRequestNestController,
+    GetV1GamesGameIdSlotSlotIdCardsRequestNestController,
+    PatchV1GamesGameIdHttpRequestNestController,
+    PostV1GamesHttpRequestNestController,
+    PostV1GamesIdSlotHttpRequestNestController,
   ],
   imports: [
     GameHttpApiApplicationModule.forRootAsync([

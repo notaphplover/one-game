@@ -1,17 +1,17 @@
 import { GameEventsChannelFromGameIdBuilder } from './builders/GameEventsChannelFromGameIdBuilder';
-import { GetGameGameIdEventsV2SseController } from './controllers/GetGameGameIdEventsV2SseController';
-import { GetGameGameIdSlotSlotIdCardsV1RequestController } from './controllers/GetGameGameIdSlotSlotIdCardsV1RequestController';
-import { GetGamesV1GameIdSpecHttpRequestController } from './controllers/GetGamesV1GameIdSpecHttpRequestController';
-import { GetGamesV1HttpRequestController } from './controllers/GetGamesV1HttpRequestController';
-import { GetGamesV1MineHttpRequestController } from './controllers/GetGamesV1MineHttpRequestController';
-import { GetGamesV1SpecsHttpRequestController } from './controllers/GetGamesV1SpecsHttpRequestController';
-import { GetGameV1GameIdHttpRequestController } from './controllers/GetGameV1GameIdHttpRequestController';
-import { PatchGameV1GameIdHttpRequestController } from './controllers/PatchGameV1GameIdHttpRequestController';
-import { PostGameIdSlotV1HttpRequestController } from './controllers/PostGameIdSlotV1HttpRequestController';
-import { PostGameV1HttpRequestController } from './controllers/PostGameV1HttpRequestController';
-import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
-import { GetGamesV1GameIdRequestParamHandler } from './handlers/GetGamesV1GameIdRequestParamHandler';
-import { PatchGameGameIdV1RequestParamHandler } from './handlers/PatchGameGameIdV1RequestParamHandler';
+import { GetV1GamesGameIdHttpRequestController } from './controllers/GetV1GamesGameIdHttpRequestController';
+import { GetV1GamesGameIdSlotSlotIdCardsRequestController } from './controllers/GetV1GamesGameIdSlotSlotIdCardsRequestController';
+import { GetV1GamesGameIdSpecHttpRequestController } from './controllers/GetV1GamesGameIdSpecHttpRequestController';
+import { GetV1GamesHttpRequestController } from './controllers/GetV1GamesHttpRequestController';
+import { GetV1GamesMineHttpRequestController } from './controllers/GetV1GamesMineHttpRequestController';
+import { GetV1GamesSpecsHttpRequestController } from './controllers/GetV1GamesSpecsHttpRequestController';
+import { GetV2GamesGameIdEventsSseController } from './controllers/GetV2GamesGameIdEventsSseController';
+import { PatchV1GamesGameIdHttpRequestController } from './controllers/PatchV1GamesGameIdHttpRequestController';
+import { PostV1GamesGameIdSlotsHttpRequestController } from './controllers/PostV1GamesGameIdSlotsHttpRequestController';
+import { PostV1GamesHttpRequestController } from './controllers/PostV1GamesHttpRequestController';
+import { GetV1GamesGameIdRequestParamHandler } from './handlers/GetV1GamesGameIdRequestParamHandler';
+import { GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler } from './handlers/GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler';
+import { PatchV1GamesGameIdRequestParamHandler } from './handlers/PatchV1GamesGameIdRequestParamHandler';
 import { GameMiddleware } from './middlewares/GameMiddleware';
 import { BaseGameMessageEvent } from './models/BaseGameMessageEvent';
 import { GameMessageEvent } from './models/GameMessageEvent';
@@ -62,17 +62,17 @@ export {
   gameSlotPersistenceOutputPortSymbol,
   gameSpecPersistenceOutputPortSymbol,
   gameTurnEndSignalMessageSendOutputPortSymbol,
-  GetGameGameIdEventsV2SseController,
-  GetGameGameIdSlotSlotIdCardsV1RequestController,
-  GetGameGameIdSlotSlotIdCardsV1RequestParamHandler,
-  GetGamesV1GameIdRequestParamHandler,
-  GetGamesV1GameIdSpecHttpRequestController,
-  GetGamesV1HttpRequestController,
-  GetGamesV1MineHttpRequestController,
-  GetGamesV1SpecsHttpRequestController,
-  GetGameV1GameIdHttpRequestController,
-  PatchGameGameIdV1RequestParamHandler,
-  PatchGameV1GameIdHttpRequestController,
-  PostGameIdSlotV1HttpRequestController,
-  PostGameV1HttpRequestController,
+  GetV2GamesGameIdEventsSseController,
+  GetV1GamesGameIdSlotSlotIdCardsRequestController,
+  GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler,
+  GetV1GamesGameIdRequestParamHandler,
+  GetV1GamesGameIdSpecHttpRequestController,
+  GetV1GamesHttpRequestController,
+  GetV1GamesMineHttpRequestController,
+  GetV1GamesSpecsHttpRequestController,
+  GetV1GamesGameIdHttpRequestController,
+  PatchV1GamesGameIdRequestParamHandler,
+  PatchV1GamesGameIdHttpRequestController,
+  PostV1GamesGameIdSlotsHttpRequestController,
+  PostV1GamesHttpRequestController,
 };

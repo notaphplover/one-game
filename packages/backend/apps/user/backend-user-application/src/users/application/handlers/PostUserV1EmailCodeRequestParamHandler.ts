@@ -14,12 +14,12 @@ import {
   UserPersistenceOutputPort,
   userPersistenceOutputPortSymbol,
 } from '../ports/output/UserPersistenceOutputPort';
-import { BaseUserV1EmailCodeRequestParamHandler } from './BaseUserV1EmailCodeRequestParamHandler';
-import { PostUserV1EmailCodeRequestBodyParamHandler } from './PostUserV1EmailCodeRequestBodyParamHandler';
+import { BaseV1UsersEmailCodeRequestParamHandler } from './BaseV1UsersEmailCodeRequestParamHandler';
+import { PostV1UsersEmailCodeRequestBodyParamHandler } from './PostV1UsersEmailCodeRequestBodyParamHandler';
 
 @Injectable()
 export class PostUserV1EmailCodeRequestParamHandler
-  extends BaseUserV1EmailCodeRequestParamHandler
+  extends BaseV1UsersEmailCodeRequestParamHandler
   implements Handler<[Request], [User, UserCodeKind]>
 {
   readonly #postUserV1EmailCodeRequestBodyParamHandler: Handler<
@@ -35,7 +35,7 @@ export class PostUserV1EmailCodeRequestParamHandler
   constructor(
     @Inject(userPersistenceOutputPortSymbol)
     userPersistenceOutputPort: UserPersistenceOutputPort,
-    @Inject(PostUserV1EmailCodeRequestBodyParamHandler)
+    @Inject(PostV1UsersEmailCodeRequestBodyParamHandler)
     postUserV1EmailCodeRequestBodyParamHandler: Handler<
       [RequestWithBody],
       [apiModels.UserCodeCreateQueryV1]
