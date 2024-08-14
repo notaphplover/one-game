@@ -1,5 +1,12 @@
 # @cornie-js/backend-graphql
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [2002d71]
+  - @cornie-js/backend-http@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

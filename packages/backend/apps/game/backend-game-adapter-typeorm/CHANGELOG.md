@@ -1,5 +1,26 @@
 # @cornie-js/backend-game-adapter-typeorm
 
+## 0.3.0
+
+### Minor Changes
+
+- 675a1ce: Updated modules to operate with updated domain game models
+- eba015d: Updated GameDb with isPublic
+
+### Patch Changes
+
+- Updated dependencies [5291208]
+- Updated dependencies [675a1ce]
+- Updated dependencies [675a1ce]
+- Updated dependencies [675a1ce]
+- Updated dependencies [f5d8473]
+- Updated dependencies [1e84086]
+- Updated dependencies [a9ad80c]
+- Updated dependencies [8ec592e]
+- Updated dependencies [f5d8473]
+  - @cornie-js/backend-game-domain@0.3.0
+  - @cornie-js/backend-game-application@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

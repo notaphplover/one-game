@@ -1,5 +1,15 @@
 # @cornie-js/api-json-schemas-provider
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [28d92f2]
+- Updated dependencies [f5d8473]
+- Updated dependencies [28d92f2]
+- Updated dependencies [f5d8473]
+  - @cornie-js/api-json-schemas@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

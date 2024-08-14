@@ -1,5 +1,13 @@
 # @cornie-js/backend-user-adapter-typeorm
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [28d92f2]
+- Updated dependencies [c333080]
+  - @cornie-js/backend-user-application@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # @cornie-js/backend-http
 
+## 0.3.0
+
+### Minor Changes
+
+- 2002d71: Update RequestService with tryParseBooleanQuery
+
+### Patch Changes
+
+- Updated dependencies [28d92f2]
+- Updated dependencies [f5d8473]
+- Updated dependencies [28d92f2]
+- Updated dependencies [f5d8473]
+  - @cornie-js/api-models@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
