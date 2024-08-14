@@ -15,7 +15,7 @@ import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 const LAST_EVENT_ID_HEADER: string = 'last-event-id';
 
 @Injectable()
-export class GetGameGameIdEventsV2RequestParamHandler
+export class GetV2GamesGameIdEventsRequestParamHandler
   implements
     Handler<
       [Request & AuthRequestContextHolder & GameRequestContextHolder],

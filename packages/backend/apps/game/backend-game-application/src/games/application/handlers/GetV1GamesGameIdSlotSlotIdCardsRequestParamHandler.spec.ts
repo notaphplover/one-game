@@ -13,14 +13,14 @@ import {
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
-import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from './GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
+import { GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler } from './GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler';
 
-describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
-  let getGameGameIdSlotSlotIdCardsV1RequestParamHandler: GetGameGameIdSlotSlotIdCardsV1RequestParamHandler;
+describe(GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler.name, () => {
+  let getV1GamesGameIdSlotSlotIdCardsRequestParamHandler: GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler;
 
   beforeAll(() => {
-    getGameGameIdSlotSlotIdCardsV1RequestParamHandler =
-      new GetGameGameIdSlotSlotIdCardsV1RequestParamHandler();
+    getV1GamesGameIdSlotSlotIdCardsRequestParamHandler =
+      new GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler();
   });
 
   describe('.handle', () => {
@@ -52,7 +52,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             game: gameFixture,
           },
           urlParameters: {
-            [GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
+            [GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
               gameSlotPositionStringifiedFixture,
           },
         };
@@ -63,7 +63,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           result =
-            await getGameGameIdSlotSlotIdCardsV1RequestParamHandler.handle(
+            await getV1GamesGameIdSlotSlotIdCardsRequestParamHandler.handle(
               requestFixture,
             );
         });
@@ -98,7 +98,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             game: gameFixture,
           },
           urlParameters: {
-            [GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
+            [GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
               gameSlotPositionStringifiedFixture,
           },
         };
@@ -109,7 +109,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await getGameGameIdSlotSlotIdCardsV1RequestParamHandler.handle(
+            await getV1GamesGameIdSlotSlotIdCardsRequestParamHandler.handle(
               requestFixture,
             );
           } catch (error: unknown) {
@@ -157,7 +157,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
             game: gameFixture,
           },
           urlParameters: {
-            [GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
+            [GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler.getGameGameIdSlotSlotIdRequestParam]:
               gameSlotPositionStringifiedFixture,
           },
         };
@@ -168,7 +168,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await getGameGameIdSlotSlotIdCardsV1RequestParamHandler.handle(
+            await getV1GamesGameIdSlotSlotIdCardsRequestParamHandler.handle(
               requestFixture,
             );
           } catch (error: unknown) {
@@ -222,7 +222,7 @@ describe(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await getGameGameIdSlotSlotIdCardsV1RequestParamHandler.handle(
+            await getV1GamesGameIdSlotSlotIdCardsRequestParamHandler.handle(
               requestFixture,
             );
           } catch (error: unknown) {

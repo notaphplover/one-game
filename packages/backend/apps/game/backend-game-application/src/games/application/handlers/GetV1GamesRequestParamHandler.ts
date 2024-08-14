@@ -8,6 +8,7 @@ import {
 } from '@cornie-js/backend-common';
 import {
   GameFindQuery,
+  GamesCanBeFoundByUserSpec,
   GameStatus,
 } from '@cornie-js/backend-game-domain/games';
 import {
@@ -31,23 +32,27 @@ const MIN_PAGE_VALUE: number = 1;
 const MIN_PAGE_SIZE_VALUE: number = 1;
 
 @Injectable()
-export class GetGamesV1MineRequestParamHandler
+export class GetV1GamesRequestParamHandler
   implements Handler<[Request & AuthRequestContextHolder], [GameFindQuery]>
 {
+  public static isPublicQueryParam: string = 'isPublic';
   public static pageQueryParam: string = 'page';
   public static pageSizeQueryParam: string = 'pageSize';
   public static statusQueryParam: string = 'status';
 
+  readonly #gamesCanBeFoundByUserSpec: GamesCanBeFoundByUserSpec;
   readonly #gameStatusFromGameV1StatusBuilder: Builder<GameStatus, [string]>;
-
   readonly #requestService: RequestService;
 
   constructor(
+    @Inject(GamesCanBeFoundByUserSpec)
+    gamesCanBeFoundByUserSpec: GamesCanBeFoundByUserSpec,
     @Inject(GameStatusFromGameV1StatusBuilder)
     gameStatusFromGameV1StatusBuilder: Builder<GameStatus, [string]>,
     @Inject(RequestService)
     requestService: RequestService,
   ) {
+    this.#gamesCanBeFoundByUserSpec = gamesCanBeFoundByUserSpec;
     this.#gameStatusFromGameV1StatusBuilder = gameStatusFromGameV1StatusBuilder;
     this.#requestService = requestService;
   }
@@ -55,6 +60,10 @@ export class GetGamesV1MineRequestParamHandler
   public async handle(
     request: Request & AuthRequestContextHolder,
   ): Promise<[GameFindQuery]> {
+    const parsedIsPublic: Either<
+      RequestQueryParseFailure,
+      boolean | undefined
+    > = this.#getParsedIsPublic(request);
     const parsedPage: Either<RequestQueryParseFailure, number> =
       this.#getParsedPage(request);
     const parsedPageSize: Either<RequestQueryParseFailure, number> =
@@ -64,21 +73,26 @@ export class GetGamesV1MineRequestParamHandler
       GameStatus | undefined
     > = this.#getParsedStatus(request);
 
-    if (parsedPage.isRight && parsedPageSize.isRight && parsedStatus.isRight) {
+    if (
+      parsedIsPublic.isRight &&
+      parsedPage.isRight &&
+      parsedPageSize.isRight &&
+      parsedStatus.isRight
+    ) {
       const gameFindQuery: Writable<GameFindQuery> = {
         limit: parsedPageSize.value,
         offset: parsedPageSize.value * (parsedPage.value - 1),
       };
 
+      if (parsedIsPublic.value !== undefined) {
+        gameFindQuery.isPublic = parsedIsPublic.value;
+      }
+
       if (parsedStatus.value !== undefined) {
         gameFindQuery.status = parsedStatus.value;
       }
 
-      const userId: string = this.#parseUserId(request);
-
-      gameFindQuery.gameSlotFindQuery = {
-        userId,
-      };
+      this.#assertIsValidGameFindQuery(gameFindQuery, request);
 
       return [gameFindQuery];
     }
@@ -87,9 +101,10 @@ export class GetGamesV1MineRequestParamHandler
       Either<RequestQueryParseFailure, unknown>,
       string,
     ][] = [
-      [parsedPage, GetGamesV1MineRequestParamHandler.pageQueryParam],
-      [parsedPageSize, GetGamesV1MineRequestParamHandler.pageSizeQueryParam],
-      [parsedStatus, GetGamesV1MineRequestParamHandler.statusQueryParam],
+      [parsedIsPublic, GetV1GamesRequestParamHandler.isPublicQueryParam],
+      [parsedPage, GetV1GamesRequestParamHandler.pageQueryParam],
+      [parsedPageSize, GetV1GamesRequestParamHandler.pageSizeQueryParam],
+      [parsedStatus, GetV1GamesRequestParamHandler.statusQueryParam],
     ];
 
     const errors: string[] =
@@ -101,12 +116,35 @@ export class GetGamesV1MineRequestParamHandler
     );
   }
 
+  #getParsedIsPublic(
+    request: Request,
+  ): Either<RequestQueryParseFailure, boolean | undefined> {
+    const parsedIsPublic: Either<RequestQueryParseFailure, boolean> =
+      this.#requestService.tryParseBooleanQuery(request, {
+        isMultiple: false,
+        name: GetV1GamesRequestParamHandler.isPublicQueryParam,
+      });
+
+    if (parsedIsPublic.isRight) {
+      return parsedIsPublic;
+    }
+
+    if (parsedIsPublic.value.kind === RequestQueryParseFailureKind.notFound) {
+      return {
+        isRight: true,
+        value: undefined,
+      };
+    }
+
+    return parsedIsPublic;
+  }
+
   #getParsedPage(request: Request): Either<RequestQueryParseFailure, number> {
     return this.#requestService.tryParseIntegerQuery(request, {
       default: DEFAULT_PAGE_VALUE,
       isMultiple: false,
       min: MIN_PAGE_VALUE,
-      name: GetGamesV1MineRequestParamHandler.pageQueryParam,
+      name: GetV1GamesRequestParamHandler.pageQueryParam,
     });
   }
 
@@ -118,7 +156,7 @@ export class GetGamesV1MineRequestParamHandler
       isMultiple: false,
       max: MAX_PAGE_SIZE_VALUE,
       min: MIN_PAGE_SIZE_VALUE,
-      name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+      name: GetV1GamesRequestParamHandler.pageSizeQueryParam,
     });
   }
 
@@ -128,7 +166,7 @@ export class GetGamesV1MineRequestParamHandler
     const parsedStatus: Either<RequestQueryParseFailure, string> =
       this.#requestService.tryParseStringQuery(request, {
         isMultiple: false,
-        name: GetGamesV1MineRequestParamHandler.statusQueryParam,
+        name: GetV1GamesRequestParamHandler.statusQueryParam,
       });
 
     if (parsedStatus.isRight) {
@@ -175,16 +213,20 @@ export class GetGamesV1MineRequestParamHandler
     }
   }
 
-  #parseUserId(request: AuthRequestContextHolder): string {
+  #assertIsValidGameFindQuery(
+    gameFindQuery: GameFindQuery,
+    request: AuthRequestContextHolder,
+  ): void {
     const auth: Auth = request[requestContextProperty].auth;
 
-    if (auth.kind !== AuthKind.user) {
+    if (
+      auth.kind === AuthKind.user &&
+      !this.#gamesCanBeFoundByUserSpec.isSatisfiedBy(gameFindQuery)
+    ) {
       throw new AppError(
-        AppErrorKind.unprocessableOperation,
-        'Unnable to retrieve user from non user credentials',
+        AppErrorKind.invalidCredentials,
+        'Access denied. Reason: requested games cannot be found with the current credentials',
       );
     }
-
-    return auth.user.id;
   }
 }

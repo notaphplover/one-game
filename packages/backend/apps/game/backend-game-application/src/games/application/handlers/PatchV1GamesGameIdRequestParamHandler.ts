@@ -9,10 +9,10 @@ import {
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PatchGameGameIdV1RequestBodyParamHandler } from './PatchGameGameIdV1RequestBodyParamHandler';
+import { PatchV1GamesGameIdRequestBodyParamHandler } from './PatchV1GamesGameIdRequestBodyParamHandler';
 
 @Injectable()
-export class PatchGameGameIdV1RequestParamHandler
+export class PatchV1GamesGameIdRequestParamHandler
   implements
     Handler<
       [RequestWithBody & AuthRequestContextHolder],
@@ -27,7 +27,7 @@ export class PatchGameGameIdV1RequestParamHandler
   >;
 
   constructor(
-    @Inject(PatchGameGameIdV1RequestBodyParamHandler)
+    @Inject(PatchV1GamesGameIdRequestBodyParamHandler)
     patchGameGameIdV1RequestBodyParamHandler: Handler<
       [RequestWithBody],
       [apiModels.GameIdUpdateQueryV1]
@@ -42,7 +42,7 @@ export class PatchGameGameIdV1RequestParamHandler
   ): Promise<[string, apiModels.GameIdUpdateQueryV1, apiModels.UserV1]> {
     const gameId: string | undefined =
       request.urlParameters[
-        PatchGameGameIdV1RequestParamHandler.patchGameV1GameIdRequestParam
+        PatchV1GamesGameIdRequestParamHandler.patchGameV1GameIdRequestParam
       ];
 
     if (gameId === undefined) {

@@ -20,9 +20,9 @@ import {
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
-import { GetGamesV1SpecsRequestParamHandler } from './GetGamesV1SpecsRequestParamHandler';
+import { GetV1GamesSpecsRequestParamHandler } from './GetV1GamesSpecsRequestParamHandler';
 
-describe(GetGamesV1SpecsRequestParamHandler.name, () => {
+describe(GetV1GamesSpecsRequestParamHandler.name, () => {
   let apiJsonSchemasValidationProviderMock: jest.Mocked<ApiJsonSchemasValidationProvider>;
   let gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock: jest.Mocked<
     Builder<GameSpecFindQuerySortOption, [apiModels.GameSpecSortOptionV1]>
@@ -32,7 +32,7 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
   >;
   let requestServiceMock: jest.Mocked<RequestService>;
 
-  let getGamesV1SpecsRequestParamHandler: GetGamesV1SpecsRequestParamHandler;
+  let getGamesV1SpecsRequestParamHandler: GetV1GamesSpecsRequestParamHandler;
 
   beforeAll(() => {
     requestServiceMock = {
@@ -57,7 +57,7 @@ describe(GetGamesV1SpecsRequestParamHandler.name, () => {
       build: jest.fn(),
     };
 
-    getGamesV1SpecsRequestParamHandler = new GetGamesV1SpecsRequestParamHandler(
+    getGamesV1SpecsRequestParamHandler = new GetV1GamesSpecsRequestParamHandler(
       apiJsonSchemasValidationProviderMock,
       gameSpecFindQuerySortOptionFromGameSpecSortOptionV1BuilderMock,
       requestServiceMock,

@@ -14,22 +14,22 @@ import {
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { ActiveGameV1Fixtures } from '../fixtures/ActiveGameV1Fixtures';
 import { GameIdPlayCardsQueryV1Fixtures } from '../fixtures/GameIdPlayCardsQueryV1Fixtures';
-import { PatchGameGameIdV1RequestParamHandler } from './PatchGameGameIdV1RequestParamHandler';
+import { PatchV1GamesGameIdRequestParamHandler } from './PatchV1GamesGameIdRequestParamHandler';
 
-describe(PatchGameGameIdV1RequestParamHandler.name, () => {
+describe(PatchV1GamesGameIdRequestParamHandler.name, () => {
   let patchGameGameIdV1RequestBodyParamHandlerMock: jest.Mocked<
     Handler<[RequestWithBody], [apiModels.GameIdUpdateQueryV1]>
   >;
 
-  let patchGameGameIdV1RequestParamHandler: PatchGameGameIdV1RequestParamHandler;
+  let patchV1GamesGameIdRequestParamHandler: PatchV1GamesGameIdRequestParamHandler;
 
   beforeAll(() => {
     patchGameGameIdV1RequestBodyParamHandlerMock = {
       handle: jest.fn(),
     };
 
-    patchGameGameIdV1RequestParamHandler =
-      new PatchGameGameIdV1RequestParamHandler(
+    patchV1GamesGameIdRequestParamHandler =
+      new PatchV1GamesGameIdRequestParamHandler(
         patchGameGameIdV1RequestBodyParamHandlerMock,
       );
   });
@@ -52,7 +52,7 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await patchGameGameIdV1RequestParamHandler.handle(
+            await patchV1GamesGameIdRequestParamHandler.handle(
               requestFixture as RequestWithBody & AuthRequestContextHolder,
             );
           } catch (error: unknown) {
@@ -95,7 +95,7 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
             auth: authFixture,
           },
           urlParameters: {
-            [PatchGameGameIdV1RequestParamHandler.patchGameV1GameIdRequestParam]:
+            [PatchV1GamesGameIdRequestParamHandler.patchGameV1GameIdRequestParam]:
               ActiveGameV1Fixtures.any.id,
           },
         };
@@ -106,7 +106,7 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
 
         beforeAll(async () => {
           try {
-            await patchGameGameIdV1RequestParamHandler.handle(requestFixture);
+            await patchV1GamesGameIdRequestParamHandler.handle(requestFixture);
           } catch (error: unknown) {
             result = error;
           }
@@ -153,7 +153,7 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
             auth: authFixture,
           },
           urlParameters: {
-            [PatchGameGameIdV1RequestParamHandler.patchGameV1GameIdRequestParam]:
+            [PatchV1GamesGameIdRequestParamHandler.patchGameV1GameIdRequestParam]:
               gameIdFixture,
           },
         };
@@ -172,7 +172,7 @@ describe(PatchGameGameIdV1RequestParamHandler.name, () => {
           );
 
           result =
-            await patchGameGameIdV1RequestParamHandler.handle(requestFixture);
+            await patchV1GamesGameIdRequestParamHandler.handle(requestFixture);
         });
 
         afterAll(() => {

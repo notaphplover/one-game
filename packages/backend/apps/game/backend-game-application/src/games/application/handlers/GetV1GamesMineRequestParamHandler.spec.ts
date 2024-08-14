@@ -23,15 +23,15 @@ import {
 } from '@cornie-js/backend-http';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
-import { GetGamesV1MineRequestParamHandler } from './GetGamesV1MineRequestParamHandler';
+import { GetV1GamesMineRequestParamHandler } from './GetV1GamesMineRequestParamHandler';
 
-describe(GetGamesV1MineRequestParamHandler.name, () => {
+describe(GetV1GamesMineRequestParamHandler.name, () => {
   let gameStatusFromGameV1StatusBuilderMock: jest.Mocked<
     Builder<GameStatus, [string]>
   >;
   let requestServiceMock: jest.Mocked<RequestService>;
 
-  let getGameV1MineRequestParamHandler: GetGamesV1MineRequestParamHandler;
+  let getGameV1MineRequestParamHandler: GetV1GamesMineRequestParamHandler;
 
   beforeAll(() => {
     gameStatusFromGameV1StatusBuilderMock = {
@@ -43,7 +43,7 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
       tryParseStringQuery: jest.fn(),
     } as Partial<jest.Mocked<RequestService>> as jest.Mocked<RequestService>;
 
-    getGameV1MineRequestParamHandler = new GetGamesV1MineRequestParamHandler(
+    getGameV1MineRequestParamHandler = new GetV1GamesMineRequestParamHandler(
       gameStatusFromGameV1StatusBuilderMock,
       requestServiceMock,
     );
@@ -111,12 +111,12 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1MineRequestParamHandler.pageQueryParam,
+          name: GetV1GamesMineRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+          name: GetV1GamesMineRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -147,12 +147,12 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
           1,
         );
         expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledWith([
-          [failureFixture, GetGamesV1MineRequestParamHandler.pageQueryParam],
+          [failureFixture, GetV1GamesMineRequestParamHandler.pageQueryParam],
           [
             failureFixture,
-            GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+            GetV1GamesMineRequestParamHandler.pageSizeQueryParam,
           ],
-          [failureFixture, GetGamesV1MineRequestParamHandler.statusQueryParam],
+          [failureFixture, GetV1GamesMineRequestParamHandler.statusQueryParam],
         ]);
       });
 
@@ -209,12 +209,12 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1MineRequestParamHandler.pageQueryParam,
+          name: GetV1GamesMineRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+          name: GetV1GamesMineRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -310,12 +310,12 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1MineRequestParamHandler.pageQueryParam,
+          name: GetV1GamesMineRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+          name: GetV1GamesMineRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -351,14 +351,14 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
               isRight: true,
               value: pageFixture,
             },
-            GetGamesV1MineRequestParamHandler.pageQueryParam,
+            GetV1GamesMineRequestParamHandler.pageQueryParam,
           ],
           [
             {
               isRight: true,
               value: pageSizeFixture,
             },
-            GetGamesV1MineRequestParamHandler.pageSizeQueryParam,
+            GetV1GamesMineRequestParamHandler.pageSizeQueryParam,
           ],
           [
             {
@@ -368,7 +368,7 @@ describe(GetGamesV1MineRequestParamHandler.name, () => {
                 kind: RequestQueryParseFailureKind.invalidValue,
               },
             },
-            GetGamesV1MineRequestParamHandler.statusQueryParam,
+            GetV1GamesMineRequestParamHandler.statusQueryParam,
           ],
         ]);
       });

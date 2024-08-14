@@ -10,13 +10,14 @@ import {
   Response,
   ResponseWithBody,
 } from '@cornie-js/backend-http';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { GetGamesV1RequestParamHandler } from '../handlers/GetGamesV1RequestParamHandler';
+import { GetV1GamesRequestParamHandler } from '../handlers/GetV1GamesRequestParamHandler';
 import { GameManagementInputPort } from '../ports/input/GameManagementInputPort';
 
-export class GetGamesV1HttpRequestController extends HttpRequestController<
+@Injectable()
+export class GetV1GamesHttpRequestController extends HttpRequestController<
   Request,
   [GameFindQuery],
   apiModels.GameV1[]
@@ -24,7 +25,7 @@ export class GetGamesV1HttpRequestController extends HttpRequestController<
   readonly #gameManagementInputPort: GameManagementInputPort;
 
   constructor(
-    @Inject(GetGamesV1RequestParamHandler)
+    @Inject(GetV1GamesRequestParamHandler)
     requestParamHandler: Handler<[Request], [GameFindQuery]>,
     @Inject(MultipleEntitiesGetResponseBuilder)
     responseBuilder: Builder<

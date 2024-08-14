@@ -18,12 +18,12 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { GetGameGameIdSlotSlotIdCardsV1RequestParamHandler } from '../handlers/GetGameGameIdSlotSlotIdCardsV1RequestParamHandler';
+import { GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler } from '../handlers/GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler';
 import { GameMiddleware } from '../middlewares/GameMiddleware';
 import { GameSlotManagementInputPort } from '../ports/input/GameSlotManagementInputPort';
 
 @Injectable()
-export class GetGameGameIdSlotSlotIdCardsV1RequestController extends HttpRequestController<
+export class GetV1GamesGameIdSlotSlotIdCardsRequestController extends HttpRequestController<
   Request,
   [number, Game, apiModels.UserV1],
   apiModels.ActiveGameSlotCardsV1 | undefined
@@ -31,7 +31,7 @@ export class GetGameGameIdSlotSlotIdCardsV1RequestController extends HttpRequest
   readonly #gameSlotManagementInputPort: GameSlotManagementInputPort;
 
   constructor(
-    @Inject(GetGameGameIdSlotSlotIdCardsV1RequestParamHandler)
+    @Inject(GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler)
     requestParamHandler: Handler<[Request], [number, Game, apiModels.UserV1]>,
     @Inject(SingleEntityGetResponseBuilder)
     responseBuilder: Builder<

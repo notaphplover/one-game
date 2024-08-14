@@ -1,35 +1,36 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { Builder, Handler } from '@cornie-js/backend-common';
+import { GameSpecFindQuery } from '@cornie-js/backend-game-domain/games';
 import {
   ErrorV1ResponseFromErrorBuilder,
   HttpRequestController,
   MiddlewarePipeline,
+  MultipleEntitiesGetResponseBuilder,
   Request,
   Response,
   ResponseWithBody,
-  SingleEntityGetResponseBuilder,
 } from '@cornie-js/backend-http';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
-import { GetGamesV1GameIdRequestParamHandler } from '../handlers/GetGamesV1GameIdRequestParamHandler';
+import { GetV1GamesSpecsRequestParamHandler } from '../handlers/GetV1GamesSpecsRequestParamHandler';
 import { GameSpecManagementInputPort } from '../ports/input/GameSpecManagementInputPort';
 
 @Injectable()
-export class GetGamesV1GameIdSpecHttpRequestController extends HttpRequestController<
+export class GetV1GamesSpecsHttpRequestController extends HttpRequestController<
   Request,
-  [string],
-  apiModels.GameSpecV1 | undefined
+  [GameSpecFindQuery],
+  apiModels.GameSpecV1[]
 > {
   readonly #gameSpecManagementInputPort: GameSpecManagementInputPort;
 
   constructor(
-    @Inject(GetGamesV1GameIdRequestParamHandler)
-    requestParamHandler: Handler<[Request], [string]>,
-    @Inject(SingleEntityGetResponseBuilder)
-    responseBuilder: Builder<
-      Response | ResponseWithBody<unknown>,
-      [apiModels.GameSpecV1 | undefined]
+    @Inject(GetV1GamesSpecsRequestParamHandler)
+    getGamesV1SpecsRequestParamHandler: Handler<[Request], [GameSpecFindQuery]>,
+    @Inject(MultipleEntitiesGetResponseBuilder)
+    multipleEntitiesGetResponseBuilder: Builder<
+      ResponseWithBody<unknown>,
+      [apiModels.GameSpecV1[]]
     >,
     @Inject(ErrorV1ResponseFromErrorBuilder)
     errorV1ResponseFromErrorBuilder: Builder<
@@ -42,8 +43,8 @@ export class GetGamesV1GameIdSpecHttpRequestController extends HttpRequestContro
     authMiddleware: AuthMiddleware,
   ) {
     super(
-      requestParamHandler,
-      responseBuilder,
+      getGamesV1SpecsRequestParamHandler,
+      multipleEntitiesGetResponseBuilder,
       errorV1ResponseFromErrorBuilder,
       new MiddlewarePipeline([authMiddleware]),
     );
@@ -51,9 +52,9 @@ export class GetGamesV1GameIdSpecHttpRequestController extends HttpRequestContro
     this.#gameSpecManagementInputPort = gameSpecManagementInputPort;
   }
 
-  protected async _handleUseCase(
-    gameId: string,
-  ): Promise<apiModels.GameSpecV1 | undefined> {
-    return this.#gameSpecManagementInputPort.findOne({ gameIds: [gameId] });
+  protected override async _handleUseCase(
+    gameSpecFindQuery: GameSpecFindQuery,
+  ): Promise<apiModels.GameSpecV1[]> {
+    return this.#gameSpecManagementInputPort.find(gameSpecFindQuery);
   }
 }

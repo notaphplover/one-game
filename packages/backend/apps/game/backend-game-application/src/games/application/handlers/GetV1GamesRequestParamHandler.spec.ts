@@ -24,16 +24,16 @@ import {
 import { RequestQueryParseOptions } from '@cornie-js/backend-http/lib/http/application/services/RequestService';
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
-import { GetGamesV1RequestParamHandler } from './GetGamesV1RequestParamHandler';
+import { GetV1GamesRequestParamHandler } from './GetV1GamesRequestParamHandler';
 
-describe(GetGamesV1RequestParamHandler.name, () => {
+describe(GetV1GamesRequestParamHandler.name, () => {
   let gamesCanBeFoundByUserSpecMock: jest.Mocked<GamesCanBeFoundByUserSpec>;
   let gameStatusFromGameV1StatusBuilderMock: jest.Mocked<
     Builder<GameStatus, [string]>
   >;
   let requestServiceMock: jest.Mocked<RequestService>;
 
-  let getGamesV1MineRequestParamHandler: GetGamesV1RequestParamHandler;
+  let getGamesV1MineRequestParamHandler: GetV1GamesRequestParamHandler;
 
   beforeAll(() => {
     gamesCanBeFoundByUserSpecMock = {
@@ -49,7 +49,7 @@ describe(GetGamesV1RequestParamHandler.name, () => {
       tryParseStringQuery: jest.fn(),
     } as Partial<jest.Mocked<RequestService>> as jest.Mocked<RequestService>;
 
-    getGamesV1MineRequestParamHandler = new GetGamesV1RequestParamHandler(
+    getGamesV1MineRequestParamHandler = new GetV1GamesRequestParamHandler(
       gamesCanBeFoundByUserSpecMock,
       gameStatusFromGameV1StatusBuilderMock,
       requestServiceMock,
@@ -120,7 +120,7 @@ describe(GetGamesV1RequestParamHandler.name, () => {
       it('should call requestService.tryParseBooleanQuery()', () => {
         const expectedOptions: RequestQueryParseOptions<boolean> = {
           isMultiple: false,
-          name: GetGamesV1RequestParamHandler.isPublicQueryParam,
+          name: GetV1GamesRequestParamHandler.isPublicQueryParam,
         };
 
         expect(requestServiceMock.tryParseBooleanQuery).toHaveBeenCalledTimes(
@@ -136,12 +136,12 @@ describe(GetGamesV1RequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1RequestParamHandler.pageQueryParam,
+          name: GetV1GamesRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1RequestParamHandler.pageSizeQueryParam,
+          name: GetV1GamesRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -172,10 +172,10 @@ describe(GetGamesV1RequestParamHandler.name, () => {
           1,
         );
         expect(requestServiceMock.composeErrorMessages).toHaveBeenCalledWith([
-          [failureFixture, GetGamesV1RequestParamHandler.isPublicQueryParam],
-          [failureFixture, GetGamesV1RequestParamHandler.pageQueryParam],
-          [failureFixture, GetGamesV1RequestParamHandler.pageSizeQueryParam],
-          [failureFixture, GetGamesV1RequestParamHandler.statusQueryParam],
+          [failureFixture, GetV1GamesRequestParamHandler.isPublicQueryParam],
+          [failureFixture, GetV1GamesRequestParamHandler.pageQueryParam],
+          [failureFixture, GetV1GamesRequestParamHandler.pageSizeQueryParam],
+          [failureFixture, GetV1GamesRequestParamHandler.statusQueryParam],
         ]);
       });
 
@@ -239,7 +239,7 @@ describe(GetGamesV1RequestParamHandler.name, () => {
       it('should call requestService.tryParseBooleanQuery()', () => {
         const expectedOptions: RequestQueryParseOptions<boolean> = {
           isMultiple: false,
-          name: GetGamesV1RequestParamHandler.isPublicQueryParam,
+          name: GetV1GamesRequestParamHandler.isPublicQueryParam,
         };
 
         expect(requestServiceMock.tryParseBooleanQuery).toHaveBeenCalledTimes(
@@ -255,12 +255,12 @@ describe(GetGamesV1RequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1RequestParamHandler.pageQueryParam,
+          name: GetV1GamesRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1RequestParamHandler.pageSizeQueryParam,
+          name: GetV1GamesRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -374,7 +374,7 @@ describe(GetGamesV1RequestParamHandler.name, () => {
       it('should call requestService.tryParseBooleanQuery()', () => {
         const expectedOptions: RequestQueryParseOptions<boolean> = {
           isMultiple: false,
-          name: GetGamesV1RequestParamHandler.isPublicQueryParam,
+          name: GetV1GamesRequestParamHandler.isPublicQueryParam,
         };
 
         expect(requestServiceMock.tryParseBooleanQuery).toHaveBeenCalledTimes(
@@ -390,12 +390,12 @@ describe(GetGamesV1RequestParamHandler.name, () => {
         const firstCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1RequestParamHandler.pageQueryParam,
+          name: GetV1GamesRequestParamHandler.pageQueryParam,
         };
         const secondCallExpectedProperties: Partial<
           NumericRequestQueryParseOptions<false>
         > = {
-          name: GetGamesV1RequestParamHandler.pageSizeQueryParam,
+          name: GetV1GamesRequestParamHandler.pageSizeQueryParam,
         };
 
         expect(requestServiceMock.tryParseIntegerQuery).toHaveBeenCalledTimes(
@@ -431,21 +431,21 @@ describe(GetGamesV1RequestParamHandler.name, () => {
               isRight: true,
               value: isPublicFixture,
             },
-            GetGamesV1RequestParamHandler.isPublicQueryParam,
+            GetV1GamesRequestParamHandler.isPublicQueryParam,
           ],
           [
             {
               isRight: true,
               value: pageFixture,
             },
-            GetGamesV1RequestParamHandler.pageQueryParam,
+            GetV1GamesRequestParamHandler.pageQueryParam,
           ],
           [
             {
               isRight: true,
               value: pageSizeFixture,
             },
-            GetGamesV1RequestParamHandler.pageSizeQueryParam,
+            GetV1GamesRequestParamHandler.pageSizeQueryParam,
           ],
           [
             {
@@ -455,7 +455,7 @@ describe(GetGamesV1RequestParamHandler.name, () => {
                 kind: RequestQueryParseFailureKind.invalidValue,
               },
             },
-            GetGamesV1RequestParamHandler.statusQueryParam,
+            GetV1GamesRequestParamHandler.statusQueryParam,
           ],
         ]);
       });

@@ -11,10 +11,10 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
-import { PostGameIdSlotV1RequestBodyHandler } from './PostGameIdSlotV1RequestBodyHandler';
+import { PostV1GamesGameIdSlotRequestBodyHandler } from './PostV1GamesGameIdSlotRequestBodyHandler';
 
 @Injectable()
-export class PostGameIdSlotV1RequestParamHandler
+export class PostV1GamesGameIdSlotsRequestParamHandler
   implements
     Handler<
       [RequestWithBody & GameRequestContextHolder],
@@ -27,7 +27,7 @@ export class PostGameIdSlotV1RequestParamHandler
   >;
 
   constructor(
-    @Inject(PostGameIdSlotV1RequestBodyHandler)
+    @Inject(PostV1GamesGameIdSlotRequestBodyHandler)
     postGameIdSlotV1RequestBodyHandler: Handler<
       [RequestWithBody],
       [apiModels.GameIdSlotCreateQueryV1]

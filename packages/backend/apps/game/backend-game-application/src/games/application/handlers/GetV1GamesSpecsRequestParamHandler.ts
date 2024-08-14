@@ -36,7 +36,7 @@ const MIN_PAGE_VALUE: number = 1;
 const MIN_PAGE_SIZE_VALUE: number = 1;
 
 @Injectable()
-export class GetGamesV1SpecsRequestParamHandler
+export class GetV1GamesSpecsRequestParamHandler
   implements Handler<[Request & AuthRequestContextHolder], [GameSpecFindQuery]>
 {
   public static gameIdQuery: string = 'gameId';
@@ -99,10 +99,10 @@ export class GetGamesV1SpecsRequestParamHandler
     }
 
     const errors: string[] = this.#requestService.composeErrorMessages([
-      [parsedGameIds, GetGamesV1SpecsRequestParamHandler.gameIdQuery],
-      [parsedPage, GetGamesV1SpecsRequestParamHandler.pageQueryParam],
-      [parsedPageSize, GetGamesV1SpecsRequestParamHandler.pageSizeQueryParam],
-      [parsedSortOption, GetGamesV1SpecsRequestParamHandler.sortQueryParam],
+      [parsedGameIds, GetV1GamesSpecsRequestParamHandler.gameIdQuery],
+      [parsedPage, GetV1GamesSpecsRequestParamHandler.pageQueryParam],
+      [parsedPageSize, GetV1GamesSpecsRequestParamHandler.pageSizeQueryParam],
+      [parsedSortOption, GetV1GamesSpecsRequestParamHandler.sortQueryParam],
     ]);
 
     throw new AppError(
@@ -156,7 +156,7 @@ export class GetGamesV1SpecsRequestParamHandler
     return this.#requestService.tryParseStringQuery(request, {
       default: [],
       isMultiple: true,
-      name: GetGamesV1SpecsRequestParamHandler.gameIdQuery,
+      name: GetV1GamesSpecsRequestParamHandler.gameIdQuery,
     });
   }
 
@@ -165,7 +165,7 @@ export class GetGamesV1SpecsRequestParamHandler
       default: DEFAULT_PAGE_VALUE,
       isMultiple: false,
       min: MIN_PAGE_VALUE,
-      name: GetGamesV1SpecsRequestParamHandler.pageQueryParam,
+      name: GetV1GamesSpecsRequestParamHandler.pageQueryParam,
     });
   }
 
@@ -177,7 +177,7 @@ export class GetGamesV1SpecsRequestParamHandler
       isMultiple: false,
       max: MAX_PAGE_SIZE_VALUE,
       min: MIN_PAGE_SIZE_VALUE,
-      name: GetGamesV1SpecsRequestParamHandler.pageSizeQueryParam,
+      name: GetV1GamesSpecsRequestParamHandler.pageSizeQueryParam,
     });
   }
 
@@ -190,7 +190,7 @@ export class GetGamesV1SpecsRequestParamHandler
     const parsedGameSpecSortOptions: Either<RequestQueryParseFailure, string> =
       this.#requestService.tryParseStringQuery(request, {
         isMultiple: false,
-        name: GetGamesV1SpecsRequestParamHandler.sortQueryParam,
+        name: GetV1GamesSpecsRequestParamHandler.sortQueryParam,
       });
 
     if (

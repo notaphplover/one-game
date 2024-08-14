@@ -13,7 +13,7 @@ import { Injectable } from '@nestjs/common';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 
 @Injectable()
-export class GetGameGameIdSlotSlotIdCardsV1RequestParamHandler
+export class GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler
   implements
     Handler<
       [Request & AuthRequestContextHolder & GameRequestContextHolder],
@@ -27,7 +27,7 @@ export class GetGameGameIdSlotSlotIdCardsV1RequestParamHandler
   ): Promise<[number, Game, apiModels.UserV1]> {
     const stringifiedSlotIndex: string | undefined =
       request.urlParameters[
-        GetGameGameIdSlotSlotIdCardsV1RequestParamHandler
+        GetV1GamesGameIdSlotSlotIdCardsRequestParamHandler
           .getGameGameIdSlotSlotIdRequestParam
       ];
 

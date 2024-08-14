@@ -14,14 +14,14 @@ import {
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameSlotCreateV1Fixtures } from '../fixtures/GameSlotCreateV1Fixtures';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
-import { PostGameIdSlotV1RequestParamHandler } from './PostGameIdSlotV1RequestParamHandler';
+import { PostV1GamesGameIdSlotsRequestParamHandler } from './PostV1GamesGameIdSlotsRequestParamHandler';
 
-describe(PostGameIdSlotV1RequestParamHandler.name, () => {
+describe(PostV1GamesGameIdSlotsRequestParamHandler.name, () => {
   let postGameIdSlotV1RequestBodyHandlerMock: jest.Mocked<
     Handler<[RequestWithBody], [apiModels.GameIdSlotCreateQueryV1]>
   >;
 
-  let postGameIdSlotV1RequestParamHandler: PostGameIdSlotV1RequestParamHandler;
+  let postGameIdSlotV1RequestParamHandler: PostV1GamesGameIdSlotsRequestParamHandler;
 
   beforeAll(() => {
     postGameIdSlotV1RequestBodyHandlerMock = {
@@ -29,7 +29,7 @@ describe(PostGameIdSlotV1RequestParamHandler.name, () => {
     };
 
     postGameIdSlotV1RequestParamHandler =
-      new PostGameIdSlotV1RequestParamHandler(
+      new PostV1GamesGameIdSlotsRequestParamHandler(
         postGameIdSlotV1RequestBodyHandlerMock,
       );
   });

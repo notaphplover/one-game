@@ -22,13 +22,13 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 
 import { AuthMiddleware } from '../../../auth/application/middlewares/AuthMiddleware';
 import { GameActionManagementInputPort } from '../../../gameActions/application/ports/input/GameActionManagementInputPort';
-import { GetGameGameIdEventsV2RequestParamHandler } from '../handlers/GetGameGameIdEventsV2RequestParamHandler';
+import { GetV2GamesGameIdEventsRequestParamHandler } from '../handlers/GetV2GamesGameIdEventsRequestParamHandler';
 import { GameMiddleware } from '../middlewares/GameMiddleware';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
 import { GameEventsManagementInputPort } from '../ports/input/GameEventsManagementInputPort';
 
 @Injectable()
-export class GetGameGameIdEventsV2SseController extends HttpSseRequestController<
+export class GetV2GamesGameIdEventsSseController extends HttpSseRequestController<
   Request & AuthRequestContextHolder & GameRequestContextHolder,
   [Game, apiModels.UserV1, string | null]
 > {
@@ -36,7 +36,7 @@ export class GetGameGameIdEventsV2SseController extends HttpSseRequestController
   readonly #gameEventsManagementInputPort: GameEventsManagementInputPort;
 
   constructor(
-    @Inject(GetGameGameIdEventsV2RequestParamHandler)
+    @Inject(GetV2GamesGameIdEventsRequestParamHandler)
     getGameGameIdEventsV1RequestParamHandler: Handler<
       [Request & AuthRequestContextHolder & GameRequestContextHolder],
       [Game, apiModels.UserV1, string | null]

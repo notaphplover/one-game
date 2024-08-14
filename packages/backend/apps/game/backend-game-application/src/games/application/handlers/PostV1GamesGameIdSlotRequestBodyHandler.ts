@@ -7,7 +7,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RequestBodyParamHandler } from '../../../foundation/http/application/RequestBodyParamHandler';
 
 @Injectable()
-export class PatchGameGameIdV1RequestBodyParamHandler
+export class PostV1GamesGameIdSlotRequestBodyHandler
   extends RequestBodyParamHandler<apiModels.GameIdSlotCreateQueryV1>
   implements Handler<[RequestWithBody], [apiModels.GameIdSlotCreateQueryV1]>
 {
@@ -16,7 +16,9 @@ export class PatchGameGameIdV1RequestBodyParamHandler
     apiJsonSchemasValidationProvider: ApiJsonSchemasValidationProvider,
   ) {
     super(
-      apiJsonSchemasValidationProvider.provide(SchemaId.GameIdUpdateQueryV1),
+      apiJsonSchemasValidationProvider.provide(
+        SchemaId.GameIdSlotCreateQueryV1,
+      ),
     );
   }
 }

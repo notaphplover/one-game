@@ -13,14 +13,14 @@ import {
 
 import { UserV1Fixtures } from '../../../users/application/fixtures/models/UserV1Fixtures';
 import { GameRequestContextHolder } from '../models/GameRequestContextHolder';
-import { GetGameGameIdEventsV2RequestParamHandler } from './GetGameGameIdEventsV2RequestParamHandler';
+import { GetV2GamesGameIdEventsRequestParamHandler } from './GetV2GamesGameIdEventsRequestParamHandler';
 
-describe(GetGameGameIdEventsV2RequestParamHandler.name, () => {
-  let getGameGameIdEventsV2RequestParamHandler: GetGameGameIdEventsV2RequestParamHandler;
+describe(GetV2GamesGameIdEventsRequestParamHandler.name, () => {
+  let getGameGameIdEventsV2RequestParamHandler: GetV2GamesGameIdEventsRequestParamHandler;
 
   beforeAll(() => {
     getGameGameIdEventsV2RequestParamHandler =
-      new GetGameGameIdEventsV2RequestParamHandler();
+      new GetV2GamesGameIdEventsRequestParamHandler();
   });
 
   describe('.handle', () => {
