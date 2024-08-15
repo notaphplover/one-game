@@ -1,5 +1,11 @@
 # @cornie-js/backend-api-validators
 
+## 0.2.1
+
+### Patch Changes
+
+- @cornie-js/api-json-schemas-provider@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

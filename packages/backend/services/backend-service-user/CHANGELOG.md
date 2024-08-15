@@ -1,5 +1,25 @@
 # @cornie-js/backend-service-user
 
+## 0.4.0
+
+### Minor Changes
+
+- 28d92f2: Removed deprecated POST /v1/auth
+
+### Patch Changes
+
+- Updated dependencies [28d92f2]
+- Updated dependencies [28d92f2]
+- Updated dependencies [f5d8473]
+- Updated dependencies [28d92f2]
+- Updated dependencies [2002d71]
+- Updated dependencies [f5d8473]
+- Updated dependencies [c333080]
+  - @cornie-js/backend-user-application@0.3.0
+  - @cornie-js/api-models@0.3.0
+  - @cornie-js/backend-http@0.3.0
+  - @cornie-js/backend-user-adapter-typeorm@0.2.1
+
 ## 0.3.0
 
 ### Minor Changes

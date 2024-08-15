@@ -1,5 +1,31 @@
 # @cornie-js/backend-service-game
 
+## 0.4.0
+
+### Minor Changes
+
+- f5d8473: Updated GameV1 with isPublic
+- eef7bfe: Added GET v1/games
+- f5d8473: Updated GameCreateQueryV1 with isPublic
+
+### Patch Changes
+
+- Updated dependencies [675a1ce]
+- Updated dependencies [28d92f2]
+- Updated dependencies [f5d8473]
+- Updated dependencies [28d92f2]
+- Updated dependencies [eba015d]
+- Updated dependencies [a9ad80c]
+- Updated dependencies [8ec592e]
+- Updated dependencies [2002d71]
+- Updated dependencies [f5d8473]
+  - @cornie-js/backend-game-adapter-typeorm@0.3.0
+  - @cornie-js/backend-game-application@0.3.0
+  - @cornie-js/api-models@0.3.0
+  - @cornie-js/backend-http@0.3.0
+  - @cornie-js/backend-game-adapter-pulsar@0.2.1
+  - @cornie-js/backend-game-adapter-ioredis@0.2.1
+
 ## 0.3.0
 
 ### Minor Changes

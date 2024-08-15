@@ -1,5 +1,14 @@
 # @cornie-js/backend-game-domain
 
+## 0.3.0
+
+### Minor Changes
+
+- 5291208: Added GamesCanBeFoundByUserSpec
+- 675a1ce: Updated GameCreateQuery with isPublic
+- 675a1ce: Updated Game with isPublic
+- 1e84086: Update GameFindQuery with isPublic
+
 ## 0.2.0
 
 ### Minor Changes

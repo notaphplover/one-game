@@ -1,5 +1,14 @@
 # @cornie-js/backend-service-gateway
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [2002d71]
+  - @cornie-js/backend-http@0.3.0
+  - @cornie-js/backend-gateway-application@0.3.1
+  - @cornie-js/backend-graphql@0.2.1
+
 ## 0.4.0
 
 ### Minor Changes
