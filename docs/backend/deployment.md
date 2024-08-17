@@ -41,6 +41,8 @@ minikube image load robertopintosl/one-game-backend-consumer-game:latest
 minikube image load robertopintosl/one-game-backend-service-game:latest
 ```
 
+Note: keep in mind k8s might pull docker images from the registry. In order to keep the loaded image, consider updating your service with `imagePullPolicy: Never`.
+
 Assuming you want to locally deploy services through minikube, consider `minikube tunnel` to provide external ips to exposed services.
 
 #### Enabling minikube ingress
