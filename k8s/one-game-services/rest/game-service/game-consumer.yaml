@@ -18,7 +18,6 @@ spec:
     spec:
       containers:
       - image: robertopintosl/one-game-backend-consumer-game:latest
-        imagePullPolicy: Never
         env:
           - name: ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED
             value: 'false'
