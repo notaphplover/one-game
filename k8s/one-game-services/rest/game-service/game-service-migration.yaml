@@ -9,8 +9,7 @@ spec:
       containers:
       - name: rest-service-game-migration
         image: robertopintosl/one-game-backend-service-game:latest
-        imagePullPolicy: Never
-        command: ["pnpm",  "migrations:run"]
+        command: ["cornie-js-game-service-run-migrations"]
         env:
           - name: ONE_JS_GAME_SERVICE_DOT_ENV_ENABLED
             value: 'false'
