@@ -1,6 +1,6 @@
-import { Either } from '../models/Either';
+import { Either } from '../../common/models/Either';
 
-export const validateName = (name: string): Either<string, undefined> => {
+export const validateUsername = (name: string): Either<string, undefined> => {
   if (name.trim() === '') {
     return {
       isRight: false,

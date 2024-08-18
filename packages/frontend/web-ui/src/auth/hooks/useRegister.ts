@@ -2,12 +2,12 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { useEffect, useState } from 'react';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
-import { validateEmail } from '../../common/helpers/validateEmail';
-import { validateName } from '../../common/helpers/validateName';
-import { validatePassword } from '../../common/helpers/validatePassword';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
+import { validateUsername } from '../../user/helpers/validateUsername';
+import { validateConfirmPassword } from '../helpers/validateConfirmPassword';
+import { validateEmail } from '../helpers/validateEmail';
+import { validatePassword } from '../helpers/validatePassword';
 import { UseRegisterActions } from '../models/UseRegisterActions';
 import {
   RegisterFormFields,
@@ -104,7 +104,7 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
       formValidation.email = emailValidation.value;
     }
 
-    const nameValidation: Either<string, undefined> = validateName(
+    const nameValidation: Either<string, undefined> = validateUsername(
       registerData.form.fields.name,
     );
 

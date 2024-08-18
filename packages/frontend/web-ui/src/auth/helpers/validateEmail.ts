@@ -1,4 +1,4 @@
-import { Either } from '../models/Either';
+import { Either } from '../../common/models/Either';
 
 export const validateEmail = (email: string): Either<string, undefined> => {
   if (email.match(/^\S+@\S+$/gi) == null) {

@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../common/helpers/isFullfilledPayloadAction');
-jest.mock('../../common/helpers/validateEmail');
-jest.mock('../../common/helpers/validatePassword');
-jest.mock('../../app/store/thunk/createAuthByCredentials');
 jest.mock('../../app/store/hooks');
+jest.mock('../../app/store/thunk/createAuthByCredentials');
+jest.mock('../../common/helpers/isFullfilledPayloadAction');
+jest.mock('../helpers/validateEmail');
+jest.mock('../helpers/validatePassword');
 
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -17,9 +17,9 @@ import {
 import { useAppDispatch } from '../../app/store/hooks';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 import { isFullfilledPayloadAction } from '../../common/helpers/isFullfilledPayloadAction';
-import { validateEmail } from '../../common/helpers/validateEmail';
-import { validatePassword } from '../../common/helpers/validatePassword';
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
+import { validateEmail } from '../helpers/validateEmail';
+import { validatePassword } from '../helpers/validatePassword';
 import { FormFieldsLogin } from '../models/FormFieldsLogin';
 import { FormValidationResult } from '../models/FormValidationResult';
 import { LoginStatus } from '../models/LoginStatus';

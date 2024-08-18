@@ -1,12 +1,12 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { useEffect, useState } from 'react';
 
+import { validateConfirmPassword } from '../../auth/helpers/validateConfirmPassword';
+import { validatePassword } from '../../auth/helpers/validatePassword';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
-import { validateName } from '../../common/helpers/validateName';
-import { validatePassword } from '../../common/helpers/validatePassword';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
+import { validateUsername } from '../helpers/validateUsername';
 import { UserInfoStatus } from '../models/UserInfoStatus';
 import { UseUserInfoActions } from '../models/UseUserInfoActions';
 import {
@@ -88,7 +88,7 @@ export const useUserInfo = (): [UseUserInfoData, UseUserInfoActions] => {
       }
     }
 
-    const nameValidation: Either<string, undefined> = validateName(
+    const nameValidation: Either<string, undefined> = validateUsername(
       userInfoData.form.fields.name,
     );
 
