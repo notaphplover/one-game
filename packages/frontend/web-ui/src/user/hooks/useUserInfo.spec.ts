@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../auth/helpers/validateConfirmPassword');
+jest.mock('../../auth/helpers/validatePassword');
 jest.mock('../../common/helpers/mapUseQueryHookResult');
-jest.mock('../../common/helpers/validateConfirmPassword');
-jest.mock('../../common/helpers/validateName');
-jest.mock('../../common/helpers/validatePassword');
 jest.mock('../../common/http/services/cornieApi');
+jest.mock('../helpers/validateUsername');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { UpdateUsersV1MeArgs } from '@cornie-js/frontend-api-rtk-query';
@@ -12,12 +12,12 @@ import { QueryStatus } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult, waitFor } from '@testing-library/react';
 import React, { act } from 'react';
 
+import { validateConfirmPassword } from '../../auth/helpers/validateConfirmPassword';
+import { validatePassword } from '../../auth/helpers/validatePassword';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
-import { validateName } from '../../common/helpers/validateName';
-import { validatePassword } from '../../common/helpers/validatePassword';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either, Left, Right } from '../../common/models/Either';
+import { validateUsername } from '../helpers/validateUsername';
 import { UserInfoStatus } from '../models/UserInfoStatus';
 import { UseUserInfoActions } from '../models/UseUserInfoActions';
 import { UseUserInfoData } from '../models/UseUserInfoData';
@@ -162,7 +162,9 @@ describe(useUserInfo.name, () => {
           value: undefined,
         });
 
-        (validateName as jest.Mocked<typeof validateName>).mockReturnValueOnce({
+        (
+          validateUsername as jest.Mocked<typeof validateUsername>
+        ).mockReturnValueOnce({
           isRight: true,
           value: undefined,
         });

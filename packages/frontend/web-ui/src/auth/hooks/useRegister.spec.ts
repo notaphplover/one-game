@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../common/helpers/mapUseQueryHookResult');
-jest.mock('../../common/helpers/validateConfirmPassword');
-jest.mock('../../common/helpers/validateEmail');
-jest.mock('../../common/helpers/validateName');
-jest.mock('../../common/helpers/validatePassword');
 jest.mock('../../common/http/services/cornieApi');
+jest.mock('../../user/helpers/validateUsername');
+jest.mock('../helpers/validateConfirmPassword');
+jest.mock('../helpers/validateEmail');
+jest.mock('../helpers/validatePassword');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
@@ -17,12 +17,12 @@ import { renderHook, RenderHookResult } from '@testing-library/react';
 import React, { act } from 'react';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { validateConfirmPassword } from '../../common/helpers/validateConfirmPassword';
-import { validateEmail } from '../../common/helpers/validateEmail';
-import { validateName } from '../../common/helpers/validateName';
-import { validatePassword } from '../../common/helpers/validatePassword';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Right } from '../../common/models/Either';
+import { validateUsername } from '../../user/helpers/validateUsername';
+import { validateConfirmPassword } from '../helpers/validateConfirmPassword';
+import { validateEmail } from '../helpers/validateEmail';
+import { validatePassword } from '../helpers/validatePassword';
 import { UseRegisterActions } from '../models/UseRegisterActions';
 import { UseRegisterData } from '../models/UseRegisterData';
 import { UseRegisterStatus } from '../models/UseRegisterStatus';
@@ -223,7 +223,9 @@ describe(useRegister.name, () => {
         value: undefined,
       });
 
-      (validateName as jest.Mocked<typeof validateName>).mockReturnValueOnce({
+      (
+        validateUsername as jest.Mocked<typeof validateUsername>
+      ).mockReturnValueOnce({
         isRight: true,
         value: undefined,
       });

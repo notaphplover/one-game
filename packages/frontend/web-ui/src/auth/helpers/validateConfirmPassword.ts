@@ -1,5 +1,5 @@
-import { Either } from '../models/Either';
-import { PASSWORD_MIN_LENGTH } from './passwordMinLength';
+import { PASSWORD_MIN_LENGTH } from '../../common/helpers/passwordMinLength';
+import { Either } from '../../common/models/Either';
 
 export const validateConfirmPassword = (
   password: string | null | undefined,
