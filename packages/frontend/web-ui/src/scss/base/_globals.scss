@@ -106,65 +106,52 @@ a.logo-cornie-text:hover {
   margin-bottom: 1.5rem;
 }
 
-.page-section-container {
-  margin: 0 auto;
-  max-width: 1200px;
+.menu-navbar {
+  display: flex;
 }
 
 .navbar-menu-item {
   padding: 1rem;
 }
 
-.navbar_link {
+.navbar-link {
   color: var(--cg-bkg-primary-dark);
   margin: 0.5rem 0.5rem;
 }
 
-.navbar-menu-item .navbar_link_button {
-  color: var(--cg-bkg-primary-dark);
-  font-size: v.$font-xs;
-}
-
-.navbar-menu-item .navbar_link_button:hover {
-  color: var(--cg-bkg-secondary-light);
-  background-color: v.$transparent;
-}
-
 .navbar-options-menu {
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
+  display: none;
 }
 
-@media (min-width: v.$xs) {
-  .navbar-options-menu-icon {
-    display: flex;
-  }
-  .menu_navbar {
-    display: flex;
-  }
-  .navbar-options-menu {
-    display: none;
-  }
+.navbar-options-menu-icon {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
 @media (min-width: v.$md) {
   .navbar-options-menu-icon {
     display: none;
   }
-  .menu_navbar {
+  .menu-navbar {
     display: none;
   }
   .navbar-options-menu {
     display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
   }
 }
 
 .navbar-options-menu .navbar-option {
   color: var(--cg-text-primary);
-  margin: 1rem 0.5rem;
 }
 
 .navbar-options-menu .navbar-option:hover {
   color: var(--cg-bkg-secondary-light);
+}
+
+.page-section-container {
+  margin: 0 auto;
+  max-width: 1200px;
 }
