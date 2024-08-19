@@ -15,7 +15,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { render, RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { AuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
 import { CornieHome } from './CornieHome';
@@ -24,19 +24,13 @@ const HOME_PAGE = '#home-page';
 const HOME_PAGE_WITH_AUTH = '#home-page-with-auth';
 
 describe(CornieHome.name, () => {
-  describe('when called, and useSelector() returns a not authenticated state', () => {
-    let authStateFixture: AuthState;
-
+  describe('when called, and useSelector() returns null', () => {
     let shownPage: Element | null;
 
     beforeAll(() => {
-      authStateFixture = {
-        status: AuthStateStatus.nonAuthenticated,
-      };
-
       (
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(authStateFixture);
+      ).mockReturnValueOnce(null);
 
       const renderResult: RenderResult = render(
         <MemoryRouter>
@@ -58,8 +52,8 @@ describe(CornieHome.name, () => {
     });
   });
 
-  describe('when called, and useSelector() returns a valid accessToken', () => {
-    let authStateFixture: AuthState;
+  describe('when called, and useSelector() returns AuthenticatedAuthState', () => {
+    let authStateFixture: AuthenticatedAuthState;
     let shownPage: Element | null;
 
     beforeAll(() => {

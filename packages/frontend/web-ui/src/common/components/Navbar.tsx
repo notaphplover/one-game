@@ -30,9 +30,7 @@ export const Navbar = (): React.JSX.Element => {
   const onLogout = (event: React.FormEvent) => {
     event.preventDefault();
     dispatch(logout());
-    navigate(getSlug(NavbarPageName.logout), {
-      replace: true,
-    });
+    navigate(getSlug(NavbarPageName.logout));
   };
 
   return (
