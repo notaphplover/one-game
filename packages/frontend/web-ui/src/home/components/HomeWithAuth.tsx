@@ -3,14 +3,8 @@ import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
 } from '@mui/icons-material';
-import GamesIcon from '@mui/icons-material/Games';
-import { Box, Button, Grid, Link, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
-import {
-  Link as RouterLink,
-  NavigateFunction,
-  useNavigate,
-} from 'react-router-dom';
 
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
@@ -67,8 +61,6 @@ export const HomeWithAuth = (): React.JSX.Element => {
     GAME_STATUS_ACTIVE,
   );
 
-  const navigate: NavigateFunction = useNavigate();
-
   const onNextPageNonStarted = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -113,11 +105,6 @@ export const HomeWithAuth = (): React.JSX.Element => {
     }
   };
 
-  const onCreateNewGame = (event: React.FormEvent) => {
-    event.preventDefault();
-    navigate('/games', { replace: true });
-  };
-
   return (
     <CornieLayout id="home-page-with-auth" withFooter withNavBar>
       <Box
@@ -125,22 +112,6 @@ export const HomeWithAuth = (): React.JSX.Element => {
         className="page-section-container home-auth-container"
       >
         <Grid container>
-          <Grid item xs={12}>
-            <Box component="div" className="home-auth-button-container">
-              <Link component={RouterLink} to="/games/">
-                <Button
-                  type="button"
-                  aria-pressed="true"
-                  className="home-auth-button-new-game"
-                  variant="contained"
-                  startIcon={<GamesIcon />}
-                  onClick={onCreateNewGame}
-                >
-                  New Game
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
           <Grid item xs={12}>
             <Typography variant="h3" className="home-auth-text" component="h3">
               Pending Games

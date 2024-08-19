@@ -35,12 +35,12 @@
 }
 
 .home-auth-container {
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .home-auth-container .home-auth-text {
   color: var(--cg-bkg-primary-dark);
-  padding: 2rem 0;
+  padding: 1rem 0;
   text-align: left;
   font-size: variables.$font-md;
 }
@@ -50,27 +50,6 @@
   padding: 2rem 1rem;
   text-align: left;
   font-size: variables.$font-sm;
-}
-
-.home-auth-button-container {
-  display: flex;
-  justify-content: end;
-}
-
-.home-auth-button-container .home-auth-button-new-game {
-  background-color: var(--cg-bkg-primary-dark);
-  margin: 2rem auto;
-  padding: 1rem;
-  border-radius: 10px;
-  font-weight: bold;
-  box-shadow:
-    0 4px 8px 0 var(--cg-bkg-secondary-dark),
-    0 6px 20px 0 var(--cg-bkg-secondary-dark);
-}
-
-.home-auth-button-container .home-auth-button-new-game:hover {
-  background-color: var(--cg-bkg-primary-light);
-  font-weight: bold;
 }
 
 .home-auth-container-games {
