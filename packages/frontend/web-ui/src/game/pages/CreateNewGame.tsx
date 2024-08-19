@@ -59,7 +59,7 @@ export const CreateNewGame = (): React.JSX.Element => {
 
   const onGoHome = (event: React.FormEvent): void => {
     event.preventDefault();
-    navigate('/', { replace: true });
+    navigate('/');
   };
 
   const isTextFieldDisabled = (): boolean => {

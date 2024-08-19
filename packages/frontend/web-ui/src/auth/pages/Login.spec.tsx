@@ -281,7 +281,7 @@ describe(Login.name, () => {
     });
 
     it('should navigate to the next page', () => {
-      expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
+      expect(navigateMock).toHaveBeenCalledWith('/');
     });
 
     it('should save accessToken and refreshToken in Local Storage', () => {

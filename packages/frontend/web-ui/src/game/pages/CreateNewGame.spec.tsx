@@ -358,7 +358,7 @@ describe(CreateNewGame.name, () => {
 
       await waitFor(() => {
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
+        expect(navigateMock).toHaveBeenCalledWith('/');
       });
     });
 
@@ -367,7 +367,7 @@ describe(CreateNewGame.name, () => {
     });
 
     it('should navigate to Cornie Home page', () => {
-      expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
+      expect(navigateMock).toHaveBeenCalledWith('/');
     });
   });
 });

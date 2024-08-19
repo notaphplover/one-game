@@ -67,7 +67,7 @@ export const Login = (): React.JSX.Element => {
 
       const redirectTo: string | null = getRedirectTo();
       if (redirectTo === null) {
-        navigate('/', { replace: true });
+        navigate('/');
       } else {
         window.location.href = redirectTo;
       }
