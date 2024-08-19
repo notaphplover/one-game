@@ -5,6 +5,7 @@ import { getSlug } from './getSlug';
 
 describe(getSlug.name, () => {
   describe.each<[NavbarPageName, string]>([
+    [NavbarPageName.createGame, '/games'],
     [NavbarPageName.login, '/auth/login'],
     [NavbarPageName.logout, '/'],
     [NavbarPageName.register, '/auth/register'],
