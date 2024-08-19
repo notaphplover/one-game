@@ -1,41 +1,46 @@
-import {
-  AccountCircleOutlined,
-  AppRegistrationOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-} from '@mui/icons-material';
+import { AccountCircle } from '@mui/icons-material';
+import GamesIcon from '@mui/icons-material/Games';
 import { Box, Button } from '@mui/material';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { getSlug } from '../helpers/getSlug';
-import { NavbarPageName } from '../models/NavbarPageName';
 
 export interface MenuOptionsParams {
   auth: AuthenticatedAuthState | null;
-  onLogout: (event: React.FormEvent) => void;
+  setGamesMenuAnchorNav: (
+    value: React.SetStateAction<(EventTarget & Element) | null>,
+  ) => void;
+  setUserMenuAnchorNav: (
+    value: React.SetStateAction<(EventTarget & Element) | null>,
+  ) => void;
 }
 
 const NavbarOptionsContents = (
   params: MenuOptionsParams,
 ): React.JSX.Element => {
+  const handleOpenGamesMenu: React.MouseEventHandler = (
+    event: React.MouseEvent,
+  ) => {
+    params.setGamesMenuAnchorNav(event.currentTarget);
+  };
+  const handleOpenUserMenu: React.MouseEventHandler = (
+    event: React.MouseEvent,
+  ) => {
+    params.setUserMenuAnchorNav(event.currentTarget);
+  };
+
   if (params.auth === null) {
     return (
       <>
         <Button
-          component="a"
+          aria-label="account-menu-button"
+          aria-controls="user-menu-appbar"
+          aria-haspopup="true"
           className="navbar-option"
-          href={getSlug(NavbarPageName.login)}
-          startIcon={<LoginOutlined />}
+          component="button"
+          onClick={handleOpenUserMenu}
+          startIcon={<AccountCircle />}
         >
-          {NavbarPageName.login}
-        </Button>
-        <Button
-          component="a"
-          className="navbar-option"
-          href={getSlug(NavbarPageName.register)}
-          startIcon={<AppRegistrationOutlined />}
-        >
-          {NavbarPageName.register}
+          <span className="navbar-option-text">ACCOUNT</span>
         </Button>
       </>
     );
@@ -44,20 +49,26 @@ const NavbarOptionsContents = (
   return (
     <>
       <Button
-        component="a"
+        aria-label="games-menu-button"
+        aria-controls="games-menu-appbar"
+        aria-haspopup="true"
         className="navbar-option"
-        href={getSlug(NavbarPageName.user)}
-        startIcon={<AccountCircleOutlined />}
+        component="button"
+        onClick={handleOpenGamesMenu}
+        startIcon={<GamesIcon />}
       >
-        {NavbarPageName.user}
+        <span className="navbar-option-text">GAMES</span>
       </Button>
       <Button
-        type="button"
+        aria-label="account-menu-button"
+        aria-controls="user-menu-appbar"
+        aria-haspopup="true"
         className="navbar-option"
-        startIcon={<LogoutOutlined />}
-        onClick={params.onLogout}
+        component="button"
+        onClick={handleOpenUserMenu}
+        startIcon={<AccountCircle />}
       >
-        {NavbarPageName.logout}
+        <span className="navbar-option-text">ACCOUNT</span>
       </Button>
     </>
   );

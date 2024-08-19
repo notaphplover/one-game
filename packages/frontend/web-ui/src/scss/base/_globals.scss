@@ -15,7 +15,9 @@
 }
 
 html {
+  background-color: var(--cg-bkg-secondary-light);
   box-sizing: border-box;
+  min-height: 100vh;
 }
 
 *,
@@ -120,27 +122,9 @@ a.logo-cornie-text:hover {
 }
 
 .navbar-options-menu {
-  display: none;
-}
-
-.navbar-options-menu-icon {
   display: flex;
   flex-grow: 1;
   justify-content: flex-end;
-}
-
-@media (min-width: v.$md) {
-  .navbar-options-menu-icon {
-    display: none;
-  }
-  .menu-navbar {
-    display: none;
-  }
-  .navbar-options-menu {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-  }
 }
 
 .navbar-options-menu .navbar-option {
@@ -149,6 +133,16 @@ a.logo-cornie-text:hover {
 
 .navbar-options-menu .navbar-option:hover {
   color: var(--cg-bkg-secondary-light);
+}
+
+.navbar-options-menu .navbar-option span.navbar-option-text {
+  display: none;
+}
+
+@media (min-width: v.$md) {
+  .navbar-options-menu .navbar-option span.navbar-option-text {
+    display: inline;
+  }
 }
 
 .page-section-container {

@@ -1,11 +1,16 @@
-import { Box, Menu, MenuItem } from '@mui/material';
-import { Link } from 'react-router-dom';
+import {
+  AccountCircleOutlined,
+  AppRegistrationOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+} from '@mui/icons-material';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { getSlug } from '../helpers/getSlug';
 import { NavbarPageName } from '../models/NavbarPageName';
 
-export interface NavbarMenuParams {
+export interface NavbarUserMenuParams {
   auth: AuthenticatedAuthState | null;
   onLogout: (event: React.FormEvent) => void;
   setUserMenuAnchorNav: React.Dispatch<
@@ -14,11 +19,13 @@ export interface NavbarMenuParams {
   userMenuAnchorNav: (EventTarget & Element) | null;
 }
 
-const buildCloseUserMenu = (params: NavbarMenuParams) => () => {
+const buildCloseUserMenu = (params: NavbarUserMenuParams) => () => {
   params.setUserMenuAnchorNav(null);
 };
 
-const NavbarUserMenuItems = (params: NavbarMenuParams): React.JSX.Element => {
+const NavbarUserMenuItems = (
+  params: NavbarUserMenuParams,
+): React.JSX.Element => {
   if (params.auth === null) {
     return (
       <Box>
@@ -27,18 +34,28 @@ const NavbarUserMenuItems = (params: NavbarMenuParams): React.JSX.Element => {
           key={NavbarPageName.login}
           onClick={buildCloseUserMenu(params)}
         >
-          <Link className="navbar-link" to={getSlug(NavbarPageName.login)}>
+          <Button
+            component="a"
+            className="navbar-link"
+            href={getSlug(NavbarPageName.login)}
+            startIcon={<LoginOutlined />}
+          >
             {NavbarPageName.login}
-          </Link>
+          </Button>
         </MenuItem>
         <MenuItem
           className="navbar-menu-item"
           key={NavbarPageName.register}
           onClick={buildCloseUserMenu(params)}
         >
-          <Link className="navbar-link" to={getSlug(NavbarPageName.register)}>
+          <Button
+            component="a"
+            className="navbar-link"
+            href={getSlug(NavbarPageName.register)}
+            startIcon={<AppRegistrationOutlined />}
+          >
             {NavbarPageName.register}
-          </Link>
+          </Button>
         </MenuItem>
       </Box>
     );
@@ -48,31 +65,40 @@ const NavbarUserMenuItems = (params: NavbarMenuParams): React.JSX.Element => {
     <Box>
       <MenuItem
         className="navbar-menu-item"
-        key={NavbarPageName.user}
+        key={NavbarPageName.userMe}
         onClick={buildCloseUserMenu(params)}
       >
-        <Link className="navbar-link" to={getSlug(NavbarPageName.user)}>
-          {NavbarPageName.user}
-        </Link>
+        <Button
+          component="a"
+          className="navbar-link"
+          href={getSlug(NavbarPageName.userMe)}
+          startIcon={<AccountCircleOutlined />}
+        >
+          {NavbarPageName.userMe}
+        </Button>
       </MenuItem>
       <MenuItem
         className="navbar-menu-item"
         key={NavbarPageName.logout}
         onClick={buildCloseUserMenu(params)}
       >
-        <Link
+        <Button
+          component="a"
           className="navbar-link"
+          href={getSlug(NavbarPageName.logout)}
           onClick={params.onLogout}
-          to={getSlug(NavbarPageName.logout)}
+          startIcon={<LogoutOutlined />}
         >
           {NavbarPageName.logout}
-        </Link>
+        </Button>
       </MenuItem>
     </Box>
   );
 };
 
-export const NavbarUserMenu = (params: NavbarMenuParams): React.JSX.Element => {
+export const NavbarUserMenu = (
+  params: NavbarUserMenuParams,
+): React.JSX.Element => {
   const isNavBarOpen = (): boolean => params.userMenuAnchorNav !== null;
 
   const handleCloseNavMenu = () => {
@@ -82,15 +108,15 @@ export const NavbarUserMenu = (params: NavbarMenuParams): React.JSX.Element => {
   return (
     <Menu
       className="menu-navbar"
-      id="menu-appbar"
+      id="user-menu-appbar"
       anchorEl={params.userMenuAnchorNav}
       anchorOrigin={{
-        horizontal: 'left',
+        horizontal: 'right',
         vertical: 'bottom',
       }}
       keepMounted
       transformOrigin={{
-        horizontal: 'left',
+        horizontal: 'right',
         vertical: 'top',
       }}
       open={isNavBarOpen()}
