@@ -1,3 +1,4 @@
+jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../hooks/useJoinExistingGame');
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
@@ -5,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { render, RenderResult } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useJoinExistingGame } from '../hooks/useJoinExistingGame';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { JoinExistingGame } from './JoinExistingGame';
@@ -40,6 +42,11 @@ describe(JoinExistingGame.name, () => {
       jest.clearAllMocks();
     });
 
+    it('should call useRedirectUnauthorized()', () => {
+      expect(useRedirectUnauthorized).toHaveBeenCalledTimes(1);
+      expect(useRedirectUnauthorized).toHaveBeenCalledWith();
+    });
+
     it('should show the success grid', () => {
       expect(joinExistingGameOkGridDisplayValue).not.toBe('none');
     });
@@ -73,6 +80,11 @@ describe(JoinExistingGame.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+    });
+
+    it('should call useRedirectUnauthorized()', () => {
+      expect(useRedirectUnauthorized).toHaveBeenCalledTimes(1);
+      expect(useRedirectUnauthorized).toHaveBeenCalledWith();
     });
 
     it('should show the rejected grid', () => {

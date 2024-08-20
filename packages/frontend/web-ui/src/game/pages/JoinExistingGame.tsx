@@ -11,12 +11,15 @@ import {
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { CheckingGame } from '../components/CheckingGame';
 import { useJoinExistingGame } from '../hooks/useJoinExistingGame';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 
 export const JoinExistingGame = (): React.JSX.Element => {
+  useRedirectUnauthorized();
+
   const { status, errorMessage } = useJoinExistingGame();
 
   const getJoinExistinGameOkDisplay = (): string => {

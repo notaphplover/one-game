@@ -1,13 +1,6 @@
 jest.mock('../../app/store/hooks');
-jest.mock('../../common/helpers/getSlug');
 jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
-
-jest.mock('react-router-dom', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
-  useNavigate: jest.fn(),
-}));
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
@@ -15,34 +8,17 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { QueryStatus } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult, waitFor } from '@testing-library/react';
 import { act } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
-import { getSlug } from '../../common/helpers/getSlug';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { PageName } from '../../common/models/PageName';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
 import { useJoinExistingGame } from './useJoinExistingGame';
 
 describe(useJoinExistingGame.name, () => {
-  let navigateMock: ReturnType<typeof useNavigate> &
-    jest.Mock<ReturnType<typeof useNavigate>>;
-
-  beforeAll(() => {
-    navigateMock = jest.fn<ReturnType<typeof useNavigate>>() as ReturnType<
-      typeof useNavigate
-    > &
-      jest.Mock<ReturnType<typeof useNavigate>>;
-
-    (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
-      navigateMock,
-    );
-  });
-
   describe('having a window with location.href with gameId query', () => {
     let gameIdFixture: string;
     let previousLocation: Location;
@@ -59,123 +35,6 @@ describe(useJoinExistingGame.name, () => {
         configurable: true,
         value: new URL(locationFixture),
         writable: true,
-      });
-    });
-
-    describe('when called, and selectAuthenticatedAuth() returns null', () => {
-      let slugFixture: string;
-
-      let useGetUsersV1MeQueryResultMock: jest.Mocked<
-        ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
-      >;
-      let useCreateGamesV1SlotsMutationResultMock: jest.Mocked<
-        ReturnType<typeof cornieApi.useCreateGamesV1SlotsMutation>
-      >;
-      let authFixture: AuthenticatedAuthState | null;
-
-      beforeAll(async () => {
-        slugFixture = '/slug-fixture';
-
-        useGetUsersV1MeQueryResultMock = {
-          data: undefined,
-          error: undefined,
-          isLoading: false,
-          refetch: jest.fn(),
-        };
-
-        useCreateGamesV1SlotsMutationResultMock = [
-          jest.fn(),
-          {
-            reset: jest.fn(),
-            status: QueryStatus.uninitialized,
-          },
-        ];
-
-        authFixture = null;
-
-        (useAppSelector as unknown as jest.Mock<typeof useAppSelector>)
-          .mockReturnValueOnce(authFixture)
-          .mockReturnValueOnce(authFixture);
-        (
-          cornieApi.useGetUsersV1MeQuery as jest.Mock<
-            typeof cornieApi.useGetUsersV1MeQuery
-          >
-        ).mockReturnValue(useGetUsersV1MeQueryResultMock);
-        (
-          cornieApi.useCreateGamesV1SlotsMutation as jest.Mock<
-            typeof cornieApi.useCreateGamesV1SlotsMutation
-          >
-        ).mockReturnValue(useCreateGamesV1SlotsMutationResultMock);
-
-        (
-          mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-        ).mockReturnValue({
-          isRight: false,
-          value: '',
-        });
-
-        navigateMock.mockReturnValue(undefined);
-
-        (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
-
-        // eslint-disable-next-line @typescript-eslint/await-thenable
-        await act(() => {
-          renderHook(() => useJoinExistingGame());
-        });
-      });
-
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
-
-      it('should call useAppSelector()', () => {
-        expect(useAppSelector).toHaveBeenCalledTimes(2);
-        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
-      });
-
-      it('should call useNavigate()', () => {
-        expect(useNavigate).toHaveBeenCalledTimes(2);
-        expect(useNavigate).toHaveBeenCalledWith();
-      });
-
-      it('should call cornieApi.useGetUsersV1MeQuery()', () => {
-        const expectedParams: Parameters<
-          typeof cornieApi.useGetUsersV1MeQuery
-        > = [
-          {
-            params: [],
-          },
-        ];
-
-        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledTimes(2);
-        expect(cornieApi.useGetUsersV1MeQuery).toHaveBeenCalledWith(
-          ...expectedParams,
-        );
-      });
-
-      it('should call cornieApi.useCreateGamesV1SlotsMutation()', () => {
-        expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledTimes(
-          2,
-        );
-        expect(cornieApi.useCreateGamesV1SlotsMutation).toHaveBeenCalledWith();
-      });
-
-      it('should call mapUseQueryHookResult()', () => {
-        expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-        expect(mapUseQueryHookResult).toHaveBeenCalledWith(
-          useGetUsersV1MeQueryResultMock,
-        );
-      });
-
-      it('should call getSlug()', () => {
-        expect(getSlug).toHaveBeenCalledWith(PageName.login);
-      });
-
-      it('should call navigate()', () => {
-        const redirectToUrl: string = `${slugFixture}?redirectTo=http://corniegame.com/game/joinGame?gameId=gameId`;
-
-        expect(navigateMock).toHaveBeenCalledTimes(1);
-        expect(navigateMock).toHaveBeenCalledWith(redirectToUrl);
       });
     });
 
@@ -293,10 +152,6 @@ describe(useJoinExistingGame.name, () => {
       afterAll(() => {
         jest.resetAllMocks();
         jest.clearAllMocks();
-      });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
       });
 
       it('should call useAppSelector()', () => {
@@ -472,10 +327,6 @@ describe(useJoinExistingGame.name, () => {
       afterAll(() => {
         jest.resetAllMocks();
         jest.clearAllMocks();
-      });
-
-      it('should not call navigate()', () => {
-        expect(navigateMock).not.toHaveBeenCalled();
       });
 
       it('should call useAppSelector()', () => {
