@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 
 import { getSlug } from '../helpers/getSlug';
-import { NavbarPageName } from '../models/NavbarPageName';
+import { PageName } from '../models/PageName';
 
 export interface NavbarGamesMenuParams {
   setGamesMenuAnchorNav: React.Dispatch<
@@ -22,16 +22,16 @@ const NavbarGamesMenuItems = (
     <Box>
       <MenuItem
         className="navbar-menu-item"
-        key={NavbarPageName.createGame}
+        key={PageName.createGame}
         onClick={buildCloseMenu(params)}
       >
         <Button
           component="a"
           className="navbar-link"
-          href={getSlug(NavbarPageName.createGame)}
+          href={getSlug(PageName.createGame)}
           startIcon={<AddIcon />}
         >
-          {NavbarPageName.createGame}
+          NEW GAME
         </Button>
       </MenuItem>
     </Box>

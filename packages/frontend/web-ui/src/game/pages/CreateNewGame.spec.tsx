@@ -1,3 +1,4 @@
+jest.mock('../../common/helpers/getSlug');
 jest.mock('../hooks/useCreateNewGame');
 jest.mock('../../app/store/hooks');
 
@@ -21,7 +22,9 @@ import { MemoryRouter, useNavigate } from 'react-router-dom';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
+import { getSlug } from '../../common/helpers/getSlug';
 import { Either } from '../../common/models/Either';
+import { PageName } from '../../common/models/PageName';
 import {
   NUMBER_PLAYERS_MAXIMUM,
   NUMBER_PLAYERS_MINIMUM,
@@ -306,9 +309,13 @@ describe(CreateNewGame.name, () => {
   });
 
   describe('when called, and game is created and can navigate to the next page', () => {
+    let slugFixture: string;
+
     let renderResult: RenderResult;
 
     beforeAll(async () => {
+      slugFixture = '/slug-fixture';
+
       (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
         navigateMock,
       );
@@ -354,11 +361,13 @@ describe(CreateNewGame.name, () => {
         status: CreateNewGameStatus.done,
       });
 
+      (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
+
       fireEvent.click(formCornieHomeButton);
 
       await waitFor(() => {
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(navigateMock).toHaveBeenCalledWith('/');
+        expect(navigateMock).toHaveBeenCalledWith(slugFixture);
       });
     });
 
@@ -366,8 +375,13 @@ describe(CreateNewGame.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should navigate to Cornie Home page', () => {
-      expect(navigateMock).toHaveBeenCalledWith('/');
+    it('should call getSlug()', () => {
+      expect(getSlug).toHaveBeenCalledWith(PageName.home);
+    });
+
+    it('should call navigate()', () => {
+      expect(navigateMock).toHaveBeenCalledTimes(1);
+      expect(navigateMock).toHaveBeenCalledWith(slugFixture);
     });
   });
 });

@@ -1,4 +1,5 @@
 jest.mock('../../app/store/hooks');
+jest.mock('../../common/helpers/getSlug');
 jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
 
@@ -19,8 +20,10 @@ import { useNavigate } from 'react-router-dom';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
+import { getSlug } from '../../common/helpers/getSlug';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
+import { PageName } from '../../common/models/PageName';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
 import { useJoinExistingGame } from './useJoinExistingGame';
@@ -34,6 +37,10 @@ describe(useJoinExistingGame.name, () => {
       typeof useNavigate
     > &
       jest.Mock<ReturnType<typeof useNavigate>>;
+
+    (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
+      navigateMock,
+    );
   });
 
   describe('having a window with location.href with gameId query', () => {
@@ -56,6 +63,8 @@ describe(useJoinExistingGame.name, () => {
     });
 
     describe('when called, and selectAuthenticatedAuth() returns null', () => {
+      let slugFixture: string;
+
       let useGetUsersV1MeQueryResultMock: jest.Mocked<
         ReturnType<typeof cornieApi.useGetUsersV1MeQuery>
       >;
@@ -65,6 +74,8 @@ describe(useJoinExistingGame.name, () => {
       let authFixture: AuthenticatedAuthState | null;
 
       beforeAll(async () => {
+        slugFixture = '/slug-fixture';
+
         useGetUsersV1MeQueryResultMock = {
           data: undefined,
           error: undefined,
@@ -105,9 +116,7 @@ describe(useJoinExistingGame.name, () => {
 
         navigateMock.mockReturnValue(undefined);
 
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
-          navigateMock,
-        );
+        (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
 
         // eslint-disable-next-line @typescript-eslint/await-thenable
         await act(() => {
@@ -158,8 +167,14 @@ describe(useJoinExistingGame.name, () => {
         );
       });
 
-      it('should call navigate() to the Login page', () => {
-        const redirectToUrl: string = `/auth/login?redirectTo=http://corniegame.com/game/joinGame?gameId=gameId`;
+      it('should call getSlug()', () => {
+        expect(getSlug).toHaveBeenCalledWith(PageName.login);
+      });
+
+      it('should call navigate()', () => {
+        const redirectToUrl: string = `${slugFixture}?redirectTo=http://corniegame.com/game/joinGame?gameId=gameId`;
+
+        expect(navigateMock).toHaveBeenCalledTimes(1);
         expect(navigateMock).toHaveBeenCalledWith(redirectToUrl);
       });
     });
@@ -247,10 +262,6 @@ describe(useJoinExistingGame.name, () => {
         (
           useAppSelector as unknown as jest.Mock<typeof useAppSelector>
         ).mockReturnValue(authFixture);
-
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValue(
-          navigateMock,
-        );
 
         (
           cornieApi.useGetUsersV1MeQuery as jest.Mock<
@@ -449,10 +460,6 @@ describe(useJoinExistingGame.name, () => {
           isRight: false,
           value: '',
         });
-
-        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
-          navigateMock,
-        );
 
         await act(async () => {
           renderResult = renderHook(() => useJoinExistingGame());

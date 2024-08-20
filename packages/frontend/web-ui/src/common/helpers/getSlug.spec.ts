@@ -1,18 +1,18 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { NavbarPageName } from '../models/NavbarPageName';
+import { PageName } from '../models/PageName';
 import { getSlug } from './getSlug';
 
 describe(getSlug.name, () => {
-  describe.each<[NavbarPageName, string]>([
-    [NavbarPageName.createGame, '/games'],
-    [NavbarPageName.login, '/auth/login'],
-    [NavbarPageName.logout, '/'],
-    [NavbarPageName.register, '/auth/register'],
-    [NavbarPageName.userMe, '/users/me'],
+  describe.each<[PageName, string]>([
+    [PageName.createGame, '/games'],
+    [PageName.login, '/auth/login'],
+    [PageName.home, '/'],
+    [PageName.register, '/auth/register'],
+    [PageName.userMe, '/users/me'],
   ])(
     'having a page name "%s"',
-    (pageName: NavbarPageName, expectedResult: string) => {
+    (pageName: PageName, expectedResult: string) => {
       describe('when called', () => {
         let result: unknown;
 

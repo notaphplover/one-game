@@ -24,7 +24,9 @@ import React, { useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { getSlug } from '../../common/helpers/getSlug';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 
@@ -59,7 +61,7 @@ export const CreateNewGame = (): React.JSX.Element => {
 
   const onGoHome = (event: React.FormEvent): void => {
     event.preventDefault();
-    navigate('/');
+    navigate(getSlug(PageName.home));
   };
 
   const isTextFieldDisabled = (): boolean => {

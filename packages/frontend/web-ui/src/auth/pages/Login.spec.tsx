@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../hooks/useLoginForm');
+jest.mock('../../common/helpers/getSlug');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../../app/store/hooks');
 
@@ -16,7 +17,9 @@ import { MemoryRouter, useNavigate } from 'react-router-dom';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
+import { getSlug } from '../../common/helpers/getSlug';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
+import { PageName } from '../../common/models/PageName';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormParams } from '../models/UseLoginFormResult';
@@ -236,7 +239,11 @@ describe(Login.name, () => {
   });
 
   describe('when called, and user exists and navigate to the next page', () => {
+    let slugFixture: string;
+
     beforeAll(() => {
+      slugFixture = '/slug-fixture';
+
       authenticatedAuthStateFixture = {
         accessToken: 'accessToken-fixture',
         refreshToken: 'refreshToken-fixture',
@@ -268,6 +275,8 @@ describe(Login.name, () => {
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
       ).mockReturnValueOnce(authenticatedAuthStateFixture);
 
+      (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
+
       render(
         <MemoryRouter>
           <Login />
@@ -280,8 +289,14 @@ describe(Login.name, () => {
       jest.resetAllMocks();
     });
 
-    it('should navigate to the next page', () => {
-      expect(navigateMock).toHaveBeenCalledWith('/');
+    it('should call getSlug()', () => {
+      expect(getSlug).toHaveBeenCalledTimes(1);
+      expect(getSlug).toHaveBeenCalledWith(PageName.home);
+    });
+
+    it('should call navigate()', () => {
+      expect(navigateMock).toHaveBeenCalledTimes(1);
+      expect(navigateMock).toHaveBeenCalledWith(slugFixture);
     });
 
     it('should save accessToken and refreshToken in Local Storage', () => {
