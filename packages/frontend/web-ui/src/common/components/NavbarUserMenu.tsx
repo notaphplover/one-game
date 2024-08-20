@@ -8,7 +8,7 @@ import { Box, Button, Menu, MenuItem } from '@mui/material';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { getSlug } from '../helpers/getSlug';
-import { NavbarPageName } from '../models/NavbarPageName';
+import { PageName } from '../models/PageName';
 
 export interface NavbarUserMenuParams {
   auth: AuthenticatedAuthState | null;
@@ -31,30 +31,30 @@ const NavbarUserMenuItems = (
       <Box>
         <MenuItem
           className="navbar-menu-item"
-          key={NavbarPageName.login}
+          key={PageName.login}
           onClick={buildCloseUserMenu(params)}
         >
           <Button
             component="a"
             className="navbar-link"
-            href={getSlug(NavbarPageName.login)}
+            href={getSlug(PageName.login)}
             startIcon={<LoginOutlined />}
           >
-            {NavbarPageName.login}
+            LOGIN
           </Button>
         </MenuItem>
         <MenuItem
           className="navbar-menu-item"
-          key={NavbarPageName.register}
+          key={PageName.register}
           onClick={buildCloseUserMenu(params)}
         >
           <Button
             component="a"
             className="navbar-link"
-            href={getSlug(NavbarPageName.register)}
+            href={getSlug(PageName.register)}
             startIcon={<AppRegistrationOutlined />}
           >
-            {NavbarPageName.register}
+            REGISTER
           </Button>
         </MenuItem>
       </Box>
@@ -65,31 +65,31 @@ const NavbarUserMenuItems = (
     <Box>
       <MenuItem
         className="navbar-menu-item"
-        key={NavbarPageName.userMe}
+        key={PageName.userMe}
         onClick={buildCloseUserMenu(params)}
       >
         <Button
           component="a"
           className="navbar-link"
-          href={getSlug(NavbarPageName.userMe)}
+          href={getSlug(PageName.userMe)}
           startIcon={<AccountCircleOutlined />}
         >
-          {NavbarPageName.userMe}
+          PROFILE
         </Button>
       </MenuItem>
       <MenuItem
         className="navbar-menu-item"
-        key={NavbarPageName.logout}
+        key={PageName.home}
         onClick={buildCloseUserMenu(params)}
       >
         <Button
           component="a"
           className="navbar-link"
-          href={getSlug(NavbarPageName.logout)}
+          href={getSlug(PageName.home)}
           onClick={params.onLogout}
           startIcon={<LogoutOutlined />}
         >
-          {NavbarPageName.logout}
+          LOGOUT
         </Button>
       </MenuItem>
     </Box>

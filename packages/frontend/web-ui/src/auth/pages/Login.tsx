@@ -22,8 +22,10 @@ import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppSelector } from '../../app/store/hooks';
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { getSlug } from '../../common/helpers/getSlug';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
@@ -67,7 +69,7 @@ export const Login = (): React.JSX.Element => {
 
       const redirectTo: string | null = getRedirectTo();
       if (redirectTo === null) {
-        navigate('/');
+        navigate(getSlug(PageName.home));
       } else {
         window.location.href = redirectTo;
       }

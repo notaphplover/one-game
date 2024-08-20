@@ -7,7 +7,7 @@ import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { getSlug } from '../helpers/getSlug';
-import { NavbarPageName } from '../models/NavbarPageName';
+import { PageName } from '../models/PageName';
 import { NavbarGamesMenu } from './NavbarGamesMenu';
 import { NavbarOptions } from './NavbarOptions';
 import { NavbarUserMenu } from './NavbarUserMenu';
@@ -30,7 +30,7 @@ export const Navbar = (): React.JSX.Element => {
   const onLogout = (event: React.FormEvent) => {
     event.preventDefault();
     dispatch(logout());
-    navigate(getSlug(NavbarPageName.logout));
+    navigate(getSlug(PageName.home));
   };
 
   return (

@@ -6,16 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppSelector } from '../../app/store/hooks';
+import { getSlug } from '../../common/helpers/getSlug';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
+import { PageName } from '../../common/models/PageName';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
 
 export const UNEXPECTED_ERROR_MESSAGE: string = 'Unexpected error';
 
 function buildLoginPageUrl(redirectTo: string): string {
-  return `/auth/login?redirectTo=${redirectTo}`;
+  return `${getSlug(PageName.login)}?redirectTo=${redirectTo}`;
 }
 
 export const useJoinExistingGame = (): UseJoinExistingGameResult => {
