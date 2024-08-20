@@ -7,7 +7,11 @@ jest.mock('../helpers/getSlug');
 
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Location as ReactRouterLocation,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
@@ -17,57 +21,96 @@ import { PageName } from '../models/PageName';
 import { useRedirectUnauthorized } from './useRedirectUnauthorized';
 
 describe(useRedirectUnauthorized.name, () => {
-  describe('when called, and useAppSelector() returns null', () => {
-    let slugFixture: string;
+  describe('having a window with location.href with gameId query', () => {
+    let previousLocation: Location;
+    let locationFixture: URL;
 
-    let navigateMock: ReturnType<typeof useNavigate> &
-      jest.Mock<ReturnType<typeof useNavigate>>;
+    beforeAll(() => {
+      previousLocation = window.location;
+      locationFixture = new URL('http://corniegame.com/sample-path');
 
-    beforeAll(async () => {
-      slugFixture = '/slug-fixture';
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        value: new URL(locationFixture),
+        writable: true,
+      });
+    });
 
-      navigateMock = jest.fn<ReturnType<typeof useNavigate>>() as ReturnType<
-        typeof useNavigate
-      > &
+    describe('when called, and useAppSelector() returns null', () => {
+      let reactRouterLocationFixture: ReactRouterLocation;
+      let slugFixture: string;
+
+      let navigateMock: ReturnType<typeof useNavigate> &
         jest.Mock<ReturnType<typeof useNavigate>>;
 
-      (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
-        navigateMock,
-      );
+      beforeAll(async () => {
+        reactRouterLocationFixture = {
+          pathname: '/path-fixture',
+        } as Partial<ReactRouterLocation> as ReactRouterLocation;
+        slugFixture = '/slug-fixture';
 
-      (useAppSelector as jest.Mock<typeof useAppSelector>).mockReturnValueOnce(
-        null,
-      );
+        navigateMock = jest.fn<ReturnType<typeof useNavigate>>() as ReturnType<
+          typeof useNavigate
+        > &
+          jest.Mock<ReturnType<typeof useNavigate>>;
 
-      (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
+        (useLocation as jest.Mock<typeof useLocation>).mockReturnValueOnce(
+          reactRouterLocationFixture,
+        );
 
-      await act(async () => {
-        renderHook(() => useRedirectUnauthorized());
+        (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
+          navigateMock,
+        );
+
+        (
+          useAppSelector as jest.Mock<typeof useAppSelector>
+        ).mockReturnValueOnce(null);
+
+        (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
+
+        await act(async () => {
+          renderHook(() => useRedirectUnauthorized());
+        });
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call useNavigate()', () => {
+        expect(useNavigate).toHaveBeenCalledTimes(1);
+        expect(useNavigate).toHaveBeenCalledWith();
+      });
+
+      it('should call useAppSelector()', () => {
+        expect(useAppSelector).toHaveBeenCalledTimes(1);
+        expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
+      });
+
+      it('should call getSlug()', () => {
+        expect(getSlug).toHaveBeenCalledTimes(1);
+        expect(getSlug).toHaveBeenCalledWith(PageName.login);
+      });
+
+      it('should call navigate()', () => {
+        const expectedRedirection: string = new URL(
+          reactRouterLocationFixture.pathname,
+          locationFixture.href,
+        ).toString();
+
+        expect(navigateMock).toHaveBeenCalledTimes(1);
+        expect(navigateMock).toHaveBeenCalledWith(
+          `${slugFixture}?redirectTo=${encodeURIComponent(expectedRedirection)}`,
+        );
       });
     });
 
     afterAll(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should call useNavigate()', () => {
-      expect(useNavigate).toHaveBeenCalledTimes(1);
-      expect(useNavigate).toHaveBeenCalledWith();
-    });
-
-    it('should call useAppSelector()', () => {
-      expect(useAppSelector).toHaveBeenCalledTimes(1);
-      expect(useAppSelector).toHaveBeenCalledWith(expect.any(Function));
-    });
-
-    it('should call getSlug()', () => {
-      expect(getSlug).toHaveBeenCalledTimes(1);
-      expect(getSlug).toHaveBeenCalledWith(PageName.home);
-    });
-
-    it('should call navigate()', () => {
-      expect(navigateMock).toHaveBeenCalledTimes(1);
-      expect(navigateMock).toHaveBeenCalledWith(slugFixture);
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        value: previousLocation,
+        writable: true,
+      });
     });
   });
 
