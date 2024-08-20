@@ -32,7 +32,10 @@ function getReactStrictModeFriendlyCurrentUrl(location: Location): URL {
    * Tbh, this sucks, but it doesn't seem to be a better way
    * since React won't provide a more detailed location object...
    */
-  return new URL(location.pathname, window.location.href);
+  return new URL(
+    `${location.pathname}${location.search}`,
+    window.location.href,
+  );
 }
 
 export function useRedirectUnauthorized(): void {

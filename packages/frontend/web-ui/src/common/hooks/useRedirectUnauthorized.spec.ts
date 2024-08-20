@@ -46,6 +46,7 @@ describe(useRedirectUnauthorized.name, () => {
       beforeAll(async () => {
         reactRouterLocationFixture = {
           pathname: '/path-fixture',
+          search: '?search=fixture',
         } as Partial<ReactRouterLocation> as ReactRouterLocation;
         slugFixture = '/slug-fixture';
 
@@ -94,7 +95,8 @@ describe(useRedirectUnauthorized.name, () => {
 
       it('should call navigate()', () => {
         const expectedRedirection: string = new URL(
-          reactRouterLocationFixture.pathname,
+          reactRouterLocationFixture.pathname +
+            reactRouterLocationFixture.search,
           locationFixture.href,
         ).toString();
 
