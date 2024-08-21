@@ -83,7 +83,7 @@ export const CreateNewGame = (): React.JSX.Element => {
   return (
     <>
       <CircularProgressModal open={isPending()} />
-      <CornieLayout id="create-new-game-page" withFooter withNavBar>
+      <CornieLayout withFooter withNavBar>
         <Box
           component="div"
           className="page-section-container new-game-container"

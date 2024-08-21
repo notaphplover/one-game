@@ -1,6 +1,11 @@
-@use '../../base/variables' as var;
+@use '../../../base/variables' as variables;
 
-.login-form-grid {
+.user-info-page-container {
+  min-height: 100%;
+  padding-top: 3rem;
+}
+
+.user-info-form-grid {
   background-color: var(--cg-text-primary);
   border-radius: 10px;
   text-align: center;
@@ -9,32 +14,31 @@
   margin: 0rem 2rem;
 }
 
-@media (min-width: var.$sm) {
-  .login-form-grid {
+@media (min-width: variables.$sm) {
+  .user-info-form-grid {
     margin: 0;
     max-width: 450px;
   }
 }
 
-.login-form-title {
+.user-info-form-title {
   padding-bottom: 1.5rem;
 }
 
-.form-login-error {
+.user-info-form-error {
   margin-top: 1.5rem;
   text-align: left;
 }
 
-.login-form-grid .form-text-fieldset {
+.user-info-form-grid .form-text-fieldset {
   margin-top: 1.5rem;
 }
 
-.login-form-grid .form-text-fieldset:hover {
+.user-info-form-grid .form-text-fieldset:hover {
   border-radius: 5px;
   box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
 }
 
-.login-form-button {
+.user-info-form-button-box {
   margin-top: 2rem;
-  margin-bottom: 2rem;
 }

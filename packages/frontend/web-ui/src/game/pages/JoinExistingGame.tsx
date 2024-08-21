@@ -11,9 +11,9 @@ import {
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { CircularProgressModal } from '../../common/components/CircularProgressModal';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { CheckingGame } from '../components/CheckingGame';
 import { useJoinExistingGame } from '../hooks/useJoinExistingGame';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 
@@ -30,94 +30,102 @@ export const JoinExistingGame = (): React.JSX.Element => {
     return status === JoinExistingGameStatus.rejected ? '' : 'none';
   };
 
-  if (status === JoinExistingGameStatus.pending) {
-    return <CheckingGame />;
-  }
+  const isPending: () => boolean = (): boolean =>
+    status === JoinExistingGameStatus.pending;
 
   return (
-    <CornieLayout>
-      <Grid
-        className="bkg-layout"
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid item>
-          <Box className="logo-cornie-position">
-            <Typography
-              className="logo-cornie-text"
-              variant="h4"
-              noWrap
-              component="a"
-              href="/"
-            >
-              CORNIE
-            </Typography>
-          </Box>
-        </Grid>
-
-        <Grid item>
-          <Box className="box-shadow join-existing-game-grid">
-            <Grid container>
-              <Grid
-                className="join-existing-game-ok"
-                container
-                display={getJoinExistinGameOkDisplay()}
+    <>
+      <CircularProgressModal open={isPending()} />
+      <CornieLayout>
+        <Grid
+          className="join-existing-game-container"
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Grid item>
+            <Box className="logo-cornie-position">
+              <Typography
+                className="logo-cornie-text"
+                variant="h4"
+                noWrap
+                component="a"
+                href="/"
               >
-                <Grid item xs={12}>
-                  <Typography variant="h5" className="join-existing-game-title">
-                    {'Game joined'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box className="join-existing-game-success">
-                    <Alert severity="success">
-                      <AlertTitle>Success</AlertTitle>
-                    </Alert>
-                  </Box>
-                </Grid>
-              </Grid>
+                CORNIE
+              </Typography>
+            </Box>
+          </Grid>
 
-              <Grid
-                className="join-existing-game-error-message"
-                container
-                display={getJoinExistinGameErrorDisplay()}
-              >
-                <Grid item xs={12}>
-                  <Typography variant="h5" className="join-existing-game-title">
-                    {'Game not joined'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box className="join-existing-game-error">
-                    <Alert severity="error">
-                      <AlertTitle>Error</AlertTitle>
-                      {errorMessage}
-                    </Alert>
-                  </Box>
-                </Grid>
-              </Grid>
-
-              <Grid container direction="row" justifyContent="end">
-                <Grid item xs={12}>
-                  <Link component={RouterLink} color="primary" to="/">
-                    <Button
-                      type="button"
-                      className="return-cornie-button"
-                      variant="contained"
-                      startIcon={<Home />}
+          <Grid item>
+            <Box className="box-shadow join-existing-game-grid">
+              <Grid container>
+                <Grid
+                  className="join-existing-game-ok"
+                  container
+                  display={getJoinExistinGameOkDisplay()}
+                >
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h5"
+                      className="join-existing-game-title"
                     >
-                      Cornie Home
-                    </Button>
-                  </Link>
+                      {'Game joined'}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box className="join-existing-game-success">
+                      <Alert severity="success">
+                        <AlertTitle>Success</AlertTitle>
+                      </Alert>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+                <Grid
+                  className="join-existing-game-error-message"
+                  container
+                  display={getJoinExistinGameErrorDisplay()}
+                >
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h5"
+                      className="join-existing-game-title"
+                    >
+                      {'Game not joined'}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box className="join-existing-game-error">
+                      <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {errorMessage}
+                      </Alert>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+                <Grid container direction="row" justifyContent="end">
+                  <Grid item xs={12}>
+                    <Link component={RouterLink} color="primary" to="/">
+                      <Button
+                        type="button"
+                        className="return-cornie-button"
+                        variant="contained"
+                        startIcon={<Home />}
+                      >
+                        Cornie Home
+                      </Button>
+                    </Link>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Box>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </CornieLayout>
+      </CornieLayout>
+    </>
   );
 };

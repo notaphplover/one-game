@@ -104,7 +104,7 @@ export const Login = (): React.JSX.Element => {
       <CircularProgressModal open={isPending()} />
       <CornieLayout>
         <Grid
-          className="bkg-layout"
+          className="login-page-container"
           container
           direction="column"
           alignItems="center"

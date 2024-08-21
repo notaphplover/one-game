@@ -1,4 +1,4 @@
-@use '../base/variables' as variables;
+@use '../../../base/variables' as variables;
 
 .home-button-container {
   background-color: variables.$white;
@@ -90,4 +90,8 @@
   background-color: var(--cg-bkg-secondary-main);
   font-weight: bold;
   color: var(--cg-btn-third-txt);
+}
+
+.login-page-container {
+  min-height: 100vh;
 }

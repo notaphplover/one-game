@@ -35,7 +35,7 @@ export const RegisterConfirm = (): React.JSX.Element => {
       <CircularProgressModal open={isPending()} />
       <CornieLayout>
         <Grid
-          className="bkg-layout"
+          className="register-confirm-page-container"
           container
           spacing={0}
           direction="column"

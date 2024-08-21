@@ -1,0 +1,50 @@
+@use '../../base/variables' as variables;
+
+.menu-navbar {
+  display: flex;
+}
+
+.navbar-menu-item {
+  padding: 1rem;
+}
+
+.navbar-link {
+  color: var(--cg-bkg-primary-dark);
+  margin: 0.5rem 0.5rem;
+}
+
+.navbar-options-menu {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.navbar-options-menu .navbar-option {
+  color: var(--cg-text-primary);
+}
+
+.navbar-options-menu .navbar-option:hover {
+  color: var(--cg-bkg-secondary-light);
+}
+
+.navbar-options-menu .navbar-option span.navbar-option-text {
+  display: none;
+}
+
+@media (min-width: variables.$md) {
+  .navbar-options-menu .navbar-option span.navbar-option-text {
+    display: inline;
+  }
+}
+
+a.logo-cornie-navbar-text {
+  font-family: variables.$cornie_font;
+  font-weight: bold;
+  letter-spacing: 0.3rem;
+  font-size: variables.$font-sm;
+  color: var(--cg-text-primary);
+}
+
+a.logo-cornie-navbar-text:hover {
+  color: var(--cg-bkg-secondary-light);
+}
