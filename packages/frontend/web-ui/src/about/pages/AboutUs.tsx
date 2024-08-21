@@ -4,7 +4,7 @@ import { CornieLayout } from '../../common/layout/CornieLayout';
 
 export const AboutUs = (): React.JSX.Element => {
   return (
-    <CornieLayout id="about-page" withFooter withNavBar>
+    <CornieLayout withFooter withNavBar>
       <Grid container>
         <Grid item sx={{ margin: '0 auto', maxWidth: '1200px' }}>
           <Box component="span" sx={{ color: 'primary.dark', p: 10 }}>

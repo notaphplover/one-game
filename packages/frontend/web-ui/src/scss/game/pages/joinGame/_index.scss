@@ -1,4 +1,8 @@
-@use '../../base/variables' as var;
+@use '../../../base/variables' as variables;
+
+.join-existing-game-container {
+  min-height: 100vh;
+}
 
 .join-existing-game-grid {
   background-color: var(--cg-text-primary);
@@ -13,7 +17,7 @@
   padding-bottom: 1rem;
 }
 
-@media (min-width: var.$sm) {
+@media (min-width: variables.$sm) {
   .join-existing-game-grid {
     margin: 0;
     max-width: 450px;

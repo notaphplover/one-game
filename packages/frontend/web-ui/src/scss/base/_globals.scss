@@ -1,4 +1,4 @@
-@use 'variables' as v;
+@use 'variables' as variables;
 
 :root {
   /* --- COLORS ---*/
@@ -27,8 +27,8 @@ html {
 }
 
 body {
-  font-family: v.$principal_font;
-  font-size: v.$font-xs;
+  font-family: variables.$principal_font;
+  font-size: variables.$font-xs;
 }
 
 a:link {
@@ -41,15 +41,15 @@ a:hover {
 }
 
 h1 {
-  font-size: v.$font-lg;
+  font-size: variables.$font-lg;
 }
 
 h2 {
-  font-size: v.$font-md;
+  font-size: variables.$font-md;
 }
 
 h3 {
-  font-size: v.$font-sm;
+  font-size: variables.$font-sm;
 }
 
 img {
@@ -79,23 +79,11 @@ img {
   grid-template-rows: 1fr auto;
 }
 
-a.logo-cornie-navbar-text {
-  font-family: v.$cornie_font;
-  font-weight: bold;
-  letter-spacing: 0.3rem;
-  font-size: v.$font-sm;
-  color: var(--cg-text-primary);
-}
-
-a.logo-cornie-navbar-text:hover {
-  color: var(--cg-bkg-secondary-light);
-}
-
 a.logo-cornie-text {
-  font-family: v.$cornie_font;
+  font-family: variables.$cornie_font;
   font-weight: bold;
   letter-spacing: 0.3rem;
-  font-size: v.$font-lg;
+  font-size: variables.$font-lg;
   color: var(--cg-bkg-primary-dark);
   margin: 2rem;
 }
@@ -106,43 +94,6 @@ a.logo-cornie-text:hover {
 
 .logo-cornie-position {
   margin-bottom: 1.5rem;
-}
-
-.menu-navbar {
-  display: flex;
-}
-
-.navbar-menu-item {
-  padding: 1rem;
-}
-
-.navbar-link {
-  color: var(--cg-bkg-primary-dark);
-  margin: 0.5rem 0.5rem;
-}
-
-.navbar-options-menu {
-  display: flex;
-  flex-grow: 1;
-  justify-content: flex-end;
-}
-
-.navbar-options-menu .navbar-option {
-  color: var(--cg-text-primary);
-}
-
-.navbar-options-menu .navbar-option:hover {
-  color: var(--cg-bkg-secondary-light);
-}
-
-.navbar-options-menu .navbar-option span.navbar-option-text {
-  display: none;
-}
-
-@media (min-width: v.$md) {
-  .navbar-options-menu .navbar-option span.navbar-option-text {
-    display: inline;
-  }
 }
 
 .page-section-container {

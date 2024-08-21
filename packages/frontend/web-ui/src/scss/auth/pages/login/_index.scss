@@ -1,11 +1,6 @@
-@use '../base/variables' as variables;
+@use '../../../base/variables' as variables;
 
-.bkg-user-info {
-  min-height: 100%;
-  padding-top: 3rem;
-}
-
-.user-info-form-grid {
+.login-form-grid {
   background-color: var(--cg-text-primary);
   border-radius: 10px;
   text-align: center;
@@ -15,30 +10,31 @@
 }
 
 @media (min-width: variables.$sm) {
-  .user-info-form-grid {
+  .login-form-grid {
     margin: 0;
     max-width: 450px;
   }
 }
 
-.user-info-form-title {
+.login-form-title {
   padding-bottom: 1.5rem;
 }
 
-.user-info-form-error {
+.form-login-error {
   margin-top: 1.5rem;
   text-align: left;
 }
 
-.user-info-form-grid .form-text-fieldset {
+.login-form-grid .form-text-fieldset {
   margin-top: 1.5rem;
 }
 
-.user-info-form-grid .form-text-fieldset:hover {
+.login-form-grid .form-text-fieldset:hover {
   border-radius: 5px;
   box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
 }
 
-.user-info-form-button-box {
+.login-form-button {
   margin-top: 2rem;
+  margin-bottom: 2rem;
 }

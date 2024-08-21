@@ -1,4 +1,9 @@
-@use '../base/variables' as var;
+@use '../../../base/variables' as variables;
+
+.new-game-container {
+  padding: 8rem 0.5rem;
+  max-width: 450px;
+}
 
 .new-game-form-grid {
   background-color: var(--cg-text-primary);
@@ -9,7 +14,7 @@
   margin: 0rem 1rem;
 }
 
-@media (min-width: var.$sm) {
+@media (min-width: variables.$sm) {
   .new-game-form-grid {
     padding: 3rem;
     margin: 0;

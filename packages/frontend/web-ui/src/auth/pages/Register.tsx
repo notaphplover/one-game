@@ -45,7 +45,7 @@ export const Register = () => {
       <CircularProgressModal open={isPending()} />
       <CornieLayout>
         <Grid
-          className="bkg-register"
+          className="register-page-container"
           container
           spacing={0}
           direction="column"

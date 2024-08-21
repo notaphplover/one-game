@@ -36,7 +36,7 @@ export const UserInfo = () => {
       <CircularProgressModal open={isPending()} />
       <CornieLayout withFooter withNavBar>
         <Grid
-          className="bkg-user-info"
+          className="user-info-page-container"
           container
           spacing={0}
           direction="column"
