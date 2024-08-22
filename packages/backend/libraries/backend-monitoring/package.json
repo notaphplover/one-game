@@ -16,7 +16,7 @@
     "@opentelemetry/sdk-node": "0.52.1",
     "@opentelemetry/sdk-trace-node": "1.25.1",
     "@opentelemetry/resources": "1.25.1",
-    "@opentelemetry/semantic-conventions": "1.25.1",
+    "@opentelemetry/semantic-conventions": "1.26.0",
     "axios": "1.7.4",
     "form-data": "4.0.0"
   },
