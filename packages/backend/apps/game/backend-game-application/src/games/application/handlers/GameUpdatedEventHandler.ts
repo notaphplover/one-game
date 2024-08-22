@@ -80,8 +80,8 @@ export class GameUpdatedEventHandler
     gameEventsSubscriptionOutputPort: GameEventsSubscriptionOutputPort,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
-    @Optional()
     @Inject(gameTurnEndSignalMessageSendOutputPortSymbol)
+    @Optional()
     gameTurnEndSignalMessageSendOutputPort:
       | GameTurnEndSignalMessageSendOutputPort
       | undefined,

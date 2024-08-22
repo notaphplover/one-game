@@ -2,6 +2,7 @@ import {
   UuidProviderOutputPort,
   uuidProviderOutputPortSymbol,
 } from '@cornie-js/backend-app-uuid';
+import { MessageDeliveryScheduleKind } from '@cornie-js/backend-application-messaging';
 import {
   AppError,
   AppErrorKind,
@@ -24,7 +25,13 @@ import {
   StartGameUpdateQueryFromGameBuilder,
 } from '@cornie-js/backend-game-domain/games';
 import { GameInitialSnapshotCreateQuery } from '@cornie-js/backend-game-domain/gameSnapshots';
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  LoggerService,
+  Optional,
+} from '@nestjs/common';
 
 import { CreateGameInitialSnapshotUseCaseHandler } from '../../../gameSnapshots/application/handlers/CreateGameInitialSnapshotUseCaseHandler';
 import { NonStartedGameFilledEvent } from '../models/NonStartedGameFilledEvent';
@@ -36,6 +43,12 @@ import {
   GameSpecPersistenceOutputPort,
   gameSpecPersistenceOutputPortSymbol,
 } from '../ports/output/GameSpecPersistenceOutputPort';
+import {
+  GameTurnEndSignalMessageSendOutputPort,
+  gameTurnEndSignalMessageSendOutputPortSymbol,
+} from '../ports/output/GameTurnEndSignalMessageSendOutputPort';
+
+const GAME_TURN_SIGNAL_DELAY_MS: number = 30000;
 
 @Injectable()
 export class NonStartedGameFilledEventHandler
@@ -56,6 +69,10 @@ export class NonStartedGameFilledEventHandler
   readonly #gameService: GameService;
   readonly #gamePersistenceOutputPort: GamePersistenceOutputPort;
   readonly #gameSpecPersistenceOutputPort: GameSpecPersistenceOutputPort;
+  readonly #gameTurnEndSignalMessageSendOutputPort:
+    | GameTurnEndSignalMessageSendOutputPort
+    | undefined;
+  readonly #logger: LoggerService;
   readonly #startGameUpdateQueryFromGameBuilder: Builder<
     GameUpdateQuery,
     [NonStartedGame, GameSpec]
@@ -78,6 +95,11 @@ export class NonStartedGameFilledEventHandler
       GameUpdateQuery,
       [ActiveGame, GameSpec]
     >,
+    @Inject(gameTurnEndSignalMessageSendOutputPortSymbol)
+    @Optional()
+    gameTurnEndSignalMessageSendOutputPort:
+      | GameTurnEndSignalMessageSendOutputPort
+      | undefined,
     @Inject(gamePersistenceOutputPortSymbol)
     gamePersistenceOutputPort: GamePersistenceOutputPort,
     @Inject(GameService)
@@ -98,9 +120,12 @@ export class NonStartedGameFilledEventHandler
       gameCardsEffectUpdateQueryFromGameBuilder;
     this.#gamePassTurnUpdateQueryFromGameBuilder =
       gamePassTurnUpdateQueryFromGameBuilder;
+    this.#gameTurnEndSignalMessageSendOutputPort =
+      gameTurnEndSignalMessageSendOutputPort;
     this.#gamePersistenceOutputPort = gamePersistenceOutputPort;
     this.#gameService = gameService;
     this.#gameSpecPersistenceOutputPort = gameSpecPersistenceOutputPort;
+    this.#logger = new Logger(NonStartedGameFilledEventHandler.name);
     this.#startGameUpdateQueryFromGameBuilder =
       startGameUpdateQueryFromGameBuilder;
     this.#uuidProviderOutputPort = uuidProviderOutputPort;
@@ -122,6 +147,8 @@ export class NonStartedGameFilledEventHandler
     );
 
     await this.#createGameInitialSnapshot(updatedGame, transactionWrapper);
+
+    await this.#sendGameTurnEndSignal(updatedGame);
   }
 
   #isActiveGame(game: Game | undefined): game is ActiveGame {
@@ -265,6 +292,35 @@ export class NonStartedGameFilledEventHandler
     );
 
     return this.#getUpdatedGame(game, transactionWrapper);
+  }
+
+  async #sendGameTurnEndSignal(activeGame: ActiveGame): Promise<void> {
+    if (this.#gameTurnEndSignalMessageSendOutputPort !== undefined) {
+      this.#logger.log(
+        `Detected start of game "${activeGame.id}", sending signal...`,
+      );
+
+      await this.#gameTurnEndSignalMessageSendOutputPort.send({
+        data: {
+          gameId: activeGame.id,
+          turn: activeGame.state.turn,
+        },
+        delivery: {
+          schedule: {
+            delayMs: GAME_TURN_SIGNAL_DELAY_MS,
+            kind: MessageDeliveryScheduleKind.delay,
+          },
+        },
+      });
+
+      this.#logger.log(
+        `End of turn signal sent for game "${activeGame.id}" (at turn ${activeGame.state.turn.toString()})`,
+      );
+    } else {
+      this.#logger.log(
+        `Detected start of game "${activeGame.id}", no signal is sent`,
+      );
+    }
   }
 
   async #startGame(

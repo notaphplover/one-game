@@ -2,6 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import {
+  MessageDeliveryScheduleKind,
+  MessageSendOptions,
+} from '@cornie-js/backend-application-messaging';
+import {
   AppError,
   AppErrorKind,
   Builder,
@@ -28,9 +32,11 @@ import {
 import { GameInitialSnapshotCreateQuery } from '@cornie-js/backend-game-domain/gameSnapshots';
 
 import { NonStartedGameFilledEventFixtures } from '../fixtures/NonStartedGameFilledEventFixtures';
+import { GameTurnEndSignalMessage } from '../models/GameTurnEndSignalMessage';
 import { NonStartedGameFilledEvent } from '../models/NonStartedGameFilledEvent';
 import { GamePersistenceOutputPort } from '../ports/output/GamePersistenceOutputPort';
 import { GameSpecPersistenceOutputPort } from '../ports/output/GameSpecPersistenceOutputPort';
+import { GameTurnEndSignalMessageSendOutputPort } from '../ports/output/GameTurnEndSignalMessageSendOutputPort';
 import { NonStartedGameFilledEventHandler } from './NonStartedGameFilledEventHandler';
 
 describe(NonStartedGameFilledEventHandler.name, () => {
@@ -49,6 +55,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
   let gamePersistenceOutputPortMock: jest.Mocked<GamePersistenceOutputPort>;
   let gameServiceMock: jest.Mocked<GameService>;
   let gameSpecPersistenceOutputPortMock: jest.Mocked<GameSpecPersistenceOutputPort>;
+  let gameTurnEndSignalMessageSendOutputPortMock: jest.Mocked<GameTurnEndSignalMessageSendOutputPort>;
   let startGameUpdateQueryFromGameBuilderMock: jest.Mocked<
     Builder<GameUpdateQuery, [NonStartedGame, GameSpec]>
   >;
@@ -76,6 +83,10 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       jest.Mocked<GamePersistenceOutputPort>
     > as jest.Mocked<GamePersistenceOutputPort>;
 
+    gameTurnEndSignalMessageSendOutputPortMock = {
+      send: jest.fn(),
+    };
+
     gameServiceMock = {
       isColored: jest.fn() as unknown,
     } as Partial<jest.Mocked<GameService>> as jest.Mocked<GameService>;
@@ -98,6 +109,7 @@ describe(NonStartedGameFilledEventHandler.name, () => {
       createGameInitialSnapshotUseCaseHandlerMock,
       gameCardsEffectUpdateQueryFromGameBuilderMock,
       gamePassTurnUpdateQueryFromGameBuilderMock,
+      gameTurnEndSignalMessageSendOutputPortMock,
       gamePersistenceOutputPortMock,
       gameServiceMock,
       gameSpecPersistenceOutputPortMock,
@@ -257,6 +269,10 @@ describe(NonStartedGameFilledEventHandler.name, () => {
 
         uuidProviderOutputPortMock.generateV4.mockReturnValue(uuidFixture);
 
+        gameTurnEndSignalMessageSendOutputPortMock.send.mockResolvedValueOnce(
+          undefined,
+        );
+
         result = await nonStartedGameFilledEventHandler.handle(
           nonStartedGameFilledEventFixture,
           transactionWrapperFixture,
@@ -412,6 +428,29 @@ describe(NonStartedGameFilledEventHandler.name, () => {
         expect(
           createGameInitialSnapshotUseCaseHandlerMock.handle,
         ).toHaveBeenCalledWith(expectedQuery, transactionWrapperFixture);
+      });
+
+      it('should call gameTurnEndSignalMessageSendOutputPort.send()', () => {
+        const messageSendOptions: MessageSendOptions<GameTurnEndSignalMessage> =
+          {
+            data: {
+              gameId: activeGameFixture.id,
+              turn: activeGameFixture.state.turn,
+            },
+            delivery: {
+              schedule: {
+                delayMs: 30000,
+                kind: MessageDeliveryScheduleKind.delay,
+              },
+            },
+          };
+
+        expect(
+          gameTurnEndSignalMessageSendOutputPortMock.send,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          gameTurnEndSignalMessageSendOutputPortMock.send,
+        ).toHaveBeenCalledWith(messageSendOptions);
       });
 
       it('should return undefined', () => {
