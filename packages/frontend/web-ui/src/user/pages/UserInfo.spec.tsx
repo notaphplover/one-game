@@ -14,7 +14,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 import { UserInfoStatus } from '../models/UserInfoStatus';
 import { UserInfo } from './UserInfo';
 
-describe(UserInfo, () => {
+describe(UserInfo.name, () => {
   describe('when called, and useUserInfo() returns status fetchingUser', () => {
     let authFixture: AuthenticatedAuthState | null;
 
