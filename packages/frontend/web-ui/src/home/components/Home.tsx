@@ -1,7 +1,9 @@
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { getSlug } from '../../common/helpers/getSlug';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { ReversedCard } from '../../game/components/ReversedCard';
 
 export const Home = (): React.JSX.Element => {
@@ -58,7 +60,7 @@ export const Home = (): React.JSX.Element => {
                 Enjoy this magical card game made with ❤ and passion
               </Typography>
 
-              <Link component={RouterLink} to="/auth/register">
+              <Link component={RouterLink} to={getSlug(PageName.register)}>
                 <Button
                   type="button"
                   className="home-button"

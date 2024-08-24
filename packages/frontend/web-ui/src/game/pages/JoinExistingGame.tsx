@@ -12,8 +12,10 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { getSlug } from '../../common/helpers/getSlug';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { useJoinExistingGame } from '../hooks/useJoinExistingGame';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 
@@ -109,7 +111,11 @@ export const JoinExistingGame = (): React.JSX.Element => {
 
                 <Grid container direction="row" justifyContent="end">
                   <Grid item xs={12}>
-                    <Link component={RouterLink} color="primary" to="/">
+                    <Link
+                      component={RouterLink}
+                      color="primary"
+                      to={getSlug(PageName.home)}
+                    >
                       <Button
                         type="button"
                         className="return-cornie-button"

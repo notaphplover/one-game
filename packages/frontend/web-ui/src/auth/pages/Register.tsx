@@ -14,9 +14,11 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { getSlug } from '../../common/helpers/getSlug';
 import { useRedirectAuthorized } from '../../common/hooks/useRedirectAuthorized';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { useRegister } from '../hooks/useRegister';
 import { UseRegisterStatus } from '../models/UseRegisterStatus';
 
@@ -237,7 +239,7 @@ export const Register = () => {
                       <Link
                         component={RouterLink}
                         color="primary"
-                        to="/auth/login"
+                        to={getSlug(PageName.login)}
                       >
                         Sign in
                       </Link>
