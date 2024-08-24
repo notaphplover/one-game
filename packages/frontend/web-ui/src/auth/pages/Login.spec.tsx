@@ -1,25 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../hooks/useLoginForm');
-jest.mock('../../common/helpers/getSlug');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../../app/store/hooks');
 
-jest.mock('react-router-dom', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
-  useNavigate: jest.fn(),
-}));
-
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppSelector } from '../../app/store/hooks';
-import { getSlug } from '../../common/helpers/getSlug';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
-import { PageName } from '../../common/models/PageName';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormParams } from '../models/UseLoginFormResult';
@@ -38,9 +28,6 @@ describe(Login.name, () => {
     (event: React.MouseEvent<HTMLElement>) => void
   >;
 
-  let navigateMock: ReturnType<typeof useNavigate> &
-    jest.Mock<ReturnType<typeof useNavigate>>;
-
   let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
 
   beforeAll(() => {
@@ -54,11 +41,6 @@ describe(Login.name, () => {
 
     handleClickShowPasswordMock = jest.fn();
     handleMouseDownPasswordMock = jest.fn();
-
-    navigateMock = jest
-      .fn<ReturnType<typeof useNavigate>>()
-      .mockReturnValue(undefined) as ReturnType<typeof useNavigate> &
-      jest.Mock<ReturnType<typeof useNavigate>>;
 
     authenticatedAuthStateFixture = null;
   });
@@ -235,82 +217,6 @@ describe(Login.name, () => {
 
     it('should display a textbox with the message error', () => {
       expect(pErrorBackend).toBe(backendErrorFixture);
-    });
-  });
-
-  describe('when called, and user exists and navigate to the next page', () => {
-    let slugFixture: string;
-
-    beforeAll(() => {
-      slugFixture = '/slug-fixture';
-
-      authenticatedAuthStateFixture = {
-        accessToken: 'accessToken-fixture',
-        refreshToken: 'refreshToken-fixture',
-        status: AuthStateStatus.authenticated,
-      };
-
-      (useNavigate as jest.Mock<typeof useNavigate>).mockReturnValueOnce(
-        navigateMock,
-      );
-
-      (useLoginForm as jest.Mock<typeof useLoginForm>).mockReturnValueOnce({
-        backendError: null,
-        formFields: formFieldsFixture,
-        formStatus: LoginStatus.backendOK,
-        formValidation: {},
-        notifyFormFieldsFilled: notifyFormFieldsFilledMock,
-        setFormField: setFormFieldMock,
-      });
-
-      (
-        useShowPassword as jest.Mock<typeof useShowPassword>
-      ).mockReturnValueOnce({
-        handleClickShowPassword: handleClickShowPasswordMock,
-        handleMouseDownPassword: handleMouseDownPasswordMock,
-        showPassword: false,
-      });
-
-      (
-        useAppSelector as unknown as jest.Mock<typeof useAppSelector>
-      ).mockReturnValueOnce(authenticatedAuthStateFixture);
-
-      (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
-
-      render(
-        <MemoryRouter>
-          <Login />
-        </MemoryRouter>,
-      );
-    });
-
-    afterAll(() => {
-      jest.clearAllMocks();
-      jest.resetAllMocks();
-    });
-
-    it('should call getSlug()', () => {
-      expect(getSlug).toHaveBeenCalledTimes(1);
-      expect(getSlug).toHaveBeenCalledWith(PageName.home);
-    });
-
-    it('should call navigate()', () => {
-      expect(navigateMock).toHaveBeenCalledTimes(1);
-      expect(navigateMock).toHaveBeenCalledWith(slugFixture);
-    });
-
-    it('should save accessToken and refreshToken in Local Storage', () => {
-      const accessTokenStorage: string | null =
-        window.localStorage.getItem('accessToken');
-      const refreshTokenStorage: string | null =
-        window.localStorage.getItem('refreshToken');
-
-      expect(accessTokenStorage).toBe(
-        authenticatedAuthStateFixture?.accessToken,
-      );
-      expect(refreshTokenStorage).toBe(
-        authenticatedAuthStateFixture?.refreshToken,
-      );
     });
   });
 });

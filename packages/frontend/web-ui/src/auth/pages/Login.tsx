@@ -11,21 +11,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
-import {
-  Link as RouterLink,
-  NavigateFunction,
-  useNavigate,
-} from 'react-router-dom';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
-import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
-import { useAppSelector } from '../../app/store/hooks';
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
-import { getSlug } from '../../common/helpers/getSlug';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { PageName } from '../../common/models/PageName';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
@@ -46,35 +37,11 @@ export const Login = (): React.JSX.Element => {
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);
 
-  const navigate: NavigateFunction = useNavigate();
-
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     notifyFormFieldsFilled();
   };
-
-  const auth: AuthenticatedAuthState | null = useAppSelector(
-    selectAuthenticatedAuth,
-  );
-
-  const getRedirectTo = (): string | null => {
-    return new URL(window.location.href).searchParams.get('redirectTo');
-  };
-
-  useEffect(() => {
-    if (formStatus === LoginStatus.backendOK && auth !== null) {
-      window.localStorage.setItem('accessToken', auth.accessToken);
-      window.localStorage.setItem('refreshToken', auth.refreshToken);
-
-      const redirectTo: string | null = getRedirectTo();
-      if (redirectTo === null) {
-        navigate(getSlug(PageName.home));
-      } else {
-        window.location.href = redirectTo;
-      }
-    }
-  }, [formStatus, auth]);
 
   const isTextFieldDisabled = () => {
     return (
