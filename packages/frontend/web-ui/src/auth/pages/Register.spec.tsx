@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
+jest.mock('../../common/hooks/useRedirectAuthorized');
 jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../hooks/useRegister');
 
