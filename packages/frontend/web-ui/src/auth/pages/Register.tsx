@@ -14,12 +14,15 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { useRedirectAuthorized } from '../../common/hooks/useRedirectAuthorized';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { useRegister } from '../hooks/useRegister';
 import { UseRegisterStatus } from '../models/UseRegisterStatus';
 
 export const Register = () => {
+  useRedirectAuthorized();
+
   const [{ form, status }, { handlers }] = useRegister();
   const { showPassword, handleClickShowPassword, handleMouseDownPassword } =
     useShowPassword(false);

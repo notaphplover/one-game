@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { useAppDispatch } from '../../app/store/hooks';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
 import { isFullfilledPayloadAction } from '../../common/helpers/isFullfilledPayloadAction';
+import { useRedirectAuthorized } from '../../common/hooks/useRedirectAuthorized';
 import { OK, UNAUTHORIZED } from '../../common/http/helpers/httpCodes';
 import { Either } from '../../common/models/Either';
 import { validateEmail } from '../helpers/validateEmail';
@@ -18,6 +20,27 @@ export const UNAUTHORIZED_ERROR_MESSAGE: string = 'Unauthorized.';
 const UNEXPECTED_ERROR_MESSAGE: string =
   'Unexpected error occurred while processing the request.';
 
+const useRedirectAuthorizedIfNoQuery: () => string | null = ():
+  | string
+  | null => {
+  const location = useLocation();
+
+  const getRedirectTo = (): string | null => {
+    return new URL(
+      `${location.pathname}${location.search}`,
+      window.location.href,
+    ).searchParams.get('redirectTo');
+  };
+
+  const redirectTo: string | null = getRedirectTo();
+
+  const shouldSkipRedirection: boolean = redirectTo !== null;
+
+  useRedirectAuthorized(shouldSkipRedirection);
+
+  return redirectTo;
+};
+
 export const useLoginForm = (
   params: UseLoginFormParams,
 ): UseLoginFormResult => {
@@ -29,6 +52,8 @@ export const useLoginForm = (
   const [formValidation, setFormValidation] = useState<FormValidationResult>(
     {},
   );
+
+  const redirectTo: string | null = useRedirectAuthorizedIfNoQuery();
 
   const dispatch = useAppDispatch();
 
@@ -108,6 +133,9 @@ export const useLoginForm = (
       switch (response.payload.statusCode) {
         case OK:
           setFormStatus(LoginStatus.backendOK);
+          if (redirectTo !== null) {
+            window.location.href = redirectTo;
+          }
           break;
         case UNAUTHORIZED:
           setBackendError(UNAUTHORIZED_ERROR_MESSAGE);

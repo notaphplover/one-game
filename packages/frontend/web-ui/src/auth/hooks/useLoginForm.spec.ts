@@ -1,8 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('react-router-dom');
+
 jest.mock('../../app/store/hooks');
 jest.mock('../../app/store/thunk/createAuthByCredentials');
 jest.mock('../../common/helpers/isFullfilledPayloadAction');
+jest.mock('../../common/hooks/useRedirectAuthorized');
 jest.mock('../helpers/validateEmail');
 jest.mock('../helpers/validatePassword');
 
@@ -13,6 +16,7 @@ import {
   RenderHookResult,
   waitFor,
 } from '@testing-library/react';
+import { Location as ReactRouterLocation, useLocation } from 'react-router-dom';
 
 import { useAppDispatch } from '../../app/store/hooks';
 import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
@@ -46,12 +50,23 @@ describe(useLoginForm.name, () => {
     passwordErrorFixture = 'error-password';
   });
 
-  describe('when called, on an initialize values', () => {
+  describe('when called', () => {
+    let reactRouterLocationFixture: ReactRouterLocation;
+
     let result: RenderHookResult<UseLoginFormResult, unknown>;
     let formFields: FormFieldsLogin;
     let formStatus: LoginStatus;
 
     beforeAll(() => {
+      reactRouterLocationFixture = {
+        pathname: '/path-fixture',
+        search: '?search=fixture',
+      } as Partial<ReactRouterLocation> as ReactRouterLocation;
+
+      (useLocation as jest.Mock<typeof useLocation>).mockReturnValueOnce(
+        reactRouterLocationFixture,
+      );
+
       result = renderHook(() => useLoginForm(initialForm));
 
       formFields = result.result.current.formFields;
@@ -60,6 +75,11 @@ describe(useLoginForm.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+    });
+
+    it('should call useLocation()', () => {
+      expect(useLocation).toHaveBeenCalledTimes(1);
+      expect(useLocation).toHaveBeenCalledWith();
     });
 
     it('should initialize values on email', () => {
@@ -75,11 +95,23 @@ describe(useLoginForm.name, () => {
     });
   });
 
-  describe('when called, and email input value is not correct', () => {
+  describe('when called, and validateEmail() returns Left', () => {
+    let reactRouterLocationFixture: ReactRouterLocation;
+
     let result: RenderHookResult<UseLoginFormResult, unknown>;
     let formValidation: FormValidationResult;
 
     beforeAll(() => {
+      reactRouterLocationFixture = {
+        pathname: '/path-fixture',
+        search: '?search=fixture',
+      } as Partial<ReactRouterLocation> as ReactRouterLocation;
+
+      (useLocation as jest.Mock<typeof useLocation>)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture);
+
       (validateEmail as jest.Mock<typeof validateEmail>).mockReturnValueOnce({
         isRight: false,
         value: emailErrorFixture,
@@ -108,24 +140,39 @@ describe(useLoginForm.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should have been called validateEmail once', () => {
-      expect(validateEmail).toHaveBeenCalledTimes(1);
+    it('should call useLocation()', () => {
+      expect(useLocation).toHaveBeenCalledTimes(3);
+      expect(useLocation).toHaveBeenCalledWith();
     });
 
-    it('should have been called validateEmail with arguments', () => {
+    it('should call validateEmail()', () => {
+      expect(validateEmail).toHaveBeenCalledTimes(1);
       expect(validateEmail).toHaveBeenCalledWith(initialForm.email);
     });
 
-    it('should return an invalid email error message', () => {
-      expect(formValidation).toStrictEqual({ email: emailErrorFixture });
+    it('should return error object', () => {
+      const expected: FormValidationResult = { email: emailErrorFixture };
+      expect(formValidation).toStrictEqual(expected);
     });
   });
 
-  describe('when called, and password input value is not correct', () => {
+  describe('when called, and validatePassword() returns Left', () => {
+    let reactRouterLocationFixture: ReactRouterLocation;
+
     let result: RenderHookResult<UseLoginFormResult, unknown>;
     let formValidation: FormValidationResult;
 
     beforeAll(() => {
+      reactRouterLocationFixture = {
+        pathname: '/path-fixture',
+        search: '?search=fixture',
+      } as Partial<ReactRouterLocation> as ReactRouterLocation;
+
+      (useLocation as jest.Mock<typeof useLocation>)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture);
+
       (validateEmail as jest.Mock<typeof validateEmail>).mockReturnValueOnce({
         isRight: true,
         value: undefined,
@@ -154,18 +201,25 @@ describe(useLoginForm.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should have been called validateFormPassword once', () => {
-      expect(validatePassword).toHaveBeenCalledTimes(1);
+    it('should call useLocation()', () => {
+      expect(useLocation).toHaveBeenCalledTimes(3);
+      expect(useLocation).toHaveBeenCalledWith();
     });
-    it('should have been called validateFormPassword with arguments', () => {
+
+    it('should call validateFormPassword()', () => {
+      expect(validatePassword).toHaveBeenCalledTimes(1);
       expect(validatePassword).toHaveBeenCalledWith(initialForm.password);
     });
-    it('should return an invalid password error message', () => {
-      expect(formValidation).toStrictEqual({ password: passwordErrorFixture });
+
+    it('should return error object', () => {
+      const expected: FormValidationResult = { password: passwordErrorFixture };
+      expect(formValidation).toStrictEqual(expected);
     });
   });
 
-  describe('when called, and API returns an OK response', () => {
+  describe('when called, and dispatch() returns an OK response', () => {
+    let reactRouterLocationFixture: ReactRouterLocation;
+
     let createAuthByCredentialsResult: ReturnType<
       typeof createAuthByCredentials
     >;
@@ -174,6 +228,17 @@ describe(useLoginForm.name, () => {
     let result: RenderHookResult<UseLoginFormResult, unknown>;
 
     beforeAll(async () => {
+      reactRouterLocationFixture = {
+        pathname: '/path-fixture',
+        search: '?search=fixture',
+      } as Partial<ReactRouterLocation> as ReactRouterLocation;
+
+      (useLocation as jest.Mock<typeof useLocation>)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture);
+
       createAuthByCredentialsResult = Symbol() as unknown as ReturnType<
         typeof createAuthByCredentials
       >;
@@ -247,7 +312,12 @@ describe(useLoginForm.name, () => {
       dispatchMock.mockReset();
     });
 
-    it('should called useAppDispatch()', () => {
+    it('should call useLocation()', () => {
+      expect(useLocation).toHaveBeenCalledTimes(4);
+      expect(useLocation).toHaveBeenCalledWith();
+    });
+
+    it('should call useAppDispatch()', () => {
       expect(dispatchMock).toHaveBeenCalled();
       expect(dispatchMock).toHaveBeenCalledWith(createAuthByCredentialsResult);
     });
@@ -258,6 +328,8 @@ describe(useLoginForm.name, () => {
   });
 
   describe('when called, and API returns a non OK response', () => {
+    let reactRouterLocationFixture: ReactRouterLocation;
+
     let createAuthByCredentialsResult: ReturnType<
       typeof createAuthByCredentials
     >;
@@ -266,6 +338,17 @@ describe(useLoginForm.name, () => {
     let backendError: string | null;
 
     beforeAll(async () => {
+      reactRouterLocationFixture = {
+        pathname: '/path-fixture',
+        search: '?search=fixture',
+      } as Partial<ReactRouterLocation> as ReactRouterLocation;
+
+      (useLocation as jest.Mock<typeof useLocation>)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture)
+        .mockReturnValueOnce(reactRouterLocationFixture);
+
       createAuthByCredentialsResult = Symbol() as unknown as ReturnType<
         typeof createAuthByCredentials
       >;
@@ -337,6 +420,11 @@ describe(useLoginForm.name, () => {
     afterAll(() => {
       jest.clearAllMocks();
       jest.resetAllMocks();
+    });
+
+    it('should call useLocation()', () => {
+      expect(useLocation).toHaveBeenCalledTimes(4);
+      expect(useLocation).toHaveBeenCalledWith();
     });
 
     it('should called useAppDispatch()', () => {

@@ -29,39 +29,7 @@ function createAuthFulfilledReducer(
 ): AuthState {
   switch (action.payload.statusCode) {
     case OK:
-      return {
-        accessToken: action.payload.body.accessToken,
-        refreshToken: action.payload.body.refreshToken,
-        status: AuthStateStatus.authenticated,
-      };
-    default:
-      return {
-        status: AuthStateStatus.nonAuthenticated,
-      };
-  }
-}
-
-function createAuthRefreshTokenFulfilledReducer(
-  _state: AuthState,
-  action: PayloadAction<AuthSerializedResponse>,
-): AuthState {
-  switch (action.payload.statusCode) {
-    case OK:
-      window.localStorage.setItem(
-        'accessToken',
-        action.payload.body.accessToken,
-      );
-
-      window.localStorage.setItem(
-        'refreshToken',
-        action.payload.body.refreshToken,
-      );
-
-      return {
-        accessToken: action.payload.body.accessToken,
-        refreshToken: action.payload.body.refreshToken,
-        status: AuthStateStatus.authenticated,
-      };
+      return reduceAuthV2(action.payload.body);
     default:
       return {
         status: AuthStateStatus.nonAuthenticated,
@@ -79,11 +47,7 @@ function loginReducer(
   _state: AuthState,
   action: PayloadAction<apiModels.AuthV2>,
 ): AuthState {
-  return {
-    accessToken: action.payload.accessToken,
-    refreshToken: action.payload.refreshToken,
-    status: AuthStateStatus.authenticated,
-  };
+  return reduceAuthV2(action.payload);
 }
 
 function logoutReducer(): AuthState {
@@ -92,6 +56,17 @@ function logoutReducer(): AuthState {
 
   return {
     status: AuthStateStatus.nonAuthenticated,
+  };
+}
+
+function reduceAuthV2(authV2: apiModels.AuthV2): AuthState {
+  window.localStorage.setItem('accessToken', authV2.accessToken);
+  window.localStorage.setItem('refreshToken', authV2.refreshToken);
+
+  return {
+    accessToken: authV2.accessToken,
+    refreshToken: authV2.refreshToken,
+    status: AuthStateStatus.authenticated,
   };
 }
 
@@ -107,10 +82,7 @@ export const authSlice = createSlice({
       .addCase(createAuthByCredentials.fulfilled, createAuthFulfilledReducer)
       .addCase(createAuthByCredentials.rejected, createAuthRejectedReducer)
       .addCase(createAuthByRefreshToken.pending, createAuthPendingReducer)
-      .addCase(
-        createAuthByRefreshToken.fulfilled,
-        createAuthRefreshTokenFulfilledReducer,
-      )
+      .addCase(createAuthByRefreshToken.fulfilled, createAuthFulfilledReducer)
       .addCase(createAuthByRefreshToken.rejected, createAuthRejectedReducer)
       .addCase(login, loginReducer)
       .addCase(logout, logoutReducer);
