@@ -11,7 +11,9 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { getSlug } from '../../common/helpers/getSlug';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { useRegisterConfirm } from '../hooks/useRegisterConfirm';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
 
@@ -99,7 +101,11 @@ export const RegisterConfirm = (): React.JSX.Element => {
                   justifyContent="end"
                 >
                   <Grid item>
-                    <Link component={RouterLink} color="primary" to="/">
+                    <Link
+                      component={RouterLink}
+                      color="primary"
+                      to={getSlug(PageName.home)}
+                    >
                       <Button
                         type="button"
                         className="return-cornie-button"
