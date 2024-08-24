@@ -1,4 +1,5 @@
 jest.mock('../../common/helpers/getSlug');
+jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../hooks/useCreateNewGame');
 jest.mock('../../app/store/hooks');
 

@@ -25,12 +25,15 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
 import { getSlug } from '../../common/helpers/getSlug';
+import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { PageName } from '../../common/models/PageName';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 
 export const CreateNewGame = (): React.JSX.Element => {
+  useRedirectUnauthorized();
+
   const {
     formFields,
     status,
