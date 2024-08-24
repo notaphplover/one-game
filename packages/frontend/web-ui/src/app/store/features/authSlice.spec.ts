@@ -5,7 +5,10 @@ import { PayloadAction, UnknownAction } from '@reduxjs/toolkit';
 
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
 import { SerializableResponse } from '../../../common/http/models/SerializedResponse';
+import login from '../actions/login';
+import logout from '../actions/logout';
 import {
+  AuthenticatedAuthState,
   AuthState,
   NonAuthenticatedAuthState,
   PendingAuthState,
@@ -133,6 +136,16 @@ describe('authSlice', () => {
 
       beforeAll(() => {
         result = authSlice.reducer(stateFixture, actionFixture);
+      });
+
+      it('should save accessToken and refreshToken in Local Storage', () => {
+        const accessTokenStorage: string | null =
+          window.localStorage.getItem('accessToken');
+        const refreshTokenStorage: string | null =
+          window.localStorage.getItem('refreshToken');
+
+        expect(accessTokenStorage).toBe(payloadFixture.body.accessToken);
+        expect(refreshTokenStorage).toBe(payloadFixture.body.refreshToken);
       });
 
       it('should return a state', () => {
@@ -266,6 +279,16 @@ describe('authSlice', () => {
 
         expect(result).toStrictEqual(expected);
       });
+
+      it('should save accessToken and refreshToken in Local Storage', () => {
+        const accessTokenStorage: string | null =
+          window.localStorage.getItem('accessToken');
+        const refreshTokenStorage: string | null =
+          window.localStorage.getItem('refreshToken');
+
+        expect(accessTokenStorage).toBe(payloadFixture.body.accessToken);
+        expect(refreshTokenStorage).toBe(payloadFixture.body.refreshToken);
+      });
     });
   });
 
@@ -375,16 +398,6 @@ describe('authSlice', () => {
         result = authSlice.reducer(stateFixture, actionFixture);
       });
 
-      it('should return a state', () => {
-        const expected: AuthState = {
-          accessToken: payloadFixture.body.accessToken,
-          refreshToken: payloadFixture.body.refreshToken,
-          status: AuthStateStatus.authenticated,
-        };
-
-        expect(result).toStrictEqual(expected);
-      });
-
       it('should save accessToken and refreshToken in Local Storage', () => {
         const accessTokenStorage: string | null =
           window.localStorage.getItem('accessToken');
@@ -393,6 +406,16 @@ describe('authSlice', () => {
 
         expect(accessTokenStorage).toBe(payloadFixture.body.accessToken);
         expect(refreshTokenStorage).toBe(payloadFixture.body.refreshToken);
+      });
+
+      it('should return a state', () => {
+        const expected: AuthState = {
+          accessToken: payloadFixture.body.accessToken,
+          refreshToken: payloadFixture.body.refreshToken,
+          status: AuthStateStatus.authenticated,
+        };
+
+        expect(result).toStrictEqual(expected);
       });
     });
   });
@@ -417,6 +440,71 @@ describe('authSlice', () => {
         'arg-1-fixture',
         'arg-2-fixture',
       );
+    });
+
+    describe('when authSlice.reducer() is called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = authSlice.reducer(stateFixture, actionFixture);
+      });
+
+      it('should return a state', () => {
+        const expected: AuthState = {
+          status: AuthStateStatus.nonAuthenticated,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having a non authenticated state and a login action', () => {
+    let authV2Fixture: apiModels.AuthV2;
+    let stateFixture: NonAuthenticatedAuthState;
+    let actionFixture: PayloadAction<apiModels.AuthV2, 'login'>;
+
+    beforeAll(() => {
+      authV2Fixture = {
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+      };
+      stateFixture = {
+        status: AuthStateStatus.nonAuthenticated,
+      };
+      actionFixture = login(authV2Fixture);
+    });
+
+    describe('when authSlice.reducer() is called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = authSlice.reducer(stateFixture, actionFixture);
+      });
+
+      it('should return a state', () => {
+        const expected: AuthState = {
+          accessToken: authV2Fixture.accessToken,
+          refreshToken: authV2Fixture.refreshToken,
+          status: AuthStateStatus.authenticated,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having an authenticated state and a logout action', () => {
+    let stateFixture: AuthenticatedAuthState;
+    let actionFixture: PayloadAction<void, 'logout'>;
+
+    beforeAll(() => {
+      stateFixture = {
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+        status: AuthStateStatus.authenticated,
+      };
+      actionFixture = logout();
     });
 
     describe('when authSlice.reducer() is called', () => {
