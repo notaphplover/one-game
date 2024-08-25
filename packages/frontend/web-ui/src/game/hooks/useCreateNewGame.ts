@@ -18,6 +18,7 @@ const UNEXPECTED_ERROR_MESSAGE: string =
 
 export const useCreateNewGame = (): CreateNewGameResult => {
   const [formFields, setFormFields] = useState<FormFieldsNewGame>({
+    isPublic: false,
     name: '',
     options: {
       chainDraw2Draw2Cards: false,
@@ -64,6 +65,18 @@ export const useCreateNewGame = (): CreateNewGameResult => {
       throw new Error('Unexpected form state at setFormField');
     }
   }
+
+  const setFormFieldIsPublic = (
+    _event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    checked: boolean,
+  ): void => {
+    assertFormFieldsCanBeUpdated(status);
+
+    setFormFields({
+      ...formFields,
+      isPublic: checked,
+    });
+  };
 
   const setFormFieldName = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -123,6 +136,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
   const createGame = () => {
     const gameCreateQuery: apiModels.GameCreateQueryV1 = {
       gameSlotsAmount: formFields.players,
+      isPublic: formFields.isPublic,
       options: formFields.options,
     };
 
@@ -239,6 +253,7 @@ export const useCreateNewGame = (): CreateNewGameResult => {
     formFields,
     formValidation,
     notifyFormFieldsFilled,
+    setFormFieldIsPublic,
     setFormFieldName,
     setFormFieldOptions,
     setFormFieldPlayers,

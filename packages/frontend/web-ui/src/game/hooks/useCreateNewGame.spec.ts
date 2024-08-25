@@ -121,6 +121,10 @@ describe(useCreateNewGame.name, () => {
       );
     });
 
+    it('should have initial isPublic value', () => {
+      expect(formFieldsNewGame.isPublic).toBe(false);
+    });
+
     it('should have initial name value', () => {
       const expectedName: string = '';
       expect(formFieldsNewGame.name).toStrictEqual(expectedName);

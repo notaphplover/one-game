@@ -28,6 +28,7 @@ import { getSlug } from '../../common/helpers/getSlug';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { PageName } from '../../common/models/PageName';
+import { GameVisibilityTextField } from '../components/GameVisibilityTextField';
 import { useCreateNewGame } from '../hooks/useCreateNewGame';
 import { CreateNewGameStatus } from '../models/CreateNewGameStatus';
 
@@ -40,6 +41,7 @@ export const CreateNewGame = (): React.JSX.Element => {
     notifyFormFieldsFilled,
     formValidation,
     errorMessage,
+    setFormFieldIsPublic,
     setFormFieldName,
     setFormFieldPlayers,
     setFormFieldOptions,
@@ -126,6 +128,12 @@ export const CreateNewGame = (): React.JSX.Element => {
                   />
                 </Grid>
                 <Grid item xs={12}>
+                  <GameVisibilityTextField
+                    disabled={isTextFieldDisabled()}
+                    onChange={setFormFieldIsPublic}
+                  />
+                </Grid>
+                <Grid item xs={12}>
                   <Box className="new-game-options">
                     <Button
                       className="button-new-game-options"
@@ -145,7 +153,7 @@ export const CreateNewGame = (): React.JSX.Element => {
                       </DialogTitle>
                       <DialogContent>
                         <FormControl component="fieldset">
-                          <FormGroup aria-label="position">
+                          <FormGroup>
                             <FormControlLabel
                               value="chainDraw2Draw2Cards"
                               className="new-game-option-formcontrol"

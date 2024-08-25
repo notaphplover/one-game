@@ -42,6 +42,12 @@ describe(CreateNewGame.name, () => {
   let authFixture: AuthenticatedAuthState | null;
 
   let notifyFormFieldsFilledMock: jest.Mock<() => void>;
+  let setFormFieldIsPublicMock: jest.Mock<
+    (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      checked: boolean,
+    ) => void
+  >;
   let setFormFieldNameMock: jest.Mock<
     (event: React.ChangeEvent<HTMLInputElement>) => void
   >;
@@ -59,6 +65,7 @@ describe(CreateNewGame.name, () => {
 
   beforeAll(() => {
     formFieldsFixture = {
+      isPublic: false,
       name: 'name-fixture',
       options: {
         chainDraw2Draw2Cards: false,
@@ -80,6 +87,7 @@ describe(CreateNewGame.name, () => {
 
     notifyFormFieldsFilledMock = jest.fn();
 
+    setFormFieldIsPublicMock = jest.fn();
     setFormFieldNameMock = jest.fn();
     setFormFieldPlayersMock = jest.fn();
     setFormFieldOptionsMock = jest.fn();
@@ -123,6 +131,7 @@ describe(CreateNewGame.name, () => {
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormFieldIsPublic: setFormFieldIsPublicMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
@@ -162,6 +171,7 @@ describe(CreateNewGame.name, () => {
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormFieldIsPublic: setFormFieldIsPublicMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
@@ -207,6 +217,7 @@ describe(CreateNewGame.name, () => {
 
     beforeAll(async () => {
       formFieldsFixture = {
+        isPublic: false,
         name: undefined,
         options: {
           chainDraw2Draw2Cards: false,
@@ -236,6 +247,7 @@ describe(CreateNewGame.name, () => {
           },
         },
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormFieldIsPublic: setFormFieldIsPublicMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
@@ -277,6 +289,7 @@ describe(CreateNewGame.name, () => {
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormFieldIsPublic: setFormFieldIsPublicMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
@@ -332,6 +345,7 @@ describe(CreateNewGame.name, () => {
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormFieldIsPublic: setFormFieldIsPublicMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
@@ -356,6 +370,7 @@ describe(CreateNewGame.name, () => {
         formFields: formFieldsFixture,
         formValidation: formValidationMock,
         notifyFormFieldsFilled: notifyFormFieldsFilledMock,
+        setFormFieldIsPublic: setFormFieldIsPublicMock,
         setFormFieldName: setFormFieldNameMock,
         setFormFieldOptions: setFormFieldOptionsMock,
         setFormFieldPlayers: setFormFieldPlayersMock,
