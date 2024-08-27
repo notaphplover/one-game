@@ -1,9 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import {
-  ArrowBackIosNewOutlined,
-  ArrowForwardIosOutlined,
-} from '@mui/icons-material';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useState } from 'react';
 
 import { cornieApi } from '../../common/http/services/cornieApi';
@@ -113,52 +109,24 @@ export const HomeWithAuth = (): React.JSX.Element => {
       >
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="h3" className="home-auth-text" component="h3">
-              Pending Games
-            </Typography>
-            <Box component="div" className="home-auth-container-games">
-              <NonStartedGameList gamesResult={nonStartedGamesResult} />
-              <Box component="div" className="home-auth-pagination">
-                <Button
-                  type="button"
-                  className="home-auth-pagination-button arrowback-nonstarted"
-                  variant="contained"
-                  startIcon={<ArrowBackIosNewOutlined />}
-                  onClick={onPreviousPageNonStarted}
-                ></Button>
-                <Button
-                  type="button"
-                  className="home-auth-pagination-button arrowforward-nonstarted"
-                  variant="contained"
-                  endIcon={<ArrowForwardIosOutlined />}
-                  onClick={onNextPageNonStarted}
-                ></Button>
-              </Box>
-            </Box>
+            <NonStartedGameList
+              gamesResult={nonStartedGamesResult}
+              pagination={{
+                onNextPageButtonClick: onNextPageNonStarted,
+                onPreviousPageButtonClick: onPreviousPageNonStarted,
+              }}
+              title="Pending Games"
+            />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h3" className="home-auth-text" component="h3">
-              Active Games
-            </Typography>
-            <Box component="div" className="home-auth-container-games">
-              <ActiveGameList gamesResult={activeGamesResult} />
-              <Box component="div" className="home-auth-pagination">
-                <Button
-                  type="button"
-                  className="home-auth-pagination-button arrowback-active"
-                  variant="contained"
-                  startIcon={<ArrowBackIosNewOutlined />}
-                  onClick={onPreviousPageActive}
-                ></Button>
-                <Button
-                  type="button"
-                  className="home-auth-pagination-button arrowforward-active"
-                  variant="contained"
-                  endIcon={<ArrowForwardIosOutlined />}
-                  onClick={onNextPageActive}
-                ></Button>
-              </Box>
-            </Box>
+            <ActiveGameList
+              gamesResult={activeGamesResult}
+              pagination={{
+                onNextPageButtonClick: onNextPageActive,
+                onPreviousPageButtonClick: onPreviousPageActive,
+              }}
+              title="Active Games"
+            />
           </Grid>
         </Grid>
       </Box>

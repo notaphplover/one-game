@@ -38,60 +38,6 @@
   padding: 1rem;
 }
 
-.home-auth-container .home-auth-text {
-  color: var(--cg-bkg-primary-dark);
-  padding: 1rem 0;
-  text-align: left;
-  font-size: variables.$font-md;
-}
-
-.home-auth-container .home-auth-text-white {
-  color: var(--cg-text-primary);
-  padding: 2rem 1rem;
-  text-align: left;
-  font-size: variables.$font-sm;
-}
-
-.home-auth-container-games {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 330px;
-  border: 1px solid var(--cg-bkg-primary-dark);
-  border-radius: 10px;
-  background-color: var(--cg-bkg-primary-dark);
-  box-shadow:
-    0 4px 8px 0 var(--cg-bkg-secondary-dark),
-    0 6px 20px 0 var(--cg-bkg-secondary-dark);
-}
-
-@media (min-width: variables.$sm) {
-  .home-auth-container-games {
-    margin: 1rem;
-  }
-}
-
-.home-auth-pagination {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem auto;
-}
-
-.home-auth-pagination .home-auth-pagination-button {
-  background-color: var(--cg-bkg-primary-main);
-  border: 1px solid var(--cg-bkg-secondary-light);
-  box-shadow:
-    0 2px 6px 0 var(--cg-bkg-secondary-main),
-    0 2px 6px 0 var(--cg-bkg-secondary-main);
-}
-
-.home-auth-pagination .home-auth-pagination-button:hover {
-  background-color: var(--cg-bkg-secondary-main);
-  font-weight: bold;
-  color: var(--cg-btn-third-txt);
-}
-
 .login-page-container {
   min-height: 100vh;
 }

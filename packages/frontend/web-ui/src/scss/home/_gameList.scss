@@ -1,13 +1,27 @@
 @use '../base/variables' as variables;
 
-.game-list-text {
+.games-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 1rem 0rem;
+  min-height: 330px;
+  border: 1px solid var(--cg-bkg-primary-dark);
+  border-radius: 10px;
+  background-color: var(--cg-bkg-primary-dark);
+  box-shadow:
+    0 4px 8px 0 var(--cg-bkg-secondary-dark),
+    0 6px 20px 0 var(--cg-bkg-secondary-dark);
+}
+
+.games-container .game-list-text {
   color: var(--cg-text-primary);
-  padding: 2rem 1rem;
+  padding: 0.5rem;
   text-align: left;
   font-size: variables.$font-sm;
 }
 
-.game-list-item {
+.games-container .game-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,22 +30,22 @@
   border-radius: 10px;
   box-shadow: 0 2px 4px 0 var(--cg-bkg-secondary-dark);
   margin: 0.5rem;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
-.game-list-item .game-list-item-button:hover {
+.games-container .game-list-item .game-list-item-button:hover {
   background-color: var(--cg-bkg-secondary-main);
   font-weight: bold;
   color: var(--cg-btn-third-txt);
 }
 
-.game-list-item .game-list-item-text {
+.games-container .game-list-item .game-list-item-text {
   color: var(--cg-text-primary);
   text-align: center;
-  font-size: variables.$font-sm;
+  font-size: variables.$font-xs;
 }
 
-.game-list-item .game-list-item-button {
+.games-container .game-list-item .game-list-item-button {
   background-color: var(--cg-bkg-primary-dark);
   border: 1px solid var(--cg-bkg-secondary-light);
   font-weight: bold;
@@ -40,7 +54,28 @@
   box-shadow: 0 4px 8px 0 var(--cg-text-primary);
 }
 
-.game-list-item .game-list-item-button:hover {
+.games-container .game-list-item .game-list-item-button:hover {
+  background-color: var(--cg-bkg-secondary-main);
+  font-weight: bold;
+  color: var(--cg-btn-third-txt);
+}
+
+.games-container .game-list-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+.games-container .game-list-pagination .game-list-pagination-button {
+  background-color: var(--cg-bkg-primary-main);
+  border: 1px solid var(--cg-bkg-secondary-light);
+  box-shadow:
+    0 2px 6px 0 var(--cg-bkg-secondary-main),
+    0 2px 6px 0 var(--cg-bkg-secondary-main);
+}
+
+.games-container .game-list-pagination .game-list-pagination-button:hover {
   background-color: var(--cg-bkg-secondary-main);
   font-weight: bold;
   color: var(--cg-btn-third-txt);
