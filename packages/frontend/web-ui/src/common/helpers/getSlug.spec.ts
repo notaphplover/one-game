@@ -8,6 +8,7 @@ describe(getSlug.name, () => {
     [PageName.createGame, '/games'],
     [PageName.login, '/auth/login'],
     [PageName.home, '/'],
+    [PageName.publicGames, '/games/public'],
     [PageName.register, '/auth/register'],
     [PageName.userMe, '/users/me'],
   ])(
