@@ -10,7 +10,7 @@ export interface BaseGameListItemOptions {
 export const BaseGameListItem = ({ button, game }: BaseGameListItemOptions) => {
   return (
     <Box component="div" className="game-list-item">
-      <Typography variant="h5" className="game-list-item-text" component="h5">
+      <Typography className="game-list-item-text">
         {game.name === undefined ? '--' : game.name}
       </Typography>
       {button}

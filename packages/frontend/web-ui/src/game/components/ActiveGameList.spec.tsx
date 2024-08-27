@@ -27,7 +27,7 @@ describe(ActiveGameList.name, () => {
     beforeAll(() => {
       baseGameListContentFixture = 'Expected content fixture';
       baseGameListResultFixture = (
-        <div className="base-game-list-fixture">
+        <div data-testid="base-game-list-fixture">
           {baseGameListContentFixture}
         </div>
       );
@@ -40,9 +40,9 @@ describe(ActiveGameList.name, () => {
         <ActiveGameList gamesResult={optionsFixture.gamesResult} />,
       );
 
-      const baseGameList: ChildNode | undefined =
-        renderResult.container.querySelector('.base-game-list-fixture')
-          ?.childNodes[0];
+      const baseGameList: ChildNode | undefined = renderResult.getByTestId(
+        'base-game-list-fixture',
+      ).childNodes[0];
 
       baseGameListContent = baseGameList?.nodeValue;
     });

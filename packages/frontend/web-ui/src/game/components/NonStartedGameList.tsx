@@ -5,12 +5,14 @@ import { Fragment } from 'react';
 
 import { Either } from '../../common/models/Either';
 import useConsecutiveSnackbars from '../hooks/useConsecutiveSnackbars';
-import { BaseGameList } from './BaseGameList';
+import { BaseGameList, BaseGameListPaginationOptions } from './BaseGameList';
 import { NonStartedGameListItem } from './NonStartedGameListItem';
 
 const SNACKBAR_MESSAGE_CONTENT: string = 'Link copied to the clipboard';
 
 export interface NonStartedGameListOptions {
+  pagination?: BaseGameListPaginationOptions | undefined;
+  title?: string | undefined;
   gamesResult: Either<string, apiModels.GameArrayV1> | null;
 }
 
@@ -51,8 +53,8 @@ export const NonStartedGameList = (options: NonStartedGameListOptions) => {
         TransitionProps={{ onExited: dequeue }}
       ></Snackbar>
       <BaseGameList
-        gamesResult={options.gamesResult}
         buildGameItem={buildGameItemBuilder(enqueue)}
+        {...options}
       />
     </>
   );

@@ -6,12 +6,19 @@ jest.mock('../../game/components/ActiveGameList');
 jest.mock('../../game/components/NonStartedGameList');
 
 import { render, RenderResult } from '@testing-library/react';
+import { MouseEventHandler } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/store/hooks';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { ActiveGameList } from '../../game/components/ActiveGameList';
-import { NonStartedGameList } from '../../game/components/NonStartedGameList';
+import {
+  ActiveGameList,
+  ActiveGameListOptions,
+} from '../../game/components/ActiveGameList';
+import {
+  NonStartedGameList,
+  NonStartedGameListOptions,
+} from '../../game/components/NonStartedGameList';
 import { HomeWithAuth } from './HomeWithAuth';
 
 describe(HomeWithAuth.name, () => {
@@ -99,23 +106,39 @@ describe(HomeWithAuth.name, () => {
     });
 
     it('should call ActiveGameList()', () => {
-      expect(ActiveGameList).toHaveBeenCalledTimes(1);
-      expect(ActiveGameList).toHaveBeenCalledWith(
-        {
-          gamesResult: null,
+      const expectedOptions: ActiveGameListOptions = {
+        gamesResult: null,
+        pagination: {
+          onNextPageButtonClick: expect.any(
+            Function,
+          ) as unknown as MouseEventHandler<HTMLButtonElement>,
+          onPreviousPageButtonClick: expect.any(
+            Function,
+          ) as unknown as MouseEventHandler<HTMLButtonElement>,
         },
-        {},
-      );
+        title: 'Active Games',
+      };
+
+      expect(ActiveGameList).toHaveBeenCalledTimes(1);
+      expect(ActiveGameList).toHaveBeenCalledWith(expectedOptions, {});
     });
 
     it('should call NonStartedGameList()', () => {
-      expect(NonStartedGameList).toHaveBeenCalledTimes(1);
-      expect(NonStartedGameList).toHaveBeenCalledWith(
-        {
-          gamesResult: null,
+      const expectedOptions: NonStartedGameListOptions = {
+        gamesResult: null,
+        pagination: {
+          onNextPageButtonClick: expect.any(
+            Function,
+          ) as unknown as MouseEventHandler<HTMLButtonElement>,
+          onPreviousPageButtonClick: expect.any(
+            Function,
+          ) as unknown as MouseEventHandler<HTMLButtonElement>,
         },
-        {},
-      );
+        title: 'Pending Games',
+      };
+
+      expect(NonStartedGameList).toHaveBeenCalledTimes(1);
+      expect(NonStartedGameList).toHaveBeenCalledWith(expectedOptions, {});
     });
 
     it('should render an active game list', () => {
