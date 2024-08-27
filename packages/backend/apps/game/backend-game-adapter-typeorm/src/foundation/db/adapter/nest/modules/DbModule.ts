@@ -6,6 +6,7 @@ import {
 } from '@nestjs/typeorm';
 
 import { TransactionProvisionTypeOrmAdapter } from '../../typeorm/adapters/TransactionProvisionTypeOrmAdapter';
+import { NumberToBooleanTransformer } from '../../typeorm/transformers/NumberToBooleanTransformer';
 import { DbModuleOptions } from '../models/DbModuleOptions';
 import { typeOrmEntities } from '../models/entities';
 
@@ -30,9 +31,11 @@ export class DbModule {
     }
 
     return {
+      exports: [NumberToBooleanTransformer],
       global: false,
       imports: [options.builders.root(typeOrmModuleAsyncOptions)],
       module: DbModule,
+      providers: [NumberToBooleanTransformer],
     };
   }
 

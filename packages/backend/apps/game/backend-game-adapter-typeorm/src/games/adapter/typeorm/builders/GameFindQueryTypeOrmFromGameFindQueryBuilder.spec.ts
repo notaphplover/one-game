@@ -37,6 +37,7 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
+import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
 import { GameDb } from '../models/GameDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameFindQueryTypeOrmFromGameFindQueryBuilder } from './GameFindQueryTypeOrmFromGameFindQueryBuilder';
@@ -48,6 +49,9 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
       [GameSlotFindQuery, QueryBuilder<GameSlotDb> & WhereExpressionBuilder]
     >
   >;
+
+  let numberToBooleanTransformerMock: jest.Mocked<NumberToBooleanTransformer>;
+
   let gameFindQueryTypeOrmFromGameFindQueryBuilder: GameFindQueryTypeOrmFromGameFindQueryBuilder;
 
   beforeAll(() => {
@@ -55,9 +59,15 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
       build: jest.fn(),
     };
 
+    numberToBooleanTransformerMock = {
+      from: jest.fn(),
+      to: jest.fn(),
+    };
+
     gameFindQueryTypeOrmFromGameFindQueryBuilder =
       new GameFindQueryTypeOrmFromGameFindQueryBuilder(
         gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilderMock,
+        numberToBooleanTransformerMock,
       );
   });
 
@@ -167,12 +177,18 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
       });
 
       describe('when called', () => {
+        let numberFixture: number;
+
         let result: unknown;
 
         beforeAll(() => {
+          numberFixture = 1;
+
           (
             InstanceChecker.isSelectQueryBuilder as unknown as jest.Mock
           ).mockReturnValue(true);
+
+          numberToBooleanTransformerMock.to.mockReturnValueOnce(numberFixture);
 
           result = gameFindQueryTypeOrmFromGameFindQueryBuilder.build(
             gameFindQueryFixture,
@@ -188,12 +204,19 @@ describe(GameFindQueryTypeOrmFromGameFindQueryBuilder.name, () => {
           ).mockReset();
         });
 
+        it('should call numberToBooleanTransformerMock.to()', () => {
+          expect(numberToBooleanTransformerMock.to).toHaveBeenCalledTimes(1);
+          expect(numberToBooleanTransformerMock.to).toHaveBeenCalledWith(
+            gameFindQueryFixture.isPublic,
+          );
+        });
+
         it('should call queryBuilder.andWhere()', () => {
           expect(queryBuilderMock.andWhere).toHaveBeenCalled();
           expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
             `${GameDb.name}.isPublic = :GameDb.isPublic`,
             {
-              [`GameDb.isPublic`]: gameFindQueryFixture.isPublic,
+              [`GameDb.isPublic`]: numberFixture,
             },
           );
         });
