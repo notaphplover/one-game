@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 
 import { BaseFindQueryToFindQueryTypeOrmBuilder } from '../../../../foundation/db/adapter/typeorm/builders/BaseFindQueryToFindQueryTypeOrmBuilder';
+import { NumberToBooleanTransformer } from '../../../../foundation/db/adapter/typeorm/transformers/NumberToBooleanTransformer';
 import { GameDb } from '../models/GameDb';
 import { GameSlotDb } from '../models/GameSlotDb';
 import { GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder } from './GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder';
@@ -31,17 +32,22 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
     [GameSlotFindQuery, QueryBuilder<GameSlotDb> & WhereExpressionBuilder]
   >;
 
+  readonly #numberToBooleanTransformer: NumberToBooleanTransformer;
+
   constructor(
     @Inject(GameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder)
     gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder: Builder<
       QueryBuilder<GameSlotDb> & WhereExpressionBuilder,
       [GameSlotFindQuery, QueryBuilder<GameSlotDb> & WhereExpressionBuilder]
     >,
+    @Inject(NumberToBooleanTransformer)
+    numberToBooleanTransformer: NumberToBooleanTransformer,
   ) {
     super();
 
     this.#gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder =
       gameSlotFindQueryTypeOrmFromGameSlotFindQueryBuilder;
+    this.#numberToBooleanTransformer = numberToBooleanTransformer;
   }
 
   public build(
@@ -179,7 +185,8 @@ export class GameFindQueryTypeOrmFromGameFindQueryBuilder
       queryBuilderResult = queryBuilderResult.andWhere(
         `${gamePropertiesPrefix}isPublic = :${gamePropertiesPrefix}isPublic`,
         {
-          [`${gamePropertiesPrefix}isPublic`]: gameFindQuery.isPublic,
+          [`${gamePropertiesPrefix}isPublic`]:
+            this.#numberToBooleanTransformer.to(gameFindQuery.isPublic),
         },
       );
     }
