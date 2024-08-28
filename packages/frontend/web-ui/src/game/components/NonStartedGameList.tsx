@@ -6,11 +6,20 @@ import { Fragment } from 'react';
 import { Either } from '../../common/models/Either';
 import useConsecutiveSnackbars from '../hooks/useConsecutiveSnackbars';
 import { BaseGameList, BaseGameListPaginationOptions } from './BaseGameList';
-import { NonStartedGameListItem } from './NonStartedGameListItem';
+import {
+  NonStartedGameListItem,
+  NonStartedGameListItemButtonsOptions,
+} from './NonStartedGameListItem';
 
 const SNACKBAR_MESSAGE_CONTENT: string = 'Link copied to the clipboard';
 
+export interface NonStartedGameListButtonsOptions {
+  join?: boolean;
+  share?: boolean;
+}
+
 export interface NonStartedGameListOptions {
+  buttons?: NonStartedGameListButtonsOptions;
   pagination?: BaseGameListPaginationOptions | undefined;
   title?: string | undefined;
   gamesResult: Either<string, apiModels.GameArrayV1> | null;
@@ -18,13 +27,19 @@ export interface NonStartedGameListOptions {
 
 function buildGameItemBuilder(
   enqueue: (messageContent: string) => void,
+  options: NonStartedGameListOptions,
 ): (game: apiModels.GameV1, key: number) => React.JSX.Element {
-  const onClick: () => void = () => {
+  const onclick: () => void = () => {
     enqueue(SNACKBAR_MESSAGE_CONTENT);
   };
 
+  const buttonOptions: NonStartedGameListItemButtonsOptions = {
+    join: options.buttons?.join ?? false,
+    share: options.buttons?.share === true ? { onclick } : false,
+  };
+
   return (game: apiModels.GameV1, key: number) => (
-    <NonStartedGameListItem key={key} game={game} onButtonClick={onClick} />
+    <NonStartedGameListItem key={key} game={game} buttons={buttonOptions} />
   );
 }
 
@@ -53,7 +68,7 @@ export const NonStartedGameList = (options: NonStartedGameListOptions) => {
         TransitionProps={{ onExited: dequeue }}
       ></Snackbar>
       <BaseGameList
-        buildGameItem={buildGameItemBuilder(enqueue)}
+        buildGameItem={buildGameItemBuilder(enqueue, options)}
         {...options}
       />
     </>

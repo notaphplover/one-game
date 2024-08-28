@@ -125,6 +125,9 @@ describe(HomeWithAuth.name, () => {
 
     it('should call NonStartedGameList()', () => {
       const expectedOptions: NonStartedGameListOptions = {
+        buttons: {
+          share: true,
+        },
         gamesResult: null,
         pagination: {
           onNextPageButtonClick: expect.any(

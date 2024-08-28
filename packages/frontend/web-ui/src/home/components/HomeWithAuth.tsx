@@ -1,5 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid2 } from '@mui/material';
 import { useState } from 'react';
 
 import { cornieApi } from '../../common/http/services/cornieApi';
@@ -107,9 +107,12 @@ export const HomeWithAuth = (): React.JSX.Element => {
         component="div"
         className="page-section-container home-auth-container"
       >
-        <Grid container>
-          <Grid item xs={12}>
+        <Grid2 container>
+          <Grid2 size={12}>
             <NonStartedGameList
+              buttons={{
+                share: true,
+              }}
               gamesResult={nonStartedGamesResult}
               pagination={{
                 onNextPageButtonClick: onNextPageNonStarted,
@@ -117,8 +120,8 @@ export const HomeWithAuth = (): React.JSX.Element => {
               }}
               title="Pending Games"
             />
-          </Grid>
-          <Grid item xs={12}>
+          </Grid2>
+          <Grid2 size={12}>
             <ActiveGameList
               gamesResult={activeGamesResult}
               pagination={{
@@ -127,8 +130,8 @@ export const HomeWithAuth = (): React.JSX.Element => {
               }}
               title="Active Games"
             />
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Box>
     </CornieLayout>
   );
