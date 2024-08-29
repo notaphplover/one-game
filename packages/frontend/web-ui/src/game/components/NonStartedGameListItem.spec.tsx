@@ -1,10 +1,13 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../common/helpers/getSlug');
 jest.mock('./BaseGameListItem');
 
 import { render, RenderResult } from '@testing-library/react';
-import React, { MouseEventHandler } from 'react';
+import React from 'react';
 
+import { getSlug } from '../../common/helpers/getSlug';
+import { PageName } from '../../common/models/PageName';
 import { BaseGameListItem, BaseGameListItemOptions } from './BaseGameListItem';
 import {
   NonStartedGameListItem,
@@ -16,6 +19,10 @@ describe(NonStartedGameListItem.name, () => {
 
   beforeAll(() => {
     nonStartedGameListItemOptionsMock = {
+      buttons: {
+        join: { onclick: jest.fn() },
+        share: { onclick: jest.fn() },
+      },
       game: {
         id: 'id-fixture',
         isPublic: false,
@@ -25,17 +32,18 @@ describe(NonStartedGameListItem.name, () => {
           status: 'nonStarted',
         },
       },
-      onButtonClick: jest.fn(),
     };
   });
 
   describe('when called', () => {
     let baseGameListItemContentFixture: string;
+    let slugFixture: string;
 
     let baseGameListItemContent: string | null | undefined;
 
     beforeAll(() => {
       baseGameListItemContentFixture = 'Expected content fixture';
+      slugFixture = '/slug-fixture';
 
       const baseGameListItemFixture = (
         <div className="base-game-list-item-fixture">
@@ -47,13 +55,10 @@ describe(NonStartedGameListItem.name, () => {
         BaseGameListItem as jest.Mock<typeof BaseGameListItem>
       ).mockReturnValueOnce(baseGameListItemFixture);
 
+      (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
+
       const renderResult: RenderResult = render(
-        <NonStartedGameListItem
-          game={nonStartedGameListItemOptionsMock.game}
-          onButtonClick={
-            nonStartedGameListItemOptionsMock.onButtonClick as MouseEventHandler
-          }
-        />,
+        <NonStartedGameListItem {...nonStartedGameListItemOptionsMock} />,
       );
 
       const baseGameListItem: ChildNode | undefined =
@@ -75,6 +80,11 @@ describe(NonStartedGameListItem.name, () => {
 
       expect(BaseGameListItem).toHaveBeenCalledTimes(1);
       expect(BaseGameListItem).toHaveBeenCalledWith(expectedOptions, {});
+    });
+
+    it('should call getSlug()', () => {
+      expect(getSlug).toHaveBeenCalledTimes(1);
+      expect(getSlug).toHaveBeenCalledWith(PageName.joinGame);
     });
 
     it('should return expected content', () => {

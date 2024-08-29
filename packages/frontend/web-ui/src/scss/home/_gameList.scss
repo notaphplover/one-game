@@ -5,7 +5,6 @@
   flex-direction: column;
   justify-content: space-between;
   margin: 1rem 0rem;
-  min-height: 330px;
   border: 1px solid var(--cg-bkg-primary-dark);
   border-radius: 10px;
   background-color: var(--cg-bkg-primary-dark);
@@ -48,16 +47,17 @@
 .games-container .game-list-item .game-list-item-button {
   background-color: var(--cg-bkg-primary-dark);
   border: 1px solid var(--cg-bkg-secondary-light);
+  box-shadow: 0 4px 8px 0 var(--cg-text-primary);
+  color: var(--cg-text-primary);
   font-weight: bold;
   height: 2.5rem;
   width: 7rem;
-  box-shadow: 0 4px 8px 0 var(--cg-text-primary);
 }
 
 .games-container .game-list-item .game-list-item-button:hover {
   background-color: var(--cg-bkg-secondary-main);
-  font-weight: bold;
   color: var(--cg-btn-third-txt);
+  font-weight: bold;
 }
 
 .games-container .game-list-pagination {
