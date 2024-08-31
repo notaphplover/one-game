@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
+jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../game/components/ActiveGameList');
 jest.mock('../../game/components/NonStartedGameList');
@@ -10,6 +11,7 @@ import { MouseEventHandler } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/store/hooks';
+import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import {
   ActiveGameList,
@@ -61,6 +63,23 @@ describe(HomeWithAuth.name, () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           refetch: jest.fn<any>(),
         });
+
+      (
+        cornieApi.useGetUsersV1MeQuery as jest.Mock<
+          typeof cornieApi.useGetUsersV1MeQuery
+        >
+      ).mockReturnValueOnce({
+        data: undefined,
+        error: undefined,
+        isLoading: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        refetch: jest.fn<any>(),
+      });
+
+      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+        .mockReturnValueOnce(null)
+        .mockReturnValueOnce(null)
+        .mockReturnValueOnce(null);
 
       activeGameListFixture = (
         <div className="active-game-list-fixture">Active game list mock</div>
@@ -138,6 +157,7 @@ describe(HomeWithAuth.name, () => {
           ) as unknown as MouseEventHandler<HTMLButtonElement>,
         },
         title: 'Pending Games',
+        usersMeResult: null,
       };
 
       expect(NonStartedGameList).toHaveBeenCalledTimes(1);
