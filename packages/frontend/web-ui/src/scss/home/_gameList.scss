@@ -11,72 +11,71 @@
   box-shadow:
     0 4px 8px 0 var(--cg-bkg-secondary-dark),
     0 6px 20px 0 var(--cg-bkg-secondary-dark);
-}
 
-.games-container .game-list-text {
-  color: var(--cg-text-primary);
-  padding: 0.5rem;
-  text-align: left;
-  font-size: variables.$font-sm;
-}
+  .game-list-text {
+    color: var(--cg-text-primary);
+    padding: 0.5rem;
+    text-align: left;
+    font-size: variables.$font-sm;
+  }
 
-.games-container .game-list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--cg-bkg-primary-light);
-  border: 2px solid var(--cg-bkg-secondary-light);
-  border-radius: 10px;
-  box-shadow: 0 2px 4px 0 var(--cg-bkg-secondary-dark);
-  margin: 0.5rem;
-  padding: 0.5rem;
-}
+  .game-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--cg-bkg-primary-light);
+    border: 2px solid var(--cg-bkg-secondary-light);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 var(--cg-bkg-secondary-dark);
+    margin: 0.5rem;
+    padding: 0.5rem;
 
-.games-container .game-list-item .game-list-item-button:hover {
-  background-color: var(--cg-bkg-secondary-main);
-  font-weight: bold;
-  color: var(--cg-btn-third-txt);
-}
+    .game-list-item-button {
+      background-color: var(--cg-bkg-primary-dark);
+      border: 1px solid var(--cg-bkg-secondary-light);
+      box-shadow: 0 4px 8px 0 var(--cg-text-primary);
+      color: var(--cg-text-primary);
+      font-weight: bold;
+      height: 2.5rem;
+      width: 7rem;
 
-.games-container .game-list-item .game-list-item-text {
-  color: var(--cg-text-primary);
-  text-align: center;
-  font-size: variables.$font-xs;
-}
+      &:disabled,
+      &[aria-disabled='true'] {
+        color: var(--cg-bkg-primary-light);
+      }
 
-.games-container .game-list-item .game-list-item-button {
-  background-color: var(--cg-bkg-primary-dark);
-  border: 1px solid var(--cg-bkg-secondary-light);
-  box-shadow: 0 4px 8px 0 var(--cg-text-primary);
-  color: var(--cg-text-primary);
-  font-weight: bold;
-  height: 2.5rem;
-  width: 7rem;
-}
+      &:hover {
+        background-color: var(--cg-bkg-secondary-main);
+        font-weight: bold;
+        color: var(--cg-btn-third-txt);
+      }
+    }
 
-.games-container .game-list-item .game-list-item-button:hover {
-  background-color: var(--cg-bkg-secondary-main);
-  color: var(--cg-btn-third-txt);
-  font-weight: bold;
-}
+    .game-list-item-text {
+      color: var(--cg-text-primary);
+      text-align: center;
+      font-size: variables.$font-xs;
+    }
+  }
 
-.games-container .game-list-pagination {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem auto;
-}
+  .game-list-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem auto;
 
-.games-container .game-list-pagination .game-list-pagination-button {
-  background-color: var(--cg-bkg-primary-main);
-  border: 1px solid var(--cg-bkg-secondary-light);
-  box-shadow:
-    0 2px 6px 0 var(--cg-bkg-secondary-main),
-    0 2px 6px 0 var(--cg-bkg-secondary-main);
-}
+    .game-list-pagination-button {
+      background-color: var(--cg-bkg-primary-main);
+      border: 1px solid var(--cg-bkg-secondary-light);
+      box-shadow:
+        0 2px 6px 0 var(--cg-bkg-secondary-main),
+        0 2px 6px 0 var(--cg-bkg-secondary-main);
 
-.games-container .game-list-pagination .game-list-pagination-button:hover {
-  background-color: var(--cg-bkg-secondary-main);
-  font-weight: bold;
-  color: var(--cg-btn-third-txt);
+      &:hover {
+        background-color: var(--cg-bkg-secondary-main);
+        font-weight: bold;
+        color: var(--cg-btn-third-txt);
+      }
+    }
+  }
 }

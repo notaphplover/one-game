@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../common/helpers/getSlug');
+jest.mock('../helpers/userCanJoinGame');
 jest.mock('./BaseGameListItem');
 
 import { render, RenderResult } from '@testing-library/react';
@@ -8,6 +9,7 @@ import React from 'react';
 
 import { getSlug } from '../../common/helpers/getSlug';
 import { PageName } from '../../common/models/PageName';
+import { userCanJoinGame } from '../helpers/userCanJoinGame';
 import { BaseGameListItem, BaseGameListItemOptions } from './BaseGameListItem';
 import {
   NonStartedGameListItem,
@@ -38,12 +40,14 @@ describe(NonStartedGameListItem.name, () => {
   describe('when called', () => {
     let baseGameListItemContentFixture: string;
     let slugFixture: string;
+    let userCanJoinGameResultFixture: boolean;
 
     let baseGameListItemContent: string | null | undefined;
 
     beforeAll(() => {
       baseGameListItemContentFixture = 'Expected content fixture';
       slugFixture = '/slug-fixture';
+      userCanJoinGameResultFixture = true;
 
       const baseGameListItemFixture = (
         <div className="base-game-list-item-fixture">
@@ -56,6 +60,10 @@ describe(NonStartedGameListItem.name, () => {
       ).mockReturnValueOnce(baseGameListItemFixture);
 
       (getSlug as jest.Mock<typeof getSlug>).mockReturnValueOnce(slugFixture);
+
+      (
+        userCanJoinGame as jest.Mock<typeof userCanJoinGame>
+      ).mockReturnValueOnce(userCanJoinGameResultFixture);
 
       const renderResult: RenderResult = render(
         <NonStartedGameListItem {...nonStartedGameListItemOptionsMock} />,

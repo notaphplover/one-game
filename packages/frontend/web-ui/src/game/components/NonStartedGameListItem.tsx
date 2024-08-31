@@ -5,6 +5,7 @@ import { MouseEvent, MouseEventHandler } from 'react';
 
 import { getSlug } from '../../common/helpers/getSlug';
 import { PageName } from '../../common/models/PageName';
+import { userCanJoinGame } from '../helpers/userCanJoinGame';
 import { BaseGameListItem } from './BaseGameListItem';
 
 export type NonStartedGameListItemButtonOptions =
@@ -20,6 +21,7 @@ export interface NonStartedGameListItemButtonsOptions {
 
 export interface NonStartedGameListItemOptions {
   buttons?: NonStartedGameListItemButtonsOptions;
+  user?: apiModels.UserV1;
   game: apiModels.GameV1;
 }
 
@@ -63,6 +65,7 @@ export const NonStartedGameListItem = (
       <Button
         className="game-list-item-button"
         component="a"
+        disabled={!userCanJoinGame(options.game, options.user)}
         href={`${getSlug(PageName.joinGame)}?gameId=${options.game.id}`}
         startIcon={<JoinInner />}
       >
