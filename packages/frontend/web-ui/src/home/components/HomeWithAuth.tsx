@@ -2,6 +2,7 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { Box, Grid2 } from '@mui/material';
 import { useState } from 'react';
 
+import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { Either } from '../../common/models/Either';
@@ -11,6 +12,7 @@ import { GameStatus } from '../../game/models/GameStatus';
 
 const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
 const GAME_STATUS_ACTIVE: GameStatus = 'active';
+const GAMES_REFRESH_INTERVAL_MS = 10000;
 const PAGE_SIZE: number = 3;
 const ONE_PAGE: number = 1;
 
@@ -18,27 +20,32 @@ function useGetGamesV1Mine(
   page: number,
   status: string,
 ): { result: Either<string, apiModels.GameArrayV1> | null } {
-  const { data, error, isLoading } = cornieApi.useGetGamesV1MineQuery({
-    params: [
-      {
-        page: page.toString(),
-        pageSize: PAGE_SIZE.toString(),
-        status,
-      },
-    ],
+  const result = cornieApi.useGetGamesV1MineQuery(
+    {
+      params: [
+        {
+          page: page.toString(),
+          pageSize: PAGE_SIZE.toString(),
+          status,
+        },
+      ],
+    },
+    {
+      pollingInterval: GAMES_REFRESH_INTERVAL_MS,
+    },
+  );
+
+  return { result: mapUseQueryHookResult(result) };
+}
+
+function useGetUserMe(): { result: Either<string, apiModels.UserV1> | null } {
+  const useGetUsersV1MeQueryResult = cornieApi.useGetUsersV1MeQuery({
+    params: [],
   });
 
-  const result: Either<string, apiModels.GameArrayV1> | null = isLoading
-    ? null
-    : data === undefined
-      ? {
-          isRight: false,
-          value: error?.message ?? '',
-        }
-      : {
-          isRight: true,
-          value: data,
-        };
+  const result: Either<string, apiModels.UserV1> | null = mapUseQueryHookResult(
+    useGetUsersV1MeQueryResult,
+  );
 
   return { result };
 }
@@ -56,6 +63,8 @@ export const HomeWithAuth = (): React.JSX.Element => {
     activePage,
     GAME_STATUS_ACTIVE,
   );
+
+  const { result: usersV1MeResult } = useGetUserMe();
 
   const onNextPageNonStarted = (event: React.FormEvent) => {
     event.preventDefault();
@@ -119,6 +128,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
                 onPreviousPageButtonClick: onPreviousPageNonStarted,
               }}
               title="Pending Games"
+              usersMeResult={usersV1MeResult}
             />
           </Grid2>
           <Grid2 size={12}>

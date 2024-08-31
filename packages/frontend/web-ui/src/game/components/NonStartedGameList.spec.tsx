@@ -18,6 +18,7 @@ describe(NonStartedGameList.name, () => {
   beforeAll(() => {
     optionsFixture = {
       gamesResult: null,
+      usersMeResult: null,
     };
   });
 
@@ -40,7 +41,7 @@ describe(NonStartedGameList.name, () => {
       );
 
       const renderResult: RenderResult = render(
-        <NonStartedGameList gamesResult={optionsFixture.gamesResult} />,
+        <NonStartedGameList {...optionsFixture} />,
       );
 
       const baseGameList: ChildNode | undefined =

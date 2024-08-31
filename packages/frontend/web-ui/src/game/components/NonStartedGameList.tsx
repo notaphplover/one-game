@@ -19,10 +19,11 @@ export interface NonStartedGameListButtonsOptions {
 }
 
 export interface NonStartedGameListOptions {
-  buttons?: NonStartedGameListButtonsOptions;
+  buttons?: NonStartedGameListButtonsOptions | undefined;
   pagination?: BaseGameListPaginationOptions | undefined;
   title?: string | undefined;
   gamesResult: Either<string, apiModels.GameArrayV1> | null;
+  usersMeResult: Either<string, apiModels.UserV1> | null;
 }
 
 function buildGameItemBuilder(
@@ -69,7 +70,8 @@ export const NonStartedGameList = (options: NonStartedGameListOptions) => {
       ></Snackbar>
       <BaseGameList
         buildGameItem={buildGameItemBuilder(enqueue, options)}
-        {...options}
+        gamesResult={options.gamesResult}
+        pagination={options.pagination}
       />
     </>
   );

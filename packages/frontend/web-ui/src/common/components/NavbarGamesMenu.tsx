@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
+import PublicIcon from '@mui/icons-material/Public';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 
 import { getSlug } from '../helpers/getSlug';
@@ -32,6 +33,20 @@ const NavbarGamesMenuItems = (
           startIcon={<AddIcon />}
         >
           NEW GAME
+        </Button>
+      </MenuItem>
+      <MenuItem
+        className="navbar-menu-item"
+        key={PageName.publicGames}
+        onClick={buildCloseMenu(params)}
+      >
+        <Button
+          component="a"
+          className="navbar-link"
+          href={getSlug(PageName.publicGames)}
+          startIcon={<PublicIcon />}
+        >
+          PUBLIC GAMES
         </Button>
       </MenuItem>
     </Box>

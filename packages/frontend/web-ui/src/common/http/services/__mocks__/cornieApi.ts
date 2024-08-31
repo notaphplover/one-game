@@ -9,6 +9,7 @@ export const cornieApi: jest.Mocked<typeof originalCornieApi> = {
   useCreateUsersV1EmailCodeMutation: jest.fn(),
   useCreateUsersV1Mutation: jest.fn(),
   useGetGamesV1MineQuery: jest.fn(),
+  useGetGamesV1Query: jest.fn(),
   useGetUsersV1MeDetailQuery: jest.fn(),
   useGetUsersV1MeQuery: jest.fn(),
   useUpdateUsersV1MeMutation: jest.fn(),
