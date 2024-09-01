@@ -17,10 +17,12 @@ import { SerializableAppError } from './foundation/error/SerializableAppError';
 import { QueryReturnValue } from './foundation/http/models/QueryReturnValue';
 import { CreateGamesV1Args } from './games/models/CreateGamesV1Args';
 import { CreateGamesV1SlotsArgs } from './games/models/CreateGamesV1SlotsArgs';
+import { GetGamesSpecsV1Args } from './games/models/GetGamesSpecsV1Args';
 import { GetGamesV1Args } from './games/models/GetGamesV1Args';
 import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
 import { createGamesV1 } from './games/mutations/createGamesV1';
 import { createGamesV1Slots } from './games/mutations/createGamesV1Slots';
+import { getGamesSpecsV1 } from './games/queries/getGamesSpecsV1';
 import { getGamesV1 } from './games/queries/getGamesV1';
 import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
 import { CreateUsersV1Args } from './users/models/CreateUsersV1Args';
@@ -114,6 +116,15 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
         CreateUsersV1EmailCodeArgs
       >({
         queryFn: createUsersV1EmailCode(options.httpClient),
+      }),
+      getGamesSpecsV1: build.query<
+        apiModels.GameSpecArrayV1,
+        GetGamesSpecsV1Args
+      >({
+        queryFn: authorizedApiCall(
+          getGamesSpecsV1(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
       }),
       getGamesV1: build.query<apiModels.GameArrayV1, GetGamesV1Args>({
         queryFn: authorizedApiCall(
