@@ -11,7 +11,7 @@ import { isFullfilledPayloadAction } from '../helpers/isFullfilledPayloadAction'
 import { OK, UNAUTHORIZED } from '../http/helpers/httpCodes';
 import { refreshTokenMutex } from '../http/helpers/refresTokenMutex';
 import { HttpApiResult } from '../http/models/HttpApiResult';
-import { httpClient } from '../http/services/HttpService';
+import { httpClient } from '../http/services/httpClient';
 import { Either } from '../models/Either';
 import {
   SingleApiCallResult,

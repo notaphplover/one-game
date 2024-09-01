@@ -1,4 +1,4 @@
-jest.mock('../../common/http/services/HttpService');
+jest.mock('../../common/http/services/httpClient');
 jest.mock('../../common/http/helpers/buildSerializableResponse');
 jest.mock('../../app/store/thunk/createAuthByToken');
 jest.mock('../../app/store/hooks');
@@ -17,7 +17,7 @@ import { buildSerializableResponse } from '../../common/http/helpers/buildSerial
 import { AuthSerializedResponse } from '../../common/http/models/AuthSerializedResponse';
 import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
 import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
-import { httpClient } from '../../common/http/services/HttpService';
+import { httpClient } from '../../common/http/services/httpClient';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
 import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
 import {
