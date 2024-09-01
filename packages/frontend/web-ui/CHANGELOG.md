@@ -1,5 +1,13 @@
 # @cornie-js/web-ui
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [2890713]
+- Updated dependencies [7830d5b]
+  - @cornie-js/frontend-api-rtk-query@0.2.0
+
 ## 0.0.2
 
 ### Patch Changes

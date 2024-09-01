@@ -1,5 +1,12 @@
 # @cornie-js/backend-consumer-game
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [7c53e6e]
+  - @cornie-js/backend-game-adapter-typeorm@0.3.1
+
 ## 0.3.1
 
 ### Patch Changes
