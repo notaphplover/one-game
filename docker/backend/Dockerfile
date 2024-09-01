@@ -65,11 +65,11 @@ EXPOSE 3003
 CMD [ "pnpm", "serve" ]
 
 FROM base AS npmbackendconsumergame
-RUN pnpm i -g --prod @cornie-js/backend-consumer-game@0.3.1
+RUN pnpm i -g --prod @cornie-js/backend-consumer-game@0.3.2
 CMD [ "cornie-js-game-consumer-bootstrap" ]
 
 FROM base AS npmbackendservicegame
-RUN pnpm i -g --prod @cornie-js/backend-service-game@0.4.0
+RUN pnpm i -g --prod @cornie-js/backend-service-game@0.4.1
 CMD [ "cornie-js-game-service-bootstrap" ]
 
 FROM base AS npmbackendserviceuser
