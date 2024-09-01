@@ -1,13 +1,13 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../../common/http/services/HttpService');
+jest.mock('../../../common/http/services/httpClient');
 jest.mock('../../../common/http/helpers/buildSerializableResponse');
 jest.mock('../hooks');
 
 import { buildSerializableResponse } from '../../../common/http/helpers/buildSerializableResponse';
 import { AuthResponse } from '../../../common/http/models/AuthResponse';
 import { AuthSerializedResponse } from '../../../common/http/models/AuthSerializedResponse';
-import { httpClient } from '../../../common/http/services/HttpService';
+import { httpClient } from '../../../common/http/services/httpClient';
 import { useAppSelector } from '../hooks';
 import { createAuthByRefreshToken } from './createAuthByRefreshToken';
 

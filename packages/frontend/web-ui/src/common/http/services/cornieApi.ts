@@ -6,7 +6,7 @@ import {
   selectAuthToken,
   selectRefreshToken,
 } from '../../../app/store/features/authSlice';
-import { httpClient } from './HttpService';
+import { httpClient } from './httpClient';
 
 export const cornieApi = buildApi({
   httpClient,

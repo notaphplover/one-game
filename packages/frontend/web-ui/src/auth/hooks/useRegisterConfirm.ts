@@ -8,7 +8,7 @@ import { buildSerializableResponse } from '../../common/http/helpers/buildSerial
 import { OK, UNAUTHORIZED } from '../../common/http/helpers/httpCodes';
 import { RegisterConfirmResponse } from '../../common/http/models/RegisterConfirmResponse';
 import { RegisterConfirmSerializedResponse } from '../../common/http/models/RegisterConfirmSerializedResponse';
-import { httpClient } from '../../common/http/services/HttpService';
+import { httpClient } from '../../common/http/services/httpClient';
 import { RegisterConfirmStatus } from '../models/RegisterConfirmStatus';
 import { UseRegisterConfirmResult } from '../models/UseRegisterConfirmResult';
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { HttpApiParams } from '../http/models/HttpApiParams';
 import { HttpApiResult } from '../http/models/HttpApiResult';
-import { httpClient } from '../http/services/HttpService';
+import { httpClient } from '../http/services/httpClient';
 import { Either } from '../models/Either';
 
 export enum ApiCallStatus {

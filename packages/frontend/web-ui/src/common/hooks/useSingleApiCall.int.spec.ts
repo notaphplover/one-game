@@ -1,4 +1,4 @@
-jest.mock('../http/services/HttpService');
+jest.mock('../http/services/httpClient');
 
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
@@ -8,7 +8,7 @@ import { act } from 'react';
 
 import { HttpApiParams } from '../http/models/HttpApiParams';
 import { HttpApiResult } from '../http/models/HttpApiResult';
-import { httpClient } from '../http/services/HttpService';
+import { httpClient } from '../http/services/httpClient';
 import { Either } from '../models/Either';
 import {
   SingleApiCallResult,
