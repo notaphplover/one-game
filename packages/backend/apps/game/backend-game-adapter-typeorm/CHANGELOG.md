@@ -1,5 +1,11 @@
 # @cornie-js/backend-game-adapter-typeorm
 
+## 0.3.1
+
+### Patch Changes
+
+- 7c53e6e: Fix builder to properly set isPublic filter
+
 ## 0.3.0
 
 ### Minor Changes
