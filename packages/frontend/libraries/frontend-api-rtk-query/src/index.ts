@@ -37,8 +37,13 @@ import { getUsersV1MeDetail } from './users/queries/getUsersV1MeDetail';
 
 export type {
   CreateAuthV2Args,
+  CreateGamesV1Args,
+  CreateGamesV1SlotsArgs,
   CreateUsersV1Args,
   CreateUsersV1EmailCodeArgs,
+  GetGamesSpecsV1Args,
+  GetGamesV1Args,
+  GetGamesV1MineArgs,
   GetUsersV1MeArgs,
   SerializableAppError,
   UpdateUsersV1MeArgs,
