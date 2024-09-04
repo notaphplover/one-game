@@ -15,7 +15,7 @@
     "@cornie-js/api-openapi-schema": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
     "@cornie-js/openapi-utils": "workspace:*",
-    "@types/node": "20.16.3",
+    "@types/node": "20.16.4",
     "@types/qs": "6.9.15",
     "@typescript-eslint/eslint-plugin": "8.4.0",
     "@typescript-eslint/parser": "8.4.0",
@@ -26,7 +26,7 @@
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
-    "yaml": "2.5.0"
+    "yaml": "2.5.1"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
