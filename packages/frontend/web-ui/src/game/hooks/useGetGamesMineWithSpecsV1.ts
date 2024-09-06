@@ -1,5 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { GetGamesV1Args } from '@cornie-js/frontend-api-rtk-query';
+import { GetGamesV1MineArgs } from '@cornie-js/frontend-api-rtk-query';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
@@ -18,13 +18,13 @@ export interface UseGetGamesWithSpecsV1Result {
   result: Either<string, GameWithSpecPair[]> | null;
 }
 
-function useGetGamesV1(
-  getGamesV1Args: GetGamesV1Args,
+function useGetGamesV1Mine(
+  getGamesV1Args: GetGamesV1MineArgs,
   subscriptionOptions: UseQuerySubscriptionOptions,
 ): {
   result: Either<string, apiModels.GameArrayV1> | null;
 } {
-  const result = cornieApi.useGetGamesV1Query(
+  const result = cornieApi.useGetGamesV1MineQuery(
     getGamesV1Args,
     subscriptionOptions,
   );
@@ -32,11 +32,11 @@ function useGetGamesV1(
   return { result: mapUseQueryHookResult(result) };
 }
 
-export const useGetGamesWithSpecsV1 = (
-  getGamesV1Args: GetGamesV1Args,
+export const useGetGamesMineWithSpecsV1 = (
+  getGamesV1Args: GetGamesV1MineArgs,
   subscriptionOptions: UseQuerySubscriptionOptions,
 ): UseGetGamesWithSpecsV1Result => {
-  const { result: gamesV1Result } = useGetGamesV1(
+  const { result: gamesV1Result } = useGetGamesV1Mine(
     getGamesV1Args,
     subscriptionOptions,
   );

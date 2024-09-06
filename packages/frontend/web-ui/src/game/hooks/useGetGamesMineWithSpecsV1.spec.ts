@@ -6,7 +6,7 @@ jest.mock('../helpers/buildGameWithSpecPairArrayResult');
 jest.mock('./useGetGameSpecsV1ForGames');
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { GetGamesV1Args } from '@cornie-js/frontend-api-rtk-query';
+import { GetGamesV1MineArgs } from '@cornie-js/frontend-api-rtk-query';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
@@ -19,27 +19,27 @@ import { Either } from '../../common/models/Either';
 import { buildGameWithSpecPairArrayResult } from '../helpers/buildGameWithSpecPairArrayResult';
 import { GameWithSpecPair } from '../models/GameWithSpecPair';
 import {
+  useGetGamesMineWithSpecsV1,
+  UseGetGamesWithSpecsV1Result,
+} from './useGetGamesMineWithSpecsV1';
+import {
   useGetGameSpecsV1ForGames,
   UseGetGameSpecsV1ForGamesResult,
 } from './useGetGameSpecsV1ForGames';
-import {
-  useGetGamesWithSpecsV1,
-  UseGetGamesWithSpecsV1Result,
-} from './useGetGamesWithSpecsV1';
 
 type UseQuerySubscriptionOptions = SubscriptionOptions & {
   skip?: boolean;
   refetchOnMountOrArgChange?: boolean | number;
 };
 
-describe(useGetGamesWithSpecsV1.name, () => {
+describe(useGetGamesMineWithSpecsV1.name, () => {
   describe('when called', () => {
     let gamesV1ResultFixture: Either<string, apiModels.GameArrayV1> | null;
     let gameWithSpecV1PairArrayResultFixture: Either<
       string,
       GameWithSpecPair[]
     > | null;
-    let getGamesV1ArgsFixture: GetGamesV1Args;
+    let getGamesV1MineArgsFixture: GetGamesV1MineArgs;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
     let useGetGameSpecsV1ForGamesResultFixture: UseGetGameSpecsV1ForGamesResult;
     let useQueryStateResultFixture: UseQueryStateResult<apiModels.GameArrayV1> & {
@@ -52,7 +52,7 @@ describe(useGetGamesWithSpecsV1.name, () => {
     beforeAll(() => {
       gamesV1ResultFixture = null;
       gameWithSpecV1PairArrayResultFixture = null;
-      getGamesV1ArgsFixture = {
+      getGamesV1MineArgsFixture = {
         params: [
           {
             isPublic: 'false',
@@ -76,8 +76,8 @@ describe(useGetGamesWithSpecsV1.name, () => {
       };
 
       (
-        cornieApi.useGetGamesV1Query as jest.Mock<
-          typeof cornieApi.useGetGamesV1Query
+        cornieApi.useGetGamesV1MineQuery as jest.Mock<
+          typeof cornieApi.useGetGamesV1MineQuery
         >
       ).mockReturnValueOnce(useQueryStateResultFixture);
 
@@ -96,8 +96,8 @@ describe(useGetGamesWithSpecsV1.name, () => {
       ).mockReturnValueOnce(gameWithSpecV1PairArrayResultFixture);
 
       renderResult = renderHook(() =>
-        useGetGamesWithSpecsV1(
-          getGamesV1ArgsFixture,
+        useGetGamesMineWithSpecsV1(
+          getGamesV1MineArgsFixture,
           subscriptionOptionsFixture,
         ),
       );
@@ -107,14 +107,13 @@ describe(useGetGamesWithSpecsV1.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should call cornieApi.useGetGamesV1Query()', () => {
-      const expectedParams: Parameters<typeof cornieApi.useGetGamesV1Query> = [
-        getGamesV1ArgsFixture,
-        subscriptionOptionsFixture,
-      ];
+    it('should call cornieApi.useGetGamesV1MineQuery()', () => {
+      const expectedParams: Parameters<
+        typeof cornieApi.useGetGamesV1MineQuery
+      > = [getGamesV1MineArgsFixture, subscriptionOptionsFixture];
 
-      expect(cornieApi.useGetGamesV1Query).toHaveBeenCalledTimes(1);
-      expect(cornieApi.useGetGamesV1Query).toHaveBeenCalledWith(
+      expect(cornieApi.useGetGamesV1MineQuery).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useGetGamesV1MineQuery).toHaveBeenCalledWith(
         ...expectedParams,
       );
     });
