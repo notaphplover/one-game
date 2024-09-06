@@ -7,7 +7,7 @@ import { BaseGameList, BaseGameListPaginationOptions } from './BaseGameList';
 export interface ActiveGameListOptions {
   pagination?: BaseGameListPaginationOptions | undefined;
   title?: string | undefined;
-  gamesResult: Either<string, apiModels.GameArrayV1> | null;
+  gameResourcesListResult: Either<string, apiModels.GameArrayV1> | null;
 }
 
 function buildGameItem(game: apiModels.GameV1, key: number): React.JSX.Element {

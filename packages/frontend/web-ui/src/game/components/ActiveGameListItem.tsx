@@ -23,7 +23,5 @@ export const ActiveGameListItem = (options: ActiveGameListItemOptions) => {
     </Box>
   );
 
-  return (
-    <BaseGameListItem button={button} game={options.game}></BaseGameListItem>
-  );
+  return <BaseGameListItem button={button} gameText={options.game.name} />;
 };

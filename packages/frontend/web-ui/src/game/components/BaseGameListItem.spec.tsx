@@ -1,6 +1,5 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { models as apiModels } from '@cornie-js/api-models';
 import { render, RenderResult } from '@testing-library/react';
 import { ReactNode } from 'react';
 
@@ -8,19 +7,6 @@ import { BaseGameListItem } from './BaseGameListItem';
 
 describe(BaseGameListItem.name, () => {
   describe('having a game with no name', () => {
-    let gameV1Fixture: apiModels.GameV1;
-
-    beforeAll(() => {
-      gameV1Fixture = {
-        id: 'id-fixture',
-        isPublic: false,
-        state: {
-          slots: [],
-          status: 'nonStarted',
-        },
-      };
-    });
-
     describe('when called', () => {
       let expectedButtonTextValue: string;
 
@@ -35,7 +21,7 @@ describe(BaseGameListItem.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <BaseGameListItem button={button} game={gameV1Fixture} />,
+          <BaseGameListItem button={button} />,
         );
 
         const buttonTextNode: ChildNode | undefined =
@@ -61,18 +47,10 @@ describe(BaseGameListItem.name, () => {
   });
 
   describe('having a game name', () => {
-    let gameV1Fixture: apiModels.GameV1;
+    let gameTextFixture: string;
 
     beforeAll(() => {
-      gameV1Fixture = {
-        id: 'id-fixture',
-        isPublic: false,
-        name: 'name-fixture',
-        state: {
-          slots: [],
-          status: 'nonStarted',
-        },
-      };
+      gameTextFixture = 'nonStarted';
     });
 
     describe('when called', () => {
@@ -89,7 +67,7 @@ describe(BaseGameListItem.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <BaseGameListItem button={button} game={gameV1Fixture} />,
+          <BaseGameListItem button={button} gameText={gameTextFixture} />,
         );
 
         const buttonTextNode: ChildNode | undefined =
@@ -109,7 +87,7 @@ describe(BaseGameListItem.name, () => {
       });
 
       it('should render game text', () => {
-        expect(gameListItemTextValue).toBe(gameV1Fixture.name);
+        expect(gameListItemTextValue).toBe(gameTextFixture);
       });
     });
   });

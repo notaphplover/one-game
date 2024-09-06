@@ -9,10 +9,10 @@ import { ActiveGameListItem } from './ActiveGameListItem';
 import { BaseGameListItem, BaseGameListItemOptions } from './BaseGameListItem';
 
 describe(ActiveGameListItem.name, () => {
-  let gameFixture: apiModels.GameV1;
+  let gameV1Fixture: apiModels.GameV1;
 
   beforeAll(() => {
-    gameFixture = {
+    gameV1Fixture = {
       id: 'id',
       isPublic: false,
       state: {
@@ -40,7 +40,7 @@ describe(ActiveGameListItem.name, () => {
         BaseGameListItem as jest.Mock<typeof BaseGameListItem>
       ).mockReturnValueOnce(baseGameListItemFixture);
 
-      const renderResult = render(<ActiveGameListItem game={gameFixture} />);
+      const renderResult = render(<ActiveGameListItem game={gameV1Fixture} />);
 
       const baseGameListItem: ChildNode | undefined =
         renderResult.container.querySelector('.base-game-list-item-fixture')
@@ -56,7 +56,7 @@ describe(ActiveGameListItem.name, () => {
     it('should call BaseGameListItem()', () => {
       const expectedOptions: BaseGameListItemOptions = {
         button: expect.anything() as unknown as React.JSX.Element,
-        game: gameFixture,
+        gameText: gameV1Fixture.name,
       };
 
       expect(BaseGameListItem).toHaveBeenCalledTimes(1);

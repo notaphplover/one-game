@@ -2,10 +2,10 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('./BaseGameList');
 
-import { models as apiModels } from '@cornie-js/api-models';
 import { render, RenderResult } from '@testing-library/react';
 import React from 'react';
 
+import { GameWithSpecPair } from '../models/GameWithSpecPair';
 import { BaseGameList, BaseGameListOptions } from './BaseGameList';
 import {
   NonStartedGameList,
@@ -17,7 +17,7 @@ describe(NonStartedGameList.name, () => {
 
   beforeAll(() => {
     optionsFixture = {
-      gamesResult: null,
+      gameResourcesListResult: null,
       usersMeResult: null,
     };
   });
@@ -56,12 +56,12 @@ describe(NonStartedGameList.name, () => {
     });
 
     it('should call BaseGameList()', () => {
-      const expectedOptions: BaseGameListOptions = {
+      const expectedOptions: BaseGameListOptions<GameWithSpecPair> = {
         buildGameItem: expect.any(Function) as unknown as (
-          game: apiModels.GameV1,
+          gameWithSpecPair: GameWithSpecPair,
           key: number,
         ) => React.JSX.Element,
-        gamesResult: optionsFixture.gamesResult,
+        gameResourcesListResult: optionsFixture.gameResourcesListResult,
       };
 
       expect(BaseGameList).toHaveBeenCalledTimes(1);

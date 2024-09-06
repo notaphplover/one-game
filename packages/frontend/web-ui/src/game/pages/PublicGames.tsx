@@ -8,34 +8,12 @@ import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { Either } from '../../common/models/Either';
 import { NonStartedGameList } from '../components/NonStartedGameList';
+import { useGetGamesWithSpecsV1 } from '../hooks/useGetGamesWithSpecsV1';
 import { GameStatus } from '../models/GameStatus';
 
 const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
 const GAMES_REFRESH_INTERVAL_MS = 10000;
 const PAGE_SIZE: number = 10;
-
-function useGetGamesV1(
-  page: number,
-  status: string,
-): { result: Either<string, apiModels.GameArrayV1> | null } {
-  const result = cornieApi.useGetGamesV1Query(
-    {
-      params: [
-        {
-          isPublic: 'true',
-          page: page.toString(),
-          pageSize: PAGE_SIZE.toString(),
-          status,
-        },
-      ],
-    },
-    {
-      pollingInterval: GAMES_REFRESH_INTERVAL_MS,
-    },
-  );
-
-  return { result: mapUseQueryHookResult(result) };
-}
 
 function useGetUserMe(): { result: Either<string, apiModels.UserV1> | null } {
   const useGetUsersV1MeQueryResult = cornieApi.useGetUsersV1MeQuery({
@@ -54,9 +32,20 @@ export const PublicGames = (): React.JSX.Element => {
 
   const [nonStartedPage, setNonStartedPage] = useState<number>(1);
 
-  const { result: nonStartedGamesResult } = useGetGamesV1(
-    nonStartedPage,
-    GAME_STATUS_NON_STARTED,
+  const { result: gamesResourcesListResult } = useGetGamesWithSpecsV1(
+    {
+      params: [
+        {
+          isPublic: 'true',
+          page: nonStartedPage.toString(),
+          pageSize: PAGE_SIZE.toString(),
+          status: GAME_STATUS_NON_STARTED,
+        },
+      ],
+    },
+    {
+      pollingInterval: GAMES_REFRESH_INTERVAL_MS,
+    },
   );
 
   const { result: usersV1MeResult } = useGetUserMe();
@@ -65,8 +54,8 @@ export const PublicGames = (): React.JSX.Element => {
     event.preventDefault();
 
     if (
-      nonStartedGamesResult?.isRight === true &&
-      nonStartedGamesResult.value.length > 0
+      gamesResourcesListResult?.isRight === true &&
+      gamesResourcesListResult.value.length > 0
     ) {
       setNonStartedPage(nonStartedPage + 1);
     }
@@ -75,11 +64,9 @@ export const PublicGames = (): React.JSX.Element => {
   const onPreviousPage = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (nonStartedGamesResult?.isRight === true) {
-      const previousPage: number = nonStartedPage - 1;
-      if (previousPage > 0) {
-        setNonStartedPage(previousPage);
-      }
+    const previousPage: number = nonStartedPage - 1;
+    if (previousPage > 0) {
+      setNonStartedPage(previousPage);
     }
   };
 
@@ -95,7 +82,7 @@ export const PublicGames = (): React.JSX.Element => {
               buttons={{
                 join: true,
               }}
-              gamesResult={nonStartedGamesResult}
+              gameResourcesListResult={gamesResourcesListResult}
               pagination={{
                 onNextPageButtonClick: onNextPage,
                 onPreviousPageButtonClick: onPreviousPage,

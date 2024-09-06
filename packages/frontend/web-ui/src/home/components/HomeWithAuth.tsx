@@ -8,6 +8,7 @@ import { CornieLayout } from '../../common/layout/CornieLayout';
 import { Either } from '../../common/models/Either';
 import { ActiveGameList } from '../../game/components/ActiveGameList';
 import { NonStartedGameList } from '../../game/components/NonStartedGameList';
+import { useGetGamesMineWithSpecsV1 } from '../../game/hooks/useGetGamesMineWithSpecsV1';
 import { GameStatus } from '../../game/models/GameStatus';
 
 const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
@@ -54,10 +55,21 @@ export const HomeWithAuth = (): React.JSX.Element => {
   const [nonStartedPage, setNonStartedPage] = useState<number>(1);
   const [activePage, setActivePage] = useState<number>(1);
 
-  const { result: nonStartedGamesResult } = useGetGamesV1Mine(
-    nonStartedPage,
-    GAME_STATUS_NON_STARTED,
-  );
+  const { result: nonStartedGamesResourcesListResult } =
+    useGetGamesMineWithSpecsV1(
+      {
+        params: [
+          {
+            page: nonStartedPage.toString(),
+            pageSize: PAGE_SIZE.toString(),
+            status: GAME_STATUS_NON_STARTED,
+          },
+        ],
+      },
+      {
+        pollingInterval: GAMES_REFRESH_INTERVAL_MS,
+      },
+    );
 
   const { result: activeGamesResult } = useGetGamesV1Mine(
     activePage,
@@ -70,8 +82,8 @@ export const HomeWithAuth = (): React.JSX.Element => {
     event.preventDefault();
 
     if (
-      nonStartedGamesResult?.isRight === true &&
-      nonStartedGamesResult.value.length > 0
+      nonStartedGamesResourcesListResult?.isRight === true &&
+      nonStartedGamesResourcesListResult.value.length > 0
     ) {
       setNonStartedPage(nonStartedPage + ONE_PAGE);
     }
@@ -80,11 +92,9 @@ export const HomeWithAuth = (): React.JSX.Element => {
   const onPreviousPageNonStarted = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (nonStartedGamesResult?.isRight === true) {
-      const previousPage: number = nonStartedPage - ONE_PAGE;
-      if (previousPage >= ONE_PAGE) {
-        setNonStartedPage(previousPage);
-      }
+    const previousPage: number = nonStartedPage - ONE_PAGE;
+    if (previousPage > 0) {
+      setNonStartedPage(previousPage);
     }
   };
 
@@ -102,11 +112,10 @@ export const HomeWithAuth = (): React.JSX.Element => {
   const onPreviousPageActive = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (activeGamesResult?.isRight === true) {
-      const previousPage: number = activePage - ONE_PAGE;
-      if (previousPage >= ONE_PAGE) {
-        setActivePage(previousPage);
-      }
+    const previousPage: number = activePage - ONE_PAGE;
+
+    if (previousPage > 0) {
+      setActivePage(previousPage);
     }
   };
 
@@ -122,7 +131,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
               buttons={{
                 share: true,
               }}
-              gamesResult={nonStartedGamesResult}
+              gameResourcesListResult={nonStartedGamesResourcesListResult}
               pagination={{
                 onNextPageButtonClick: onNextPageNonStarted,
                 onPreviousPageButtonClick: onPreviousPageNonStarted,
@@ -133,7 +142,7 @@ export const HomeWithAuth = (): React.JSX.Element => {
           </Grid2>
           <Grid2 size={12}>
             <ActiveGameList
-              gamesResult={activeGamesResult}
+              gameResourcesListResult={activeGamesResult}
               pagination={{
                 onNextPageButtonClick: onNextPageActive,
                 onPreviousPageButtonClick: onPreviousPageActive,

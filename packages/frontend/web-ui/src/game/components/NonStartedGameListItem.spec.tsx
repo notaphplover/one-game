@@ -34,6 +34,20 @@ describe(NonStartedGameListItem.name, () => {
           status: 'nonStarted',
         },
       },
+      gameSpec: {
+        cardSpecs: [],
+        gameId: 'id-fixture',
+        gameSlotsAmount: 2,
+        options: {
+          chainDraw2Draw2Cards: false,
+          chainDraw2Draw4Cards: false,
+          chainDraw4Draw2Cards: false,
+          chainDraw4Draw4Cards: false,
+          playCardIsMandatory: false,
+          playMultipleSameCards: false,
+          playWildDraw4IfNoOtherAlternative: true,
+        },
+      },
     };
   });
 
@@ -83,7 +97,7 @@ describe(NonStartedGameListItem.name, () => {
     it('should call BaseGameListItem()', () => {
       const expectedOptions: BaseGameListItemOptions = {
         button: expect.anything() as unknown as React.JSX.Element,
-        game: nonStartedGameListItemOptionsMock.game,
+        gameText: `(${nonStartedGameListItemOptionsMock.game.state.slots.length.toString()}/${nonStartedGameListItemOptionsMock.gameSpec.gameSlotsAmount.toString()}) ${nonStartedGameListItemOptionsMock.game.name as string}`,
       };
 
       expect(BaseGameListItem).toHaveBeenCalledTimes(1);

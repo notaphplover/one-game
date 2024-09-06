@@ -23,6 +23,7 @@ export interface NonStartedGameListItemOptions {
   buttons?: NonStartedGameListItemButtonsOptions;
   user?: apiModels.UserV1;
   game: apiModels.GameV1;
+  gameSpec: apiModels.GameSpecV1;
 }
 
 async function copyTextToClipboard(
@@ -94,10 +95,16 @@ export const NonStartedGameListItem = (
     </Box>
   );
 
+  const playersText: string = `(${options.game.state.slots.length.toString()}/${options.gameSpec.gameSlotsAmount.toString()})`;
+
   return (
     <BaseGameListItem
       button={buttonsContainer}
-      game={options.game}
-    ></BaseGameListItem>
+      gameText={
+        options.game.name === undefined
+          ? playersText
+          : `${playersText} ${options.game.name}`
+      }
+    />
   );
 };

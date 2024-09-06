@@ -5,7 +5,10 @@ jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../common/layout/CornieLayout');
 jest.mock('../components/NonStartedGameList');
+jest.mock('../hooks/useGetGamesWithSpecsV1');
 
+import { GetGamesV1Args } from '@cornie-js/frontend-api-rtk-query';
+import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -16,7 +19,13 @@ import {
   NonStartedGameList,
   NonStartedGameListOptions,
 } from '../components/NonStartedGameList';
+import { useGetGamesWithSpecsV1 } from '../hooks/useGetGamesWithSpecsV1';
 import { PublicGames } from './PublicGames';
+
+type UseQuerySubscriptionOptions = SubscriptionOptions & {
+  skip?: boolean;
+  refetchOnMountOrArgChange?: boolean | number;
+};
 
 describe(PublicGames.name, () => {
   describe('when called', () => {
@@ -28,16 +37,8 @@ describe(PublicGames.name, () => {
 
     beforeAll(() => {
       (
-        cornieApi.useGetGamesV1MineQuery as jest.Mock<
-          typeof cornieApi.useGetGamesV1MineQuery
-        >
-      ).mockReturnValueOnce({
-        data: undefined,
-        error: undefined,
-        isLoading: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        refetch: jest.fn<any>(),
-      });
+        useGetGamesWithSpecsV1 as jest.Mock<typeof useGetGamesWithSpecsV1>
+      ).mockReturnValueOnce({ result: null });
 
       (
         cornieApi.useGetUsersV1MeQuery as jest.Mock<
@@ -51,9 +52,9 @@ describe(PublicGames.name, () => {
         refetch: jest.fn<any>(),
       });
 
-      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(null)
-        .mockReturnValueOnce(null);
+      (
+        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+      ).mockReturnValueOnce(null);
 
       nonStartedGameListFixture = (
         <div data-testid="non-started-game-list-fixture">
@@ -83,12 +84,35 @@ describe(PublicGames.name, () => {
       jest.clearAllMocks();
     });
 
+    it('should call useGetGamesWithSpecsV1()', () => {
+      const expectedGetGamesV1Args: GetGamesV1Args = {
+        params: [
+          {
+            isPublic: 'true',
+            page: '1',
+            pageSize: '10',
+            status: 'nonStarted',
+          },
+        ],
+      };
+
+      const expectedUseQuerySubscriptionOptions: UseQuerySubscriptionOptions = {
+        pollingInterval: 10000,
+      };
+
+      expect(useGetGamesWithSpecsV1).toHaveBeenCalledTimes(1);
+      expect(useGetGamesWithSpecsV1).toHaveBeenCalledWith(
+        expectedGetGamesV1Args,
+        expectedUseQuerySubscriptionOptions,
+      );
+    });
+
     it('should call NonStartedGameList()', () => {
       const expectedOptions: NonStartedGameListOptions = {
         buttons: {
           join: true,
         },
-        gamesResult: null,
+        gameResourcesListResult: null,
         pagination: {
           onNextPageButtonClick: expect.any(
             Function,

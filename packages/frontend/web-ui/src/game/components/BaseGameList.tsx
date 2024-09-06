@@ -1,4 +1,3 @@
-import { models as apiModels } from '@cornie-js/api-models';
 import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
@@ -7,11 +6,11 @@ import { Box, Button, Typography } from '@mui/material';
 
 import { Either } from '../../common/models/Either';
 
-export interface BaseGameListOptions {
+export interface BaseGameListOptions<TGameResources> {
   pagination?: BaseGameListPaginationOptions | undefined;
   title?: string | undefined;
-  gamesResult: Either<string, apiModels.GameArrayV1> | null;
-  buildGameItem(game: apiModels.GameV1, key: number): React.JSX.Element;
+  gameResourcesListResult: Either<string, TGameResources[]> | null;
+  buildGameItem(gameResources: TGameResources, key: number): React.JSX.Element;
 }
 
 export interface BaseGameListPaginationOptions {
@@ -27,21 +26,21 @@ function getNoGamesContent(): React.JSX.Element {
   return <Typography className="game-list-text">No games found.</Typography>;
 }
 
-function getGamesContent(
-  options: BaseGameListOptions,
+function getGamesContent<TGameResources>(
+  options: BaseGameListOptions<TGameResources>,
 ): React.JSX.Element | React.JSX.Element[] {
-  if (options.gamesResult === null) {
+  if (options.gameResourcesListResult === null) {
     return getNoGamesContent();
   }
 
-  if (options.gamesResult.isRight) {
-    if (options.gamesResult.value.length === 0) {
+  if (options.gameResourcesListResult.isRight) {
+    if (options.gameResourcesListResult.value.length === 0) {
       return getNoGamesContent();
     }
 
-    return options.gamesResult.value.map(
-      (game: apiModels.GameV1, index: number) =>
-        options.buildGameItem(game, index),
+    return options.gameResourcesListResult.value.map(
+      (gameResources: TGameResources, index: number) =>
+        options.buildGameItem(gameResources, index),
     );
   }
 
@@ -52,7 +51,9 @@ function getGamesContent(
   );
 }
 
-function getTitle(options: BaseGameListOptions): React.JSX.Element | undefined {
+function getTitle(
+  options: BaseGameListOptions<unknown>,
+): React.JSX.Element | undefined {
   if (options.title === undefined) {
     return undefined;
   }
@@ -65,7 +66,7 @@ function getTitle(options: BaseGameListOptions): React.JSX.Element | undefined {
 }
 
 function getPagination(
-  options: BaseGameListOptions,
+  options: BaseGameListOptions<unknown>,
 ): React.JSX.Element | undefined {
   if (options.pagination === undefined) {
     return undefined;
@@ -91,7 +92,7 @@ function getPagination(
   );
 }
 
-export const BaseGameList = (options: BaseGameListOptions) => {
+export const BaseGameList = (options: BaseGameListOptions<unknown>) => {
   return (
     <Box component="div" className="games-container">
       <Box component="div">

@@ -14,7 +14,7 @@ describe(ActiveGameList.name, () => {
 
   beforeAll(() => {
     optionsFixture = {
-      gamesResult: null,
+      gameResourcesListResult: null,
     };
   });
 
@@ -37,7 +37,9 @@ describe(ActiveGameList.name, () => {
       );
 
       const renderResult: RenderResult = render(
-        <ActiveGameList gamesResult={optionsFixture.gamesResult} />,
+        <ActiveGameList
+          gameResourcesListResult={optionsFixture.gameResourcesListResult}
+        />,
       );
 
       const baseGameList: ChildNode | undefined = renderResult.getByTestId(
@@ -52,12 +54,12 @@ describe(ActiveGameList.name, () => {
     });
 
     it('should call BaseGameList()', () => {
-      const expectedOptions: BaseGameListOptions = {
+      const expectedOptions: BaseGameListOptions<apiModels.GameV1> = {
         buildGameItem: expect.any(Function) as unknown as (
           game: apiModels.GameV1,
           key: number,
         ) => React.JSX.Element,
-        gamesResult: optionsFixture.gamesResult,
+        gameResourcesListResult: optionsFixture.gameResourcesListResult,
       };
 
       expect(BaseGameList).toHaveBeenCalledTimes(1);
