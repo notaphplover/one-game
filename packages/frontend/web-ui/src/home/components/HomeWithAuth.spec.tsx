@@ -5,6 +5,7 @@ jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../game/components/ActiveGameList');
 jest.mock('../../game/components/NonStartedGameList');
+jest.mock('../../game/hooks/useGetGamesMineWithSpecsV1');
 
 import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
@@ -21,6 +22,7 @@ import {
   NonStartedGameList,
   NonStartedGameListOptions,
 } from '../../game/components/NonStartedGameList';
+import { useGetGamesMineWithSpecsV1 } from '../../game/hooks/useGetGamesMineWithSpecsV1';
 import { HomeWithAuth } from './HomeWithAuth';
 
 describe(HomeWithAuth.name, () => {
@@ -45,24 +47,22 @@ describe(HomeWithAuth.name, () => {
       ).mockReturnValue(accessTokenFixture);
 
       (
+        useGetGamesMineWithSpecsV1 as jest.Mock<
+          typeof useGetGamesMineWithSpecsV1
+        >
+      ).mockReturnValueOnce({ result: null });
+
+      (
         cornieApi.useGetGamesV1MineQuery as jest.Mock<
           typeof cornieApi.useGetGamesV1MineQuery
         >
-      )
-        .mockReturnValueOnce({
-          data: undefined,
-          error: undefined,
-          isLoading: true,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          refetch: jest.fn<any>(),
-        })
-        .mockReturnValueOnce({
-          data: undefined,
-          error: undefined,
-          isLoading: true,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          refetch: jest.fn<any>(),
-        });
+      ).mockReturnValueOnce({
+        data: undefined,
+        error: undefined,
+        isLoading: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        refetch: jest.fn<any>(),
+      });
 
       (
         cornieApi.useGetUsersV1MeQuery as jest.Mock<
@@ -77,7 +77,6 @@ describe(HomeWithAuth.name, () => {
       });
 
       (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(null)
         .mockReturnValueOnce(null)
         .mockReturnValueOnce(null);
 
@@ -126,7 +125,7 @@ describe(HomeWithAuth.name, () => {
 
     it('should call ActiveGameList()', () => {
       const expectedOptions: ActiveGameListOptions = {
-        gamesResult: null,
+        gameResourcesListResult: null,
         pagination: {
           onNextPageButtonClick: expect.any(
             Function,
@@ -147,7 +146,7 @@ describe(HomeWithAuth.name, () => {
         buttons: {
           share: true,
         },
-        gamesResult: null,
+        gameResourcesListResult: null,
         pagination: {
           onNextPageButtonClick: expect.any(
             Function,

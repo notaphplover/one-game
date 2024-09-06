@@ -24,7 +24,7 @@ describe(BaseGameList.name, () => {
         const renderResult = render(
           <BaseGameList
             buildGameItem={buildGameItemMock}
-            gamesResult={null}
+            gameResourcesListResult={null}
           ></BaseGameList>,
         );
 
@@ -53,7 +53,7 @@ describe(BaseGameList.name, () => {
         const renderResult = render(
           <BaseGameList
             buildGameItem={buildGameItemMock}
-            gamesResult={{
+            gameResourcesListResult={{
               isRight: false,
               value: 'error-message-fixture',
             }}
@@ -117,7 +117,7 @@ describe(BaseGameList.name, () => {
         const renderResult = render(
           <BaseGameList
             buildGameItem={buildGameItemMock}
-            gamesResult={gameResultFixture}
+            gameResourcesListResult={gameResultFixture}
           ></BaseGameList>,
         );
 

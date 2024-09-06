@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 
 import { Either } from '../../common/models/Either';
 import useConsecutiveSnackbars from '../hooks/useConsecutiveSnackbars';
+import { GameWithSpecPair } from '../models/GameWithSpecPair';
 import { BaseGameList, BaseGameListPaginationOptions } from './BaseGameList';
 import {
   NonStartedGameListItem,
@@ -22,14 +23,14 @@ export interface NonStartedGameListOptions {
   buttons?: NonStartedGameListButtonsOptions | undefined;
   pagination?: BaseGameListPaginationOptions | undefined;
   title?: string | undefined;
-  gamesResult: Either<string, apiModels.GameArrayV1> | null;
+  gameResourcesListResult: Either<string, GameWithSpecPair[]> | null;
   usersMeResult: Either<string, apiModels.UserV1> | null;
 }
 
 function buildGameItemBuilder(
   enqueue: (messageContent: string) => void,
   options: NonStartedGameListOptions,
-): (game: apiModels.GameV1, key: number) => React.JSX.Element {
+): (gameWithSpecPair: GameWithSpecPair, key: number) => React.JSX.Element {
   const onclick: () => void = () => {
     enqueue(SNACKBAR_MESSAGE_CONTENT);
   };
@@ -39,8 +40,13 @@ function buildGameItemBuilder(
     share: options.buttons?.share === true ? { onclick } : false,
   };
 
-  return (game: apiModels.GameV1, key: number) => (
-    <NonStartedGameListItem key={key} game={game} buttons={buttonOptions} />
+  return (gameWithSpecPair: GameWithSpecPair, key: number) => (
+    <NonStartedGameListItem
+      key={key}
+      game={gameWithSpecPair.game}
+      gameSpec={gameWithSpecPair.spec}
+      buttons={buttonOptions}
+    />
   );
 }
 
@@ -70,8 +76,9 @@ export const NonStartedGameList = (options: NonStartedGameListOptions) => {
       ></Snackbar>
       <BaseGameList
         buildGameItem={buildGameItemBuilder(enqueue, options)}
-        gamesResult={options.gamesResult}
+        gameResourcesListResult={options.gameResourcesListResult}
         pagination={options.pagination}
+        title={options.title}
       />
     </>
   );
