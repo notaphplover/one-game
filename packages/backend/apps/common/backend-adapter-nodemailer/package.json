@@ -11,7 +11,7 @@
     "nodemailer": "6.9.15"
   },
   "devDependencies": {
-    "@eslint/js": "9.9.1",
+    "@eslint/js": "9.10.0",
     "@jest/globals": "29.7.0",
     "@stryker-mutator/core": "8.5.0",
     "@stryker-mutator/jest-runner": "8.5.0",
