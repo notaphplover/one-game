@@ -9,11 +9,11 @@
   },
   "description": "Backend user service for one-game-js",
   "dependencies": {
-    "@fastify/helmet": "11.1.1",
-    "@nestjs/common": "10.4.1",
-    "@nestjs/core": "10.4.1",
-    "@nestjs/platform-fastify": "10.4.1",
-    "@nestjs/typeorm": "10.0.2",
+    "@fastify/helmet": "^11.1.1",
+    "@nestjs/common": "^10.4.1",
+    "@nestjs/core": "^10.4.1",
+    "@nestjs/platform-fastify": "^10.4.1",
+    "@nestjs/typeorm": "^10.0.2",
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-adapter-nodemailer": "workspace:*",
     "@cornie-js/backend-application-mail": "workspace:*",
@@ -23,11 +23,10 @@
     "@cornie-js/backend-monitoring": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-user-application": "workspace:*",
-    "fastify": "4.28.1",
-    "glob": "11.0.0",
-    "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.1",
-    "typeorm": "0.3.20"
+    "fastify": "^4.28.1",
+    "glob": "^11.0.0",
+    "reflect-metadata": "~0.2.2",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@cornie-js/process-manager": "workspace:*",
@@ -43,6 +42,7 @@
     "rimraf": "6.0.1",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
+    "typeorm": "0.3.20",
     "typescript": "5.5.4"
   },
   "engines": {

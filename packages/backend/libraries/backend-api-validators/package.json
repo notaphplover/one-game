@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
-    "ajv": "8.17.1"
+    "ajv": "^8.17.1"
   },
   "devDependencies": {
     "@cornie-js/json-schema-utils": "workspace:*",
