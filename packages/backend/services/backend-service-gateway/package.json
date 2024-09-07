@@ -8,8 +8,8 @@
   },
   "description": "Backend GRaphQL gateway service for one-game-js",
   "dependencies": {
-    "@apollo/server": "4.11.0",
-    "@as-integrations/fastify": "2.1.1",
+    "@apollo/server": "^4.11.0",
+    "@as-integrations/fastify": "^2.1.1",
     "@cornie-js/api-graphql-models": "workspace:*",
     "@cornie-js/api-graphql-schemas-provider": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
@@ -17,14 +17,14 @@
     "@cornie-js/backend-gateway-env": "workspace:*",
     "@cornie-js/backend-graphql": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
-    "@fastify/cors": "9.0.1",
-    "@fastify/helmet": "11.1.1",
-    "@nestjs/common": "10.4.1",
-    "@nestjs/core": "10.4.1",
-    "fastify": "4.28.1",
-    "graphql": "16.9.0",
-    "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.1"
+    "@fastify/cors": "^9.0.1",
+    "@fastify/helmet": "^11.1.1",
+    "@nestjs/common": "^10.4.1",
+    "@nestjs/core": "^10.4.1",
+    "fastify": "^4.28.1",
+    "graphql": "^16.9.0",
+    "reflect-metadata": "~0.2.2",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@cornie-js/process-manager": "workspace:*",
