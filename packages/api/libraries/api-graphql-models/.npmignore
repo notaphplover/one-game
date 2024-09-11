@@ -14,3 +14,5 @@ stryker.config.mjs
 tsconfig.json
 tsconfig.cjs.json
 tsconfig.esm.json
+tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
