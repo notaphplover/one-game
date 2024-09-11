@@ -7,5 +7,7 @@
 # Compiled files
 /lib/
 
+/tsconfig.tsbuildinfo
+
 # Turborepo files
 .turbo/
