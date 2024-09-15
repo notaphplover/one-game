@@ -5,7 +5,7 @@ import { getSlug } from './getSlug';
 
 describe(getSlug.name, () => {
   describe.each<[PageName, string]>([
-    [PageName.createGame, '/games'],
+    [PageName.createGame, '/games/create'],
     [PageName.login, '/auth/login'],
     [PageName.home, '/'],
     [PageName.joinGame, '/games/join'],
