@@ -7,14 +7,12 @@ interface BaseCardOptions {
 
 export const BaseCard = (params: BaseCardOptions) => {
   return (
-    <Box component="div" className="cornie-base-card">
-      <Box component="div" className="cornie-base-card-inner-border">
-        <Box
-          component="div"
-          className={`cornie-base-card-inner-content ${params.colorClass}`}
-        >
-          {params.children}
-        </Box>
+    <Box component="div" className="cornie-card">
+      <Box
+        component="div"
+        className={`cornie-card-inner-content ${params.colorClass}`}
+      >
+        {params.children}
       </Box>
     </Box>
   );
