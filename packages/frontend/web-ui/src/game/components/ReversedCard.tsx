@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
 
-export const ReversedCard = (): React.JSX.Element => {
+export const ReversedCard = (options?: {
+  text?: string;
+}): React.JSX.Element => {
   return (
     <Box component="div" className="cornie-card">
       <Box component="div" className="cornie-card-inner-border">
@@ -28,7 +30,7 @@ export const ReversedCard = (): React.JSX.Element => {
             </svg>
           </Box>
           <Box component="div" className="cornie-card-text">
-            CORNIE
+            {options?.text ?? 'CORNIE'}
           </Box>
         </Box>
       </Box>

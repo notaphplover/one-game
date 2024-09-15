@@ -7,7 +7,7 @@ import { PublicGames } from '../pages/PublicGames';
 export const GameRoutes = (): React.JSX.Element => {
   return (
     <Routes>
-      <Route path="/" element={<CreateNewGame />} />
+      <Route path="/create" element={<CreateNewGame />} />
       <Route path="/join" element={<JoinExistingGame />} />
       <Route path="/public" element={<PublicGames />} />
     </Routes>

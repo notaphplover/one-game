@@ -50,7 +50,7 @@ describe(DrawCard.name, () => {
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(
-        '.cornie-base-card-inner-content',
+        '.cornie-card-inner-content',
       ) as HTMLElement;
 
       isExpectedClassNameInCard =

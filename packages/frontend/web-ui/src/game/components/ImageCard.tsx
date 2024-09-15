@@ -10,7 +10,7 @@ export interface ImageCardOptions {
 export const ImageCard = (params: ImageCardOptions) => {
   return (
     <BaseCard colorClass={params.colorClass}>
-      <Box component="div" className="cornie-base-card-image">
+      <Box component="div" className="cornie-card-image">
         <img src={params.image} />
       </Box>
     </BaseCard>

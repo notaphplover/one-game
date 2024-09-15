@@ -1,44 +1,74 @@
 @use '../../base/variables' as variables;
 
 div.cornie-card {
+  aspect-ratio: 2 / 3;
   border: 2px solid var(--cg-bkg-primary-main);
   border-radius: 1.5rem;
   background-color: variables.$black;
-  height: 100%;
   padding: 0.5rem 0.5rem;
-}
 
-div.cornie-card div.cornie-card-inner-border {
-  border-radius: 1rem;
-  background-color: var(--cg-bkg-primary-main);
-  height: 100%;
-  padding: 0.5rem 0.5rem;
-}
+  div.cornie-card-inner-border {
+    border-radius: 1rem;
+    background-color: var(--cg-bkg-primary-main);
+    height: 100%;
+    padding: 0.5rem 0.5rem;
 
-div.cornie-card div.cornie-card-inner-content {
-  background-color: variables.$black;
-  border-radius: 0.5rem;
-  display: grid;
-  height: 100%;
-}
+    div.cornie-card-inner-content {
+      border-radius: 0.5rem;
+    }
+  }
 
-div.cornie-card div.cornie-card-icon {
-  align-self: end;
-  padding: 0 1rem;
-}
+  div.cornie-card-inner-content {
+    background-color: variables.$black;
+    border-radius: 1rem;
+    display: grid;
+    height: 100%;
 
-div.cornie-card div.cornie-card-icon path {
-  stroke: var(--cg-bkg-primary-light);
-}
+    &.blue-card {
+      background-color: variables.$blue;
+    }
 
-div.cornie-card div.cornie-card-text {
-  align-self: start;
-  color: var(--cg-bkg-primary-light);
-  cursor: default;
-  font-family: variables.$cornie_font;
-  font-weight: bold;
-  font-size: variables.$font-sm;
-  letter-spacing: 0.3rem;
-  text-align: center;
-  user-select: none;
+    &.green-card {
+      background-color: variables.$green;
+    }
+
+    &.red-card {
+      background-color: variables.$red;
+    }
+
+    &.yellow-card {
+      background-color: variables.$yellow;
+    }
+
+    &.white-color {
+      background-color: variables.$white;
+    }
+  }
+
+  div.cornie-card-icon {
+    align-self: end;
+    padding: 0 1rem;
+
+    path {
+      stroke: var(--cg-bkg-primary-light);
+    }
+  }
+
+  div.cornie-card-text {
+    align-self: start;
+    color: var(--cg-bkg-primary-light);
+    cursor: default;
+    font-family: variables.$cornie_font;
+    font-weight: bold;
+    font-size: variables.$font-xs;
+    letter-spacing: 0.3rem;
+    text-align: center;
+    user-select: none;
+  }
+
+  div.cornie-card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
