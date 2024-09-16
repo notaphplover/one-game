@@ -6,8 +6,10 @@ import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppSelector } from '../../app/store/hooks';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
+import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
+import { UrlLikeLocation } from '../../common/models/UrlLikeLocation';
 import { JoinExistingGameStatus } from '../models/JoinExistingGameStatus';
 import { UseJoinExistingGameResult } from '../models/UseJoinExistingGameResult';
 
@@ -19,7 +21,7 @@ export const useJoinExistingGame = (): UseJoinExistingGameResult => {
     JoinExistingGameStatus.idle,
   );
 
-  const url: URL = new URL(window.location.href);
+  const url: UrlLikeLocation = useUrlLikeLocation();
   const gameIdParam: string | null = url.searchParams.get('gameId');
 
   const auth: AuthenticatedAuthState | null = useAppSelector(
