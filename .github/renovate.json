@@ -33,6 +33,7 @@
       "labels": ["docker-update"]
     }
   ],
+  "rangeStrategy": "bump",
   "rebaseWhen": "conflicted",
   "semanticCommits": "enabled",
   "schedule": [
