@@ -1,12 +1,9 @@
-import { models as apiModels } from '@cornie-js/api-models';
 import { Box, Grid2 } from '@mui/material';
 import { useState } from 'react';
 
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
-import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { Either } from '../../common/models/Either';
+import { useGetUserMe } from '../../user/hooks/useGetUserMe';
 import { NonStartedGameList } from '../components/NonStartedGameList';
 import { useGetGamesWithSpecsV1 } from '../hooks/useGetGamesWithSpecsV1';
 import { GameStatus } from '../models/GameStatus';
@@ -14,18 +11,6 @@ import { GameStatus } from '../models/GameStatus';
 const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
 const GAMES_REFRESH_INTERVAL_MS = 10000;
 const PAGE_SIZE: number = 10;
-
-function useGetUserMe(): { result: Either<string, apiModels.UserV1> | null } {
-  const useGetUsersV1MeQueryResult = cornieApi.useGetUsersV1MeQuery({
-    params: [],
-  });
-
-  const result: Either<string, apiModels.UserV1> | null = mapUseQueryHookResult(
-    useGetUsersV1MeQueryResult,
-  );
-
-  return { result };
-}
 
 export const PublicGames = (): React.JSX.Element => {
   useRedirectUnauthorized();
