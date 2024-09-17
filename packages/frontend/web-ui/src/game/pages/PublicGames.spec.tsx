@@ -1,9 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/hooks/useRedirectUnauthorized');
-jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../common/layout/CornieLayout');
+jest.mock('../../user/hooks/useGetUserMe');
 jest.mock('../components/NonStartedGameList');
 jest.mock('../hooks/useGetGamesWithSpecsV1');
 
@@ -13,8 +12,7 @@ import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { cornieApi } from '../../common/http/services/cornieApi';
+import { useGetUserMe } from '../../user/hooks/useGetUserMe';
 import {
   NonStartedGameList,
   NonStartedGameListOptions,
@@ -40,21 +38,9 @@ describe(PublicGames.name, () => {
         useGetGamesWithSpecsV1 as jest.Mock<typeof useGetGamesWithSpecsV1>
       ).mockReturnValueOnce({ result: null });
 
-      (
-        cornieApi.useGetUsersV1MeQuery as jest.Mock<
-          typeof cornieApi.useGetUsersV1MeQuery
-        >
-      ).mockReturnValueOnce({
-        data: undefined,
-        error: undefined,
-        isLoading: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        refetch: jest.fn<any>(),
+      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValueOnce({
+        result: null,
       });
-
-      (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-      ).mockReturnValueOnce(null);
 
       nonStartedGameListFixture = (
         <div data-testid="non-started-game-list-fixture">
@@ -82,6 +68,11 @@ describe(PublicGames.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+    });
+
+    it('should call useGetUserMe()', () => {
+      expect(useGetUserMe).toHaveBeenCalledTimes(1);
+      expect(useGetUserMe).toHaveBeenCalledWith();
     });
 
     it('should call useGetGamesWithSpecsV1()', () => {
