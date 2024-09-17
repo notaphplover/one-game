@@ -1,6 +1,6 @@
 import { Environment } from '@cornie-js/backend-gateway-env';
 import cors, { FastifyCorsOptions } from '@fastify/cors';
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { FastifyInstance, FastifyPluginCallback } from 'fastify';
 
 export async function buildFastifyServer(
   env: Environment,
@@ -11,7 +11,10 @@ export async function buildFastifyServer(
     origin: env.corsOrigins,
   };
 
-  await fastifyServer.register(cors, corsOptions);
+  await fastifyServer.register(
+    cors as unknown as FastifyPluginCallback,
+    corsOptions,
+  );
 
   return fastifyServer;
 }

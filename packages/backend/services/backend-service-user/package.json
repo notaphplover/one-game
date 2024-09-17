@@ -23,7 +23,6 @@
     "@cornie-js/backend-monitoring": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-user-application": "workspace:*",
-    "fastify": "^4.28.1",
     "glob": "^11.0.0",
     "reflect-metadata": "~0.2.2",
     "rxjs": "^7.8.1"
@@ -37,6 +36,7 @@
     "@typescript-eslint/eslint-plugin": "8.6.0",
     "@typescript-eslint/parser": "8.6.0",
     "dotenv-cli": "7.4.2",
+    "fastify": "5.0.0",
     "jest": "29.7.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
