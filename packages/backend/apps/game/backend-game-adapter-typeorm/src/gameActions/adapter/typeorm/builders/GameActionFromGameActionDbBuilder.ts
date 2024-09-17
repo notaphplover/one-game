@@ -33,6 +33,7 @@ export class GameActionFromGameActionDbBuilder
     );
 
     switch (payload.version) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       case GameActionDbVersion.v1:
         return this.#buildFromV1(gameActionDb, payload);
     }

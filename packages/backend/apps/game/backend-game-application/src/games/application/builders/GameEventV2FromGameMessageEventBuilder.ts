@@ -32,6 +32,7 @@ export class GameEventV2FromGameMessageEventBuilder
     gameMessageEvent: GameMessageEvent,
   ): [string | null, apiModels.GameEventV2] {
     switch (gameMessageEvent.kind) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       case GameMessageEventKind.gameUpdated:
         return this.#buildFromGameUpdatedMessageEvent(gameMessageEvent);
     }

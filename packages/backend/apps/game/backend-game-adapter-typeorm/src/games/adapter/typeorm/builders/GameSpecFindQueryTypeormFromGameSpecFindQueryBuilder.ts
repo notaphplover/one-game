@@ -109,6 +109,7 @@ export class GameSpecFindQueryTypeormFromGameSpecFindQueryBuilder
       this.#assertSelectQueryBuilderIsUsedForSelectFilters(queryBuilder);
 
       switch (gameSpecFindQuery.sort) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         case GameSpecFindQuerySortOption.gameIds:
           if (gameSpecFindQuery.gameIds === undefined) {
             throw new AppError(
