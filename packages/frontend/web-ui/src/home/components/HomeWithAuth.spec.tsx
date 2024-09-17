@@ -6,6 +6,7 @@ jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../game/components/ActiveGameList');
 jest.mock('../../game/components/NonStartedGameList');
 jest.mock('../../game/hooks/useGetGamesMineWithSpecsV1');
+jest.mock('../../user/hooks/useGetUserMe');
 
 import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
@@ -23,6 +24,7 @@ import {
   NonStartedGameListOptions,
 } from '../../game/components/NonStartedGameList';
 import { useGetGamesMineWithSpecsV1 } from '../../game/hooks/useGetGamesMineWithSpecsV1';
+import { useGetUserMe } from '../../user/hooks/useGetUserMe';
 import { HomeWithAuth } from './HomeWithAuth';
 
 describe(HomeWithAuth.name, () => {
@@ -64,21 +66,13 @@ describe(HomeWithAuth.name, () => {
         refetch: jest.fn<any>(),
       });
 
-      (
-        cornieApi.useGetUsersV1MeQuery as jest.Mock<
-          typeof cornieApi.useGetUsersV1MeQuery
-        >
-      ).mockReturnValueOnce({
-        data: undefined,
-        error: undefined,
-        isLoading: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        refetch: jest.fn<any>(),
+      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValueOnce({
+        result: null,
       });
 
-      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(null)
-        .mockReturnValueOnce(null);
+      (
+        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+      ).mockReturnValueOnce(null);
 
       activeGameListFixture = (
         <div className="active-game-list-fixture">Active game list mock</div>

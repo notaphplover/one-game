@@ -10,6 +10,7 @@ import { ActiveGameList } from '../../game/components/ActiveGameList';
 import { NonStartedGameList } from '../../game/components/NonStartedGameList';
 import { useGetGamesMineWithSpecsV1 } from '../../game/hooks/useGetGamesMineWithSpecsV1';
 import { GameStatus } from '../../game/models/GameStatus';
+import { useGetUserMe } from '../../user/hooks/useGetUserMe';
 
 const GAME_STATUS_NON_STARTED: GameStatus = 'nonStarted';
 const GAME_STATUS_ACTIVE: GameStatus = 'active';
@@ -37,18 +38,6 @@ function useGetGamesV1Mine(
   );
 
   return { result: mapUseQueryHookResult(result) };
-}
-
-function useGetUserMe(): { result: Either<string, apiModels.UserV1> | null } {
-  const useGetUsersV1MeQueryResult = cornieApi.useGetUsersV1MeQuery({
-    params: [],
-  });
-
-  const result: Either<string, apiModels.UserV1> | null = mapUseQueryHookResult(
-    useGetUsersV1MeQueryResult,
-  );
-
-  return { result };
 }
 
 export const HomeWithAuth = (): React.JSX.Element => {
