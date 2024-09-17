@@ -19,11 +19,13 @@ import { CreateGamesV1Args } from './games/models/CreateGamesV1Args';
 import { CreateGamesV1SlotsArgs } from './games/models/CreateGamesV1SlotsArgs';
 import { GetGamesSpecsV1Args } from './games/models/GetGamesSpecsV1Args';
 import { GetGamesV1Args } from './games/models/GetGamesV1Args';
+import { GetGamesV1GameIdArgs } from './games/models/GetGamesV1GameIdArgs';
 import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
 import { createGamesV1 } from './games/mutations/createGamesV1';
 import { createGamesV1Slots } from './games/mutations/createGamesV1Slots';
 import { getGamesSpecsV1 } from './games/queries/getGamesSpecsV1';
 import { getGamesV1 } from './games/queries/getGamesV1';
+import { getGamesV1GameId } from './games/queries/getGamesV1GameId';
 import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
 import { CreateUsersV1Args } from './users/models/CreateUsersV1Args';
 import { CreateUsersV1EmailCodeArgs } from './users/models/CreateUsersV1EmailCodeArgs';
@@ -43,6 +45,7 @@ export type {
   CreateUsersV1EmailCodeArgs,
   GetGamesSpecsV1Args,
   GetGamesV1Args,
+  GetGamesV1GameIdArgs,
   GetGamesV1MineArgs,
   GetUsersV1MeArgs,
   SerializableAppError,
@@ -134,6 +137,15 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
       getGamesV1: build.query<apiModels.GameArrayV1, GetGamesV1Args>({
         queryFn: authorizedApiCall(
           getGamesV1(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
+      }),
+      getGamesV1GameId: build.query<
+        apiModels.GameV1 | undefined,
+        GetGamesV1GameIdArgs
+      >({
+        queryFn: authorizedApiCall(
+          getGamesV1GameId(options.httpClient),
           authorizedEndpointsOptions,
         ),
       }),
