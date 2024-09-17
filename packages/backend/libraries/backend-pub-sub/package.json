@@ -6,7 +6,7 @@
   "description": "Backend pub sub library for one-game-js services",
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
-    "ioredis": "^5.3.2"
+    "ioredis": "^5.4.1"
   },
   "devDependencies": {
     "@eslint/js": "9.10.0",
