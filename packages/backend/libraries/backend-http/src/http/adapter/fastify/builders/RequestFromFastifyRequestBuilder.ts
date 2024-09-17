@@ -1,6 +1,7 @@
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
 import { Injectable } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
+import { FastifyRequest as FastifyRequest4 } from 'fastify4';
 import { IncomingHttpHeaders } from 'http';
 
 import { Request } from '../../../application/models/Request';
@@ -9,7 +10,7 @@ import { Request } from '../../../application/models/Request';
 export class RequestFromFastifyRequestBuilder
   implements Builder<Request, [FastifyRequest]>
 {
-  public build(request: FastifyRequest): Request {
+  public build(request: FastifyRequest | FastifyRequest4): Request {
     return {
       headers: this.#parseRequests(request.headers),
       query: this.#parseQuery(request.query),
