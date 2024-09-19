@@ -20,12 +20,14 @@ import { CreateGamesV1SlotsArgs } from './games/models/CreateGamesV1SlotsArgs';
 import { GetGamesSpecsV1Args } from './games/models/GetGamesSpecsV1Args';
 import { GetGamesV1Args } from './games/models/GetGamesV1Args';
 import { GetGamesV1GameIdArgs } from './games/models/GetGamesV1GameIdArgs';
+import { GetGamesV1GameIdSlotsSlotIdCardsArgs } from './games/models/GetGamesV1GameIdSlotsSlotIdCardsArgs';
 import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
 import { createGamesV1 } from './games/mutations/createGamesV1';
 import { createGamesV1Slots } from './games/mutations/createGamesV1Slots';
 import { getGamesSpecsV1 } from './games/queries/getGamesSpecsV1';
 import { getGamesV1 } from './games/queries/getGamesV1';
 import { getGamesV1GameId } from './games/queries/getGamesV1GameId';
+import { getGamesV1GameIdSlotsSlotIdCards } from './games/queries/getGamesV1GameIdSlotsSlotIdCards';
 import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
 import { CreateUsersV1Args } from './users/models/CreateUsersV1Args';
 import { CreateUsersV1EmailCodeArgs } from './users/models/CreateUsersV1EmailCodeArgs';
@@ -46,6 +48,7 @@ export type {
   GetGamesSpecsV1Args,
   GetGamesV1Args,
   GetGamesV1GameIdArgs,
+  GetGamesV1GameIdSlotsSlotIdCardsArgs,
   GetGamesV1MineArgs,
   GetUsersV1MeArgs,
   SerializableAppError,
@@ -146,6 +149,15 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
       >({
         queryFn: authorizedApiCall(
           getGamesV1GameId(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
+      }),
+      getGamesV1GameIdSlotsSlotIdCards: build.query<
+        apiModels.CardArrayV1,
+        GetGamesV1GameIdSlotsSlotIdCardsArgs
+      >({
+        queryFn: authorizedApiCall(
+          getGamesV1GameIdSlotsSlotIdCards(options.httpClient),
           authorizedEndpointsOptions,
         ),
       }),
