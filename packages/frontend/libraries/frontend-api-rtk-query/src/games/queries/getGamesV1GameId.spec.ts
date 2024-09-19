@@ -261,10 +261,7 @@ describe(getGamesV1GameId.name, () => {
             SerializableAppError,
             never
           > = {
-            error: {
-              kind: AppErrorKind.entityNotFound,
-              message: resultFixture.body.description,
-            },
+            data: undefined,
           };
 
           expect(result).toStrictEqual(expected);

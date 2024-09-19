@@ -61,10 +61,7 @@ export function getGamesV1GameId(
         };
       case NOT_FOUND:
         return {
-          error: {
-            kind: AppErrorKind.entityNotFound,
-            message: httpResponse.body.description,
-          },
+          data: undefined,
         };
       default:
         return {

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Link, Typography } from '@mui/material';
+import { Box, Button, Grid2, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { getSlug } from '../helpers/getSlug';
@@ -8,7 +8,7 @@ import { PageName } from '../models/PageName';
 export const PageNotFound = (): React.JSX.Element => {
   return (
     <CornieLayout withFooter withNavBar>
-      <Grid
+      <Grid2
         className="page-not-found-page-container"
         container
         spacing={0}
@@ -16,14 +16,14 @@ export const PageNotFound = (): React.JSX.Element => {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item xs={3}>
+        <Grid2 size={3}>
           <Box className="box-shadow user-info-form-grid">
             <Typography variant="h5" className="user-info-form-title">
               {'Page not found'}
             </Typography>
 
-            <Grid container>
-              <Grid item xs={12}>
+            <Grid2 container>
+              <Grid2 size={12}>
                 <Box className="page-not-found-button-box">
                   <Link
                     component={RouterLink}
@@ -35,11 +35,11 @@ export const PageNotFound = (): React.JSX.Element => {
                     </Button>
                   </Link>
                 </Box>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Box>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </CornieLayout>
   );
 };
