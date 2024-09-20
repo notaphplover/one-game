@@ -12,7 +12,7 @@
     "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.10.0",
+    "@eslint/js": "9.11.0",
     "@jest/globals": "29.7.0",
     "@stryker-mutator/core": "8.5.0",
     "@stryker-mutator/jest-runner": "8.5.0",
