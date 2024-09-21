@@ -10,7 +10,7 @@ export interface TextCardOptions {
 export const TextCard = (params: TextCardOptions) => {
   return (
     <BaseCard colorClass={params.colorClass}>
-      <Box component="div" className="cornie-base-card-text">
+      <Box component="div" className="cornie-card-text cornie-text-card-text">
         {params.text}
       </Box>
     </BaseCard>

@@ -64,6 +64,10 @@ div.cornie-card {
     letter-spacing: 0.3rem;
     text-align: center;
     user-select: none;
+
+    &.cornie-text-card-text {
+      align-self: center;
+    }
   }
 
   div.cornie-card-image {
