@@ -5,7 +5,7 @@
   },
   "description": "Backend messaging application package",
   "dependencies": {
-    "@nestjs/common": "^10.4.3"
+    "@nestjs/common": "^10.4.4"
   },
   "devDependencies": {
     "@eslint/js": "9.11.0",
