@@ -13,7 +13,7 @@ import { JoinExistingGame } from './JoinExistingGame';
 
 describe(JoinExistingGame.name, () => {
   describe('when called, and useJoinExistingGame returns a fulfilled status', () => {
-    let joinExistingGameOkGridDisplayValue: string;
+    let successElement: HTMLElement | null;
 
     beforeAll(async () => {
       (
@@ -29,13 +29,9 @@ describe(JoinExistingGame.name, () => {
         </MemoryRouter>,
       );
 
-      const joinGameOkGrid: HTMLElement = renderResult.container.querySelector(
-        '.join-existing-game-ok',
-      ) as HTMLElement;
-
-      joinExistingGameOkGridDisplayValue = window
-        .getComputedStyle(joinGameOkGrid)
-        .getPropertyValue('display');
+      successElement = renderResult.container.querySelector(
+        '.join-existing-game-success',
+      );
     });
 
     afterAll(() => {
@@ -48,12 +44,12 @@ describe(JoinExistingGame.name, () => {
     });
 
     it('should show the success grid', () => {
-      expect(joinExistingGameOkGridDisplayValue).not.toBe('none');
+      expect(successElement).not.toBeNull();
     });
   });
 
-  describe('when called, and useJoinExistingGame returns a fulfilled rejected', () => {
-    let joinExistingGameKoGridDisplayValue: string;
+  describe('when called, and useJoinExistingGame returns a rejected result', () => {
+    let failureElement: HTMLElement | null;
 
     beforeAll(async () => {
       (
@@ -69,13 +65,9 @@ describe(JoinExistingGame.name, () => {
         </MemoryRouter>,
       );
 
-      const joinGameKoGrid: HTMLElement = renderResult.container.querySelector(
+      failureElement = renderResult.container.querySelector(
         '.join-existing-game-error',
-      ) as HTMLElement;
-
-      joinExistingGameKoGridDisplayValue = window
-        .getComputedStyle(joinGameKoGrid)
-        .getPropertyValue('display');
+      );
     });
 
     afterAll(() => {
@@ -88,7 +80,7 @@ describe(JoinExistingGame.name, () => {
     });
 
     it('should show the rejected grid', () => {
-      expect(joinExistingGameKoGridDisplayValue).not.toBe('none');
+      expect(failureElement).not.toBeNull();
     });
   });
 });

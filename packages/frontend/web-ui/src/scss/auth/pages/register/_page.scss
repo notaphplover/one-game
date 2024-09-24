@@ -2,15 +2,51 @@
 
 .register-page-container {
   min-height: 100vh;
-}
 
-.register-form-grid {
-  background-color: var(--cg-text-primary);
-  border-radius: 10px;
-  text-align: center;
-  color: var(--cg-bkg-primary-light);
-  padding: 3rem;
-  margin: 0rem 2rem;
+  .register-error-container {
+    margin-top: 1rem;
+  }
+
+  .register-form-grid {
+    background-color: var(--cg-text-primary);
+    border-radius: 10px;
+    text-align: center;
+    color: var(--cg-bkg-primary-light);
+    padding: 1rem;
+    margin: 0rem 1rem;
+
+    .form-text-fieldset {
+      margin-top: 1rem;
+
+      &:hover {
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
+      }
+    }
+
+    .return-cornie-button {
+      margin-top: 1rem;
+    }
+  }
+
+  .register-form-button {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .register-form-title {
+    padding-bottom: 1rem;
+  }
+
+  .form-register-error {
+    margin-top: 1.5rem;
+    text-align: left;
+  }
+
+  .form-register-success {
+    margin-top: 1rem;
+    text-align: left;
+  }
 }
 
 @media (min-width: variables.$sm) {
@@ -18,36 +54,4 @@
     margin: 0;
     max-width: 450px;
   }
-}
-
-.register-form-title {
-  padding-bottom: 1.5rem;
-}
-
-.form-register-error {
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-.form-register-success {
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-.register-form-grid .form-text-fieldset {
-  margin-top: 1.5rem;
-}
-
-.register-form-grid .form-text-fieldset:hover {
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
-}
-
-.register-form-button {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-.register-form-grid .return-cornie-button {
-  margin-top: 2rem;
 }
