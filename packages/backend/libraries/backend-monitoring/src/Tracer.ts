@@ -12,7 +12,7 @@ import {
 } from '@opentelemetry/resources';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { NodeSDK } from '@opentelemetry/sdk-node';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 
 export interface TraceOptions {
   serviceName: string;
@@ -36,7 +36,7 @@ export class Tracer {
         exporter: new OTLPMetricExporter(),
       }),
       resource: new Resource({
-        [SemanticResourceAttributes.SERVICE_NAME]: options.serviceName,
+        [ATTR_SERVICE_NAME]: options.serviceName,
       }),
       resourceDetectors: [
         containerDetector,
