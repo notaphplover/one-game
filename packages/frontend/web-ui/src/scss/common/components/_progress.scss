@@ -1,7 +1,10 @@
 @use '../../base/variables' as variables;
 
 .circular-progress-bck {
+  align-items: center;
+  display: flex;
   background-color: variables.$transparent;
+  justify-content: center;
   min-height: 100%;
   padding: 4rem;
 }
