@@ -43,7 +43,7 @@ export const UserInfo = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Grid2 size={12}>
+          <Grid2>
             <Box className="box-shadow user-info-form-grid">
               <Typography variant="h5" className="user-info-form-title">
                 {'User info'}
