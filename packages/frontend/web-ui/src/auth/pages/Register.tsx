@@ -4,7 +4,7 @@ import {
   AlertTitle,
   Box,
   Button,
-  Grid,
+  Grid2,
   IconButton,
   InputAdornment,
   Link,
@@ -49,7 +49,7 @@ export const Register = () => {
     <>
       <CircularProgressModal open={isPending()} />
       <CornieLayout>
-        <Grid
+        <Grid2
           className="register-page-container"
           container
           spacing={0}
@@ -57,7 +57,7 @@ export const Register = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item>
+          <Grid2>
             <Box className="logo-cornie-position">
               <Typography
                 className="logo-cornie-text"
@@ -69,17 +69,17 @@ export const Register = () => {
                 CORNIE
               </Typography>
             </Box>
-          </Grid>
+          </Grid2>
 
-          <Grid item xs={3}>
+          <Grid2>
             <Box className="box-shadow register-form-grid">
               <Typography variant="h5" className="register-form-title">
-                Create an account
+                Create account
               </Typography>
 
               <form>
-                <Grid container>
-                  <Grid item xs={12}>
+                <Grid2 container>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset form-register-name"
                       autoFocus
@@ -94,8 +94,8 @@ export const Register = () => {
                       error={form.validation.name !== undefined}
                       helperText={form.validation.name}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset form-register-email"
                       disabled={isTextFieldDisabled()}
@@ -109,8 +109,8 @@ export const Register = () => {
                       error={form.validation.email !== undefined}
                       helperText={form.validation.email}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset form-register-password"
                       disabled={isTextFieldDisabled()}
@@ -144,8 +144,8 @@ export const Register = () => {
                       error={form.validation.password !== undefined}
                       helperText={form.validation.password}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset form-register-confirm-password"
                       disabled={isTextFieldDisabled()}
@@ -179,42 +179,35 @@ export const Register = () => {
                       error={form.validation.confirmPassword !== undefined}
                       helperText={form.validation.confirmPassword}
                     />
-                  </Grid>
-                </Grid>
-
-                <Grid
-                  container
-                  display={
-                    status === UseRegisterStatus.backendError ? '' : 'none'
-                  }
-                >
-                  <Grid item xs={12}>
-                    <Box className="form-register-error">
+                  </Grid2>
+                  <Grid2 size={12}>
+                    <Box
+                      className="register-error-container"
+                      display={
+                        status === UseRegisterStatus.backendError ? '' : 'none'
+                      }
+                    >
                       <Alert severity="error">
                         <AlertTitle>Error</AlertTitle>
                         Unexpected error occured. Please try again later.
                       </Alert>
                     </Box>
-                  </Grid>
-                </Grid>
-
-                <Grid
-                  container
-                  display={status === UseRegisterStatus.success ? '' : 'none'}
-                >
-                  <Grid item xs={12}>
-                    <Box className="form-register-success">
+                  </Grid2>
+                  <Grid2 size={12}>
+                    <Box
+                      className="form-register-success"
+                      display={
+                        status === UseRegisterStatus.success ? '' : 'none'
+                      }
+                    >
                       <Alert severity="success">
                         <AlertTitle>Success</AlertTitle>
                         User created! We sent an email, please, check your
                         inbox.
                       </Alert>
                     </Box>
-                  </Grid>
-                </Grid>
-
-                <Grid container>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <Box className="register-form-button">
                       <Button
                         className="register-button"
@@ -227,15 +220,10 @@ export const Register = () => {
                         <Typography textAlign="center">Create</Typography>
                       </Button>
                     </Box>
-                  </Grid>
-
-                  <Grid container direction="column" alignItems="center">
-                    <Grid item xs={6}>
-                      <Typography>
-                        {"Do you have a Cornie's account?"}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
+                    <Typography>
+                      Do you have an account?{' '}
                       <Link
                         component={RouterLink}
                         color="primary"
@@ -243,13 +231,13 @@ export const Register = () => {
                       >
                         Sign in
                       </Link>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                    </Typography>
+                  </Grid2>
+                </Grid2>
               </form>
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </CornieLayout>
     </>
   );

@@ -1,6 +1,6 @@
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind } from '@cornie-js/frontend-common';
+import { AppErrorKind } from '@cornie-js/frontend-common';
 
 import { SerializableAppError } from '../../foundation/error/SerializableAppError';
 import { HttpApiParams } from '../../foundation/http/models/HttpApiParams';
@@ -70,7 +70,10 @@ export function createAuthV2(
         };
       default:
         return {
-          error: new AppError(AppErrorKind.unknown),
+          error: {
+            kind: AppErrorKind.unknown,
+            message: '',
+          },
         };
     }
   };

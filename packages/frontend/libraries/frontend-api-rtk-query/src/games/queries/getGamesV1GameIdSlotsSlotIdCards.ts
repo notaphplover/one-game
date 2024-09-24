@@ -1,6 +1,6 @@
 import { HttpClient } from '@cornie-js/api-http-client';
 import { models as apiModels } from '@cornie-js/api-models';
-import { AppError, AppErrorKind } from '@cornie-js/frontend-common';
+import { AppErrorKind } from '@cornie-js/frontend-common';
 import { BaseQueryApi } from '@reduxjs/toolkit/query';
 
 import { SerializableAppError } from '../../foundation/error/SerializableAppError';
@@ -68,7 +68,10 @@ export function getGamesV1GameIdSlotsSlotIdCards(
         };
       default:
         return {
-          error: new AppError(AppErrorKind.unknown),
+          error: {
+            kind: AppErrorKind.unknown,
+            message: '',
+          },
         };
     }
   };
