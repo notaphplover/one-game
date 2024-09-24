@@ -3,7 +3,7 @@ import {
   AlertTitle,
   Box,
   Button,
-  Grid,
+  Grid2,
   Link,
   Typography,
 } from '@mui/material';
@@ -36,7 +36,7 @@ export const RegisterConfirm = (): React.JSX.Element => {
     <>
       <CircularProgressModal open={isPending()} />
       <CornieLayout>
-        <Grid
+        <Grid2
           className="register-confirm-page-container"
           container
           spacing={0}
@@ -44,7 +44,7 @@ export const RegisterConfirm = (): React.JSX.Element => {
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item>
+          <Grid2>
             <Box className="logo-cornie-position">
               <Typography
                 className="logo-cornie-text"
@@ -56,70 +56,57 @@ export const RegisterConfirm = (): React.JSX.Element => {
                 CORNIE
               </Typography>
             </Box>
-          </Grid>
+          </Grid2>
 
-          <Grid item xs={3}>
+          <Grid2>
             <Box className="box-shadow register-form-grid">
               <Typography variant="h5" className="register-form-title">
                 Confirm your account user
               </Typography>
-              <Grid container>
-                <Grid
-                  className="confirm-register-ok"
-                  container
-                  display={getRegisterConfirmOkDisplay()}
-                >
-                  <Grid item xs={12}>
-                    <Box className="form-register-success">
-                      <Alert severity="success">
-                        <AlertTitle>Success</AlertTitle>
-                        Your account have been created succesfully!
-                      </Alert>
-                    </Box>
-                  </Grid>
-                </Grid>
+              <Grid2 container>
+                <Grid2 size={12}>
+                  <Box
+                    className="form-register-success"
+                    display={getRegisterConfirmOkDisplay()}
+                  >
+                    <Alert severity="success">
+                      <AlertTitle>Success</AlertTitle>
+                      Your account have been created succesfully!
+                    </Alert>
+                  </Box>
+                </Grid2>
 
-                <Grid
-                  className="confirm-register-error-message"
-                  container
-                  display={getRegisterConfirmErrorDisplay()}
-                >
-                  <Grid item xs={12}>
-                    <Box className="form-register-error">
-                      <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {errorMessage}
-                      </Alert>
-                    </Box>
-                  </Grid>
-                </Grid>
+                <Grid2 size={12}>
+                  <Box
+                    className="form-register-error"
+                    display={getRegisterConfirmErrorDisplay()}
+                  >
+                    <Alert severity="error">
+                      <AlertTitle>Error</AlertTitle>
+                      {errorMessage}
+                    </Alert>
+                  </Box>
+                </Grid2>
 
-                <Grid
-                  className="confirm-register-button"
-                  container
-                  direction="row"
-                  justifyContent="end"
-                >
-                  <Grid item>
-                    <Link
-                      component={RouterLink}
-                      color="primary"
-                      to={getSlug(PageName.home)}
+                <Grid2 size={12}>
+                  <Link
+                    component={RouterLink}
+                    color="primary"
+                    to={getSlug(PageName.home)}
+                  >
+                    <Button
+                      type="button"
+                      className="return-cornie-button"
+                      variant="contained"
                     >
-                      <Button
-                        type="button"
-                        className="return-cornie-button"
-                        variant="contained"
-                      >
-                        Return to Cornie
-                      </Button>
-                    </Link>
-                  </Grid>
-                </Grid>
-              </Grid>
+                      Return to Cornie
+                    </Button>
+                  </Link>
+                </Grid2>
+              </Grid2>
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </CornieLayout>
     </>
   );

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import { selectAuth } from '../../app/store/features/authSlice';
+import { AuthState } from '../../app/store/helpers/models/AuthState';
+import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
 import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
@@ -28,9 +29,7 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
   const codeParam: string | null = location.searchParams.get(CODE_QUERY_PARAM);
 
   const dispatch = useAppDispatch();
-  const auth: AuthenticatedAuthState | null = useAppSelector(
-    selectAuthenticatedAuth,
-  );
+  const auth: AuthState = useAppSelector(selectAuth);
 
   const handleResponse: (
     response: RegisterConfirmSerializedResponse,
@@ -62,16 +61,23 @@ export const useRegisterConfirm = (): UseRegisterConfirmResult => {
           }
           break;
         case RegisterConfirmStatus.pending:
-          if (auth !== null) {
-            try {
-              const response: RegisterConfirmSerializedResponse =
-                await updateUserMe(auth.accessToken);
+          switch (auth.status) {
+            case AuthStateStatus.authenticated:
+              try {
+                const response: RegisterConfirmSerializedResponse =
+                  await updateUserMe(auth.accessToken);
 
-              handleResponse(response);
-            } catch (_error: unknown) {
+                handleResponse(response);
+              } catch (_error: unknown) {
+                setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+                setStatus(RegisterConfirmStatus.rejected);
+              }
+              break;
+            case AuthStateStatus.nonAuthenticated:
               setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
               setStatus(RegisterConfirmStatus.rejected);
-            }
+              break;
+            default:
           }
           break;
         default:

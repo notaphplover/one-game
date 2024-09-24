@@ -5,19 +5,20 @@
   border-radius: 10px;
   text-align: center;
   color: var(--cg-bkg-primary-light);
-  padding: 3rem;
-  margin: 0rem 2rem;
+  margin: 0rem 1rem;
+  padding: 1rem;
 }
 
 @media (min-width: variables.$sm) {
   .login-form-grid {
     margin: 0;
     max-width: 450px;
+    padding: 2rem;
   }
 }
 
 .login-form-title {
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
 }
 
 .form-login-error {

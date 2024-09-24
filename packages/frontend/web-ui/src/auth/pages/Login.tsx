@@ -4,7 +4,7 @@ import {
   AlertTitle,
   Box,
   Button,
-  Grid,
+  Grid2,
   IconButton,
   InputAdornment,
   Link,
@@ -70,14 +70,14 @@ export const Login = (): React.JSX.Element => {
     <>
       <CircularProgressModal open={isPending()} />
       <CornieLayout>
-        <Grid
+        <Grid2
           className="login-page-container"
           container
           direction="column"
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item>
+          <Grid2>
             <Box className="logo-cornie-position">
               <Typography
                 className="logo-cornie-text"
@@ -89,17 +89,17 @@ export const Login = (): React.JSX.Element => {
                 CORNIE
               </Typography>
             </Box>
-          </Grid>
+          </Grid2>
 
-          <Grid item xs={3}>
+          <Grid2>
             <Box className="box-shadow login-form-grid">
               <Typography variant="h5" className="login-form-title">
-                Welcome to Cornie's game
+                Welcome
               </Typography>
 
               <form>
-                <Grid container>
-                  <Grid item xs={12}>
+                <Grid2 container>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset form-login-email"
                       autoFocus
@@ -114,8 +114,8 @@ export const Login = (): React.JSX.Element => {
                       error={formValidation.email !== undefined}
                       helperText={formValidation.email}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset form-login-password"
                       disabled={isTextFieldDisabled()}
@@ -149,58 +149,50 @@ export const Login = (): React.JSX.Element => {
                       error={formValidation.password !== undefined}
                       helperText={formValidation.password}
                     />
-                  </Grid>
+                  </Grid2>
 
-                  <Grid
-                    container
+                  <Grid2
+                    size={12}
                     display={formStatus === LoginStatus.backendKO ? '' : 'none'}
                   >
-                    <Grid item xs={12}>
-                      <Box className="form-login-error">
-                        <Alert severity="error">
-                          <AlertTitle>Error</AlertTitle>
-                          {backendError}
-                        </Alert>
-                      </Box>
-                    </Grid>
-                  </Grid>
+                    <Box className="form-login-error">
+                      <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {backendError}
+                      </Alert>
+                    </Box>
+                  </Grid2>
 
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Box className="login-form-button">
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          fullWidth
-                          onClick={onSubmit}
-                        >
-                          <Typography textAlign="center">Login</Typography>
-                        </Button>
-                      </Box>
-                    </Grid>
+                  <Grid2 size={12}>
+                    <Box className="login-form-button">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        onClick={onSubmit}
+                      >
+                        <Typography textAlign="center">Login</Typography>
+                      </Button>
+                    </Box>
+                  </Grid2>
 
-                    <Grid container direction="column" alignItems="center">
-                      <Grid item xs={6}>
-                        <Typography>
-                          Don't you have a Cornie's account?
-                        </Typography>
-                      </Grid>
-                      <Grid item md={12}>
-                        <Link
-                          component={RouterLink}
-                          color="primary"
-                          to="/auth/register"
-                        >
-                          Sign up
-                        </Link>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                  <Grid2 size={12}>
+                    <Typography>
+                      Don't you have an account?{' '}
+                      <Link
+                        component={RouterLink}
+                        color="primary"
+                        to="/auth/register"
+                      >
+                        Sign up
+                      </Link>
+                    </Typography>{' '}
+                  </Grid2>
+                </Grid2>
               </form>
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </CornieLayout>
     </>
   );

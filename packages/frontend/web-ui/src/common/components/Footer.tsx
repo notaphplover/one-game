@@ -1,19 +1,18 @@
-import { Grid } from '@mui/material';
+import { Grid2 } from '@mui/material';
 import React from 'react';
 
 export const Footer = (): React.JSX.Element => {
   return (
-    <Grid
+    <Grid2
       container
       component="footer"
       sx={{ backgroundColor: 'primary.dark', mt: 6 }}
     >
-      <Grid
-        item
+      <Grid2
         sx={{
           padding: 4,
         }}
-      ></Grid>
-    </Grid>
+      ></Grid2>
+    </Grid2>
   );
 };

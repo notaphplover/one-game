@@ -98,6 +98,10 @@ export const selectAuthToken = (state: RootState): string | null => {
     : null;
 };
 
+export const selectAuth = (state: RootState): AuthState => {
+  return state.auth;
+};
+
 export const selectAuthenticatedAuth = (
   state: RootState,
 ): AuthenticatedAuthState | null => {

@@ -3,7 +3,7 @@ import {
   AlertTitle,
   Box,
   Button,
-  Grid,
+  Grid2,
   TextField,
   Typography,
 } from '@mui/material';
@@ -35,7 +35,7 @@ export const UserInfo = () => {
     <>
       <CircularProgressModal open={isPending()} />
       <CornieLayout withFooter withNavBar>
-        <Grid
+        <Grid2
           className="user-info-page-container"
           container
           spacing={0}
@@ -43,15 +43,15 @@ export const UserInfo = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item xs={3}>
+          <Grid2>
             <Box className="box-shadow user-info-form-grid">
               <Typography variant="h5" className="user-info-form-title">
                 {'User info'}
               </Typography>
 
               <form>
-                <Grid container>
-                  <Grid item xs={12}>
+                <Grid2 container>
+                  <Grid2 size={12}>
                     <TextField
                       className="form-text-fieldset"
                       data-testid="user-info-form-text-email"
@@ -63,8 +63,8 @@ export const UserInfo = () => {
                       type="text"
                       value={form.fields.email ?? ''}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       autoFocus
                       className="form-text-fieldset"
@@ -80,8 +80,8 @@ export const UserInfo = () => {
                       type="text"
                       value={form.fields.name ?? ''}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       autoFocus
                       className="form-text-fieldset"
@@ -97,8 +97,8 @@ export const UserInfo = () => {
                       type="password"
                       value={form.fields.password ?? ''}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <TextField
                       autoFocus
                       className="form-text-fieldset"
@@ -114,27 +114,27 @@ export const UserInfo = () => {
                       type="password"
                       value={form.fields.confirmPassword ?? ''}
                     />
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
 
-                <Grid
+                <Grid2
                   container
                   display={
                     status === UserInfoStatus.userFetchError ? '' : 'none'
                   }
                 >
-                  <Grid item xs={12}>
+                  <Grid2 size={12}>
                     <Box className="user-info-form-error">
                       <Alert severity="error">
                         <AlertTitle>Error</AlertTitle>
                         Unexpected error encountered while fetching user data
                       </Alert>
                     </Box>
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
 
-                <Grid container>
-                  <Grid item xs={12}>
+                <Grid2 container>
+                  <Grid2 size={12}>
                     <Box className="user-info-form-button-box">
                       <Button
                         disabled={isNotIdle()}
@@ -146,12 +146,12 @@ export const UserInfo = () => {
                         <Typography textAlign="center">Save</Typography>
                       </Button>
                     </Box>
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               </form>
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </CornieLayout>
     </>
   );

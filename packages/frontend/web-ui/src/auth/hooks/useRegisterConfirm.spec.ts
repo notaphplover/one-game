@@ -10,7 +10,10 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 import { act } from 'react';
 
-import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
+import {
+  AuthenticatedAuthState,
+  NonAuthenticatedAuthState,
+} from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 import { createAuthByToken } from '../../app/store/thunk/createAuthByToken';
@@ -308,8 +311,8 @@ describe(useRegisterConfirm.name, () => {
     });
   });
 
-  describe('when called, and accessToken is null', () => {
-    let authenticatedAuthStateFixture: AuthenticatedAuthState | null;
+  describe('when called, and useAppSelector returns non authenticated auth', () => {
+    let authenticatedAuthStateFixture: NonAuthenticatedAuthState;
     let createAuthByTokenResult: ReturnType<typeof createAuthByToken>;
     let status: RegisterConfirmStatus;
     let urlLikeLocationFixture: UrlLikeLocation;
@@ -326,7 +329,9 @@ describe(useRegisterConfirm.name, () => {
         typeof createAuthByToken
       >;
 
-      authenticatedAuthStateFixture = null;
+      authenticatedAuthStateFixture = {
+        status: AuthStateStatus.nonAuthenticated,
+      };
 
       const payloadActionFixture: PayloadAction<AuthSerializedResponse> = {
         payload: {
@@ -393,11 +398,11 @@ describe(useRegisterConfirm.name, () => {
     });
 
     it('should return a rejected status', () => {
-      expect(status).toBe(RegisterConfirmStatus.pending);
+      expect(status).toBe(RegisterConfirmStatus.rejected);
     });
 
     it('should return an error message Unexpected error', () => {
-      expect(errorMessage).toBeNull();
+      expect(errorMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
     });
   });
 

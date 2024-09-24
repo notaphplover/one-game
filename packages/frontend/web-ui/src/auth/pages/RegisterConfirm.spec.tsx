@@ -42,7 +42,7 @@ describe(RegisterConfirm.name, () => {
 
       const confirmRegisterOkGrid: HTMLElement =
         renderResult.container.querySelector(
-          '.confirm-register-ok',
+          '.form-register-success',
         ) as HTMLElement;
 
       confirmRegisterOkGridDisplayValue = window
@@ -86,7 +86,7 @@ describe(RegisterConfirm.name, () => {
 
       const confirmRegisterErrorGrid: HTMLElement =
         renderResult.container.querySelector(
-          '.confirm-register-error-message',
+          '.form-register-error',
         ) as HTMLElement;
 
       confirmRegisterErrorGridDisplayValue = window

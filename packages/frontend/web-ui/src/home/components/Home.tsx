@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Link, Typography } from '@mui/material';
+import { Box, Button, Grid2, Link, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { getSlug } from '../../common/helpers/getSlug';
@@ -9,8 +9,8 @@ import { ReversedCard } from '../../game/components/ReversedCard';
 export const Home = (): React.JSX.Element => {
   return (
     <CornieLayout id="home-page" withFooter withNavBar>
-      <Grid container>
-        <Grid item xs={12}>
+      <Grid2 container>
+        <Grid2 size={12}>
           <Box component="div" className="page-section-container">
             <Box component="div" className="home-cards-grid">
               <Box
@@ -39,10 +39,10 @@ export const Home = (): React.JSX.Element => {
               </Box>
             </Box>
           </Box>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={12}>
+        </Grid2>
+      </Grid2>
+      <Grid2 container>
+        <Grid2 size={12}>
           <Box component="div" className="home-button-container">
             <Box component="div" className="page-section-container">
               <Typography
@@ -71,8 +71,8 @@ export const Home = (): React.JSX.Element => {
               </Link>
             </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </CornieLayout>
   );
 };
