@@ -1,5 +1,6 @@
 export enum PageName {
   createGame,
+  game,
   home,
   joinGame,
   login,

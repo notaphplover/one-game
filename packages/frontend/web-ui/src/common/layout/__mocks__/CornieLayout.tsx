@@ -1,16 +1,18 @@
+import { jest } from '@jest/globals';
+
 import { Box } from '@mui/material';
 
-interface CornieLayoutParams {
-  children: React.JSX.Element | React.JSX.Element[];
-  id?: string;
-  withFooter?: boolean;
-  withNavBar?: boolean;
-}
+import type {
+  CornieLayout as OriginalCornieLayout,
+  CornieLayoutParams,
+} from '../CornieLayout';
 
-export const CornieLayout = (params: CornieLayoutParams): React.JSX.Element => {
-  return (
-    <Box component="div" className="bkg-layout" id={params.id}>
-      <article>{params.children}</article>
-    </Box>
-  );
-};
+export const CornieLayout = jest.fn<typeof OriginalCornieLayout>(
+  (params: CornieLayoutParams): React.JSX.Element => {
+    return (
+      <Box component="div" className="bkg-layout" id={params.id}>
+        <article>{params.children}</article>
+      </Box>
+    );
+  },
+);

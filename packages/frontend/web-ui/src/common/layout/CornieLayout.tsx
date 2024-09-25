@@ -17,7 +17,7 @@ function getLayoutBoxClassName(params: CornieLayoutParams): string {
   return layoutBoxClassNames.join(' ');
 }
 
-interface CornieLayoutParams {
+export interface CornieLayoutParams {
   children: React.JSX.Element | React.JSX.Element[];
   id?: string;
   withFooter?: boolean;

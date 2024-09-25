@@ -1,0 +1,170 @@
+@use '../../base/variables' as variables;
+
+@mixin fanOf($count, $angle) {
+  $offset: calc($angle / 2);
+
+  > :nth-last-child(#{$count}) {
+    $increment: calc($angle / ($count - 1));
+
+    transform: translate(-50%, -50%) rotate(-$offset);
+
+    @for $i from 2 through $count {
+      & ~ :nth-child(#{$i}) {
+        transform: translate(-50%, -50%)
+          rotate(-$offset + $increment * ($i - 1));
+      }
+    }
+  }
+}
+
+@mixin fanOfAtMost($count, $angleMin, $angleMax) {
+  $increment: calc(($angleMax - $angleMin) / ($count - 1));
+
+  @for $i from 1 through $count {
+    @include fanOf($i, $angleMin + $increment * ($i - 1));
+  }
+}
+
+.game-page-container {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+
+  .game-container {
+    background-color: var(--cg-bkg-primary-dark);
+    border: 1px solid var(--cg-bkg-primary-dark);
+    border-radius: 10px;
+    box-shadow:
+      0 4px 8px 0 var(--cg-bkg-secondary-dark),
+      0 6px 20px 0 var(--cg-bkg-secondary-dark);
+    max-width: 600px;
+    width: 100%;
+
+    .game-area,
+    .player-hand {
+      div.cornie-card {
+        box-shadow: 2px 4px 2px 1px var(--cg-bkg-border-card);
+
+        div.cornie-card-inner-content {
+          div.cornie-card-text.cornie-text-card-text {
+            font-size: 75px;
+          }
+        }
+      }
+    }
+
+    @media (min-width: variables.$sm) {
+      .game-area,
+      .player-hand {
+        div.cornie-card {
+          div.cornie-card-inner-content {
+            div.cornie-card-text.cornie-text-card-text {
+              font-size: 95px;
+            }
+          }
+        }
+      }
+    }
+
+    @media (min-width: variables.$md) {
+      .game-area,
+      .player-hand {
+        div.cornie-card {
+          div.cornie-card-inner-content {
+            div.cornie-card-text.cornie-text-card-text {
+              font-size: 110px;
+            }
+          }
+        }
+      }
+    }
+
+    .game-area {
+      display: flex;
+      justify-content: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+      padding: 0.5rem;
+
+      div.cornie-card {
+        margin: 0 0.5rem;
+        max-width: 100px;
+        width: 100px;
+      }
+    }
+
+    @media (min-width: variables.$sm) {
+      .game-area div.cornie-card {
+        max-width: 125px;
+        width: 125px;
+      }
+    }
+
+    @media (min-width: variables.$md) {
+      .game-area div.cornie-card {
+        max-width: 150px;
+        width: 150px;
+      }
+    }
+
+    .player-hand {
+      height: 250px;
+      position: relative;
+
+      @include fanOfAtMost(10, 30deg, 180deg);
+
+      div.cornie-card {
+        left: 50%;
+        position: absolute;
+        top: 35%;
+        transform-origin: center 110%;
+        width: 100px;
+
+        &:hover {
+          z-index: 1;
+        }
+      }
+    }
+
+    @media (min-width: variables.$sm) {
+      .player-hand {
+        height: 312px;
+
+        div.cornie-card {
+          transform-origin: center 120%;
+          width: 125px;
+        }
+      }
+    }
+
+    @media (min-width: variables.$md) {
+      .player-hand {
+        height: 375px;
+
+        div.cornie-card {
+          width: 150px;
+        }
+      }
+    }
+
+    .player-hand-pagination-container {
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+
+      .player-hand-pagination {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0rem;
+        width: 100%;
+
+        .player-hand-pagination-button {
+          margin: 0 0.5rem;
+          z-index: 1;
+        }
+      }
+    }
+  }
+}

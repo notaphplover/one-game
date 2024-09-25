@@ -2,6 +2,8 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { JoinInnerOutlined } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 
+import { getSlug } from '../../common/helpers/getSlug';
+import { PageName } from '../../common/models/PageName';
 import { BaseGameListItem } from './BaseGameListItem';
 
 export interface ActiveGameListItemOptions {
@@ -13,7 +15,8 @@ export const ActiveGameListItem = (options: ActiveGameListItemOptions) => {
     <Box component="div">
       <Button
         className="game-list-item-button"
-        disabled
+        component="a"
+        href={`${getSlug(PageName.game)}?gameId=${options.game.id}`}
         startIcon={<JoinInnerOutlined />}
         type="button"
         variant="contained"

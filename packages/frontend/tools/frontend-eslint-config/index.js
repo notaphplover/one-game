@@ -72,6 +72,7 @@ function buildBaseConfig() {
           ],
         },
       ],
+      '@typescript-eslint/no-deprecated': 'error',
       '@typescript-eslint/no-duplicate-type-constituents': 'off',
       '@typescript-eslint/no-dynamic-delete': 'error',
       '@typescript-eslint/no-inferrable-types': 'off',
