@@ -17,7 +17,7 @@
     "@stryker-mutator/core": "8.5.0",
     "@stryker-mutator/jest-runner": "8.5.0",
     "@stryker-mutator/typescript-checker": "8.5.0",
-    "@types/node": "20.16.7",
+    "@types/node": "20.16.8",
     "@typescript-eslint/eslint-plugin": "8.7.0",
     "@typescript-eslint/parser": "8.7.0",
     "fastify": "^5.0.0",
