@@ -16,7 +16,7 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
-  Grid,
+  Grid2,
   TextField,
   Typography,
 } from '@mui/material';
@@ -99,8 +99,8 @@ export const CreateNewGame = (): React.JSX.Element => {
             </Typography>
 
             <form>
-              <Grid container>
-                <Grid item xs={12}>
+              <Grid2 container>
+                <Grid2 size={12}>
                   <TextField
                     autoFocus
                     className="new-game-text-fieldset form-name-new-game"
@@ -112,8 +112,8 @@ export const CreateNewGame = (): React.JSX.Element => {
                     value={formFields.name}
                     onChange={setFormFieldName}
                   />
-                </Grid>
-                <Grid item xs={12}>
+                </Grid2>
+                <Grid2 size={12}>
                   <TextField
                     className="new-game-text-fieldset form-players-new-game"
                     disabled={isTextFieldDisabled()}
@@ -126,14 +126,14 @@ export const CreateNewGame = (): React.JSX.Element => {
                     error={!formValidation.isRight}
                     helperText={formValidation.value?.numberOfPlayers}
                   />
-                </Grid>
-                <Grid item xs={12}>
+                </Grid2>
+                <Grid2 size={12}>
                   <GameVisibilityTextField
                     disabled={isTextFieldDisabled()}
                     onChange={setFormFieldIsPublic}
                   />
-                </Grid>
-                <Grid item xs={12}>
+                </Grid2>
+                <Grid2 size={12}>
                   <Box className="new-game-options">
                     <Button
                       className="button-new-game-options"
@@ -291,39 +291,39 @@ export const CreateNewGame = (): React.JSX.Element => {
                       </DialogActions>
                     </Dialog>
                   </Box>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
-              <Grid container display={errorMessage !== null ? '' : 'none'}>
-                <Grid item xs={12}>
+              <Grid2 container display={errorMessage !== null ? '' : 'none'}>
+                <Grid2 size={12}>
                   <Box className="form-new-game-error">
                     <Alert severity="error">
                       <AlertTitle>Error</AlertTitle>
                       {errorMessage}
                     </Alert>
                   </Box>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
-              <Grid
+              <Grid2
                 container
                 display={status === CreateNewGameStatus.done ? '' : 'none'}
               >
-                <Grid item xs={12}>
+                <Grid2 size={12}>
                   <Box className="form-new-game-success">
                     <Alert severity="success">
                       <AlertTitle>Success</AlertTitle>
                       New game created!
                     </Alert>
                   </Box>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
-              <Grid
+              <Grid2
                 container
                 display={status === CreateNewGameStatus.done ? '' : 'none'}
               >
-                <Grid item xs={12}>
+                <Grid2 size={12}>
                   <Box className="new-game-form-button">
                     <Button
                       className="new-game-cornie-button"
@@ -336,14 +336,14 @@ export const CreateNewGame = (): React.JSX.Element => {
                       CORNIE HOME
                     </Button>
                   </Box>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
 
-              <Grid
+              <Grid2
                 container
                 display={status === CreateNewGameStatus.done ? 'none' : ''}
               >
-                <Grid item xs={12}>
+                <Grid2 size={12}>
                   <Box className="new-game-form-button">
                     <Button
                       fullWidth
@@ -355,8 +355,8 @@ export const CreateNewGame = (): React.JSX.Element => {
                       CREATE
                     </Button>
                   </Box>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </form>
           </Box>
         </Box>
