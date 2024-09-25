@@ -8,7 +8,7 @@ import {
   Link,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
