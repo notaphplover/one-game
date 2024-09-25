@@ -1,3 +1,30 @@
 .register-confirm-page-container {
   min-height: 100vh;
+
+  .form-register-error {
+    margin-top: 1rem;
+    text-align: left;
+  }
+
+  .form-register-success {
+    margin-top: 1rem;
+    text-align: left;
+  }
+
+  .register-form-grid {
+    background-color: var(--cg-text-primary);
+    border-radius: 10px;
+    text-align: center;
+    color: var(--cg-bkg-primary-light);
+    padding: 1rem;
+    margin: 0rem 1rem;
+  }
+
+  .return-cornie-button {
+    margin-top: 1rem;
+  }
+
+  .register-form-title {
+    padding-bottom: 1rem;
+  }
 }
