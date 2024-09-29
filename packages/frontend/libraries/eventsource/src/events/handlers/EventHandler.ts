@@ -1,4 +1,6 @@
-export type EventHandler<TEvent extends Event> = (event: TEvent) => void;
-export interface EventHandlerObject<TEvent extends Event> {
-  handleEvent(event: TEvent): void;
+export // eslint-disable-next-line @typescript-eslint/no-explicit-any
+type EventHandler<TThis, TEvent> = (this: TThis, event: TEvent) => any;
+
+export interface EventHandlerObject<TThis, TEvent extends Event> {
+  handleEvent(this: TThis, event: TEvent): void;
 }

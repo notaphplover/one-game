@@ -8,14 +8,18 @@ describe(EventEmitter.name, () => {
     describe('when called, and eventEmitter.emit() is called', () => {
       let eventFixture: Event;
 
-      let handlerMock: EventHandler<Event>;
+      let handlerMock: EventHandler<unknown, Event>;
 
       beforeAll(() => {
         eventFixture = new Event('eventType');
 
         handlerMock = jest.fn();
 
-        const eventEmitter: EventEmitter<Event> = new EventEmitter();
+        const selfFixture: unknown = { foo: 'bar' };
+
+        const eventEmitter: EventEmitter<unknown, Event> = new EventEmitter(
+          selfFixture,
+        );
 
         eventEmitter.add('eventType', handlerMock);
         eventEmitter.emit('eventType', eventFixture);
@@ -36,14 +40,18 @@ describe(EventEmitter.name, () => {
     describe('when called', () => {
       let eventFixture: Event;
 
-      let handlerMock: EventHandler<Event>;
+      let handlerMock: EventHandler<unknown, Event>;
 
       beforeAll(() => {
         eventFixture = new Event('eventType');
 
         handlerMock = jest.fn();
 
-        const eventEmitter: EventEmitter<Event> = new EventEmitter();
+        const selfFixture: unknown = { foo: 'bar' };
+
+        const eventEmitter: EventEmitter<unknown, Event> = new EventEmitter(
+          selfFixture,
+        );
 
         eventEmitter.add('eventType', handlerMock);
         eventEmitter.emit('eventType', eventFixture);
@@ -64,14 +72,18 @@ describe(EventEmitter.name, () => {
     describe('when called, and eventEmitter.emit() is called', () => {
       let eventFixture: Event;
 
-      let handlerMock: EventHandler<Event>;
+      let handlerMock: EventHandler<unknown, Event>;
 
       beforeAll(() => {
         eventFixture = new Event('eventType');
 
         handlerMock = jest.fn();
 
-        const eventEmitter: EventEmitter<Event> = new EventEmitter();
+        const selfFixture: unknown = { foo: 'bar' };
+
+        const eventEmitter: EventEmitter<unknown, Event> = new EventEmitter(
+          selfFixture,
+        );
 
         eventEmitter.add('eventType', handlerMock);
         eventEmitter.remove('eventType', handlerMock);

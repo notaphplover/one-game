@@ -1,21 +1,23 @@
 import { EventHandler, EventHandlerObject } from '../handlers/EventHandler';
 
-export class EventEmitter<TEvent extends Event> {
+export class EventEmitter<TThis, TEvent extends Event> {
+  readonly #self: TThis;
   readonly #listeners: Map<
     string,
-    (EventHandler<TEvent> | EventHandlerObject<TEvent>)[]
+    (EventHandler<TThis, TEvent> | EventHandlerObject<TThis, TEvent>)[]
   >;
 
-  constructor() {
+  constructor(self: TThis) {
     this.#listeners = new Map();
+    this.#self = self;
   }
 
   public add(
     type: string,
-    handler: EventHandler<TEvent> | EventHandlerObject<TEvent>,
+    handler: EventHandler<TThis, TEvent> | EventHandlerObject<TThis, TEvent>,
   ): void {
     let listeners:
-      | (EventHandler<TEvent> | EventHandlerObject<TEvent>)[]
+      | (EventHandler<TThis, TEvent> | EventHandlerObject<TThis, TEvent>)[]
       | undefined = this.#listeners.get(type);
 
     if (listeners === undefined) {
@@ -29,15 +31,17 @@ export class EventEmitter<TEvent extends Event> {
 
   public emit(type: string, event: TEvent): void {
     const listeners:
-      | (EventHandler<TEvent> | EventHandlerObject<TEvent>)[]
+      | (EventHandler<TThis, TEvent> | EventHandlerObject<TThis, TEvent>)[]
       | undefined = this.#listeners.get(type);
 
     if (listeners !== undefined) {
       for (const listener of listeners) {
-        if (typeof listener === 'function') {
-          listener(event);
+        if (typeof listener === 'object') {
+          (listener.handleEvent.bind(this.#self) as (event: TEvent) => unknown)(
+            event,
+          );
         } else {
-          listener.handleEvent(event);
+          (listener.bind(this.#self) as (event: TEvent) => unknown)(event);
         }
       }
     }
@@ -49,10 +53,10 @@ export class EventEmitter<TEvent extends Event> {
 
   public remove(
     type: string,
-    handler: EventHandler<TEvent> | EventHandlerObject<TEvent>,
+    handler: EventHandler<TThis, TEvent> | EventHandlerObject<TThis, TEvent>,
   ): boolean {
     const listeners:
-      | (EventHandler<TEvent> | EventHandlerObject<TEvent>)[]
+      | (EventHandler<TThis, TEvent> | EventHandlerObject<TThis, TEvent>)[]
       | undefined = this.#listeners.get(type);
 
     if (listeners === undefined) {
