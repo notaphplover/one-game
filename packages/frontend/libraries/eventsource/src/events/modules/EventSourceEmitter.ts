@@ -2,33 +2,39 @@ import { EventHandler, EventHandlerObject } from '../handlers/EventHandler';
 import { EventSourceEvent } from '../models/EventSourceEvent';
 import { NonMessageEvent } from '../models/NonMessageEvent';
 import { EventEmitter } from './EventEmitter';
+import { EventSource } from './EventSource';
 
 export class EventSourceEmitter {
   public static errorEventType: string = 'error';
   public static openEventType: string = 'open';
 
-  readonly #eventEmitter: EventEmitter<Event>;
-  readonly #messageEventEmitter: EventEmitter<MessageEvent<unknown>>;
+  readonly #eventEmitter: EventEmitter<EventSource, Event>;
+  readonly #messageEventEmitter: EventEmitter<
+    EventSource,
+    MessageEvent<unknown>
+  >;
 
-  constructor() {
-    this.#eventEmitter = new EventEmitter();
-    this.#messageEventEmitter = new EventEmitter();
+  constructor(eventSource: EventSource) {
+    this.#eventEmitter = new EventEmitter(eventSource);
+    this.#messageEventEmitter = new EventEmitter(eventSource);
   }
 
   public add<T extends string>(
     type: T,
     handler: T extends NonMessageEvent
-      ? EventHandler<Event> | EventHandlerObject<Event>
+      ?
+          | EventHandler<EventSource, Event>
+          | EventHandlerObject<EventSource, Event>
       :
-          | EventHandler<MessageEvent<unknown>>
-          | EventHandlerObject<MessageEvent<unknown>>,
+          | EventHandler<EventSource, MessageEvent<unknown>>
+          | EventHandlerObject<EventSource, MessageEvent<unknown>>,
   ): void {
     if (this.#isNonMessageEvent(type)) {
       this.#eventEmitter.add(
         type,
         handler as
-          | EventHandler<Event>
-          | EventHandlerObject<EventSourceEvent<T>>,
+          | EventHandler<EventSource, Event>
+          | EventHandlerObject<EventSource, Event>,
       );
     } else {
       this.#messageEventEmitter.add(type, handler);
@@ -58,17 +64,17 @@ export class EventSourceEmitter {
   public remove<T extends string>(
     type: T,
     handler: T extends NonMessageEvent
-      ? EventHandler<Event> | EventHandlerObject<Event>
+      ?
+          | EventHandler<EventSource, Event>
+          | EventHandlerObject<EventSource, Event>
       :
-          | EventHandler<MessageEvent<unknown>>
-          | EventHandlerObject<MessageEvent<unknown>>,
+          | EventHandler<EventSource, MessageEvent<unknown>>
+          | EventHandlerObject<EventSource, MessageEvent<unknown>>,
   ): void {
     if (this.#isNonMessageEvent(type)) {
       this.#eventEmitter.remove(
         type,
-        handler as
-          | EventHandler<Event>
-          | EventHandlerObject<EventSourceEvent<T>>,
+        handler as EventHandler<EventSource, Event>,
       );
     } else {
       this.#messageEventEmitter.remove(type, handler);

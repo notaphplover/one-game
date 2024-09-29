@@ -3,7 +3,7 @@
 An spec compliant implementation of the Eventsource [spec](https://html.spec.whatwg.org/multipage/server-sent-events.html) with useful extensions
 
 ## What do you mean by "spec compliant"
-Well, It's not currently possible to write a 100 spec compliant in javascript at the moment. There're small well-known discrepancies with the spec:
+Well, It's not currently possible to write a 100% spec compliant in javascript at the moment. There're small well-known discrepancies with the spec:
 
 - Request initiator type cannot be "other" as stated in the [spec](https://html.spec.whatwg.org/multipage/server-sent-events.html#the-eventsource-interface).
 - Request redirections are followed, not only 301 and 307 ones as

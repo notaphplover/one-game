@@ -64,7 +64,9 @@ describe(EventSource.name, () => {
 
   describe('.onmessage', () => {
     describe('when called, and messages are received', () => {
-      let onMessageMock: jest.Mock<EventHandler<MessageEvent<unknown>>>;
+      let onMessageMock: jest.Mock<
+        EventHandler<EventSource, MessageEvent<unknown>>
+      >;
       let eventSource: EventSource;
 
       beforeAll(async () => {
@@ -74,7 +76,7 @@ describe(EventSource.name, () => {
 
         await new Promise<void>((resolve: () => void) => {
           onMessageMock = jest
-            .fn<EventHandler<MessageEvent<unknown>>>()
+            .fn<EventHandler<EventSource, MessageEvent<unknown>>>()
             .mockImplementation((_event: MessageEvent<unknown>): void => {
               if (onMessageMock.mock.calls.length === 6) {
                 eventSource.close();
@@ -137,7 +139,7 @@ describe(EventSource.name, () => {
 
   describe('.onopen', () => {
     describe('when called, and conection is opened', () => {
-      let onOpenMock: EventHandler<Event>;
+      let onOpenMock: EventHandler<EventSource, Event>;
       let eventSource: EventSource;
 
       beforeAll(async () => {
@@ -147,7 +149,7 @@ describe(EventSource.name, () => {
 
         await new Promise<void>((resolve: () => void) => {
           onOpenMock = jest
-            .fn<EventHandler<Event>>()
+            .fn<EventHandler<EventSource, Event>>()
             .mockImplementation((_event: Event): void => {
               eventSource.close();
               resolve();

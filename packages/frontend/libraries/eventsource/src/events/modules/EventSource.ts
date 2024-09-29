@@ -14,21 +14,19 @@ const EVENT_STREAM_MIME_TYPE: string = 'text/event-stream';
 const INITIAL_RETRY_MS: number = 1000;
 
 export class EventSource implements EventTarget {
-  public static readonly CONNECTING: number = 0;
-  public static readonly OPEN: number = 1;
-  public static readonly CLOSED: number = 2;
+  // eslint-disable-next-line @typescript-eslint/prefer-as-const
+  public readonly CONNECTING: 0 = 0;
+  // eslint-disable-next-line @typescript-eslint/prefer-as-const
+  public readonly OPEN: 1 = 1;
+  // eslint-disable-next-line @typescript-eslint/prefer-as-const, @typescript-eslint/no-magic-numbers
+  public readonly CLOSED: 2 = 2;
 
   #currentAbortController: AbortController | undefined;
   readonly #eventSourceEmitter: EventSourceEmitter;
   #lastEventId: string;
-  #onerror: (EventHandler<Event> | EventHandlerObject<Event>) | undefined;
-  #onmessage:
-    | (
-        | EventHandler<MessageEvent<unknown>>
-        | EventHandlerObject<MessageEvent<unknown>>
-      )
-    | undefined;
-  #onopen: (EventHandler<Event> | EventHandlerObject<Event>) | undefined;
+  #onerror: EventHandler<EventSource, Event> | null;
+  #onmessage: EventHandler<EventSource, MessageEvent<unknown>> | null;
+  #onopen: EventHandler<EventSource, Event> | null;
   #readyState: number;
   #retryMs: number;
   readonly #url: string;
@@ -37,8 +35,11 @@ export class EventSource implements EventTarget {
   // Consider https://html.spec.whatwg.org/multipage/server-sent-events.html#the-eventsource-interface as reference
 
   constructor(url: string, eventSourceInitDict: EventSourceInit = {}) {
-    this.#eventSourceEmitter = new EventSourceEmitter();
+    this.#eventSourceEmitter = new EventSourceEmitter(this);
     this.#lastEventId = '';
+    this.#onerror = null;
+    this.#onmessage = null;
+    this.#onopen = null;
     this.#retryMs = INITIAL_RETRY_MS;
     this.#url = this.#parseUrl(url);
 
@@ -50,7 +51,7 @@ export class EventSource implements EventTarget {
 
     this.#withCredentials = eventSourceInitDict.withCredentials ?? false;
 
-    this.#readyState = EventSource.CONNECTING;
+    this.#readyState = this.CONNECTING;
 
     setTimeout(() => {
       void this.#fetch(() =>
@@ -59,24 +60,18 @@ export class EventSource implements EventTarget {
     }, 1);
   }
 
-  public get onerror():
-    | (EventHandler<Event> | EventHandlerObject<Event>)
-    | undefined {
+  public get onerror(): EventHandler<EventSource, Event> | null {
     return this.#onerror;
   }
 
-  public get onmessage():
-    | (
-        | EventHandler<MessageEvent<unknown>>
-        | EventHandlerObject<MessageEvent<unknown>>
-      )
-    | undefined {
+  public get onmessage(): EventHandler<
+    EventSource,
+    MessageEvent<unknown>
+  > | null {
     return this.#onmessage;
   }
 
-  public get onopen():
-    | (EventHandler<Event> | EventHandlerObject<Event>)
-    | undefined {
+  public get onopen(): EventHandler<EventSource, Event> | null {
     return this.#onopen;
   }
 
@@ -92,39 +87,30 @@ export class EventSource implements EventTarget {
     return this.#withCredentials;
   }
 
-  public set onerror(
-    handler: (EventHandler<Event> | EventHandlerObject<Event>) | undefined,
-  ) {
+  public set onerror(handler: EventHandler<EventSource, Event> | null) {
     this.#onerror = handler;
 
-    if (handler !== undefined) {
+    if (handler !== null) {
       this.#eventSourceEmitter.empty(EventSourceEmitter.errorEventType);
       this.#eventSourceEmitter.add(EventSourceEmitter.errorEventType, handler);
     }
   }
 
   public set onmessage(
-    handler:
-      | (
-          | EventHandler<MessageEvent<unknown>>
-          | EventHandlerObject<MessageEvent<unknown>>
-        )
-      | undefined,
+    handler: EventHandler<EventSource, MessageEvent<unknown>> | null,
   ) {
     this.#onmessage = handler;
 
-    if (handler !== undefined) {
+    if (handler !== null) {
       this.#eventSourceEmitter.empty('message');
       this.#eventSourceEmitter.add('message', handler);
     }
   }
 
-  public set onopen(
-    handler: (EventHandler<Event> | EventHandlerObject<Event>) | undefined,
-  ) {
+  public set onopen(handler: EventHandler<EventSource, Event> | null) {
     this.#onopen = handler;
 
-    if (handler !== undefined) {
+    if (handler !== null) {
       this.#eventSourceEmitter.empty(EventSourceEmitter.openEventType);
       this.#eventSourceEmitter.add(EventSourceEmitter.openEventType, handler);
     }
@@ -134,10 +120,12 @@ export class EventSource implements EventTarget {
     type: T,
     handler:
       | (T extends NonMessageEvent
-          ? EventHandler<Event> | EventHandlerObject<Event>
+          ?
+              | EventHandler<EventSource, Event>
+              | EventHandlerObject<EventSource, Event>
           :
-              | EventHandler<MessageEvent<unknown>>
-              | EventHandlerObject<MessageEvent<unknown>>)
+              | EventHandler<EventSource, MessageEvent<unknown>>
+              | EventHandlerObject<EventSource, MessageEvent<unknown>>)
       | null,
     options?: AddEventListenerOptions | boolean,
   ): void {
@@ -164,10 +152,12 @@ export class EventSource implements EventTarget {
     type: T,
     handler:
       | (T extends NonMessageEvent
-          ? EventHandler<Event> | EventHandlerObject<Event>
+          ?
+              | EventHandler<EventSource, Event>
+              | EventHandlerObject<EventSource, Event>
           :
-              | EventHandler<MessageEvent<unknown>>
-              | EventHandlerObject<MessageEvent<unknown>>)
+              | EventHandler<EventSource, MessageEvent<unknown>>
+              | EventHandlerObject<EventSource, MessageEvent<unknown>>)
       | null,
     _options?: EventListenerOptions | boolean,
   ): void {
@@ -238,7 +228,7 @@ export class EventSource implements EventTarget {
   }
 
   #close(): void {
-    this.#readyState = EventSource.CLOSED;
+    this.#readyState = this.CLOSED;
 
     if (this.#currentAbortController !== undefined) {
       this.#currentAbortController.abort();
@@ -250,11 +240,11 @@ export class EventSource implements EventTarget {
   async #fetch(buildRequest: () => [Request, AbortController]): Promise<void> {
     await fetchSse({
       beforeRetry: (_error: unknown): boolean => {
-        if (this.#readyState === EventSource.CLOSED) {
+        if (this.#readyState === this.CLOSED) {
           return false;
         }
 
-        this.#readyState = EventSource.CONNECTING;
+        this.#readyState = this.CONNECTING;
         this.dispatchEvent(new Event(EventSourceEmitter.errorEventType));
 
         return true;
@@ -265,7 +255,7 @@ export class EventSource implements EventTarget {
       },
       getRetryMs: () => this.#retryMs,
       onOpen: () => {
-        this.#readyState = EventSource.OPEN;
+        this.#readyState = this.OPEN;
         this.dispatchEvent(new Event(EventSourceEmitter.openEventType));
       },
       parseSseStreamParams: {
