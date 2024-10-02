@@ -1,33 +1,66 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder } from '@cornie-js/backend-common';
-import { Card } from '@cornie-js/backend-game-domain/cards';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import { CardFixtures } from '@cornie-js/backend-game-domain/cards/fixtures';
 import {
   GameAction,
   GameActionKind,
 } from '@cornie-js/backend-game-domain/gameActions';
+import { GameDirection } from '@cornie-js/backend-game-domain/games';
 
+import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
+import { GameDirectionDb } from '../../../../games/adapter/typeorm/models/GameDirectionDb';
 import { GameActionDbFixtures } from '../fixtures/GameActionDbFixtures';
 import { GameActionDb } from '../models/GameActionDb';
 import { GameActionFromGameActionDbBuilder } from './GameActionFromGameActionDbBuilder';
 
 describe(GameActionFromGameActionDbBuilder.name, () => {
+  let cardFixture: Card;
+  let cardColorFixture: CardColor;
+  let gameDirectionFixture: GameDirection;
+
   let cardBuilderMock: jest.Mocked<Builder<Card, [CardDb]>>;
+  let cardColorBuilderMock: jest.Mocked<Builder<CardColor, [CardColorDb]>>;
+  let gameDirectionFromGameDirectionDbBuilderMock: jest.Mocked<
+    Builder<GameDirection, [GameDirectionDb]>
+  >;
 
   let gameActionFromGameActionDbBuilder: GameActionFromGameActionDbBuilder;
 
   beforeAll(() => {
+    cardFixture = CardFixtures.any;
+    cardColorFixture = CardColor.blue;
+    gameDirectionFixture = GameDirection.antiClockwise;
+
     cardBuilderMock = {
       build: jest.fn(),
     };
+    cardColorBuilderMock = {
+      build: jest.fn(),
+    };
+    gameDirectionFromGameDirectionDbBuilderMock = {
+      build: jest.fn(),
+    };
 
-    cardBuilderMock.build.mockReturnValue(CardFixtures.any);
+    cardBuilderMock.build.mockReturnValue(cardFixture);
+    cardColorBuilderMock.build.mockReturnValue(cardColorFixture);
+    gameDirectionFromGameDirectionDbBuilderMock.build.mockReturnValue(
+      gameDirectionFixture,
+    );
 
     gameActionFromGameActionDbBuilder = new GameActionFromGameActionDbBuilder(
       cardBuilderMock,
+      cardColorBuilderMock,
+      gameDirectionFromGameDirectionDbBuilderMock,
     );
+  });
+
+  afterAll(() => {
+    cardBuilderMock.build.mockReset();
+    cardColorBuilderMock.build.mockReset();
+    gameDirectionFromGameDirectionDbBuilderMock.build.mockReset();
   });
 
   describe('.build', () => {
@@ -42,7 +75,7 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
           return {
             currentPlayingSlotIndex:
               gameActionDbFixture.currentPlayingSlotIndex,
-            draw: [CardFixtures.any],
+            draw: [cardFixture],
             gameId: gameActionDbFixture.gameId,
             id: gameActionDbFixture.id,
             kind: GameActionKind.draw,
@@ -72,20 +105,25 @@ describe(GameActionFromGameActionDbBuilder.name, () => {
       ],
       [
         'play cards v1',
-        GameActionDbFixtures.withPayloadWithKindPlayCardsAndCardsOne,
+        GameActionDbFixtures.withActiveGamePayloadWithKindPlayCardsAndCardsOne,
         (): GameAction => {
           const gameActionDbFixture: GameActionDb =
-            GameActionDbFixtures.withPayloadWithKindPlayCardsAndCardsOne;
+            GameActionDbFixtures.withActiveGamePayloadWithKindPlayCardsAndCardsOne;
 
           return {
-            cards: [CardFixtures.any],
-            currentCard: CardFixtures.any,
+            cards: [cardFixture],
             currentPlayingSlotIndex:
               gameActionDbFixture.currentPlayingSlotIndex,
             gameId: gameActionDbFixture.gameId,
             id: gameActionDbFixture.id,
             kind: GameActionKind.playCards,
             position: gameActionDbFixture.position,
+            stateUpdate: {
+              currentCard: cardFixture,
+              currentColor: cardColorFixture,
+              currentDirection: gameDirectionFixture,
+              drawCount: gameActionDbFixture.game.drawCount as number,
+            },
             turn: gameActionDbFixture.turn,
           };
         },

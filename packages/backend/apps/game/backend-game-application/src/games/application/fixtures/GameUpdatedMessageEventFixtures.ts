@@ -55,7 +55,8 @@ export class GameUpdatedMessageEventFixtures {
   public static get withPlayCardsGameActionWithCardsOneAndCurrentCard(): GameUpdatedMessageEvent {
     return {
       ...GameUpdatedMessageEventFixtures.any,
-      gameAction: GameActionFixtures.withKindPlayCardsAndCardsOneAndCurrentCard,
+      gameAction:
+        GameActionFixtures.withKindPlayCardsAndCardsOneAndStateUpdateNonNull,
     };
   }
 

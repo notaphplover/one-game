@@ -19,6 +19,16 @@ export class GameActionDbFixtures {
     };
   }
 
+  public static get withGameActive(): GameActionDb {
+    const gameDbFixture: GameDb =
+      GameDbFixtures.withStatusActiveAndGameSlotsOne;
+
+    return {
+      ...GameActionDbFixtures.any,
+      game: gameDbFixture,
+    };
+  }
+
   public static get withPayloadWithKindDrawCardsAndCardsOne(): GameActionDb {
     return {
       ...GameActionDbFixtures.any,
@@ -35,7 +45,7 @@ export class GameActionDbFixtures {
     };
   }
 
-  public static get withPayloadWithKindPlayCardsAndCardsOne(): GameActionDb {
+  public static get withActiveGamePayloadWithKindPlayCardsAndCardsOne(): GameActionDb {
     return {
       ...GameActionDbFixtures.any,
       payload: JSON.stringify(

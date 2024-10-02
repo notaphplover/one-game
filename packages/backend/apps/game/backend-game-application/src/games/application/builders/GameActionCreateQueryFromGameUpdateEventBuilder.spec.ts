@@ -89,15 +89,26 @@ describe(GameActionCreateQueryFromGameUpdateEventBuilder.name, () => {
         it('should return a GameActionCreateQuery', () => {
           const expected: GameActionCreateQuery = {
             cards: activeGameUpdatedCardsDrawEventFixture.cards,
-            currentCard: (
-              activeGameUpdatedCardsDrawEventFixture.game as ActiveGame
-            ).state.currentCard,
             currentPlayingSlotIndex:
               activeGameUpdatedCardsDrawEventFixture.gameBeforeUpdate.state
                 .currentPlayingSlotIndex,
             gameId: activeGameUpdatedCardsDrawEventFixture.gameBeforeUpdate.id,
             id: uuidContextFixture.uuid,
             kind: GameActionKind.playCards,
+            stateUpdate: {
+              currentCard: (
+                activeGameUpdatedCardsDrawEventFixture.game as ActiveGame
+              ).state.currentCard,
+              currentColor: (
+                activeGameUpdatedCardsDrawEventFixture.game as ActiveGame
+              ).state.currentColor,
+              currentDirection: (
+                activeGameUpdatedCardsDrawEventFixture.game as ActiveGame
+              ).state.currentDirection,
+              drawCount: (
+                activeGameUpdatedCardsDrawEventFixture.game as ActiveGame
+              ).state.drawCount,
+            },
             turn: activeGameUpdatedCardsDrawEventFixture.gameBeforeUpdate.state
               .turn,
           };
@@ -133,13 +144,18 @@ describe(GameActionCreateQueryFromGameUpdateEventBuilder.name, () => {
         it('should return a GameActionCreateQuery', () => {
           const expected: GameActionCreateQuery = {
             cards: activeGameUpdatedCardsDrawEventFixture.cards,
-            currentCard: null,
             currentPlayingSlotIndex:
               activeGameUpdatedCardsDrawEventFixture.gameBeforeUpdate.state
                 .currentPlayingSlotIndex,
             gameId: activeGameUpdatedCardsDrawEventFixture.gameBeforeUpdate.id,
             id: uuidContextFixture.uuid,
             kind: GameActionKind.playCards,
+            stateUpdate: {
+              currentCard: null,
+              currentColor: null,
+              currentDirection: null,
+              drawCount: null,
+            },
             turn: activeGameUpdatedCardsDrawEventFixture.gameBeforeUpdate.state
               .turn,
           };
