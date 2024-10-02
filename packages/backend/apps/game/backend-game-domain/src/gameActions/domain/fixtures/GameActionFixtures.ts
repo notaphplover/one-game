@@ -1,4 +1,6 @@
 import { CardFixtures } from '../../../cards/domain/fixtures/CardFixtures';
+import { CardColor } from '../../../cards/domain/valueObjects/CardColor';
+import { GameDirection } from '../../../games/domain/valueObjects/GameDirection';
 import { DrawGameAction } from '../valueObjects/DrawGameAction';
 import { GameAction } from '../valueObjects/GameAction';
 import { GameActionKind } from '../valueObjects/GameActionKind';
@@ -45,21 +47,31 @@ export class GameActionFixtures {
   public static get withKindPlayCards(): PlayCardsGameAction {
     return {
       cards: [],
-      currentCard: null,
       currentPlayingSlotIndex: 0,
       gameId: 'e6b54159-a4ef-41fc-994a-20709526bdaa',
       id: '16b54159-a4ef-41fc-994a-20709526bda0',
       kind: GameActionKind.playCards,
       position: 1,
+      stateUpdate: {
+        currentCard: null,
+        currentColor: null,
+        currentDirection: null,
+        drawCount: null,
+      },
       turn: 1,
     };
   }
 
-  public static get withKindPlayCardsAndCardsOneAndCurrentCard(): PlayCardsGameAction {
+  public static get withKindPlayCardsAndCardsOneAndStateUpdateNonNull(): PlayCardsGameAction {
     return {
       ...GameActionFixtures.withKindPlayCards,
       cards: [CardFixtures.any],
-      currentCard: CardFixtures.any,
+      stateUpdate: {
+        currentCard: CardFixtures.any,
+        currentColor: CardColor.blue,
+        currentDirection: GameDirection.antiClockwise,
+        drawCount: 0,
+      },
     };
   }
 
@@ -67,7 +79,12 @@ export class GameActionFixtures {
     return {
       ...GameActionFixtures.withKindPlayCards,
       cards: [CardFixtures.any],
-      currentCard: null,
+      stateUpdate: {
+        currentCard: null,
+        currentColor: null,
+        currentDirection: null,
+        drawCount: null,
+      },
     };
   }
 }

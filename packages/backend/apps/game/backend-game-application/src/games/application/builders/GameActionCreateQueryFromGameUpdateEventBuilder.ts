@@ -90,18 +90,39 @@ export class GameActionCreateQueryFromGameUpdateEventBuilder
     event: ActiveGameUpdatedCardsPlayEvent,
     context: UuidContext,
   ): PlayCardsGameActionCreateQuery {
-    return {
-      cards: event.cards,
-      currentCard: this.#isActiveGame(event.game)
-        ? event.game.state.currentCard
-        : null,
-      currentPlayingSlotIndex:
-        event.gameBeforeUpdate.state.currentPlayingSlotIndex,
-      gameId: event.gameBeforeUpdate.id,
-      id: context.uuid,
-      kind: GameActionKind.playCards,
-      turn: event.gameBeforeUpdate.state.turn,
-    };
+    if (this.#isActiveGame(event.game)) {
+      return {
+        cards: event.cards,
+        currentPlayingSlotIndex:
+          event.gameBeforeUpdate.state.currentPlayingSlotIndex,
+        gameId: event.gameBeforeUpdate.id,
+        id: context.uuid,
+        kind: GameActionKind.playCards,
+        stateUpdate: {
+          currentCard: event.game.state.currentCard,
+          currentColor: event.game.state.currentColor,
+          currentDirection: event.game.state.currentDirection,
+          drawCount: event.game.state.drawCount,
+        },
+        turn: event.gameBeforeUpdate.state.turn,
+      };
+    } else {
+      return {
+        cards: event.cards,
+        currentPlayingSlotIndex:
+          event.gameBeforeUpdate.state.currentPlayingSlotIndex,
+        gameId: event.gameBeforeUpdate.id,
+        id: context.uuid,
+        kind: GameActionKind.playCards,
+        stateUpdate: {
+          currentCard: null,
+          currentColor: null,
+          currentDirection: null,
+          drawCount: null,
+        },
+        turn: event.gameBeforeUpdate.state.turn,
+      };
+    }
   }
 
   #isActiveGame(game: Game): game is ActiveGame {

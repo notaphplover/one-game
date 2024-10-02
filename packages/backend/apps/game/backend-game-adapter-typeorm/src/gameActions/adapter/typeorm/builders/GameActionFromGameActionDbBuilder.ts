@@ -1,30 +1,52 @@
 import { AppError, AppErrorKind, Builder } from '@cornie-js/backend-common';
-import { Card } from '@cornie-js/backend-game-domain/cards';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   GameAction,
   GameActionKind,
+  PlayCardsGameActionStateUpdate,
 } from '@cornie-js/backend-game-domain/gameActions';
+import { GameDirection } from '@cornie-js/backend-game-domain/games';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CardBuilder } from '../../../../cards/adapter/typeorm/builders/CardBuilder';
+import { CardColorBuilder } from '../../../../cards/adapter/typeorm/builders/CardColorBuilder';
+import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
+import { GameDirectionFromGameDirectionDbBuilder } from '../../../../games/adapter/typeorm/builders/GameDirectionFromGameDirectionDbBuilder';
+import { GameDirectionDb } from '../../../../games/adapter/typeorm/models/GameDirectionDb';
 import { GameActionDb } from '../models/GameActionDb';
 import { GameActionDbPayload } from '../models/GameActionDbPayload';
 import { GameActionDbVersion } from '../models/GameActionDbVersion';
 import { GameActionDbPayloadV1 } from '../models/v1/GameActionDbPayloadV1';
 import { GameActionDbPayloadV1Kind } from '../models/v1/GameActionDbPayloadV1Kind';
+import { PlayCardsGameActionStateUpdateDbPayloadV1 } from '../models/v1/PlayCardsGameActionDbPayloadV1';
 
 @Injectable()
 export class GameActionFromGameActionDbBuilder
   implements Builder<GameAction, [GameActionDb]>
 {
   readonly #cardBuilder: Builder<Card, [CardDb]>;
+  readonly #cardColorBuilder: Builder<CardColor, [CardColorDb]>;
+  readonly #gameDirectionFromGameDirectionDbBuilder: Builder<
+    GameDirection,
+    [GameDirectionDb]
+  >;
 
   constructor(
     @Inject(CardBuilder)
     cardBuilder: Builder<Card, [CardDb]>,
+    @Inject(CardColorBuilder)
+    cardColorBuilder: Builder<CardColor, [CardColorDb]>,
+    @Inject(GameDirectionFromGameDirectionDbBuilder)
+    gameDirectionFromGameDirectionDbBuilder: Builder<
+      GameDirection,
+      [GameDirectionDb]
+    >,
   ) {
     this.#cardBuilder = cardBuilder;
+    this.#cardColorBuilder = cardColorBuilder;
+    this.#gameDirectionFromGameDirectionDbBuilder =
+      gameDirectionFromGameDirectionDbBuilder;
   }
 
   public build(gameActionDb: GameActionDb): GameAction {
@@ -71,17 +93,36 @@ export class GameActionFromGameActionDbBuilder
           cards: payload.cards.map((cardDb: CardDb) =>
             this.#cardBuilder.build(cardDb),
           ),
-          currentCard:
-            payload.currentCard === null
-              ? null
-              : this.#cardBuilder.build(payload.currentCard),
           currentPlayingSlotIndex: gameActionDb.currentPlayingSlotIndex,
           gameId: gameActionDb.gameId,
           id: gameActionDb.id,
           kind: GameActionKind.playCards,
           position: gameActionDb.position,
+          stateUpdate: this.#buildStateUpdate(payload.stateUpdate),
           turn: gameActionDb.turn,
         };
+    }
+  }
+
+  #buildStateUpdate(
+    stateUpdate: PlayCardsGameActionStateUpdateDbPayloadV1,
+  ): PlayCardsGameActionStateUpdate {
+    if (stateUpdate.currentCard === null) {
+      return {
+        currentCard: null,
+        currentColor: null,
+        currentDirection: null,
+        drawCount: null,
+      };
+    } else {
+      return {
+        currentCard: this.#cardBuilder.build(stateUpdate.currentCard),
+        currentColor: this.#cardColorBuilder.build(stateUpdate.currentColor),
+        currentDirection: this.#gameDirectionFromGameDirectionDbBuilder.build(
+          stateUpdate.currentDirection,
+        ),
+        drawCount: stateUpdate.drawCount,
+      };
     }
   }
 

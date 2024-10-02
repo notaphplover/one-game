@@ -2,38 +2,88 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://onegame.schemas/api/v2/game-events/cards-played-game-event.json",
   "title": "CardsPlayedGameEventV2",
-  "additionalProperties": false,
-  "type": "object",
-  "properties": {
-    "cards": {
-      "$ref": "https://onegame.schemas/api/v1/cards/card-array.json"
-    },
-    "currentCard": {
-      "anyOf": [
-        {
+  "anyOf": [
+    {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "cards": {
+          "$ref": "https://onegame.schemas/api/v1/cards/card-array.json"
+        },
+        "currentCard": {
           "$ref": "https://onegame.schemas/api/v1/cards/card.json"
         },
-        {
-          "type": "null"
+        "currentColor": {
+          "$ref": "https://onegame.schemas/api/v1/cards/card-color.json"
+        },
+        "currentDirection": {
+          "$ref": "https://onegame.schemas/api/v1/games/game-direction.json"
+        },
+        "currentPlayingSlotIndex": {
+          "type": "integer"
+        },
+        "drawCount": {
+          "type": "number"
+        },
+        "kind": {
+          "const": "cardsPlayed",
+          "type": "string"
+        },
+        "position": {
+          "type": "integer"
         }
+      },
+      "required": [
+        "cards",
+        "currentCard",
+        "currentColor",
+        "currentDirection",
+        "drawCount",
+        "currentPlayingSlotIndex",
+        "kind",
+        "position"
       ]
     },
-    "currentPlayingSlotIndex": {
-      "type": "integer"
-    },
-    "kind": {
-      "const": "cardsPlayed",
-      "type": "string"
-    },
-    "position": {
-      "type": "integer"
+    {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "cards": {
+          "$ref": "https://onegame.schemas/api/v1/cards/card-array.json"
+        },
+        "currentCard": {
+          "type": "null"
+        },
+        "currentColor": {
+          "type": "null"
+        },
+        "currentDirection": {
+          "type": "null"
+        },
+        "currentPlayingSlotIndex": {
+          "type": "integer"
+        },
+        "drawCount": {
+          "type": "null"
+        },
+        "kind": {
+          "const": "cardsPlayed",
+          "type": "string"
+        },
+        "position": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cards",
+        "currentCard",
+        "currentColor",
+        "currentDirection",
+        "drawCount",
+        "currentPlayingSlotIndex",
+        "kind",
+        "position"
+      ]
     }
-  },
-  "required": [
-    "cards",
-    "currentCard",
-    "currentPlayingSlotIndex",
-    "kind",
-    "position"
   ]
 }
