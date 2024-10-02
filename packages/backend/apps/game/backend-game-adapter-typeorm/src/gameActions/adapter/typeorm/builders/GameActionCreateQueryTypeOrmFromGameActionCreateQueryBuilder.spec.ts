@@ -1,13 +1,14 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { Builder } from '@cornie-js/backend-common';
-import { Card } from '@cornie-js/backend-game-domain/cards';
+import { Card, CardColor } from '@cornie-js/backend-game-domain/cards';
 import {
   DrawGameActionCreateQuery,
   PassTurnGameActionCreateQuery,
   PlayCardsGameActionCreateQuery,
 } from '@cornie-js/backend-game-domain/gameActions';
 import { GameActionCreateQueryFixtures } from '@cornie-js/backend-game-domain/gameActions/fixtures';
+import { GameDirection } from '@cornie-js/backend-game-domain/games';
 import {
   InsertQueryBuilder,
   ObjectLiteral,
@@ -16,7 +17,9 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
+import { CardColorDb } from '../../../../cards/adapter/typeorm/models/CardColorDb';
 import { CardDb } from '../../../../cards/adapter/typeorm/models/CardDb';
+import { GameDirectionDb } from '../../../../games/adapter/typeorm/models/GameDirectionDb';
 import { GameActionDb } from '../models/GameActionDb';
 import { GameActionDbVersion } from '../models/GameActionDbVersion';
 import { DrawCardsGameActionDbPayloadV1 } from '../models/v1/DrawCardsGameActionDbPayloadV1';
@@ -28,7 +31,11 @@ import { GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder } from './
 describe(
   GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder.name,
   () => {
+    let cardColorDbBuilderMock: jest.Mocked<Builder<CardColorDb, [CardColor]>>;
     let cardDbBuilderMock: jest.Mocked<Builder<CardDb, [Card]>>;
+    let gameDirectionDbFromGameDirectionMock: jest.Mocked<
+      Builder<GameDirectionDb, [GameDirection]>
+    >;
     let repositoryMock: jest.Mocked<Repository<GameActionDb>>;
     let queryBuilderMock: jest.Mocked<
       InsertQueryBuilder<GameActionDb> & SelectQueryBuilder<GameActionDb>
@@ -37,7 +44,13 @@ describe(
     let gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder: GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder;
 
     beforeAll(() => {
+      cardColorDbBuilderMock = {
+        build: jest.fn(),
+      };
       cardDbBuilderMock = {
+        build: jest.fn(),
+      };
+      gameDirectionDbFromGameDirectionMock = {
         build: jest.fn(),
       };
 
@@ -65,7 +78,9 @@ describe(
 
       gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder =
         new GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder(
+          cardColorDbBuilderMock,
           cardDbBuilderMock,
+          gameDirectionDbFromGameDirectionMock,
           repositoryMock,
         );
     });
@@ -355,18 +370,30 @@ describe(
         });
 
         describe('when called', () => {
+          let cardColorDbFixture: CardColorDb;
           let cardDbFixture: CardDb;
+          let gameDirectionDbFixture: GameDirectionDb;
 
           let result: unknown;
 
           let positionValue: () => string;
 
           beforeAll(() => {
+            cardColorDbFixture = 0x0030;
             cardDbFixture = 0x0039;
+            gameDirectionDbFixture = GameDirectionDb.antiClockwise;
+
+            cardColorDbBuilderMock.build.mockReturnValueOnce(
+              cardColorDbFixture,
+            );
 
             cardDbBuilderMock.build
               .mockReturnValueOnce(cardDbFixture)
               .mockReturnValueOnce(cardDbFixture);
+
+            gameDirectionDbFromGameDirectionMock.build.mockReturnValueOnce(
+              gameDirectionDbFixture,
+            );
 
             result =
               gameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder.build(
@@ -382,8 +409,14 @@ describe(
           it('should call insertQueryBuilder.values()', () => {
             const expectedPayload: PlayCardsGameActionDbPayloadV1 = {
               cards: [cardDbFixture],
-              currentCard: cardDbFixture,
               kind: GameActionDbPayloadV1Kind.playCards,
+              stateUpdate: {
+                currentCard: cardDbFixture,
+                currentColor: cardColorDbFixture,
+                currentDirection: gameDirectionDbFixture,
+                drawCount: playCardsGameActionCreateQueryFixture.stateUpdate
+                  .drawCount as number,
+              },
               version: GameActionDbVersion.v1,
             };
 

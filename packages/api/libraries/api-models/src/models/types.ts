@@ -66,6 +66,27 @@ export type GameEventV2 =
   | CardsDrawnGameEventV2
   | CardsPlayedGameEventV2
   | TurnPassedGameEventV2;
+export type CardsPlayedGameEventV2 =
+  | {
+      cards: CardArrayV1;
+      currentCard: CardV1;
+      currentColor: CardColorV1;
+      currentDirection: GameDirectionV1;
+      currentPlayingSlotIndex: number;
+      drawCount: number;
+      kind: 'cardsPlayed';
+      position: number;
+    }
+  | {
+      cards: CardArrayV1;
+      currentCard: null;
+      currentColor: null;
+      currentDirection: null;
+      currentPlayingSlotIndex: number;
+      drawCount: null;
+      kind: 'cardsPlayed';
+      position: number;
+    };
 
 export interface DrawCardV1 {
   color: CardColorV1;
@@ -230,13 +251,6 @@ export interface CardsDrawnGameEventV2 {
   currentPlayingSlotIndex: number;
   drawAmount: number;
   kind: 'cardsDrawn';
-  position: number;
-}
-export interface CardsPlayedGameEventV2 {
-  cards: CardArrayV1;
-  currentCard: CardV1 | null;
-  currentPlayingSlotIndex: number;
-  kind: 'cardsPlayed';
   position: number;
 }
 export interface TurnPassedGameEventV2 {

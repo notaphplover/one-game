@@ -33,7 +33,7 @@ spec:
           - 0
       containers:
         - name: grafana
-          image: grafana/grafana-enterprise:11.2.1
+          image: grafana/grafana-enterprise:11.2.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

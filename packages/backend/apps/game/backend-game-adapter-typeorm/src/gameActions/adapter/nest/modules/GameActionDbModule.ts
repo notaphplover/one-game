@@ -4,6 +4,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { CardDbModule } from '../../../../cards/adapter/nest/modules/CardDbModule';
 import { DbModuleOptions } from '../../../../foundation/db/adapter/nest/models/DbModuleOptions';
 import { DbModule } from '../../../../foundation/db/adapter/nest/modules/DbModule';
+import { GameDbModule } from '../../../../games/adapter/nest/modules/GameDbModule';
 import { GameActionPersistenceTypeOrmAdapter } from '../../typeorm/adapters/GameActionPersistenceTypeOrmAdapter';
 import { GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder } from '../../typeorm/builders/GameActionCreateQueryTypeOrmFromGameActionCreateQueryBuilder';
 import { GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder } from '../../typeorm/builders/GameActionFindQueryTypeOrmFromGameActionFindQueryBuilder';
@@ -21,6 +22,7 @@ export class GameActionDbModule {
       imports: [
         CardDbModule,
         DbModule.forRootAsync(dbModuleOptions),
+        GameDbModule.forRootAsync(dbModuleOptions),
         dbModuleOptions.builders.feature([GameActionDb]),
       ],
       module: GameActionDbModule,

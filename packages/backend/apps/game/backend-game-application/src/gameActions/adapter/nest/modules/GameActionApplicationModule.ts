@@ -1,6 +1,7 @@
 import { DynamicModule, ForwardReference, Module, Type } from '@nestjs/common';
 
 import { CardModule } from '../../../../cards/adapter/nest/modules/CardModule';
+import { GameDirectionApplicationModule } from '../../../../games/adapter/nest/modules/GameDirectionApplicationModule';
 import { GameEventV2FromGameActionBuilder } from '../../../application/builders/GameEventV2FromGameActionBuilder';
 import { MessageEventFromGameActionBuilder } from '../../../application/builders/MessageEventFromGameActionBuilder';
 import { GameActionManagementInputPort } from '../../../application/ports/input/GameActionManagementInputPort';
@@ -18,7 +19,7 @@ export class GameActionApplicationModule {
         GameEventV2FromGameActionBuilder,
       ],
       global: false,
-      imports: [...(imports ?? []), CardModule],
+      imports: [...(imports ?? []), CardModule, GameDirectionApplicationModule],
       module: GameActionApplicationModule,
       providers: [
         GameActionManagementInputPort,

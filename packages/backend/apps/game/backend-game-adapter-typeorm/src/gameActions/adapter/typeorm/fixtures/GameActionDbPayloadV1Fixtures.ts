@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+import { GameDirectionDb } from '../../../../games/adapter/typeorm/models/GameDirectionDb';
 import { GameActionDbVersion } from '../models/GameActionDbVersion';
 import { DrawCardsGameActionDbPayloadV1 } from '../models/v1/DrawCardsGameActionDbPayloadV1';
 import { GameActionDbPayloadV1 } from '../models/v1/GameActionDbPayloadV1';
@@ -34,8 +35,13 @@ export class GameActionDbPayloadV1Fixtures {
   public static get withKindPlayCardsAndCardsOne(): PlayCardsGameActionDbPayloadV1 {
     return {
       cards: [0x0039],
-      currentCard: 0x0039,
       kind: GameActionDbPayloadV1Kind.playCards,
+      stateUpdate: {
+        currentCard: 0x0039,
+        currentColor: 0x0030,
+        currentDirection: GameDirectionDb.antiClockwise,
+        drawCount: 0,
+      },
       version: GameActionDbVersion.v1,
     };
   }
