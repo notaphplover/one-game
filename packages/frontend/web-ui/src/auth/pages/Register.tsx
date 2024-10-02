@@ -189,7 +189,7 @@ export const Register = () => {
                     >
                       <Alert severity="error">
                         <AlertTitle>Error</AlertTitle>
-                        Unexpected error occured. Please try again later.
+                        {form.errorMessage}
                       </Alert>
                     </Box>
                   </Grid2>
