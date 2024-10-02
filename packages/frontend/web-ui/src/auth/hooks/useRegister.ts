@@ -1,10 +1,15 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 
+import { isSerializableAppError } from '../../common/helpers/isSerializableAppError';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
+import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
 import { validateUsername } from '../../user/helpers/validateUsername';
+import { getCreateUserErrorMessage } from '../helpers/getCreateUserErrorMessage';
 import { validateConfirmPassword } from '../helpers/validateConfirmPassword';
 import { validateEmail } from '../helpers/validateEmail';
 import { validatePassword } from '../helpers/validatePassword';
@@ -32,11 +37,14 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
 
   const [triggerCreateUser, createUserResult] =
     cornieApi.useCreateUsersV1Mutation();
+
   const [triggerCreateUserCode, createUserCodeResult] =
     cornieApi.useCreateUsersV1EmailCodeMutation();
 
-  const userCreatedResult: Either<string, apiModels.UserV1> | null =
-    mapUseQueryHookResult(createUserResult);
+  const userCreatedResult: Either<
+    SerializableAppError | SerializedError,
+    apiModels.UserV1
+  > | null = mapUseQueryHookResultV2(createUserResult);
 
   const userCodeCreatedResult: Either<string, undefined> | null =
     mapUseQueryHookResult(createUserCodeResult);
@@ -192,6 +200,7 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
     } else {
       setRegisterData({
         form: {
+          errorMessage: '',
           fields: {
             ...registerData.form.fields,
           },
@@ -207,15 +216,29 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
       if (userCreatedResult.isRight) {
         createUserCode();
       } else {
-        setRegisterData({
-          form: {
-            fields: {
-              ...registerData.form.fields,
+        if (isSerializableAppError(userCreatedResult)) {
+          setRegisterData({
+            form: {
+              errorMessage: getCreateUserErrorMessage(userCreatedResult.kind),
+              fields: {
+                ...registerData.form.fields,
+              },
+              validation: { ...registerData.form.validation },
             },
-            validation: { ...registerData.form.validation },
-          },
-          status: UseRegisterStatus.backendError,
-        });
+            status: UseRegisterStatus.backendError,
+          });
+        } else {
+          setRegisterData({
+            form: {
+              errorMessage: getCreateUserErrorMessage(undefined),
+              fields: {
+                ...registerData.form.fields,
+              },
+              validation: { ...registerData.form.validation },
+            },
+            status: UseRegisterStatus.backendError,
+          });
+        }
       }
     }
   }, [createUserResult]);

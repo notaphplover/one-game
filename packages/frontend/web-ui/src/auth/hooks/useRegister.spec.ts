@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../common/helpers/mapUseQueryHookResult');
+jest.mock('../../common/helpers/mapUseQueryHookResultV2');
 jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../user/helpers/validateUsername');
 jest.mock('../helpers/validateConfirmPassword');
@@ -17,6 +18,7 @@ import { renderHook, RenderHookResult } from '@testing-library/react';
 import React, { act } from 'react';
 
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
+import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Right } from '../../common/models/Either';
 import { validateUsername } from '../../user/helpers/validateUsername';
@@ -64,6 +66,10 @@ describe(useRegister.name, () => {
       ).mockReturnValue(null);
 
       (
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
+      ).mockReturnValue(null);
+
+      (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
           typeof cornieApi.useCreateUsersV1Mutation
         >
@@ -97,14 +103,18 @@ describe(useRegister.name, () => {
       ).toHaveBeenCalledWith();
     });
 
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(1);
       expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        2,
+        1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });
@@ -197,6 +207,10 @@ describe(useRegister.name, () => {
 
       (
         mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+      ).mockReturnValue(null);
+
+      (
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValue(null);
 
       (
@@ -427,10 +441,12 @@ describe(useRegister.name, () => {
       userCodeCreatedResultFixture = null;
 
       (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(userCreatedResultFixture)
         .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCreatedResultFixture)
         .mockReturnValueOnce(userCodeCreatedResultFixture);
+
+      (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
+        .mockReturnValueOnce(userCreatedResultFixture)
+        .mockReturnValueOnce(userCreatedResultFixture);
 
       (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
@@ -466,22 +482,26 @@ describe(useRegister.name, () => {
       ).toHaveBeenCalledWith();
     });
 
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(4);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        1,
+        useCreateUsersV1MutationResultMock[1],
+      );
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
       expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        2,
+        1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
       expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        3,
-        useCreateUsersV1MutationResultMock[1],
-      );
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        4,
+        2,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });
@@ -585,10 +605,12 @@ describe(useRegister.name, () => {
       };
 
       (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(userCreatedResultFixture)
         .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCreatedResultFixture)
         .mockReturnValueOnce(userCodeCreatedResultFixture);
+
+      (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
+        .mockReturnValueOnce(userCreatedResultFixture)
+        .mockReturnValueOnce(userCreatedResultFixture);
 
       (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
@@ -624,22 +646,26 @@ describe(useRegister.name, () => {
       ).toHaveBeenCalledWith();
     });
 
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(4);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         2,
+        useCreateUsersV1MutationResultMock[1],
+      );
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
       expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        3,
-        useCreateUsersV1MutationResultMock[1],
-      );
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        4,
+        2,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });
