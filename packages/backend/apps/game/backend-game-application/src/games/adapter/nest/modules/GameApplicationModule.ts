@@ -16,7 +16,6 @@ import { GameCardSpecFromGameCardSpecV1Builder } from '../../../application/buil
 import { GameCardSpecsFromGameSpecV1Builder } from '../../../application/builders/GameCardSpecsFromGameSpecV1Builder';
 import { GameCardSpecV1FromGameCardSpecBuilder } from '../../../application/builders/GameCardSpecV1FromGameCardSpecBuilder';
 import { GameCreateQueryFromGameCreateQueryV1Builder } from '../../../application/builders/GameCreateQueryFromGameCreateQueryV1Builder';
-import { GameDirectionV1FromGameDirectionBuilder } from '../../../application/builders/GameDirectionV1FromGameDirectionBuilder';
 import { GameEventV2FromGameMessageEventBuilder } from '../../../application/builders/GameEventV2FromGameMessageEventBuilder';
 import { GameMessageEventFromStringBuilder } from '../../../application/builders/GameMessageEventFromStringBuilder';
 import { GameMessageEventV1FromGameMessageEventBuilder } from '../../../application/builders/GameMessageEventV1FromGameMessageEventBuilder';
@@ -42,6 +41,7 @@ import { GameEventsManagementInputPort } from '../../../application/ports/input/
 import { GameManagementInputPort } from '../../../application/ports/input/GameManagementInputPort';
 import { GameSlotManagementInputPort } from '../../../application/ports/input/GameSlotManagementInputPort';
 import { GameSpecManagementInputPort } from '../../../application/ports/input/GameSpecManagementInputPort';
+import { GameDirectionApplicationModule } from './GameDirectionApplicationModule';
 
 @Module({})
 export class GameApplicationModule {
@@ -65,6 +65,7 @@ export class GameApplicationModule {
         CardDomainModule,
         CardModule,
         GameActionApplicationModule.forRootAsync(imports),
+        GameDirectionApplicationModule,
         GameDomainModule,
         GameSnapshotApplicationModule.forRootAsync(imports),
         UserModule,
@@ -81,7 +82,6 @@ export class GameApplicationModule {
         GameCardSpecV1FromGameCardSpecBuilder,
         GameCreateQueryFromGameCreateQueryV1Builder,
         GameCreateQueryFromGameCreateQueryV1Builder,
-        GameDirectionV1FromGameDirectionBuilder,
         GameEventsManagementInputPort,
         GameEventV2FromGameMessageEventBuilder,
         GameIdAutoUpdateHandler,
