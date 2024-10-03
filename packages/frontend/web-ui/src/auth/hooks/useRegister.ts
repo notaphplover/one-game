@@ -216,10 +216,12 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
       if (userCreatedResult.isRight) {
         createUserCode();
       } else {
-        if (isSerializableAppError(userCreatedResult)) {
+        if (isSerializableAppError(userCreatedResult.value)) {
           setRegisterData({
             form: {
-              errorMessage: getCreateUserErrorMessage(userCreatedResult.kind),
+              errorMessage: getCreateUserErrorMessage(
+                userCreatedResult.value.kind,
+              ),
               fields: {
                 ...registerData.form.fields,
               },

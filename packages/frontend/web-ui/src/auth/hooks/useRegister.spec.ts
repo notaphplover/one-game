@@ -7,21 +7,28 @@ jest.mock('../../user/helpers/validateUsername');
 jest.mock('../helpers/validateConfirmPassword');
 jest.mock('../helpers/validateEmail');
 jest.mock('../helpers/validatePassword');
+jest.mock('../helpers/getCreateUserErrorMessage');
+jest.mock('../../common/helpers/isSerializableAppError');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
   CreateUsersV1Args,
   CreateUsersV1EmailCodeArgs,
+  SerializableAppError,
 } from '@cornie-js/frontend-api-rtk-query';
+import { AppErrorKind } from '@cornie-js/frontend-common';
 import { QueryStatus } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 import React, { act } from 'react';
 
+import { isSerializableAppError } from '../../common/helpers/isSerializableAppError';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { Right } from '../../common/models/Either';
+import { Left, Right } from '../../common/models/Either';
 import { validateUsername } from '../../user/helpers/validateUsername';
+import { HTTP_CONFLICT_USER_ERROR_MESSAGE } from '../helpers/createUserErrorMessages';
+import { getCreateUserErrorMessage } from '../helpers/getCreateUserErrorMessage';
 import { validateConfirmPassword } from '../helpers/validateConfirmPassword';
 import { validateEmail } from '../helpers/validateEmail';
 import { validatePassword } from '../helpers/validatePassword';
@@ -68,6 +75,16 @@ describe(useRegister.name, () => {
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValue(null);
+
+      (
+        isSerializableAppError as unknown as jest.Mock<
+          typeof isSerializableAppError
+        >
+      ).mockReturnValue(false);
+
+      (
+        getCreateUserErrorMessage as jest.Mock<typeof getCreateUserErrorMessage>
+      ).mockReturnValue('');
 
       (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
@@ -212,6 +229,16 @@ describe(useRegister.name, () => {
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValue(null);
+
+      (
+        isSerializableAppError as unknown as jest.Mock<
+          typeof isSerializableAppError
+        >
+      ).mockReturnValue(false);
+
+      (
+        getCreateUserErrorMessage as jest.Mock<typeof getCreateUserErrorMessage>
+      ).mockReturnValue('');
 
       (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
@@ -449,6 +476,16 @@ describe(useRegister.name, () => {
         .mockReturnValueOnce(userCreatedResultFixture);
 
       (
+        isSerializableAppError as unknown as jest.Mock<
+          typeof isSerializableAppError
+        >
+      ).mockReturnValue(false);
+
+      (
+        getCreateUserErrorMessage as jest.Mock<typeof getCreateUserErrorMessage>
+      ).mockReturnValue('');
+
+      (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
           typeof cornieApi.useCreateUsersV1Mutation
         >
@@ -538,6 +575,184 @@ describe(useRegister.name, () => {
             validation: {},
           },
           status: UseRegisterStatus.creatingUserCode,
+        },
+        {
+          handlers: {
+            onConfirmPasswordChanged: expect.any(Function) as unknown as (
+              event: React.ChangeEvent<HTMLInputElement>,
+            ) => void,
+            onEmailChanged: expect.any(Function) as unknown as (
+              event: React.ChangeEvent<HTMLInputElement>,
+            ) => void,
+            onNameChanged: expect.any(Function) as unknown as (
+              event: React.ChangeEvent<HTMLInputElement>,
+            ) => void,
+            onPasswordChanged: expect.any(Function) as unknown as (
+              event: React.ChangeEvent<HTMLInputElement>,
+            ) => void,
+            onSubmit: expect.any(Function) as unknown as (
+              event: React.FormEvent,
+            ) => void,
+          },
+        },
+      ];
+
+      expect(renderResult.result.current).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe('when called, and cornieApi.useCreateUsersV1Mutation() returns Left user error', () => {
+    let useCreateUsersV1MutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateUsersV1Mutation>
+    >;
+    let useCreateUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateUsersV1EmailCodeMutation>
+    >;
+
+    let userCreatedResultFixture: Left<SerializableAppError>;
+    let userCodeCreatedResultFixture: null;
+    let errorMessageFixture: string;
+
+    let renderResult: RenderHookResult<
+      [UseRegisterData, UseRegisterActions],
+      unknown
+    >;
+
+    beforeAll(() => {
+      useCreateUsersV1MutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      useCreateUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      userCreatedResultFixture = {
+        isRight: false,
+        value: {
+          kind: AppErrorKind.entityConflict,
+          message: 'message-fixture',
+        },
+      };
+
+      errorMessageFixture = HTTP_CONFLICT_USER_ERROR_MESSAGE;
+
+      userCodeCreatedResultFixture = null;
+
+      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
+        .mockReturnValueOnce(userCodeCreatedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture);
+
+      (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
+        .mockReturnValueOnce(userCreatedResultFixture)
+        .mockReturnValueOnce(userCreatedResultFixture);
+
+      (
+        isSerializableAppError as unknown as jest.Mock<
+          typeof isSerializableAppError
+        >
+      ).mockReturnValue(true);
+
+      (
+        getCreateUserErrorMessage as jest.Mock<typeof getCreateUserErrorMessage>
+      ).mockReturnValue(errorMessageFixture);
+
+      (
+        cornieApi.useCreateUsersV1Mutation as jest.Mock<
+          typeof cornieApi.useCreateUsersV1Mutation
+        >
+      ).mockReturnValue(useCreateUsersV1MutationResultMock);
+
+      (
+        cornieApi.useCreateUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useCreateUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useCreateUsersV1EmailCodeMutationResultMock);
+
+      renderResult = renderHook(() => useRegister());
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('should return cornieApi.useCreateUsersV1Mutation()', () => {
+      expect(cornieApi.useCreateUsersV1Mutation).toHaveBeenCalledTimes(2);
+      expect(cornieApi.useCreateUsersV1Mutation).toHaveBeenCalledWith();
+    });
+
+    it('should return cornieApi.useCreateUsersV1EmailCodeMutation()', () => {
+      expect(cornieApi.useCreateUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
+        2,
+      );
+      expect(
+        cornieApi.useCreateUsersV1EmailCodeMutation,
+      ).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        1,
+        useCreateUsersV1MutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        1,
+        useCreateUsersV1MutationResultMock[1],
+      );
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        1,
+        useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
+        2,
+        useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+    });
+
+    it('should call isSerializableAppError()', () => {
+      expect(isSerializableAppError).toHaveBeenCalledTimes(1);
+      expect(isSerializableAppError).toHaveBeenNthCalledWith(
+        1,
+        userCreatedResultFixture.value,
+      );
+    });
+
+    it('should call getCreateUserErrorMessage()', () => {
+      expect(getCreateUserErrorMessage).toHaveBeenCalledTimes(1);
+      expect(getCreateUserErrorMessage).toHaveBeenNthCalledWith(
+        1,
+        userCreatedResultFixture.value.kind,
+      );
+    });
+
+    it('should return expected result', () => {
+      const expectedResult: [UseRegisterData, UseRegisterActions] = [
+        {
+          form: {
+            errorMessage: HTTP_CONFLICT_USER_ERROR_MESSAGE,
+            fields: {
+              confirmPassword: '',
+              email: '',
+              name: '',
+              password: '',
+            },
+            validation: {},
+          },
+          status: UseRegisterStatus.backendError,
         },
         {
           handlers: {
