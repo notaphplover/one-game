@@ -16,6 +16,7 @@ export interface RegisterFormValidationResult {
 
 export interface UseRegisterData {
   form: {
+    errorMessage?: string;
     fields: RegisterFormFields;
     validation: RegisterFormValidationResult;
   };
