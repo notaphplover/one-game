@@ -14,19 +14,32 @@ describe(isSerializableAppError.name, () => {
       },
       true,
     ],
+    ['a non object', AppErrorKind.contractViolation, false],
+    ['a null value', null, false],
     [
-      'a SerializedError',
+      'an object with no kind',
       {
-        code: 'code-fixture',
         message: 'message-fixture',
-        name: 'name-fixture',
-        stack: 'stack-fixture',
       },
       false,
     ],
-    ['a non object', {}, false],
+    [
+      'an object with invalid kind',
+      {
+        kind: 'kind-fixture',
+        message: 'message-fixture',
+      },
+      false,
+    ],
+    [
+      'an object with valid kind and no message',
+      {
+        kind: AppErrorKind.contractViolation,
+      },
+      false,
+    ],
   ])(
-    'having %s error',
+    'having %s value',
     (_: string, errorFixture: unknown, expectedResult: boolean) => {
       describe('when called', () => {
         let result: unknown;
