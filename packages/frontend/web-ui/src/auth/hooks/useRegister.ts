@@ -200,7 +200,6 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
     } else {
       setRegisterData({
         form: {
-          errorMessage: '',
           fields: {
             ...registerData.form.fields,
           },
