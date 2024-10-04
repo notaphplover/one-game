@@ -189,7 +189,7 @@ export class EventSource implements EventTarget {
 
     // 1. Let mode be "no-cors" if corsAttributeState is No CORS, and "cors" otherwise.
     let mode: RequestMode =
-      corsAtributeState === 'No CORS' ? 'cors' : 'no-cors';
+      corsAtributeState === 'No CORS' ? 'no-cors' : 'cors';
 
     // 2. If same-origin fallback flag is set and mode is "no-cors", set mode to "same-origin".
     if (sameOriginFallback === true && mode == 'no-cors') {
