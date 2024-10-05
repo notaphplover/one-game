@@ -3,7 +3,6 @@ import { GetV2GamesGameIdEventsSseController } from '@cornie-js/backend-game-app
 import {
   FastifyReplyFromResponseBuilder,
   FastifyReplySseConsumerFromFastifyReplyBuilder,
-  FastifySseReplyFromResponseBuilder,
   HttpNestFastifySseController,
   MessageEvent,
   Request,
@@ -15,6 +14,8 @@ import {
 } from '@cornie-js/backend-http';
 import { Controller, Get, Inject, Req, Res } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
+
+import { FastifySseReplyFromResponseBuilder } from '../../../../foundation/http/adapter/fastify/builders/FastifySseReplyFromResponseBuilder';
 
 @Controller(`v2/events/games`)
 export class GetV2EventsGamesGameIdRequestNestController extends HttpNestFastifySseController {

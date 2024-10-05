@@ -15,7 +15,6 @@ import { DelayedSseConsumer } from '../../../application/modules/DelayedSseConsu
 import { SsePublisher } from '../../../application/modules/SsePublisher';
 import { SseTeardownExecutor } from '../../../application/modules/SseTeardownExecutor';
 import { FastifyReplySseConsumerFromFastifyReplyBuilder } from '../../fastify/builders/FastifyReplySseConsumerFromFastifyReplyBuilder';
-import { FastifySseReplyFromResponseBuilder } from '../../fastify/builders/FastifySseReplyFromResponseBuilder';
 import { HttpNestFastifySseController } from './HttpNestFastifySseController';
 
 describe(HttpNestFastifySseController.name, () => {
@@ -35,7 +34,9 @@ describe(HttpNestFastifySseController.name, () => {
   let resultBuilderMock: jest.Mocked<
     Builder<FastifyReply, [Response | ResponseWithBody<unknown>, FastifyReply]>
   >;
-  let sseResultBuilderMock: jest.Mocked<FastifySseReplyFromResponseBuilder>;
+  let sseResultBuilderMock: jest.Mocked<
+    Builder<FastifyReply, [Response, FastifyReply]>
+  >;
 
   let httpNestFastifySseController: HttpNestFastifySseController;
 
