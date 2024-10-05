@@ -7,13 +7,24 @@ import { FastifyReply } from 'fastify';
 
 import { Response } from '../../../application/models/Response';
 
+const CORS_ORIGINS_SEPARATOR: string = ',';
+
 @Injectable()
 export class FastifySseReplyFromResponseBuilder
   implements Builder<FastifyReply, [Response, FastifyReply]>
 {
+  readonly #accessControlAllowOriginValue: string;
+
+  constructor(corsOrigins: string[]) {
+    this.#accessControlAllowOriginValue = corsOrigins.join(
+      CORS_ORIGINS_SEPARATOR,
+    );
+  }
+
   public build(response: Response, fastifyReply: FastifyReply): FastifyReply {
     const sseHeaders: http.OutgoingHttpHeaders | http2.OutgoingHttpHeaders = {
       ...response.headers,
+      'access-control-allow-origin': this.#accessControlAllowOriginValue,
       // Consider https://html.spec.whatwg.org/multipage/server-sent-events.html as reference
       // Disable cache, even for old browsers and proxies
       'cache-control':

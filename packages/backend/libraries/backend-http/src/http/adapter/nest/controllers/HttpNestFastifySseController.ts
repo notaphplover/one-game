@@ -11,7 +11,6 @@ import { DelayedSseConsumer } from '../../../application/modules/DelayedSseConsu
 import { SsePublisher } from '../../../application/modules/SsePublisher';
 import { SseTeardownExecutor } from '../../../application/modules/SseTeardownExecutor';
 import { FastifyReplySseConsumerFromFastifyReplyBuilder } from '../../fastify/builders/FastifyReplySseConsumerFromFastifyReplyBuilder';
-import { FastifySseReplyFromResponseBuilder } from '../../fastify/builders/FastifySseReplyFromResponseBuilder';
 
 @Injectable()
 export class HttpNestFastifySseController<
@@ -31,7 +30,7 @@ export class HttpNestFastifySseController<
     FastifyReply,
     [Response | ResponseWithBody<unknown>, FastifyReply]
   >;
-  readonly #sseResultBuilder: FastifySseReplyFromResponseBuilder;
+  readonly #sseResultBuilder: Builder<FastifyReply, [Response, FastifyReply]>;
 
   constructor(
     fastifyReplyConsumerFromFastifyReplyBuilder: FastifyReplySseConsumerFromFastifyReplyBuilder,
@@ -47,7 +46,7 @@ export class HttpNestFastifySseController<
       FastifyReply,
       [Response | ResponseWithBody<unknown>, FastifyReply]
     >,
-    sseResultBuilder: FastifySseReplyFromResponseBuilder,
+    sseResultBuilder: Builder<FastifyReply, [Response, FastifyReply]>,
   ) {
     this.#fastifyReplySseConsumerFromFastifyReplyBuilder =
       fastifyReplyConsumerFromFastifyReplyBuilder;
