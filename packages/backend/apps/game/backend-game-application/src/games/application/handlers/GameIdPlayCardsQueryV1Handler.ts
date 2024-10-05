@@ -146,7 +146,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
 
     return {
       cards,
-      game: await this._getUpdatedGame(game),
+      game: await this._getUpdatedGame(game, transactionWrapper),
       gameBeforeUpdate: game,
       kind: ActiveGameUpdatedEventKind.cardsPlay,
       transactionWrapper,

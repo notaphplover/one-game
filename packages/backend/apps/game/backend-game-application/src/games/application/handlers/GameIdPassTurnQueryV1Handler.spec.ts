@@ -543,6 +543,7 @@ describe(GameIdPassTurnQueryV1Handler.name, () => {
         expect(gamePersistenceOutputPortMock.findOne).toHaveBeenNthCalledWith(
           2,
           expectedSecondGameFindQuery,
+          transactionWrapperMock,
         );
       });
 
