@@ -31,7 +31,7 @@ import {
   UseLoginFormParams,
   UseLoginFormResult,
 } from '../models/UseLoginFormResult';
-import { UNAUTHORIZED_ERROR_MESSAGE, useLoginForm } from './useLoginForm';
+import { useLoginForm } from './useLoginForm';
 
 describe(useLoginForm.name, () => {
   let initialForm: UseLoginFormParams;
@@ -436,7 +436,7 @@ describe(useLoginForm.name, () => {
       expect(formStatus).toBe(LoginStatus.backendKO);
     });
     it('should return an error message Invalid Credentials', () => {
-      expect(backendError).toBe(UNAUTHORIZED_ERROR_MESSAGE);
+      expect(backendError).toBe('UNAUTHORIZED_ERROR_MESSAGE');
     });
   });
 });
