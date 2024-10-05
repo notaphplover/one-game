@@ -86,9 +86,13 @@ ${JSON.stringify(gameIdUpdateQueryV1)}`);
 
   protected async _getUpdatedGame(
     game: ActiveGame,
+    transactionWrapper: TransactionWrapper,
   ): Promise<ActiveGame | FinishedGame> {
     const gameFound: Game | undefined =
-      await this.#gamePersistenceOutputPort.findOne({ id: game.id });
+      await this.#gamePersistenceOutputPort.findOne(
+        { id: game.id },
+        transactionWrapper,
+      );
 
     if (gameFound === undefined || this.#isNonStartedGame(gameFound)) {
       throw new AppError(
