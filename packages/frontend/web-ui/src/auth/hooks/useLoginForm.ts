@@ -156,13 +156,14 @@ export const useLoginForm = (
           window.location.href = redirectTo;
         }
       } else {
-        setFormStatus(LoginStatus.backendKO);
         if (isSerializableAppError(createAuthResult.value)) {
           setBackendError(
             getCreateAuthErrorMessage(createAuthResult.value.kind),
           );
+          setFormStatus(LoginStatus.backendKO);
         } else {
           setBackendError(getCreateAuthErrorMessage(undefined));
+          setFormStatus(LoginStatus.backendKO);
         }
       }
     }
