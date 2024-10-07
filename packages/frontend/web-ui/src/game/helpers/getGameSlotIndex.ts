@@ -3,9 +3,9 @@ import { models as apiModels } from '@cornie-js/api-models';
 export function getGameSlotIndex(
   game: apiModels.GameV1 | undefined,
   user: apiModels.UserV1,
-): string | null {
+): number | undefined {
   if (game === undefined) {
-    return null;
+    return undefined;
   }
 
   for (let i: number = 0; i < game.state.slots.length; ++i) {
@@ -15,9 +15,9 @@ export function getGameSlotIndex(
         | apiModels.FinishedGameSlotV1;
 
     if (gameSlot.userId === user.id) {
-      return i.toString();
+      return i;
     }
   }
 
-  return null;
+  return undefined;
 }

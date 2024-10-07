@@ -10,14 +10,9 @@ import { CornieLayout } from '../../common/layout/CornieLayout';
 import { PageNotFound } from '../../common/pages/PageNotFound';
 import { Card } from '../components/Card';
 import { ReversedCard } from '../components/ReversedCard';
+import { isNonStartedGame } from '../helpers/isNonStartedGame';
 import { useGame } from '../hooks/useGame';
 import { NonStartedGame } from './NonStartedGame';
-
-function isNonStartedGame(
-  game: apiModels.GameV1 | undefined,
-): game is apiModels.NonStartedGameV1 {
-  return game?.state.status === 'nonStarted';
-}
 
 export const Game = (): React.JSX.Element => {
   const {
@@ -39,11 +34,7 @@ export const Game = (): React.JSX.Element => {
     currentCard === undefined ? (
       <ReversedCard text="" />
     ) : (
-      <Card
-        card={{
-          kind: 'wildDraw4',
-        }}
-      />
+      <Card card={currentCard} />
     );
 
   return (
