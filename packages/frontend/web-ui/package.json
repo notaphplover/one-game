@@ -21,6 +21,7 @@
   "dependencies": {
     "@cornie-js/api-http-client": "workspace:*",
     "@cornie-js/api-models": "workspace:*",
+    "@cornie-js/eventsource": "workspace:*",
     "@cornie-js/frontend-api-rtk-query": "workspace:*",
     "@cornie-js/frontend-common": "workspace:*",
     "@emotion/react": "11.13.3",
