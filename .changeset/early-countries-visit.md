@@ -1,4 +1,5 @@
 ---
+"@cornie-js/api-models": minor
 "@cornie-js/backend-game-application": minor
 ---
 
