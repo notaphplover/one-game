@@ -1,6 +1,6 @@
 import { Environment } from '../models/Environment';
 
-class EnvironmentService {
+export class EnvironmentService {
   readonly #env: Environment;
 
   constructor() {
