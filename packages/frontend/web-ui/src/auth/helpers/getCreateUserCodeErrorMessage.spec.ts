@@ -4,6 +4,7 @@ import { AppErrorKind } from '@cornie-js/frontend-common';
 
 import {
   HTTP_CONFLICT_USERCODE_ERROR_MESSAGE,
+  HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE,
   UNEXPECTED_USERCODE_ERROR_MESSAGE,
 } from './createUserCodeErrorMessage';
 import { getCreateUserCodeErrorMessage } from './getCreateUserCodeErrorMessage';
@@ -11,13 +12,18 @@ import { getCreateUserCodeErrorMessage } from './getCreateUserCodeErrorMessage';
 describe(getCreateUserCodeErrorMessage.name, () => {
   describe.each<[string, AppErrorKind | undefined, string]>([
     [
-      'an kind value',
+      'an entity conflict error kind',
       AppErrorKind.entityConflict,
       HTTP_CONFLICT_USERCODE_ERROR_MESSAGE,
     ],
-    ['an undefined value', undefined, UNEXPECTED_USERCODE_ERROR_MESSAGE],
+    [
+      'an unprocessable error kind',
+      AppErrorKind.unprocessableOperation,
+      HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE,
+    ],
+    ['an undefined', undefined, UNEXPECTED_USERCODE_ERROR_MESSAGE],
   ])(
-    'having %s error',
+    'having %s value',
     (
       _: string,
       errorKindFixture: AppErrorKind | undefined,
