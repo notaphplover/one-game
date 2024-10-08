@@ -17,6 +17,7 @@ import { NonStartedGame } from './NonStartedGame';
 export const Game = (): React.JSX.Element => {
   const {
     currentCard,
+    deckCardsAmount,
     game,
     isPending,
     useGameCardsResult: { cards, hasNext, hasPrevious, setNext, setPrevious },
@@ -47,7 +48,7 @@ export const Game = (): React.JSX.Element => {
         >
           <Box component="div" className="game-container">
             <Box component="div" className="game-area" data-testid="game-area">
-              <ReversedCard text="" />
+              <ReversedCard text={(deckCardsAmount ?? '').toString()} />
               {currentCardElement}
             </Box>
             <Box component="div" className="player-area">

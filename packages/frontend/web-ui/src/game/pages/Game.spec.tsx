@@ -33,6 +33,7 @@ describe(Game.name, () => {
 
       useGameResultFixture = {
         currentCard: undefined,
+        deckCardsAmount: undefined,
         game: undefined,
         isPending: false,
         useGameCardsResult: {
@@ -101,6 +102,7 @@ describe(Game.name, () => {
 
       useGameResultFixture = {
         currentCard: undefined,
+        deckCardsAmount: undefined,
         game: gameFixture,
         isPending: false,
         useGameCardsResult: {
@@ -154,6 +156,7 @@ describe(Game.name, () => {
     beforeAll(() => {
       useGameResultFixture = {
         currentCard: undefined,
+        deckCardsAmount: undefined,
         game: undefined,
         isPending: true,
         useGameCardsResult: {
