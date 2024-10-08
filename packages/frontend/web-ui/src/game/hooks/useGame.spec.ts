@@ -364,7 +364,7 @@ describe(useGame.name, () => {
     it('should return expected result', () => {
       const expected: UseGameResult = {
         currentCard: gameFixture.state.currentCard,
-        deckCardsAmount: 190,
+        deckCardsAmount: 189,
         game: gameFixture,
         isPending: false,
         useGameCardsResult: useGameCardsResultFixture,

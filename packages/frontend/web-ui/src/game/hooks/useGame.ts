@@ -16,6 +16,8 @@ import { useGetGameSpecV1 } from './useGetGameSpecV1';
 import { useGetGamesV1GameId } from './useGetGamesV1GameId';
 import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsSlotIdCards';
 
+const GAME_CURRENT_CARDS: number = 1;
+
 export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
   deckCardsAmount: number | undefined;
@@ -38,11 +40,13 @@ function countDeckCards(
     0,
   );
 
-  return game.state.slots.reduce(
+  const nonPlayerCards: number = game.state.slots.reduce(
     (count: number, gameSlot: apiModels.ActiveGameSlotV1): number =>
       count - gameSlot.cardsAmount,
     totalCards,
   );
+
+  return nonPlayerCards - GAME_CURRENT_CARDS;
 }
 
 function getGameCurrentCard(
