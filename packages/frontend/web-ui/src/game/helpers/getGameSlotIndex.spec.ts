@@ -35,7 +35,7 @@ describe(getGameSlotIndex.name, () => {
       });
 
       it('should return expected result', () => {
-        expect(result).toBeNull();
+        expect(result).toBeUndefined();
       });
     });
   });
@@ -74,7 +74,7 @@ describe(getGameSlotIndex.name, () => {
       });
 
       it('should return expected result', () => {
-        expect(result).toBe('0');
+        expect(result).toBe(0);
       });
     });
   });

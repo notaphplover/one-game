@@ -161,10 +161,14 @@ export class GameUpdatedEventHandler
 
   async #sendGameTurnEndSignal(game: Game): Promise<void> {
     if (game.state.status !== GameStatus.active) {
-      throw new AppError(
-        AppErrorKind.unknown,
-        'Unexpected non active game when sending game turn end signal',
-      );
+      this.#logger
+        .warn(`Unexpected non active game when sending game turn end signal:
+
+${JSON.stringify(game)}
+
+No end turn signal will be delivered`);
+
+      return;
     }
 
     if (this.#gameTurnEndSignalMessageSendOutputPort !== undefined) {

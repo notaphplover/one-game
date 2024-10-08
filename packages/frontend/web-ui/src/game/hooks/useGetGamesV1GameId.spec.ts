@@ -81,6 +81,7 @@ describe(useGetGamesV1GameId.name, () => {
 
     it('should return expected result', () => {
       const expected: UseGetGamesV1GameIdResult = {
+        queryResult: useQueryStateResultFixture,
         result: mapUseQueryHookResultResult,
       };
 

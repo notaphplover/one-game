@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../../common/hooks/useUrlLikeLocation');
 jest.mock('../../user/hooks/useGetUserMe');
+jest.mock('../helpers/buildEventSource');
 jest.mock('../helpers/getGameSlotIndex');
 jest.mock('./useGameCards');
 jest.mock('./useGetGamesV1GameId');
@@ -13,13 +14,18 @@ import { renderHook, RenderHookResult } from '@testing-library/react';
 
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
+import { CornieEventSource } from '../../common/http/services/CornieEventSource';
 import { UrlLikeLocation } from '../../common/models/UrlLikeLocation';
 import { useGetUserMe } from '../../user/hooks/useGetUserMe';
+import { buildEventSource } from '../helpers/buildEventSource';
 import { getGameSlotIndex } from '../helpers/getGameSlotIndex';
 import { useGame, UseGameResult } from './useGame';
 import { useGameCards, UseGameCardsResult } from './useGameCards';
 import { useGetGamesV1GameId } from './useGetGamesV1GameId';
-import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsSlotIdCards';
+import {
+  useGetGamesV1GameIdSlotsSlotIdCards,
+  UseGetGamesV1GameIdSlotsSlotIdCardsResult,
+} from './useGetGamesV1GameIdSlotsSlotIdCards';
 
 describe(useGame.name, () => {
   describe('when called, and queries return null result', () => {
@@ -55,13 +61,15 @@ describe(useGame.name, () => {
 
       (
         useGetGamesV1GameId as jest.Mock<typeof useGetGamesV1GameId>
-      ).mockReturnValueOnce({ result: null });
+      ).mockReturnValueOnce({ queryResult: null, result: null });
 
       (
         useGetGamesV1GameIdSlotsSlotIdCards as jest.Mock<
           typeof useGetGamesV1GameIdSlotsSlotIdCards
         >
-      ).mockReturnValueOnce({ result: null });
+      ).mockReturnValueOnce({
+        result: null,
+      } as Partial<UseGetGamesV1GameIdSlotsSlotIdCardsResult> as UseGetGamesV1GameIdSlotsSlotIdCardsResult);
 
       (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValueOnce(
         useGameCardsResultFixture,
@@ -97,7 +105,7 @@ describe(useGame.name, () => {
       expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledTimes(1);
       expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledWith(
         gameIdFixture,
-        null,
+        undefined,
       );
     });
 
@@ -119,10 +127,11 @@ describe(useGame.name, () => {
   });
 
   describe('when called, and queries return non null results', () => {
+    let cornieEventSourceMock: jest.Mocked<CornieEventSource>;
     let gameCardsFixture: apiModels.CardArrayV1;
     let gameFixture: apiModels.ActiveGameV1;
     let gameIdFixture: string;
-    let gameSlotIndexFixture: string;
+    let gameSlotIndexFixture: number;
     let urlLikeLocationFixture: UrlLikeLocation;
     let userFixture: apiModels.UserV1;
     let useGameCardsResultFixture: UseGameCardsResult;
@@ -130,6 +139,11 @@ describe(useGame.name, () => {
     let renderResult: RenderHookResult<UseGameResult, unknown>;
 
     beforeAll(() => {
+      cornieEventSourceMock = {
+        close: jest.fn(),
+      } as Partial<
+        jest.Mocked<CornieEventSource>
+      > as jest.Mocked<CornieEventSource>;
       gameCardsFixture = [
         {
           kind: 'wildDraw4',
@@ -155,7 +169,7 @@ describe(useGame.name, () => {
         },
       };
 
-      gameSlotIndexFixture = '0';
+      gameSlotIndexFixture = 0;
 
       userFixture = {
         active: true,
@@ -180,9 +194,9 @@ describe(useGame.name, () => {
 
       (
         useUrlLikeLocation as jest.Mock<typeof useUrlLikeLocation>
-      ).mockReturnValueOnce(urlLikeLocationFixture);
+      ).mockReturnValue(urlLikeLocationFixture);
 
-      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValueOnce({
+      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValue({
         result: {
           isRight: true,
           value: userFixture,
@@ -191,7 +205,8 @@ describe(useGame.name, () => {
 
       (
         useGetGamesV1GameId as jest.Mock<typeof useGetGamesV1GameId>
-      ).mockReturnValueOnce({
+      ).mockReturnValue({
+        queryResult: Symbol(),
         result: {
           isRight: true,
           value: gameFixture,
@@ -199,21 +214,25 @@ describe(useGame.name, () => {
       });
 
       (
+        buildEventSource as jest.Mock<typeof buildEventSource>
+      ).mockReturnValueOnce(cornieEventSourceMock);
+
+      (
         useGetGamesV1GameIdSlotsSlotIdCards as jest.Mock<
           typeof useGetGamesV1GameIdSlotsSlotIdCards
         >
-      ).mockReturnValueOnce({
+      ).mockReturnValue({
         result: {
           isRight: true,
           value: gameCardsFixture,
         },
-      });
+      } as Partial<UseGetGamesV1GameIdSlotsSlotIdCardsResult> as UseGetGamesV1GameIdSlotsSlotIdCardsResult);
 
-      (
-        getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>
-      ).mockReturnValueOnce(gameSlotIndexFixture);
+      (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReturnValue(
+        gameSlotIndexFixture,
+      );
 
-      (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValueOnce(
+      (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValue(
         useGameCardsResultFixture,
       );
 
@@ -222,42 +241,80 @@ describe(useGame.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+
+      (useUrlLikeLocation as jest.Mock<typeof useUrlLikeLocation>).mockReset();
+      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReset();
+      (
+        useGetGamesV1GameId as jest.Mock<typeof useGetGamesV1GameId>
+      ).mockReset();
+      (
+        useGetGamesV1GameIdSlotsSlotIdCards as jest.Mock<
+          typeof useGetGamesV1GameIdSlotsSlotIdCards
+        >
+      ).mockReset();
+      (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReset();
+      (useGameCards as jest.Mock<typeof useGameCards>).mockReset();
     });
 
     it('should call useRedirectUnauthorized()', () => {
-      expect(useRedirectUnauthorized).toHaveBeenCalledTimes(1);
+      expect(useRedirectUnauthorized).toHaveBeenCalledTimes(2);
       expect(useRedirectUnauthorized).toHaveBeenCalledWith();
     });
 
     it('should call useGetUserMe()', () => {
-      expect(useGetUserMe).toHaveBeenCalledTimes(1);
+      expect(useGetUserMe).toHaveBeenCalledTimes(2);
       expect(useGetUserMe).toHaveBeenCalledWith();
     });
 
     it('should call useGetGamesV1GameId()', () => {
-      expect(useGetGamesV1GameId).toHaveBeenCalledTimes(1);
-      expect(useGetGamesV1GameId).toHaveBeenCalledWith(gameIdFixture);
+      expect(useGetGamesV1GameId).toHaveBeenCalledTimes(2);
+      expect(useGetGamesV1GameId).toHaveBeenNthCalledWith(1, gameIdFixture);
+      expect(useGetGamesV1GameId).toHaveBeenNthCalledWith(2, gameIdFixture);
     });
 
     it('should call getGameSlotIndex()', () => {
-      expect(getGameSlotIndex).toHaveBeenCalledTimes(1);
-      expect(getGameSlotIndex).toHaveBeenCalledWith(gameFixture, userFixture);
+      expect(getGameSlotIndex).toHaveBeenCalledTimes(2);
+      expect(getGameSlotIndex).toHaveBeenNthCalledWith(
+        1,
+        undefined,
+        userFixture,
+      );
+      expect(getGameSlotIndex).toHaveBeenNthCalledWith(
+        2,
+        gameFixture,
+        userFixture,
+      );
+    });
+
+    it('should call buildEventSource()', () => {
+      expect(buildEventSource).toHaveBeenCalledTimes(1);
+      expect(buildEventSource).toHaveBeenCalledWith(
+        gameFixture,
+        expect.any(Function),
+      );
     });
 
     it('should call useGetGamesV1GameIdSlotsSlotIdCards()', () => {
-      expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledTimes(1);
-      expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledWith(
+      expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledTimes(2);
+      expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenNthCalledWith(
+        1,
         gameIdFixture,
-        gameSlotIndexFixture,
+        gameSlotIndexFixture.toString(),
+      );
+      expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenNthCalledWith(
+        2,
+        gameIdFixture,
+        gameSlotIndexFixture.toString(),
       );
     });
 
     it('should call useGameCards()', () => {
-      expect(useGameCards).toHaveBeenCalledTimes(1);
-      expect(useGameCards).toHaveBeenCalledWith(gameCardsFixture);
+      expect(useGameCards).toHaveBeenCalledTimes(2);
+      expect(useGameCards).toHaveBeenNthCalledWith(1, gameCardsFixture);
+      expect(useGameCards).toHaveBeenNthCalledWith(2, gameCardsFixture);
     });
 
-    it('should retuen expected result', () => {
+    it('should return expected result', () => {
       const expected: UseGameResult = {
         currentCard: gameFixture.state.currentCard,
         game: gameFixture,

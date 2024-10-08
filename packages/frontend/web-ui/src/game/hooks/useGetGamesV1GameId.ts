@@ -5,11 +5,12 @@ import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
 
 export interface UseGetGamesV1GameIdResult {
+  queryResult: unknown;
   result: Either<string, apiModels.GameV1> | null;
 }
 
 export function useGetGamesV1GameId(
-  gameId: string | null,
+  gameId: string | undefined,
 ): UseGetGamesV1GameIdResult {
   const useGetUsersV1MeQueryResult = cornieApi.useGetGamesV1GameIdQuery(
     {
@@ -20,7 +21,7 @@ export function useGetGamesV1GameId(
       ],
     },
     {
-      skip: gameId === null,
+      skip: gameId === undefined,
     },
   );
 
@@ -28,5 +29,5 @@ export function useGetGamesV1GameId(
     useGetUsersV1MeQueryResult,
   );
 
-  return { result };
+  return { queryResult: useGetUsersV1MeQueryResult, result };
 }

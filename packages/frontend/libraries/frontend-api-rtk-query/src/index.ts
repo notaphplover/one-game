@@ -17,6 +17,7 @@ import { SerializableAppError } from './foundation/error/SerializableAppError';
 import { QueryReturnValue } from './foundation/http/models/QueryReturnValue';
 import { CreateGamesV1Args } from './games/models/CreateGamesV1Args';
 import { CreateGamesV1SlotsArgs } from './games/models/CreateGamesV1SlotsArgs';
+import { GetGamesGameIdSpecsV1Args } from './games/models/GetGamesGameIdSpecsV1Args';
 import { GetGamesSpecsV1Args } from './games/models/GetGamesSpecsV1Args';
 import { GetGamesV1Args } from './games/models/GetGamesV1Args';
 import { GetGamesV1GameIdArgs } from './games/models/GetGamesV1GameIdArgs';
@@ -24,6 +25,7 @@ import { GetGamesV1GameIdSlotsSlotIdCardsArgs } from './games/models/GetGamesV1G
 import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
 import { createGamesV1 } from './games/mutations/createGamesV1';
 import { createGamesV1Slots } from './games/mutations/createGamesV1Slots';
+import { getGamesGameIdSpecsV1 } from './games/queries/getGamesGameIdSpecsV1';
 import { getGamesSpecsV1 } from './games/queries/getGamesSpecsV1';
 import { getGamesV1 } from './games/queries/getGamesV1';
 import { getGamesV1GameId } from './games/queries/getGamesV1GameId';
@@ -45,6 +47,7 @@ export type {
   CreateGamesV1SlotsArgs,
   CreateUsersV1Args,
   CreateUsersV1EmailCodeArgs,
+  GetGamesGameIdSpecsV1Args,
   GetGamesSpecsV1Args,
   GetGamesV1Args,
   GetGamesV1GameIdArgs,
@@ -127,6 +130,15 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
         CreateUsersV1EmailCodeArgs
       >({
         queryFn: createUsersV1EmailCode(options.httpClient),
+      }),
+      getGamesGameIdSpecsV1: build.query<
+        apiModels.GameSpecV1,
+        GetGamesGameIdSpecsV1Args
+      >({
+        queryFn: authorizedApiCall(
+          getGamesGameIdSpecsV1(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
       }),
       getGamesSpecsV1: build.query<
         apiModels.GameSpecArrayV1,

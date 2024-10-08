@@ -4,6 +4,16 @@ jest.mock('../../common/helpers/mapUseQueryHookResult');
 jest.mock('../../common/http/services/cornieApi');
 
 import { models as apiModels } from '@cornie-js/api-models';
+import {
+  ApiTag,
+  GetGamesV1GameIdSlotsSlotIdCardsArgs,
+  SerializableAppError,
+} from '@cornie-js/frontend-api-rtk-query';
+import {
+  BaseQueryFn,
+  QueryActionCreatorResult,
+  QueryDefinition,
+} from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
 import {
@@ -97,6 +107,16 @@ describe(useGetGamesV1GameIdSlotsSlotIdCards.name, () => {
 
     it('should return expected result', () => {
       const expected: UseGetGamesV1GameIdSlotsSlotIdCardsResult = {
+        refetch: expect.any(
+          Function,
+        ) as unknown as () => QueryActionCreatorResult<
+          QueryDefinition<
+            GetGamesV1GameIdSlotsSlotIdCardsArgs,
+            BaseQueryFn<void, symbol, SerializableAppError>,
+            ApiTag,
+            apiModels.CardArrayV1
+          >
+        >,
         result: mapUseQueryHookResultResult,
       };
 
