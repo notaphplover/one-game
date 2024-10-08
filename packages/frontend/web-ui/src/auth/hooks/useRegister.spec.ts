@@ -22,7 +22,6 @@ import { renderHook, RenderHookResult } from '@testing-library/react';
 import React, { act } from 'react';
 
 import { isSerializableAppError } from '../../common/helpers/isSerializableAppError';
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Left, Right } from '../../common/models/Either';
@@ -67,10 +66,6 @@ describe(useRegister.name, () => {
           status: QueryStatus.uninitialized,
         },
       ];
-
-      (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-      ).mockReturnValue(null);
 
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
@@ -121,17 +116,13 @@ describe(useRegister.name, () => {
     });
 
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
-    });
-
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(1);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        1,
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        2,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });
@@ -221,10 +212,6 @@ describe(useRegister.name, () => {
       } as Partial<
         jest.Mocked<React.FormEvent>
       > as jest.Mocked<React.FormEvent>;
-
-      (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-      ).mockReturnValue(null);
 
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
@@ -467,23 +454,11 @@ describe(useRegister.name, () => {
 
       userCodeCreatedResultFixture = null;
 
-      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCodeCreatedResultFixture);
-
       (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
         .mockReturnValueOnce(userCreatedResultFixture)
-        .mockReturnValueOnce(userCreatedResultFixture);
-
-      (
-        isSerializableAppError as unknown as jest.Mock<
-          typeof isSerializableAppError
-        >
-      ).mockReturnValue(false);
-
-      (
-        getCreateUserErrorMessage as jest.Mock<typeof getCreateUserErrorMessage>
-      ).mockReturnValue('');
+        .mockReturnValueOnce(userCreatedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture);
 
       (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
@@ -520,25 +495,21 @@ describe(useRegister.name, () => {
     });
 
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(4);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
-        1,
-        useCreateUsersV1MutationResultMock[1],
-      );
-    });
-
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        1,
+        2,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        2,
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        3,
+        useCreateUsersV1MutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        4,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });
@@ -574,7 +545,7 @@ describe(useRegister.name, () => {
             },
             validation: {},
           },
-          status: UseRegisterStatus.creatingUserCode,
+          status: UseRegisterStatus.success,
         },
         {
           handlers: {
@@ -647,13 +618,11 @@ describe(useRegister.name, () => {
 
       userCodeCreatedResultFixture = null;
 
-      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCodeCreatedResultFixture);
-
       (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
         .mockReturnValueOnce(userCreatedResultFixture)
-        .mockReturnValueOnce(userCreatedResultFixture);
+        .mockReturnValueOnce(userCreatedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture);
 
       (
         isSerializableAppError as unknown as jest.Mock<
@@ -700,41 +669,45 @@ describe(useRegister.name, () => {
     });
 
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(4);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
-        1,
-        useCreateUsersV1MutationResultMock[1],
-      );
-    });
-
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        1,
+        2,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        2,
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        3,
+        useCreateUsersV1MutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        4,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });
 
     it('should call isSerializableAppError()', () => {
-      expect(isSerializableAppError).toHaveBeenCalledTimes(1);
+      expect(isSerializableAppError).toHaveBeenCalledTimes(2);
       expect(isSerializableAppError).toHaveBeenNthCalledWith(
         1,
+        userCreatedResultFixture.value,
+      );
+      expect(isSerializableAppError).toHaveBeenNthCalledWith(
+        2,
         userCreatedResultFixture.value,
       );
     });
 
     it('should call getCreateUserErrorMessage()', () => {
-      expect(getCreateUserErrorMessage).toHaveBeenCalledTimes(1);
+      expect(getCreateUserErrorMessage).toHaveBeenCalledTimes(2);
       expect(getCreateUserErrorMessage).toHaveBeenNthCalledWith(
         1,
+        userCreatedResultFixture.value.kind,
+      );
+      expect(getCreateUserErrorMessage).toHaveBeenNthCalledWith(
+        2,
         userCreatedResultFixture.value.kind,
       );
     });
@@ -819,13 +792,9 @@ describe(useRegister.name, () => {
         value: undefined,
       };
 
-      (mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>)
-        .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCodeCreatedResultFixture);
-
       (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
         .mockReturnValueOnce(userCreatedResultFixture)
-        .mockReturnValueOnce(userCreatedResultFixture);
+        .mockReturnValueOnce(userCodeCreatedResultFixture);
 
       (
         cornieApi.useCreateUsersV1Mutation as jest.Mock<
@@ -862,25 +831,21 @@ describe(useRegister.name, () => {
     });
 
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(4);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1MutationResultMock[1],
       );
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         2,
-        useCreateUsersV1MutationResultMock[1],
-      );
-    });
-
-    it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(2);
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
-      expect(mapUseQueryHookResult).toHaveBeenNthCalledWith(
-        2,
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        3,
+        useCreateUsersV1MutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        4,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
     });

@@ -4,7 +4,6 @@ import { SerializedError } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 
 import { isSerializableAppError } from '../../common/helpers/isSerializableAppError';
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
 import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
@@ -46,8 +45,10 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
     apiModels.UserV1
   > | null = mapUseQueryHookResultV2(createUserResult);
 
-  const userCodeCreatedResult: Either<string, undefined> | null =
-    mapUseQueryHookResult(createUserCodeResult);
+  const userCodeCreatedResult: Either<
+    SerializableAppError | SerializedError,
+    undefined
+  > | null = mapUseQueryHookResultV2(createUserCodeResult);
 
   const updateForm = (fields: RegisterFormFields): void => {
     const updatedRegisterData: UseRegisterData = { ...registerData };
@@ -257,15 +258,31 @@ export const useRegister = (): [UseRegisterData, UseRegisterActions] => {
           status: UseRegisterStatus.success,
         });
       } else {
-        setRegisterData({
-          form: {
-            fields: {
-              ...registerData.form.fields,
+        if (isSerializableAppError(userCodeCreatedResult.value)) {
+          setRegisterData({
+            form: {
+              errorMessage: getCreateUserErrorMessage(
+                userCodeCreatedResult.value.kind,
+              ),
+              fields: {
+                ...registerData.form.fields,
+              },
+              validation: { ...registerData.form.validation },
             },
-            validation: { ...registerData.form.validation },
-          },
-          status: UseRegisterStatus.backendError,
-        });
+            status: UseRegisterStatus.backendError,
+          });
+        } else {
+          setRegisterData({
+            form: {
+              errorMessage: getCreateUserErrorMessage(undefined),
+              fields: {
+                ...registerData.form.fields,
+              },
+              validation: { ...registerData.form.validation },
+            },
+            status: UseRegisterStatus.backendError,
+          });
+        }
       }
     }
   }, [createUserCodeResult]);
