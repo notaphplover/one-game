@@ -6,6 +6,7 @@ jest.mock('../../user/hooks/useGetUserMe');
 jest.mock('../helpers/buildEventSource');
 jest.mock('../helpers/getGameSlotIndex');
 jest.mock('./useGameCards');
+jest.mock('./useGetGameSpecV1');
 jest.mock('./useGetGamesV1GameId');
 jest.mock('./useGetGamesV1GameIdSlotsSlotIdCards');
 
@@ -21,6 +22,7 @@ import { buildEventSource } from '../helpers/buildEventSource';
 import { getGameSlotIndex } from '../helpers/getGameSlotIndex';
 import { useGame, UseGameResult } from './useGame';
 import { useGameCards, UseGameCardsResult } from './useGameCards';
+import { useGetGameSpecV1, UseGetGameSpecV1Result } from './useGetGameSpecV1';
 import { useGetGamesV1GameId } from './useGetGamesV1GameId';
 import {
   useGetGamesV1GameIdSlotsSlotIdCards,
@@ -71,6 +73,12 @@ describe(useGame.name, () => {
         result: null,
       } as Partial<UseGetGamesV1GameIdSlotsSlotIdCardsResult> as UseGetGamesV1GameIdSlotsSlotIdCardsResult);
 
+      (
+        useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>
+      ).mockReturnValueOnce({
+        result: null,
+      });
+
       (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValueOnce(
         useGameCardsResultFixture,
       );
@@ -117,6 +125,7 @@ describe(useGame.name, () => {
     it('should retuen expected result', () => {
       const expected: UseGameResult = {
         currentCard: undefined,
+        deckCardsAmount: undefined,
         game: undefined,
         isPending: true,
         useGameCardsResult: useGameCardsResultFixture,
@@ -134,6 +143,7 @@ describe(useGame.name, () => {
     let gameSlotIndexFixture: number;
     let urlLikeLocationFixture: UrlLikeLocation;
     let userFixture: apiModels.UserV1;
+    let useGetGameSpecV1ResultFixture: UseGetGameSpecV1Result;
     let useGameCardsResultFixture: UseGameCardsResult;
 
     let renderResult: RenderHookResult<UseGameResult, unknown>;
@@ -164,7 +174,12 @@ describe(useGame.name, () => {
           currentTurnCardsPlayed: false,
           drawCount: 0,
           lastEventId: 'last-event-id-fixture',
-          slots: [],
+          slots: [
+            {
+              cardsAmount: 10,
+              userId: 'user-id-fixture',
+            },
+          ],
           status: 'active',
         },
       };
@@ -183,6 +198,33 @@ describe(useGame.name, () => {
         pathname: '/path',
         searchParams: new URLSearchParams(`?gameId=${gameIdFixture}`),
       } as Partial<UrlLikeLocation> as UrlLikeLocation;
+
+      useGetGameSpecV1ResultFixture = {
+        result: {
+          isRight: true,
+          value: {
+            cardSpecs: [
+              {
+                amount: 200,
+                card: {
+                  kind: 'wild',
+                },
+              },
+            ],
+            gameId: 'game-id-fixture',
+            gameSlotsAmount: 2,
+            options: {
+              chainDraw2Draw2Cards: true,
+              chainDraw2Draw4Cards: true,
+              chainDraw4Draw2Cards: true,
+              chainDraw4Draw4Cards: true,
+              playCardIsMandatory: true,
+              playMultipleSameCards: true,
+              playWildDraw4IfNoOtherAlternative: false,
+            },
+          },
+        },
+      };
 
       useGameCardsResultFixture = {
         cards: [],
@@ -232,6 +274,10 @@ describe(useGame.name, () => {
         gameSlotIndexFixture,
       );
 
+      (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReturnValue(
+        useGetGameSpecV1ResultFixture,
+      );
+
       (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValue(
         useGameCardsResultFixture,
       );
@@ -253,6 +299,7 @@ describe(useGame.name, () => {
         >
       ).mockReset();
       (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReset();
+      (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReset();
       (useGameCards as jest.Mock<typeof useGameCards>).mockReset();
     });
 
@@ -317,6 +364,7 @@ describe(useGame.name, () => {
     it('should return expected result', () => {
       const expected: UseGameResult = {
         currentCard: gameFixture.state.currentCard,
+        deckCardsAmount: 190,
         game: gameFixture,
         isPending: false,
         useGameCardsResult: useGameCardsResultFixture,
