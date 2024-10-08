@@ -12,14 +12,37 @@ import { handleGameMessageEvents } from '../helpers/handleGameMessageEvents';
 import { isActiveGame } from '../helpers/isActiveGame';
 import { isFinishedGame } from '../helpers/isFinishedGame';
 import { useGameCards, UseGameCardsResult } from './useGameCards';
+import { useGetGameSpecV1 } from './useGetGameSpecV1';
 import { useGetGamesV1GameId } from './useGetGamesV1GameId';
 import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsSlotIdCards';
 
 export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
+  deckCardsAmount: number | undefined;
   game: apiModels.GameV1 | undefined;
   isPending: boolean;
   useGameCardsResult: UseGameCardsResult;
+}
+
+function countDeckCards(
+  game: apiModels.GameV1 | undefined,
+  gameSpec: apiModels.GameSpecV1 | undefined,
+): number | undefined {
+  if (!isActiveGame(game) || gameSpec === undefined) {
+    return undefined;
+  }
+
+  const totalCards: number = gameSpec.cardSpecs.reduce(
+    (count: number, cardSpec: apiModels.GameCardSpecV1): number =>
+      count + cardSpec.amount,
+    0,
+  );
+
+  return game.state.slots.reduce(
+    (count: number, gameSlot: apiModels.ActiveGameSlotV1): number =>
+      count - gameSlot.cardsAmount,
+    totalCards,
+  );
 }
 
 function getGameCurrentCard(
@@ -48,6 +71,19 @@ export const useGame = (): UseGameResult => {
 
   const [eventSource, setEventSource] = useState<CornieEventSource>();
 
+  const gameSlotIndexParam: number | undefined =
+    usersV1MeResult?.isRight === true
+      ? getGameSlotIndex(game, usersV1MeResult.value)
+      : undefined;
+
+  const {
+    refetch: refetchGamesV1GameIdSlotsSlotIdCards,
+    result: gamesV1GameIdSlotsSlotIdCardsResult,
+  } = useGetGamesV1GameIdSlotsSlotIdCards(
+    gameIdParam,
+    gameSlotIndexParam?.toString(),
+  );
+
   useEffect(() => {
     const game: apiModels.GameV1 | undefined =
       gamesV1GameIdResult?.isRight === true
@@ -71,32 +107,6 @@ export const useGame = (): UseGameResult => {
       }
     }
   }, [gamesV1GameIdQueryResult]);
-
-  const currentCard: apiModels.CardV1 | undefined = getGameCurrentCard(game);
-
-  const gameSlotIndexParam: number | undefined =
-    usersV1MeResult?.isRight === true
-      ? getGameSlotIndex(game, usersV1MeResult.value)
-      : undefined;
-
-  const {
-    refetch: refetchGamesV1GameIdSlotsSlotIdCards,
-    result: gamesV1GameIdSlotsSlotIdCardsResult,
-  } = useGetGamesV1GameIdSlotsSlotIdCards(
-    gameIdParam,
-    gameSlotIndexParam?.toString(),
-  );
-
-  const isPending =
-    gamesV1GameIdResult === null ||
-    gamesV1GameIdSlotsSlotIdCardsResult === null;
-
-  const gameCards: apiModels.CardArrayV1 =
-    gamesV1GameIdSlotsSlotIdCardsResult?.isRight === true
-      ? gamesV1GameIdSlotsSlotIdCardsResult.value
-      : [];
-
-  const useGameCardsResult: UseGameCardsResult = useGameCards(gameCards);
 
   useEffect(() => {
     if (isActiveGame(game)) {
@@ -126,10 +136,27 @@ export const useGame = (): UseGameResult => {
     }
   }, [messageEventsQueue]);
 
+  const { result: gamesV1GameIdSpecsResult } = useGetGameSpecV1(gameIdParam);
+
+  const deckCardsAmount: number | undefined =
+    game !== undefined && gamesV1GameIdSpecsResult?.isRight === true
+      ? countDeckCards(game, gamesV1GameIdSpecsResult.value)
+      : undefined;
+
+  const gameCards: apiModels.CardArrayV1 =
+    gamesV1GameIdSlotsSlotIdCardsResult?.isRight === true
+      ? gamesV1GameIdSlotsSlotIdCardsResult.value
+      : [];
+
+  const useGameCardsResult: UseGameCardsResult = useGameCards(gameCards);
+
   return {
-    currentCard,
+    currentCard: getGameCurrentCard(game),
+    deckCardsAmount,
     game,
-    isPending,
+    isPending:
+      gamesV1GameIdResult === null ||
+      gamesV1GameIdSlotsSlotIdCardsResult === null,
     useGameCardsResult,
   };
 };
