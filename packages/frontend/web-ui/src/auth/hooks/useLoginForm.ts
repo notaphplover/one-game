@@ -66,7 +66,7 @@ export const useLoginForm = (
     apiModels.AuthV2
   > | null = mapUseQueryHookResultV2(createAuthV2Result);
 
-  const authUser = async () => {
+  const authUser = () => {
     if (formStatus !== LoginStatus.pendingBackend) {
       throw new Error('Unexpected state when creating auth');
     }
@@ -88,7 +88,7 @@ export const useLoginForm = (
         validateFormFields();
         break;
       case LoginStatus.pendingBackend:
-        void authUser();
+        authUser();
         break;
       default:
     }
