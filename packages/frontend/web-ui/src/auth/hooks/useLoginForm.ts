@@ -1,12 +1,17 @@
+import { models as apiModels } from '@cornie-js/api-models';
+import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import login from '../../app/store/actions/login';
 import { useAppDispatch } from '../../app/store/hooks';
-import { createAuthByCredentials } from '../../app/store/thunk/createAuthByCredentials';
-import { isFullfilledPayloadAction } from '../../common/helpers/isFullfilledPayloadAction';
+import { isSerializableAppError } from '../../common/helpers/isSerializableAppError';
+import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { useRedirectAuthorized } from '../../common/hooks/useRedirectAuthorized';
-import { OK, UNAUTHORIZED } from '../../common/http/helpers/httpCodes';
+import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
+import { getCreateAuthErrorMessage } from '../helpers/getCreateAuthErrorMessage';
 import { validateEmail } from '../helpers/validateEmail';
 import { validatePassword } from '../helpers/validatePassword';
 import { FormValidationResult } from '../models/FormValidationResult';
@@ -15,10 +20,6 @@ import {
   UseLoginFormResult,
 } from '../models/UseLoginFormResult';
 import { LoginStatus } from './../models/LoginStatus';
-
-export const UNAUTHORIZED_ERROR_MESSAGE: string = 'Unauthorized.';
-const UNEXPECTED_ERROR_MESSAGE: string =
-  'Unexpected error occurred while processing the request.';
 
 const useRedirectAuthorizedIfNoQuery: () => string | null = ():
   | string
@@ -57,13 +58,37 @@ export const useLoginForm = (
 
   const dispatch = useAppDispatch();
 
+  const [triggerCreateAuthV2, createAuthV2Result] =
+    cornieApi.useCreateAuthV2Mutation();
+
+  const createAuthResult: Either<
+    SerializableAppError | SerializedError,
+    apiModels.AuthV2
+  > | null = mapUseQueryHookResultV2(createAuthV2Result);
+
+  const authUser = () => {
+    if (formStatus !== LoginStatus.pendingBackend) {
+      throw new Error('Unexpected state when creating auth');
+    }
+
+    void triggerCreateAuthV2({
+      authCreateQuery: {
+        email: formFields.email,
+        kind: 'login',
+        password: formFields.password,
+      },
+    });
+
+    setFormStatus(LoginStatus.creatingAuth);
+  };
+
   useEffect(() => {
     switch (formStatus) {
       case LoginStatus.pendingValidation:
         validateFormFields();
         break;
       case LoginStatus.pendingBackend:
-        void authUser();
+        authUser();
         break;
       default:
     }
@@ -122,31 +147,27 @@ export const useLoginForm = (
     }
   };
 
-  const authUser = async () => {
-    if (formStatus !== LoginStatus.pendingBackend) {
-      throw new Error('Unexpected form state at createUser');
-    }
-
-    const response = await dispatch(createAuthByCredentials(formFields));
-
-    if (isFullfilledPayloadAction(response)) {
-      switch (response.payload.statusCode) {
-        case OK:
-          setFormStatus(LoginStatus.backendOK);
-          if (redirectTo !== null) {
-            window.location.href = redirectTo;
-          }
-          break;
-        case UNAUTHORIZED:
-          setBackendError(UNAUTHORIZED_ERROR_MESSAGE);
+  useEffect(() => {
+    if (createAuthResult !== null) {
+      if (createAuthResult.isRight) {
+        setFormStatus(LoginStatus.backendOK);
+        dispatch(login(createAuthResult.value));
+        if (redirectTo !== null) {
+          window.location.href = redirectTo;
+        }
+      } else {
+        if (isSerializableAppError(createAuthResult.value)) {
+          setBackendError(
+            getCreateAuthErrorMessage(createAuthResult.value.kind),
+          );
           setFormStatus(LoginStatus.backendKO);
-          break;
-        default:
-          setBackendError(UNEXPECTED_ERROR_MESSAGE);
+        } else {
+          setBackendError(getCreateAuthErrorMessage(undefined));
           setFormStatus(LoginStatus.backendKO);
+        }
       }
     }
-  };
+  }, [createAuthV2Result]);
 
   return {
     backendError,
