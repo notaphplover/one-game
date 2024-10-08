@@ -3,6 +3,7 @@ export enum LoginStatus {
   pendingValidation = 1,
   validationKO = 2,
   pendingBackend = 3,
-  backendKO = 4,
-  backendOK = 5,
+  creatingAuth = 4,
+  backendKO = 5,
+  backendOK = 6,
 }
