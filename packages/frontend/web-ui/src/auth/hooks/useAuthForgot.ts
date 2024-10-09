@@ -6,7 +6,7 @@ import { isSerializableAppError } from '../../common/helpers/isSerializableAppEr
 import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
-import { getCreateUserErrorMessage } from '../helpers/getCreateUserErrorMessage';
+import { getCreateUserCodeErrorMessage } from '../helpers/getCreateUserCodeErrorMessage';
 import { validateEmail } from '../helpers/validateEmail';
 import { UseAuthForgotActions } from '../models/UseAuthForgotActions';
 import {
@@ -140,7 +140,7 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
         if (isSerializableAppError(userCodeCreatedResult.value)) {
           setAuthForgotData({
             form: {
-              errorMessage: getCreateUserErrorMessage(
+              errorMessage: getCreateUserCodeErrorMessage(
                 userCodeCreatedResult.value.kind,
               ),
               fields: {
@@ -153,7 +153,7 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
         } else {
           setAuthForgotData({
             form: {
-              errorMessage: getCreateUserErrorMessage(undefined),
+              errorMessage: getCreateUserCodeErrorMessage(undefined),
               fields: {
                 ...authForgotData.form.fields,
               },

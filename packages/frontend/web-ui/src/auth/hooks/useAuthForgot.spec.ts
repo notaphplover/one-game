@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../../common/helpers/mapUseQueryHookResultV2');
 jest.mock('../../common/http/services/cornieApi');
 jest.mock('../helpers/validateEmail');
-jest.mock('../helpers/getCreateUserErrorMessage');
+jest.mock('../helpers/getCreateUserCodeErrorMessage');
 jest.mock('../../common/helpers/isSerializableAppError');
 
 import {
@@ -20,7 +20,7 @@ import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookRes
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Left, Right } from '../../common/models/Either';
 import { HTTP_CONFLICT_USER_ERROR_MESSAGE } from '../helpers/createUserErrorMessages';
-import { getCreateUserErrorMessage } from '../helpers/getCreateUserErrorMessage';
+import { getCreateUserCodeErrorMessage } from '../helpers/getCreateUserCodeErrorMessage';
 import { validateEmail } from '../helpers/validateEmail';
 import { UseAuthForgotActions } from '../models/UseAuthForgotActions';
 import { UseAuthForgotData } from '../models/UseAuthForgotData';
@@ -370,7 +370,9 @@ describe(useAuthForgot.name, () => {
       ).mockReturnValue(true);
 
       (
-        getCreateUserErrorMessage as jest.Mock<typeof getCreateUserErrorMessage>
+        getCreateUserCodeErrorMessage as jest.Mock<
+          typeof getCreateUserCodeErrorMessage
+        >
       ).mockReturnValue(errorMessageFixture);
 
       (
@@ -416,9 +418,9 @@ describe(useAuthForgot.name, () => {
       );
     });
 
-    it('should call getCreateUserErrorMessage()', () => {
-      expect(getCreateUserErrorMessage).toHaveBeenCalledTimes(1);
-      expect(getCreateUserErrorMessage).toHaveBeenNthCalledWith(
+    it('should call getCreateUserCodeErrorMessage()', () => {
+      expect(getCreateUserCodeErrorMessage).toHaveBeenCalledTimes(1);
+      expect(getCreateUserCodeErrorMessage).toHaveBeenNthCalledWith(
         1,
         userCodeCreatedResultFixture.value.kind,
       );
