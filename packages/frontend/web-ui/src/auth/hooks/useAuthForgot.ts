@@ -124,6 +124,17 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
     }
   }
 
+  function buildErrorMessage(value: unknown): string {
+    let errorMessage: string;
+
+    if (isSerializableAppError(value)) {
+      errorMessage = getCreateUserCodeErrorMessage(value.kind);
+    } else {
+      errorMessage = getCreateUserCodeErrorMessage(undefined);
+    }
+    return errorMessage;
+  }
+
   useEffect(() => {
     if (userCodeCreatedResult !== null) {
       if (userCodeCreatedResult.isRight) {
@@ -137,31 +148,16 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
           status: UseAuthForgotStatus.success,
         });
       } else {
-        if (isSerializableAppError(userCodeCreatedResult.value)) {
-          setAuthForgotData({
-            form: {
-              errorMessage: getCreateUserCodeErrorMessage(
-                userCodeCreatedResult.value.kind,
-              ),
-              fields: {
-                ...authForgotData.form.fields,
-              },
-              validation: { ...authForgotData.form.validation },
+        setAuthForgotData({
+          form: {
+            errorMessage: buildErrorMessage(userCodeCreatedResult.value),
+            fields: {
+              ...authForgotData.form.fields,
             },
-            status: UseAuthForgotStatus.backendError,
-          });
-        } else {
-          setAuthForgotData({
-            form: {
-              errorMessage: getCreateUserCodeErrorMessage(undefined),
-              fields: {
-                ...authForgotData.form.fields,
-              },
-              validation: { ...authForgotData.form.validation },
-            },
-            status: UseAuthForgotStatus.backendError,
-          });
-        }
+            validation: { ...authForgotData.form.validation },
+          },
+          status: UseAuthForgotStatus.backendError,
+        });
       }
     }
   }, [createUserCodeResult]);
