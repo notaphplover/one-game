@@ -176,15 +176,25 @@ export const Login = (): React.JSX.Element => {
                     </Box>
                   </Grid2>
 
-                  <Grid2 size={12}>
-                    <Typography>
-                      Don't you have an account?{' '}
+                  <Grid2 size={6} className="login-form-links">
+                    <Typography className="left-link">
                       <Link
                         component={RouterLink}
                         color="primary"
                         to="/auth/register"
                       >
                         Sign up
+                      </Link>
+                    </Typography>{' '}
+                  </Grid2>
+                  <Grid2 size={6} className="login-form-links">
+                    <Typography className="right-link">
+                      <Link
+                        component={RouterLink}
+                        color="primary"
+                        to="/auth/forgot"
+                      >
+                        Forgot password?
                       </Link>
                     </Typography>{' '}
                   </Grid2>
