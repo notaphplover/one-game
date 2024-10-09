@@ -9,6 +9,7 @@ const NAVBAR_PAGE_NAME_TO_PAGE_SLUG_MAP: { [TPage in PageName]: string } = {
   [PageName.publicGames]: '/games/public',
   [PageName.register]: '/auth/register',
   [PageName.userMe]: '/users/me',
+  [PageName.forgot]: '/auth/forgot',
 };
 
 export function getSlug(pageName: PageName): string {
