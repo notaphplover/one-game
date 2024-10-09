@@ -1,5 +1,9 @@
 @use '../../../base/variables' as variables;
 
+.login-page-container {
+  min-height: 100vh;
+}
+
 .login-form-grid {
   background-color: var(--cg-text-primary);
   border-radius: 10px;

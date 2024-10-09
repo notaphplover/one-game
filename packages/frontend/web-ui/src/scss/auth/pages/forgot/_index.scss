@@ -1,5 +1,9 @@
 @use '../../../base/variables' as variables;
 
+.forgot-page-container {
+  min-height: 100vh;
+}
+
 .forgot-form-grid {
   background-color: var(--cg-text-primary);
   border-radius: 10px;
@@ -26,13 +30,15 @@
   text-align: left;
 }
 
-.forgot-form-grid .form-text-fieldset {
-  margin-top: 1.5rem;
-}
+.forgot-form-grid {
+  .form-text-fieldset {
+    margin-top: 1.5rem;
+  }
 
-.forgot-form-grid .form-text-fieldset:hover {
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
+  .form-text-fieldset:hover {
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
+  }
 }
 
 .forgot-error-container {
