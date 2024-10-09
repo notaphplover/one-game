@@ -11,14 +11,14 @@
     "@typescript-eslint/eslint-plugin": "8.8.1",
     "@typescript-eslint/parser": "8.8.1",
     "@eslint/js": "9.12.0",
-    "express": "4.21.0",
+    "express": "4.21.1",
     "jest": "29.7.0",
     "jest-mock": "29.7.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",

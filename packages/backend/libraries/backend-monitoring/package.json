@@ -7,11 +7,11 @@
   "dependencies": {
     "@datadog/pprof": "^5.3.0",
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/auto-instrumentations-node": "~0.50.0",
+    "@opentelemetry/auto-instrumentations-node": "~0.50.1",
     "@opentelemetry/exporter-metrics-otlp-grpc": "~0.53.0",
     "@opentelemetry/exporter-trace-otlp-grpc": "~0.53.0",
-    "@opentelemetry/resource-detector-container": "~0.4.1",
-    "@opentelemetry/resource-detector-gcp": "~0.29.11",
+    "@opentelemetry/resource-detector-container": "~0.4.2",
+    "@opentelemetry/resource-detector-gcp": "~0.29.12",
     "@opentelemetry/sdk-metrics": "^1.26.0",
     "@opentelemetry/sdk-node": "~0.53.0",
     "@opentelemetry/sdk-trace-node": "^1.26.0",
@@ -32,7 +32,7 @@
     "rimraf": "6.0.1",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
