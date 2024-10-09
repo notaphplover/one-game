@@ -217,7 +217,7 @@ describe(useAuthForgot.name, () => {
             },
             validation: {},
           },
-          status: UseAuthForgotStatus.sendRequest,
+          status: UseAuthForgotStatus.creatingUserCode,
         },
         {
           handlers: {

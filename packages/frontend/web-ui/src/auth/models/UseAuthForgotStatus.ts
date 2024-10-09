@@ -1,5 +1,5 @@
 export enum UseAuthForgotStatus {
-  sendRequest = 'sendRequest',
+  creatingUserCode = 'creatingUserCode',
   backendError = 'backendError',
   idle = 'idle',
   success = 'success',

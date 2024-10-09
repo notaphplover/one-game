@@ -75,7 +75,7 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
         },
         validation: { ...authForgotData.form.validation },
       },
-      status: UseAuthForgotStatus.sendRequest,
+      status: UseAuthForgotStatus.creatingUserCode,
     });
 
     void triggerCreateUserCode({
