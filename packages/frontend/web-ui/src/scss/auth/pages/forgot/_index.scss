@@ -1,0 +1,48 @@
+@use '../../../base/variables' as variables;
+
+.forgot-form-grid {
+  background-color: var(--cg-text-primary);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--cg-bkg-primary-light);
+  margin: 0rem 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: variables.$sm) {
+  .forgot-form-grid {
+    margin: 0;
+    max-width: 450px;
+    padding: 2rem;
+  }
+}
+
+.forgot-form-title {
+  padding-bottom: 1rem;
+}
+
+.form-login-error {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.forgot-form-grid .form-text-fieldset {
+  margin-top: 1.5rem;
+}
+
+.forgot-form-grid .form-text-fieldset:hover {
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 10px var(--cg-bkg-secondary-light);
+}
+
+.forgot-error-container {
+  margin-top: 1rem;
+}
+
+.forgot-success-container {
+  margin-top: 1rem;
+}
+
+.forgot-form-button {
+  margin-top: 1.5rem;
+}
