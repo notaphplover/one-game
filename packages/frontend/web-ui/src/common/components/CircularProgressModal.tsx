@@ -1,8 +1,4 @@
-import {
-  Box,
-  CircularProgress as MuiCircularProgress,
-  Modal,
-} from '@mui/material';
+import { Box, CircularProgress, Modal } from '@mui/material';
 import React from 'react';
 
 interface CircularProgressParams {
@@ -15,7 +11,7 @@ export const CircularProgressModal = (
   return (
     <Modal open={params.open ?? false}>
       <Box className="circular-progress-bck">
-        <MuiCircularProgress color="primary" />
+        <CircularProgress color="primary" />
       </Box>
     </Modal>
   );

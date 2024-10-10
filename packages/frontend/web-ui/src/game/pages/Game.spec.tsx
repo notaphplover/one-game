@@ -36,6 +36,13 @@ describe(Game.name, () => {
         deckCardsAmount: undefined,
         game: undefined,
         isPending: false,
+        useCountdownResult: {
+          currentSeconds: 10,
+          durationSeconds: 30,
+          isRunning: true,
+          start: jest.fn(),
+          stop: jest.fn(),
+        },
         useGameCardsResult: {
           cards: [],
           hasNext: false,
@@ -105,6 +112,13 @@ describe(Game.name, () => {
         deckCardsAmount: undefined,
         game: gameFixture,
         isPending: false,
+        useCountdownResult: {
+          currentSeconds: 10,
+          durationSeconds: 30,
+          isRunning: true,
+          start: jest.fn(),
+          stop: jest.fn(),
+        },
         useGameCardsResult: {
           cards: [],
           hasNext: false,
@@ -151,7 +165,7 @@ describe(Game.name, () => {
   describe('when called, and useGame() returns a pending state with an undefined game', () => {
     let useGameResultFixture: UseGameResult;
 
-    let cardElements: HTMLCollection;
+    let gameAreaElements: HTMLCollection;
 
     beforeAll(() => {
       useGameResultFixture = {
@@ -159,6 +173,13 @@ describe(Game.name, () => {
         deckCardsAmount: undefined,
         game: undefined,
         isPending: true,
+        useCountdownResult: {
+          currentSeconds: 10,
+          durationSeconds: 30,
+          isRunning: true,
+          start: jest.fn(),
+          stop: jest.fn(),
+        },
         useGameCardsResult: {
           cards: [],
           hasNext: false,
@@ -178,7 +199,7 @@ describe(Game.name, () => {
         </MemoryRouter>,
       );
 
-      cardElements = renderResult.getByTestId('game-area').children;
+      gameAreaElements = renderResult.getByTestId('game-area').children;
     });
 
     afterAll(() => {
@@ -195,8 +216,8 @@ describe(Game.name, () => {
       expect(CornieLayout).toHaveBeenCalledWith(expectedParams, {});
     });
 
-    it('should render two cards in the game area', () => {
-      expect(cardElements).toHaveLength(2);
+    it('should render two cards and a countdown in the game area', () => {
+      expect(gameAreaElements).toHaveLength(3);
     });
   });
 });

@@ -1,6 +1,10 @@
 import { models as apiModels } from '@cornie-js/api-models';
 import { useEffect, useState } from 'react';
 
+import {
+  useCountdown,
+  UseCountdownResult,
+} from '../../common/hooks/useCountdown';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
 import { CornieEventSource } from '../../common/http/services/CornieEventSource';
@@ -17,12 +21,14 @@ import { useGetGamesV1GameId } from './useGetGamesV1GameId';
 import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsSlotIdCards';
 
 const GAME_CURRENT_CARDS: number = 1;
+const MAX_SECONDS_PER_TURN: number = 30;
 
 export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
   deckCardsAmount: number | undefined;
   game: apiModels.GameV1 | undefined;
   isPending: boolean;
+  useCountdownResult: UseCountdownResult;
   useGameCardsResult: UseGameCardsResult;
 }
 
@@ -88,6 +94,10 @@ export const useGame = (): UseGameResult => {
     gameSlotIndexParam?.toString(),
   );
 
+  const useCountdownResult = useCountdown({
+    durationSeconds: MAX_SECONDS_PER_TURN,
+  });
+
   useEffect(() => {
     const game: apiModels.GameV1 | undefined =
       gamesV1GameIdResult?.isRight === true
@@ -120,7 +130,10 @@ export const useGame = (): UseGameResult => {
           messageEventsQueue,
           (gameSlotIndex: number): void => {
             if (gameSlotIndex === gameSlotIndexParam) {
+              useCountdownResult.start();
               void refetchGamesV1GameIdSlotsSlotIdCards();
+            } else {
+              useCountdownResult.stop();
             }
           },
         );
@@ -161,6 +174,7 @@ export const useGame = (): UseGameResult => {
     isPending:
       gamesV1GameIdResult === null ||
       gamesV1GameIdSlotsSlotIdCardsResult === null,
+    useCountdownResult,
     useGameCardsResult,
   };
 };
