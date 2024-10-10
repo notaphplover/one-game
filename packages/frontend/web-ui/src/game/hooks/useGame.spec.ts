@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../common/hooks/useCountdown');
 jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../../common/hooks/useUrlLikeLocation');
 jest.mock('../../user/hooks/useGetUserMe');
@@ -13,6 +14,10 @@ jest.mock('./useGetGamesV1GameIdSlotsSlotIdCards');
 import { models as apiModels } from '@cornie-js/api-models';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
+import {
+  useCountdown,
+  UseCountdownResult,
+} from '../../common/hooks/useCountdown';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
 import { CornieEventSource } from '../../common/http/services/CornieEventSource';
@@ -33,6 +38,7 @@ describe(useGame.name, () => {
   describe('when called, and queries return null result', () => {
     let gameIdFixture: string;
     let urlLikeLocationFixture: UrlLikeLocation;
+    let useCountdownResultFixture: UseCountdownResult;
     let useGameCardsResultFixture: UseGameCardsResult;
 
     let renderResult: RenderHookResult<UseGameResult, unknown>;
@@ -44,6 +50,14 @@ describe(useGame.name, () => {
         pathname: '/path',
         searchParams: new URLSearchParams(`?gameId=${gameIdFixture}`),
       } as Partial<UrlLikeLocation> as UrlLikeLocation;
+
+      useCountdownResultFixture = {
+        currentSeconds: 2,
+        durationSeconds: 30,
+        isRunning: true,
+        start: jest.fn(),
+        stop: jest.fn(),
+      };
 
       useGameCardsResultFixture = {
         cards: [],
@@ -72,6 +86,10 @@ describe(useGame.name, () => {
       ).mockReturnValueOnce({
         result: null,
       } as Partial<UseGetGamesV1GameIdSlotsSlotIdCardsResult> as UseGetGamesV1GameIdSlotsSlotIdCardsResult);
+
+      (useCountdown as jest.Mock<typeof useCountdown>).mockReturnValueOnce(
+        useCountdownResultFixture,
+      );
 
       (
         useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>
@@ -128,6 +146,7 @@ describe(useGame.name, () => {
         deckCardsAmount: undefined,
         game: undefined,
         isPending: true,
+        useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
       };
 
@@ -144,6 +163,7 @@ describe(useGame.name, () => {
     let urlLikeLocationFixture: UrlLikeLocation;
     let userFixture: apiModels.UserV1;
     let useGetGameSpecV1ResultFixture: UseGetGameSpecV1Result;
+    let useCountdownResultFixture: UseCountdownResult;
     let useGameCardsResultFixture: UseGameCardsResult;
 
     let renderResult: RenderHookResult<UseGameResult, unknown>;
@@ -234,6 +254,14 @@ describe(useGame.name, () => {
         setPrevious: jest.fn(),
       };
 
+      useCountdownResultFixture = {
+        currentSeconds: 2,
+        durationSeconds: 30,
+        isRunning: true,
+        start: jest.fn(),
+        stop: jest.fn(),
+      };
+
       (
         useUrlLikeLocation as jest.Mock<typeof useUrlLikeLocation>
       ).mockReturnValue(urlLikeLocationFixture);
@@ -270,6 +298,10 @@ describe(useGame.name, () => {
         },
       } as Partial<UseGetGamesV1GameIdSlotsSlotIdCardsResult> as UseGetGamesV1GameIdSlotsSlotIdCardsResult);
 
+      (useCountdown as jest.Mock<typeof useCountdown>).mockReturnValue(
+        useCountdownResultFixture,
+      );
+
       (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReturnValue(
         gameSlotIndexFixture,
       );
@@ -298,6 +330,7 @@ describe(useGame.name, () => {
           typeof useGetGamesV1GameIdSlotsSlotIdCards
         >
       ).mockReset();
+      (useCountdown as jest.Mock<typeof useCountdown>).mockReset();
       (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReset();
       (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReset();
       (useGameCards as jest.Mock<typeof useGameCards>).mockReset();
@@ -367,6 +400,7 @@ describe(useGame.name, () => {
         deckCardsAmount: 189,
         game: gameFixture,
         isPending: false,
+        useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
       };
 

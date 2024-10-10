@@ -6,6 +6,7 @@ import {
 import { Box, Button } from '@mui/material';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { Countdown } from '../../common/components/Countdown';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { PageNotFound } from '../../common/pages/PageNotFound';
 import { Card } from '../components/Card';
@@ -20,6 +21,7 @@ export const Game = (): React.JSX.Element => {
     deckCardsAmount,
     game,
     isPending,
+    useCountdownResult: { currentSeconds, durationSeconds, isRunning },
     useGameCardsResult: { cards, hasNext, hasPrevious, setNext, setPrevious },
   } = useGame();
 
@@ -38,6 +40,15 @@ export const Game = (): React.JSX.Element => {
       <Card card={currentCard} />
     );
 
+  const countDownElement: React.JSX.Element = isRunning ? (
+    <Countdown
+      currentSeconds={currentSeconds}
+      durationSeconds={durationSeconds}
+    />
+  ) : (
+    <Countdown />
+  );
+
   return (
     <>
       <CircularProgressModal open={isPending} />
@@ -50,6 +61,7 @@ export const Game = (): React.JSX.Element => {
             <Box component="div" className="game-area" data-testid="game-area">
               <ReversedCard text={(deckCardsAmount ?? '').toString()} />
               {currentCardElement}
+              {countDownElement}
             </Box>
             <Box component="div" className="player-area">
               <Box component="div" className="player-hand-pagination-container">
