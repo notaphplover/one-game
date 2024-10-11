@@ -82,6 +82,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             },
             skipCount: 0,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -127,6 +128,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             skipCount: 0,
             status: GameStatus.finished,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -189,6 +191,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             },
             skipCount: 0,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -234,6 +237,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             skipCount: 0,
             status: GameStatus.finished,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -296,6 +300,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             },
             skipCount: 0,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -341,6 +346,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             skipCount: 0,
             status: GameStatus.finished,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -403,6 +409,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             },
             skipCount: 0,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);
@@ -448,6 +455,7 @@ describe(GamePassTurnUpdateQueryFromGameBuilder.name, () => {
             skipCount: 0,
             status: GameStatus.finished,
             turn: activeGameFixture.state.turn + 1,
+            turnExpiresAt: expect.any(Date) as unknown as Date,
           };
 
           expect(result).toStrictEqual(expected);

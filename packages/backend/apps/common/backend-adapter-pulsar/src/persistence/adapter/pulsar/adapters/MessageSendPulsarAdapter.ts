@@ -37,9 +37,11 @@ export class MessageSendPulsarAdapter<TMessage>
     if (options.delivery !== undefined) {
       if (options.delivery.schedule !== undefined) {
         switch (options.delivery.schedule.kind) {
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           case MessageDeliveryScheduleKind.delay:
             producerMessage.deliverAfter = options.delivery.schedule.delayMs;
+            break;
+          case MessageDeliveryScheduleKind.time:
+            producerMessage.deliverAt = options.delivery.schedule.timeStamp;
             break;
         }
       }
