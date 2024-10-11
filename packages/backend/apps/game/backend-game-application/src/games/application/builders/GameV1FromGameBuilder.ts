@@ -126,6 +126,7 @@ export class GameV1FromGameBuilder
           this.#activeGameSlotV1FromActiveGameSlotBuilder.build(gameSlot),
         ),
         status: 'active',
+        turnExpiresAt: game.state.turnExpiresAt.toISOString(),
       },
     };
 

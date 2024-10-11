@@ -25,6 +25,7 @@ describe(cloneGame.name, () => {
           lastEventId: 'last-event-id',
           slots: [],
           status: 'active',
+          turnExpiresAt: '2020-01-01T00:00:00.000Z',
         },
       };
     });

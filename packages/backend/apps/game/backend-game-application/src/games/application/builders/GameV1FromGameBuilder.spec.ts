@@ -180,6 +180,7 @@ describe(GameV1FromGameBuilder.name, () => {
               lastEventId: gameFixture.state.lastGameActionId,
               slots: [activeGameSlotV1Fixture],
               status: 'active',
+              turnExpiresAt: gameFixture.state.turnExpiresAt.toISOString(),
             },
           };
 
@@ -287,6 +288,7 @@ describe(GameV1FromGameBuilder.name, () => {
               lastEventId: gameFixture.state.lastGameActionId,
               slots: [activeGameSlotV1Fixture],
               status: 'active',
+              turnExpiresAt: gameFixture.state.turnExpiresAt.toISOString(),
             },
           };
 
