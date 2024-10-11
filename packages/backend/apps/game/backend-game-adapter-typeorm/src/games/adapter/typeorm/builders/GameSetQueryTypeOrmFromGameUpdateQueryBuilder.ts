@@ -152,6 +152,10 @@ export class GameSetQueryTypeOrmFromGameUpdateQueryBuilder
       gameSetQueryTypeOrm.turn = gameUpdateQuery.turn;
     }
 
+    if (gameUpdateQuery.turnExpiresAt !== undefined) {
+      gameSetQueryTypeOrm.turnExpiresAt = gameUpdateQuery.turnExpiresAt;
+    }
+
     if (gameUpdateQuery.skipCount !== undefined) {
       gameSetQueryTypeOrm.skipCount = gameUpdateQuery.skipCount;
     }

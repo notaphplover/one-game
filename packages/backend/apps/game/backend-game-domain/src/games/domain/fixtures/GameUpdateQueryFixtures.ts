@@ -176,4 +176,13 @@ export class GameUpdateQueryFixtures {
 
     return fixture;
   }
+
+  public static get withTurnExpiresAt(): GameUpdateQuery {
+    const fixture: GameUpdateQuery = {
+      ...GameUpdateQueryFixtures.any,
+      turnExpiresAt: new Date('2020-01-01'),
+    };
+
+    return fixture;
+  }
 }
