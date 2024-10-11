@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('ajv/dist/2020');
+jest.mock('ajv-formats');
 
 import {
   JsonRootSchema202012,
