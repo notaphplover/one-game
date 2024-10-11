@@ -65,6 +65,7 @@ export class StartGameUpdateQueryFromGameBuilder
       skipCount: 0,
       status: GameStatus.active,
       turn: this.#gameService.getInitialTurn(),
+      turnExpiresAt: new Date(),
     };
 
     return gameUpdateQuery;

@@ -168,6 +168,7 @@ describe(StartGameUpdateQueryFromGameBuilder.name, () => {
           skipCount: 0,
           status: GameStatus.active,
           turn: initialTurnFixture,
+          turnExpiresAt: expect.any(Date) as unknown as Date,
         };
 
         expect(result).toStrictEqual(expected);
@@ -322,6 +323,7 @@ describe(StartGameUpdateQueryFromGameBuilder.name, () => {
           skipCount: 0,
           status: GameStatus.active,
           turn: initialTurnFixture,
+          turnExpiresAt: expect.any(Date) as unknown as Date,
         };
 
         expect(result).toStrictEqual(expected);
