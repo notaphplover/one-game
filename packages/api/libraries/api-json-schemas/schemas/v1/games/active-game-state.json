@@ -38,6 +38,10 @@
     "status": {
       "const": "active",
       "type": "string"
+    },
+    "turnExpiresAt": {
+      "format": "date-time",
+      "type": "string"
     }
   },
   "required": [
@@ -50,6 +54,7 @@
     "drawCount",
     "lastEventId",
     "slots",
-    "status"
+    "status",
+    "turnExpiresAt"
   ]
 }

@@ -129,6 +129,7 @@ export interface ActiveGameStateV1 {
   lastEventId: string | null;
   slots: ActiveGameSlotV1[];
   status: 'active';
+  turnExpiresAt: string;
 }
 export interface ActiveGameSlotV1 {
   cardsAmount: number;
