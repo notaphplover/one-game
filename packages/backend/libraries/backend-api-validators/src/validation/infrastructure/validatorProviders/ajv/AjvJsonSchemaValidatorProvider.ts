@@ -3,6 +3,7 @@ import {
   JsonRootSchema202012Object,
 } from '@cornie-js/json-schema-utils';
 import Ajv, { ErrorObject, ValidateFunction } from 'ajv/dist/2020';
+import addFormats from 'ajv-formats';
 
 import { Validator } from '../../../../common/application/modules/Validator';
 
@@ -15,6 +16,8 @@ export class AjvJsonSchemaValidatorProvider<TId extends string = string> {
   constructor(jsonSchemasBuildFn: () => Promise<JsonRootSchema202012[]>) {
     this.#idToValidatorMap = new Map();
     this.#ajvInstance = new Ajv();
+    addFormats(this.#ajvInstance);
+
     this.#initializeIsCalled = false;
 
     this.#jsonSchemasBuildFn = jsonSchemasBuildFn;

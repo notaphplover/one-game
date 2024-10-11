@@ -5,8 +5,9 @@
   },
   "description": "Backend api model validators",
   "dependencies": {
-    "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
+    "@cornie-js/backend-common": "workspace:*",
+    "ajv-formats": "^3.0.1",
     "ajv": "^8.17.1"
   },
   "devDependencies": {
