@@ -254,7 +254,7 @@ describe(GameFromGameDbBuilder.name, () => {
     });
   });
 
-  describe('having a started GameDb with null currentTurnSingleCardDraw', () => {
+  describe('having an active GameDb with null currentTurnSingleCardDraw', () => {
     let gameCardSpecArrayFixture: GameCardSpec[];
     let gameDbFixture: GameDb;
 
@@ -360,6 +360,7 @@ describe(GameFromGameDbBuilder.name, () => {
             slots: [gameSlotFixture],
             status: GameStatus.active,
             turn: gameDbFixture.turn as number,
+            turnExpiresAt: gameDbFixture.turnExpiresAt as Date,
           },
         };
 
@@ -474,6 +475,7 @@ describe(GameFromGameDbBuilder.name, () => {
             slots: [gameSlotFixture],
             status: GameStatus.active,
             turn: gameDbFixture.turn as number,
+            turnExpiresAt: gameDbFixture.turnExpiresAt as Date,
           },
         };
 

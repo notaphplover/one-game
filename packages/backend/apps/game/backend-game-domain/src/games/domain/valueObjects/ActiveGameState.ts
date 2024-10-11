@@ -21,4 +21,5 @@ export interface ActiveGameState {
   readonly slots: ActiveGameSlot[];
   readonly status: GameStatus.active;
   readonly turn: number;
+  readonly turnExpiresAt: Date;
 }

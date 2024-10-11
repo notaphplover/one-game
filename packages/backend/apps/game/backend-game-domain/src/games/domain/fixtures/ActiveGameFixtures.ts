@@ -33,6 +33,7 @@ export class ActiveGameFixtures {
         slots: [ActiveGameSlotFixtures.withPositionZero],
         status: GameStatus.active,
         turn: 1,
+        turnExpiresAt: new Date('2020-01-01'),
       },
     };
   }

@@ -91,6 +91,7 @@ export class GameDbFixtures {
     fixture.skipCount = 0;
     fixture.status = GameStatusDb.active;
     fixture.turn = 1;
+    fixture.turnExpiresAt = new Date('2020-01-01');
 
     return fixture;
   }
