@@ -48,7 +48,7 @@ import {
   gameTurnEndSignalMessageSendOutputPortSymbol,
 } from '../ports/output/GameTurnEndSignalMessageSendOutputPort';
 
-const GAME_TURN_SIGNAL_DELAY_MS: number = 30000;
+const GAME_TURN_DURATION_MS: number = 30000;
 
 @Injectable()
 export class NonStartedGameFilledEventHandler
@@ -307,7 +307,7 @@ export class NonStartedGameFilledEventHandler
         },
         delivery: {
           schedule: {
-            delayMs: GAME_TURN_SIGNAL_DELAY_MS,
+            delayMs: GAME_TURN_DURATION_MS,
             kind: MessageDeliveryScheduleKind.delay,
           },
         },

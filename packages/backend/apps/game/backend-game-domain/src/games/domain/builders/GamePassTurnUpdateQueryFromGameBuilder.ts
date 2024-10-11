@@ -8,6 +8,8 @@ import { GameDirection } from '../valueObjects/GameDirection';
 import { GameSpec } from '../valueObjects/GameSpec';
 import { GameStatus } from '../valueObjects/GameStatus';
 
+const GAME_TURN_DURATION_MS: number = 30000;
+
 @Injectable()
 export class GamePassTurnUpdateQueryFromGameBuilder
   implements Builder<GameUpdateQuery, [ActiveGame, GameSpec]>
@@ -22,6 +24,11 @@ export class GamePassTurnUpdateQueryFromGameBuilder
   }
 
   public build(game: ActiveGame, gameSpec: GameSpec): GameUpdateQuery {
+    const turnExpiresAt: Date = new Date();
+    turnExpiresAt.setMilliseconds(
+      turnExpiresAt.getMilliseconds() + GAME_TURN_DURATION_MS,
+    );
+
     const gameUpdateQuery: GameUpdateQuery = {
       currentPlayingSlotIndex: this.#getNextTurnPlayerIndex(game, gameSpec),
       currentTurnCardsDrawn: false,
@@ -35,6 +42,7 @@ export class GamePassTurnUpdateQueryFromGameBuilder
       },
       skipCount: 0,
       turn: game.state.turn + 1,
+      turnExpiresAt,
     };
 
     if (this.#isGameFinishedSpec.isSatisfiedBy(game)) {

@@ -3,6 +3,7 @@ import {
   MessageDeliveryOptions,
   MessageDeliverySchedule,
   MessageDeliveryScheduleKind,
+  MessageDeliveryTimeSchedule,
 } from './mail/application/models/MessageDeliveryOptions';
 import { MessageSendOptions } from './mail/application/models/MessageSendOptions';
 import {
@@ -14,6 +15,7 @@ export type {
   MessageDeliveryDelaySchedule,
   MessageDeliveryOptions,
   MessageDeliverySchedule,
+  MessageDeliveryTimeSchedule,
   MessageSendOptions,
   MessageSendOutputPort,
 };
