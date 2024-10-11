@@ -24,4 +24,5 @@ export interface GameUpdateQuery {
   skipCount?: number;
   status?: GameStatus;
   turn?: number;
+  turnExpiresAt?: Date;
 }

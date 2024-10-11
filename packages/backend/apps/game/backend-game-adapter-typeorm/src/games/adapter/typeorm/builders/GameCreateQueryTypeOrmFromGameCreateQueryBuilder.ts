@@ -28,6 +28,8 @@ export class GameCreateQueryTypeOrmFromGameCreateQueryBuilder
       isPublic: gameCreateQuery.isPublic,
       name: gameCreateQuery.name ?? null,
       status: GameStatusDb.nonStarted,
+      turn: null,
+      turnExpiresAt: null,
     };
   }
 }

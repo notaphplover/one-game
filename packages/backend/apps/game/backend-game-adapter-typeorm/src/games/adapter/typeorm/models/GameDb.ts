@@ -182,4 +182,11 @@ export class GameDb {
     type: 'smallint',
   })
   public readonly turn!: number | null;
+
+  @Column({
+    name: 'turn_expires_at',
+    nullable: true,
+    type: 'timestamptz',
+  })
+  public readonly turnExpiresAt!: Date | null;
 }

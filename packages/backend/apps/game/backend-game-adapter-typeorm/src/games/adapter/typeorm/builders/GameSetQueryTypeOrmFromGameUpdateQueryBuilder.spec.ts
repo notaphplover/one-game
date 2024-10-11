@@ -633,5 +633,37 @@ describe(GameSetQueryTypeOrmFromGameUpdateQueryBuilder.name, () => {
         });
       });
     });
+
+    describe('having a GameUpdateQuery with turnExpiresAt', () => {
+      let gameUpdateQueryFixture: GameUpdateQuery;
+
+      beforeAll(() => {
+        gameUpdateQueryFixture = GameUpdateQueryFixtures.withTurnExpiresAt;
+      });
+
+      describe('when called', () => {
+        let result: unknown;
+
+        beforeAll(() => {
+          result = gameSetQueryTypeOrmFromGameUpdateQueryBuilder.build(
+            gameUpdateQueryFixture,
+          );
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should return a QueryDeepPartialEntity<GameDb>', () => {
+          const expectedProperties: Partial<QueryDeepPartialEntity<GameDb>> = {
+            turnExpiresAt: gameUpdateQueryFixture.turnExpiresAt as Date,
+          };
+
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedProperties),
+          );
+        });
+      });
+    });
   });
 });

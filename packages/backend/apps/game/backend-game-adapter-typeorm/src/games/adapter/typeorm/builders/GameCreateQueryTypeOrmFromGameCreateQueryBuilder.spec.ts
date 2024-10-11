@@ -52,6 +52,8 @@ describe(GameCreateQueryTypeOrmFromGameCreateQueryBuilder.name, () => {
             isPublic: gameCreateQueryFixture.isPublic,
             name: gameCreateQueryFixture.name as string,
             status: GameStatusDb.nonStarted,
+            turn: null,
+            turnExpiresAt: null,
           };
 
           expect(result).toStrictEqual(expected);
@@ -94,6 +96,8 @@ describe(GameCreateQueryTypeOrmFromGameCreateQueryBuilder.name, () => {
             isPublic: gameCreateQueryFixture.isPublic,
             name: null,
             status: GameStatusDb.nonStarted,
+            turn: null,
+            turnExpiresAt: null,
           };
 
           expect(result).toStrictEqual(expected);
