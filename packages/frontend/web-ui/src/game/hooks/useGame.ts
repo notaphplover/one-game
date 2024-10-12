@@ -149,7 +149,12 @@ export const useGame = (): UseGameResult => {
     }
 
     if (messageEventsQueue.length > 0) {
-      setMessageEventsQueue([]);
+      setMessageEventsQueue(
+        (
+          currentMessageEventsQueue: [string, apiModels.GameEventV2][],
+        ): [string, apiModels.GameEventV2][] =>
+          currentMessageEventsQueue.slice(messageEventsQueue.length),
+      );
     }
   }, [messageEventsQueue]);
 
