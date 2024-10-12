@@ -2,6 +2,8 @@ import { models as apiModels } from '@cornie-js/api-models';
 
 import { cloneGame } from './cloneGame';
 
+const GAME_TURN_MS: number = 30000;
+
 function buildFinishedGame(
   game: apiModels.ActiveGameV1,
 ): apiModels.FinishedGameV1 {
@@ -78,6 +80,11 @@ export function handleGameMessageEvents(
         } else {
           updatedGame.state.currentPlayingSlotIndex =
             messageEvent.nextPlayingSlotIndex;
+
+          const date: Date = new Date();
+          date.setMilliseconds(date.getMilliseconds() + GAME_TURN_MS);
+
+          updatedGame.state.turnExpiresAt = date.toISOString();
 
           onTurnChange(updatedGame.state.currentPlayingSlotIndex);
         }

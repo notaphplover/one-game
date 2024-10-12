@@ -577,6 +577,10 @@ describe(handleGameMessageEvents.name, () => {
       let result: unknown;
 
       beforeAll(() => {
+        jest.useFakeTimers({
+          now: new Date('2020-01-02'),
+        });
+
         (cloneGame as jest.Mock<typeof cloneGame>).mockReturnValueOnce(
           buildGameFixture(),
         );
@@ -591,6 +595,7 @@ describe(handleGameMessageEvents.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+        jest.useRealTimers();
       });
 
       it('should call cloneGame', () => {
@@ -619,6 +624,7 @@ describe(handleGameMessageEvents.name, () => {
             currentPlayingSlotIndex:
               turnPassedGameEventV2.nextPlayingSlotIndex as number,
             lastEventId: eventId,
+            turnExpiresAt: '2020-01-02T00:00:30.000Z',
           },
         };
 
