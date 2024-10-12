@@ -155,7 +155,7 @@ describe(useGame.name, () => {
     });
   });
 
-  describe('when called, and queries return non null results', () => {
+  describe('when called, and queries return non null results, and getGameSlotIndex returns playing slot index', () => {
     let cornieEventSourceMock: jest.Mocked<CornieEventSource>;
     let gameCardsFixture: apiModels.CardArrayV1;
     let gameFixture: apiModels.ActiveGameV1;
@@ -206,7 +206,7 @@ describe(useGame.name, () => {
         },
       };
 
-      gameSlotIndexFixture = 0;
+      gameSlotIndexFixture = gameFixture.state.currentPlayingSlotIndex;
 
       userFixture = {
         active: true,
@@ -359,7 +359,7 @@ describe(useGame.name, () => {
       expect(getGameSlotIndex).toHaveBeenCalledTimes(2);
       expect(getGameSlotIndex).toHaveBeenNthCalledWith(
         1,
-        undefined,
+        gameFixture,
         userFixture,
       );
       expect(getGameSlotIndex).toHaveBeenNthCalledWith(
