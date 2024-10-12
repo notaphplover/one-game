@@ -11,8 +11,12 @@ export interface UseCountdownResult {
   currentSeconds: number;
   durationSeconds: number;
   isRunning: boolean;
-  start: () => void;
+  start: (seconds?: number) => void;
   stop: () => void;
+}
+
+function isNatural(number: number): boolean {
+  return number > 0 && number === Math.floor(number);
 }
 
 export const useCountdown = (
@@ -21,16 +25,22 @@ export const useCountdown = (
   const [currentSeconds, setCurrentSeconds] = useState(params.durationSeconds);
   const [timerId, setTimerId] = useState<number>();
 
-  if (
-    params.durationSeconds <= 0 ||
-    params.durationSeconds !== Math.floor(params.durationSeconds)
-  ) {
+  if (!isNatural(params.durationSeconds)) {
     throw new Error(
       'Unable to initialize hook: durationSeconds must be a natural number',
     );
   }
 
-  const start: () => void = (): void => {
+  const start: (seconds?: number) => void = (seconds?: number): void => {
+    if (seconds !== undefined) {
+      const naturalSeconds: number = Math.min(
+        params.durationSeconds,
+        Math.max(1, Math.floor(seconds)),
+      );
+
+      setCurrentSeconds(naturalSeconds);
+    }
+
     if (timerId !== undefined) {
       clearInterval(timerId);
     }
