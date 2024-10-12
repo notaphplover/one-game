@@ -30,10 +30,18 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
   const [triggerCreateUserCode, createUserCodeResult] =
     cornieApi.useCreateUsersV1EmailCodeMutation();
 
+  const [triggerDeleteUserCode, deleteUserCodeResult] =
+    cornieApi.useDeleteUsersV1EmailCodeMutation();
+
   const userCodeCreatedResult: Either<
     SerializableAppError | SerializedError,
     undefined
   > | null = mapUseQueryHookResultV2(createUserCodeResult);
+
+  const userCodeDeletedResult: Either<
+    SerializableAppError | SerializedError,
+    undefined
+  > | null = mapUseQueryHookResultV2(deleteUserCodeResult);
 
   const updateForm = (fields: AuthForgotFormFields): void => {
     const updatedAuthForgotData: UseAuthForgotData = { ...authForgotData };
@@ -65,6 +73,26 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
     }
 
     return formValidation;
+  }
+
+  function deleteUserCode(): void {
+    setAuthForgotData({
+      form: {
+        fields: {
+          ...authForgotData.form.fields,
+        },
+        validation: { ...authForgotData.form.validation },
+      },
+      status: UseAuthForgotStatus.deletingUserCode,
+    });
+
+    void triggerDeleteUserCode({
+      params: [
+        {
+          email: authForgotData.form.fields.email,
+        },
+      ],
+    });
   }
 
   function createUserCode(): void {
@@ -110,7 +138,7 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
         status: authForgotData.status,
       });
 
-      createUserCode();
+      deleteUserCode();
     } else {
       setAuthForgotData({
         form: {
@@ -134,6 +162,34 @@ export const useAuthForgot = (): [UseAuthForgotData, UseAuthForgotActions] => {
     }
     return errorMessage;
   }
+
+  useEffect(() => {
+    if (userCodeDeletedResult !== null) {
+      if (userCodeDeletedResult.isRight) {
+        setAuthForgotData({
+          form: {
+            fields: {
+              ...authForgotData.form.fields,
+            },
+            validation: { ...authForgotData.form.validation },
+          },
+          status: UseAuthForgotStatus.creatingUserCode,
+        });
+        createUserCode();
+      } else {
+        setAuthForgotData({
+          form: {
+            errorMessage: buildErrorMessage(userCodeDeletedResult.value),
+            fields: {
+              ...authForgotData.form.fields,
+            },
+            validation: { ...authForgotData.form.validation },
+          },
+          status: UseAuthForgotStatus.backendError,
+        });
+      }
+    }
+  }, [deleteUserCodeResult]);
 
   useEffect(() => {
     if (userCodeCreatedResult !== null) {

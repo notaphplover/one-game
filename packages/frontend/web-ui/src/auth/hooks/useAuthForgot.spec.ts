@@ -7,7 +7,7 @@ jest.mock('../helpers/getCreateUserCodeErrorMessage');
 jest.mock('../../common/helpers/isSerializableAppError');
 
 import {
-  CreateUsersV1EmailCodeArgs,
+  DeleteUsersV1EmailCodeArgs,
   SerializableAppError,
 } from '@cornie-js/frontend-api-rtk-query';
 import { AppErrorKind } from '@cornie-js/frontend-common';
@@ -19,7 +19,7 @@ import { isSerializableAppError } from '../../common/helpers/isSerializableAppEr
 import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Left, Right } from '../../common/models/Either';
-import { HTTP_CONFLICT_USER_ERROR_MESSAGE } from '../helpers/createUserErrorMessages';
+import { HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE } from '../helpers/createUserCodeErrorMessage';
 import { getCreateUserCodeErrorMessage } from '../helpers/getCreateUserCodeErrorMessage';
 import { validateEmail } from '../helpers/validateEmail';
 import { UseAuthForgotActions } from '../models/UseAuthForgotActions';
@@ -31,6 +31,9 @@ describe(useAuthForgot.name, () => {
   describe('when called', () => {
     let useCreateUsersV1EmailCodeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useCreateUsersV1EmailCodeMutation>
+    >;
+    let useDeleteUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useDeleteUsersV1EmailCodeMutation>
     >;
 
     let renderResult: RenderHookResult<
@@ -47,6 +50,14 @@ describe(useAuthForgot.name, () => {
         },
       ];
 
+      useDeleteUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValue(null);
@@ -56,6 +67,12 @@ describe(useAuthForgot.name, () => {
           typeof cornieApi.useCreateUsersV1EmailCodeMutation
         >
       ).mockReturnValue(useCreateUsersV1EmailCodeMutationResultMock);
+
+      (
+        cornieApi.useDeleteUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useDeleteUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useDeleteUsersV1EmailCodeMutationResultMock);
 
       renderResult = renderHook(() => useAuthForgot());
     });
@@ -74,11 +91,24 @@ describe(useAuthForgot.name, () => {
       ).toHaveBeenCalledWith();
     });
 
+    it('should return cornieApi.useDeleteUsersV1EmailCodeMutation()', () => {
+      expect(cornieApi.useDeleteUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(
+        cornieApi.useDeleteUsersV1EmailCodeMutation,
+      ).toHaveBeenCalledWith();
+    });
+
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        2,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
       );
     });
 
@@ -113,6 +143,9 @@ describe(useAuthForgot.name, () => {
     let useCreateUsersV1EmailCodeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useCreateUsersV1EmailCodeMutation>
     >;
+    let useDeleteUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useDeleteUsersV1EmailCodeMutation>
+    >;
 
     let emailFixture: string;
     let eventMock: jest.Mocked<React.FormEvent>;
@@ -124,6 +157,14 @@ describe(useAuthForgot.name, () => {
 
     beforeAll(() => {
       useCreateUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      useDeleteUsersV1EmailCodeMutationResultMock = [
         jest.fn(),
         {
           reset: jest.fn(),
@@ -148,6 +189,12 @@ describe(useAuthForgot.name, () => {
           typeof cornieApi.useCreateUsersV1EmailCodeMutation
         >
       ).mockReturnValue(useCreateUsersV1EmailCodeMutationResultMock);
+
+      (
+        cornieApi.useDeleteUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useDeleteUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useDeleteUsersV1EmailCodeMutationResultMock);
 
       (validateEmail as jest.Mocked<typeof validateEmail>).mockReturnValueOnce({
         isRight: true,
@@ -189,23 +236,20 @@ describe(useAuthForgot.name, () => {
       jest.resetAllMocks();
     });
 
-    it('should call triggerCreateUserCode()', () => {
-      const expected: CreateUsersV1EmailCodeArgs = {
+    it('should call triggerDeleteUserCode()', () => {
+      const expected: DeleteUsersV1EmailCodeArgs = {
         params: [
           {
             email: emailFixture,
           },
-          {
-            kind: 'resetPassword',
-          },
         ],
       };
 
-      const [triggerCreateUserCode] =
-        useCreateUsersV1EmailCodeMutationResultMock;
+      const [triggerDeleteUserCode] =
+        useDeleteUsersV1EmailCodeMutationResultMock;
 
-      expect(triggerCreateUserCode).toHaveBeenCalledTimes(1);
-      expect(triggerCreateUserCode).toHaveBeenCalledWith(expected);
+      expect(triggerDeleteUserCode).toHaveBeenCalledTimes(1);
+      expect(triggerDeleteUserCode).toHaveBeenCalledWith(expected);
     });
 
     it('should return expected result', () => {
@@ -217,7 +261,7 @@ describe(useAuthForgot.name, () => {
             },
             validation: {},
           },
-          status: UseAuthForgotStatus.creatingUserCode,
+          status: UseAuthForgotStatus.deletingUserCode,
         },
         {
           handlers: {
@@ -235,10 +279,184 @@ describe(useAuthForgot.name, () => {
     });
   });
 
-  describe('when called, and cornieApi.useCreateUsersV1EmailCodeMutation() returns Right user code result', () => {
+  describe('when called, and cornieApi.useDeleteUsersV1EmailCodeMutation() returns Left result error', () => {
     let useCreateUsersV1EmailCodeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useCreateUsersV1EmailCodeMutation>
     >;
+    let useDeleteUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useDeleteUsersV1EmailCodeMutation>
+    >;
+
+    let userCodeDeletedResultFixture: Left<SerializableAppError>;
+    let errorMessageFixture: string;
+
+    let renderResult: RenderHookResult<
+      [UseAuthForgotData, UseAuthForgotActions],
+      unknown
+    >;
+
+    beforeAll(() => {
+      useCreateUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      useDeleteUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      userCodeDeletedResultFixture = {
+        isRight: false,
+        value: {
+          kind: AppErrorKind.unprocessableOperation,
+          message: 'message-fixture',
+        },
+      };
+
+      errorMessageFixture = HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE;
+
+      (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
+        .mockReturnValueOnce(userCodeDeletedResultFixture)
+        .mockReturnValueOnce(userCodeDeletedResultFixture);
+
+      (
+        isSerializableAppError as unknown as jest.Mock<
+          typeof isSerializableAppError
+        >
+      ).mockReturnValue(true);
+
+      (
+        getCreateUserCodeErrorMessage as jest.Mock<
+          typeof getCreateUserCodeErrorMessage
+        >
+      ).mockReturnValue(errorMessageFixture);
+
+      (
+        cornieApi.useCreateUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useCreateUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useCreateUsersV1EmailCodeMutationResultMock);
+
+      (
+        cornieApi.useDeleteUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useDeleteUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useDeleteUsersV1EmailCodeMutationResultMock);
+
+      renderResult = renderHook(() => useAuthForgot());
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+    });
+
+    it('should return cornieApi.useCreateUsersV1EmailCodeMutation()', () => {
+      expect(cornieApi.useCreateUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
+        2,
+      );
+      expect(
+        cornieApi.useCreateUsersV1EmailCodeMutation,
+      ).toHaveBeenCalledWith();
+    });
+
+    it('should return cornieApi.useDeleteUsersV1EmailCodeMutation()', () => {
+      expect(cornieApi.useDeleteUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
+        2,
+      );
+      expect(
+        cornieApi.useDeleteUsersV1EmailCodeMutation,
+      ).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(4);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        1,
+        useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        2,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        3,
+        useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        4,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
+      );
+    });
+
+    it('should call isSerializableAppError()', () => {
+      expect(isSerializableAppError).toHaveBeenCalledTimes(2);
+      expect(isSerializableAppError).toHaveBeenNthCalledWith(
+        1,
+        userCodeDeletedResultFixture.value,
+      );
+      expect(isSerializableAppError).toHaveBeenNthCalledWith(
+        2,
+        userCodeDeletedResultFixture.value,
+      );
+    });
+
+    it('should call getCreateUserCodeErrorMessage()', () => {
+      expect(getCreateUserCodeErrorMessage).toHaveBeenCalledTimes(2);
+      expect(getCreateUserCodeErrorMessage).toHaveBeenNthCalledWith(
+        1,
+        userCodeDeletedResultFixture.value.kind,
+      );
+      expect(isSerializableAppError).toHaveBeenNthCalledWith(
+        2,
+        userCodeDeletedResultFixture.value,
+      );
+    });
+
+    it('should return expected result', () => {
+      const expectedResult: [UseAuthForgotData, UseAuthForgotActions] = [
+        {
+          form: {
+            errorMessage: HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE,
+            fields: {
+              email: '',
+            },
+            validation: {},
+          },
+          status: UseAuthForgotStatus.backendError,
+        },
+        {
+          handlers: {
+            onEmailChanged: expect.any(Function) as unknown as (
+              event: React.ChangeEvent<HTMLInputElement>,
+            ) => void,
+            onSubmit: expect.any(Function) as unknown as (
+              event: React.FormEvent,
+            ) => void,
+          },
+        },
+      ];
+
+      expect(renderResult.result.current).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe('when called, and cornieApi.useDeleteUsersV1EmailCodeMutation() returns Right and cornieApi.useCreateUsersV1EmailCodeMutation() returns Right result user code', () => {
+    let useCreateUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useCreateUsersV1EmailCodeMutation>
+    >;
+    let useDeleteUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useDeleteUsersV1EmailCodeMutation>
+    >;
+
+    let userCodeDeletedResultFixture: Right<undefined>;
 
     let userCodeCreatedResultFixture: Right<undefined>;
 
@@ -256,6 +474,19 @@ describe(useAuthForgot.name, () => {
         },
       ];
 
+      useDeleteUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
+      userCodeDeletedResultFixture = {
+        isRight: true,
+        value: undefined,
+      };
+
       userCodeCreatedResultFixture = {
         isRight: true,
         value: undefined,
@@ -263,13 +494,21 @@ describe(useAuthForgot.name, () => {
 
       (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
         .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCodeCreatedResultFixture);
+        .mockReturnValueOnce(userCodeDeletedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture)
+        .mockReturnValueOnce(userCodeDeletedResultFixture);
 
       (
         cornieApi.useCreateUsersV1EmailCodeMutation as jest.Mock<
           typeof cornieApi.useCreateUsersV1EmailCodeMutation
         >
       ).mockReturnValue(useCreateUsersV1EmailCodeMutationResultMock);
+
+      (
+        cornieApi.useDeleteUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useDeleteUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useDeleteUsersV1EmailCodeMutationResultMock);
 
       renderResult = renderHook(() => useAuthForgot());
     });
@@ -279,7 +518,16 @@ describe(useAuthForgot.name, () => {
       jest.resetAllMocks();
     });
 
-    it('should call cornieApi.useCreateUsersV1EmailCodeMutation()', () => {
+    it('should call cornieApi.useDeleteUsersV1EmailCodeMutationResultMock()', () => {
+      expect(cornieApi.useCreateUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
+        2,
+      );
+      expect(
+        cornieApi.useDeleteUsersV1EmailCodeMutation,
+      ).toHaveBeenCalledWith();
+    });
+
+    it('should call cornieApi.useCreateUsersV1EmailCodeMutationResultMock()', () => {
       expect(cornieApi.useCreateUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
         2,
       );
@@ -289,14 +537,22 @@ describe(useAuthForgot.name, () => {
     });
 
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(4);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         2,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        3,
         useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        4,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
       );
     });
 
@@ -327,11 +583,15 @@ describe(useAuthForgot.name, () => {
     });
   });
 
-  describe('when called, and cornieApi.useCreateUsersV1Mutation() returns Left user error', () => {
+  describe('when called, and cornieApi.useDeleteUsersV1EmailCodeMutation() returns Right and cornieApi.useCreateUsersV1EmailCodeMutation() returns Left user error', () => {
     let useCreateUsersV1EmailCodeMutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useCreateUsersV1EmailCodeMutation>
     >;
+    let useDeleteUsersV1EmailCodeMutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useDeleteUsersV1EmailCodeMutation>
+    >;
 
+    let userCodeDeletedResultFixture: Right<undefined>;
     let userCodeCreatedResultFixture: Left<SerializableAppError>;
     let errorMessageFixture: string;
 
@@ -349,19 +609,34 @@ describe(useAuthForgot.name, () => {
         },
       ];
 
+      useDeleteUsersV1EmailCodeMutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
       userCodeCreatedResultFixture = {
         isRight: false,
         value: {
-          kind: AppErrorKind.entityConflict,
+          kind: AppErrorKind.unprocessableOperation,
           message: 'message-fixture',
         },
       };
 
-      errorMessageFixture = HTTP_CONFLICT_USER_ERROR_MESSAGE;
+      userCodeDeletedResultFixture = {
+        isRight: true,
+        value: undefined,
+      };
+
+      errorMessageFixture = HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE;
 
       (mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>)
         .mockReturnValueOnce(userCodeCreatedResultFixture)
-        .mockReturnValueOnce(userCodeCreatedResultFixture);
+        .mockReturnValueOnce(userCodeDeletedResultFixture)
+        .mockReturnValueOnce(userCodeCreatedResultFixture)
+        .mockReturnValueOnce(userCodeDeletedResultFixture);
 
       (
         isSerializableAppError as unknown as jest.Mock<
@@ -381,6 +656,12 @@ describe(useAuthForgot.name, () => {
         >
       ).mockReturnValue(useCreateUsersV1EmailCodeMutationResultMock);
 
+      (
+        cornieApi.useDeleteUsersV1EmailCodeMutation as jest.Mock<
+          typeof cornieApi.useDeleteUsersV1EmailCodeMutation
+        >
+      ).mockReturnValue(useDeleteUsersV1EmailCodeMutationResultMock);
+
       renderResult = renderHook(() => useAuthForgot());
     });
 
@@ -398,15 +679,32 @@ describe(useAuthForgot.name, () => {
       ).toHaveBeenCalledWith();
     });
 
+    it('should return cornieApi.useDeleteUsersV1EmailCodeMutation()', () => {
+      expect(cornieApi.useDeleteUsersV1EmailCodeMutation).toHaveBeenCalledTimes(
+        2,
+      );
+      expect(
+        cornieApi.useDeleteUsersV1EmailCodeMutation,
+      ).toHaveBeenCalledWith();
+    });
+
     it('should call mapUseQueryHookResultV2()', () => {
-      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(4);
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         1,
         useCreateUsersV1EmailCodeMutationResultMock[1],
       );
       expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
         2,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        3,
         useCreateUsersV1EmailCodeMutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        4,
+        useDeleteUsersV1EmailCodeMutationResultMock[1],
       );
     });
 
@@ -430,7 +728,7 @@ describe(useAuthForgot.name, () => {
       const expectedResult: [UseAuthForgotData, UseAuthForgotActions] = [
         {
           form: {
-            errorMessage: HTTP_CONFLICT_USER_ERROR_MESSAGE,
+            errorMessage: HTTP_UNPROCESSABLE_USERCODE_ERROR_MESSAGE,
             fields: {
               email: '',
             },
