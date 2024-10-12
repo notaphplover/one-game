@@ -130,8 +130,12 @@ export const useGame = (): UseGameResult => {
           messageEventsQueue,
           (gameSlotIndex: number): void => {
             if (gameSlotIndex === gameSlotIndexParam) {
-              useCountdownResult.start();
               void refetchGamesV1GameIdSlotsSlotIdCards();
+            }
+          },
+          (gameSlotIndex: number): void => {
+            if (gameSlotIndex === gameSlotIndexParam) {
+              useCountdownResult.start();
             } else {
               useCountdownResult.stop();
             }

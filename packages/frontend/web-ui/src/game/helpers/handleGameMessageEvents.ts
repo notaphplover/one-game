@@ -34,6 +34,7 @@ export function handleGameMessageEvents(
   game: apiModels.ActiveGameV1,
   messageEventsQueue: [string, apiModels.GameEventV2][],
   onCardsChange: (gameSlotIndex: number) => void,
+  onTurnChange: (gameSlotIndex: number) => void,
 ): apiModels.ActiveGameV1 | apiModels.FinishedGameV1 {
   const updatedGame: apiModels.ActiveGameV1 = cloneGame(game);
 
@@ -77,6 +78,8 @@ export function handleGameMessageEvents(
         } else {
           updatedGame.state.currentPlayingSlotIndex =
             messageEvent.nextPlayingSlotIndex;
+
+          onTurnChange(updatedGame.state.currentPlayingSlotIndex);
         }
 
         break;

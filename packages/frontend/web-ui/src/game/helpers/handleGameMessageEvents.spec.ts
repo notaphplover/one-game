@@ -12,6 +12,7 @@ describe(handleGameMessageEvents.name, () => {
     let gameFixture: apiModels.ActiveGameV1;
     let messageEventsQueueFixture: [];
     let onCardsChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
+    let onTurnChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
 
     beforeAll(() => {
       gameFixture = {
@@ -37,6 +38,7 @@ describe(handleGameMessageEvents.name, () => {
       messageEventsQueueFixture = [];
 
       onCardsChangeMock = jest.fn();
+      onTurnChangeMock = jest.fn();
     });
 
     describe('when called', () => {
@@ -51,6 +53,7 @@ describe(handleGameMessageEvents.name, () => {
           gameFixture,
           messageEventsQueueFixture,
           onCardsChangeMock,
+          onTurnChangeMock,
         );
       });
 
@@ -73,6 +76,7 @@ describe(handleGameMessageEvents.name, () => {
     let buildGameFixture: () => apiModels.ActiveGameV1;
     let messageEventsQueueFixture: [[string, apiModels.CardsDrawnGameEventV2]];
     let onCardsChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
+    let onTurnChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
 
     beforeAll(() => {
       buildGameFixture = () => ({
@@ -113,6 +117,7 @@ describe(handleGameMessageEvents.name, () => {
       ];
 
       onCardsChangeMock = jest.fn();
+      onTurnChangeMock = jest.fn();
     });
 
     describe('when called', () => {
@@ -127,6 +132,7 @@ describe(handleGameMessageEvents.name, () => {
           buildGameFixture(),
           messageEventsQueueFixture,
           onCardsChangeMock,
+          onTurnChangeMock,
         );
       });
 
@@ -182,6 +188,7 @@ describe(handleGameMessageEvents.name, () => {
     let buildGameFixture: () => apiModels.ActiveGameV1;
     let messageEventsQueueFixture: [[string, apiModels.CardsPlayedGameEventV2]];
     let onCardsChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
+    let onTurnChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
 
     beforeAll(() => {
       buildGameFixture = () => ({
@@ -230,6 +237,7 @@ describe(handleGameMessageEvents.name, () => {
       ];
 
       onCardsChangeMock = jest.fn();
+      onTurnChangeMock = jest.fn();
     });
 
     describe('when called', () => {
@@ -244,6 +252,7 @@ describe(handleGameMessageEvents.name, () => {
           buildGameFixture(),
           messageEventsQueueFixture,
           onCardsChangeMock,
+          onTurnChangeMock,
         );
       });
 
@@ -296,6 +305,7 @@ describe(handleGameMessageEvents.name, () => {
     let buildGameFixture: () => apiModels.ActiveGameV1;
     let messageEventsQueueFixture: [[string, apiModels.CardsPlayedGameEventV2]];
     let onCardsChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
+    let onTurnChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
 
     beforeAll(() => {
       buildGameFixture = () => ({
@@ -346,6 +356,7 @@ describe(handleGameMessageEvents.name, () => {
       ];
 
       onCardsChangeMock = jest.fn();
+      onTurnChangeMock = jest.fn();
     });
 
     describe('when called', () => {
@@ -360,6 +371,7 @@ describe(handleGameMessageEvents.name, () => {
           buildGameFixture(),
           messageEventsQueueFixture,
           onCardsChangeMock,
+          onTurnChangeMock,
         );
       });
 
@@ -420,6 +432,7 @@ describe(handleGameMessageEvents.name, () => {
     let buildGameFixture: () => apiModels.ActiveGameV1;
     let messageEventsQueueFixture: [[string, apiModels.TurnPassedGameEventV2]];
     let onCardsChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
+    let onTurnChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
 
     beforeAll(() => {
       buildGameFixture = () => ({
@@ -460,6 +473,7 @@ describe(handleGameMessageEvents.name, () => {
       ];
 
       onCardsChangeMock = jest.fn();
+      onTurnChangeMock = jest.fn();
     });
 
     describe('when called', () => {
@@ -474,6 +488,7 @@ describe(handleGameMessageEvents.name, () => {
           buildGameFixture(),
           messageEventsQueueFixture,
           onCardsChangeMock,
+          onTurnChangeMock,
         );
       });
 
@@ -514,6 +529,7 @@ describe(handleGameMessageEvents.name, () => {
     let buildGameFixture: () => apiModels.ActiveGameV1;
     let messageEventsQueueFixture: [[string, apiModels.TurnPassedGameEventV2]];
     let onCardsChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
+    let onTurnChangeMock: jest.Mock<(gameSlotIndex: number) => void>;
 
     beforeAll(() => {
       buildGameFixture = () => ({
@@ -554,6 +570,7 @@ describe(handleGameMessageEvents.name, () => {
       ];
 
       onCardsChangeMock = jest.fn();
+      onTurnChangeMock = jest.fn();
     });
 
     describe('when called', () => {
@@ -568,6 +585,7 @@ describe(handleGameMessageEvents.name, () => {
           buildGameFixture(),
           messageEventsQueueFixture,
           onCardsChangeMock,
+          onTurnChangeMock,
         );
       });
 
@@ -578,6 +596,15 @@ describe(handleGameMessageEvents.name, () => {
       it('should call cloneGame', () => {
         expect(cloneGame).toHaveBeenCalledTimes(1);
         expect(cloneGame).toHaveBeenCalledWith(buildGameFixture());
+      });
+
+      it('should call onTurnChange()', () => {
+        const [[, messageEventFixture]] = messageEventsQueueFixture;
+
+        expect(onTurnChangeMock).toHaveBeenCalledTimes(1);
+        expect(onTurnChangeMock).toHaveBeenCalledWith(
+          messageEventFixture.nextPlayingSlotIndex,
+        );
       });
 
       it('should return game', () => {
