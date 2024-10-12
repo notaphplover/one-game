@@ -33,10 +33,12 @@ import { getGamesV1GameIdSlotsSlotIdCards } from './games/queries/getGamesV1Game
 import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
 import { CreateUsersV1Args } from './users/models/CreateUsersV1Args';
 import { CreateUsersV1EmailCodeArgs } from './users/models/CreateUsersV1EmailCodeArgs';
+import { DeleteUsersV1EmailCodeArgs } from './users/models/DeleteUsersV1EmailCodeArgs';
 import { GetUsersV1MeArgs } from './users/models/GetUsersV1MeArgs';
 import { UpdateUsersV1MeArgs } from './users/models/UpdateUsersV1MeArgs';
 import { createUsersV1 } from './users/mutations/createUsersV1';
 import { createUsersV1EmailCode } from './users/mutations/createUsersV1EmailCode';
+import { deleteUsersV1EmailCode } from './users/mutations/deleteUsersV1EmailCode';
 import { updateUsersV1Me } from './users/mutations/updateUsersV1Me';
 import { getUsersV1Me } from './users/queries/getUsersV1Me';
 import { getUsersV1MeDetail } from './users/queries/getUsersV1MeDetail';
@@ -47,6 +49,7 @@ export type {
   CreateGamesV1SlotsArgs,
   CreateUsersV1Args,
   CreateUsersV1EmailCodeArgs,
+  DeleteUsersV1EmailCodeArgs,
   GetGamesGameIdSpecsV1Args,
   GetGamesSpecsV1Args,
   GetGamesV1Args,
@@ -130,6 +133,12 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
         CreateUsersV1EmailCodeArgs
       >({
         queryFn: createUsersV1EmailCode(options.httpClient),
+      }),
+      deleteUsersV1EmailCode: build.mutation<
+        undefined,
+        DeleteUsersV1EmailCodeArgs
+      >({
+        queryFn: deleteUsersV1EmailCode(options.httpClient),
       }),
       getGamesGameIdSpecsV1: build.query<
         apiModels.GameSpecV1,
