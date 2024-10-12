@@ -5,6 +5,7 @@ import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
 
 export interface UseGetUserMeResult {
+  queryResult: unknown;
   result: Either<string, apiModels.UserV1> | null;
 }
 
@@ -17,5 +18,8 @@ export function useGetUserMe(): UseGetUserMeResult {
     useGetUsersV1MeQueryResult,
   );
 
-  return { result };
+  return {
+    queryResult: useGetUsersV1MeQueryResult,
+    result,
+  };
 }

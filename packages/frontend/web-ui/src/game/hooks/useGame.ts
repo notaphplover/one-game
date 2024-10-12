@@ -22,6 +22,7 @@ import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsS
 
 const GAME_CURRENT_CARDS: number = 1;
 const MAX_SECONDS_PER_TURN: number = 30;
+const MS_PER_SECOND: number = 1000;
 
 export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
@@ -68,7 +69,8 @@ export const useGame = (): UseGameResult => {
   const gameIdParam: string | undefined =
     url.searchParams.get('gameId') ?? undefined;
 
-  const { result: usersV1MeResult } = useGetUserMe();
+  const { queryResult: usersV1MeQueryResult, result: usersV1MeResult } =
+    useGetUserMe();
 
   const { queryResult: gamesV1GameIdQueryResult, result: gamesV1GameIdResult } =
     useGetGamesV1GameId(gameIdParam);
@@ -81,9 +83,14 @@ export const useGame = (): UseGameResult => {
 
   const [eventSource, setEventSource] = useState<CornieEventSource>();
 
+  const gameOrUndefined: apiModels.GameV1 | undefined =
+    gamesV1GameIdResult?.isRight === true
+      ? gamesV1GameIdResult.value
+      : undefined;
+
   const gameSlotIndexParam: number | undefined =
     usersV1MeResult?.isRight === true
-      ? getGameSlotIndex(game, usersV1MeResult.value)
+      ? getGameSlotIndex(gameOrUndefined, usersV1MeResult.value)
       : undefined;
 
   const {
@@ -99,20 +106,39 @@ export const useGame = (): UseGameResult => {
   });
 
   useEffect(() => {
-    const game: apiModels.GameV1 | undefined =
+    const gameResult: apiModels.GameV1 | undefined =
       gamesV1GameIdResult?.isRight === true
         ? gamesV1GameIdResult.value
         : undefined;
 
-    if (isActiveGame(game)) {
-      setGame(game);
+    if (isActiveGame(gameResult)) {
+      if (game !== gameResult) {
+        setGame(gameResult);
+      }
 
       if (eventSource === undefined) {
-        setEventSource(buildEventSource(game, setMessageEventsQueue));
+        setEventSource(buildEventSource(gameResult, setMessageEventsQueue));
+      }
+
+      if (
+        gameResult.state.currentPlayingSlotIndex === gameSlotIndexParam &&
+        !useCountdownResult.isRunning
+      ) {
+        const seconds = Math.floor(
+          (new Date(gameResult.state.turnExpiresAt).getTime() -
+            new Date().getTime()) /
+            MS_PER_SECOND,
+        );
+
+        if (seconds > 0) {
+          useCountdownResult.start(seconds);
+        }
       }
     } else {
-      if (isFinishedGame(game)) {
-        setGame(game);
+      if (isFinishedGame(gameResult)) {
+        if (game !== gameResult) {
+          setGame(gameResult);
+        }
 
         if (eventSource !== undefined) {
           eventSource.close();
@@ -120,7 +146,7 @@ export const useGame = (): UseGameResult => {
         }
       }
     }
-  }, [gamesV1GameIdQueryResult]);
+  }, [gamesV1GameIdQueryResult, usersV1MeQueryResult]);
 
   useEffect(() => {
     if (isActiveGame(game)) {
@@ -130,8 +156,12 @@ export const useGame = (): UseGameResult => {
           messageEventsQueue,
           (gameSlotIndex: number): void => {
             if (gameSlotIndex === gameSlotIndexParam) {
-              useCountdownResult.start();
               void refetchGamesV1GameIdSlotsSlotIdCards();
+            }
+          },
+          (gameSlotIndex: number): void => {
+            if (gameSlotIndex === gameSlotIndexParam) {
+              useCountdownResult.start();
             } else {
               useCountdownResult.stop();
             }
@@ -149,7 +179,12 @@ export const useGame = (): UseGameResult => {
     }
 
     if (messageEventsQueue.length > 0) {
-      setMessageEventsQueue([]);
+      setMessageEventsQueue(
+        (
+          currentMessageEventsQueue: [string, apiModels.GameEventV2][],
+        ): [string, apiModels.GameEventV2][] =>
+          currentMessageEventsQueue.slice(messageEventsQueue.length),
+      );
     }
   }, [messageEventsQueue]);
 

@@ -67,6 +67,7 @@ describe(useGetUserMe.name, () => {
 
     it('should return expected result', () => {
       const expected: UseGetUserMeResult = {
+        queryResult: useQueryStateResultFixture,
         result: mapUseQueryHookResultResult,
       };
 
