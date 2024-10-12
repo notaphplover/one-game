@@ -72,6 +72,7 @@ describe(useGame.name, () => {
       ).mockReturnValueOnce(urlLikeLocationFixture);
 
       (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValueOnce({
+        queryResult: Symbol(),
         result: null,
       });
 
@@ -268,6 +269,7 @@ describe(useGame.name, () => {
       ).mockReturnValue(urlLikeLocationFixture);
 
       (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValue({
+        queryResult: Symbol(),
         result: {
           isRight: true,
           value: userFixture,

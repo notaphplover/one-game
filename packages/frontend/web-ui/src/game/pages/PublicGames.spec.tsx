@@ -39,6 +39,7 @@ describe(PublicGames.name, () => {
       ).mockReturnValueOnce({ result: null });
 
       (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValueOnce({
+        queryResult: Symbol(),
         result: null,
       });
 
