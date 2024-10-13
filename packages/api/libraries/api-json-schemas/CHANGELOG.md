@@ -1,5 +1,11 @@
 # @cornie-js/api-json-schemas
 
+## 0.4.0
+
+### Minor Changes
+
+- 3ac73bf: update ActiveGameStateV1 with turnExpiresAt.
+
 ## 0.3.0
 
 ### Minor Changes

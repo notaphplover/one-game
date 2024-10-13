@@ -62,5 +62,5 @@
     "test:uncommitted": "pnpm run test --changedSince=HEAD",
     "test:unit:js": "pnpm run test:js --selectProjects Unit"
   },
-  "version": "0.3.0"
+  "version": "0.3.1"
 }

@@ -1,5 +1,12 @@
 # @cornie-js/backend-user-adapter-typeorm
 
+## 0.2.2
+
+### Patch Changes
+
+- 9fc87aa: Updated `UserCodeCreateQueryTypeOrmFromUserCodeCreateQueryBuilder`to set kind
+  - @cornie-js/backend-user-application@0.3.1
+
 ## 0.2.1
 
 ### Patch Changes

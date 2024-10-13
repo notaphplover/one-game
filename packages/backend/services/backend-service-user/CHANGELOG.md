@@ -1,5 +1,19 @@
 # @cornie-js/backend-service-user
 
+## 0.4.1
+
+### Patch Changes
+
+- 9fc87aa: Updated POST `/v1/users/email/{email}/code` to trigger proper reset password mail messages
+- Updated dependencies [c51ec2c]
+- Updated dependencies [8ff6a38]
+- Updated dependencies [9fc87aa]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/api-models@0.4.0
+  - @cornie-js/backend-http@0.4.0
+  - @cornie-js/backend-user-adapter-typeorm@0.2.2
+  - @cornie-js/backend-user-application@0.3.1
+
 ## 0.4.0
 
 ### Minor Changes

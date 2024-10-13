@@ -1,5 +1,12 @@
 # @cornie-js/backend-api-validators
 
+## 0.2.2
+
+### Patch Changes
+
+- 762b683: Updated AjvJsonSchemaValidatorProvider to support json-schema formats
+  - @cornie-js/api-json-schemas-provider@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes

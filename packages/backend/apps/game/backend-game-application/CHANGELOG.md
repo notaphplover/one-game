@@ -1,5 +1,28 @@
 # @cornie-js/backend-game-application
 
+## 0.4.0
+
+### Minor Changes
+
+- c51ec2c: Updated CardsPlayedGameEventV2 with currentColor, currentDirection and drawCount
+- 3ac73bf: update ActiveGameStateV1 with turnExpiresAt.
+
+### Patch Changes
+
+- 380be3a: Fixed GameIdUpdateQueryV1Handler.\_getUpdatedGame to require a TransactionWrapper
+- Updated dependencies [c51ec2c]
+- Updated dependencies [c51ec2c]
+- Updated dependencies [22302d5]
+- Updated dependencies [8ff6a38]
+- Updated dependencies [30ac61b]
+- Updated dependencies [762b683]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/backend-game-domain@0.4.0
+  - @cornie-js/api-models@0.4.0
+  - @cornie-js/backend-http@0.4.0
+  - @cornie-js/backend-api-validators@0.2.2
+  - @cornie-js/api-http-client@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes
