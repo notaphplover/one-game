@@ -1,5 +1,17 @@
 # @cornie-js/backend-user-application
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [8ff6a38]
+- Updated dependencies [762b683]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/api-models@0.4.0
+  - @cornie-js/backend-http@0.4.0
+  - @cornie-js/backend-api-validators@0.2.2
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,26 @@
 # @cornie-js/backend-test-e2e
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [c51ec2c]
+- Updated dependencies [c51ec2c]
+- Updated dependencies [85f368b]
+- Updated dependencies [22302d5]
+- Updated dependencies [380be3a]
+- Updated dependencies [30ac61b]
+- Updated dependencies [30ac61b]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/backend-game-domain@0.4.0
+  - @cornie-js/backend-game-adapter-typeorm@0.4.0
+  - @cornie-js/api-models@0.4.0
+  - @cornie-js/backend-game-application@0.4.0
+  - @cornie-js/eventsource@0.2.0
+  - @cornie-js/api-http-client@0.3.0
+  - @cornie-js/backend-game-adapter-ioredis@0.2.2
+
 ## 0.1.3
 
 ### Patch Changes

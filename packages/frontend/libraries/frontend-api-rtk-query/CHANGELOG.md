@@ -1,5 +1,21 @@
 # @cornie-js/frontend-api-rtk-query
 
+## 0.3.0
+
+### Minor Changes
+
+- f5cff6f: Added missing query arg types
+- 988e920: Added getGamesV1GameId query
+- a507d51: Added getGamesV1GameIdSlotsSlotIdCards query
+- 57138d0: Added `getGamesGameIdSpecsV1` query.
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/api-models@0.4.0
+  - @cornie-js/api-http-client@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

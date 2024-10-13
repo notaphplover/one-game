@@ -1,5 +1,20 @@
 # @cornie-js/backend-game-adapter-pulsar
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [c51ec2c]
+- Updated dependencies [a77ce49]
+- Updated dependencies [22302d5]
+- Updated dependencies [380be3a]
+- Updated dependencies [30ac61b]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/backend-game-domain@0.4.0
+  - @cornie-js/backend-game-application@0.4.0
+  - @cornie-js/backend-adapter-pulsar@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes

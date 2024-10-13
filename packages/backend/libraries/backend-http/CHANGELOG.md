@@ -1,5 +1,17 @@
 # @cornie-js/backend-http
 
+## 0.4.0
+
+### Minor Changes
+
+- 8ff6a38: Updated FastifySseReplyFromResponseBuilder with custom cors origins
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/api-models@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes

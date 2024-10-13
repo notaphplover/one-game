@@ -1,5 +1,16 @@
 # @cornie-js/backend-gateway-application
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [8ff6a38]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/api-models@0.4.0
+  - @cornie-js/backend-http@0.4.0
+  - @cornie-js/api-http-client@0.3.0
+
 ## 0.3.1
 
 ### Patch Changes

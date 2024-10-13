@@ -1,5 +1,12 @@
 # @cornie-js/api-models
 
+## 0.4.0
+
+### Minor Changes
+
+- c51ec2c: Updated CardsPlayedGameEventV2 with currentColor, currentDirection and drawCount
+- 3ac73bf: update ActiveGameStateV1 with turnExpiresAt.
+
 ## 0.3.0
 
 ### Minor Changes

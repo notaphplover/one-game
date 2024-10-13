@@ -1,5 +1,23 @@
 # @cornie-js/backend-game-adapter-typeorm
 
+## 0.4.0
+
+### Minor Changes
+
+- c51ec2c: Updated PlayCardsGameActionDbPayloadV1 with currentColor, currentDirection and drawCount
+- 30ac61b: update GameDb with turnExpiresAt
+
+### Patch Changes
+
+- Updated dependencies [c51ec2c]
+- Updated dependencies [c51ec2c]
+- Updated dependencies [22302d5]
+- Updated dependencies [380be3a]
+- Updated dependencies [30ac61b]
+- Updated dependencies [3ac73bf]
+  - @cornie-js/backend-game-domain@0.4.0
+  - @cornie-js/backend-game-application@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes

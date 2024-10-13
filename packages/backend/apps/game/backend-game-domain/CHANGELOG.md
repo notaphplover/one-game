@@ -1,5 +1,13 @@
 # @cornie-js/backend-game-domain
 
+## 0.4.0
+
+### Minor Changes
+
+- c51ec2c: Updated PlayCardsGameActionCreateQuery with stateUpdate
+- 22302d5: Updated ActiveGame with turnExpiresAt.
+- 30ac61b: update GameUpdateQuery with turnExpiresAt
+
 ## 0.3.0
 
 ### Minor Changes
