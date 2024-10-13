@@ -19,7 +19,7 @@ describe(mapUseQueryHookResultV2.name, () => {
     ]
   >([
     [
-      'with isFetching true',
+      'with isFetching true and no data',
       {
         error: undefined,
         isFetching: true,
@@ -28,13 +28,39 @@ describe(mapUseQueryHookResultV2.name, () => {
       null,
     ],
     [
-      'with isLoading true',
+      'with isFetching true and not undefined data',
+      {
+        data: 'data-fixture',
+        error: undefined,
+        isFetching: true,
+        isLoading: false,
+      },
+      {
+        isRight: true,
+        value: 'data-fixture',
+      },
+    ],
+    [
+      'with isLoading true and no data',
       {
         error: undefined,
         isFetching: false,
         isLoading: true,
       },
       null,
+    ],
+    [
+      'with isLoading true and not undefined data',
+      {
+        data: 'data-fixture',
+        error: undefined,
+        isFetching: false,
+        isLoading: true,
+      },
+      {
+        isRight: true,
+        value: 'data-fixture',
+      },
     ],
     [
       'with isLoading false and result.data.isUninitialized true',

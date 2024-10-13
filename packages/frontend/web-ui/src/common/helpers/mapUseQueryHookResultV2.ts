@@ -17,7 +17,12 @@ export function mapUseQueryHookResultV2<TResult>(
   return result.isLoading ||
     result.isFetching === true ||
     result.isUninitialized === true
-    ? null
+    ? result.data === undefined
+      ? null
+      : {
+          isRight: true,
+          value: result.data as TResult,
+        }
     : result.error === undefined
       ? {
           isRight: true,
