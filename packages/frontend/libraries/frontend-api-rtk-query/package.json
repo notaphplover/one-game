@@ -8,7 +8,7 @@
     "@cornie-js/api-http-client": "workspace:*",
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/frontend-common": "workspace:*",
-    "@reduxjs/toolkit": "2.2.8",
+    "@reduxjs/toolkit": "2.3.0",
     "async-mutex": "0.5.0"
   },
   "devDependencies": {
