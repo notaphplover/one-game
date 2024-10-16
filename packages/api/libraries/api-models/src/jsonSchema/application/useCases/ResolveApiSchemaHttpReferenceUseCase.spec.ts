@@ -1,7 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import * as jestMock from 'jest-mock';
-
 jest.mock('node:http');
 
 import http from 'node:http';
@@ -38,7 +36,7 @@ describe(ResolveApiSchemaHttpReferenceUseCase.name, () => {
           fileContentBufferFixture = Buffer.from(fileContentFixture);
 
           (
-            http.request as jestMock.Mock<typeof http.request>
+            http.request as jest.Mock<typeof http.request>
           ).mockImplementationOnce(
             (
               _: unknown,
