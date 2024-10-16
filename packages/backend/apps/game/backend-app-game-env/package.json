@@ -5,7 +5,7 @@
   },
   "description": "Backend game app env",
   "dependencies": {
-    "@nestjs/common": "^10.4.4",
+    "@nestjs/common": "^10.4.5",
     "@cornie-js/backend-env": "workspace:*",
     "@cornie-js/backend-jwt": "workspace:*",
     "envalid": "^8.0.0"
