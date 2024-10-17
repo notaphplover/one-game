@@ -4,7 +4,7 @@ import {
   HTTP_FORBIDDEN_UPD_USER_ME_ERROR_MESSAGE,
   HTTP_UNAUTHORIZED_UPD_USER_ME_ERROR_MESSAGE,
   UNEXPECTED_UPD_USER_ME_ERROR_MESSAGE,
-} from './createUpdateUserMeErrorMessage';
+} from './updateUserMeErrorMessage';
 
 export function getUpdateUserMeErrorMessage(
   errorKind: AppErrorKind | undefined,

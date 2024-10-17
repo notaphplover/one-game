@@ -2,12 +2,12 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AppErrorKind } from '@cornie-js/frontend-common';
 
+import { getUpdateUserMeErrorMessage } from './getUpdateUserMeErrorMessage';
 import {
   HTTP_FORBIDDEN_UPD_USER_ME_ERROR_MESSAGE,
   HTTP_UNAUTHORIZED_UPD_USER_ME_ERROR_MESSAGE,
   UNEXPECTED_UPD_USER_ME_ERROR_MESSAGE,
-} from './createUpdateUserMeErrorMessage';
-import { getUpdateUserMeErrorMessage } from './getUpdateUserMeErrorMessage';
+} from './updateUserMeErrorMessage';
 
 describe(getUpdateUserMeErrorMessage.name, () => {
   describe.each<[string, AppErrorKind | undefined, string]>([
