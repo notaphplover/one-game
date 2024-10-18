@@ -25,7 +25,6 @@ import {
 import { UseResetPasswordStatus } from '../models/UseResetPasswordStatus';
 
 const CODE_QUERY_PARAM: string = 'code';
-const TYPE_ERROR_MUTATION: string = 'auth';
 
 export const useResetPassword = (): [
   UseResetPasswordData,
@@ -204,24 +203,24 @@ export const useResetPassword = (): [
     }
   }
 
-  function buildErrorMessage(
-    value: unknown,
-    typeError: string | undefined,
-  ): string {
+  function buildAuthErrorMessage(value: unknown): string {
     let errorMessage: string;
 
     if (isSerializableAppError(value)) {
-      if (typeError === TYPE_ERROR_MUTATION) {
-        errorMessage = getCreateAuthErrorMessage(value.kind);
-      } else {
-        errorMessage = getUpdateUserMeErrorMessage(value.kind);
-      }
+      errorMessage = getCreateAuthErrorMessage(value.kind);
     } else {
-      if (typeError === TYPE_ERROR_MUTATION) {
-        errorMessage = getCreateAuthErrorMessage(undefined);
-      } else {
-        errorMessage = getUpdateUserMeErrorMessage(undefined);
-      }
+      errorMessage = getCreateAuthErrorMessage(undefined);
+    }
+    return errorMessage;
+  }
+
+  function buildUpdateUserErrorMessage(value: unknown): string {
+    let errorMessage: string;
+
+    if (isSerializableAppError(value)) {
+      errorMessage = getUpdateUserMeErrorMessage(value.kind);
+    } else {
+      errorMessage = getUpdateUserMeErrorMessage(undefined);
     }
     return errorMessage;
   }
@@ -261,10 +260,7 @@ export const useResetPassword = (): [
       } else {
         setResetPasswordData({
           form: {
-            errorMessage: buildErrorMessage(
-              createAuthResult.value,
-              TYPE_ERROR_MUTATION,
-            ),
+            errorMessage: buildAuthErrorMessage(createAuthResult.value),
             fields: {
               ...resetPasswordData.form.fields,
             },
@@ -291,7 +287,7 @@ export const useResetPassword = (): [
       } else {
         setResetPasswordData({
           form: {
-            errorMessage: buildErrorMessage(updateUserResult.value, undefined),
+            errorMessage: buildUpdateUserErrorMessage(updateUserResult.value),
             fields: {
               ...resetPasswordData.form.fields,
             },
