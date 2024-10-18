@@ -8,4 +8,5 @@ export enum PageName {
   register,
   userMe,
   forgot,
+  reset,
 }

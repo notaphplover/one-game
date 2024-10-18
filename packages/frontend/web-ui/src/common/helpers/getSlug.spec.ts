@@ -13,6 +13,8 @@ describe(getSlug.name, () => {
     [PageName.publicGames, '/games/public'],
     [PageName.register, '/auth/register'],
     [PageName.userMe, '/users/me'],
+    [PageName.forgot, '/auth/forgot'],
+    [PageName.reset, '/auth/reset-password'],
   ])(
     'having a page name "%s"',
     (pageName: PageName, expectedResult: string) => {
