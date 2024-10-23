@@ -45,7 +45,7 @@
     "@jest/globals": "29.7.0",
     "@jest/types": "29.6.3",
     "@testing-library/react": "^16.0.1",
-    "@types/react": "18.3.11",
+    "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@typescript-eslint/eslint-plugin": "8.11.0",
     "@typescript-eslint/parser": "8.11.0",
@@ -59,6 +59,6 @@
     "prettier": "3.3.3",
     "sass": "1.80.3",
     "typescript": "5.6.3",
-    "vite": "5.4.9"
+    "vite": "5.4.10"
   }
 }
