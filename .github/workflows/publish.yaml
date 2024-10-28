@@ -3,18 +3,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 on:
-  pull_request:
-    branches:
-      - 'changeset-release/**'
-    types:
-      - closed
   workflow_dispatch:
 jobs:
   publish:
     name: Bump package versions and publish to npm.
     environment: CI
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,7 +23,7 @@ jobs:
           app_id: ${{ vars.GH_APP_ID }}
           private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
-      - name: Create Release Pull Request
+      - name: Create Release Pull or publish changes
         uses: changesets/action@v1
         with:
           commit: "chore: bump package versions"
