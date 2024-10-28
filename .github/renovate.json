@@ -5,7 +5,7 @@
     "pnpm": "9"
   },
   "extends": ["config:base", ":disableRateLimiting"],
-  "ignoreDeps": ["eslint-plugin-import"],
+  "ignoreDeps": [],
   "kubernetes": {
     "fileMatch": ["k8s/.+\\.yaml$"]
   },
@@ -36,7 +36,5 @@
   "rangeStrategy": "bump",
   "rebaseWhen": "conflicted",
   "semanticCommits": "enabled",
-  "schedule": [
-    "at any time"
-  ]
+  "schedule": ["at any time"]
 }
