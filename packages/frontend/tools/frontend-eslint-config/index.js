@@ -107,7 +107,12 @@ function buildBaseConfig() {
       '@typescript-eslint/typedef': ['off'],
       '@typescript-eslint/unified-signatures': 'error',
       '@typescript-eslint/strict-boolean-expressions': 'error',
-      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': [
+        'error',
+        {
+          considerDefaultExhaustiveForUnions: true,
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
