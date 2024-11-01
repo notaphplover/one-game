@@ -12,7 +12,7 @@
     "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.13.0",
+    "@eslint/js": "9.14.0",
     "@jest/globals": "29.7.0",
     "@stryker-mutator/core": "8.6.0",
     "@stryker-mutator/jest-runner": "8.6.0",
@@ -20,7 +20,7 @@
     "@types/node": "22.8.6",
     "@typescript-eslint/eslint-plugin": "8.12.2",
     "@typescript-eslint/parser": "8.12.2",
-    "eslint": "9.13.0",
+    "eslint": "9.14.0",
     "fastify": "^5.1.0",
     "fastify4": "npm:fastify@^4.28.1",
     "jest": "29.7.0",
