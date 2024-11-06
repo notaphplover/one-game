@@ -1,4 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { MouseEvent } from 'react';
 
 import { getCardColorClassName } from '../helpers/getCardColorClassName';
 import { getImageCardUrl } from '../helpers/getImageCardUrl';
@@ -14,7 +15,7 @@ export const DrawCard = (params: DrawCardOptions) => {
     <ImageCard
       image={getImageCardUrl(params.card)}
       colorClass={getCardColorClassName(params.card.color)}
-      onDoubleClick={() => params.onDoubleClick}
+      onDoubleClick={params.onDoubleClick}
     ></ImageCard>
   );
 };

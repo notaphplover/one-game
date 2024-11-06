@@ -12,7 +12,7 @@ export const BaseCard = (params: BaseCardOptions) => {
     <Box
       component="div"
       className="cornie-card"
-      onDoubleClick={() => params.onDoubleClick}
+      onDoubleClick={params.onDoubleClick}
     >
       <Box
         component="div"

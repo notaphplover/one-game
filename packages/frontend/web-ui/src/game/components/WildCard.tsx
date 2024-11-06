@@ -1,4 +1,5 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { MouseEvent } from 'react';
 
 import { getImageCardUrl } from '../helpers/getImageCardUrl';
 import { ImageCard } from './ImageCard';
@@ -14,7 +15,7 @@ export const WildCard = (params: WildCardOptions) => {
     <ImageCard
       image={getImageCardUrl(params.card)}
       colorClass={params.colorClass}
-      onDoubleClick={() => params.onDoubleClick}
+      onDoubleClick={params.onDoubleClick}
     ></ImageCard>
   );
 };
