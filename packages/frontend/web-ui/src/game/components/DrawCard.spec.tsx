@@ -19,6 +19,7 @@ describe(DrawCard.name, () => {
   let drawCardOptionsFixture: DrawCardOptions;
   let classNameFixture: string;
   let imageUrlFixture: string;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     drawCardOptionsFixture = {
@@ -30,6 +31,7 @@ describe(DrawCard.name, () => {
 
     classNameFixture = 'blue-card';
     imageUrlFixture = 'image-url-fixture';
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -46,7 +48,10 @@ describe(DrawCard.name, () => {
       ).mockReturnValueOnce(imageUrlFixture);
 
       const renderResult: RenderResult = render(
-        <DrawCard card={drawCardOptionsFixture.card}></DrawCard>,
+        <DrawCard
+          card={drawCardOptionsFixture.card}
+          onDoubleClick={() => onDoubleClickMock}
+        ></DrawCard>,
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(

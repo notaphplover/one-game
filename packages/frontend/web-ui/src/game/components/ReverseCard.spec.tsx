@@ -19,6 +19,7 @@ describe(ReverseCard.name, () => {
   let reverseCardOptionsFixture: ReverseCardOptions;
   let classNameFixture: string;
   let imageUrlFixture: string;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     reverseCardOptionsFixture = {
@@ -30,6 +31,7 @@ describe(ReverseCard.name, () => {
 
     classNameFixture = 'blue-card';
     imageUrlFixture = 'image-url-fixture';
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -46,7 +48,10 @@ describe(ReverseCard.name, () => {
       ).mockReturnValueOnce(imageUrlFixture);
 
       const renderResult: RenderResult = render(
-        <ReverseCard card={reverseCardOptionsFixture.card}></ReverseCard>,
+        <ReverseCard
+          card={reverseCardOptionsFixture.card}
+          onDoubleClick={() => onDoubleClickMock}
+        ></ReverseCard>,
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(

@@ -6,12 +6,14 @@ import { ImageCard, ImageCardOptions } from './ImageCard';
 
 describe(ImageCard.name, () => {
   let imageCardOptionsFixture: ImageCardOptions;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     imageCardOptionsFixture = {
       colorClass: 'blue-card',
       image: '/assets/image.png',
     };
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -23,6 +25,7 @@ describe(ImageCard.name, () => {
         <ImageCard
           colorClass={imageCardOptionsFixture.colorClass}
           image={imageCardOptionsFixture.image}
+          onDoubleClick={() => onDoubleClickMock}
         ></ImageCard>,
       );
 

@@ -6,12 +6,14 @@ import { TextCard, TextCardOptions } from './TextCard';
 
 describe(TextCard.name, () => {
   let textCardOptionsFixture: TextCardOptions;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     textCardOptionsFixture = {
       colorClass: 'blue-card',
       text: '4',
     };
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -23,6 +25,7 @@ describe(TextCard.name, () => {
         <TextCard
           colorClass={textCardOptionsFixture.colorClass}
           text={textCardOptionsFixture.text}
+          onDoubleClick={() => onDoubleClickMock}
         ></TextCard>,
       );
 

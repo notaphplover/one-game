@@ -19,6 +19,7 @@ describe(SkipCard.name, () => {
   let skipCardOptionsFixture: SkipCardOptions;
   let classNameFixture: string;
   let imageUrlFixture: string;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     skipCardOptionsFixture = {
@@ -30,6 +31,7 @@ describe(SkipCard.name, () => {
 
     classNameFixture = 'blue-card';
     imageUrlFixture = 'image-url-fixture';
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -46,7 +48,10 @@ describe(SkipCard.name, () => {
       ).mockReturnValueOnce(imageUrlFixture);
 
       const renderResult: RenderResult = render(
-        <SkipCard card={skipCardOptionsFixture.card}></SkipCard>,
+        <SkipCard
+          card={skipCardOptionsFixture.card}
+          onDoubleClick={() => onDoubleClickMock}
+        ></SkipCard>,
       );
 
       const cardColor: HTMLElement = renderResult.container.querySelector(

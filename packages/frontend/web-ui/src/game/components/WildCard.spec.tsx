@@ -16,6 +16,7 @@ import { WildCard, WildCardOptions } from './WildCard';
 describe(WildCard.name, () => {
   let wildCardOptionsFixture: WildCardOptions;
   let imageUrlFixture: string;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     wildCardOptionsFixture = {
@@ -26,6 +27,7 @@ describe(WildCard.name, () => {
     };
 
     imageUrlFixture = 'image-url-fixture';
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -41,6 +43,7 @@ describe(WildCard.name, () => {
         <WildCard
           card={wildCardOptionsFixture.card}
           colorClass={wildCardOptionsFixture.colorClass}
+          onDoubleClick={() => onDoubleClickMock}
         ></WildCard>,
       );
 

@@ -7,10 +7,12 @@ import { BaseCard } from './BaseCard';
 describe(BaseCard.name, () => {
   let childrenMock: jest.Mock<() => React.JSX.Element | React.JSX.Element[]>;
   let colorClassFixture: string;
+  let onDoubleClickMock: jest.Mock<() => void> | undefined;
 
   beforeAll(() => {
     childrenMock = jest.fn();
     colorClassFixture = 'blue-card';
+    onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -21,6 +23,7 @@ describe(BaseCard.name, () => {
         <BaseCard
           children={childrenMock()}
           colorClass={colorClassFixture}
+          onDoubleClick={() => onDoubleClickMock}
         ></BaseCard>,
       );
 
