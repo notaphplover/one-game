@@ -40,6 +40,7 @@ describe(Card.name, () => {
           kind: 'normal',
           number: 5,
         },
+        onDoubleClick: () => undefined,
       };
     });
 
@@ -55,7 +56,7 @@ describe(Card.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <Card card={cardOptionsFixture.card}></Card>,
+          <Card {...cardOptionsFixture} />,
         );
 
         chosenCard = renderResult.container.querySelector(
@@ -87,6 +88,7 @@ describe(Card.name, () => {
           color: 'blue',
           kind: 'draw',
         },
+        onDoubleClick: () => undefined,
       };
     });
 
@@ -102,7 +104,7 @@ describe(Card.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <Card card={cardOptionsFixture.card}></Card>,
+          <Card {...cardOptionsFixture} />,
         );
 
         chosenCard = renderResult.container.querySelector(
@@ -134,6 +136,7 @@ describe(Card.name, () => {
           color: 'blue',
           kind: 'reverse',
         },
+        onDoubleClick: () => undefined,
       };
     });
 
@@ -149,7 +152,7 @@ describe(Card.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <Card card={cardOptionsFixture.card}></Card>,
+          <Card {...cardOptionsFixture} />,
         );
 
         chosenCard = renderResult.container.querySelector(
@@ -181,6 +184,7 @@ describe(Card.name, () => {
           color: 'blue',
           kind: 'skip',
         },
+        onDoubleClick: () => undefined,
       };
     });
 
@@ -196,7 +200,7 @@ describe(Card.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <Card card={cardOptionsFixture.card}></Card>,
+          <Card {...cardOptionsFixture} />,
         );
 
         chosenCard = renderResult.container.querySelector(
@@ -227,6 +231,7 @@ describe(Card.name, () => {
         card: {
           kind: 'wild',
         },
+        onDoubleClick: () => undefined,
       };
     });
 
@@ -242,7 +247,7 @@ describe(Card.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <Card card={cardOptionsFixture.card}></Card>,
+          <Card {...cardOptionsFixture} />,
         );
 
         chosenCard = renderResult.container.querySelector(
@@ -258,10 +263,9 @@ describe(Card.name, () => {
         expect(WildCard).toHaveBeenCalledTimes(1);
         expect(WildCard).toHaveBeenCalledWith(
           {
-            card: {
-              kind: 'wild',
-            },
+            card: cardOptionsFixture.card,
             colorClass: 'white-color',
+            onDoubleClick: cardOptionsFixture.onDoubleClick,
           },
           {},
         );
@@ -281,6 +285,7 @@ describe(Card.name, () => {
         card: {
           kind: 'wildDraw4',
         },
+        onDoubleClick: () => undefined,
       };
     });
 
@@ -296,7 +301,7 @@ describe(Card.name, () => {
         );
 
         const renderResult: RenderResult = render(
-          <Card card={cardOptionsFixture.card}></Card>,
+          <Card {...cardOptionsFixture} />,
         );
 
         chosenCard = renderResult.container.querySelector(
@@ -312,10 +317,9 @@ describe(Card.name, () => {
         expect(WildDraw4Card).toHaveBeenCalledTimes(1);
         expect(WildDraw4Card).toHaveBeenCalledWith(
           {
-            card: {
-              kind: 'wildDraw4',
-            },
+            card: cardOptionsFixture.card,
             colorClass: 'white-color',
+            onDoubleClick: cardOptionsFixture.onDoubleClick,
           },
           {},
         );
