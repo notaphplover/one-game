@@ -70,3 +70,47 @@ That's all! You are ready to start calling the API
 Sometimes a database is not properly created. Trying to launch the servers with no env variables is a way to do this. Reseting the db is probably the easiest way to go, at least in a local setup.
 
 Db state is saved on local volumes. Deleting the db container is not enough to reset the db state. Only after killing the container, removing it and removing its volume the db state is reset.
+
+### Pulsar cluster issues
+
+You might experience issues the first time the pulsar cluster is started. If the cluster is not properly initialized, errors such as "TopicNotFound"
+might appear in the game services logs. In order to solve this issue, follow these steps:
+
+- Remove apache pulsar container:
+
+```bash
+docker kill <pulsar-container-id>
+docker rm <pulsar-container-id>
+docker volume rm pulsardata
+docker volume rm pulsarconf
+```
+
+- Start services:
+
+```bash
+pnpm run serve:api:rest:dependencies
+```
+
+- Once the pulsar cluster is properly initialized (10 seconds should be more than enough), you should be free to run backend services like in any other
+scenario:
+
+```bash
+pnpm run serve:api:rest
+```
+
+Note: The pulsar cluster logs a summary once it's properly initialized, you should be able to see logs indicating the service is ready:
+
+```
+2024-11-05T11:36:19,907+0000 [worker-scheduler-0] INFO  org.apache.pulsar.functions.worker.SchedulerManager - Schedule summary - execution time
+0.050956318 sec | total unassigned: 0 | stats: {"Added": 0, "Updated": 0, "removed": 0}
+{
+  "c-standalone-fw-localhost-8080" : {
+    "originalNumAssignments" : 0,
+    "finalNumAssignments" : 0,
+    "instancesAdded" : 0,
+    "instancesRemoved" : 0,
+    "instancesUpdated" : 0,
+    "alive" : true
+  }
+}
+```
