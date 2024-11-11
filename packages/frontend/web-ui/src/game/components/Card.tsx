@@ -10,6 +10,7 @@ import { WildDraw4Card } from './WildDraw4Card';
 
 export interface CardOptions {
   card: apiModels.CardV1;
+  isSelected?: boolean | undefined;
   onDoubleClick?: (event: MouseEvent) => void;
 }
 
@@ -19,6 +20,7 @@ export const Card = (params: CardOptions) => {
       return (
         <DrawCard
           card={params.card}
+          isSelected={params.isSelected}
           onDoubleClick={params.onDoubleClick}
         ></DrawCard>
       );
@@ -26,6 +28,7 @@ export const Card = (params: CardOptions) => {
       return (
         <NormalCard
           card={params.card}
+          isSelected={params.isSelected}
           onDoubleClick={params.onDoubleClick}
         ></NormalCard>
       );
@@ -33,6 +36,7 @@ export const Card = (params: CardOptions) => {
       return (
         <ReverseCard
           card={params.card}
+          isSelected={params.isSelected}
           onDoubleClick={params.onDoubleClick}
         ></ReverseCard>
       );
@@ -40,6 +44,7 @@ export const Card = (params: CardOptions) => {
       return (
         <SkipCard
           card={params.card}
+          isSelected={params.isSelected}
           onDoubleClick={params.onDoubleClick}
         ></SkipCard>
       );
@@ -48,6 +53,7 @@ export const Card = (params: CardOptions) => {
         <WildCard
           card={params.card}
           colorClass="white-color"
+          isSelected={params.isSelected}
           onDoubleClick={params.onDoubleClick}
         ></WildCard>
       );
@@ -56,6 +62,7 @@ export const Card = (params: CardOptions) => {
         <WildDraw4Card
           card={params.card}
           colorClass="white-color"
+          isSelected={params.isSelected}
           onDoubleClick={params.onDoubleClick}
         ></WildDraw4Card>
       );

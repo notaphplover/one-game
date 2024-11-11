@@ -21,10 +21,14 @@ import { WildCard, WildCardOptions } from './WildCard';
 
 describe(WildCard.name, () => {
   let wildCardOptionsFixture: WildCardOptions;
+  let classNameSelected: string;
+  let isSelectedFixture: boolean;
   let imageUrlFixture: string;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
+    classNameSelected = 'selected';
+    isSelectedFixture = true;
     wildCardOptionsFixture = {
       card: {
         kind: 'wild',
@@ -39,6 +43,7 @@ describe(WildCard.name, () => {
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
     let imageSourceUrl: string | null | undefined;
+    let isSelectedCard: boolean;
 
     beforeAll(() => {
       (
@@ -49,6 +54,7 @@ describe(WildCard.name, () => {
         <WildCard
           card={wildCardOptionsFixture.card}
           colorClass={wildCardOptionsFixture.colorClass}
+          isSelected={isSelectedFixture}
           onDoubleClick={onDoubleClickMock}
         ></WildCard>,
       );
@@ -62,6 +68,12 @@ describe(WildCard.name, () => {
       );
 
       imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
+
+      const divSelectedCard: HTMLElement = renderResult.container.querySelector(
+        '.cornie-card',
+      ) as HTMLElement;
+
+      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',
@@ -85,6 +97,10 @@ describe(WildCard.name, () => {
 
     it('should contain a div with a white-color className', () => {
       expect(isExpectedClassNameInCard).toBe(true);
+    });
+
+    it('should contain a div with selected className', () => {
+      expect(isSelectedCard).toBe(true);
     });
 
     it('should show a card with src image', () => {

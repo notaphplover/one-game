@@ -24,6 +24,8 @@ import { DrawCard, DrawCardOptions } from './DrawCard';
 describe(DrawCard.name, () => {
   let drawCardOptionsFixture: DrawCardOptions;
   let classNameFixture: string;
+  let classNameSelected: string;
+  let isSelectedFixture: boolean;
   let imageUrlFixture: string;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
@@ -36,12 +38,15 @@ describe(DrawCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
+    classNameSelected = 'selected';
     imageUrlFixture = 'image-url-fixture';
+    isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
+    let isSelectedCard: boolean;
     let imageSourceUrl: string | null | undefined;
 
     beforeAll(() => {
@@ -56,6 +61,7 @@ describe(DrawCard.name, () => {
       const renderResult: RenderResult = render(
         <DrawCard
           card={drawCardOptionsFixture.card}
+          isSelected={isSelectedFixture}
           onDoubleClick={onDoubleClickMock}
         ></DrawCard>,
       );
@@ -68,6 +74,12 @@ describe(DrawCard.name, () => {
         cardColor.classList.contains(classNameFixture);
 
       imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
+
+      const divSelectedCard: HTMLElement = renderResult.container.querySelector(
+        '.cornie-card',
+      ) as HTMLElement;
+
+      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',
@@ -95,6 +107,10 @@ describe(DrawCard.name, () => {
 
     it('should contain a div with a blue-card className', () => {
       expect(isExpectedClassNameInCard).toBe(true);
+    });
+
+    it('should contain a div with selected className', () => {
+      expect(isSelectedCard).toBe(true);
     });
 
     it('should show a card with src image', () => {

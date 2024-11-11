@@ -7,6 +7,7 @@ import { ImageCard } from './ImageCard';
 
 export interface ReverseCardOptions {
   card: apiModels.ReverseCardV1;
+  isSelected?: boolean | undefined;
   onDoubleClick?: ((event: MouseEvent) => void) | undefined;
 }
 
@@ -15,6 +16,7 @@ export const ReverseCard = (params: ReverseCardOptions) => {
     <ImageCard
       image={getImageCardUrl(params.card)}
       colorClass={getCardColorClassName(params.card.color)}
+      isSelected={params.isSelected}
       onDoubleClick={params.onDoubleClick}
     ></ImageCard>
   );

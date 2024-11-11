@@ -24,6 +24,8 @@ import { ReverseCard, ReverseCardOptions } from './ReverseCard';
 describe(ReverseCard.name, () => {
   let reverseCardOptionsFixture: ReverseCardOptions;
   let classNameFixture: string;
+  let classNameSelected: string;
+  let isSelectedFixture: boolean;
   let imageUrlFixture: string;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
@@ -36,13 +38,16 @@ describe(ReverseCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
+    classNameSelected = 'selected';
     imageUrlFixture = 'image-url-fixture';
+    isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
     let imageSourceUrl: string | null | undefined;
+    let isSelectedCard: boolean;
 
     beforeAll(() => {
       (
@@ -56,6 +61,7 @@ describe(ReverseCard.name, () => {
       const renderResult: RenderResult = render(
         <ReverseCard
           card={reverseCardOptionsFixture.card}
+          isSelected={isSelectedFixture}
           onDoubleClick={onDoubleClickMock}
         ></ReverseCard>,
       );
@@ -66,6 +72,12 @@ describe(ReverseCard.name, () => {
 
       isExpectedClassNameInCard =
         cardColor.classList.contains(classNameFixture);
+
+      const divSelectedCard: HTMLElement = renderResult.container.querySelector(
+        '.cornie-card',
+      ) as HTMLElement;
+
+      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
 
       imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
 
@@ -95,6 +107,10 @@ describe(ReverseCard.name, () => {
 
     it('should contain a div with a blue-card className', () => {
       expect(isExpectedClassNameInCard).toBe(true);
+    });
+
+    it('should contain a div with selected className', () => {
+      expect(isSelectedCard).toBe(true);
     });
 
     it('should show a card with src image', () => {

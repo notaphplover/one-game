@@ -40,6 +40,7 @@ describe(Card.name, () => {
           kind: 'normal',
           number: 5,
         },
+        isSelected: true,
         onDoubleClick: () => undefined,
       };
     });
@@ -88,6 +89,7 @@ describe(Card.name, () => {
           color: 'blue',
           kind: 'draw',
         },
+        isSelected: true,
         onDoubleClick: () => undefined,
       };
     });
@@ -136,6 +138,7 @@ describe(Card.name, () => {
           color: 'blue',
           kind: 'reverse',
         },
+        isSelected: true,
         onDoubleClick: () => undefined,
       };
     });
@@ -184,6 +187,7 @@ describe(Card.name, () => {
           color: 'blue',
           kind: 'skip',
         },
+        isSelected: true,
         onDoubleClick: () => undefined,
       };
     });
@@ -231,6 +235,7 @@ describe(Card.name, () => {
         card: {
           kind: 'wild',
         },
+        isSelected: true,
         onDoubleClick: () => undefined,
       };
     });
@@ -265,6 +270,7 @@ describe(Card.name, () => {
           {
             card: cardOptionsFixture.card,
             colorClass: 'white-color',
+            isSelected: true,
             onDoubleClick: cardOptionsFixture.onDoubleClick,
           },
           {},
@@ -285,6 +291,7 @@ describe(Card.name, () => {
         card: {
           kind: 'wildDraw4',
         },
+        isSelected: true,
         onDoubleClick: () => undefined,
       };
     });
@@ -319,6 +326,7 @@ describe(Card.name, () => {
           {
             card: cardOptionsFixture.card,
             colorClass: 'white-color',
+            isSelected: true,
             onDoubleClick: cardOptionsFixture.onDoubleClick,
           },
           {},

@@ -24,7 +24,9 @@ import { SkipCard, SkipCardOptions } from './SkipCard';
 describe(SkipCard.name, () => {
   let skipCardOptionsFixture: SkipCardOptions;
   let classNameFixture: string;
+  let classNameSelected: string;
   let imageUrlFixture: string;
+  let isSelectedFixture: boolean;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
@@ -36,13 +38,16 @@ describe(SkipCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
+    classNameSelected = 'selected';
     imageUrlFixture = 'image-url-fixture';
+    isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
     let imageSourceUrl: string | null | undefined;
+    let isSelectedCard: boolean;
 
     beforeAll(() => {
       (
@@ -56,6 +61,7 @@ describe(SkipCard.name, () => {
       const renderResult: RenderResult = render(
         <SkipCard
           card={skipCardOptionsFixture.card}
+          isSelected={isSelectedFixture}
           onDoubleClick={onDoubleClickMock}
         ></SkipCard>,
       );
@@ -66,6 +72,12 @@ describe(SkipCard.name, () => {
 
       isExpectedClassNameInCard =
         cardColor.classList.contains(classNameFixture);
+
+      const divSelectedCard: HTMLElement = renderResult.container.querySelector(
+        '.cornie-card',
+      ) as HTMLElement;
+
+      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
 
       imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
 
@@ -95,6 +107,10 @@ describe(SkipCard.name, () => {
 
     it('should contain a div with a blue-card className', () => {
       expect(isExpectedClassNameInCard).toBe(true);
+    });
+
+    it('should contain a div with selected className', () => {
+      expect(isSelectedCard).toBe(true);
     });
 
     it('should show a card with src image', () => {
