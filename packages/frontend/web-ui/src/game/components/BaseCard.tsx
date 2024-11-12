@@ -5,7 +5,7 @@ interface BaseCardOptions {
   children: React.JSX.Element | React.JSX.Element[];
   colorClass: string;
   isSelected?: boolean | undefined;
-  onDoubleClick?: ((event: MouseEvent) => void) | undefined;
+  onClick?: ((event: MouseEvent) => void) | undefined;
 }
 
 function addSelectedClassName(isSelected: boolean | undefined): string {
@@ -21,7 +21,7 @@ export const BaseCard = (params: BaseCardOptions) => {
     <Box
       component="div"
       className={`cornie-card ${addSelectedClassName(params.isSelected)}`}
-      onDoubleClick={params.onDoubleClick}
+      onClick={params.onClick}
     >
       <Box
         component="div"

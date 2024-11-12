@@ -41,7 +41,7 @@ describe(Card.name, () => {
           number: 5,
         },
         isSelected: true,
-        onDoubleClick: () => undefined,
+        onClick: () => undefined,
       };
     });
 
@@ -90,7 +90,7 @@ describe(Card.name, () => {
           kind: 'draw',
         },
         isSelected: true,
-        onDoubleClick: () => undefined,
+        onClick: () => undefined,
       };
     });
 
@@ -139,7 +139,7 @@ describe(Card.name, () => {
           kind: 'reverse',
         },
         isSelected: true,
-        onDoubleClick: () => undefined,
+        onClick: () => undefined,
       };
     });
 
@@ -188,7 +188,7 @@ describe(Card.name, () => {
           kind: 'skip',
         },
         isSelected: true,
-        onDoubleClick: () => undefined,
+        onClick: () => undefined,
       };
     });
 
@@ -236,7 +236,7 @@ describe(Card.name, () => {
           kind: 'wild',
         },
         isSelected: true,
-        onDoubleClick: () => undefined,
+        onClick: () => undefined,
       };
     });
 
@@ -271,7 +271,7 @@ describe(Card.name, () => {
             card: cardOptionsFixture.card,
             colorClass: 'white-color',
             isSelected: true,
-            onDoubleClick: cardOptionsFixture.onDoubleClick,
+            onClick: cardOptionsFixture.onClick,
           },
           {},
         );
@@ -292,7 +292,7 @@ describe(Card.name, () => {
           kind: 'wildDraw4',
         },
         isSelected: true,
-        onDoubleClick: () => undefined,
+        onClick: () => undefined,
       };
     });
 
@@ -327,7 +327,7 @@ describe(Card.name, () => {
             card: cardOptionsFixture.card,
             colorClass: 'white-color',
             isSelected: true,
-            onDoubleClick: cardOptionsFixture.onDoubleClick,
+            onClick: cardOptionsFixture.onClick,
           },
           {},
         );

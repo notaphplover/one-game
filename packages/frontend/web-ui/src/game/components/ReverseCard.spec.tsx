@@ -27,7 +27,7 @@ describe(ReverseCard.name, () => {
   let selectedClassName: string;
   let isSelectedFixture: boolean;
   let imageUrlFixture: string;
-  let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
+  let onClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
     reverseCardOptionsFixture = {
@@ -41,7 +41,7 @@ describe(ReverseCard.name, () => {
     selectedClassName = 'selected';
     imageUrlFixture = 'image-url-fixture';
     isSelectedFixture = true;
-    onDoubleClickMock = jest.fn();
+    onClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -62,7 +62,7 @@ describe(ReverseCard.name, () => {
         <ReverseCard
           card={reverseCardOptionsFixture.card}
           isSelected={isSelectedFixture}
-          onDoubleClick={onDoubleClickMock}
+          onClick={onClickMock}
         ></ReverseCard>,
       );
 
@@ -85,11 +85,11 @@ describe(ReverseCard.name, () => {
         '.cornie-card-inner-content',
       ) as Element;
 
-      fireEvent.dblClick(selectedCard);
+      fireEvent.click(selectedCard);
 
       void waitFor(() => {
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        expect(onClickMock).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -117,9 +117,9 @@ describe(ReverseCard.name, () => {
       expect(imageSourceUrl).toStrictEqual(imageUrlFixture);
     });
 
-    it('should call a onDoubleClick()', () => {
-      expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
-      expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
+    it('should call a onClick()', () => {
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+      expect(onClickMock).toHaveBeenCalledWith(expect.any(Object));
     });
   });
 });
