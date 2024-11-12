@@ -7,7 +7,7 @@ export interface ImageCardOptions {
   colorClass: string;
   image: string;
   isSelected?: boolean | undefined;
-  onDoubleClick?: ((event: MouseEvent) => void) | undefined;
+  onClick?: ((event: MouseEvent) => void) | undefined;
 }
 
 export const ImageCard = (params: ImageCardOptions) => {
@@ -15,7 +15,7 @@ export const ImageCard = (params: ImageCardOptions) => {
     <BaseCard
       colorClass={params.colorClass}
       isSelected={params.isSelected}
-      onDoubleClick={params.onDoubleClick}
+      onClick={params.onClick}
     >
       <Box component="div" className="cornie-card-image">
         <img src={params.image} />

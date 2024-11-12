@@ -18,7 +18,7 @@ describe(NormalCard.name, () => {
   let classNameFixture: string;
   let selectedClassName: string;
   let isSelectedFixture: boolean;
-  let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
+  let onClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
     normalCardOptionsFixture = {
@@ -32,7 +32,7 @@ describe(NormalCard.name, () => {
     classNameFixture = 'blue-card';
     selectedClassName = 'selected';
     isSelectedFixture = true;
-    onDoubleClickMock = jest.fn();
+    onClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -49,7 +49,7 @@ describe(NormalCard.name, () => {
         <NormalCard
           card={normalCardOptionsFixture.card}
           isSelected={isSelectedFixture}
-          onDoubleClick={onDoubleClickMock}
+          onClick={onClickMock}
         ></NormalCard>,
       );
 
@@ -72,11 +72,11 @@ describe(NormalCard.name, () => {
         '.cornie-card-inner-content',
       ) as Element;
 
-      fireEvent.dblClick(selectedCard);
+      fireEvent.click(selectedCard);
 
       void waitFor(() => {
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        expect(onClickMock).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -100,9 +100,9 @@ describe(NormalCard.name, () => {
       expect(cardValue).toBe(normalCardOptionsFixture.card.number.toString());
     });
 
-    it('should call a onDoubleClick()', () => {
-      expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
-      expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
+    it('should call a onClick()', () => {
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+      expect(onClickMock).toHaveBeenCalledWith(expect.any(Object));
     });
   });
 });

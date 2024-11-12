@@ -14,7 +14,7 @@ describe(ImageCard.name, () => {
   let selectedClassName: string;
   let imageCardOptionsFixture: ImageCardOptions;
   let isSelectedFixture: boolean;
-  let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
+  let onClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
     selectedClassName = 'selected';
@@ -23,7 +23,7 @@ describe(ImageCard.name, () => {
       image: '/assets/image.png',
     };
     isSelectedFixture = true;
-    onDoubleClickMock = jest.fn();
+    onClickMock = jest.fn();
   });
 
   describe('when called', () => {
@@ -37,7 +37,7 @@ describe(ImageCard.name, () => {
           colorClass={imageCardOptionsFixture.colorClass}
           image={imageCardOptionsFixture.image}
           isSelected={isSelectedFixture}
-          onDoubleClick={onDoubleClickMock}
+          onClick={onClickMock}
         ></ImageCard>,
       );
 
@@ -63,11 +63,11 @@ describe(ImageCard.name, () => {
         '.cornie-card-inner-content',
       ) as Element;
 
-      fireEvent.dblClick(selectedCard);
+      fireEvent.click(selectedCard);
 
       void waitFor(() => {
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        expect(onClickMock).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -87,9 +87,9 @@ describe(ImageCard.name, () => {
       expect(imageSourceUrl).toBe(imageCardOptionsFixture.image);
     });
 
-    it('should call a onDoubleClick()', () => {
-      expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
-      expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
+    it('should call a onClick()', () => {
+      expect(onClickMock).toHaveBeenCalledTimes(1);
+      expect(onClickMock).toHaveBeenCalledWith(expect.any(Object));
     });
   });
 });

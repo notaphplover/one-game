@@ -11,7 +11,7 @@ import { WildDraw4Card } from './WildDraw4Card';
 export interface CardOptions {
   card: apiModels.CardV1;
   isSelected?: boolean | undefined;
-  onDoubleClick?: (event: MouseEvent) => void;
+  onClick?: (event: MouseEvent) => void;
 }
 
 export const Card = (params: CardOptions) => {
@@ -21,7 +21,7 @@ export const Card = (params: CardOptions) => {
         <DrawCard
           card={params.card}
           isSelected={params.isSelected}
-          onDoubleClick={params.onDoubleClick}
+          onClick={params.onClick}
         ></DrawCard>
       );
     case 'normal':
@@ -29,7 +29,7 @@ export const Card = (params: CardOptions) => {
         <NormalCard
           card={params.card}
           isSelected={params.isSelected}
-          onDoubleClick={params.onDoubleClick}
+          onClick={params.onClick}
         ></NormalCard>
       );
     case 'reverse':
@@ -37,7 +37,7 @@ export const Card = (params: CardOptions) => {
         <ReverseCard
           card={params.card}
           isSelected={params.isSelected}
-          onDoubleClick={params.onDoubleClick}
+          onClick={params.onClick}
         ></ReverseCard>
       );
     case 'skip':
@@ -45,7 +45,7 @@ export const Card = (params: CardOptions) => {
         <SkipCard
           card={params.card}
           isSelected={params.isSelected}
-          onDoubleClick={params.onDoubleClick}
+          onClick={params.onClick}
         ></SkipCard>
       );
     case 'wild':
@@ -54,7 +54,7 @@ export const Card = (params: CardOptions) => {
           card={params.card}
           colorClass="white-color"
           isSelected={params.isSelected}
-          onDoubleClick={params.onDoubleClick}
+          onClick={params.onClick}
         ></WildCard>
       );
     case 'wildDraw4':
@@ -63,7 +63,7 @@ export const Card = (params: CardOptions) => {
           card={params.card}
           colorClass="white-color"
           isSelected={params.isSelected}
-          onDoubleClick={params.onDoubleClick}
+          onClick={params.onClick}
         ></WildDraw4Card>
       );
   }
