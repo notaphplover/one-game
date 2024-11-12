@@ -24,7 +24,7 @@ import { DrawCard, DrawCardOptions } from './DrawCard';
 describe(DrawCard.name, () => {
   let drawCardOptionsFixture: DrawCardOptions;
   let classNameFixture: string;
-  let classNameSelected: string;
+  let selectedClassName: string;
   let isSelectedFixture: boolean;
   let imageUrlFixture: string;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
@@ -38,7 +38,7 @@ describe(DrawCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
-    classNameSelected = 'selected';
+    selectedClassName = 'selected';
     imageUrlFixture = 'image-url-fixture';
     isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
@@ -79,7 +79,7 @@ describe(DrawCard.name, () => {
         '.cornie-card',
       ) as HTMLElement;
 
-      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',

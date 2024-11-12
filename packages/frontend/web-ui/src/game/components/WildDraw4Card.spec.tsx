@@ -21,13 +21,13 @@ import { WildDraw4Card, WildDraw4CardOptions } from './WildDraw4Card';
 
 describe(WildDraw4Card.name, () => {
   let wildDraw4CardOptionsFixture: WildDraw4CardOptions;
-  let classNameSelected: string;
+  let selectedClassName: string;
   let isSelectedFixture: boolean;
   let imageUrlFixture: string;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
-    classNameSelected = 'selected';
+    selectedClassName = 'selected';
     isSelectedFixture = true;
     wildDraw4CardOptionsFixture = {
       card: {
@@ -73,7 +73,7 @@ describe(WildDraw4Card.name, () => {
         '.cornie-card',
       ) as HTMLElement;
 
-      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',

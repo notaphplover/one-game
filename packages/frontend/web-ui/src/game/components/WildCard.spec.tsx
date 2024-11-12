@@ -21,13 +21,13 @@ import { WildCard, WildCardOptions } from './WildCard';
 
 describe(WildCard.name, () => {
   let wildCardOptionsFixture: WildCardOptions;
-  let classNameSelected: string;
+  let selectedClassName: string;
   let isSelectedFixture: boolean;
   let imageUrlFixture: string;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
-    classNameSelected = 'selected';
+    selectedClassName = 'selected';
     isSelectedFixture = true;
     wildCardOptionsFixture = {
       card: {
@@ -73,7 +73,7 @@ describe(WildCard.name, () => {
         '.cornie-card',
       ) as HTMLElement;
 
-      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',

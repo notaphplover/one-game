@@ -24,7 +24,7 @@ import { SkipCard, SkipCardOptions } from './SkipCard';
 describe(SkipCard.name, () => {
   let skipCardOptionsFixture: SkipCardOptions;
   let classNameFixture: string;
-  let classNameSelected: string;
+  let selectedClassName: string;
   let imageUrlFixture: string;
   let isSelectedFixture: boolean;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
@@ -38,7 +38,7 @@ describe(SkipCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
-    classNameSelected = 'selected';
+    selectedClassName = 'selected';
     imageUrlFixture = 'image-url-fixture';
     isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
@@ -77,7 +77,7 @@ describe(SkipCard.name, () => {
         '.cornie-card',
       ) as HTMLElement;
 
-      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       imageSourceUrl = cardColor.querySelector('img')?.getAttribute('src');
 

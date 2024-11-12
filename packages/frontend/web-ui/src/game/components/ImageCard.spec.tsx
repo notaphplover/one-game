@@ -11,13 +11,13 @@ import { MouseEvent } from 'react';
 import { ImageCard, ImageCardOptions } from './ImageCard';
 
 describe(ImageCard.name, () => {
-  let classNameSelected: string;
+  let selectedClassName: string;
   let imageCardOptionsFixture: ImageCardOptions;
   let isSelectedFixture: boolean;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
-    classNameSelected = 'selected';
+    selectedClassName = 'selected';
     imageCardOptionsFixture = {
       colorClass: 'blue-card',
       image: '/assets/image.png',
@@ -57,7 +57,7 @@ describe(ImageCard.name, () => {
         '.cornie-card',
       ) as HTMLElement;
 
-      isSelectedCard = divSelectedCard.classList.contains(classNameSelected);
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',
