@@ -16,6 +16,8 @@ import { NormalCard, NormalCardOptions } from './NormalCard';
 describe(NormalCard.name, () => {
   let normalCardOptionsFixture: NormalCardOptions;
   let classNameFixture: string;
+  let selectedClassName: string;
+  let isSelectedFixture: boolean;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
@@ -28,12 +30,15 @@ describe(NormalCard.name, () => {
     };
 
     classNameFixture = 'blue-card';
+    selectedClassName = 'selected';
+    isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
     let cardValue: string | null | undefined;
+    let isSelectedCard: boolean;
 
     beforeAll(() => {
       (
@@ -43,6 +48,7 @@ describe(NormalCard.name, () => {
       const renderResult: RenderResult = render(
         <NormalCard
           card={normalCardOptionsFixture.card}
+          isSelected={isSelectedFixture}
           onDoubleClick={onDoubleClickMock}
         ></NormalCard>,
       );
@@ -55,6 +61,12 @@ describe(NormalCard.name, () => {
         cardColor.classList.contains(classNameFixture);
 
       cardValue = cardColor.firstChild?.textContent;
+
+      const divSelectedCard: HTMLElement = renderResult.container.querySelector(
+        '.cornie-card',
+      ) as HTMLElement;
+
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',
@@ -78,6 +90,10 @@ describe(NormalCard.name, () => {
 
     it('should contain a div with a blue-card className', () => {
       expect(isExpectedClassNameInCard).toBe(true);
+    });
+
+    it('should contain a div with selected className', () => {
+      expect(isSelectedCard).toBe(true);
     });
 
     it('should show a card with value 4', () => {

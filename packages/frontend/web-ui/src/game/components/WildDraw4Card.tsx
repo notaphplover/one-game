@@ -7,6 +7,7 @@ import { ImageCard } from './ImageCard';
 export interface WildDraw4CardOptions {
   card: apiModels.WildDraw4CardV1;
   colorClass: 'white-color';
+  isSelected?: boolean | undefined;
   onDoubleClick?: ((event: MouseEvent) => void) | undefined;
 }
 
@@ -15,6 +16,7 @@ export const WildDraw4Card = (params: WildDraw4CardOptions) => {
     <ImageCard
       image={getImageCardUrl(params.card)}
       colorClass={params.colorClass}
+      isSelected={params.isSelected}
       onDoubleClick={params.onDoubleClick}
     ></ImageCard>
   );

@@ -11,58 +11,222 @@ import { MouseEvent } from 'react';
 import { BaseCard } from './BaseCard';
 
 describe(BaseCard.name, () => {
-  let childrenMock: jest.Mock<() => React.JSX.Element | React.JSX.Element[]>;
-  let colorClassFixture: string;
-  let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
-
-  beforeAll(() => {
-    childrenMock = jest.fn();
-    colorClassFixture = 'blue-card';
-    onDoubleClickMock = jest.fn();
-  });
-
-  describe('when called', () => {
-    let isExpectedClassNameInCard: boolean;
+  describe('having a BaseCardOptions with isSelected true', () => {
+    let childrenMock: jest.Mock<() => React.JSX.Element | React.JSX.Element[]>;
+    let selectedClassName: string;
+    let colorClassFixture: string;
+    let isSelectedFixture: boolean;
+    let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
     beforeAll(() => {
-      const renderResult: RenderResult = render(
-        <BaseCard
-          children={childrenMock()}
-          colorClass={colorClassFixture}
-          onDoubleClick={onDoubleClickMock}
-        ></BaseCard>,
-      );
+      childrenMock = jest.fn();
+      selectedClassName = 'selected';
+      colorClassFixture = 'blue-card';
+      isSelectedFixture = true;
+      onDoubleClickMock = jest.fn();
+    });
 
-      const cardColor: HTMLElement = renderResult.container.querySelector(
-        '.cornie-card-inner-content',
-      ) as HTMLElement;
+    describe('when called', () => {
+      let isExpectedClassNameInCard: boolean;
+      let isSelectedCard: boolean;
 
-      isExpectedClassNameInCard =
-        cardColor.classList.contains(colorClassFixture);
+      beforeAll(() => {
+        const renderResult: RenderResult = render(
+          <BaseCard
+            children={childrenMock()}
+            colorClass={colorClassFixture}
+            isSelected={isSelectedFixture}
+            onDoubleClick={onDoubleClickMock}
+          ></BaseCard>,
+        );
 
-      const selectedCard: Element | null = renderResult.container.querySelector(
-        '.cornie-card-inner-content',
-      ) as Element;
+        const cardColor: HTMLElement = renderResult.container.querySelector(
+          '.cornie-card-inner-content',
+        ) as HTMLElement;
 
-      fireEvent.dblClick(selectedCard);
+        isExpectedClassNameInCard =
+          cardColor.classList.contains(colorClassFixture);
 
-      void waitFor(() => {
-        // eslint-disable-next-line jest/no-standalone-expect
+        const divSelectedCard: HTMLElement =
+          renderResult.container.querySelector('.cornie-card') as HTMLElement;
+
+        isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
+
+        const selectedCard: Element | null =
+          renderResult.container.querySelector(
+            '.cornie-card-inner-content',
+          ) as Element;
+
+        fireEvent.dblClick(selectedCard);
+
+        void waitFor(() => {
+          // eslint-disable-next-line jest/no-standalone-expect
+          expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should contain a div with a blue-card className', () => {
+        expect(isExpectedClassNameInCard).toBe(true);
+      });
+
+      it('should contain a div with selected className', () => {
+        expect(isSelectedCard).toBe(true);
+      });
+
+      it('should call a onDoubleClick()', () => {
         expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
       });
     });
+  });
 
-    afterAll(() => {
-      jest.clearAllMocks();
+  describe('having a BaseCardOptions with isSelected false', () => {
+    let childrenMock: jest.Mock<() => React.JSX.Element | React.JSX.Element[]>;
+    let selectedClassName: string;
+    let colorClassFixture: string;
+    let isSelectedFixture: boolean;
+    let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
+
+    beforeAll(() => {
+      childrenMock = jest.fn();
+      selectedClassName = 'selected';
+      colorClassFixture = 'blue-card';
+      isSelectedFixture = false;
+      onDoubleClickMock = jest.fn();
     });
 
-    it('should contain a div with a blue-card className', () => {
-      expect(isExpectedClassNameInCard).toBe(true);
+    describe('when called', () => {
+      let isExpectedClassNameInCard: boolean;
+      let isSelectedCard: boolean;
+
+      beforeAll(() => {
+        const renderResult: RenderResult = render(
+          <BaseCard
+            children={childrenMock()}
+            colorClass={colorClassFixture}
+            isSelected={isSelectedFixture}
+            onDoubleClick={onDoubleClickMock}
+          ></BaseCard>,
+        );
+
+        const cardColor: HTMLElement = renderResult.container.querySelector(
+          '.cornie-card-inner-content',
+        ) as HTMLElement;
+
+        isExpectedClassNameInCard =
+          cardColor.classList.contains(colorClassFixture);
+
+        const divSelectedCard: HTMLElement =
+          renderResult.container.querySelector('.cornie-card') as HTMLElement;
+
+        isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
+
+        const selectedCard: Element | null =
+          renderResult.container.querySelector(
+            '.cornie-card-inner-content',
+          ) as Element;
+
+        fireEvent.dblClick(selectedCard);
+
+        void waitFor(() => {
+          // eslint-disable-next-line jest/no-standalone-expect
+          expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should contain a div with a blue-card className', () => {
+        expect(isExpectedClassNameInCard).toBe(true);
+      });
+
+      it('should not contain a div with selected className', () => {
+        expect(isSelectedCard).toBe(false);
+      });
+
+      it('should call a onDoubleClick()', () => {
+        expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
+      });
+    });
+  });
+
+  describe('having a BaseCardOptions with isSelected undefined', () => {
+    let childrenMock: jest.Mock<() => React.JSX.Element | React.JSX.Element[]>;
+    let selectedClassName: string;
+    let colorClassFixture: string;
+    let isSelectedFixture: undefined;
+    let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
+
+    beforeAll(() => {
+      childrenMock = jest.fn();
+      selectedClassName = 'selected';
+      colorClassFixture = 'blue-card';
+      isSelectedFixture = undefined;
+      onDoubleClickMock = jest.fn();
     });
 
-    it('should call a onDoubleClick()', () => {
-      expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
-      expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
+    describe('when called', () => {
+      let isExpectedClassNameInCard: boolean;
+      let isSelectedCard: boolean;
+
+      beforeAll(() => {
+        const renderResult: RenderResult = render(
+          <BaseCard
+            children={childrenMock()}
+            colorClass={colorClassFixture}
+            isSelected={isSelectedFixture}
+            onDoubleClick={onDoubleClickMock}
+          ></BaseCard>,
+        );
+
+        const cardColor: HTMLElement = renderResult.container.querySelector(
+          '.cornie-card-inner-content',
+        ) as HTMLElement;
+
+        isExpectedClassNameInCard =
+          cardColor.classList.contains(colorClassFixture);
+
+        const divSelectedCard: HTMLElement =
+          renderResult.container.querySelector('.cornie-card') as HTMLElement;
+
+        isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
+
+        const selectedCard: Element | null =
+          renderResult.container.querySelector(
+            '.cornie-card-inner-content',
+          ) as Element;
+
+        fireEvent.dblClick(selectedCard);
+
+        void waitFor(() => {
+          // eslint-disable-next-line jest/no-standalone-expect
+          expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should contain a div with a blue-card className', () => {
+        expect(isExpectedClassNameInCard).toBe(true);
+      });
+
+      it('should not contain a div with selected className', () => {
+        expect(isSelectedCard).toBe(false);
+      });
+
+      it('should call a onDoubleClick()', () => {
+        expect(onDoubleClickMock).toHaveBeenCalledTimes(1);
+        expect(onDoubleClickMock).toHaveBeenCalledWith(expect.any(Object));
+      });
     });
   });
 });

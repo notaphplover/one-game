@@ -7,6 +7,7 @@ import { ImageCard } from './ImageCard';
 
 export interface SkipCardOptions {
   card: apiModels.SkipCardV1;
+  isSelected?: boolean | undefined;
   onDoubleClick?: ((event: MouseEvent) => void) | undefined;
 }
 
@@ -15,6 +16,7 @@ export const SkipCard = (params: SkipCardOptions) => {
     <ImageCard
       image={getImageCardUrl(params.card)}
       colorClass={getCardColorClassName(params.card.color)}
+      isSelected={params.isSelected}
       onDoubleClick={params.onDoubleClick}
     ></ImageCard>
   );

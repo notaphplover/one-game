@@ -11,26 +11,32 @@ import { MouseEvent } from 'react';
 import { ImageCard, ImageCardOptions } from './ImageCard';
 
 describe(ImageCard.name, () => {
+  let selectedClassName: string;
   let imageCardOptionsFixture: ImageCardOptions;
+  let isSelectedFixture: boolean;
   let onDoubleClickMock: jest.Mock<(event: MouseEvent) => void>;
 
   beforeAll(() => {
+    selectedClassName = 'selected';
     imageCardOptionsFixture = {
       colorClass: 'blue-card',
       image: '/assets/image.png',
     };
+    isSelectedFixture = true;
     onDoubleClickMock = jest.fn();
   });
 
   describe('when called', () => {
     let isExpectedClassNameInCard: boolean;
     let imageSourceUrl: string | null | undefined;
+    let isSelectedCard: boolean;
 
     beforeAll(() => {
       const renderResult: RenderResult = render(
         <ImageCard
           colorClass={imageCardOptionsFixture.colorClass}
           image={imageCardOptionsFixture.image}
+          isSelected={isSelectedFixture}
           onDoubleClick={onDoubleClickMock}
         ></ImageCard>,
       );
@@ -46,6 +52,12 @@ describe(ImageCard.name, () => {
       imageSourceUrl = renderResult.container
         .querySelector('img')
         ?.getAttribute('src');
+
+      const divSelectedCard: HTMLElement = renderResult.container.querySelector(
+        '.cornie-card',
+      ) as HTMLElement;
+
+      isSelectedCard = divSelectedCard.classList.contains(selectedClassName);
 
       const selectedCard: Element | null = renderResult.container.querySelector(
         '.cornie-card-inner-content',
@@ -65,6 +77,10 @@ describe(ImageCard.name, () => {
 
     it('should contain a div with a blue-card className', () => {
       expect(isExpectedClassNameInCard).toBe(true);
+    });
+
+    it('should contain a div with selected className', () => {
+      expect(isSelectedCard).toBe(true);
     });
 
     it('should show a card with src image', () => {
