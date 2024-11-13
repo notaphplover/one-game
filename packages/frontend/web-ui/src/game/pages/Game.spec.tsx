@@ -35,6 +35,7 @@ describe(Game.name, () => {
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
+        isMyTurn: false,
         isPending: false,
         useCountdownResult: {
           currentSeconds: 10,
@@ -45,10 +46,12 @@ describe(Game.name, () => {
         },
         useGameCardsResult: {
           cards: [],
+          deleteAllSelectedCard: jest.fn(),
           hasNext: false,
           hasPrevious: false,
           setNext: jest.fn(),
           setPrevious: jest.fn(),
+          switchCardSelection: jest.fn(),
         },
       };
 
@@ -111,6 +114,7 @@ describe(Game.name, () => {
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: gameFixture,
+        isMyTurn: false,
         isPending: false,
         useCountdownResult: {
           currentSeconds: 10,
@@ -121,10 +125,12 @@ describe(Game.name, () => {
         },
         useGameCardsResult: {
           cards: [],
+          deleteAllSelectedCard: jest.fn(),
           hasNext: false,
           hasPrevious: false,
           setNext: jest.fn(),
           setPrevious: jest.fn(),
+          switchCardSelection: jest.fn(),
         },
       };
 
@@ -172,6 +178,7 @@ describe(Game.name, () => {
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
+        isMyTurn: false,
         isPending: true,
         useCountdownResult: {
           currentSeconds: 10,
@@ -182,10 +189,12 @@ describe(Game.name, () => {
         },
         useGameCardsResult: {
           cards: [],
+          deleteAllSelectedCard: jest.fn(),
           hasNext: false,
           hasPrevious: false,
           setNext: jest.fn(),
           setPrevious: jest.fn(),
+          switchCardSelection: jest.fn(),
         },
       };
 

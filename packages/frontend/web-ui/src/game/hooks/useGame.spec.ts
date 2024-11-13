@@ -61,10 +61,12 @@ describe(useGame.name, () => {
 
       useGameCardsResultFixture = {
         cards: [],
+        deleteAllSelectedCard: jest.fn(),
         hasNext: false,
         hasPrevious: false,
         setNext: jest.fn(),
         setPrevious: jest.fn(),
+        switchCardSelection: jest.fn(),
       };
 
       (
@@ -146,6 +148,7 @@ describe(useGame.name, () => {
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
+        isMyTurn: false,
         isPending: true,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
@@ -250,10 +253,12 @@ describe(useGame.name, () => {
 
       useGameCardsResultFixture = {
         cards: [],
+        deleteAllSelectedCard: jest.fn(),
         hasNext: false,
         hasPrevious: false,
         setNext: jest.fn(),
         setPrevious: jest.fn(),
+        switchCardSelection: jest.fn(),
       };
 
       useCountdownResultFixture = {
@@ -402,6 +407,7 @@ describe(useGame.name, () => {
         currentCard: gameFixture.state.currentCard,
         deckCardsAmount: 189,
         game: gameFixture,
+        isMyTurn: true,
         isPending: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
