@@ -28,6 +28,7 @@ export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
   deckCardsAmount: number | undefined;
   game: apiModels.GameV1 | undefined;
+  isMyTurn: boolean;
   isPending: boolean;
   useCountdownResult: UseCountdownResult;
   useGameCardsResult: UseGameCardsResult;
@@ -92,6 +93,10 @@ export const useGame = (): UseGameResult => {
     usersV1MeResult?.isRight === true
       ? getGameSlotIndex(gameOrUndefined, usersV1MeResult.value)
       : undefined;
+
+  const isMyTurn: boolean =
+    isActiveGame(game) &&
+    game.state.currentPlayingSlotIndex === gameSlotIndexParam;
 
   const {
     refetch: refetchGamesV1GameIdSlotsSlotIdCards,
@@ -206,6 +211,7 @@ export const useGame = (): UseGameResult => {
     currentCard: getGameCurrentCard(game),
     deckCardsAmount,
     game,
+    isMyTurn,
     isPending:
       gamesV1GameIdResult === null ||
       gamesV1GameIdSlotsSlotIdCardsResult === null,

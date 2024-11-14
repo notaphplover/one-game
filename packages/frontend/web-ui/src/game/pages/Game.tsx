@@ -1,9 +1,9 @@
-import { models as apiModels } from '@cornie-js/api-models';
 import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
 } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
+import { MouseEvent } from 'react';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
 import { Countdown } from '../../common/components/Countdown';
@@ -13,6 +13,7 @@ import { Card } from '../components/Card';
 import { ReversedCard } from '../components/ReversedCard';
 import { isNonStartedGame } from '../helpers/isNonStartedGame';
 import { useGame } from '../hooks/useGame';
+import { GameCard } from '../hooks/useGameCards';
 import { NonStartedGame } from './NonStartedGame';
 
 export const Game = (): React.JSX.Element => {
@@ -20,9 +21,17 @@ export const Game = (): React.JSX.Element => {
     currentCard,
     deckCardsAmount,
     game,
+    isMyTurn,
     isPending,
     useCountdownResult: { currentSeconds, durationSeconds, isRunning },
-    useGameCardsResult: { cards, hasNext, hasPrevious, setNext, setPrevious },
+    useGameCardsResult: {
+      cards,
+      hasNext,
+      hasPrevious,
+      setNext,
+      setPrevious,
+      switchCardSelection,
+    },
   } = useGame();
 
   if (!isPending && game === undefined) {
@@ -48,6 +57,15 @@ export const Game = (): React.JSX.Element => {
   ) : (
     <Countdown />
   );
+
+  const buildOnHandleClick =
+    (index: number) =>
+    (event: MouseEvent): void => {
+      event.preventDefault();
+      if (isMyTurn) {
+        switchCardSelection(index);
+      }
+    };
 
   return (
     <>
@@ -89,8 +107,13 @@ export const Game = (): React.JSX.Element => {
                 </Box>
               </Box>
               <Box component="div" className="player-hand">
-                {cards.map((card: apiModels.CardV1, index: number) => (
-                  <Card card={card} key={`card-${index.toString()}`} />
+                {cards.map((gameCard: GameCard) => (
+                  <Card
+                    card={gameCard.card}
+                    key={`card-${gameCard.index.toString()}`}
+                    isSelected={gameCard.isSelected}
+                    onClick={buildOnHandleClick(gameCard.index)}
+                  />
                 ))}
               </Box>
             </Box>

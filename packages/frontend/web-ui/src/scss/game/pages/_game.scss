@@ -66,6 +66,10 @@
             font-size: 75px;
           }
         }
+
+        &.selected {
+          box-shadow: 0px 0px 6px 6px var(--cg-bkg-secondary-light);
+        }
       }
     }
 
