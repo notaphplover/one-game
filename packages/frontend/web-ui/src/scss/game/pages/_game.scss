@@ -112,6 +112,70 @@
         max-width: 100px;
         width: 100px;
       }
+
+      .game-area-buttons {
+        display: grid;
+        gap: 1rem;
+        max-width: 600px;
+        padding: 0.5rem;
+        border-radius: 15px;
+        border: 1px solid var(--cg-bkg-secondary-light);
+
+        @media (min-width: variables.$md) {
+          gap: 1.5rem;
+          width: 125px;
+        }
+
+        @media (min-width: variables.$sm) {
+          gap: 2rem;
+          width: 150px;
+        }
+      }
+
+      .game-area-info {
+        display: grid;
+        max-width: 600px;
+        padding: 0.3rem;
+        border-radius: 15px;
+        border: 1px solid var(--cg-bkg-secondary-light);
+
+        @media (win-width: variables.$md) {
+          gap: 1rem;
+          padding: 0.5rem;
+          width: 125px;
+        }
+
+        @media (win-width: variables.$md) {
+          width: 150px;
+        }
+
+        .game-area-info-timer {
+          justify-items: center;
+        }
+
+        .game-area-info-deck {
+          border-radius: 1.5rem;
+          background-color: var(--cg-bkg-secondary-main);
+          text-align: center;
+          margin-top: 2px;
+          padding: 2px;
+          user-select: none;
+
+          @media (min-width: variables.$md) {
+            padding: 0.8rem;
+            margin-top: auto;
+            margin-bottom: auto;
+          }
+
+          .game-area-info-deck-count {
+            font-weight: bold;
+
+            @media (min-width: variables.$sm) {
+              font-size: variables.$font-sm;
+            }
+          }
+        }
+      }
     }
 
     @media (min-width: variables.$sm) {
