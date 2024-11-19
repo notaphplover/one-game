@@ -197,6 +197,11 @@ export class GameMutationResolver
     switch (httpResponse.statusCode) {
       case 200:
         return this.#gameGraphQlFromGameV1Builder.build(httpResponse.body);
+      case 400:
+        throw new AppError(
+          AppErrorKind.contractViolation,
+          httpResponse.body.description,
+        );
       case 401:
         throw new AppError(
           AppErrorKind.missingCredentials,
@@ -209,6 +214,11 @@ export class GameMutationResolver
         );
       case 404:
         return null;
+      case 422:
+        throw new AppError(
+          AppErrorKind.unprocessableOperation,
+          httpResponse.body.description,
+        );
     }
   }
 }
