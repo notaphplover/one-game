@@ -5,7 +5,7 @@
   },
   "description": "Backend game adapter pulsar modules",
   "dependencies": {
-    "@nestjs/common": "^10.4.7",
+    "@nestjs/common": "^10.4.8",
     "@nestjs/typeorm": "^10.0.2",
     "@cornie-js/backend-adapter-pulsar": "workspace:*",
     "@cornie-js/backend-app-game-env": "workspace:*",
@@ -14,7 +14,7 @@
     "@cornie-js/backend-common": "workspace:*"
   },
   "devDependencies": {
-    "@eslint/js": "9.14.0",
+    "@eslint/js": "9.15.0",
     "@jest/globals": "29.7.0",
     "@stryker-mutator/core": "8.6.0",
     "@stryker-mutator/jest-runner": "8.6.0",
