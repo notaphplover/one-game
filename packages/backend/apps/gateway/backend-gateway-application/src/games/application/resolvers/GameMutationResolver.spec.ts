@@ -453,14 +453,15 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.endpoints.updateGame() returns an UNAUTHORIZED response', () => {
-      let errorV1: apiModels.ErrorV1;
+    describe('when called, and httpClient.endpoints.updateGame() returns a NOT_FOUND response', () => {
+      let errorV1Fixture: apiModels.ErrorV1;
+
       let contextFixture: Context;
 
       let result: unknown;
 
       beforeAll(async () => {
-        errorV1 = {
+        errorV1Fixture = {
           description: 'error description fixture',
         };
 
@@ -475,25 +476,21 @@ describe(GameMutationResolver.name, () => {
         } as Partial<Context> as Context;
 
         httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
-          body: errorV1,
+          body: errorV1Fixture,
           headers: {},
-          statusCode: HttpStatus.UNAUTHORIZED,
+          statusCode: HttpStatus.NOT_FOUND,
         });
 
-        try {
-          await gameMutationResolver.drawGameCards(
-            undefined,
-            {
-              gameDrawCardsInput: {
-                slotIndex: slotIndexFixture,
-              },
-              gameId: gameIdFixture,
+        result = await gameMutationResolver.drawGameCards(
+          undefined,
+          {
+            gameDrawCardsInput: {
+              slotIndex: slotIndexFixture,
             },
-            contextFixture,
-          );
-        } catch (error: unknown) {
-          result = error;
-        }
+            gameId: gameIdFixture,
+          },
+          contextFixture,
+        );
       });
 
       afterAll(() => {
@@ -516,94 +513,94 @@ describe(GameMutationResolver.name, () => {
         );
       });
 
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.missingCredentials,
-          message: errorV1.description,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
+      it('should return null', () => {
+        expect(result).toBeNull();
       });
     });
 
-    describe('when called, and httpClient.endpoints.updateGame() returns an FORBIDDEN response', () => {
-      let errorV1: apiModels.ErrorV1;
-      let contextFixture: Context;
+    describe.each<[400 | 401 | 403 | 422, AppErrorKind]>([
+      [HttpStatus.BAD_REQUEST, AppErrorKind.contractViolation],
+      [HttpStatus.UNAUTHORIZED, AppErrorKind.missingCredentials],
+      [HttpStatus.FORBIDDEN, AppErrorKind.invalidCredentials],
+      [HttpStatus.UNPROCESSABLE_ENTITY, AppErrorKind.unprocessableOperation],
+    ])(
+      'when called, and httpClient.endpoints.updateGame() returns a %s response',
+      (httpStatus: 400 | 401 | 403 | 422, appErrorKind: AppErrorKind) => {
+        let errorV1Fixture: apiModels.ErrorV1;
+        let contextFixture: Context;
 
-      let result: unknown;
+        let result: unknown;
 
-      beforeAll(async () => {
-        errorV1 = {
-          description: 'error description fixture',
-        };
+        beforeAll(async () => {
+          errorV1Fixture = {
+            description: 'error description fixture',
+          };
 
-        contextFixture = {
-          request: {
-            headers: {
-              foo: 'bar',
+          contextFixture = {
+            request: {
+              headers: {
+                foo: 'bar',
+              },
+              query: {},
+              urlParameters: {},
             },
-            query: {},
-            urlParameters: {},
-          },
-        } as Partial<Context> as Context;
+          } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
-          body: errorV1,
-          headers: {},
-          statusCode: HttpStatus.FORBIDDEN,
+          httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
+            body: errorV1Fixture,
+            headers: {},
+            statusCode: httpStatus,
+          });
+
+          try {
+            await gameMutationResolver.drawGameCards(
+              undefined,
+              {
+                gameDrawCardsInput: {
+                  slotIndex: slotIndexFixture,
+                },
+                gameId: gameIdFixture,
+              },
+              contextFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
         });
 
-        try {
-          await gameMutationResolver.drawGameCards(
-            undefined,
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call httpClient.endpoints.updateGame()', () => {
+          const expectedBody: apiModels.GameIdDrawCardsQueryV1 = {
+            kind: 'drawCards',
+            slotIndex: slotIndexFixture,
+          };
+
+          expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+          expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
+            contextFixture.request.headers,
             {
-              gameDrawCardsInput: {
-                slotIndex: slotIndexFixture,
-              },
               gameId: gameIdFixture,
             },
-            contextFixture,
+            expectedBody,
           );
-        } catch (error: unknown) {
-          result = error;
-        }
-      });
+        });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: appErrorKind,
+            message: errorV1Fixture.description,
+          };
 
-      it('should call httpClient.endpoints.updateGame()', () => {
-        const expectedBody: apiModels.GameIdDrawCardsQueryV1 = {
-          kind: 'drawCards',
-          slotIndex: slotIndexFixture,
-        };
-
-        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
-          contextFixture.request.headers,
-          {
-            gameId: gameIdFixture,
-          },
-          expectedBody,
-        );
-      });
-
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.invalidCredentials,
-          message: errorV1.description,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      },
+    );
   });
 
   describe('.passGameTurn', () => {
@@ -691,14 +688,15 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.endpoints.updateGame() returns an UNAUTHORIZED response', () => {
-      let errorV1: apiModels.ErrorV1;
+    describe('when called, and httpClient.endpoints.updateGame() returns a NOT_FOUND response', () => {
+      let errorV1Fixture: apiModels.ErrorV1;
+
       let contextFixture: Context;
 
       let result: unknown;
 
       beforeAll(async () => {
-        errorV1 = {
+        errorV1Fixture = {
           description: 'error description fixture',
         };
 
@@ -713,25 +711,21 @@ describe(GameMutationResolver.name, () => {
         } as Partial<Context> as Context;
 
         httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
-          body: errorV1,
+          body: errorV1Fixture,
           headers: {},
-          statusCode: HttpStatus.UNAUTHORIZED,
+          statusCode: HttpStatus.NOT_FOUND,
         });
 
-        try {
-          await gameMutationResolver.passGameTurn(
-            undefined,
-            {
-              gameId: gameIdFixture,
-              gamePassTurnInput: {
-                slotIndex: slotIndexFixture,
-              },
+        result = await gameMutationResolver.passGameTurn(
+          undefined,
+          {
+            gameId: gameIdFixture,
+            gamePassTurnInput: {
+              slotIndex: slotIndexFixture,
             },
-            contextFixture,
-          );
-        } catch (error: unknown) {
-          result = error;
-        }
+          },
+          contextFixture,
+        );
       });
 
       afterAll(() => {
@@ -754,94 +748,94 @@ describe(GameMutationResolver.name, () => {
         );
       });
 
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.missingCredentials,
-          message: errorV1.description,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
+      it('should return null', () => {
+        expect(result).toBeNull();
       });
     });
 
-    describe('when called, and httpClient.endpoints.updateGame() returns an FORBIDDEN response', () => {
-      let errorV1: apiModels.ErrorV1;
-      let contextFixture: Context;
+    describe.each<[400 | 401 | 403 | 422, AppErrorKind]>([
+      [HttpStatus.BAD_REQUEST, AppErrorKind.contractViolation],
+      [HttpStatus.UNAUTHORIZED, AppErrorKind.missingCredentials],
+      [HttpStatus.FORBIDDEN, AppErrorKind.invalidCredentials],
+      [HttpStatus.UNPROCESSABLE_ENTITY, AppErrorKind.unprocessableOperation],
+    ])(
+      'when called, and httpClient.endpoints.updateGame() returns a %s response',
+      (httpStatus: 400 | 401 | 403 | 422, appErrorKind: AppErrorKind) => {
+        let errorV1Fixture: apiModels.ErrorV1;
+        let contextFixture: Context;
 
-      let result: unknown;
+        let result: unknown;
 
-      beforeAll(async () => {
-        errorV1 = {
-          description: 'error description fixture',
-        };
+        beforeAll(async () => {
+          errorV1Fixture = {
+            description: 'error description fixture',
+          };
 
-        contextFixture = {
-          request: {
-            headers: {
-              foo: 'bar',
+          contextFixture = {
+            request: {
+              headers: {
+                foo: 'bar',
+              },
+              query: {},
+              urlParameters: {},
             },
-            query: {},
-            urlParameters: {},
-          },
-        } as Partial<Context> as Context;
+          } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
-          body: errorV1,
-          headers: {},
-          statusCode: HttpStatus.FORBIDDEN,
+          httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
+            body: errorV1Fixture,
+            headers: {},
+            statusCode: httpStatus,
+          });
+
+          try {
+            await gameMutationResolver.passGameTurn(
+              undefined,
+              {
+                gameId: gameIdFixture,
+                gamePassTurnInput: {
+                  slotIndex: slotIndexFixture,
+                },
+              },
+              contextFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
         });
 
-        try {
-          await gameMutationResolver.passGameTurn(
-            undefined,
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call httpClient.endpoints.updateGame()', () => {
+          const expectedBody: apiModels.GameIdPassTurnQueryV1 = {
+            kind: 'passTurn',
+            slotIndex: slotIndexFixture,
+          };
+
+          expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+          expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
+            contextFixture.request.headers,
             {
               gameId: gameIdFixture,
-              gamePassTurnInput: {
-                slotIndex: slotIndexFixture,
-              },
             },
-            contextFixture,
+            expectedBody,
           );
-        } catch (error: unknown) {
-          result = error;
-        }
-      });
+        });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: appErrorKind,
+            message: errorV1Fixture.description,
+          };
 
-      it('should call httpClient.endpoints.updateGame()', () => {
-        const expectedBody: apiModels.GameIdPassTurnQueryV1 = {
-          kind: 'passTurn',
-          slotIndex: slotIndexFixture,
-        };
-
-        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
-          contextFixture.request.headers,
-          {
-            gameId: gameIdFixture,
-          },
-          expectedBody,
-        );
-      });
-
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.invalidCredentials,
-          message: errorV1.description,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      },
+    );
   });
 
   describe('.playGameCards', () => {
@@ -934,14 +928,15 @@ describe(GameMutationResolver.name, () => {
       });
     });
 
-    describe('when called, and httpClient.endpoints.updateGame() returns an UNAUTHORIZED response', () => {
-      let errorV1: apiModels.ErrorV1;
+    describe('when called, and httpClient.endpoints.updateGame() returns a NOT_FOUND response', () => {
+      let errorV1Fixture: apiModels.ErrorV1;
+
       let contextFixture: Context;
 
       let result: unknown;
 
       beforeAll(async () => {
-        errorV1 = {
+        errorV1Fixture = {
           description: 'error description fixture',
         };
 
@@ -956,27 +951,23 @@ describe(GameMutationResolver.name, () => {
         } as Partial<Context> as Context;
 
         httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
-          body: errorV1,
+          body: errorV1Fixture,
           headers: {},
-          statusCode: HttpStatus.UNAUTHORIZED,
+          statusCode: HttpStatus.NOT_FOUND,
         });
 
-        try {
-          await gameMutationResolver.playGameCards(
-            undefined,
-            {
-              gameId: gameIdFixture,
-              gamePlayCardsInput: {
-                cardIndexes: cardIndexesFixture,
-                colorChoice: null,
-                slotIndex: slotIndexFixture,
-              },
+        result = await gameMutationResolver.playGameCards(
+          undefined,
+          {
+            gameId: gameIdFixture,
+            gamePlayCardsInput: {
+              cardIndexes: cardIndexesFixture,
+              colorChoice: null,
+              slotIndex: slotIndexFixture,
             },
-            contextFixture,
-          );
-        } catch (error: unknown) {
-          result = error;
-        }
+          },
+          contextFixture,
+        );
       });
 
       afterAll(() => {
@@ -1000,96 +991,96 @@ describe(GameMutationResolver.name, () => {
         );
       });
 
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.missingCredentials,
-          message: errorV1.description,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
+      it('should return null', () => {
+        expect(result).toBeNull();
       });
     });
 
-    describe('when called, and httpClient.endpoints.updateGame() returns an FORBIDDEN response', () => {
-      let errorV1: apiModels.ErrorV1;
-      let contextFixture: Context;
+    describe.each<[400 | 401 | 403 | 422, AppErrorKind]>([
+      [HttpStatus.BAD_REQUEST, AppErrorKind.contractViolation],
+      [HttpStatus.UNAUTHORIZED, AppErrorKind.missingCredentials],
+      [HttpStatus.FORBIDDEN, AppErrorKind.invalidCredentials],
+      [HttpStatus.UNPROCESSABLE_ENTITY, AppErrorKind.unprocessableOperation],
+    ])(
+      'when called, and httpClient.endpoints.updateGame() returns a %s response',
+      (httpStatus: 400 | 401 | 403 | 422, appErrorKind: AppErrorKind) => {
+        let errorV1Fixture: apiModels.ErrorV1;
+        let contextFixture: Context;
 
-      let result: unknown;
+        let result: unknown;
 
-      beforeAll(async () => {
-        errorV1 = {
-          description: 'error description fixture',
-        };
+        beforeAll(async () => {
+          errorV1Fixture = {
+            description: 'error description fixture',
+          };
 
-        contextFixture = {
-          request: {
-            headers: {
-              foo: 'bar',
+          contextFixture = {
+            request: {
+              headers: {
+                foo: 'bar',
+              },
+              query: {},
+              urlParameters: {},
             },
-            query: {},
-            urlParameters: {},
-          },
-        } as Partial<Context> as Context;
+          } as Partial<Context> as Context;
 
-        httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
-          body: errorV1,
-          headers: {},
-          statusCode: HttpStatus.FORBIDDEN,
+          httpClientMock.endpoints.updateGame.mockResolvedValueOnce({
+            body: errorV1Fixture,
+            headers: {},
+            statusCode: httpStatus,
+          });
+
+          try {
+            await gameMutationResolver.playGameCards(
+              undefined,
+              {
+                gameId: gameIdFixture,
+                gamePlayCardsInput: {
+                  cardIndexes: cardIndexesFixture,
+                  colorChoice: null,
+                  slotIndex: slotIndexFixture,
+                },
+              },
+              contextFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
         });
 
-        try {
-          await gameMutationResolver.playGameCards(
-            undefined,
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call httpClient.endpoints.updateGame()', () => {
+          const expectedBody: apiModels.GameIdPlayCardsQueryV1 = {
+            cardIndexes: cardIndexesFixture,
+            kind: 'playCards',
+            slotIndex: slotIndexFixture,
+          };
+
+          expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
+          expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
+            contextFixture.request.headers,
             {
               gameId: gameIdFixture,
-              gamePlayCardsInput: {
-                cardIndexes: cardIndexesFixture,
-                colorChoice: null,
-                slotIndex: slotIndexFixture,
-              },
             },
-            contextFixture,
+            expectedBody,
           );
-        } catch (error: unknown) {
-          result = error;
-        }
-      });
+        });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+        it('should throw an AppError', () => {
+          const expectedErrorProperties: Partial<AppError> = {
+            kind: appErrorKind,
+            message: errorV1Fixture.description,
+          };
 
-      it('should call httpClient.endpoints.updateGame()', () => {
-        const expectedBody: apiModels.GameIdPlayCardsQueryV1 = {
-          cardIndexes: cardIndexesFixture,
-          kind: 'playCards',
-          slotIndex: slotIndexFixture,
-        };
-
-        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledTimes(1);
-        expect(httpClientMock.endpoints.updateGame).toHaveBeenCalledWith(
-          contextFixture.request.headers,
-          {
-            gameId: gameIdFixture,
-          },
-          expectedBody,
-        );
-      });
-
-      it('should throw an AppError', () => {
-        const expectedErrorProperties: Partial<AppError> = {
-          kind: AppErrorKind.invalidCredentials,
-          message: errorV1.description,
-        };
-
-        expect(result).toBeInstanceOf(AppError);
-        expect(result).toStrictEqual(
-          expect.objectContaining(expectedErrorProperties),
-        );
-      });
-    });
+          expect(result).toBeInstanceOf(AppError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      },
+    );
   });
 });

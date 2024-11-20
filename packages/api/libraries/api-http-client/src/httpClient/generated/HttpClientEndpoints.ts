@@ -116,9 +116,11 @@ export class HttpClientEndpoints {
     body: apiModels.GameIdUpdateQueryV1,
   ): Promise<
     | Response<Record<string, string>, apiModels.GameV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 400>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
     | Response<Record<string, string>, apiModels.ErrorV1, 404>
+    | Response<Record<string, string>, apiModels.ErrorV1, 422>
   > {
     return this.#internalHttpClient.callEndpoint({
       body: body,

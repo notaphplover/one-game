@@ -40,7 +40,7 @@
         "vite.config.js",
         "tsconfig.json"
       ],
-      "outputs": ["src/**/*.{cjs,css,js,jsx}", "vite.config.js"]
+      "outputs": ["dist/*", "dist/**"]
     },
     "@cornie-js/web-ui#format": {
       "dependsOn": ["^build"],

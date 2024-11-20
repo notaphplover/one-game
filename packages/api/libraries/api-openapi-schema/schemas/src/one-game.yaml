@@ -233,6 +233,12 @@ paths:
             application/json:
               schema:
                 $ref: 'https://onegame.schemas/api/v1/games/game.json'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
         '401':
           description: Unauthorized
           content:
@@ -247,6 +253,12 @@ paths:
                 $ref: 'https://onegame.schemas/api/v1/errors/error.json'
         '404':
           description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '422':
+          description: Unprocessable operation
           content:
             application/json:
               schema:
