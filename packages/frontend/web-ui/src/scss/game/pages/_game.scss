@@ -130,6 +130,13 @@
           gap: 2rem;
           width: 150px;
         }
+
+        .game-area-draw-button:disabled,
+        .game-area-play-button:disabled,
+        .game-area-pass-button:disabled {
+          background-color: var(--cg-bkg-secondary-dark);
+          color: var(--cg-bkg-primary-dark);
+        }
       }
 
       .game-area-info {
@@ -154,8 +161,11 @@
         }
 
         .game-area-info-deck {
+          display: grid;
+          justify-content: center;
           border-radius: 1.5rem;
           background-color: var(--cg-bkg-secondary-main);
+          color: var(--cg-bkg-primary-dark);
           text-align: center;
           margin-top: 2px;
           padding: 2px;
@@ -165,6 +175,11 @@
             padding: 0.8rem;
             margin-top: auto;
             margin-bottom: auto;
+          }
+
+          .game-area-info-deck-image {
+            width: 32px;
+            height: 32px;
           }
 
           .game-area-info-deck-count {

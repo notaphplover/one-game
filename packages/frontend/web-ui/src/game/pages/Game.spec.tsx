@@ -5,6 +5,9 @@ jest.mock('../../common/pages/PageNotFound');
 jest.mock('../components/Card', () => ({ Card: jest.fn() }), { virtual: true });
 jest.mock('../hooks/useGame');
 jest.mock('./NonStartedGame');
+jest.mock('../../app/images/cards/deckCard.svg', () => 'deckCard-url-fixture', {
+  virtual: true,
+});
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { render, RenderResult } from '@testing-library/react';
