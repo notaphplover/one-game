@@ -74,6 +74,8 @@ describe(GameQueryResolver.name, () => {
           statusCode: HttpStatus.OK,
         };
 
+        gameFixture = Symbol() as unknown as graphqlModels.Game;
+
         gameGraphQlFromGameV1BuilderMock.build.mockReturnValueOnce(gameFixture);
 
         httpClientMock.endpoints.getGame.mockResolvedValueOnce(responseFixture);
