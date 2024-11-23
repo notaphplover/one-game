@@ -793,6 +793,10 @@ describe(AuthManagementInputPort.name, () => {
       let result: unknown;
 
       beforeAll(async () => {
+        accessTokenFixture = 'access-token-fixture';
+        refreshTokenFixture = 'refresh-token-fixture';
+        refreshTokenIdFixture = 'refresh-token-id-fixture';
+
         refreshTokenValueObjectFixture = RefreshTokenFixtures.any;
         userFixture = UserFixtures.any;
 
