@@ -34,6 +34,9 @@ describe(Register.name, () => {
     };
 
     authFixture = null;
+
+    handleClickShowPasswordMock = jest.fn();
+    handleMouseDownPasswordMock = jest.fn();
   });
 
   describe('when called, and useRegister returns result with status idle', () => {

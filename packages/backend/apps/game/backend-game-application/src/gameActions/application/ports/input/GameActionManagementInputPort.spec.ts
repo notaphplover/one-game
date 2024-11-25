@@ -52,6 +52,9 @@ describe(GameActionManagementInputPort.name, () => {
 
         beforeAll(async () => {
           gameActionFixture = GameActionFixtures.any;
+          messageEventFixture = {
+            data: 'data-fixture',
+          };
 
           gameActionPersistenceOutputPortMock.find.mockResolvedValueOnce([
             gameActionFixture,
@@ -299,6 +302,10 @@ describe(GameActionManagementInputPort.name, () => {
           };
 
           secondGameActionFixture = GameActionFixtures.any;
+
+          messageEventFixture = {
+            data: 'data-fixture',
+          };
 
           gameActionPersistenceOutputPortMock.findOne.mockResolvedValueOnce(
             firstGameActionFixture,
