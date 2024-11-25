@@ -23,8 +23,10 @@ import { GetGamesV1Args } from './games/models/GetGamesV1Args';
 import { GetGamesV1GameIdArgs } from './games/models/GetGamesV1GameIdArgs';
 import { GetGamesV1GameIdSlotsSlotIdCardsArgs } from './games/models/GetGamesV1GameIdSlotsSlotIdCardsArgs';
 import { GetGamesV1MineArgs } from './games/models/GetGamesV1MineArgs';
+import { UpdateGameV1Args } from './games/models/UpdateGameV1Args';
 import { createGamesV1 } from './games/mutations/createGamesV1';
 import { createGamesV1Slots } from './games/mutations/createGamesV1Slots';
+import { updateGameV1 } from './games/mutations/updateGameV1';
 import { getGamesGameIdSpecsV1 } from './games/queries/getGamesGameIdSpecsV1';
 import { getGamesSpecsV1 } from './games/queries/getGamesSpecsV1';
 import { getGamesV1 } from './games/queries/getGamesV1';
@@ -58,6 +60,7 @@ export type {
   GetGamesV1MineArgs,
   GetUsersV1MeArgs,
   SerializableAppError,
+  UpdateGameV1Args,
   UpdateUsersV1MeArgs,
 };
 
@@ -206,6 +209,12 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
           ),
         },
       ),
+      updateGameV1: build.mutation<apiModels.GameV1, UpdateGameV1Args>({
+        queryFn: authorizedApiCall(
+          updateGameV1(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
+      }),
       updateUsersV1Me: build.mutation<apiModels.UserV1, UpdateUsersV1MeArgs>({
         invalidatesTags: (result: apiModels.UserV1 | undefined) =>
           result === undefined ? [] : [{ id: result.id, type: ApiTag.users }],
