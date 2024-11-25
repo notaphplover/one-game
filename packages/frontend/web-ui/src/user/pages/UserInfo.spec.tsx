@@ -6,7 +6,7 @@ jest.mock('../hooks/useUserInfo');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppSelector } from '../../app/store/hooks';

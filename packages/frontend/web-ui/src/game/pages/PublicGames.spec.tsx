@@ -10,7 +10,7 @@ import { GetGamesV1Args } from '@cornie-js/frontend-api-rtk-query';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { useGetUserMe } from '../../user/hooks/useGetUserMe';
 import {

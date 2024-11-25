@@ -1,4 +1,4 @@
-import { Location } from 'react-router-dom';
+import { Location } from 'react-router';
 
 export class UrlLikeLocation {
   readonly #pathname: string;

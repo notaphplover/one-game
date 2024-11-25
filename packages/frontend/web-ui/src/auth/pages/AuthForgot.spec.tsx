@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../hooks/useAuthForgot');
 
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { HTTP_BAD_REQUEST_USER_ERROR_MESSAGE } from '../helpers/createUserErrorMessages';
 import { useAuthForgot } from '../hooks/useAuthForgot';

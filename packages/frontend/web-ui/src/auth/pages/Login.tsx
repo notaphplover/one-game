@@ -12,11 +12,13 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
+import { getSlug } from '../../common/helpers/getSlug';
 import { useShowPassword } from '../../common/hooks/useShowPassword';
 import { CornieLayout } from '../../common/layout/CornieLayout';
+import { PageName } from '../../common/models/PageName';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { LoginStatus } from '../models/LoginStatus';
 import { UseLoginFormResult } from '../models/UseLoginFormResult';
@@ -183,7 +185,7 @@ export const Login = (): React.JSX.Element => {
                       <Link
                         component={RouterLink}
                         color="primary"
-                        to="/auth/register"
+                        to={getSlug(PageName.register)}
                       >
                         Sign up
                       </Link>
@@ -194,7 +196,7 @@ export const Login = (): React.JSX.Element => {
                       <Link
                         component={RouterLink}
                         color="primary"
-                        to="/auth/forgot"
+                        to={getSlug(PageName.forgot)}
                       >
                         Forgot password?
                       </Link>
