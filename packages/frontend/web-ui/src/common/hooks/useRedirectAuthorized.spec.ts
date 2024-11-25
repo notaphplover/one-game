@@ -1,13 +1,13 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('react-router-dom');
+jest.mock('react-router');
 
 jest.mock('../../app/store/hooks');
 jest.mock('../helpers/getSlug');
 
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';

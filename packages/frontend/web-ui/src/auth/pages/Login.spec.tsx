@@ -5,7 +5,7 @@ jest.mock('../../common/hooks/useShowPassword');
 jest.mock('../../app/store/hooks');
 
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { useAppSelector } from '../../app/store/hooks';

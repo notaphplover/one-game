@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('react-router-dom');
+jest.mock('react-router');
 
 jest.mock('../models/UrlLikeLocation');
 
-import { Location, useLocation } from 'react-router-dom';
+import { Location, useLocation } from 'react-router';
 
 import { UrlLikeLocation } from '../models/UrlLikeLocation';
 import { Writable } from '../models/Writable';

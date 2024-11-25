@@ -2,7 +2,7 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import login from '../../app/store/actions/login';
 import { useAppDispatch } from '../../app/store/hooks';

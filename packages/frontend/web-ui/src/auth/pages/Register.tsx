@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
 import { getSlug } from '../../common/helpers/getSlug';
