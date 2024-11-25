@@ -1,6 +1,6 @@
 import { AppBar, Container, Toolbar, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import logout from '../../app/store/actions/logout';
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
@@ -30,7 +30,7 @@ export const Navbar = (): React.JSX.Element => {
   const onLogout = (event: React.FormEvent) => {
     event.preventDefault();
     dispatch(logout());
-    navigate(getSlug(PageName.home));
+    void navigate(getSlug(PageName.home));
   };
 
   return (

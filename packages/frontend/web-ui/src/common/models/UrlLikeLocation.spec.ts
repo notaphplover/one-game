@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
-import { Location } from 'react-router-dom';
+import { Location } from 'react-router';
 
 import { UrlLikeLocation } from './UrlLikeLocation';
 

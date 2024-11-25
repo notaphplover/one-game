@@ -1,5 +1,5 @@
 import { Box, Button, Grid2, Link, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 import { getSlug } from '../../common/helpers/getSlug';
 import { CornieLayout } from '../../common/layout/CornieLayout';

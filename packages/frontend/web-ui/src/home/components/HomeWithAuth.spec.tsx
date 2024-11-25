@@ -10,7 +10,7 @@ jest.mock('../../user/hooks/useGetUserMe');
 
 import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { useAppSelector } from '../../app/store/hooks';
 import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';

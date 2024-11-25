@@ -3,9 +3,9 @@ jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../hooks/useCreateNewGame');
 jest.mock('../../app/store/hooks');
 
-jest.mock('react-router-dom', () => ({
+jest.mock('react-router', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  ...(jest.requireActual('react-router-dom') as Record<string, unknown>),
+  ...(jest.requireActual('react-router') as Record<string, unknown>),
   useNavigate: jest.fn(),
 }));
 
@@ -18,7 +18,7 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';

@@ -4,7 +4,7 @@ jest.mock('../hooks/useJoinExistingGame');
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useJoinExistingGame } from '../hooks/useJoinExistingGame';

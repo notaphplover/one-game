@@ -4,7 +4,7 @@ import {
   NavigateFunction,
   useLocation,
   useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
@@ -48,7 +48,7 @@ export function useRedirectUnauthorized(): void {
 
   useEffect(() => {
     if (auth === null) {
-      navigate(
+      void navigate(
         buildLoginPageUrl(getReactStrictModeFriendlyCurrentUrl(location)),
       );
     }

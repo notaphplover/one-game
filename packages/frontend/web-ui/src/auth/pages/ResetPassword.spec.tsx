@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('../hooks/useResetPassword');
 
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { HTTP_UNAUTHORIZED_UPD_USER_ME_ERROR_MESSAGE } from '../helpers/updateUserMeErrorMessage';
 import { useResetPassword } from '../hooks/useResetPassword';

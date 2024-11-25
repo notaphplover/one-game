@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
 import { getSlug } from '../../common/helpers/getSlug';
