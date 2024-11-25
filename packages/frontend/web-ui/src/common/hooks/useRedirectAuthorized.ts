@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router';
 
 import { selectAuthenticatedAuth } from '../../app/store/features/authSlice';
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
@@ -18,7 +18,7 @@ export function useRedirectAuthorized(skip?: boolean): void {
 
   useEffect(() => {
     if (auth !== null && !shouldSkipNavigation) {
-      navigate(getSlug(PageName.home));
+      void navigate(getSlug(PageName.home));
     }
   }, [auth, skip]);
 }

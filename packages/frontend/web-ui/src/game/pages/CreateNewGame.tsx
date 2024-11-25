@@ -21,7 +21,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router';
 
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
 import { getSlug } from '../../common/helpers/getSlug';
@@ -66,7 +66,7 @@ export const CreateNewGame = (): React.JSX.Element => {
 
   const onGoHome = (event: React.FormEvent): void => {
     event.preventDefault();
-    navigate(getSlug(PageName.home));
+    void navigate(getSlug(PageName.home));
   };
 
   const isTextFieldDisabled = (): boolean => {

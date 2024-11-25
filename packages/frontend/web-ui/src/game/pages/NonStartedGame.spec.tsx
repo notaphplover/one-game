@@ -4,7 +4,7 @@ jest.mock('../../common/helpers/getSlug');
 jest.mock('../../common/layout/CornieLayout');
 
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { getSlug } from '../../common/helpers/getSlug';
 import { PageName } from '../../common/models/PageName';

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('react-router-dom');
+jest.mock('react-router');
 
 jest.mock('../../app/store/hooks');
 jest.mock('../../common/hooks/useRedirectAuthorized');
@@ -18,7 +18,7 @@ import { AppErrorKind } from '@cornie-js/frontend-common';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { QueryStatus } from '@reduxjs/toolkit/query';
 import { act, renderHook, RenderHookResult } from '@testing-library/react';
-import { Location as ReactRouterLocation, useLocation } from 'react-router-dom';
+import { Location as ReactRouterLocation, useLocation } from 'react-router';
 
 import login from '../../app/store/actions/login';
 import { useAppDispatch } from '../../app/store/hooks';

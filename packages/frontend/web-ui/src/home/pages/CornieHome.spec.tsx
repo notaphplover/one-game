@@ -13,7 +13,7 @@ jest.mock('../components/HomeWithAuth', () => ({
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 import { render, RenderResult } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('react-router-dom');
+jest.mock('react-router');
 
 jest.mock('../../app/store/hooks');
 jest.mock('../helpers/getSlug');
@@ -11,7 +11,7 @@ import {
   Location as ReactRouterLocation,
   useLocation,
   useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 
 import { AuthenticatedAuthState } from '../../app/store/helpers/models/AuthState';
 import { AuthStateStatus } from '../../app/store/helpers/models/AuthStateStatus';
