@@ -7,7 +7,6 @@ import { SerializableAppError } from '../../foundation/error/SerializableAppErro
 import { QueryReturnValue } from '../../foundation/http/models/QueryReturnValue';
 import { AuthorizedEndpointsOptions } from '../models/AuthorizedEndpointsOptions';
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function authorizedApiCall<TArg, TResult, TState>(
   call: (
     args: TArg,
