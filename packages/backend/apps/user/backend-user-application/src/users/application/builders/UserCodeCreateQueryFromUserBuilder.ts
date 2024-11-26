@@ -10,8 +10,7 @@ import { UserCodeContext } from '../models/UserCodeContext';
 
 @Injectable()
 export class UserCodeCreateQueryFromUserBuilder
-  implements
-    Builder<UserCodeCreateQuery, [User, UuidContext & UserCodeContext]>
+  implements Builder<UserCodeCreateQuery, [User, UuidContext & UserCodeContext]>
 {
   public build(
     user: User,

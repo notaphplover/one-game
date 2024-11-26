@@ -10,8 +10,7 @@ import { GameUpdatedMessageEvent } from '../models/GameUpdatedMessageEvent';
 
 @Injectable()
 export class GameEventV2FromGameMessageEventBuilder
-  implements
-    Builder<[string | null, apiModels.GameEventV2], [GameMessageEvent]>
+  implements Builder<[string | null, apiModels.GameEventV2], [GameMessageEvent]>
 {
   readonly #gameEventV2FromGameActionBuilder: Builder<
     [string | null, apiModels.GameEventV2],
