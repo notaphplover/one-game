@@ -5,7 +5,7 @@
   },
   "description": "Backend user app models",
   "dependencies": {
-    "@nestjs/common": "^10.4.9",
+    "@nestjs/common": "^10.4.11",
     "@nestjs/typeorm": "^10.0.2",
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-game-domain": "workspace:*",
@@ -23,7 +23,7 @@
     "@stryker-mutator/typescript-checker": "8.6.0",
     "@types/node": "22.10.0",
     "jest": "29.7.0",
-    "prettier": "3.4.0",
+    "prettier": "3.4.1",
     "rimraf": "6.0.1",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
