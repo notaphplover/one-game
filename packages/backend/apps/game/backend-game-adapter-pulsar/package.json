@@ -19,7 +19,7 @@
     "@stryker-mutator/core": "8.6.0",
     "@stryker-mutator/jest-runner": "8.6.0",
     "@stryker-mutator/typescript-checker": "8.6.0",
-    "@types/node": "22.10.0",
+    "@types/node": "22.10.1",
     "jest": "29.7.0",
     "prettier": "3.4.1",
     "pulsar-client": "1.12.0",
