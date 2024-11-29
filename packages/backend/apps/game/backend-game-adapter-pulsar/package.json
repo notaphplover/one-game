@@ -5,7 +5,7 @@
   },
   "description": "Backend game adapter pulsar modules",
   "dependencies": {
-    "@nestjs/common": "^10.4.11",
+    "@nestjs/common": "^10.4.12",
     "@nestjs/typeorm": "^10.0.2",
     "@cornie-js/backend-adapter-pulsar": "workspace:*",
     "@cornie-js/backend-app-game-env": "workspace:*",
