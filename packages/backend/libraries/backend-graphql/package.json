@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
-    "@nestjs/common": "^10.4.11",
+    "@nestjs/common": "^10.4.12",
     "graphql": "^16.9.0"
   },
   "devDependencies": {
