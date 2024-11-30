@@ -16,7 +16,7 @@
     "typeorm": "~0.3.20"
   },
   "devDependencies": {
-    "@eslint/js": "9.15.0",
+    "@eslint/js": "9.16.0",
     "@jest/globals": "29.7.0",
     "@stryker-mutator/core": "8.6.0",
     "@stryker-mutator/jest-runner": "8.6.0",
