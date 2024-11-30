@@ -35,6 +35,7 @@ describe(useGameCards.name, () => {
         deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
         hasNext: false,
         hasPrevious: false,
+        selectedCards: [],
         setNext: expect.any(Function) as unknown as () => void,
         setPrevious: expect.any(Function) as unknown as () => void,
         switchCardSelection: expect.any(Function) as unknown as (
@@ -82,6 +83,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: true,
           hasPrevious: false,
+          selectedCards: [],
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (
@@ -116,6 +118,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: false,
           hasPrevious: true,
+          selectedCards: [],
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (
@@ -157,6 +160,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: true,
           hasPrevious: false,
+          selectedCards: [9],
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (
@@ -207,6 +211,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: true,
           hasPrevious: false,
+          selectedCards: [9],
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (
@@ -223,6 +228,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: true,
           hasPrevious: false,
+          selectedCards: [],
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (

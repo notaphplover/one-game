@@ -2,8 +2,8 @@ import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
 } from '@mui/icons-material';
-import { Box, Button, Typography } from '@mui/material';
-import { MouseEvent } from 'react';
+import { Alert, Box, Button, Snackbar, Typography } from '@mui/material';
+import { FormEvent, MouseEvent } from 'react';
 
 import cardDeckImageUrl from '../../app/images/cards/deckCard.svg';
 import { CircularProgressModal } from '../../common/components/CircularProgressModal';
@@ -19,11 +19,20 @@ import { NonStartedGame } from './NonStartedGame';
 
 export const Game = (): React.JSX.Element => {
   const {
+    closeErrorMessage,
     currentCard,
     deckCardsAmount,
+    errorMessage,
     game,
+    isDrawingCardAllowed,
     isMyTurn,
+    isPassingTurnAllowed,
     isPending,
+    isPlayingCardsAllowed,
+    onHandleDrawCardsGame,
+    onHandlePassTurnGame,
+    onHandlePlayCardsGame,
+    openErrorMessage,
     useCountdownResult: { currentSeconds, durationSeconds, isRunning },
     useGameCardsResult: {
       cards,
@@ -59,6 +68,27 @@ export const Game = (): React.JSX.Element => {
     <Countdown />
   );
 
+  const buildOnHandlePlayCard = (event: FormEvent): void => {
+    event.preventDefault();
+    if (isMyTurn) {
+      onHandlePlayCardsGame(event);
+    }
+  };
+
+  const buildOnHandleDrawCard = (event: FormEvent): void => {
+    event.preventDefault();
+    if (isMyTurn) {
+      onHandleDrawCardsGame(event);
+    }
+  };
+
+  const buildOnHandlePassTurn = (event: FormEvent): void => {
+    event.preventDefault();
+    if (isMyTurn) {
+      onHandlePassTurnGame(event);
+    }
+  };
+
   const buildOnHandleClick =
     (index: number) =>
     (event: MouseEvent): void => {
@@ -78,12 +108,38 @@ export const Game = (): React.JSX.Element => {
         >
           <Box component="div" className="game-container">
             <Box component="div" className="game-area" data-testid="game-area">
+              <Box
+                component="div"
+                className="game-area-snackbar"
+                display={errorMessage !== undefined ? '' : 'none'}
+              >
+                <Snackbar
+                  anchorOrigin={{
+                    horizontal: 'center',
+                    vertical: 'top',
+                  }}
+                  className="snackbar-error"
+                  open={openErrorMessage}
+                  autoHideDuration={3000}
+                  onClose={closeErrorMessage}
+                >
+                  <Alert
+                    onClose={closeErrorMessage}
+                    severity="error"
+                    variant="filled"
+                  >
+                    {errorMessage}
+                  </Alert>
+                </Snackbar>
+              </Box>
               <Box component="div" className="game-area-buttons">
                 <Button
                   type="button"
                   className="game-area-draw-button"
                   fullWidth
                   variant="contained"
+                  disabled={!isDrawingCardAllowed}
+                  onClick={buildOnHandleDrawCard}
                 >
                   DRAW
                 </Button>
@@ -91,7 +147,9 @@ export const Game = (): React.JSX.Element => {
                   type="button"
                   className="game-area-play-button"
                   fullWidth
+                  disabled={!isPlayingCardsAllowed}
                   variant="contained"
+                  onClick={buildOnHandlePlayCard}
                 >
                   PLAY
                 </Button>
@@ -99,7 +157,9 @@ export const Game = (): React.JSX.Element => {
                   type="button"
                   className="game-area-pass-button"
                   fullWidth
+                  disabled={!isPassingTurnAllowed}
                   variant="contained"
+                  onClick={buildOnHandlePassTurn}
                 >
                   PASS
                 </Button>

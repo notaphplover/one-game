@@ -1,13 +1,18 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 
+import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import {
   useCountdown,
   UseCountdownResult,
 } from '../../common/hooks/useCountdown';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
+import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieEventSource } from '../../common/http/services/CornieEventSource';
+import { Either } from '../../common/models/Either';
 import { UrlLikeLocation } from '../../common/models/UrlLikeLocation';
 import { useGetUserMe } from '../../user/hooks/useGetUserMe';
 import { buildEventSource } from '../helpers/buildEventSource';
@@ -27,9 +32,18 @@ const MS_PER_SECOND: number = 1000;
 export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
   deckCardsAmount: number | undefined;
+  closeErrorMessage: () => void;
+  errorMessage?: string | undefined;
   game: apiModels.GameV1 | undefined;
+  isDrawingCardAllowed: boolean;
   isMyTurn: boolean;
+  isPassingTurnAllowed: boolean;
   isPending: boolean;
+  isPlayingCardsAllowed: boolean;
+  onHandleDrawCardsGame: (event: React.FormEvent) => void;
+  onHandlePassTurnGame: (event: React.FormEvent) => void;
+  onHandlePlayCardsGame: (event: React.FormEvent) => void;
+  openErrorMessage: boolean;
   useCountdownResult: UseCountdownResult;
   useGameCardsResult: UseGameCardsResult;
 }
@@ -76,6 +90,20 @@ export const useGame = (): UseGameResult => {
   const { queryResult: gamesV1GameIdQueryResult, result: gamesV1GameIdResult } =
     useGetGamesV1GameId(gameIdParam);
 
+  const [triggerUpdateGame, gameUpdatedResult] =
+    cornieApi.useUpdateGameV1Mutation();
+
+  const gameUpdateResult: Either<
+    SerializableAppError | SerializedError,
+    apiModels.GameV1
+  > | null = mapUseQueryHookResultV2(gameUpdatedResult);
+
+  const [errorMessagePlaying, setErrorMessagePlaying] = useState<
+    string | undefined
+  >(undefined);
+
+  const [openErrorMessage, setOpenErrorMessage] = useState<boolean>(false);
+
   const [game, setGame] = useState<apiModels.GameV1>();
 
   const [messageEventsQueue, setMessageEventsQueue] = useState<
@@ -98,6 +126,17 @@ export const useGame = (): UseGameResult => {
     isActiveGame(game) &&
     game.state.currentPlayingSlotIndex === gameSlotIndexParam;
 
+  const isDrawingCardAllowed: boolean =
+    isActiveGame(game) && isMyTurn && !game.state.currentTurnCardsDrawn;
+
+  const isPlayingCardsAllowed: boolean =
+    isActiveGame(game) && isMyTurn && !game.state.currentTurnCardsPlayed;
+
+  const isPassingTurnAllowed: boolean =
+    isActiveGame(game) &&
+    isMyTurn &&
+    (game.state.currentTurnCardsDrawn || game.state.currentTurnCardsPlayed);
+
   const {
     refetch: refetchGamesV1GameIdSlotsSlotIdCards,
     result: gamesV1GameIdSlotsSlotIdCardsResult,
@@ -109,6 +148,89 @@ export const useGame = (): UseGameResult => {
   const useCountdownResult = useCountdown({
     durationSeconds: MAX_SECONDS_PER_TURN,
   });
+
+  const closeErrorMessage = (): void => {
+    setOpenErrorMessage(false);
+  };
+
+  async function triggerPassGame(): Promise<void> {
+    if (gameIdParam !== undefined && gameSlotIndexParam !== undefined) {
+      setErrorMessagePlaying(undefined);
+
+      await triggerUpdateGame({
+        params: [
+          {
+            gameId: gameIdParam,
+          },
+          {
+            kind: 'passTurn',
+            slotIndex: gameSlotIndexParam,
+          },
+        ],
+      });
+    }
+  }
+
+  function onHandlePlayCardsGame(event: React.FormEvent): void {
+    event.preventDefault();
+
+    if (gameIdParam !== undefined && gameSlotIndexParam !== undefined) {
+      setErrorMessagePlaying(undefined);
+
+      void triggerUpdateGame({
+        params: [
+          {
+            gameId: gameIdParam,
+          },
+          {
+            cardIndexes: useGameCardsResult.selectedCards,
+            kind: 'playCards',
+            slotIndex: gameSlotIndexParam,
+          },
+        ],
+      });
+    }
+  }
+
+  function onHandleDrawCardsGame(event: React.FormEvent): void {
+    event.preventDefault();
+
+    if (gameIdParam !== undefined && gameSlotIndexParam !== undefined) {
+      setErrorMessagePlaying(undefined);
+
+      void triggerUpdateGame({
+        params: [
+          {
+            gameId: gameIdParam,
+          },
+          {
+            kind: 'drawCards',
+            slotIndex: gameSlotIndexParam,
+          },
+        ],
+      });
+    }
+  }
+
+  function onHandlePassTurnGame(event: React.FormEvent): void {
+    event.preventDefault();
+
+    void triggerPassGame();
+  }
+
+  useEffect(() => {
+    if (isActiveGame(game) && isMyTurn && game.state.currentTurnCardsPlayed) {
+      void triggerPassGame();
+      useGameCardsResult.deleteAllSelectedCard();
+    }
+  }, [game]);
+
+  useEffect(() => {
+    if (gameUpdateResult?.isRight === false) {
+      setErrorMessagePlaying(gameUpdateResult.value.message);
+      setOpenErrorMessage(true);
+    }
+  }, [gameUpdatedResult]);
 
   useEffect(() => {
     const gameResult: apiModels.GameV1 | undefined =
@@ -208,13 +330,22 @@ export const useGame = (): UseGameResult => {
   const useGameCardsResult: UseGameCardsResult = useGameCards(gameCards);
 
   return {
+    closeErrorMessage,
     currentCard: getGameCurrentCard(game),
     deckCardsAmount,
+    errorMessage: errorMessagePlaying,
     game,
+    isDrawingCardAllowed,
     isMyTurn,
+    isPassingTurnAllowed,
     isPending:
       gamesV1GameIdResult === null ||
       gamesV1GameIdSlotsSlotIdCardsResult === null,
+    isPlayingCardsAllowed,
+    onHandleDrawCardsGame,
+    onHandlePassTurnGame,
+    onHandlePlayCardsGame,
+    openErrorMessage,
     useCountdownResult,
     useGameCardsResult,
   };
