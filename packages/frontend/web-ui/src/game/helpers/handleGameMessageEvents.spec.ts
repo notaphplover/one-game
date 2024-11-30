@@ -623,6 +623,8 @@ describe(handleGameMessageEvents.name, () => {
             ...gameFixture.state,
             currentPlayingSlotIndex:
               turnPassedGameEventV2.nextPlayingSlotIndex as number,
+            currentTurnCardsDrawn: false,
+            currentTurnCardsPlayed: false,
             lastEventId: eventId,
             turnExpiresAt: '2020-01-02T00:00:30.000Z',
           },

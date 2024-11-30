@@ -1,8 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../app/store/store');
+jest.mock('../../common/helpers/mapUseQueryHookResultV2');
 jest.mock('../../common/hooks/useCountdown');
 jest.mock('../../common/hooks/useRedirectUnauthorized');
 jest.mock('../../common/hooks/useUrlLikeLocation');
+jest.mock('../../common/http/services/cornieApi');
 jest.mock('../../user/hooks/useGetUserMe');
 jest.mock('../helpers/buildEventSource');
 jest.mock('../helpers/getGameSlotIndex');
@@ -12,14 +15,17 @@ jest.mock('./useGetGamesV1GameId');
 jest.mock('./useGetGamesV1GameIdSlotsSlotIdCards');
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { QueryStatus } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
+import { mapUseQueryHookResultV2 } from '../../common/helpers/mapUseQueryHookResultV2';
 import {
   useCountdown,
   UseCountdownResult,
 } from '../../common/hooks/useCountdown';
 import { useRedirectUnauthorized } from '../../common/hooks/useRedirectUnauthorized';
 import { useUrlLikeLocation } from '../../common/hooks/useUrlLikeLocation';
+import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieEventSource } from '../../common/http/services/CornieEventSource';
 import { UrlLikeLocation } from '../../common/models/UrlLikeLocation';
 import { useGetUserMe } from '../../user/hooks/useGetUserMe';
@@ -40,6 +46,9 @@ describe(useGame.name, () => {
     let urlLikeLocationFixture: UrlLikeLocation;
     let useCountdownResultFixture: UseCountdownResult;
     let useGameCardsResultFixture: UseGameCardsResult;
+    let useUpdateGameV1MutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useUpdateGameV1Mutation>
+    >;
 
     let renderResult: RenderHookResult<UseGameResult, unknown>;
 
@@ -64,43 +73,60 @@ describe(useGame.name, () => {
         deleteAllSelectedCard: jest.fn(),
         hasNext: false,
         hasPrevious: false,
+        selectedCards: [],
         setNext: jest.fn(),
         setPrevious: jest.fn(),
         switchCardSelection: jest.fn(),
       };
 
+      useUpdateGameV1MutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
+        },
+      ];
+
       (
         useUrlLikeLocation as jest.Mock<typeof useUrlLikeLocation>
-      ).mockReturnValueOnce(urlLikeLocationFixture);
+      ).mockReturnValue(urlLikeLocationFixture);
 
-      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValueOnce({
+      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValue({
         queryResult: Symbol(),
         result: null,
       });
 
       (
+        cornieApi.useUpdateGameV1Mutation as jest.Mock<
+          typeof cornieApi.useUpdateGameV1Mutation
+        >
+      ).mockReturnValue(useUpdateGameV1MutationResultMock);
+
+      (
         useGetGamesV1GameId as jest.Mock<typeof useGetGamesV1GameId>
-      ).mockReturnValueOnce({ queryResult: null, result: null });
+      ).mockReturnValue({ queryResult: null, result: null });
+
+      (
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
+      ).mockReturnValue(null);
 
       (
         useGetGamesV1GameIdSlotsSlotIdCards as jest.Mock<
           typeof useGetGamesV1GameIdSlotsSlotIdCards
         >
-      ).mockReturnValueOnce({
+      ).mockReturnValue({
         result: null,
       } as Partial<UseGetGamesV1GameIdSlotsSlotIdCardsResult> as UseGetGamesV1GameIdSlotsSlotIdCardsResult);
 
-      (useCountdown as jest.Mock<typeof useCountdown>).mockReturnValueOnce(
+      (useCountdown as jest.Mock<typeof useCountdown>).mockReturnValue(
         useCountdownResultFixture,
       );
 
-      (
-        useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>
-      ).mockReturnValueOnce({
+      (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReturnValue({
         result: null,
       });
 
-      (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValueOnce(
+      (useGameCards as jest.Mock<typeof useGameCards>).mockReturnValue(
         useGameCardsResultFixture,
       );
 
@@ -109,6 +135,26 @@ describe(useGame.name, () => {
 
     afterAll(() => {
       jest.clearAllMocks();
+
+      (useUrlLikeLocation as jest.Mock<typeof useUrlLikeLocation>).mockReset();
+      (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReset();
+      (
+        useGetGamesV1GameId as jest.Mock<typeof useGetGamesV1GameId>
+      ).mockReset();
+      (
+        useGetGamesV1GameIdSlotsSlotIdCards as jest.Mock<
+          typeof useGetGamesV1GameIdSlotsSlotIdCards
+        >
+      ).mockReset();
+      (useCountdown as jest.Mock<typeof useCountdown>).mockReset();
+      (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReset();
+      (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReset();
+      (useGameCards as jest.Mock<typeof useGameCards>).mockReset();
+      (
+        cornieApi.useUpdateGameV1Mutation as jest.Mock<
+          typeof cornieApi.useUpdateGameV1Mutation
+        >
+      ).mockReset();
     });
 
     it('should call useRedirectUnauthorized()', () => {
@@ -130,6 +176,19 @@ describe(useGame.name, () => {
       expect(getGameSlotIndex).not.toHaveBeenCalled();
     });
 
+    it('should return cornieApi.useUpdateGameV1Mutation()', () => {
+      expect(cornieApi.useUpdateGameV1Mutation).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useUpdateGameV1Mutation).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        1,
+        useUpdateGameV1MutationResultMock[1],
+      );
+    });
+
     it('should call useGetGamesV1GameIdSlotsSlotIdCards()', () => {
       expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledTimes(1);
       expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledWith(
@@ -145,11 +204,26 @@ describe(useGame.name, () => {
 
     it('should retuen expected result', () => {
       const expected: UseGameResult = {
+        closeErrorMessage: expect.any(Function) as unknown as () => void,
         currentCard: undefined,
         deckCardsAmount: undefined,
+        errorMessage: undefined,
         game: undefined,
+        isDrawingCardAllowed: false,
         isMyTurn: false,
+        isPassingTurnAllowed: false,
         isPending: true,
+        isPlayingCardsAllowed: false,
+        onHandleDrawCardsGame: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+        ) => void,
+        onHandlePassTurnGame: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+        ) => void,
+        onHandlePlayCardsGame: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+        ) => void,
+        openErrorMessage: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
       };
@@ -169,6 +243,9 @@ describe(useGame.name, () => {
     let useGetGameSpecV1ResultFixture: UseGetGameSpecV1Result;
     let useCountdownResultFixture: UseCountdownResult;
     let useGameCardsResultFixture: UseGameCardsResult;
+    let useUpdateGameV1MutationResultMock: jest.Mocked<
+      ReturnType<typeof cornieApi.useUpdateGameV1Mutation>
+    >;
 
     let renderResult: RenderHookResult<UseGameResult, unknown>;
 
@@ -181,6 +258,14 @@ describe(useGame.name, () => {
       gameCardsFixture = [
         {
           kind: 'wildDraw4',
+        },
+      ];
+
+      useUpdateGameV1MutationResultMock = [
+        jest.fn(),
+        {
+          reset: jest.fn(),
+          status: QueryStatus.uninitialized,
         },
       ];
 
@@ -256,6 +341,7 @@ describe(useGame.name, () => {
         deleteAllSelectedCard: jest.fn(),
         hasNext: false,
         hasPrevious: false,
+        selectedCards: [],
         setNext: jest.fn(),
         setPrevious: jest.fn(),
         switchCardSelection: jest.fn(),
@@ -272,6 +358,16 @@ describe(useGame.name, () => {
       (
         useUrlLikeLocation as jest.Mock<typeof useUrlLikeLocation>
       ).mockReturnValue(urlLikeLocationFixture);
+
+      (
+        cornieApi.useUpdateGameV1Mutation as jest.Mock<
+          typeof cornieApi.useUpdateGameV1Mutation
+        >
+      ).mockReturnValue(useUpdateGameV1MutationResultMock);
+
+      (
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
+      ).mockReturnValue(null);
 
       (useGetUserMe as jest.Mock<typeof useGetUserMe>).mockReturnValue({
         queryResult: Symbol(),
@@ -382,6 +478,23 @@ describe(useGame.name, () => {
       );
     });
 
+    it('should return cornieApi.useUpdateGameV1Mutation()', () => {
+      expect(cornieApi.useUpdateGameV1Mutation).toHaveBeenCalledTimes(2);
+      expect(cornieApi.useUpdateGameV1Mutation).toHaveBeenCalledWith();
+    });
+
+    it('should call mapUseQueryHookResultV2()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(2);
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        1,
+        useUpdateGameV1MutationResultMock[1],
+      );
+      expect(mapUseQueryHookResultV2).toHaveBeenNthCalledWith(
+        2,
+        useUpdateGameV1MutationResultMock[1],
+      );
+    });
+
     it('should call useGetGamesV1GameIdSlotsSlotIdCards()', () => {
       expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenCalledTimes(2);
       expect(useGetGamesV1GameIdSlotsSlotIdCards).toHaveBeenNthCalledWith(
@@ -404,11 +517,26 @@ describe(useGame.name, () => {
 
     it('should return expected result', () => {
       const expected: UseGameResult = {
+        closeErrorMessage: expect.any(Function) as unknown as () => void,
         currentCard: gameFixture.state.currentCard,
         deckCardsAmount: 189,
+        errorMessage: undefined,
         game: gameFixture,
+        isDrawingCardAllowed: true,
         isMyTurn: true,
+        isPassingTurnAllowed: false,
         isPending: false,
+        isPlayingCardsAllowed: true,
+        onHandleDrawCardsGame: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+        ) => void,
+        onHandlePassTurnGame: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+        ) => void,
+        onHandlePlayCardsGame: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+        ) => void,
+        openErrorMessage: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
       };

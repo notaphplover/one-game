@@ -6,6 +6,7 @@ export interface UseGameCardsResult {
   deleteAllSelectedCard: () => void;
   hasNext: boolean;
   hasPrevious: boolean;
+  selectedCards: number[];
   setNext: () => void;
   setPrevious: () => void;
   switchCardSelection: (index: number) => void;
@@ -94,6 +95,7 @@ export const useGameCards = (
     deleteAllSelectedCard,
     hasNext,
     hasPrevious,
+    selectedCards,
     setNext,
     setPrevious,
     switchCardSelection,

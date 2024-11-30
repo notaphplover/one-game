@@ -80,6 +80,8 @@ export function handleGameMessageEvents(
         } else {
           updatedGame.state.currentPlayingSlotIndex =
             messageEvent.nextPlayingSlotIndex;
+          updatedGame.state.currentTurnCardsDrawn = false;
+          updatedGame.state.currentTurnCardsPlayed = false;
 
           const date: Date = new Date();
           date.setMilliseconds(date.getMilliseconds() + GAME_TURN_MS);

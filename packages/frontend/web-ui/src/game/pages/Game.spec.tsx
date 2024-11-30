@@ -5,6 +5,9 @@ jest.mock('../../common/pages/PageNotFound');
 jest.mock('../components/Card', () => ({ Card: jest.fn() }), { virtual: true });
 jest.mock('../hooks/useGame');
 jest.mock('./NonStartedGame');
+jest.mock('../../app/images/cards/deckCard.svg', () => 'deckCard-url-fixture', {
+  virtual: true,
+});
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { render, RenderResult } from '@testing-library/react';
@@ -32,11 +35,19 @@ describe(Game.name, () => {
       );
 
       useGameResultFixture = {
+        closeErrorMessage: jest.fn(),
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
+        isDrawingCardAllowed: false,
         isMyTurn: false,
+        isPassingTurnAllowed: false,
         isPending: false,
+        isPlayingCardsAllowed: false,
+        onHandleDrawCardsGame: jest.fn(),
+        onHandlePassTurnGame: jest.fn(),
+        onHandlePlayCardsGame: jest.fn(),
+        openErrorMessage: false,
         useCountdownResult: {
           currentSeconds: 10,
           durationSeconds: 30,
@@ -49,6 +60,7 @@ describe(Game.name, () => {
           deleteAllSelectedCard: jest.fn(),
           hasNext: false,
           hasPrevious: false,
+          selectedCards: [],
           setNext: jest.fn(),
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
@@ -111,11 +123,19 @@ describe(Game.name, () => {
       );
 
       useGameResultFixture = {
+        closeErrorMessage: jest.fn(),
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: gameFixture,
+        isDrawingCardAllowed: false,
         isMyTurn: false,
+        isPassingTurnAllowed: false,
         isPending: false,
+        isPlayingCardsAllowed: false,
+        onHandleDrawCardsGame: jest.fn(),
+        onHandlePassTurnGame: jest.fn(),
+        onHandlePlayCardsGame: jest.fn(),
+        openErrorMessage: false,
         useCountdownResult: {
           currentSeconds: 10,
           durationSeconds: 30,
@@ -128,6 +148,7 @@ describe(Game.name, () => {
           deleteAllSelectedCard: jest.fn(),
           hasNext: false,
           hasPrevious: false,
+          selectedCards: [],
           setNext: jest.fn(),
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
@@ -175,11 +196,19 @@ describe(Game.name, () => {
 
     beforeAll(() => {
       useGameResultFixture = {
+        closeErrorMessage: jest.fn(),
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
+        isDrawingCardAllowed: false,
         isMyTurn: false,
+        isPassingTurnAllowed: false,
         isPending: true,
+        isPlayingCardsAllowed: false,
+        onHandleDrawCardsGame: jest.fn(),
+        onHandlePassTurnGame: jest.fn(),
+        onHandlePlayCardsGame: jest.fn(),
+        openErrorMessage: false,
         useCountdownResult: {
           currentSeconds: 10,
           durationSeconds: 30,
@@ -192,6 +221,7 @@ describe(Game.name, () => {
           deleteAllSelectedCard: jest.fn(),
           hasNext: false,
           hasPrevious: false,
+          selectedCards: [],
           setNext: jest.fn(),
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
@@ -225,8 +255,8 @@ describe(Game.name, () => {
       expect(CornieLayout).toHaveBeenCalledWith(expectedParams, {});
     });
 
-    it('should render two cards and a countdown in the game area', () => {
-      expect(gameAreaElements).toHaveLength(3);
+    it('should render a div contains three buttons, other div contains one card and another div contains a countdown and a deck in the game area', () => {
+      expect(gameAreaElements).toHaveLength(4);
     });
   });
 });

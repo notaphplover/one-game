@@ -11,6 +11,7 @@
   .countdown-progress-container {
     display: flex;
     justify-content: center;
+    padding: 0.5rem;
   }
 
   .countdown-text-container {
@@ -20,13 +21,15 @@
     .countdown-text {
       color: var(--cg-bkg-primary-light);
       cursor: default;
-      font-family: variables.$cornie_font;
       font-weight: bold;
       font-size: variables.$font-xs;
-      letter-spacing: 0.3rem;
       padding-top: 0.5rem;
       text-align: center;
       user-select: none;
+
+      @media (min-width: variables.$sm) {
+        font-size: variables.$font-sm;
+      }
     }
   }
 }
