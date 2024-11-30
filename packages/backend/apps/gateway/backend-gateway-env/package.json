@@ -5,17 +5,17 @@
   },
   "description": "Backend user app env",
   "dependencies": {
-    "@nestjs/common": "^10.4.11",
+    "@nestjs/common": "^10.4.12",
     "@cornie-js/backend-env": "workspace:*",
     "envalid": "^8.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.15.0",
+    "@eslint/js": "9.16.0",
     "@jest/globals": "29.7.0",
     "@types/node": "22.10.1",
     "@typescript-eslint/eslint-plugin": "8.16.0",
     "@typescript-eslint/parser": "8.16.0",
-    "eslint": "9.15.0",
+    "eslint": "9.16.0",
     "jest": "29.7.0",
     "prettier": "3.4.1",
     "rimraf": "6.0.1",
