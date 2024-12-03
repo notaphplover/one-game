@@ -6,7 +6,7 @@
   "description": "Backend user domain package",
   "dependencies": {
     "@cornie-js/backend-common": "workspace:*",
-    "@nestjs/common": "^10.4.12"
+    "@nestjs/common": "^10.4.13"
   },
   "devDependencies": {
     "@eslint/js": "9.16.0",
