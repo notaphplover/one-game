@@ -6,7 +6,7 @@
   "description": "Backend nodemailer adapter for mail application",
   "dependencies": {
     "@cornie-js/backend-application-mail": "workspace:*",
-    "@nestjs/common": "^10.4.12",
+    "@nestjs/common": "^10.4.13",
     "nodemailer": "^6.9.16"
   },
   "devDependencies": {
