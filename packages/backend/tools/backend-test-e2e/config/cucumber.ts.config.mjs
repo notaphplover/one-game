@@ -13,7 +13,7 @@ function getConfiguration(parallel) {
       'src/app/adapter/cucumber/hooks/*.ts',
       'src/foundation/adapter/cucumberJs/parameters/*.ts',
     ],
-    requireModule: ['tsconfig-paths/register', 'ts-node/register'],
+    requireModule: ['ts-node/register'],
   };
 
   return config;

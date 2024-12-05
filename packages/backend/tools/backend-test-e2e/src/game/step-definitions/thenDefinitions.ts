@@ -178,6 +178,32 @@ export function thenUpdateGameResponseShouldBeSuccessful(
   });
 }
 
+export function thenUpdateGameResponseShouldContainExpectedCurrentPlayingSlotIndex(
+  this: OneGameApiWorld,
+  requestAlias: string | undefined,
+  expectedPlayingSlotIndex: number,
+): void {
+  const processedRequestAlias: string = requestAlias ?? defaultAlias;
+
+  type ResponseType = Awaited<ReturnType<HttpClientEndpoints['updateGame']>>;
+
+  const response: ResponseType = getResponseParametersOrFail(
+    this,
+    'updateGame',
+    processedRequestAlias,
+  );
+
+  expectObjectContaining<ResponseType>(response, {
+    body: {
+      state: {
+        currentPlayingSlotIndex: expectedPlayingSlotIndex,
+      },
+    },
+    headers: {},
+    statusCode: HttpStatus.OK,
+  });
+}
+
 Then<OneGameApiWorld>(
   'the create game response should contain a valid game',
   function (this: OneGameApiWorld): void {
@@ -217,5 +243,27 @@ Then<OneGameApiWorld>(
   'the update game response should be successful',
   function (this: OneGameApiWorld): void {
     thenUpdateGameResponseShouldBeSuccessful.bind(this)();
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the update game response have "{int}" as its current playing slot index',
+  function (this: OneGameApiWorld, expectedPlayingSlotIndex: number): void {
+    thenUpdateGameResponseShouldContainExpectedCurrentPlayingSlotIndex.bind(
+      this,
+    )(undefined, expectedPlayingSlotIndex);
+  },
+);
+
+Then<OneGameApiWorld>(
+  'the update game response {string} have "{int}" as its current playing slot index',
+  function (
+    this: OneGameApiWorld,
+    requestAlias: string,
+    expectedPlayingSlotIndex: number,
+  ): void {
+    thenUpdateGameResponseShouldContainExpectedCurrentPlayingSlotIndex.bind(
+      this,
+    )(requestAlias, expectedPlayingSlotIndex);
   },
 );

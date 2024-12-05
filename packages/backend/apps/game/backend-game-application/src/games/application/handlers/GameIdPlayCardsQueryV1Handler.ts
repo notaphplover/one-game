@@ -130,12 +130,12 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
 
   protected override async _handleUpdateGame(
     game: ActiveGame,
-    gameSpec: GameSpec,
+    _gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
     transactionWrapper: TransactionWrapper,
   ): Promise<ActiveGameUpdatedEvent> {
     await this._updateGame(
-      this.#buildUpdateQueries(game, gameSpec, gameIdUpdateQueryV1),
+      this.#buildUpdateQueries(game, gameIdUpdateQueryV1),
       transactionWrapper,
     );
 
@@ -155,7 +155,6 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
 
   #buildUpdateQueries(
     game: ActiveGame,
-    gameSpec: GameSpec,
     gameIdUpdateQueryV1: apiModels.GameIdPlayCardsQueryV1,
   ): GameUpdateQuery[] {
     const cardColor: CardColor | undefined = this.#getColorOrUndefined(
@@ -182,7 +181,7 @@ export class GameIdPlayCardsQueryV1Handler extends GameIdUpdateQueryV1Handler<ap
       this.#gameCardsEffectUpdateQueryFromGameBuilder.build(
         game,
         card,
-        gameSpec.gameSlotsAmount,
+        gameIdUpdateQueryV1.cardIndexes.length,
         cardColor,
       );
 

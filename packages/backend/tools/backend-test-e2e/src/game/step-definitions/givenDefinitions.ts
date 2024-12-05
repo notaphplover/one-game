@@ -602,6 +602,21 @@ Given<OneGameApiWorld>(
 );
 
 Given<OneGameApiWorld>(
+  'a game pass turn request {string} for game for {string}',
+  function (
+    this: OneGameApiWorld,
+    requestAlias: string,
+    userAlias: string,
+  ): void {
+    givenGamePassTurnQueryRequestForGame.bind(this)(
+      undefined,
+      requestAlias,
+      userAlias,
+    );
+  },
+);
+
+Given<OneGameApiWorld>(
   'a game play first card request for game for {string}',
   function (this: OneGameApiWorld, userAlias: string): void {
     givenGamePlayFirstCardQueryRequestForGame.bind(this)(

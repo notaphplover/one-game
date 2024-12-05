@@ -648,7 +648,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         ).toHaveBeenCalledWith(
           activeGameFixture,
           gamePlayCardsUpdateQueryFixture.currentCard,
-          gameSpecFixture.gameSlotsAmount,
+          gameIdPlayCardsQueryV1Fixture.cardIndexes.length,
           undefined,
         );
       });
@@ -908,7 +908,7 @@ describe(GameIdPlayCardsQueryV1Handler.name, () => {
         ).toHaveBeenCalledWith(
           activeGameFixture,
           gamePlayCardsUpdateQueryFixture.currentCard,
-          gameSpecFixture.gameSlotsAmount,
+          gameIdPlayCardsQueryV1Fixture.cardIndexes.length,
           cardColorFixture,
         );
       });

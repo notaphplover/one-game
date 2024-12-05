@@ -17,62 +17,68 @@ function expectObjectContainingAtPath<T extends object>(
   path: string,
   rootObject: object,
 ): void {
-  for (const key of Object.keys(object)) {
-    if (key in expectations) {
-      const objectProperty: unknown = object[key as keyof T];
-      const expectation: unknown = expectations[key as keyof T];
-
-      if (isObject(expectation)) {
-        const errorMessage: string = `Expecting an object in
+  for (const key of Reflect.ownKeys(expectations)) {
+    if (!(key in object)) {
+      assert.fail(`Expecting a property in
 
 ${JSON.stringify(rootObject)}
 
-at path ${buildNextPath(path, key)}`;
-
-        assert.ok(isObject(objectProperty), errorMessage);
-
-        expectObjectContainingAtPath(
-          objectProperty,
-          expectation,
-          buildNextPath(path, key),
-          rootObject,
-        );
-
-        continue;
-      }
-
-      if (typeof expectation === 'function') {
-        if (objectProperty !== expectation) {
-          (
-            expectation as (
-              value: unknown,
-              path: string,
-              rootObject: object,
-            ) => void
-          )(objectProperty, buildNextPath(path, key), rootObject);
-        }
-
-        continue;
-      }
-
-      const errorMessage: string = `Expecting an equality in
-
-${JSON.stringify(rootObject)}
-
-at path ${buildNextPath(path, key)}`;
-
-      assert.ok(objectProperty === expectation, errorMessage);
+at path ${buildNextPath(path, key)}`);
     }
+
+    const objectProperty: unknown = object[key as keyof T];
+    const expectation: unknown = expectations[key as keyof T];
+
+    if (isObject(expectation)) {
+      const errorMessage: string = `Expecting an object in
+
+${JSON.stringify(rootObject)}
+
+at path ${buildNextPath(path, key)}`;
+
+      assert.ok(isObject(objectProperty), errorMessage);
+
+      expectObjectContainingAtPath(
+        objectProperty,
+        expectation,
+        buildNextPath(path, key),
+        rootObject,
+      );
+
+      continue;
+    }
+
+    if (typeof expectation === 'function') {
+      if (objectProperty !== expectation) {
+        (
+          expectation as (
+            value: unknown,
+            path: string,
+            rootObject: object,
+          ) => void
+        )(objectProperty, buildNextPath(path, key), rootObject);
+      }
+
+      continue;
+    }
+
+    const errorMessage: string = `Expecting an equality in
+
+${JSON.stringify(rootObject)}
+
+at path ${buildNextPath(path, key)}`;
+
+    assert.ok(objectProperty === expectation, errorMessage);
   }
 }
 
-function buildNextPath(path: string, key: string): string {
+function buildNextPath(path: string, key: string | symbol): string {
   let nextPath: string;
 
   if (path === ROOT_PATH) {
-    nextPath = `${path}${key}`;
+    nextPath = `${path}${key.toString()}`;
   } else {
-    nextPath = `${path}/${key}`;
+    nextPath = `${path}/${key.toString()}`;
   }
 
   return nextPath;
