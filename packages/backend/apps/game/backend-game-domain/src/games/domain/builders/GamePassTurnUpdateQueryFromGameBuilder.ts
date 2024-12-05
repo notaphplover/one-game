@@ -64,6 +64,10 @@ export class GamePassTurnUpdateQueryFromGameBuilder
 
       if (nextTurnPlayerIndex < 0) {
         nextTurnPlayerIndex = (nextTurnPlayerIndex % players) + players;
+
+        if (nextTurnPlayerIndex === players) {
+          nextTurnPlayerIndex = 0;
+        }
       }
     } else {
       nextTurnPlayerIndex =

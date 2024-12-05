@@ -202,9 +202,10 @@ describe(useGame.name, () => {
       expect(useGameCards).toHaveBeenCalledWith([]);
     });
 
-    it('should retuen expected result', () => {
+    it('should return expected result', () => {
       const expected: UseGameResult = {
         closeErrorMessage: expect.any(Function) as unknown as () => void,
+        closeOpenDialog: expect.any(Function) as unknown as () => void,
         currentCard: undefined,
         deckCardsAmount: undefined,
         errorMessage: undefined,
@@ -220,9 +221,14 @@ describe(useGame.name, () => {
         onHandlePassTurnGame: expect.any(Function) as unknown as (
           event: React.FormEvent,
         ) => void,
+        onHandlePlayCardsChoiceColor: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+          color: apiModels.CardColorV1,
+        ) => void,
         onHandlePlayCardsGame: expect.any(Function) as unknown as (
           event: React.FormEvent,
         ) => void,
+        openDialog: false,
         openErrorMessage: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
@@ -518,6 +524,7 @@ describe(useGame.name, () => {
     it('should return expected result', () => {
       const expected: UseGameResult = {
         closeErrorMessage: expect.any(Function) as unknown as () => void,
+        closeOpenDialog: expect.any(Function) as unknown as () => void,
         currentCard: gameFixture.state.currentCard,
         deckCardsAmount: 189,
         errorMessage: undefined,
@@ -533,9 +540,14 @@ describe(useGame.name, () => {
         onHandlePassTurnGame: expect.any(Function) as unknown as (
           event: React.FormEvent,
         ) => void,
+        onHandlePlayCardsChoiceColor: expect.any(Function) as unknown as (
+          event: React.FormEvent,
+          color: apiModels.CardColorV1,
+        ) => void,
         onHandlePlayCardsGame: expect.any(Function) as unknown as (
           event: React.FormEvent,
         ) => void,
+        openDialog: false,
         openErrorMessage: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,

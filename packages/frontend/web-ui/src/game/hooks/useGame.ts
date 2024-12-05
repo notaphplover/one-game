@@ -20,7 +20,11 @@ import { getGameSlotIndex } from '../helpers/getGameSlotIndex';
 import { handleGameMessageEvents } from '../helpers/handleGameMessageEvents';
 import { isActiveGame } from '../helpers/isActiveGame';
 import { isFinishedGame } from '../helpers/isFinishedGame';
-import { useGameCards, UseGameCardsResult } from './useGameCards';
+import {
+  GameSelectedCard,
+  useGameCards,
+  UseGameCardsResult,
+} from './useGameCards';
 import { useGetGameSpecV1 } from './useGetGameSpecV1';
 import { useGetGamesV1GameId } from './useGetGamesV1GameId';
 import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsSlotIdCards';
@@ -33,6 +37,7 @@ export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
   deckCardsAmount: number | undefined;
   closeErrorMessage: () => void;
+  closeOpenDialog: () => void;
   errorMessage?: string | undefined;
   game: apiModels.GameV1 | undefined;
   isDrawingCardAllowed: boolean;
@@ -42,7 +47,12 @@ export interface UseGameResult {
   isPlayingCardsAllowed: boolean;
   onHandleDrawCardsGame: (event: React.FormEvent) => void;
   onHandlePassTurnGame: (event: React.FormEvent) => void;
+  onHandlePlayCardsChoiceColor: (
+    event: React.FormEvent,
+    color: apiModels.CardColorV1,
+  ) => void;
   onHandlePlayCardsGame: (event: React.FormEvent) => void;
+  openDialog: boolean;
   openErrorMessage: boolean;
   useCountdownResult: UseCountdownResult;
   useGameCardsResult: UseGameCardsResult;
@@ -112,6 +122,8 @@ export const useGame = (): UseGameResult => {
 
   const [eventSource, setEventSource] = useState<CornieEventSource>();
 
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   const gameOrUndefined: apiModels.GameV1 | undefined =
     gamesV1GameIdResult?.isRight === true
       ? gamesV1GameIdResult.value
@@ -153,6 +165,10 @@ export const useGame = (): UseGameResult => {
     setOpenErrorMessage(false);
   };
 
+  const closeOpenDialog = (): void => {
+    setOpenDialog(false);
+  };
+
   async function triggerPassGame(): Promise<void> {
     if (gameIdParam !== undefined && gameSlotIndexParam !== undefined) {
       setErrorMessagePlaying(undefined);
@@ -171,7 +187,62 @@ export const useGame = (): UseGameResult => {
     }
   }
 
+  function isSelectedCardsWildOrWildDraw4(): boolean {
+    let numberOfCardsWild: number = 0;
+    let numberOfCardsWildDraw4: number = 0;
+    useGameCardsResult.selectedCards.forEach(
+      (gameSelectedCard: GameSelectedCard): void => {
+        switch (gameSelectedCard.card.kind) {
+          case 'wild':
+            numberOfCardsWild = numberOfCardsWild + 1;
+            break;
+          case 'wildDraw4':
+            numberOfCardsWildDraw4 = numberOfCardsWildDraw4 + 1;
+            break;
+          default:
+            break;
+        }
+      },
+    );
+
+    return (
+      numberOfCardsWild === useGameCardsResult.selectedCards.length ||
+      numberOfCardsWildDraw4 === useGameCardsResult.selectedCards.length
+    );
+  }
+
   function onHandlePlayCardsGame(event: React.FormEvent): void {
+    event.preventDefault();
+
+    if (isSelectedCardsWildOrWildDraw4()) {
+      setOpenDialog(true);
+    } else {
+      if (gameIdParam !== undefined && gameSlotIndexParam !== undefined) {
+        setErrorMessagePlaying(undefined);
+
+        void triggerUpdateGame({
+          params: [
+            {
+              gameId: gameIdParam,
+            },
+            {
+              cardIndexes: useGameCardsResult.selectedCards.map(
+                (gameSelectedCard: GameSelectedCard): number =>
+                  gameSelectedCard.index,
+              ),
+              kind: 'playCards',
+              slotIndex: gameSlotIndexParam,
+            },
+          ],
+        });
+      }
+    }
+  }
+
+  function onHandlePlayCardsChoiceColor(
+    event: React.FormEvent,
+    color: apiModels.CardColorV1,
+  ): void {
     event.preventDefault();
 
     if (gameIdParam !== undefined && gameSlotIndexParam !== undefined) {
@@ -183,13 +254,19 @@ export const useGame = (): UseGameResult => {
             gameId: gameIdParam,
           },
           {
-            cardIndexes: useGameCardsResult.selectedCards,
+            cardIndexes: useGameCardsResult.selectedCards.map(
+              (gameSelectedCard: GameSelectedCard): number =>
+                gameSelectedCard.index,
+            ),
+            colorChoice: color,
             kind: 'playCards',
             slotIndex: gameSlotIndexParam,
           },
         ],
       });
     }
+
+    closeOpenDialog();
   }
 
   function onHandleDrawCardsGame(event: React.FormEvent): void {
@@ -219,9 +296,17 @@ export const useGame = (): UseGameResult => {
   }
 
   useEffect(() => {
-    if (isActiveGame(game) && isMyTurn && game.state.currentTurnCardsPlayed) {
-      void triggerPassGame();
-      useGameCardsResult.deleteAllSelectedCard();
+    if (isActiveGame(game)) {
+      if (isMyTurn) {
+        if (game.state.currentTurnCardsPlayed) {
+          void triggerPassGame();
+          useGameCardsResult.deleteAllSelectedCard();
+        }
+      } else {
+        if (useGameCardsResult.selectedCards.length > 0) {
+          useGameCardsResult.deleteAllSelectedCard();
+        }
+      }
     }
   }, [game]);
 
@@ -333,6 +418,7 @@ export const useGame = (): UseGameResult => {
 
   return {
     closeErrorMessage,
+    closeOpenDialog,
     currentCard: getGameCurrentCard(game),
     deckCardsAmount,
     errorMessage: errorMessagePlaying,
@@ -346,7 +432,9 @@ export const useGame = (): UseGameResult => {
     isPlayingCardsAllowed,
     onHandleDrawCardsGame,
     onHandlePassTurnGame,
+    onHandlePlayCardsChoiceColor,
     onHandlePlayCardsGame,
+    openDialog,
     openErrorMessage,
     useCountdownResult,
     useGameCardsResult,

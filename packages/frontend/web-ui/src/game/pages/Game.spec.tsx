@@ -36,6 +36,7 @@ describe(Game.name, () => {
 
       useGameResultFixture = {
         closeErrorMessage: jest.fn(),
+        closeOpenDialog: jest.fn(),
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
@@ -46,7 +47,9 @@ describe(Game.name, () => {
         isPlayingCardsAllowed: false,
         onHandleDrawCardsGame: jest.fn(),
         onHandlePassTurnGame: jest.fn(),
+        onHandlePlayCardsChoiceColor: jest.fn(),
         onHandlePlayCardsGame: jest.fn(),
+        openDialog: false,
         openErrorMessage: false,
         useCountdownResult: {
           currentSeconds: 10,
@@ -124,6 +127,7 @@ describe(Game.name, () => {
 
       useGameResultFixture = {
         closeErrorMessage: jest.fn(),
+        closeOpenDialog: jest.fn(),
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: gameFixture,
@@ -134,7 +138,9 @@ describe(Game.name, () => {
         isPlayingCardsAllowed: false,
         onHandleDrawCardsGame: jest.fn(),
         onHandlePassTurnGame: jest.fn(),
+        onHandlePlayCardsChoiceColor: jest.fn(),
         onHandlePlayCardsGame: jest.fn(),
+        openDialog: false,
         openErrorMessage: false,
         useCountdownResult: {
           currentSeconds: 10,
@@ -197,6 +203,7 @@ describe(Game.name, () => {
     beforeAll(() => {
       useGameResultFixture = {
         closeErrorMessage: jest.fn(),
+        closeOpenDialog: jest.fn(),
         currentCard: undefined,
         deckCardsAmount: undefined,
         game: undefined,
@@ -207,7 +214,9 @@ describe(Game.name, () => {
         isPlayingCardsAllowed: false,
         onHandleDrawCardsGame: jest.fn(),
         onHandlePassTurnGame: jest.fn(),
+        onHandlePlayCardsChoiceColor: jest.fn(),
         onHandlePlayCardsGame: jest.fn(),
+        openDialog: false,
         openErrorMessage: false,
         useCountdownResult: {
           currentSeconds: 10,
