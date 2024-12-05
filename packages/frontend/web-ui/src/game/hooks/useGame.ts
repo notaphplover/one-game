@@ -277,25 +277,27 @@ export const useGame = (): UseGameResult => {
 
   useEffect(() => {
     if (isActiveGame(game)) {
-      const updatedGame: apiModels.ActiveGameV1 | apiModels.FinishedGameV1 =
-        handleGameMessageEvents(
-          game,
-          messageEventsQueue,
-          (gameSlotIndex: number): void => {
-            if (gameSlotIndex === gameSlotIndexParam) {
-              void refetchGamesV1GameIdSlotsSlotIdCards();
-            }
-          },
-          (gameSlotIndex: number): void => {
-            if (gameSlotIndex === gameSlotIndexParam) {
-              useCountdownResult.start();
-            } else {
-              useCountdownResult.stop();
-            }
-          },
-        );
+      if (messageEventsQueue.length > 0) {
+        const updatedGame: apiModels.ActiveGameV1 | apiModels.FinishedGameV1 =
+          handleGameMessageEvents(
+            game,
+            messageEventsQueue,
+            (gameSlotIndex: number): void => {
+              if (gameSlotIndex === gameSlotIndexParam) {
+                void refetchGamesV1GameIdSlotsSlotIdCards();
+              }
+            },
+            (gameSlotIndex: number): void => {
+              if (gameSlotIndex === gameSlotIndexParam) {
+                useCountdownResult.start();
+              } else {
+                useCountdownResult.stop();
+              }
+            },
+          );
 
-      setGame(updatedGame);
+        setGame(updatedGame);
+      }
     } else {
       if (isFinishedGame(game)) {
         if (eventSource !== undefined) {
