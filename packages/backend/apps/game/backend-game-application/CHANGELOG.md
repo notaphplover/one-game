@@ -1,5 +1,14 @@
 # @cornie-js/backend-game-application
 
+## 0.4.1
+
+### Patch Changes
+
+- 85e8109: Updated game pass turn flow to calculate the right next turn when skip cards are played
+- Updated dependencies [99fb798]
+- Updated dependencies [99fb798]
+  - @cornie-js/backend-app-game-env@0.3.0
+
 ## 0.4.0
 
 ### Minor Changes

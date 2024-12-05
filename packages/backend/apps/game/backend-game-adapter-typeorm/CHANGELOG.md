@@ -1,5 +1,12 @@
 # @cornie-js/backend-game-adapter-typeorm
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [85e8109]
+  - @cornie-js/backend-game-application@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
