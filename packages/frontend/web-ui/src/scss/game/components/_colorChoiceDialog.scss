@@ -1,0 +1,53 @@
+@use '../../base/variables' as variables;
+
+.choice-color-dialog {
+  .dialog-title {
+    background-color: var(--cg-bkg-primary-main);
+    color: var(--cg-text-primary);
+    font-family: variables.$cornie_font;
+    font-weight: bold;
+    letter-spacing: 0.3rem;
+    font-size: variables.$font-sm;
+    text-align: center;
+  }
+
+  .MuiDialogTitle-root + .MuiDialogContent-root {
+    padding: 0.5rem;
+  }
+
+  .color-choice-dialog-content {
+    .colors-grid {
+      display: grid;
+      gap: 0.2rem;
+      grid-template-columns: 125px 125px;
+      grid-template-rows: 125px 125px;
+      justify-content: center;
+
+      .color-choice {
+        border: 1px solid variables.$black;
+        border-radius: 10px;
+      }
+
+      .green {
+        background-color: variables.$green;
+        grid-column: 1;
+        grid-row: 1;
+      }
+      .red {
+        background-color: variables.$red;
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .blue {
+        background-color: variables.$blue;
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .yellow {
+        background-color: variables.$yellow;
+        grid-column: 2;
+        grid-row: 2;
+      }
+    }
+  }
+}

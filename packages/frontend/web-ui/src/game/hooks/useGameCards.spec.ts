@@ -4,7 +4,12 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 import { act } from 'react';
 
-import { GameCard, useGameCards, UseGameCardsResult } from './useGameCards';
+import {
+  GameCard,
+  GameSelectedCard,
+  useGameCards,
+  UseGameCardsResult,
+} from './useGameCards';
 
 describe(useGameCards.name, () => {
   describe('when called', () => {
@@ -50,6 +55,7 @@ describe(useGameCards.name, () => {
   describe('having more than ten cards', () => {
     let cardsFixture: apiModels.CardArrayV1;
     let gameCardFixture: GameCard[];
+    let gameSelectedCardFixture: GameSelectedCard[];
 
     beforeAll(() => {
       cardsFixture = new Array<apiModels.CardV1>(11).fill({
@@ -67,6 +73,13 @@ describe(useGameCards.name, () => {
         { card: { kind: 'wildDraw4' }, index: 7, isSelected: false },
         { card: { kind: 'wildDraw4' }, index: 8, isSelected: false },
         { card: { kind: 'wildDraw4' }, index: 9, isSelected: false },
+      ];
+
+      gameSelectedCardFixture = [
+        {
+          card: { kind: 'wildDraw4' },
+          index: 9,
+        },
       ];
     });
 
@@ -160,7 +173,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: true,
           hasPrevious: false,
-          selectedCards: [9],
+          selectedCards: gameSelectedCardFixture,
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (
@@ -211,7 +224,7 @@ describe(useGameCards.name, () => {
           deleteAllSelectedCard: expect.any(Function) as unknown as () => void,
           hasNext: true,
           hasPrevious: false,
-          selectedCards: [9],
+          selectedCards: gameSelectedCardFixture,
           setNext: expect.any(Function) as unknown as () => void,
           setPrevious: expect.any(Function) as unknown as () => void,
           switchCardSelection: expect.any(Function) as unknown as (

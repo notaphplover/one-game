@@ -6,7 +6,7 @@ export interface UseGameCardsResult {
   deleteAllSelectedCard: () => void;
   hasNext: boolean;
   hasPrevious: boolean;
-  selectedCards: number[];
+  selectedCards: GameSelectedCard[];
   setNext: () => void;
   setPrevious: () => void;
   switchCardSelection: (index: number) => void;
@@ -15,7 +15,12 @@ export interface UseGameCardsResult {
 export interface GameCard {
   card: apiModels.CardV1;
   index: number;
-  isSelected?: boolean;
+  isSelected: boolean;
+}
+
+export interface GameSelectedCard {
+  card: apiModels.CardV1;
+  index: number;
 }
 
 const PAGE_SIZE: number = 10;
@@ -28,7 +33,7 @@ export const useGameCards = (
     React.Dispatch<React.SetStateAction<number>>,
   ] = useState(0);
 
-  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [selectedCards, setSelectedCards] = useState<GameSelectedCard[]>([]);
 
   const cardsSlice: apiModels.CardV1[] = cards.slice(
     PAGE_SIZE * page,
@@ -43,10 +48,15 @@ export const useGameCards = (
   function buildCardGameSlices(): GameCard[] {
     const gameSlice: GameCard[] = [];
     cardsSlice.forEach((card: apiModels.CardV1, index: number): void => {
+      const cardIndex: number = page * PAGE_SIZE + index;
+
       gameSlice.push({
         card: card,
-        index: page * PAGE_SIZE + index,
-        isSelected: selectedCards.includes(page * PAGE_SIZE + index),
+        index: cardIndex,
+        isSelected: selectedCards.some(
+          (gameSelectedCard: GameSelectedCard): boolean =>
+            gameSelectedCard.index === cardIndex,
+        ),
       });
     });
 
@@ -66,15 +76,25 @@ export const useGameCards = (
   }
 
   function isSelectedCard(index: number): boolean {
-    return selectedCards.includes(index);
+    return selectedCards.some(
+      (gameSelectedCard: GameSelectedCard): boolean =>
+        gameSelectedCard.index === index,
+    );
   }
 
   function addSelectedCard(index: number): void {
-    setSelectedCards([...selectedCards, index]);
+    const card: apiModels.CardV1 | undefined = cards[index];
+
+    if (card !== undefined) {
+      setSelectedCards([...selectedCards, { card, index }]);
+    }
   }
 
   function deleteSelectedCard(index: number): void {
-    const filteredSelectedCard = selectedCards.filter((card) => card !== index);
+    const filteredSelectedCard = selectedCards.filter(
+      (gameSelectedCard: GameSelectedCard): boolean =>
+        gameSelectedCard.index !== index,
+    );
     setSelectedCards(filteredSelectedCard);
   }
 

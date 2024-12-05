@@ -11,6 +11,7 @@ import { Countdown } from '../../common/components/Countdown';
 import { CornieLayout } from '../../common/layout/CornieLayout';
 import { PageNotFound } from '../../common/pages/PageNotFound';
 import { Card } from '../components/Card';
+import { ColorChoiceDialog } from '../components/ColorChoiceDialog';
 import { ReversedCard } from '../components/ReversedCard';
 import { isNonStartedGame } from '../helpers/isNonStartedGame';
 import { useGame } from '../hooks/useGame';
@@ -20,6 +21,7 @@ import { NonStartedGame } from './NonStartedGame';
 export const Game = (): React.JSX.Element => {
   const {
     closeErrorMessage,
+    closeOpenDialog,
     currentCard,
     deckCardsAmount,
     errorMessage,
@@ -31,7 +33,9 @@ export const Game = (): React.JSX.Element => {
     isPlayingCardsAllowed,
     onHandleDrawCardsGame,
     onHandlePassTurnGame,
+    onHandlePlayCardsChoiceColor,
     onHandlePlayCardsGame,
+    openDialog,
     openErrorMessage,
     useCountdownResult: { currentSeconds, durationSeconds, isRunning },
     useGameCardsResult: {
@@ -163,6 +167,11 @@ export const Game = (): React.JSX.Element => {
                 >
                   PASS
                 </Button>
+                <ColorChoiceDialog
+                  open={openDialog}
+                  onClose={closeOpenDialog}
+                  onHandlePlayCardsChoiceColor={onHandlePlayCardsChoiceColor}
+                />
               </Box>
               {currentCardElement}
               <Box component="div" className="game-area-info">
