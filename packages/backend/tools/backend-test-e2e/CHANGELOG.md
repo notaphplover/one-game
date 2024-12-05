@@ -1,5 +1,14 @@
 # @cornie-js/backend-test-e2e
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [85e8109]
+  - @cornie-js/backend-game-application@0.4.1
+  - @cornie-js/backend-game-adapter-ioredis@0.2.3
+  - @cornie-js/backend-game-adapter-typeorm@0.4.1
+
 ## 0.1.4
 
 ### Patch Changes

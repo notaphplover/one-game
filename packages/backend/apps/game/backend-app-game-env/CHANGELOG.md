@@ -1,5 +1,12 @@
 # @cornie-js/backend-app-game-env
 
+## 0.3.0
+
+### Minor Changes
+
+- 99fb798: Updated `Environment` with `pulsarGameTurnSignalEnabled`.
+- 99fb798: Updated `EnvironemntRaw` with `ONE_JS_GAME_SERVICE_PULSAR_GAME_TURN_SIGNAL_ENABLED`.
+
 ## 0.2.0
 
 ### Minor Changes

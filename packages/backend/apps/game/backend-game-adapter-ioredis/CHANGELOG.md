@@ -1,5 +1,12 @@
 # @cornie-js/backend-game-adapter-ioredis
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [85e8109]
+  - @cornie-js/backend-game-application@0.4.1
+
 ## 0.2.2
 
 ### Patch Changes
