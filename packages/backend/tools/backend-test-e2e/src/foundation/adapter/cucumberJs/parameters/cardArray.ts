@@ -7,7 +7,8 @@ import { CardArrayV1Parameter } from '../../../../card/models/CardArrayV1Paramet
 import { parseCard } from '../../../../card/utils/calculations/parseCard';
 
 const CARD_REGEXP: RegExp = /(WD|W|(?:[0-9]|D|S|R)(?:b|g|r|y))/g;
-const CARDS_REGEXP: RegExp = /"\( ((WD|W|(?:[0-9]|D|S|R)(?:b|g|r|y)) )*\)"/;
+const CARDS_REGEXP: RegExp =
+  /"(\( (?:(?:WD|W|(?:[0-9]|D|S|R)(?:b|g|r|y)) )*\))"/;
 
 function cardsParamDefinitionTransformer(
   stringifiedCards: string,
