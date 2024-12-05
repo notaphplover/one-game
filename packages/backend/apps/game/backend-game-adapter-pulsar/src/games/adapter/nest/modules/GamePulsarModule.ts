@@ -1,6 +1,9 @@
 import { pulsarClientSymbol } from '@cornie-js/backend-adapter-pulsar';
 import { EnvironmentService } from '@cornie-js/backend-app-game-env';
-import { gameTurnEndSignalMessageSendOutputPortSymbol } from '@cornie-js/backend-game-application/games';
+import {
+  GameTurnEndSignalMessageSendOutputPort,
+  gameTurnEndSignalMessageSendOutputPortSymbol,
+} from '@cornie-js/backend-game-application/games';
 import { DynamicModule, Module } from '@nestjs/common';
 import { Client, Consumer, Producer } from 'pulsar-client';
 
@@ -69,7 +72,23 @@ export class GamePulsarModule {
           },
         },
         {
+          inject: [
+            EnvironmentService,
+            GameTurnEndSignalMessageSendPulsarAdapter,
+          ],
           provide: gameTurnEndSignalMessageSendOutputPortSymbol,
+          useFactory: (
+            environmentService: EnvironmentService,
+            gameTurnEndSignalMessageSendPulsarAdapter: GameTurnEndSignalMessageSendPulsarAdapter,
+          ): GameTurnEndSignalMessageSendOutputPort | undefined => {
+            return environmentService.getEnvironment()
+              .pulsarGameTurnSignalEnabled
+              ? gameTurnEndSignalMessageSendPulsarAdapter
+              : undefined;
+          },
+        },
+        {
+          provide: GameTurnEndSignalMessageSendPulsarAdapter,
           useClass: GameTurnEndSignalMessageSendPulsarAdapter,
         },
       ],
