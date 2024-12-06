@@ -15,9 +15,9 @@
   "devDependencies": {
     "@eslint/js": "9.16.0",
     "@jest/globals": "29.7.0",
-    "@stryker-mutator/core": "8.6.0",
-    "@stryker-mutator/jest-runner": "8.6.0",
-    "@stryker-mutator/typescript-checker": "8.6.0",
+    "@stryker-mutator/core": "8.7.0",
+    "@stryker-mutator/jest-runner": "8.7.0",
+    "@stryker-mutator/typescript-checker": "8.7.0",
     "@types/node": "22.10.1",
     "@typescript-eslint/eslint-plugin": "8.17.0",
     "@typescript-eslint/parser": "8.17.0",
