@@ -118,7 +118,10 @@ describe(PublicGames.name, () => {
       };
 
       expect(NonStartedGameList).toHaveBeenCalledTimes(1);
-      expect(NonStartedGameList).toHaveBeenCalledWith(expectedOptions, {});
+      expect(NonStartedGameList).toHaveBeenCalledWith(
+        expectedOptions,
+        undefined,
+      );
     });
 
     it('should render a non started game list', () => {

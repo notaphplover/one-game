@@ -93,7 +93,7 @@ describe(Game.name, () => {
 
     it('should call PageNotFound', () => {
       expect(PageNotFound).toHaveBeenCalledTimes(1);
-      expect(PageNotFound).toHaveBeenCalledWith({}, {});
+      expect(PageNotFound).toHaveBeenCalledWith({}, undefined);
     });
 
     it('should return expected value', () => {
@@ -184,7 +184,7 @@ describe(Game.name, () => {
 
     it('should call NonStartedGame', () => {
       expect(NonStartedGame).toHaveBeenCalledTimes(1);
-      expect(NonStartedGame).toHaveBeenCalledWith({}, {});
+      expect(NonStartedGame).toHaveBeenCalledWith({}, undefined);
     });
 
     it('should return expected value', () => {
@@ -261,7 +261,7 @@ describe(Game.name, () => {
       };
 
       expect(CornieLayout).toHaveBeenCalledTimes(1);
-      expect(CornieLayout).toHaveBeenCalledWith(expectedParams, {});
+      expect(CornieLayout).toHaveBeenCalledWith(expectedParams, undefined);
     });
 
     it('should render a div contains three buttons, other div contains one card and another div contains a countdown and a deck in the game area', () => {

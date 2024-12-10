@@ -101,7 +101,7 @@ describe(NonStartedGameListItem.name, () => {
       };
 
       expect(BaseGameListItem).toHaveBeenCalledTimes(1);
-      expect(BaseGameListItem).toHaveBeenCalledWith(expectedOptions, {});
+      expect(BaseGameListItem).toHaveBeenCalledWith(expectedOptions, undefined);
     });
 
     it('should call getSlug()', () => {

@@ -71,7 +71,7 @@ describe(Card.name, () => {
 
       it('should call normal card', () => {
         expect(NormalCard).toHaveBeenCalledTimes(1);
-        expect(NormalCard).toHaveBeenCalledWith(cardOptionsFixture, {});
+        expect(NormalCard).toHaveBeenCalledWith(cardOptionsFixture, undefined);
       });
 
       it('should contain a div with normal card', () => {
@@ -120,7 +120,7 @@ describe(Card.name, () => {
 
       it('should call draw card', () => {
         expect(DrawCard).toHaveBeenCalledTimes(1);
-        expect(DrawCard).toHaveBeenCalledWith(cardOptionsFixture, {});
+        expect(DrawCard).toHaveBeenCalledWith(cardOptionsFixture, undefined);
       });
 
       it('should contain a div with draw card', () => {
@@ -169,7 +169,7 @@ describe(Card.name, () => {
 
       it('should call reverse card', () => {
         expect(ReverseCard).toHaveBeenCalledTimes(1);
-        expect(ReverseCard).toHaveBeenCalledWith(cardOptionsFixture, {});
+        expect(ReverseCard).toHaveBeenCalledWith(cardOptionsFixture, undefined);
       });
 
       it('should contain a div with reverse card', () => {
@@ -218,7 +218,7 @@ describe(Card.name, () => {
 
       it('should call skip card', () => {
         expect(SkipCard).toHaveBeenCalledTimes(1);
-        expect(SkipCard).toHaveBeenCalledWith(cardOptionsFixture, {});
+        expect(SkipCard).toHaveBeenCalledWith(cardOptionsFixture, undefined);
       });
 
       it('should contain a div with skip card', () => {
@@ -273,7 +273,7 @@ describe(Card.name, () => {
             isSelected: true,
             onClick: cardOptionsFixture.onClick,
           },
-          {},
+          undefined,
         );
       });
 
@@ -329,7 +329,7 @@ describe(Card.name, () => {
             isSelected: true,
             onClick: cardOptionsFixture.onClick,
           },
-          {},
+          undefined,
         );
       });
 
