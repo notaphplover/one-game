@@ -35,6 +35,7 @@ const MS_PER_SECOND: number = 1000;
 
 export interface UseGameResult {
   currentCard: apiModels.CardV1 | undefined;
+  currentColor: apiModels.CardColorV1 | undefined;
   deckCardsAmount: number | undefined;
   closeErrorMessage: () => void;
   closeOpenDialog: () => void;
@@ -85,6 +86,12 @@ function getGameCurrentCard(
   game: apiModels.GameV1 | undefined,
 ): apiModels.CardV1 | undefined {
   return game?.state.status === 'active' ? game.state.currentCard : undefined;
+}
+
+function getGameCurrentColor(
+  game: apiModels.GameV1 | undefined,
+): apiModels.CardColorV1 | undefined {
+  return game?.state.status === 'active' ? game.state.currentColor : undefined;
 }
 
 export const useGame = (): UseGameResult => {
@@ -420,6 +427,7 @@ export const useGame = (): UseGameResult => {
     closeErrorMessage,
     closeOpenDialog,
     currentCard: getGameCurrentCard(game),
+    currentColor: getGameCurrentColor(game),
     deckCardsAmount,
     errorMessage: errorMessagePlaying,
     game,
