@@ -133,7 +133,7 @@ describe(HomeWithAuth.name, () => {
       };
 
       expect(ActiveGameList).toHaveBeenCalledTimes(1);
-      expect(ActiveGameList).toHaveBeenCalledWith(expectedOptions, {});
+      expect(ActiveGameList).toHaveBeenCalledWith(expectedOptions, undefined);
     });
 
     it('should call NonStartedGameList()', () => {
@@ -155,7 +155,10 @@ describe(HomeWithAuth.name, () => {
       };
 
       expect(NonStartedGameList).toHaveBeenCalledTimes(1);
-      expect(NonStartedGameList).toHaveBeenCalledWith(expectedOptions, {});
+      expect(NonStartedGameList).toHaveBeenCalledWith(
+        expectedOptions,
+        undefined,
+      );
     });
 
     it('should render an active game list', () => {

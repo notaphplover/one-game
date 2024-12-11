@@ -63,7 +63,7 @@ describe(ActiveGameList.name, () => {
       };
 
       expect(BaseGameList).toHaveBeenCalledTimes(1);
-      expect(BaseGameList).toHaveBeenCalledWith(expectedOptions, {});
+      expect(BaseGameList).toHaveBeenCalledWith(expectedOptions, undefined);
     });
 
     it('should return expected content', () => {
