@@ -1,3 +1,4 @@
+import { models as apiModels } from '@cornie-js/api-models';
 import {
   ArrowBackIosNewOutlined,
   ArrowForwardIosOutlined,
@@ -23,6 +24,7 @@ export const Game = (): React.JSX.Element => {
     closeErrorMessage,
     closeOpenDialog,
     currentCard,
+    currentColor,
     deckCardsAmount,
     errorMessage,
     game,
@@ -102,6 +104,29 @@ export const Game = (): React.JSX.Element => {
       }
     };
 
+  function addCurrentColorClassName(
+    currentColor: apiModels.CardColorV1 | undefined,
+  ): string {
+    let currentColorClassName: string = 'current-card-background ';
+    switch (currentColor) {
+      case 'blue':
+        currentColorClassName += 'current-color-blue';
+        break;
+      case 'green':
+        currentColorClassName += 'current-color-green';
+        break;
+      case 'red':
+        currentColorClassName += 'current-color-red';
+        break;
+      case 'yellow':
+        currentColorClassName += 'current-color-yellow';
+        break;
+      default:
+        break;
+    }
+    return currentColorClassName;
+  }
+
   return (
     <>
       <CircularProgressModal open={isPending} />
@@ -173,7 +198,12 @@ export const Game = (): React.JSX.Element => {
                   onHandlePlayCardsChoiceColor={onHandlePlayCardsChoiceColor}
                 />
               </Box>
-              {currentCardElement}
+              <Box
+                component="div"
+                className={addCurrentColorClassName(currentColor)}
+              >
+                {currentCardElement}
+              </Box>
               <Box component="div" className="game-area-info">
                 <Box component="div" className="game-area-info-timer">
                   {countDownElement}

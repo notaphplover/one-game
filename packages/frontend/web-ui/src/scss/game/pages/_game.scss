@@ -105,7 +105,11 @@
       margin-left: auto;
       margin-right: auto;
       max-width: 600px;
-      padding: 0.5rem;
+      padding: 0.2rem;
+
+      @media (min-width: variables.$md) {
+        padding: 0.5rem;
+      }
 
       div.cornie-card {
         margin: 0 0.5rem;
@@ -136,6 +140,35 @@
         .game-area-pass-button:disabled {
           background-color: var(--cg-bkg-secondary-dark);
           color: var(--cg-bkg-primary-dark);
+        }
+      }
+
+      .current-card-background {
+        padding: 0.4rem 0.15rem;
+        margin-left: 0.2rem;
+        margin-right: 0.2rem;
+        border-radius: 15px;
+
+        @media (min-width: variables.$sm) {
+          padding: 0.5rem 0.25rem;
+          margin-left: 0.5rem;
+          margin-right: 0.5rem;
+        }
+
+        &.current-color-blue {
+          background-color: variables.$blue;
+        }
+
+        &.current-color-green {
+          background-color: variables.$green;
+        }
+
+        &.current-color-red {
+          background-color: variables.$red;
+        }
+
+        &.current-color-yellow {
+          background-color: variables.$yellow;
         }
       }
 
