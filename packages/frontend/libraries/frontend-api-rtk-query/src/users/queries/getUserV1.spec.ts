@@ -29,7 +29,11 @@ describe(getUserV1.name, () => {
       api: BaseQueryApi,
       accessToken: string | null,
     ) => Promise<
-      QueryReturnValue<apiModels.UserV1, SerializableAppError, never>
+      QueryReturnValue<
+        apiModels.UserV1 | undefined,
+        SerializableAppError,
+        never
+      >
     >;
 
     beforeAll(() => {
@@ -95,7 +99,7 @@ describe(getUserV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.UserV1,
+            apiModels.UserV1 | undefined,
             SerializableAppError,
             never
           > = {
@@ -144,7 +148,7 @@ describe(getUserV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.UserV1,
+            apiModels.UserV1 | undefined,
             SerializableAppError,
             never
           > = {
@@ -196,14 +200,11 @@ describe(getUserV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.UserV1,
+            apiModels.UserV1 | undefined,
             SerializableAppError,
             never
           > = {
-            error: {
-              kind: AppErrorKind.entityNotFound,
-              message: resultFixture.body.description,
-            },
+            data: undefined,
           };
 
           expect(result).toStrictEqual(expected);

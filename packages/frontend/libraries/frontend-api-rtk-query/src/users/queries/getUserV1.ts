@@ -21,13 +21,15 @@ export function getUserV1(
   args: GetUserV1Args,
   api: BaseQueryApi,
   accessToken: string | null,
-) => Promise<QueryReturnValue<apiModels.UserV1, SerializableAppError, never>> {
+) => Promise<
+  QueryReturnValue<apiModels.UserV1 | undefined, SerializableAppError, never>
+> {
   return async (
     args: GetUserV1Args,
     _api: BaseQueryApi,
     accessToken: string | null,
   ): Promise<
-    QueryReturnValue<apiModels.UserV1, SerializableAppError, never>
+    QueryReturnValue<apiModels.UserV1 | undefined, SerializableAppError, never>
   > => {
     const httpResponse: GetUserV1Result = await httpClient.endpoints.getUser(
       {
@@ -50,10 +52,7 @@ export function getUserV1(
         };
       case NOT_FOUND:
         return {
-          error: {
-            kind: AppErrorKind.entityNotFound,
-            message: httpResponse.body.description,
-          },
+          data: undefined,
         };
       default:
         return {
