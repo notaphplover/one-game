@@ -212,7 +212,7 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
           ),
         },
       ),
-      getUserV1: build.query<apiModels.UserV1, GetUserV1Args>({
+      getUserV1: build.query<apiModels.UserV1 | undefined, GetUserV1Args>({
         queryFn: authorizedApiCall(
           getUserV1(options.httpClient),
           authorizedEndpointsOptions,
