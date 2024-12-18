@@ -10,6 +10,7 @@ jest.mock('../../user/hooks/useGetUserMe');
 jest.mock('../helpers/buildEventSource');
 jest.mock('../helpers/getGameSlotIndex');
 jest.mock('./useGameCards');
+jest.mock('./useGetMessageFinishedGame');
 jest.mock('./useGetGameSpecV1');
 jest.mock('./useGetGamesV1GameId');
 jest.mock('./useGetGamesV1GameIdSlotsSlotIdCards');
@@ -39,6 +40,10 @@ import {
   useGetGamesV1GameIdSlotsSlotIdCards,
   UseGetGamesV1GameIdSlotsSlotIdCardsResult,
 } from './useGetGamesV1GameIdSlotsSlotIdCards';
+import {
+  useGetMessageFinishedGame,
+  UseGetMessageFinishedGameResult,
+} from './useGetMessageFinishedGame';
 
 describe(useGame.name, () => {
   describe('when called, and queries return null result', () => {
@@ -46,6 +51,7 @@ describe(useGame.name, () => {
     let urlLikeLocationFixture: UrlLikeLocation;
     let useCountdownResultFixture: UseCountdownResult;
     let useGameCardsResultFixture: UseGameCardsResult;
+    let useGetMessageFinishedGameResultFixture: UseGetMessageFinishedGameResult;
     let useUpdateGameV1MutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useUpdateGameV1Mutation>
     >;
@@ -77,6 +83,10 @@ describe(useGame.name, () => {
         setNext: jest.fn(),
         setPrevious: jest.fn(),
         switchCardSelection: jest.fn(),
+      };
+
+      useGetMessageFinishedGameResultFixture = {
+        messageFinishedGame: undefined,
       };
 
       useUpdateGameV1MutationResultMock = [
@@ -130,6 +140,10 @@ describe(useGame.name, () => {
         useGameCardsResultFixture,
       );
 
+      (
+        useGetMessageFinishedGame as jest.Mock<typeof useGetMessageFinishedGame>
+      ).mockReturnValue(useGetMessageFinishedGameResultFixture);
+
       renderResult = renderHook(() => useGame());
     });
 
@@ -150,6 +164,9 @@ describe(useGame.name, () => {
       (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReset();
       (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReset();
       (useGameCards as jest.Mock<typeof useGameCards>).mockReset();
+      (
+        useGetMessageFinishedGame as jest.Mock<typeof useGetMessageFinishedGame>
+      ).mockReset();
       (
         cornieApi.useUpdateGameV1Mutation as jest.Mock<
           typeof cornieApi.useUpdateGameV1Mutation
@@ -202,6 +219,11 @@ describe(useGame.name, () => {
       expect(useGameCards).toHaveBeenCalledWith([]);
     });
 
+    it('should call useGetMessageFinishedGame()', () => {
+      expect(useGetMessageFinishedGame).toHaveBeenCalledTimes(1);
+      expect(useGetMessageFinishedGame).toHaveBeenCalledWith(undefined);
+    });
+
     it('should return expected result', () => {
       const expected: UseGameResult = {
         closeErrorMessage: expect.any(Function) as unknown as () => void,
@@ -233,6 +255,7 @@ describe(useGame.name, () => {
         openErrorMessage: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
+        useGetMessageFinishedGameResult: useGetMessageFinishedGameResultFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);
@@ -250,6 +273,7 @@ describe(useGame.name, () => {
     let useGetGameSpecV1ResultFixture: UseGetGameSpecV1Result;
     let useCountdownResultFixture: UseCountdownResult;
     let useGameCardsResultFixture: UseGameCardsResult;
+    let useGetMessageFinishedGameResultFixture: UseGetMessageFinishedGameResult;
     let useUpdateGameV1MutationResultMock: jest.Mocked<
       ReturnType<typeof cornieApi.useUpdateGameV1Mutation>
     >;
@@ -354,6 +378,10 @@ describe(useGame.name, () => {
         switchCardSelection: jest.fn(),
       };
 
+      useGetMessageFinishedGameResultFixture = {
+        messageFinishedGame: undefined,
+      };
+
       useCountdownResultFixture = {
         currentSeconds: 2,
         durationSeconds: 30,
@@ -425,6 +453,10 @@ describe(useGame.name, () => {
         useGameCardsResultFixture,
       );
 
+      (
+        useGetMessageFinishedGame as jest.Mock<typeof useGetMessageFinishedGame>
+      ).mockReturnValue(useGetMessageFinishedGameResultFixture);
+
       renderResult = renderHook(() => useGame());
     });
 
@@ -445,6 +477,9 @@ describe(useGame.name, () => {
       (getGameSlotIndex as jest.Mock<typeof getGameSlotIndex>).mockReset();
       (useGetGameSpecV1 as jest.Mock<typeof useGetGameSpecV1>).mockReset();
       (useGameCards as jest.Mock<typeof useGameCards>).mockReset();
+      (
+        useGetMessageFinishedGame as jest.Mock<typeof useGetMessageFinishedGame>
+      ).mockReset();
     });
 
     it('should call useRedirectUnauthorized()', () => {
@@ -522,6 +557,12 @@ describe(useGame.name, () => {
       expect(useGameCards).toHaveBeenNthCalledWith(2, gameCardsFixture);
     });
 
+    it('should call useGetMessageFinishedGame()', () => {
+      expect(useGetMessageFinishedGame).toHaveBeenCalledTimes(2);
+      expect(useGetMessageFinishedGame).toHaveBeenNthCalledWith(1, undefined);
+      expect(useGetMessageFinishedGame).toHaveBeenNthCalledWith(2, gameFixture);
+    });
+
     it('should return expected result', () => {
       const expected: UseGameResult = {
         closeErrorMessage: expect.any(Function) as unknown as () => void,
@@ -553,6 +594,7 @@ describe(useGame.name, () => {
         openErrorMessage: false,
         useCountdownResult: useCountdownResultFixture,
         useGameCardsResult: useGameCardsResultFixture,
+        useGetMessageFinishedGameResult: useGetMessageFinishedGameResultFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);
