@@ -8,18 +8,15 @@ import { renderHook, RenderHookResult } from '@testing-library/react';
 import { Right } from '../../common/models/Either';
 import { useGetUser, UseGetUserResult } from '../../user/hooks/useGetUser';
 import {
-  useGetMessageFinishedGame,
-  UseGetMessageFinishedGameResult,
-} from './useGetMessageFinishedGame';
+  useGetFinishedGameWinner,
+  UseGetFinishedGameWinnerResult,
+} from './useGetFinishedGameWinner';
 
-describe(useGetMessageFinishedGame.name, () => {
+describe(useGetFinishedGameWinner.name, () => {
   describe('when called,', () => {
     let gameFixture: apiModels.GameV1;
     let UseGetUserResultFixture: UseGetUserResult;
-    let renderResult: RenderHookResult<
-      UseGetMessageFinishedGameResult,
-      unknown
-    >;
+    let renderResult: RenderHookResult<UseGetFinishedGameWinnerResult, unknown>;
 
     beforeAll(() => {
       gameFixture = {
@@ -56,7 +53,7 @@ describe(useGetMessageFinishedGame.name, () => {
         UseGetUserResultFixture,
       );
 
-      renderResult = renderHook(() => useGetMessageFinishedGame(gameFixture));
+      renderResult = renderHook(() => useGetFinishedGameWinner(gameFixture));
     });
 
     it('should call to useGetUser()', () => {
@@ -64,9 +61,9 @@ describe(useGetMessageFinishedGame.name, () => {
       expect(useGetUser).toHaveBeenCalledWith(undefined);
     });
 
-    it('should return expected message finished game undefined', () => {
-      const expected: UseGetMessageFinishedGameResult = {
-        messageFinishedGame: undefined,
+    it('should return expected finished game winner undefined', () => {
+      const expected: UseGetFinishedGameWinnerResult = {
+        endGameWinner: undefined,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);
@@ -75,13 +72,10 @@ describe(useGetMessageFinishedGame.name, () => {
 
   describe('when called, and a game is finished', () => {
     let gameFixture: apiModels.GameV1;
-    let messageFinishedGameFixture: string;
+    let endGameWinnerFixture: apiModels.UserV1;
     let UseGetUserResultFixture: UseGetUserResult;
     let userV1Result: Right<apiModels.UserV1>;
-    let renderResult: RenderHookResult<
-      UseGetMessageFinishedGameResult,
-      unknown
-    >;
+    let renderResult: RenderHookResult<UseGetFinishedGameWinnerResult, unknown>;
 
     beforeAll(() => {
       gameFixture = {
@@ -96,7 +90,11 @@ describe(useGetMessageFinishedGame.name, () => {
         },
       };
 
-      messageFinishedGameFixture = 'Finished game, the winner is name-fixture';
+      endGameWinnerFixture = {
+        active: true,
+        id: 'userId-fixture-1',
+        name: 'name-fixture',
+      };
 
       userV1Result = {
         isRight: true,
@@ -116,7 +114,7 @@ describe(useGetMessageFinishedGame.name, () => {
         UseGetUserResultFixture,
       );
 
-      renderResult = renderHook(() => useGetMessageFinishedGame(gameFixture));
+      renderResult = renderHook(() => useGetFinishedGameWinner(gameFixture));
     });
 
     it('should call to useGetUser()', () => {
@@ -126,9 +124,9 @@ describe(useGetMessageFinishedGame.name, () => {
       expect(useGetUser).toHaveBeenNthCalledWith(3, 'userId-fixture-1');
     });
 
-    it('should return expected message finished game', () => {
-      const expected: UseGetMessageFinishedGameResult = {
-        messageFinishedGame: messageFinishedGameFixture,
+    it('should return expected finished game winner', () => {
+      const expected: UseGetFinishedGameWinnerResult = {
+        endGameWinner: endGameWinnerFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);

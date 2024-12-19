@@ -69,8 +69,8 @@ describe(Game.name, () => {
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
         },
-        useGetMessageFinishedGameResult: {
-          messageFinishedGame: undefined,
+        useGetFinishedGameWinnerResult: {
+          endGameWinner: undefined,
         },
       };
 
@@ -164,8 +164,8 @@ describe(Game.name, () => {
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
         },
-        useGetMessageFinishedGameResult: {
-          messageFinishedGame: undefined,
+        useGetFinishedGameWinnerResult: {
+          endGameWinner: undefined,
         },
       };
 
@@ -244,8 +244,8 @@ describe(Game.name, () => {
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
         },
-        useGetMessageFinishedGameResult: {
-          messageFinishedGame: undefined,
+        useGetFinishedGameWinnerResult: {
+          endGameWinner: undefined,
         },
       };
 
