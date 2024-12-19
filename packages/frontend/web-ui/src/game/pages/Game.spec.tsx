@@ -69,6 +69,9 @@ describe(Game.name, () => {
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
         },
+        useGetMessageFinishedGameResult: {
+          messageFinishedGame: undefined,
+        },
       };
 
       (useGame as jest.Mock<typeof useGame>).mockReturnValueOnce(
@@ -161,6 +164,9 @@ describe(Game.name, () => {
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
         },
+        useGetMessageFinishedGameResult: {
+          messageFinishedGame: undefined,
+        },
       };
 
       (useGame as jest.Mock<typeof useGame>).mockReturnValueOnce(
@@ -237,6 +243,9 @@ describe(Game.name, () => {
           setNext: jest.fn(),
           setPrevious: jest.fn(),
           switchCardSelection: jest.fn(),
+        },
+        useGetMessageFinishedGameResult: {
+          messageFinishedGame: undefined,
         },
       };
 

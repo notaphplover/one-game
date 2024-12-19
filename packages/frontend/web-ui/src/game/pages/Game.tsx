@@ -48,6 +48,7 @@ export const Game = (): React.JSX.Element => {
       setPrevious,
       switchCardSelection,
     },
+    useGetMessageFinishedGameResult: { messageFinishedGame },
   } = useGame();
 
   if (!isPending && game === undefined) {
@@ -253,6 +254,17 @@ export const Game = (): React.JSX.Element => {
                     onClick={buildOnHandleClick(gameCard.index)}
                   />
                 ))}
+              </Box>
+              <Box
+                component="div"
+                className="message-finish-game-container"
+                display={messageFinishedGame !== undefined ? '' : 'none'}
+              >
+                <Box component="div" className="message-finish-game-pagination">
+                  <Alert className="message-finish-game" severity="success">
+                    {messageFinishedGame}
+                  </Alert>
+                </Box>
               </Box>
             </Box>
           </Box>
