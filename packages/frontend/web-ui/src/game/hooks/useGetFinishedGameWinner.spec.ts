@@ -63,7 +63,7 @@ describe(useGetFinishedGameWinner.name, () => {
 
     it('should return expected finished game winner undefined', () => {
       const expected: UseGetFinishedGameWinnerResult = {
-        endGameWinner: undefined,
+        finishedGameWinner: undefined,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);
@@ -72,7 +72,7 @@ describe(useGetFinishedGameWinner.name, () => {
 
   describe('when called, and a game is finished', () => {
     let gameFixture: apiModels.GameV1;
-    let endGameWinnerFixture: apiModels.UserV1;
+    let finishedGameWinnerFixture: apiModels.UserV1;
     let UseGetUserResultFixture: UseGetUserResult;
     let userV1Result: Right<apiModels.UserV1>;
     let renderResult: RenderHookResult<UseGetFinishedGameWinnerResult, unknown>;
@@ -90,7 +90,7 @@ describe(useGetFinishedGameWinner.name, () => {
         },
       };
 
-      endGameWinnerFixture = {
+      finishedGameWinnerFixture = {
         active: true,
         id: 'userId-fixture-1',
         name: 'name-fixture',
@@ -126,7 +126,7 @@ describe(useGetFinishedGameWinner.name, () => {
 
     it('should return expected finished game winner', () => {
       const expected: UseGetFinishedGameWinnerResult = {
-        endGameWinner: endGameWinnerFixture,
+        finishedGameWinner: finishedGameWinnerFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expected);

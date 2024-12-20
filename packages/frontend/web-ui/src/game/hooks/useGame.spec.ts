@@ -86,7 +86,7 @@ describe(useGame.name, () => {
       };
 
       useGetFinishedGameWinnerResultFixture = {
-        endGameWinner: undefined,
+        finishedGameWinner: undefined,
       };
 
       useUpdateGameV1MutationResultMock = [
@@ -379,7 +379,7 @@ describe(useGame.name, () => {
       };
 
       useGetFinishedGameWinnerResultFixture = {
-        endGameWinner: undefined,
+        finishedGameWinner: undefined,
       };
 
       useCountdownResultFixture = {

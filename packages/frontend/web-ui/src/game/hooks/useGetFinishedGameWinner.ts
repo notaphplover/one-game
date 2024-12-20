@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useGetUser, UseGetUserResult } from '../../user/hooks/useGetUser';
 
 export interface UseGetFinishedGameWinnerResult {
-  endGameWinner: apiModels.UserV1 | undefined;
+  finishedGameWinner: apiModels.UserV1 | undefined;
 }
 
 export const useGetFinishedGameWinner = (
   game: apiModels.GameV1 | undefined,
 ): UseGetFinishedGameWinnerResult => {
-  const [endGameWinner, setEndGameWinner] = useState<
+  const [finishedGameWinner, setFinishedGameWinner] = useState<
     apiModels.UserV1 | undefined
   >(undefined);
 
@@ -40,13 +40,13 @@ export const useGetFinishedGameWinner = (
     if (game?.state.status === 'finished') {
       if (userV1Result !== null) {
         if (userV1Result.isRight) {
-          setEndGameWinner(userV1Result.value);
+          setFinishedGameWinner(userV1Result.value);
         }
       }
     }
   }, [userV1QueryResult]);
 
   return {
-    endGameWinner,
+    finishedGameWinner,
   };
 };

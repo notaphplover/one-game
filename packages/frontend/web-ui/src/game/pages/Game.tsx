@@ -48,7 +48,7 @@ export const Game = (): React.JSX.Element => {
       setPrevious,
       switchCardSelection,
     },
-    useGetFinishedGameWinnerResult: { endGameWinner },
+    useGetFinishedGameWinnerResult: { finishedGameWinner },
   } = useGame();
 
   if (!isPending && game === undefined) {
@@ -258,11 +258,11 @@ export const Game = (): React.JSX.Element => {
               <Box
                 component="div"
                 className="message-finish-game-container"
-                display={endGameWinner !== undefined ? '' : 'none'}
+                display={finishedGameWinner !== undefined ? '' : 'none'}
               >
                 <Box component="div" className="message-finish-game-pagination">
                   <Alert className="message-finish-game" severity="success">
-                    {`Finished game, the winner is ${endGameWinner?.name ?? ''}`}
+                    {`Finished game, the winner is ${finishedGameWinner?.name ?? ''}`}
                   </Alert>
                 </Box>
               </Box>

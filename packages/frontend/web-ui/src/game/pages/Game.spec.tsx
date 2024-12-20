@@ -70,7 +70,7 @@ describe(Game.name, () => {
           switchCardSelection: jest.fn(),
         },
         useGetFinishedGameWinnerResult: {
-          endGameWinner: undefined,
+          finishedGameWinner: undefined,
         },
       };
 
@@ -165,7 +165,7 @@ describe(Game.name, () => {
           switchCardSelection: jest.fn(),
         },
         useGetFinishedGameWinnerResult: {
-          endGameWinner: undefined,
+          finishedGameWinner: undefined,
         },
       };
 
@@ -245,7 +245,7 @@ describe(Game.name, () => {
           switchCardSelection: jest.fn(),
         },
         useGetFinishedGameWinnerResult: {
-          endGameWinner: undefined,
+          finishedGameWinner: undefined,
         },
       };
 
