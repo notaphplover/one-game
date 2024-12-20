@@ -240,6 +240,16 @@
       }
     }
 
+    .message-finish-game-pagination {
+      display: flex;
+      justify-content: center;
+
+      .message-finish-game {
+        margin-bottom: 10px;
+        padding: 10px;
+      }
+    }
+
     .player-hand {
       height: 250px;
       position: relative;

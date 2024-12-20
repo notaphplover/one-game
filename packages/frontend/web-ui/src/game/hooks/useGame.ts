@@ -25,6 +25,10 @@ import {
   useGameCards,
   UseGameCardsResult,
 } from './useGameCards';
+import {
+  useGetFinishedGameWinner,
+  UseGetFinishedGameWinnerResult,
+} from './useGetFinishedGameWinner';
 import { useGetGameSpecV1 } from './useGetGameSpecV1';
 import { useGetGamesV1GameId } from './useGetGamesV1GameId';
 import { useGetGamesV1GameIdSlotsSlotIdCards } from './useGetGamesV1GameIdSlotsSlotIdCards';
@@ -57,6 +61,7 @@ export interface UseGameResult {
   openErrorMessage: boolean;
   useCountdownResult: UseCountdownResult;
   useGameCardsResult: UseGameCardsResult;
+  useGetFinishedGameWinnerResult: UseGetFinishedGameWinnerResult;
 }
 
 function countDeckCards(
@@ -423,6 +428,9 @@ export const useGame = (): UseGameResult => {
 
   const useGameCardsResult: UseGameCardsResult = useGameCards(gameCards);
 
+  const useGetFinishedGameWinnerResult: UseGetFinishedGameWinnerResult =
+    useGetFinishedGameWinner(game);
+
   return {
     closeErrorMessage,
     closeOpenDialog,
@@ -446,5 +454,6 @@ export const useGame = (): UseGameResult => {
     openErrorMessage,
     useCountdownResult,
     useGameCardsResult,
+    useGetFinishedGameWinnerResult,
   };
 };
