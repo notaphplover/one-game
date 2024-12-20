@@ -10,7 +10,7 @@
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-pub-sub": "workspace:*",
     "@nestjs/common": "^10.4.15",
-    "ioredis": "^5.4.1"
+    "ioredis": "^5.4.2"
   },
   "devDependencies": {
     "@eslint/js": "9.17.0",
