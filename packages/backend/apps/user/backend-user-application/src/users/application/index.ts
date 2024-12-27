@@ -1,5 +1,6 @@
 import { DeleteV1UsersEmailCodeRequestController } from './controllers/DeleteV1UsersEmailCodeRequestController';
 import { DeleteV1UsersMeHttpRequestController } from './controllers/DeleteV1UsersMeHttpRequestController';
+import { GetV1UsersHttpRequestController } from './controllers/GetV1UsersHttpRequestController';
 import { GetV1UsersMeDetailHttpRequestController } from './controllers/GetV1UsersMeDetailHttpRequestController';
 import { GetV1UsersMeHttpRequestController } from './controllers/GetV1UsersMeHttpRequestController';
 import { GetV1UsersUserIdHttpRequestController } from './controllers/GetV1UsersUserIdHttpRequestController';
@@ -21,6 +22,7 @@ export {
   BaseV1UsersEmailCodeRequestParamHandler,
   DeleteV1UsersEmailCodeRequestController,
   DeleteV1UsersMeHttpRequestController,
+  GetV1UsersHttpRequestController,
   GetV1UsersMeDetailHttpRequestController,
   GetV1UsersMeHttpRequestController,
   GetV1UsersUserIdHttpRequestController,

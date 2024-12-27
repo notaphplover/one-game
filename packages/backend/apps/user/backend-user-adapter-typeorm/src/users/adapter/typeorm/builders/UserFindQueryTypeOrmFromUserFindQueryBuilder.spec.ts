@@ -248,9 +248,9 @@ describe(UserFindQueryTypeOrmFromUserFindQueryBuilder.name, () => {
         it('should call queryBuilder.andWhere()', () => {
           expect(queryBuilderMock.andWhere).toHaveBeenCalledTimes(1);
           expect(queryBuilderMock.andWhere).toHaveBeenCalledWith(
-            `${UserDb.name}.id IN (:...${UserDb.name}id)`,
+            `${UserDb.name}.id IN (:...${UserDb.name}ids)`,
             {
-              [`${UserDb.name}id`]: userFindQueryFixture.ids,
+              [`${UserDb.name}ids`]: userFindQueryFixture.ids,
             },
           );
         });

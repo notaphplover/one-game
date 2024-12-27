@@ -31,9 +31,11 @@ export type TypesV1 =
   | UserCodeCreateQueryV1
   | UserCodeKindV1
   | UserCreateQueryV1
+  | UserDetailV1
   | UserMeUpdateQueryV1
-  | UserV1
-  | UserDetailV1;
+  | UserSortOptionV1
+  | UserArrayV1
+  | UserV1;
 export type CardV1 =
   | DrawCardV1
   | NormalCardV1
@@ -60,6 +62,8 @@ export type GameSlotV1 =
 export type GameSpecArrayV1 = GameSpecV1[];
 export type GameSpecSortOptionV1 = 'gameIds';
 export type UserCodeKindV1 = 'registerConfirm' | 'resetPassword';
+export type UserSortOptionV1 = 'ids';
+export type UserArrayV1 = UserV1[];
 export type TypesV2 = AuthCreateQueryV2 | AuthV2 | GameEventV2;
 export type AuthCreateQueryV2 = CodeAuthCreateQueryV2 | LoginAuthCreateQueryV2;
 export type GameEventV2 =
@@ -222,6 +226,9 @@ export interface UserCreateQueryV1 {
   name: string;
   password: string;
 }
+export interface UserDetailV1 {
+  email: string;
+}
 export interface UserMeUpdateQueryV1 {
   active?: true;
   name?: string;
@@ -231,9 +238,6 @@ export interface UserV1 {
   active: boolean;
   id: string;
   name: string;
-}
-export interface UserDetailV1 {
-  email: string;
 }
 export interface CodeAuthCreateQueryV2 {
   code: string;

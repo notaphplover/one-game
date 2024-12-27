@@ -5,6 +5,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { JsonSchemaModule } from '../../../../foundation/jsonSchema/adapter/nest/modules/JsonSchemaModule';
 import { DeleteV1UsersEmailCodeRequestController } from '../../../application/controllers/DeleteV1UsersEmailCodeRequestController';
 import { DeleteV1UsersMeHttpRequestController } from '../../../application/controllers/DeleteV1UsersMeHttpRequestController';
+import { GetV1UsersHttpRequestController } from '../../../application/controllers/GetV1UsersHttpRequestController';
 import { GetV1UsersMeDetailHttpRequestController } from '../../../application/controllers/GetV1UsersMeDetailHttpRequestController';
 import { GetV1UsersMeHttpRequestController } from '../../../application/controllers/GetV1UsersMeHttpRequestController';
 import { GetV1UsersUserIdHttpRequestController } from '../../../application/controllers/GetV1UsersUserIdHttpRequestController';
@@ -14,6 +15,7 @@ import { PostV1UsersHttpRequestController } from '../../../application/controlle
 import { DeleteV1UsersEmailCodeRequestParamHandler } from '../../../application/handlers/DeleteV1UsersEmailCodeRequestParamHandler';
 import { DeleteV1UsersMeRequestParamHandler } from '../../../application/handlers/DeleteV1UsersMeRequestParamHandler';
 import { GetV1UsersMeRequestParamHandler } from '../../../application/handlers/GetV1UsersMeRequestParamHandler';
+import { GetV1UsersRequestParamHandler } from '../../../application/handlers/GetV1UsersRequestParamHandler';
 import { GetV1UsersUserIdRequestParamHandler } from '../../../application/handlers/GetV1UsersUserIdRequestParamHandler';
 import { PatchV1UsersMeRequestBodyParamHandler } from '../../../application/handlers/PatchV1UsersMeRequestBodyParamHandler';
 import { PatchV1UsersMeRequestParamHandler } from '../../../application/handlers/PatchV1UsersMeRequestParamHandler';
@@ -33,6 +35,7 @@ export class UserHttpApiModule {
       exports: [
         DeleteV1UsersEmailCodeRequestController,
         DeleteV1UsersMeHttpRequestController,
+        GetV1UsersHttpRequestController,
         GetV1UsersMeHttpRequestController,
         GetV1UsersMeDetailHttpRequestController,
         GetV1UsersUserIdHttpRequestController,
@@ -54,9 +57,11 @@ export class UserHttpApiModule {
         DeleteV1UsersEmailCodeRequestParamHandler,
         DeleteV1UsersMeHttpRequestController,
         DeleteV1UsersMeRequestParamHandler,
+        GetV1UsersHttpRequestController,
         GetV1UsersMeDetailHttpRequestController,
         GetV1UsersMeHttpRequestController,
         GetV1UsersMeRequestParamHandler,
+        GetV1UsersRequestParamHandler,
         GetV1UsersUserIdHttpRequestController,
         GetV1UsersUserIdRequestParamHandler,
         PatchV1UsersMeHttpRequestController,
