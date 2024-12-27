@@ -30,21 +30,27 @@
     { "$ref": "https://onegame.schemas/api/v1/games/game-slot.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game-spec-array.json" },
     { "$ref": "https://onegame.schemas/api/v1/games/game-spec.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/game-spec-sort-option.json" },
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/game-spec-sort-option.json"
+    },
     {
       "$ref": "https://onegame.schemas/api/v1/games/game-updated-message-event.json"
     },
     { "$ref": "https://onegame.schemas/api/v1/games/game.json" },
-    { "$ref": "https://onegame.schemas/api/v1/games/non-started-game-state.json"},
+    {
+      "$ref": "https://onegame.schemas/api/v1/games/non-started-game-state.json"
+    },
     {
       "$ref": "https://onegame.schemas/api/v1/users/user-code-create-query.json"
     },
     { "$ref": "https://onegame.schemas/api/v1/users/user-code-kind.json" },
     { "$ref": "https://onegame.schemas/api/v1/users/user-create-query.json" },
+    { "$ref": "https://onegame.schemas/api/v1/users/user-detail.json" },
     {
       "$ref": "https://onegame.schemas/api/v1/users/user-me-update-query.json"
     },
-    { "$ref": "https://onegame.schemas/api/v1/users/user.json" },
-    { "$ref": "https://onegame.schemas/api/v1/users/user-detail.json" }
+    { "$ref": "https://onegame.schemas/api/v1/users/user-sort-option.json" },
+    { "$ref": "https://onegame.schemas/api/v1/users/user-array.json" },
+    { "$ref": "https://onegame.schemas/api/v1/users/user.json" }
   ]
 }
