@@ -97,9 +97,9 @@ export class UserFindQueryTypeOrmFromUserFindQueryBuilder
           );
         } else {
           queryBuilder.andWhere(
-            `${userPropertiesPrefix}id IN (:...${UserDb.name}id)`,
+            `${userPropertiesPrefix}id IN (:...${UserDb.name}ids)`,
             {
-              [`${UserDb.name}id`]: userFindQuery.ids,
+              [`${UserDb.name}ids`]: userFindQuery.ids,
             },
           );
         }
