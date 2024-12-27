@@ -3,6 +3,7 @@ import { UserCodeCreateQuery } from './query/UserCodeCreateQuery';
 import { UserCodeFindQuery } from './query/UserCodeFindQuery';
 import { UserCreateQuery } from './query/UserCreateQuery';
 import { UserFindQuery } from './query/UserFindQuery';
+import { UserFindQuerySortOption } from './query/UserFindQuerySortOption';
 import { UserUpdateQuery } from './query/UserUpdateQuery';
 import { IsValidUserCreateQuerySpec } from './specs/IsValidUserCreateQuerySpec';
 import { IsValidUserUpdateQuerySpec } from './specs/IsValidUserUpdateQuerySpec';
@@ -27,4 +28,5 @@ export {
   UserCanCreateAuthSpec,
   UserCanCreateCodeSpec,
   UserCodeKind,
+  UserFindQuerySortOption,
 };
