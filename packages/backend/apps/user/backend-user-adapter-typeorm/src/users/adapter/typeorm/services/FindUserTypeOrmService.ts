@@ -1,16 +1,16 @@
 import { Builder } from '@cornie-js/backend-common';
-import { FindTypeOrmService } from '@cornie-js/backend-db/adapter/typeorm';
+import { FindTypeOrmQueryBuilderService } from '@cornie-js/backend-db/adapter/typeorm';
 import { User, UserFindQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm';
 
 import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from '../builders/UserFindQueryTypeOrmFromUserFindQueryBuilder';
 import { UserFromUserDbBuilder } from '../builders/UserFromUserDbBuilder';
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class FindUserTypeOrmService extends FindTypeOrmService<
+export class FindUserTypeOrmService extends FindTypeOrmQueryBuilderService<
   User,
   UserDb,
   UserFindQuery
@@ -22,8 +22,8 @@ export class FindUserTypeOrmService extends FindTypeOrmService<
     userFromUserDbBuilder: Builder<User, [UserDb]>,
     @Inject(UserFindQueryTypeOrmFromUserFindQueryBuilder)
     userFindQueryTypeOrmFromUserFindQueryBuilder: Builder<
-      FindManyOptions<UserDb>,
-      [UserFindQuery]
+      QueryBuilder<UserDb> & WhereExpressionBuilder,
+      [UserFindQuery, QueryBuilder<UserDb> & WhereExpressionBuilder]
     >,
   ) {
     super(
