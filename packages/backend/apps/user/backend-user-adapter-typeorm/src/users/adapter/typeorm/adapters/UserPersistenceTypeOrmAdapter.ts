@@ -52,6 +52,10 @@ export class UserPersistenceTypeOrmAdapter
     await this.#deleteUserTypeOrmService.delete(userFindQuery);
   }
 
+  public async find(userFindQuery: UserFindQuery): Promise<User[]> {
+    return this.#findUserTypeOrmService.find(userFindQuery);
+  }
+
   public async findOne(
     userFindQuery: UserFindQuery,
   ): Promise<User | undefined> {

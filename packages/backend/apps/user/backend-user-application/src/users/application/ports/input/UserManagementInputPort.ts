@@ -123,6 +123,13 @@ export class UserManagementInputPort {
     await this.#userPersistenceOutputPort.delete(userFindQuery);
   }
 
+  public async find(userFindQuery: UserFindQuery): Promise<apiModels.UserV1[]> {
+    const users: User[] =
+      await this.#userPersistenceOutputPort.find(userFindQuery);
+
+    return users.map((user: User) => this.#buildUserV1OrUndefined(user));
+  }
+
   public async findOne(id: string): Promise<apiModels.UserV1 | undefined> {
     const userFindQuery: UserFindQuery = {
       id,
@@ -160,6 +167,11 @@ export class UserManagementInputPort {
     };
   }
 
+  #buildUserV1OrUndefined(userOrUndefined: User): apiModels.UserV1;
+  #buildUserV1OrUndefined(userOrUndefined: undefined): undefined;
+  #buildUserV1OrUndefined(
+    userOrUndefined: User | undefined,
+  ): apiModels.UserV1 | undefined;
   #buildUserV1OrUndefined(
     userOrUndefined: User | undefined,
   ): apiModels.UserV1 | undefined {

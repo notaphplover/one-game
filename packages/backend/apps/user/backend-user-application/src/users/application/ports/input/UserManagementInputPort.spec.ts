@@ -12,6 +12,7 @@ import {
 } from '@cornie-js/backend-user-domain/users';
 import {
   UserCreateQueryFixtures,
+  UserFindQueryFixtures,
   UserFixtures,
   UserUpdateQueryFixtures,
 } from '@cornie-js/backend-user-domain/users/fixtures';
@@ -62,6 +63,7 @@ describe(UserManagementInputPort.name, () => {
     userPersistenceOutputPortMock = {
       create: jest.fn(),
       delete: jest.fn(),
+      find: jest.fn(),
       findOne: jest.fn(),
       update: jest.fn(),
     };
@@ -223,6 +225,54 @@ describe(UserManagementInputPort.name, () => {
 
       it('should return undefined', () => {
         expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('.find', () => {
+    let userFindQueryFixture: UserFindQuery;
+
+    beforeAll(() => {
+      userFindQueryFixture = UserFindQueryFixtures.withId;
+    });
+
+    describe('when called', () => {
+      let userFixture: User;
+      let userV1Fixture: apiModels.UserV1;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userFixture = UserFixtures.any;
+        userV1Fixture = UserV1Fixtures.any;
+
+        userPersistenceOutputPortMock.find.mockResolvedValueOnce([userFixture]);
+
+        userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
+
+        result = await userManagementInputPort.find(userFindQueryFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call userPersistenceOutputPort.find()', () => {
+        expect(userPersistenceOutputPortMock.find).toHaveBeenCalledTimes(1);
+        expect(userPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+          userFindQueryFixture,
+        );
+      });
+
+      it('should call userV1FromUserBuilder.build()', () => {
+        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledTimes(1);
+        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledWith(
+          userFixture,
+        );
+      });
+
+      it('should return an UserV1', () => {
+        expect(result).toStrictEqual([userV1Fixture]);
       });
     });
   });
