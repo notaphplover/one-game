@@ -36,6 +36,7 @@ import { getGamesV1Mine } from './games/queries/getGamesV1Mine';
 import { CreateUsersV1Args } from './users/models/CreateUsersV1Args';
 import { CreateUsersV1EmailCodeArgs } from './users/models/CreateUsersV1EmailCodeArgs';
 import { DeleteUsersV1EmailCodeArgs } from './users/models/DeleteUsersV1EmailCodeArgs';
+import { GetUsersV1Args } from './users/models/GetUsersV1Args';
 import { GetUsersV1MeArgs } from './users/models/GetUsersV1MeArgs';
 import { GetUserV1Args } from './users/models/GetUserV1Args';
 import { UpdateUsersV1MeArgs } from './users/models/UpdateUsersV1MeArgs';
@@ -43,6 +44,7 @@ import { createUsersV1 } from './users/mutations/createUsersV1';
 import { createUsersV1EmailCode } from './users/mutations/createUsersV1EmailCode';
 import { deleteUsersV1EmailCode } from './users/mutations/deleteUsersV1EmailCode';
 import { updateUsersV1Me } from './users/mutations/updateUsersV1Me';
+import { getUsersV1 } from './users/queries/getUsersV1';
 import { getUsersV1Me } from './users/queries/getUsersV1Me';
 import { getUsersV1MeDetail } from './users/queries/getUsersV1MeDetail';
 import { getUserV1 } from './users/queries/getUserV1';
@@ -60,6 +62,7 @@ export type {
   GetGamesV1GameIdArgs,
   GetGamesV1GameIdSlotsSlotIdCardsArgs,
   GetGamesV1MineArgs,
+  GetUsersV1Args,
   GetUsersV1MeArgs,
   GetUserV1Args,
   SerializableAppError,
@@ -191,6 +194,12 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
       getGamesV1Mine: build.query<apiModels.GameArrayV1, GetGamesV1MineArgs>({
         queryFn: authorizedApiCall(
           getGamesV1Mine(options.httpClient),
+          authorizedEndpointsOptions,
+        ),
+      }),
+      getUsersV1: build.query<apiModels.UserArrayV1, GetGamesV1Args>({
+        queryFn: authorizedApiCall(
+          getUsersV1(options.httpClient),
           authorizedEndpointsOptions,
         ),
       }),
