@@ -37,6 +37,7 @@
       "$ref": "https://onegame.schemas/api/v1/games/game-updated-message-event.json"
     },
     { "$ref": "https://onegame.schemas/api/v1/games/game.json" },
+    { "$ref": "https://onegame.schemas/api/v1/users/maybe-user-array.json" },
     {
       "$ref": "https://onegame.schemas/api/v1/games/non-started-game-state.json"
     },
@@ -50,7 +51,6 @@
       "$ref": "https://onegame.schemas/api/v1/users/user-me-update-query.json"
     },
     { "$ref": "https://onegame.schemas/api/v1/users/user-sort-option.json" },
-    { "$ref": "https://onegame.schemas/api/v1/users/user-array.json" },
     { "$ref": "https://onegame.schemas/api/v1/users/user.json" }
   ]
 }

@@ -29,7 +29,7 @@ describe(getUsersV1.name, () => {
       api: BaseQueryApi,
       accessToken: string | null,
     ) => Promise<
-      QueryReturnValue<apiModels.UserArrayV1, SerializableAppError, never>
+      QueryReturnValue<apiModels.MaybeUserArrayV1, SerializableAppError, never>
     >;
 
     beforeAll(() => {
@@ -65,7 +65,7 @@ describe(getUsersV1.name, () => {
 
         beforeAll(async () => {
           resultFixture = {
-            body: Symbol() as unknown as apiModels.UserArrayV1,
+            body: Symbol() as unknown as apiModels.MaybeUserArrayV1,
             headers: {},
             statusCode: OK,
           };
@@ -97,7 +97,7 @@ describe(getUsersV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.UserArrayV1,
+            apiModels.MaybeUserArrayV1,
             SerializableAppError,
             never
           > = {
@@ -148,7 +148,7 @@ describe(getUsersV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.UserArrayV1,
+            apiModels.MaybeUserArrayV1,
             SerializableAppError,
             never
           > = {
@@ -202,7 +202,7 @@ describe(getUsersV1.name, () => {
 
         it('should return QueryReturnValue', () => {
           const expected: QueryReturnValue<
-            apiModels.UserArrayV1,
+            apiModels.MaybeUserArrayV1,
             SerializableAppError,
             never
           > = {

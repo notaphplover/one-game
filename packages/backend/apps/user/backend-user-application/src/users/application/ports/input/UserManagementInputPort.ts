@@ -14,10 +14,12 @@ import {
   User,
   UserCreateQuery,
   UserFindQuery,
+  UserFindQuerySortOption,
   UserUpdateQuery,
 } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 
+import { findByBatchIds } from '../../../../foundation/batching/calculations/findByBatchIds';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../builders/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../builders/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
@@ -36,6 +38,9 @@ import {
 @Injectable()
 export class UserManagementInputPort {
   readonly #createUserUseCaseHandler: Handler<[UserCreateQuery], User>;
+  readonly #findUsersByBatchIds: (
+    userIds: string[],
+  ) => Promise<(User | undefined)[]>;
   readonly #updateUserUseCaseHandler: Handler<[UserUpdateQuery], User>;
   readonly #userCodePersistenceOutputPort: UserCodePersistenceOutputPort;
   readonly #userCreateQueryFromUserCreateQueryV1Builder: BuilderAsync<
@@ -75,6 +80,11 @@ export class UserManagementInputPort {
     uuidProviderOutputPort: UuidProviderOutputPort,
   ) {
     this.#createUserUseCaseHandler = createUserUseCaseHandler;
+    this.#findUsersByBatchIds = findByBatchIds<User, string>(
+      (user: User): string => user.id,
+      async (ids: string[]): Promise<User[]> =>
+        this.#userPersistenceOutputPort.find({ ids }),
+    );
     this.#updateUserUseCaseHandler = updateUserUseCaseHandler;
     this.#userCodePersistenceOutputPort = userCodePersistenceOutputPort;
     this.#userCreateQueryFromUserCreateQueryV1Builder =
@@ -123,11 +133,19 @@ export class UserManagementInputPort {
     await this.#userPersistenceOutputPort.delete(userFindQuery);
   }
 
-  public async find(userFindQuery: UserFindQuery): Promise<apiModels.UserV1[]> {
+  public async find(
+    userFindQuery: UserFindQuery,
+  ): Promise<(apiModels.UserV1 | undefined)[]> {
+    if (userFindQuery.sort === UserFindQuerySortOption.ids) {
+      return this.#findBySortedIds(userFindQuery);
+    }
+
     const users: User[] =
       await this.#userPersistenceOutputPort.find(userFindQuery);
 
-    return users.map((user: User) => this.#buildUserV1OrUndefined(user));
+    return users.map(
+      (user: User): apiModels.UserV1 => this.#buildUserV1OrUndefined(user),
+    );
   }
 
   public async findOne(id: string): Promise<apiModels.UserV1 | undefined> {
@@ -184,5 +202,43 @@ export class UserManagementInputPort {
     }
 
     return userV1OrUndefined;
+  }
+
+  async #findBySortedIds(
+    userFindQuery: UserFindQuery,
+  ): Promise<(apiModels.UserV1 | undefined)[]> {
+    const ids: string[] = this.#getSortedIds(userFindQuery);
+
+    const users: (User | undefined)[] = await this.#findUsersByBatchIds(ids);
+
+    return users.map((user: User | undefined): apiModels.UserV1 | undefined =>
+      this.#buildUserV1OrUndefined(user),
+    );
+  }
+
+  #getSortedIds(userFindQuery: UserFindQuery): string[] {
+    if (
+      userFindQuery.email !== undefined ||
+      userFindQuery.id !== undefined ||
+      userFindQuery.ids === undefined ||
+      (userFindQuery.offset !== undefined && userFindQuery.offset !== 0)
+    ) {
+      throw new AppError(
+        AppErrorKind.unprocessableOperation,
+        'Ids sorted user find operations must be filtered only by ids',
+      );
+    }
+
+    if (
+      userFindQuery.limit !== undefined &&
+      userFindQuery.ids.length > userFindQuery.limit
+    ) {
+      throw new AppError(
+        AppErrorKind.contractViolation,
+        `Invalid ids sorted user find operation. Expected no more than ${userFindQuery.limit.toString()} ids, ${userFindQuery.ids.length.toString()} found instead.`,
+      );
+    }
+
+    return userFindQuery.ids;
   }
 }

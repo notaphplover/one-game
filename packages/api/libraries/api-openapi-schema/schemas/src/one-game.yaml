@@ -508,6 +508,11 @@ paths:
         - User
     get:
       summary: Get users
+      description: |
+        Gets users given some filters.
+
+        If "sort" is provided, then results are filtered by ids respecting the order in which those ids were provided in the query.
+        If no user is found for a certain id, a null value is provided instead.
       operationId: getUsers
       parameters:
         - in: query
@@ -546,7 +551,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://onegame.schemas/api/v1/users/user-array.json'
+                $ref: 'https://onegame.schemas/api/v1/users/maybe-user-array.json'
         '401':
           description: Unauthorized
           content:
