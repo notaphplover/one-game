@@ -197,7 +197,7 @@ export function buildApi<TState>(options: BuildApiOptions<TState>) {
           authorizedEndpointsOptions,
         ),
       }),
-      getUsersV1: build.query<apiModels.UserArrayV1, GetGamesV1Args>({
+      getUsersV1: build.query<apiModels.UserArrayV1, GetUsersV1Args>({
         queryFn: authorizedApiCall(
           getUsersV1(options.httpClient),
           authorizedEndpointsOptions,
