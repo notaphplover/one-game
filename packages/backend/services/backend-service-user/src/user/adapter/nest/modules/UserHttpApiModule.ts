@@ -13,6 +13,7 @@ import { HttpModule } from '../../../../foundation/http/adapter/nest/modules/Htt
 import { buildMailClientOptions } from '../../../../foundation/mail/adapter/nest/calculations/buildMailClientOptions';
 import { DeleteV1UsersEmailCodeRequestNestController } from '../controllers/DeleteV1UsersEmailCodeRequestNestController';
 import { DeleteV1UsersMeHttpRequestNestController } from '../controllers/DeleteV1UsersMeHttpRequestNestController';
+import { GetV1UsersHttpRequestNestController } from '../controllers/GetV1UsersHttpRequestNestController';
 import { GetV1UsersMeDetailHttpRequestNestController } from '../controllers/GetV1UsersMeDetailHttpRequestNestController';
 import { GetV1UsersMeHttpRequestNestController } from '../controllers/GetV1UsersMeHttpRequestNestController';
 import { GetV1UsersUserIdHttpRequestNestController } from '../controllers/GetV1UsersUserIdHttpRequestNestController';
@@ -27,6 +28,7 @@ const dbModuleOptions: DbModuleOptions = buildDbModuleOptions();
     // mind the order
     DeleteV1UsersEmailCodeRequestNestController,
     DeleteV1UsersMeHttpRequestNestController,
+    GetV1UsersHttpRequestNestController,
     GetV1UsersMeDetailHttpRequestNestController,
     GetV1UsersMeHttpRequestNestController,
     GetV1UsersUserIdHttpRequestNestController,

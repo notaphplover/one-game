@@ -12,6 +12,7 @@ export interface UserPersistenceOutputPort {
     transactionWrapper?: TransactionWrapper,
   ): Promise<User>;
   delete(userFindQuery: UserFindQuery): Promise<void>;
+  find(userFindQuery: UserFindQuery): Promise<User[]>;
   findOne(userFindQuery: UserFindQuery): Promise<User | undefined>;
   update(userUpdateQuery: UserUpdateQuery): Promise<void>;
 }

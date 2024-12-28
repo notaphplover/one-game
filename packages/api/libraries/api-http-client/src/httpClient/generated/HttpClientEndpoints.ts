@@ -229,6 +229,31 @@ export class HttpClientEndpoints {
       urlParameters: url,
     });
   }
+  public async getUsers(
+    headers: {
+      [key: string]: string;
+    },
+    query: {
+      [key: string]: string | string[];
+      id?: string | string[];
+      page?: string | string[];
+      pageSize?: string | string[];
+      sort?: string | string[];
+    },
+  ): Promise<
+    | Response<Record<string, string>, apiModels.UserArrayV1, 200>
+    | Response<Record<string, string>, apiModels.ErrorV1, 401>
+    | Response<Record<string, string>, apiModels.ErrorV1, 403>
+  > {
+    return this.#internalHttpClient.callEndpoint({
+      body: undefined,
+      headers: headers,
+      method: 'GET',
+      path: '/v1/users',
+      queryParams: query,
+      urlParameters: undefined,
+    });
+  }
   public async createUser(
     headers: {
       [key: string]: string;

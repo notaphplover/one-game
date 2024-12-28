@@ -1,12 +1,9 @@
 import { Builder } from '@cornie-js/backend-common';
-import {
-  FindQueryTypeOrmFromQueryBuilder,
-  UpdateTypeOrmService,
-} from '@cornie-js/backend-db/adapter/typeorm';
+import { UpdateTypeOrmQueryBuilderService } from '@cornie-js/backend-db/adapter/typeorm';
 import { UserUpdateQuery } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryBuilder, Repository, WhereExpressionBuilder } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from '../builders/UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
@@ -14,7 +11,7 @@ import { UserSetQueryTypeOrmFromUserUpdateQueryBuilder } from '../builders/UserS
 import { UserDb } from '../models/UserDb';
 
 @Injectable()
-export class UpdateUserTypeOrmService extends UpdateTypeOrmService<
+export class UpdateUserTypeOrmService extends UpdateTypeOrmQueryBuilderService<
   UserDb,
   UserUpdateQuery
 > {
@@ -22,9 +19,9 @@ export class UpdateUserTypeOrmService extends UpdateTypeOrmService<
     @InjectRepository(UserDb)
     repository: Repository<UserDb>,
     @Inject(UserFindQueryTypeOrmFromUserUpdateQueryBuilder)
-    userFindQueryTypeOrmFromUserUpdateQueryBuilder: FindQueryTypeOrmFromQueryBuilder<
-      UserDb,
-      UserUpdateQuery
+    userFindQueryTypeOrmFromUserUpdateQueryBuilder: Builder<
+      QueryBuilder<UserDb> & WhereExpressionBuilder,
+      [UserUpdateQuery, QueryBuilder<UserDb> & WhereExpressionBuilder]
     >,
     @Inject(UserSetQueryTypeOrmFromUserUpdateQueryBuilder)
     userSetQueryTypeOrmFromUserUpdateQueryBuilder: Builder<

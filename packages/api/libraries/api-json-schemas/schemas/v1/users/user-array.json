@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/users/user-array.json",
+  "title": "UserArrayV1",
+  "items": {
+    "$ref": "https://onegame.schemas/api/v1/users/user.json"
+  },
+  "type": "array"
+}

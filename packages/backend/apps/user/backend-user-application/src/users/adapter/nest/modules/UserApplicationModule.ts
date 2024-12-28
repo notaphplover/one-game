@@ -11,6 +11,7 @@ import { UserCodeCreateQueryFromUserBuilder } from '../../../application/builder
 import { UserCodeKindFromUserCodeKindV1Builder } from '../../../application/builders/UserCodeKindFromUserCodeKindV1Builder';
 import { UserCreateQueryFromUserCreateQueryV1Builder } from '../../../application/builders/UserCreateQueryFromUserCreateQueryV1Builder';
 import { UserDetailV1FromUserBuilder } from '../../../application/builders/UserDetailV1FromUserBuilder';
+import { UserFindQuerySortOptionFromUserSortOptionV1Builder } from '../../../application/builders/UserFindQuerySortOptionFromUserSortOptionV1Builder';
 import { UserUpdateQueryFromUserMeUpdateQueryV1Builder } from '../../../application/builders/UserUpdateQueryFromUserMeUpdateQueryV1Builder';
 import { UserV1FromUserBuilder } from '../../../application/builders/UserV1FromUserBuilder';
 import { CreateUserUseCaseHandler } from '../../../application/handlers/CreateUserUseCaseHandler';
@@ -33,6 +34,7 @@ export class UserApplicationModule {
         UserCodeKindFromUserCodeKindV1Builder,
         UserCodeManagementInputPort,
         UserDetailManagementInputPort,
+        UserFindQuerySortOptionFromUserSortOptionV1Builder,
         UserManagementInputPort,
       ],
       global: false,
@@ -57,6 +59,7 @@ export class UserApplicationModule {
         UserCreateQueryFromUserCreateQueryV1Builder,
         UserDetailManagementInputPort,
         UserDetailV1FromUserBuilder,
+        UserFindQuerySortOptionFromUserSortOptionV1Builder,
         UserManagementInputPort,
         UserUpdatedEventHandler,
         UserUpdateQueryFromUserMeUpdateQueryV1Builder,
