@@ -22,14 +22,14 @@ export function getUsersV1(
   api: BaseQueryApi,
   accessToken: string | null,
 ) => Promise<
-  QueryReturnValue<apiModels.UserArrayV1, SerializableAppError, never>
+  QueryReturnValue<apiModels.MaybeUserArrayV1, SerializableAppError, never>
 > {
   return async (
     args: GetUsersV1Args,
     _api: BaseQueryApi,
     accessToken: string | null,
   ): Promise<
-    QueryReturnValue<apiModels.UserArrayV1, SerializableAppError, never>
+    QueryReturnValue<apiModels.MaybeUserArrayV1, SerializableAppError, never>
   > => {
     const httpResponse: GetUsersResult = await httpClient.endpoints.getUsers(
       {

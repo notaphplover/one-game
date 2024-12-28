@@ -20,7 +20,7 @@ import { UserManagementInputPort } from '../ports/input/UserManagementInputPort'
 export class GetV1UsersHttpRequestController extends HttpRequestController<
   Request,
   [UserFindQuery],
-  apiModels.UserV1[]
+  (apiModels.UserV1 | undefined)[]
 > {
   readonly #userManagementInputPort: UserManagementInputPort;
 
@@ -54,7 +54,7 @@ export class GetV1UsersHttpRequestController extends HttpRequestController<
 
   protected async _handleUseCase(
     userFindQuery: UserFindQuery,
-  ): Promise<apiModels.UserV1[]> {
+  ): Promise<(apiModels.UserV1 | undefined)[]> {
     return this.#userManagementInputPort.find(userFindQuery);
   }
 }
