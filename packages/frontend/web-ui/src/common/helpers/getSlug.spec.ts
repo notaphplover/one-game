@@ -6,6 +6,7 @@ import { getSlug } from './getSlug';
 describe(getSlug.name, () => {
   describe.each<[PageName, string]>([
     [PageName.createGame, '/games/create'],
+    [PageName.finishedGames, '/games/finished'],
     [PageName.game, '/games'],
     [PageName.home, '/'],
     [PageName.login, '/auth/login'],
@@ -16,7 +17,7 @@ describe(getSlug.name, () => {
     [PageName.forgot, '/auth/forgot'],
     [PageName.reset, '/auth/reset-password'],
   ])(
-    'having a page name "%s"',
+    'having a page name %i: %s',
     (pageName: PageName, expectedResult: string) => {
       describe('when called', () => {
         let result: unknown;
