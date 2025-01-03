@@ -241,7 +241,7 @@ export class HttpClientEndpoints {
       sort?: string | string[];
     },
   ): Promise<
-    | Response<Record<string, string>, apiModels.UserArrayV1, 200>
+    | Response<Record<string, string>, apiModels.MaybeUserArrayV1, 200>
     | Response<Record<string, string>, apiModels.ErrorV1, 401>
     | Response<Record<string, string>, apiModels.ErrorV1, 403>
   > {

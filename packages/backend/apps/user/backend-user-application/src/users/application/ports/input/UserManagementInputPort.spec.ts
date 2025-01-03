@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
+jest.mock('../../../../foundation/batching/calculations/findByBatchIds');
+
 import { models as apiModels } from '@cornie-js/api-models';
 import { UuidProviderOutputPort } from '@cornie-js/backend-app-uuid';
 import { Builder, BuilderAsync, Handler } from '@cornie-js/backend-common';
@@ -17,6 +19,7 @@ import {
   UserUpdateQueryFixtures,
 } from '@cornie-js/backend-user-domain/users/fixtures';
 
+import { findByBatchIds } from '../../../../foundation/batching/calculations/findByBatchIds';
 import { UuidContext } from '../../../../foundation/common/application/models/UuidContext';
 import { UserCreateQueryV1Fixtures } from '../../fixtures/UserCreateQueryV1Fixtures';
 import { UserMeUpdateQueryV1Fixtures } from '../../fixtures/UserMeUpdateQueryV1Fixtures';
@@ -28,6 +31,9 @@ import { UserManagementInputPort } from './UserManagementInputPort';
 describe(UserManagementInputPort.name, () => {
   let createUserUseCaseHandlerMock: jest.Mocked<
     Handler<[UserCreateQuery], User>
+  >;
+  let findUsersByBatchIdsMock: jest.Mock<
+    (userIds: string[]) => Promise<(User | undefined)[]>
   >;
   let updateUserUseCaseHandlerMock: jest.Mocked<
     Handler<[UserUpdateQuery], User>
@@ -49,6 +55,7 @@ describe(UserManagementInputPort.name, () => {
     createUserUseCaseHandlerMock = {
       handle: jest.fn(),
     };
+    findUsersByBatchIdsMock = jest.fn();
     updateUserUseCaseHandlerMock = {
       handle: jest.fn(),
     };
@@ -72,6 +79,8 @@ describe(UserManagementInputPort.name, () => {
     };
     userV1FromUserBuilderMock = { build: jest.fn() };
     uuidProviderOutputPortMock = { generateV4: jest.fn() };
+
+    (findByBatchIds as jest.Mock).mockReturnValueOnce(findUsersByBatchIdsMock);
 
     userManagementInputPort = new UserManagementInputPort(
       createUserUseCaseHandlerMock,
@@ -230,49 +239,101 @@ describe(UserManagementInputPort.name, () => {
   });
 
   describe('.find', () => {
-    let userFindQueryFixture: UserFindQuery;
+    describe('having a UserFindQuery with no sort option', () => {
+      let userFindQueryFixture: UserFindQuery;
 
-    beforeAll(() => {
-      userFindQueryFixture = UserFindQueryFixtures.withId;
+      beforeAll(() => {
+        userFindQueryFixture = UserFindQueryFixtures.withNoProperties;
+      });
+
+      describe('when called', () => {
+        let userFixture: User;
+        let userV1Fixture: apiModels.UserV1;
+
+        let result: unknown;
+
+        beforeAll(async () => {
+          userFixture = UserFixtures.any;
+          userV1Fixture = UserV1Fixtures.any;
+
+          userPersistenceOutputPortMock.find.mockResolvedValueOnce([
+            userFixture,
+          ]);
+
+          userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
+
+          result = await userManagementInputPort.find(userFindQueryFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call userPersistenceOutputPort.find()', () => {
+          expect(userPersistenceOutputPortMock.find).toHaveBeenCalledTimes(1);
+          expect(userPersistenceOutputPortMock.find).toHaveBeenCalledWith(
+            userFindQueryFixture,
+          );
+        });
+
+        it('should call userV1FromUserBuilder.build()', () => {
+          expect(userV1FromUserBuilderMock.build).toHaveBeenCalledTimes(1);
+          expect(userV1FromUserBuilderMock.build).toHaveBeenCalledWith(
+            userFixture,
+          );
+        });
+
+        it('should return UserV1[]', () => {
+          expect(result).toStrictEqual([userV1Fixture]);
+        });
+      });
     });
 
-    describe('when called', () => {
-      let userFixture: User;
-      let userV1Fixture: apiModels.UserV1;
+    describe('having a UserFindQuery with sort option', () => {
+      let userFindQueryFixture: UserFindQuery;
 
-      let result: unknown;
-
-      beforeAll(async () => {
-        userFixture = UserFixtures.any;
-        userV1Fixture = UserV1Fixtures.any;
-
-        userPersistenceOutputPortMock.find.mockResolvedValueOnce([userFixture]);
-
-        userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
-
-        result = await userManagementInputPort.find(userFindQueryFixture);
+      beforeAll(() => {
+        userFindQueryFixture = UserFindQueryFixtures.withIdsTwoAndSortIds;
       });
 
-      afterAll(() => {
-        jest.clearAllMocks();
-      });
+      describe('when called', () => {
+        let userFixture: User;
+        let userV1Fixture: apiModels.UserV1;
 
-      it('should call userPersistenceOutputPort.find()', () => {
-        expect(userPersistenceOutputPortMock.find).toHaveBeenCalledTimes(1);
-        expect(userPersistenceOutputPortMock.find).toHaveBeenCalledWith(
-          userFindQueryFixture,
-        );
-      });
+        let result: unknown;
 
-      it('should call userV1FromUserBuilder.build()', () => {
-        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledTimes(1);
-        expect(userV1FromUserBuilderMock.build).toHaveBeenCalledWith(
-          userFixture,
-        );
-      });
+        beforeAll(async () => {
+          userFixture = UserFixtures.any;
+          userV1Fixture = UserV1Fixtures.any;
 
-      it('should return an UserV1', () => {
-        expect(result).toStrictEqual([userV1Fixture]);
+          findUsersByBatchIdsMock.mockResolvedValueOnce([userFixture]);
+
+          userV1FromUserBuilderMock.build.mockReturnValueOnce(userV1Fixture);
+
+          result = await userManagementInputPort.find(userFindQueryFixture);
+        });
+
+        afterAll(() => {
+          jest.clearAllMocks();
+        });
+
+        it('should call findUsersByBatchIds()', () => {
+          expect(findUsersByBatchIdsMock).toHaveBeenCalledTimes(1);
+          expect(findUsersByBatchIdsMock).toHaveBeenCalledWith(
+            userFindQueryFixture.ids,
+          );
+        });
+
+        it('should call userV1FromUserBuilder.build()', () => {
+          expect(userV1FromUserBuilderMock.build).toHaveBeenCalledTimes(1);
+          expect(userV1FromUserBuilderMock.build).toHaveBeenCalledWith(
+            userFixture,
+          );
+        });
+
+        it('should return UserV1[]', () => {
+          expect(result).toStrictEqual([userV1Fixture]);
+        });
       });
     });
   });

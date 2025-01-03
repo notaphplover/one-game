@@ -3,4 +3,4 @@
 "@cornie-js/api-models": minor
 ---
 
-Added `UserArrayV1`.
+Added `MaybeUserArrayV1`.
