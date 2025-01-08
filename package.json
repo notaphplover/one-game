@@ -8,7 +8,7 @@
     "@changesets/cli": "2.27.11",
     "@commitlint/cli": "19.6.1",
     "@commitlint/config-conventional": "19.6.0",
-    "@commitlint/prompt-cli": "19.6.1",
+    "@commitlint/prompt-cli": "19.7.0",
     "@cornie-js/backend-eslint-config": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
@@ -29,7 +29,7 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@9.15.3",
   "private": true,
   "repository": {
     "type": "git",
