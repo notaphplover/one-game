@@ -58,7 +58,60 @@ describe(buildGameWithWinnerUserPairArrayResult.name, () => {
     });
   });
 
-  describe('having Right gamesV1Result and Right winnerUserV1Result', () => {
+  describe('having Right gamesV1Result and Right winnerUserV1Result is null', () => {
+    let gamesV1Result: Right<[apiModels.GameV1]>;
+    let winnerUserV1Result: Right<[null]>;
+
+    beforeAll(() => {
+      gamesV1Result = {
+        isRight: true,
+        value: [
+          {
+            id: 'game-id',
+            isPublic: true,
+            state: {
+              slots: [],
+              status: 'finished',
+            },
+          },
+        ],
+      };
+
+      winnerUserV1Result = {
+        isRight: true,
+        value: [null],
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = buildGameWithWinnerUserPairArrayResult(
+          gamesV1Result,
+          winnerUserV1Result,
+        );
+      });
+
+      it('should return Right', () => {
+        const [game]: [apiModels.GameV1] = gamesV1Result.value;
+
+        const expected: Right<GameWithWinnerUserPair[]> = {
+          isRight: true,
+          value: [
+            {
+              game,
+              winnerUser: undefined,
+            },
+          ],
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having Right gamesV1Result and Right winnerUserV1Result is not null', () => {
     let gamesV1Result: Right<[apiModels.GameV1]>;
     let winnerUserV1Result: Right<[apiModels.UserV1]>;
 

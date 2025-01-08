@@ -41,7 +41,7 @@ export function buildGameWithWinnerUserPairArrayResult(
 
         return {
           game: gameV1,
-          winnerUser: winnerUserV1,
+          winnerUser: winnerUserV1 ?? undefined,
         };
       },
     );
