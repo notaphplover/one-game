@@ -1,29 +1,13 @@
 import { models as apiModels } from '@cornie-js/api-models';
-import { GetUsersV1Args } from '@cornie-js/frontend-api-rtk-query';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either } from '../../common/models/Either';
+import { useGetUsersV1 } from './useGetUsersV1';
 
-type UseQuerySubscriptionOptions = SubscriptionOptions & {
+export type UseQuerySubscriptionOptions = SubscriptionOptions & {
   skip?: boolean;
   refetchOnMountOrArgChange?: boolean | number;
 };
-
-function useGetUsersV1(
-  getUsersV1Args: GetUsersV1Args,
-  subscriptionOptions: UseQuerySubscriptionOptions,
-): {
-  result: Either<string, apiModels.MaybeUserArrayV1> | null;
-} {
-  const result = cornieApi.useGetUsersV1Query(
-    getUsersV1Args,
-    subscriptionOptions,
-  );
-
-  return { result: mapUseQueryHookResult(result) };
-}
 
 export interface UseGetWinnerUserV1ForGamesResult {
   result: Either<string, apiModels.MaybeUserArrayV1> | null;
