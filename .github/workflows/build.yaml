@@ -40,25 +40,6 @@ jobs:
         run: |
           echo "gitCommitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v4
-        id: ts-build-cache
-        with:
-          path: |
-            ./packages/api/libraries/*
-            ./packages/api/tools/*
-            ./packages/backend/apps/*/*
-            ./packages/backend/libraries/*
-            ./packages/backend/services/*
-            ./packages/backend/tools/*
-            ./packages/frontend/*
-            ./packages/frontend/libraries/*
-            ./packages/frontend/tools/*
-            ./packages/tools/*
-            !./packages/backend/tools/backend-dev-apache-pulsar
-          key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
-          restore-keys: |
-            ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
-
   test-package:
     name: Test package
     needs: build
@@ -81,45 +62,11 @@ jobs:
         run: |
           echo "gitCommitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v4
-        id: ts-build-cache
-        with:
-          path: |
-            ./packages/api/libraries/*
-            ./packages/api/tools/*
-            ./packages/backend/apps/*/*
-            ./packages/backend/libraries/*
-            ./packages/backend/services/*
-            ./packages/backend/tools/*
-            ./packages/frontend/*
-            ./packages/frontend/libraries/*
-            ./packages/frontend/tools/*
-            ./packages/tools/*
-            !./packages/backend/tools/backend-dev-apache-pulsar
-          key: ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
-          restore-keys: |
-            ts-build-${{ steps.get-git-commit-hash.outputs.gitCommitHash }}
-
-      - name: Build on cache miss
-        run: pnpm run build --filter ${{ join(matrix.packages, ' --filter ') }}
-        if: ${{ !steps.ts-build-cache.outputs.cache-hit }}
-
       - name: Launch Unit Tests
-        run: pnpm run test:unit:js --filter ${{ join(matrix.packages, ' --filter ') }} --only
+        run: pnpm run test:unit:js --filter ${{ join(matrix.packages, ' --filter ') }}
 
       - name: Launch Integration Tests
-        run: pnpm run test:integration:js --filter ${{ join(matrix.packages, ' --filter ') }} --only
-
-      - name: Start SSH session on failure
-        if: ${{ failure() && contains(github.event.head_commit.message, '[ci-open-ssh]') }}
-        uses: luchihoratiu/debug-via-ssh@main
-        with:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-          SSH_PASS: ${{ secrets.SSH_PASS }}
-
-      - name: Don't kill instace on failure
-        if: ${{ failure() && contains(github.event.head_commit.message, '[ci-open-ssh]') }}
-        run: sleep 1h
+        run: pnpm run test:integration:js --filter ${{ join(matrix.packages, ' --filter ') }}
 
   done:
     name: Done
