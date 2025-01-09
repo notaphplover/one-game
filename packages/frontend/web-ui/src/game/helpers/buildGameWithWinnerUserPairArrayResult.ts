@@ -26,18 +26,21 @@ export function buildGameWithWinnerUserPairArrayResult(
   }
 
   if (gamesV1Result.value.length !== winnerUserV1Result.value.length) {
+    const lengthGamesV1Result: string = gamesV1Result.value.length.toString();
+    const lengthWinnerUserV1Result: string =
+      winnerUserV1Result.value.length.toString();
+
     return {
       isRight: false,
-      value: 'Unable to fetch games data',
+      value: `Unable to fetch games data with winner data. Expected as many games as users. Found ${lengthGamesV1Result} games and ${lengthWinnerUserV1Result} users.`,
     };
   }
 
   const gameWithWinnerUserPairArray: GameWithWinnerUserPair[] =
     gamesV1Result.value.map(
       (gameV1: apiModels.GameV1, index: number): GameWithWinnerUserPair => {
-        const winnerUserV1: apiModels.UserV1 | null = winnerUserV1Result.value[
-          index
-        ] as unknown as apiModels.UserV1 | null;
+        const winnerUserV1: apiModels.UserV1 | null | undefined =
+          winnerUserV1Result.value[index];
 
         return {
           game: gameV1,
