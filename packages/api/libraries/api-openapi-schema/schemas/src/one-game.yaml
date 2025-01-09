@@ -506,6 +506,68 @@ paths:
       security: []
       tags:
         - User
+    get:
+      summary: Get users
+      description: |
+        Gets users given some filters.
+
+        If "sort" is provided, then results are filtered by ids respecting the order in which those ids were provided in the query.
+        If no user is found for a certain id, a null value is provided instead.
+      operationId: getUsers
+      parameters:
+        - in: query
+          name: id
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          style: form
+          description: id
+        - in: query
+          name: page
+          required: false
+          schema:
+            minimum: 1
+            type: number
+          description: pagination number
+        - in: query
+          name: pageSize
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: number
+          description: pagination size
+        - in: query
+          name: sort
+          required: false
+          schema:
+            $ref: https://onegame.schemas/api/v1/users/user-sort-option.json
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/users/maybe-user-array.json'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+        '403':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: 'https://onegame.schemas/api/v1/errors/error.json'
+      security:
+        - accessToken: []
+      tags:
+        - User
 
   /v1/users/email/{email}/code:
     delete:

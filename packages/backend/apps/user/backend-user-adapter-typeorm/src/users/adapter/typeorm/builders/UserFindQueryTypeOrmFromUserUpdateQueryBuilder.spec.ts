@@ -6,14 +6,17 @@ import {
   UserUpdateQuery,
 } from '@cornie-js/backend-user-domain/users';
 import { UserUpdateQueryFixtures } from '@cornie-js/backend-user-domain/users/fixtures';
-import { FindManyOptions } from 'typeorm';
+import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
 import { UserDb } from '../models/UserDb';
 import { UserFindQueryTypeOrmFromUserUpdateQueryBuilder } from './UserFindQueryTypeOrmFromUserUpdateQueryBuilder';
 
 describe(UserFindQueryTypeOrmFromUserUpdateQueryBuilder.name, () => {
   let userFindQueryTypeOrmFromUserFindQueryBuilderMock: jest.Mocked<
-    Builder<FindManyOptions<UserDb>, [UserFindQuery]>
+    Builder<
+      QueryBuilder<UserDb> & WhereExpressionBuilder,
+      [UserFindQuery, QueryBuilder<UserDb> & WhereExpressionBuilder]
+    >
   >;
 
   let userFindQueryTypeOrmFromUserUpdateQueryBuilder: UserFindQueryTypeOrmFromUserUpdateQueryBuilder;
@@ -37,19 +40,21 @@ describe(UserFindQueryTypeOrmFromUserUpdateQueryBuilder.name, () => {
     });
 
     describe('when called', () => {
-      let userFindTypeOrmOptionsFixture: FindManyOptions<UserDb>;
+      let queryBuilderFixture: QueryBuilder<UserDb> & WhereExpressionBuilder;
 
       let result: unknown;
 
       beforeAll(() => {
-        userFindTypeOrmOptionsFixture = {};
+        queryBuilderFixture = Symbol() as unknown as QueryBuilder<UserDb> &
+          WhereExpressionBuilder;
 
         userFindQueryTypeOrmFromUserFindQueryBuilderMock.build.mockReturnValueOnce(
-          userFindTypeOrmOptionsFixture,
+          queryBuilderFixture,
         );
 
         result = userFindQueryTypeOrmFromUserUpdateQueryBuilder.build(
           userUpdateQueryFixture,
+          queryBuilderFixture,
         );
       });
 
@@ -63,11 +68,14 @@ describe(UserFindQueryTypeOrmFromUserUpdateQueryBuilder.name, () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           userFindQueryTypeOrmFromUserFindQueryBuilderMock.build,
-        ).toHaveBeenCalledWith(userUpdateQueryFixture.userFindQuery);
+        ).toHaveBeenCalledWith(
+          userUpdateQueryFixture.userFindQuery,
+          queryBuilderFixture,
+        );
       });
 
-      it('should return a FindManyOptions<UserDb>', () => {
-        expect(result).toBe(userFindTypeOrmOptionsFixture);
+      it('should return QueryBuilder', () => {
+        expect(result).toBe(queryBuilderFixture);
       });
     });
   });

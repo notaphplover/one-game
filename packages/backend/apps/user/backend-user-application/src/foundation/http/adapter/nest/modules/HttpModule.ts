@@ -2,6 +2,7 @@ import {
   ErrorV1ResponseFromErrorBuilder,
   HttpStatusCodeFromErrorBuilder,
   MultipleEntitiesGetResponseBuilder,
+  RequestService,
   SingleEntityDeleteResponseBuilder,
   SingleEntityGetResponseBuilder,
   SingleEntityPatchResponseBuilder,
@@ -13,6 +14,7 @@ import { Module } from '@nestjs/common';
   exports: [
     ErrorV1ResponseFromErrorBuilder,
     MultipleEntitiesGetResponseBuilder,
+    RequestService,
     SingleEntityDeleteResponseBuilder,
     SingleEntityGetResponseBuilder,
     SingleEntityPatchResponseBuilder,
@@ -22,6 +24,7 @@ import { Module } from '@nestjs/common';
     ErrorV1ResponseFromErrorBuilder,
     HttpStatusCodeFromErrorBuilder,
     MultipleEntitiesGetResponseBuilder,
+    RequestService,
     SingleEntityDeleteResponseBuilder,
     SingleEntityGetResponseBuilder,
     SingleEntityPatchResponseBuilder,

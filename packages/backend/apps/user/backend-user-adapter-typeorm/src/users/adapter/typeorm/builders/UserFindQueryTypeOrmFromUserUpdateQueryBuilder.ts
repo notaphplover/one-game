@@ -4,34 +4,42 @@ import {
   UserUpdateQuery,
 } from '@cornie-js/backend-user-domain/users';
 import { Inject, Injectable } from '@nestjs/common';
-import { FindManyOptions } from 'typeorm';
+import { QueryBuilder, WhereExpressionBuilder } from 'typeorm';
 
 import { UserDb } from '../models/UserDb';
 import { UserFindQueryTypeOrmFromUserFindQueryBuilder } from './UserFindQueryTypeOrmFromUserFindQueryBuilder';
 
 @Injectable()
 export class UserFindQueryTypeOrmFromUserUpdateQueryBuilder
-  implements Builder<FindManyOptions<UserDb>, [UserUpdateQuery]>
+  implements
+    Builder<
+      QueryBuilder<UserDb> & WhereExpressionBuilder,
+      [UserUpdateQuery, QueryBuilder<UserDb> & WhereExpressionBuilder]
+    >
 {
   readonly #userFindQueryTypeOrmFromUserFindQueryBuilder: Builder<
-    FindManyOptions<UserDb>,
-    [UserFindQuery]
+    QueryBuilder<UserDb> & WhereExpressionBuilder,
+    [UserFindQuery, QueryBuilder<UserDb> & WhereExpressionBuilder]
   >;
 
   constructor(
     @Inject(UserFindQueryTypeOrmFromUserFindQueryBuilder)
     userFindQueryTypeOrmFromUserFindQueryBuilder: Builder<
-      FindManyOptions<UserDb>,
-      [UserFindQuery]
+      QueryBuilder<UserDb> & WhereExpressionBuilder,
+      [UserFindQuery, QueryBuilder<UserDb> & WhereExpressionBuilder]
     >,
   ) {
     this.#userFindQueryTypeOrmFromUserFindQueryBuilder =
       userFindQueryTypeOrmFromUserFindQueryBuilder;
   }
 
-  public build(userUpdateQuery: UserUpdateQuery): FindManyOptions<UserDb> {
+  public build(
+    userUpdateQuery: UserUpdateQuery,
+    queryBuilder: QueryBuilder<UserDb> & WhereExpressionBuilder,
+  ): QueryBuilder<UserDb> & WhereExpressionBuilder {
     return this.#userFindQueryTypeOrmFromUserFindQueryBuilder.build(
       userUpdateQuery.userFindQuery,
+      queryBuilder,
     );
   }
 }

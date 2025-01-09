@@ -42,6 +42,7 @@ describe(UserPersistenceTypeOrmAdapter, () => {
     > as jest.Mocked<DeleteUserTypeOrmService>;
 
     findUserTypeOrmServiceMock = {
+      find: jest.fn(),
       findOne: jest.fn(),
     } as Partial<
       jest.Mocked<FindUserTypeOrmService>
@@ -130,6 +131,43 @@ describe(UserPersistenceTypeOrmAdapter, () => {
 
       it('should return undefined', () => {
         expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('.find', () => {
+    let userFindQueryFixture: UserFindQuery;
+
+    beforeAll(() => {
+      userFindQueryFixture = UserFindQueryFixtures.withId;
+    });
+
+    describe('when called', () => {
+      let userFixture: User;
+
+      let result: unknown;
+
+      beforeAll(async () => {
+        userFixture = UserFixtures.any;
+
+        findUserTypeOrmServiceMock.find.mockResolvedValueOnce([userFixture]);
+
+        result = await userPersistenceTypeOrmAdapter.find(userFindQueryFixture);
+      });
+
+      afterAll(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call findUserTypeOrmService.find()', () => {
+        expect(findUserTypeOrmServiceMock.find).toHaveBeenCalledTimes(1);
+        expect(findUserTypeOrmServiceMock.find).toHaveBeenCalledWith(
+          userFindQueryFixture,
+        );
+      });
+
+      it('should return User[]', () => {
+        expect(result).toStrictEqual([userFixture]);
       });
     });
   });

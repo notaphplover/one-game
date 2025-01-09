@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onegame.schemas/api/v1/users/maybe-user-array.json",
+  "title": "MaybeUserArrayV1",
+  "items": {
+    "anyOf": [
+      {
+        "$ref": "https://onegame.schemas/api/v1/users/user.json"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "type": "array"
+}
