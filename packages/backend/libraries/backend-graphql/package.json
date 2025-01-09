@@ -25,7 +25,7 @@
     "rimraf": "6.0.1",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
-    "typescript": "5.7.2"
+    "typescript": "5.7.3"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
