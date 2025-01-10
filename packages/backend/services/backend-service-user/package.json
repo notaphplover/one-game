@@ -23,7 +23,7 @@
     "@cornie-js/backend-monitoring": "workspace:*",
     "@cornie-js/backend-user-adapter-typeorm": "workspace:*",
     "@cornie-js/backend-user-application": "workspace:*",
-    "glob": "^11.0.0",
+    "glob": "^11.0.1",
     "reflect-metadata": "~0.2.2",
     "rxjs": "^7.8.1"
   },
