@@ -9,7 +9,7 @@
     "@nestjs/common": "^10.4.15"
   },
   "devDependencies": {
-    "@eslint/js": "9.17.0",
+    "@eslint/js": "9.18.0",
     "@jest/globals": "29.7.0",
     "@types/node": "22.10.5",
     "@typescript-eslint/eslint-plugin": "8.19.1",
