@@ -10,6 +10,7 @@ import {
 } from '@cornie-js/frontend-api-rtk-query';
 import { AppErrorKind } from '@cornie-js/frontend-common';
 import { SerializedError } from '@reduxjs/toolkit';
+import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
 import {
@@ -19,7 +20,11 @@ import {
 import { cornieApi } from '../../common/http/services/cornieApi';
 import { Either, Left } from '../../common/models/Either';
 import { useGetUsersV1, UseGetUsersV1Result } from './useGetUsersV1';
-import { UseQuerySubscriptionOptions } from './useGetWinnerUserV1ForGames';
+
+type UseQuerySubscriptionOptions = SubscriptionOptions & {
+  skip?: boolean;
+  refetchOnMountOrArgChange?: boolean | number;
+};
 
 describe(useGetUsersV1.name, () => {
   describe('when called, and getUsersV1() returns a GetUsersV1Result with 200 http status code', () => {
