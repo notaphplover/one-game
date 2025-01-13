@@ -1,23 +1,28 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('../../common/helpers/mapUseQueryHookResult');
+jest.mock('../../common/helpers/mapUseQueryHookResultV2');
 jest.mock('../../common/http/services/cornieApi');
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { GetUsersV1Args } from '@cornie-js/frontend-api-rtk-query';
+import {
+  GetUsersV1Args,
+  SerializableAppError,
+} from '@cornie-js/frontend-api-rtk-query';
+import { AppErrorKind } from '@cornie-js/frontend-common';
+import { SerializedError } from '@reduxjs/toolkit';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
 import {
-  mapUseQueryHookResult,
-  UseQueryStateResult,
-} from '../../common/helpers/mapUseQueryHookResult';
+  mapUseQueryHookResultV2,
+  UseQueryStateResultV2,
+} from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { Either } from '../../common/models/Either';
+import { Either, Left } from '../../common/models/Either';
 import { useGetUsersV1, UseGetUsersV1Result } from './useGetUsersV1';
 import { UseQuerySubscriptionOptions } from './useGetWinnerUserV1ForGames';
 
 describe(useGetUsersV1.name, () => {
-  describe('when called', () => {
+  describe('when called, and getUsersV1() returns a GetUsersV1Result with 200 http status code', () => {
     let gameV1ResultFixture: apiModels.GameV1;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
@@ -25,7 +30,7 @@ describe(useGetUsersV1.name, () => {
       string,
       apiModels.MaybeUserArrayV1
     > | null;
-    let useQueryStateResultFixture: UseQueryStateResult<apiModels.GameArrayV1> & {
+    let useQueryStateResultFixture: UseQueryStateResultV2<apiModels.GameArrayV1> & {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       refetch: () => any;
     };
@@ -82,7 +87,7 @@ describe(useGetUsersV1.name, () => {
       ).mockReturnValueOnce(useQueryStateResultFixture);
 
       (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValueOnce(getUsersV1ResultFixture);
 
       renderResult = renderHook(() =>
@@ -117,15 +122,245 @@ describe(useGetUsersV1.name, () => {
     });
 
     it('should call mapUseQueryHookResult()', () => {
-      expect(mapUseQueryHookResult).toHaveBeenCalledTimes(1);
-      expect(mapUseQueryHookResult).toHaveBeenCalledWith(
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledWith(
         useQueryStateResultFixture,
       );
     });
 
-    it('should return UseGetUsersV1Result', () => {
+    it('should return UseGetUsersV1Result with winner user', () => {
       const expectedResult: UseGetUsersV1Result = {
         result: getUsersV1ResultFixture,
+      };
+
+      expect(renderResult.result.current).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe('when called, and getUsersV1() returns a GetUsersV1Result with 401 http status code', () => {
+    let gameV1ResultFixture: apiModels.GameV1;
+    let getUsersV1ArgsFixture: GetUsersV1Args;
+    let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
+    let getUsersV1ResultFixture: Left<
+      SerializableAppError | SerializedError
+    > | null;
+    let useQueryStateResultFixture: UseQueryStateResultV2<apiModels.GameArrayV1> & {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      refetch: () => any;
+    };
+
+    let renderResult: RenderHookResult<UseGetUsersV1Result, unknown>;
+
+    beforeAll(() => {
+      gameV1ResultFixture = {
+        id: 'game-id-fixture',
+        isPublic: false,
+        name: 'name-game-fixture',
+        state: {
+          slots: [],
+          status: 'finished',
+        },
+      };
+
+      getUsersV1ArgsFixture = {
+        params: [
+          {
+            gameId: [gameV1ResultFixture.id],
+            sort: 'ids',
+          },
+        ],
+      };
+
+      subscriptionOptionsFixture = {
+        pollingInterval: 10000,
+        skip: true,
+      };
+
+      useQueryStateResultFixture = {
+        data: undefined,
+        error: undefined,
+        isLoading: true,
+        refetch: jest.fn(),
+      };
+
+      getUsersV1ResultFixture = {
+        isRight: false,
+        value: {
+          kind: AppErrorKind.missingCredentials,
+          message: 'missing-credentials-fixture',
+        },
+      };
+
+      (
+        cornieApi.useGetUsersV1Query as jest.Mock<
+          typeof cornieApi.useGetUsersV1Query
+        >
+      ).mockReturnValueOnce(useQueryStateResultFixture);
+
+      (
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
+      ).mockReturnValueOnce(getUsersV1ResultFixture);
+
+      renderResult = renderHook(() =>
+        useGetUsersV1(getUsersV1ArgsFixture, subscriptionOptionsFixture),
+      );
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should call cornieApi.useGetUsersV1Query()', () => {
+      const userSortOptionV1: apiModels.UserSortOptionV1 = 'ids';
+      const expectedSubscriptionOptions: UseQuerySubscriptionOptions = {
+        ...subscriptionOptionsFixture,
+        skip: true,
+      };
+
+      const expectedGetWinnerUserV1Args: GetUsersV1Args = {
+        params: [
+          {
+            gameId: [gameV1ResultFixture.id],
+            sort: userSortOptionV1,
+          },
+        ],
+      };
+      expect(cornieApi.useGetUsersV1Query).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useGetUsersV1Query).toHaveBeenCalledWith(
+        expectedGetWinnerUserV1Args,
+        expectedSubscriptionOptions,
+      );
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledWith(
+        useQueryStateResultFixture,
+      );
+    });
+
+    it('should return UseGetUsersV1Result with missing credentials message', () => {
+      const getUsersV1LeftResultFixture: Left<string> = {
+        isRight: false,
+        value: 'Missing credentials.',
+      };
+      const expectedResult: UseGetUsersV1Result = {
+        result: getUsersV1LeftResultFixture,
+      };
+
+      expect(renderResult.result.current).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe('when called, and getUsersV1() returns a GetUsersV1Result with 403 http status code', () => {
+    let gameV1ResultFixture: apiModels.GameV1;
+    let getUsersV1ArgsFixture: GetUsersV1Args;
+    let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
+    let getUsersV1ResultFixture: Left<
+      SerializableAppError | SerializedError
+    > | null;
+    let useQueryStateResultFixture: UseQueryStateResultV2<apiModels.GameArrayV1> & {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      refetch: () => any;
+    };
+
+    let renderResult: RenderHookResult<UseGetUsersV1Result, unknown>;
+
+    beforeAll(() => {
+      gameV1ResultFixture = {
+        id: 'game-id-fixture',
+        isPublic: false,
+        name: 'name-game-fixture',
+        state: {
+          slots: [],
+          status: 'finished',
+        },
+      };
+
+      getUsersV1ArgsFixture = {
+        params: [
+          {
+            gameId: [gameV1ResultFixture.id],
+            sort: 'ids',
+          },
+        ],
+      };
+
+      subscriptionOptionsFixture = {
+        pollingInterval: 10000,
+        skip: true,
+      };
+
+      useQueryStateResultFixture = {
+        data: undefined,
+        error: undefined,
+        isLoading: true,
+        refetch: jest.fn(),
+      };
+
+      getUsersV1ResultFixture = {
+        isRight: false,
+        value: {
+          kind: AppErrorKind.invalidCredentials,
+          message: 'invalid-credentials-fixture',
+        },
+      };
+
+      (
+        cornieApi.useGetUsersV1Query as jest.Mock<
+          typeof cornieApi.useGetUsersV1Query
+        >
+      ).mockReturnValueOnce(useQueryStateResultFixture);
+
+      (
+        mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
+      ).mockReturnValueOnce(getUsersV1ResultFixture);
+
+      renderResult = renderHook(() =>
+        useGetUsersV1(getUsersV1ArgsFixture, subscriptionOptionsFixture),
+      );
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should call cornieApi.useGetUsersV1Query()', () => {
+      const userSortOptionV1: apiModels.UserSortOptionV1 = 'ids';
+      const expectedSubscriptionOptions: UseQuerySubscriptionOptions = {
+        ...subscriptionOptionsFixture,
+        skip: true,
+      };
+
+      const expectedGetWinnerUserV1Args: GetUsersV1Args = {
+        params: [
+          {
+            gameId: [gameV1ResultFixture.id],
+            sort: userSortOptionV1,
+          },
+        ],
+      };
+      expect(cornieApi.useGetUsersV1Query).toHaveBeenCalledTimes(1);
+      expect(cornieApi.useGetUsersV1Query).toHaveBeenCalledWith(
+        expectedGetWinnerUserV1Args,
+        expectedSubscriptionOptions,
+      );
+    });
+
+    it('should call mapUseQueryHookResult()', () => {
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledTimes(1);
+      expect(mapUseQueryHookResultV2).toHaveBeenCalledWith(
+        useQueryStateResultFixture,
+      );
+    });
+
+    it('should return UseGetUsersV1Result with invalid credentials message', () => {
+      const getUsersV1LeftResultFixture: Left<string> = {
+        isRight: false,
+        value: 'Invalid credentials.',
+      };
+      const expectedResult: UseGetUsersV1Result = {
+        result: getUsersV1LeftResultFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expectedResult);
