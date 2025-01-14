@@ -5,7 +5,7 @@
   },
   "description": "Backend API HTTP client",
   "dependencies": {
-    "qs": "^6.13.1"
+    "qs": "^6.14.0"
   },
   "devDependencies": {
     "@eslint/js": "9.18.0",
