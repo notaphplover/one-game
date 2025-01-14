@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-spread */
 import { GameDbFixtures } from '../../../../games/adapter/typeorm/fixtures/GameDbFixtures';
 import { GameDb } from '../../../../games/adapter/typeorm/models/GameDb';
 import { GameActionDb } from '../models/GameActionDb';
