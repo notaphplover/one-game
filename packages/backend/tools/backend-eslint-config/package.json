@@ -6,8 +6,8 @@
   "description": "Backend ESLint config for backend packages",
   "devDependencies": {
     "eslint-config-prettier": "10.0.1",
-    "eslint-plugin-jest": "28.10.0",
-    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-jest": "28.11.0",
+    "eslint-plugin-prettier": "5.2.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "typescript-eslint": "8.20.0"
   },
