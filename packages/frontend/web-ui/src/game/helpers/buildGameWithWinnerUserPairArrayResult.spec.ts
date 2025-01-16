@@ -1,6 +1,8 @@
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 import { models as apiModels } from '@cornie-js/api-models';
+import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 
 import { Left, Right } from '../../common/models/Either';
 import { GameWithWinnerUserPair } from '../models/GameWithWinnerUserPair';
@@ -22,18 +24,22 @@ describe(buildGameWithWinnerUserPairArrayResult.name, () => {
   });
 
   describe('having Left gamesV1Result or Left winnerUserV1Result', () => {
-    let gamesV1Result: Left<string>;
-    let winnerUserV1Result: Left<string>;
+    let gamesV1Result: Left<SerializableAppError | SerializedError>;
+    let winnerUserV1Result: Left<SerializableAppError | SerializedError>;
 
     beforeAll(() => {
       gamesV1Result = {
         isRight: false,
-        value: 'games-v1-result-fixture',
+        value: {
+          message: 'games-v1-result-fixture',
+        },
       };
 
       winnerUserV1Result = {
         isRight: false,
-        value: 'winner-user-v1-result-fixture',
+        value: {
+          message: 'winner-user-v1-result-fixture',
+        },
       };
     });
 
@@ -48,9 +54,11 @@ describe(buildGameWithWinnerUserPairArrayResult.name, () => {
       });
 
       it('should return Left', () => {
-        const expected: Left<string> = {
+        const expected: Left<SerializableAppError | SerializedError> = {
           isRight: false,
-          value: `${gamesV1Result.value}\n${winnerUserV1Result.value}`,
+          value: {
+            message: `${gamesV1Result.value.message ?? ''}\n${winnerUserV1Result.value.message ?? ''}`,
+          },
         };
 
         expect(result).toStrictEqual(expected);

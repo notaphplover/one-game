@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../common/helpers/mapUseQueryHookResultV2');
-jest.mock('../helpers/getUsersV1ErrorMessage');
 jest.mock('../../common/http/services/cornieApi');
 
 import { models as apiModels } from '@cornie-js/api-models';
@@ -19,8 +18,7 @@ import {
   UseQueryStateResultV2,
 } from '../../common/helpers/mapUseQueryHookResultV2';
 import { cornieApi } from '../../common/http/services/cornieApi';
-import { Either, Left } from '../../common/models/Either';
-import { getUsersV1ErrorMessage } from '../helpers/getUsersV1ErrorMessage';
+import { Either } from '../../common/models/Either';
 import { useGetUsersV1, UseGetUsersV1Result } from './useGetUsersV1';
 
 type UseQuerySubscriptionOptions = SubscriptionOptions & {
@@ -34,7 +32,7 @@ describe(useGetUsersV1.name, () => {
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
     let getUsersV1ResultFixture: Either<
-      string,
+      SerializableAppError | SerializedError,
       apiModels.MaybeUserArrayV1
     > | null;
     let useQueryStateResultFixture: UseQueryStateResultV2<apiModels.GameArrayV1> & {
@@ -148,10 +146,10 @@ describe(useGetUsersV1.name, () => {
     let gameV1ResultFixture: apiModels.GameV1;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
-    let getUsersV1ResultFixture: Left<
-      SerializableAppError | SerializedError
+    let getUsersV1ResultFixture: Either<
+      SerializableAppError | SerializedError,
+      apiModels.MaybeUserArrayV1
     > | null;
-    let getUsersV1ErrorMessageFixture: string;
     let useQueryStateResultFixture: UseQueryStateResultV2<apiModels.GameArrayV1> & {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       refetch: () => any;
@@ -199,8 +197,6 @@ describe(useGetUsersV1.name, () => {
         },
       };
 
-      getUsersV1ErrorMessageFixture = 'Missing credentials.';
-
       (
         cornieApi.useGetUsersV1Query as jest.Mock<
           typeof cornieApi.useGetUsersV1Query
@@ -210,10 +206,6 @@ describe(useGetUsersV1.name, () => {
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValueOnce(getUsersV1ResultFixture);
-
-      (
-        getUsersV1ErrorMessage as jest.Mock<typeof getUsersV1ErrorMessage>
-      ).mockReturnValueOnce(getUsersV1ErrorMessageFixture);
 
       renderResult = renderHook(() =>
         useGetUsersV1(getUsersV1ArgsFixture, subscriptionOptionsFixture),
@@ -253,20 +245,9 @@ describe(useGetUsersV1.name, () => {
       );
     });
 
-    it('should call getUsersV1ErrorMessage()', () => {
-      expect(getUsersV1ErrorMessage).toHaveBeenCalledTimes(1);
-      expect(getUsersV1ErrorMessage).toHaveBeenCalledWith(
-        getUsersV1ResultFixture?.value,
-      );
-    });
-
     it('should return UseGetUsersV1Result with missing credentials message', () => {
-      const getUsersV1LeftResultFixture: Left<string> = {
-        isRight: false,
-        value: 'Missing credentials.',
-      };
       const expectedResult: UseGetUsersV1Result = {
-        result: getUsersV1LeftResultFixture,
+        result: getUsersV1ResultFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expectedResult);
@@ -277,10 +258,10 @@ describe(useGetUsersV1.name, () => {
     let gameV1ResultFixture: apiModels.GameV1;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
-    let getUsersV1ResultFixture: Left<
-      SerializableAppError | SerializedError
+    let getUsersV1ResultFixture: Either<
+      SerializableAppError | SerializedError,
+      apiModels.MaybeUserArrayV1
     > | null;
-    let getUsersV1ErrorMessageFixture: string;
     let useQueryStateResultFixture: UseQueryStateResultV2<apiModels.GameArrayV1> & {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       refetch: () => any;
@@ -328,8 +309,6 @@ describe(useGetUsersV1.name, () => {
         },
       };
 
-      getUsersV1ErrorMessageFixture = 'Invalid credentials.';
-
       (
         cornieApi.useGetUsersV1Query as jest.Mock<
           typeof cornieApi.useGetUsersV1Query
@@ -339,10 +318,6 @@ describe(useGetUsersV1.name, () => {
       (
         mapUseQueryHookResultV2 as jest.Mock<typeof mapUseQueryHookResultV2>
       ).mockReturnValueOnce(getUsersV1ResultFixture);
-
-      (
-        getUsersV1ErrorMessage as jest.Mock<typeof getUsersV1ErrorMessage>
-      ).mockReturnValueOnce(getUsersV1ErrorMessageFixture);
 
       renderResult = renderHook(() =>
         useGetUsersV1(getUsersV1ArgsFixture, subscriptionOptionsFixture),
@@ -382,20 +357,9 @@ describe(useGetUsersV1.name, () => {
       );
     });
 
-    it('should call getUsersV1ErrorMessage()', () => {
-      expect(getUsersV1ErrorMessage).toHaveBeenCalledTimes(1);
-      expect(getUsersV1ErrorMessage).toHaveBeenCalledWith(
-        getUsersV1ResultFixture?.value,
-      );
-    });
-
     it('should return UseGetUsersV1Result with invalid credentials message', () => {
-      const getUsersV1LeftResultFixture: Left<string> = {
-        isRight: false,
-        value: 'Invalid credentials.',
-      };
       const expectedResult: UseGetUsersV1Result = {
-        result: getUsersV1LeftResultFixture,
+        result: getUsersV1ResultFixture,
       };
 
       expect(renderResult.result.current).toStrictEqual(expectedResult);

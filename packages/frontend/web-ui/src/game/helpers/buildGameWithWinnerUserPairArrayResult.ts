@@ -1,12 +1,23 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 
 import { Either, Left } from '../../common/models/Either';
 import { GameWithWinnerUserPair } from '../models/GameWithWinnerUserPair';
 
 export function buildGameWithWinnerUserPairArrayResult(
-  gamesV1Result: Either<string, apiModels.GameArrayV1> | null,
-  winnerUserV1Result: Either<string, apiModels.MaybeUserArrayV1> | null,
-): Either<string, GameWithWinnerUserPair[]> | null {
+  gamesV1Result: Either<
+    SerializableAppError | SerializedError,
+    apiModels.GameArrayV1
+  > | null,
+  winnerUserV1Result: Either<
+    SerializableAppError | SerializedError,
+    apiModels.MaybeUserArrayV1
+  > | null,
+): Either<
+  SerializableAppError | SerializedError,
+  GameWithWinnerUserPair[]
+> | null {
   if (winnerUserV1Result === null || gamesV1Result === null) {
     return null;
   }
@@ -14,14 +25,21 @@ export function buildGameWithWinnerUserPairArrayResult(
   if (!winnerUserV1Result.isRight || !gamesV1Result.isRight) {
     const leftovers: string[] = [gamesV1Result, winnerUserV1Result]
       .filter(
-        (result: Either<string, unknown>): result is Left<string> =>
+        (
+          result: Either<SerializableAppError | SerializedError, unknown>,
+        ): result is Left<SerializableAppError | SerializedError> =>
           !result.isRight,
       )
-      .map((result: Left<string>): string => result.value);
+      .map(
+        (result: Left<SerializableAppError | SerializedError>): string =>
+          result.value.message ?? '',
+      );
 
     return {
       isRight: false,
-      value: leftovers.join('\n'),
+      value: {
+        message: leftovers.join('\n'),
+      },
     };
   }
 
@@ -32,7 +50,9 @@ export function buildGameWithWinnerUserPairArrayResult(
 
     return {
       isRight: false,
-      value: `Unable to fetch games data with winner data. Expected as many games as users. Found ${lengthGamesV1Result} games and ${lengthWinnerUserV1Result} users.`,
+      value: {
+        message: `Unable to fetch games data with winner data. Expected as many games as users. Found ${lengthGamesV1Result} games and ${lengthWinnerUserV1Result} users.`,
+      },
     };
   }
 

@@ -1,4 +1,6 @@
 import { models as apiModels } from '@cornie-js/api-models';
+import { SerializableAppError } from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 
 import { Either } from '../../common/models/Either';
@@ -10,11 +12,17 @@ export type UseQuerySubscriptionOptions = SubscriptionOptions & {
 };
 
 export interface UseGetWinnerUserV1ForGamesResult {
-  result: Either<string, apiModels.MaybeUserArrayV1> | null;
+  result: Either<
+    SerializableAppError | SerializedError,
+    apiModels.MaybeUserArrayV1
+  > | null;
 }
 
 export const useGetWinnerUserV1ForGames = (
-  gamesV1Result: Either<string, apiModels.GameArrayV1> | null,
+  gamesV1Result: Either<
+    SerializableAppError | SerializedError,
+    apiModels.GameArrayV1
+  > | null,
   subscriptionOptions: UseQuerySubscriptionOptions,
 ): UseGetWinnerUserV1ForGamesResult => {
   const gameIds: string[] =

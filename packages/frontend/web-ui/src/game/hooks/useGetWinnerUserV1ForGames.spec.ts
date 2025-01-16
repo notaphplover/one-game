@@ -3,7 +3,11 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 jest.mock('./useGetUsersV1');
 
 import { models as apiModels } from '@cornie-js/api-models';
-import { GetUsersV1Args } from '@cornie-js/frontend-api-rtk-query';
+import {
+  GetUsersV1Args,
+  SerializableAppError,
+} from '@cornie-js/frontend-api-rtk-query';
+import { SerializedError } from '@reduxjs/toolkit';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
@@ -45,7 +49,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
     describe('when called', () => {
       let winnerUserV1ResultFixture: Either<
-        string,
+        SerializableAppError | SerializedError,
         apiModels.MaybeUserArrayV1
       > | null;
 
@@ -95,14 +99,16 @@ describe(useGetWinnerUserV1ForGames.name, () => {
   });
 
   describe('having Left gamesV1Result and subscriptionOptions', () => {
-    let gamesV1ResultFixture: Left<string>;
+    let gamesV1ResultFixture: Left<SerializableAppError | SerializedError>;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
 
     beforeAll(() => {
       gamesV1ResultFixture = {
         isRight: false,
-        value: 'value-fixture',
+        value: {
+          message: 'value-fixture',
+        },
       };
 
       getUsersV1ArgsFixture = {
@@ -122,7 +128,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
     describe('when called', () => {
       let winnerUserV1ResultFixture: Either<
-        string,
+        SerializableAppError | SerializedError,
         apiModels.MaybeUserArrayV1
       > | null;
 
@@ -199,7 +205,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
     describe('when called', () => {
       let winnerUserV1ResultFixture: Either<
-        string,
+        SerializableAppError | SerializedError,
         apiModels.MaybeUserArrayV1
       > | null;
 
@@ -251,7 +257,9 @@ describe(useGetWinnerUserV1ForGames.name, () => {
   describe('having Right gamesV1Result with a game and subscriptionOptions and Left useGetUsersV1Result', () => {
     let gameV1Fixture: apiModels.GameV1;
     let gamesV1ResultFixture: Right<apiModels.GameArrayV1>;
-    let useGetUsersV1ResultFixture: Left<string>;
+    let useGetUsersV1ResultFixture: Left<
+      SerializableAppError | SerializedError
+    >;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
 
@@ -281,7 +289,9 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
       useGetUsersV1ResultFixture = {
         isRight: false,
-        value: 'error-fixture',
+        value: {
+          message: 'error-fixture',
+        },
       };
 
       subscriptionOptionsFixture = {
@@ -292,7 +302,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
     describe('when called', () => {
       let winnerUserV1ResultFixture: Either<
-        string,
+        SerializableAppError | SerializedError,
         apiModels.MaybeUserArrayV1
       > | null;
 
@@ -304,7 +314,9 @@ describe(useGetWinnerUserV1ForGames.name, () => {
       beforeAll(() => {
         winnerUserV1ResultFixture = {
           isRight: false,
-          value: 'error-fixture',
+          value: {
+            message: 'error-fixture',
+          },
         };
 
         (useGetUsersV1 as jest.Mock<typeof useGetUsersV1>).mockReturnValue({
