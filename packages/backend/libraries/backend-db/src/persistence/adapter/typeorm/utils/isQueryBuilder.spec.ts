@@ -10,6 +10,7 @@ jest.mock('typeorm', () => {
     originalTypeOrmModule.InstanceChecker;
 
   const instanceCheckerMock: typeof InstanceChecker = {
+    // eslint-disable-next-line @typescript-eslint/no-misused-spread
     ...originalInstanceChecker,
     isDeleteQueryBuilder: jest.fn() as unknown as (
       obj: unknown,
