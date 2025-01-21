@@ -1,12 +1,14 @@
 import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../user/hooks/useGetUser');
+jest.mock('../helpers/getWinnerUserId');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
 import { Right } from '../../common/models/Either';
 import { useGetUser, UseGetUserResult } from '../../user/hooks/useGetUser';
+import { getWinnerUserId } from '../helpers/getWinnerUserId';
 import {
   useGetFinishedGameWinner,
   UseGetFinishedGameWinnerResult,
@@ -17,6 +19,7 @@ describe(useGetFinishedGameWinner.name, () => {
     let gameFixture: apiModels.GameV1;
     let UseGetUserResultFixture: UseGetUserResult;
     let renderResult: RenderHookResult<UseGetFinishedGameWinnerResult, unknown>;
+    let getWinnerUserIdFixture: string | undefined;
 
     beforeAll(() => {
       gameFixture = {
@@ -44,16 +47,27 @@ describe(useGetFinishedGameWinner.name, () => {
         },
       };
 
+      getWinnerUserIdFixture = undefined;
+
       UseGetUserResultFixture = {
         queryResult: undefined,
         result: null,
       };
+
+      (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+        getWinnerUserIdFixture,
+      );
 
       (useGetUser as jest.Mock<typeof useGetUser>).mockReturnValue(
         UseGetUserResultFixture,
       );
 
       renderResult = renderHook(() => useGetFinishedGameWinner(gameFixture));
+    });
+
+    it('should call to getWinnerUserId()', () => {
+      expect(getWinnerUserId).toHaveBeenCalledTimes(1);
+      expect(getWinnerUserId).toHaveBeenCalledWith(gameFixture);
     });
 
     it('should call to useGetUser()', () => {
@@ -76,6 +90,7 @@ describe(useGetFinishedGameWinner.name, () => {
     let UseGetUserResultFixture: UseGetUserResult;
     let userV1Result: Right<apiModels.UserV1>;
     let renderResult: RenderHookResult<UseGetFinishedGameWinnerResult, unknown>;
+    let getWinnerUserIdFixture: string | undefined;
 
     beforeAll(() => {
       gameFixture = {
@@ -89,6 +104,8 @@ describe(useGetFinishedGameWinner.name, () => {
           status: 'finished',
         },
       };
+
+      getWinnerUserIdFixture = 'userId-fixture-1';
 
       finishedGameWinnerFixture = {
         active: true,
@@ -110,11 +127,20 @@ describe(useGetFinishedGameWinner.name, () => {
         result: userV1Result,
       };
 
+      (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+        getWinnerUserIdFixture,
+      );
+
       (useGetUser as jest.Mock<typeof useGetUser>).mockReturnValue(
         UseGetUserResultFixture,
       );
 
       renderResult = renderHook(() => useGetFinishedGameWinner(gameFixture));
+    });
+
+    it('should call to getWinnerUserId()', () => {
+      expect(getWinnerUserId).toHaveBeenCalledTimes(3);
+      expect(getWinnerUserId).toHaveBeenCalledWith(gameFixture);
     });
 
     it('should call to useGetUser()', () => {
