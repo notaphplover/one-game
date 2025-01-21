@@ -2,6 +2,7 @@ import { models as apiModels } from '@cornie-js/api-models';
 import { useEffect, useState } from 'react';
 
 import { useGetUser, UseGetUserResult } from '../../user/hooks/useGetUser';
+import { getWinnerUserId } from '../helpers/getWinnerUserId';
 
 export interface UseGetFinishedGameWinnerResult {
   finishedGameWinner: apiModels.UserV1 | undefined;
@@ -13,23 +14,6 @@ export const useGetFinishedGameWinner = (
   const [finishedGameWinner, setFinishedGameWinner] = useState<
     apiModels.UserV1 | undefined
   >(undefined);
-
-  const getWinnerUserId = (
-    game: apiModels.GameV1 | undefined,
-  ): string | undefined => {
-    let selectedUserId: string | undefined = undefined;
-
-    if (game?.state.status === 'finished') {
-      game.state.slots.forEach(
-        (finishGameSlot: apiModels.FinishedGameSlotV1) => {
-          if (finishGameSlot.cardsAmount === 0) {
-            selectedUserId = finishGameSlot.userId;
-          }
-        },
-      );
-    }
-    return selectedUserId;
-  };
 
   const {
     queryResult: userV1QueryResult,
