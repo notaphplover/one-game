@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../helpers/buildGameWithWinnerUserPairArrayResult');
-jest.mock('./useGetGamesV1');
+jest.mock('./useGetGamesV1Mine');
 jest.mock('./useGetWinnerUserV1ForGames');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
-  GetGamesV1Args,
+  GetGamesV1MineArgs,
   SerializableAppError,
 } from '@cornie-js/frontend-api-rtk-query';
 import { SerializedError } from '@reduxjs/toolkit';
@@ -16,7 +16,10 @@ import { renderHook, RenderHookResult } from '@testing-library/react';
 import { Either } from '../../common/models/Either';
 import { buildGameWithWinnerUserPairArrayResult } from '../helpers/buildGameWithWinnerUserPairArrayResult';
 import { GameWithWinnerUserPair } from '../models/GameWithWinnerUserPair';
-import { useGetGamesV1, UseGetGamesV1Result } from './useGetGamesV1';
+import {
+  useGetGamesV1Mine,
+  UseGetGamesV1MineResult,
+} from './useGetGamesV1Mine';
 import {
   useGetGamesWithWinnerPairV1,
   UseGetGamesWithWinnerPairV1Result,
@@ -34,12 +37,12 @@ type UseQuerySubscriptionOptions = SubscriptionOptions & {
 describe(useGetGamesWithWinnerPairV1.name, () => {
   describe('when called, and and useGetGamesWithWinnerPairV1() returns a GameWithWinnerUserPair[]', () => {
     let gameV1ResultFixture: apiModels.GameV1;
-    let gamesV1ResultFixture: UseGetGamesV1Result;
+    let gamesV1MineResultFixture: UseGetGamesV1MineResult;
     let gameWithWinnerUserV1PairArrayResultFixture: Either<
       SerializableAppError | SerializedError,
       GameWithWinnerUserPair[]
     > | null;
-    let getGamesV1ArgsFixture: GetGamesV1Args;
+    let getGamesV1MineArgsFixture: GetGamesV1MineArgs;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
     let userV1ResultFixture: apiModels.UserV1;
     let winnerUserV1Result: UseGetWinnerUserV1ForGamesResult;
@@ -63,7 +66,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
         },
       };
 
-      gamesV1ResultFixture = {
+      gamesV1MineResultFixture = {
         result: {
           isRight: true,
           value: [gameV1ResultFixture],
@@ -93,7 +96,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
         ],
       };
 
-      getGamesV1ArgsFixture = {
+      getGamesV1MineArgsFixture = {
         params: [
           {
             isPublic: 'false',
@@ -106,9 +109,9 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
         pollingInterval: 10000,
       };
 
-      (useGetGamesV1 as jest.Mock<typeof useGetGamesV1>).mockReturnValue(
-        gamesV1ResultFixture,
-      );
+      (
+        useGetGamesV1Mine as jest.Mock<typeof useGetGamesV1Mine>
+      ).mockReturnValue(gamesV1MineResultFixture);
 
       (
         useGetWinnerUserV1ForGames as jest.Mock<
@@ -124,7 +127,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
 
       renderResult = renderHook(() =>
         useGetGamesWithWinnerPairV1(
-          getGamesV1ArgsFixture,
+          getGamesV1MineArgsFixture,
           subscriptionOptionsFixture,
         ),
       );
@@ -134,10 +137,10 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should call useGetGamesV1()', () => {
-      expect(useGetGamesV1).toHaveBeenCalledTimes(1);
-      expect(useGetGamesV1).toHaveBeenCalledWith(
-        getGamesV1ArgsFixture,
+    it('should call useGetGamesV1Mine()', () => {
+      expect(useGetGamesV1Mine).toHaveBeenCalledTimes(1);
+      expect(useGetGamesV1Mine).toHaveBeenCalledWith(
+        getGamesV1MineArgsFixture,
         subscriptionOptionsFixture,
       );
     });
@@ -145,7 +148,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
     it('should call useGetWinnerUserV1ForGames()', () => {
       expect(useGetWinnerUserV1ForGames).toHaveBeenCalledTimes(1);
       expect(useGetWinnerUserV1ForGames).toHaveBeenCalledWith(
-        gamesV1ResultFixture.result,
+        gamesV1MineResultFixture.result,
         subscriptionOptionsFixture,
       );
     });
@@ -153,7 +156,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
     it('should call buildGameWithWinnerUserPairArrayResult()', () => {
       expect(buildGameWithWinnerUserPairArrayResult).toHaveBeenCalledTimes(1);
       expect(buildGameWithWinnerUserPairArrayResult).toHaveBeenCalledWith(
-        gamesV1ResultFixture.result,
+        gamesV1MineResultFixture.result,
         winnerUserV1Result.result,
       );
     });
@@ -169,12 +172,12 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
 
   describe('when called, and useGetGamesWithWinnerPairV1() returns an error', () => {
     let gameV1ResultFixture: apiModels.GameV1;
-    let gamesV1ResultFixture: UseGetGamesV1Result;
+    let gamesV1MineResultFixture: UseGetGamesV1MineResult;
     let gameWithWinnerUserV1PairArrayResultFixture: Either<
       SerializableAppError | SerializedError,
       GameWithWinnerUserPair[]
     > | null;
-    let getGamesV1ArgsFixture: GetGamesV1Args;
+    let getGamesV1MineArgsFixture: GetGamesV1MineArgs;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
     let winnerUserV1Result: UseGetWinnerUserV1ForGamesResult;
 
@@ -197,7 +200,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
         },
       };
 
-      gamesV1ResultFixture = {
+      gamesV1MineResultFixture = {
         result: {
           isRight: true,
           value: [gameV1ResultFixture],
@@ -220,7 +223,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
         },
       };
 
-      getGamesV1ArgsFixture = {
+      getGamesV1MineArgsFixture = {
         params: [
           {
             isPublic: 'false',
@@ -233,9 +236,9 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
         pollingInterval: 10000,
       };
 
-      (useGetGamesV1 as jest.Mock<typeof useGetGamesV1>).mockReturnValue(
-        gamesV1ResultFixture,
-      );
+      (
+        useGetGamesV1Mine as jest.Mock<typeof useGetGamesV1Mine>
+      ).mockReturnValue(gamesV1MineResultFixture);
 
       (
         useGetWinnerUserV1ForGames as jest.Mock<
@@ -251,7 +254,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
 
       renderResult = renderHook(() =>
         useGetGamesWithWinnerPairV1(
-          getGamesV1ArgsFixture,
+          getGamesV1MineArgsFixture,
           subscriptionOptionsFixture,
         ),
       );
@@ -261,10 +264,10 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
       jest.clearAllMocks();
     });
 
-    it('should call useGetGamesV1()', () => {
-      expect(useGetGamesV1).toHaveBeenCalledTimes(1);
-      expect(useGetGamesV1).toHaveBeenCalledWith(
-        getGamesV1ArgsFixture,
+    it('should call useGetGamesV1Mine()', () => {
+      expect(useGetGamesV1Mine).toHaveBeenCalledTimes(1);
+      expect(useGetGamesV1Mine).toHaveBeenCalledWith(
+        getGamesV1MineArgsFixture,
         subscriptionOptionsFixture,
       );
     });
@@ -272,7 +275,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
     it('should call useGetWinnerUserV1ForGames()', () => {
       expect(useGetWinnerUserV1ForGames).toHaveBeenCalledTimes(1);
       expect(useGetWinnerUserV1ForGames).toHaveBeenCalledWith(
-        gamesV1ResultFixture.result,
+        gamesV1MineResultFixture.result,
         subscriptionOptionsFixture,
       );
     });
@@ -280,7 +283,7 @@ describe(useGetGamesWithWinnerPairV1.name, () => {
     it('should call buildGameWithWinnerUserPairArrayResult()', () => {
       expect(buildGameWithWinnerUserPairArrayResult).toHaveBeenCalledTimes(1);
       expect(buildGameWithWinnerUserPairArrayResult).toHaveBeenCalledWith(
-        gamesV1ResultFixture.result,
+        gamesV1MineResultFixture.result,
         winnerUserV1Result.result,
       );
     });
