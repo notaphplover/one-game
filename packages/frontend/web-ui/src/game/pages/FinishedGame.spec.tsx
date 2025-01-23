@@ -1,22 +1,29 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('../../app/store/hooks');
-jest.mock('../../common/helpers/mapUseQueryHookResult');
-jest.mock('../../common/http/services/cornieApi');
 jest.mock('../components/FinishedGameList');
+jest.mock('../hooks/useGetGamesWithWinnerPairV1');
 
+import { GetGamesV1MineArgs } from '@cornie-js/frontend-api-rtk-query';
+import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { render, RenderResult } from '@testing-library/react';
 import { MouseEventHandler } from 'react';
 import { MemoryRouter } from 'react-router';
 
 import { useAppSelector } from '../../app/store/hooks';
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { cornieApi } from '../../common/http/services/cornieApi';
+import { Right } from '../../common/models/Either';
 import {
   FinishedGameList,
   FinishedGameListOptions,
 } from '../components/FinishedGameList';
+import { useGetGamesWithWinnerPairV1 } from '../hooks/useGetGamesWithWinnerPairV1';
+import { GameWithWinnerUserPair } from '../models/GameWithWinnerUserPair';
 import { FinishedGame } from './FinishedGame';
+
+type UseQuerySubscriptionOptions = SubscriptionOptions & {
+  skip?: boolean;
+  refetchOnMountOrArgChange?: boolean | number;
+};
 
 describe(FinishedGame.name, () => {
   let accessTokenFixture: string;
@@ -26,8 +33,11 @@ describe(FinishedGame.name, () => {
   });
 
   describe('when called,', () => {
+    let gameFinishedGamesResultFixture: Right<GameWithWinnerUserPair[]>;
     let expectedFinishedGameListFixture: ChildNode;
     let finishedGameListFixture: React.JSX.Element;
+    let getGamesV1MineArgsFixture: GetGamesV1MineArgs;
+    let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
 
     let finishedGameListComponent: unknown;
 
@@ -36,27 +46,55 @@ describe(FinishedGame.name, () => {
         useAppSelector as unknown as jest.Mock<typeof useAppSelector>
       ).mockReturnValue(accessTokenFixture);
 
-      (
-        cornieApi.useGetGamesV1MineQuery as jest.Mock<
-          typeof cornieApi.useGetGamesV1MineQuery
-        >
-      ).mockReturnValueOnce({
-        data: undefined,
-        error: undefined,
-        isLoading: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        refetch: jest.fn<any>(),
-      });
-
-      (
-        mapUseQueryHookResult as jest.Mock<typeof mapUseQueryHookResult>
-      ).mockReturnValueOnce(null);
-
       finishedGameListFixture = (
         <div className="finished-game-list-fixture">
           Finished game list mock
         </div>
       );
+
+      gameFinishedGamesResultFixture = {
+        isRight: true,
+        value: [
+          {
+            game: {
+              id: 'game-id',
+              isPublic: true,
+              state: {
+                slots: [
+                  { cardsAmount: 0, userId: 'user-id-1-fixture' },
+                  { cardsAmount: 34, userId: 'user-id-2-fixture' },
+                ],
+                status: 'finished',
+              },
+            },
+            winnerUser: {
+              active: true,
+              id: 'user-id-1-fixture',
+              name: 'user-name-fixture',
+            },
+          },
+        ],
+      };
+
+      getGamesV1MineArgsFixture = {
+        params: [
+          {
+            page: '1',
+            pageSize: '10',
+            status: 'finished',
+          },
+        ],
+      };
+
+      subscriptionOptionsFixture = {
+        pollingInterval: 10000,
+      };
+
+      (
+        useGetGamesWithWinnerPairV1 as jest.Mock<
+          typeof useGetGamesWithWinnerPairV1
+        >
+      ).mockReturnValue({ result: gameFinishedGamesResultFixture });
 
       (
         FinishedGameList as jest.Mock<typeof FinishedGameList>
@@ -80,9 +118,17 @@ describe(FinishedGame.name, () => {
       jest.clearAllMocks();
     });
 
+    it('should call useGetGamesWithWinnerPairV1()', () => {
+      expect(useGetGamesWithWinnerPairV1).toHaveBeenCalledTimes(1);
+      expect(useGetGamesWithWinnerPairV1).toHaveBeenCalledWith(
+        getGamesV1MineArgsFixture,
+        subscriptionOptionsFixture,
+      );
+    });
+
     it('should call FinishedGameList()', () => {
       const expectedOptions: FinishedGameListOptions = {
-        gameResourcesListResult: null,
+        gameResourcesListResult: gameFinishedGamesResultFixture,
         pagination: {
           onNextPageButtonClick: expect.any(
             Function,

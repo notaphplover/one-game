@@ -1,21 +1,18 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('./BaseGameListItem');
-jest.mock('../hooks/useGetFinishedGameWinner');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import { render } from '@testing-library/react';
 
-import {
-  useGetFinishedGameWinner,
-  UseGetFinishedGameWinnerResult,
-} from '../hooks/useGetFinishedGameWinner';
+import { GameWithWinnerUserPair } from '../models/GameWithWinnerUserPair';
 import { BaseGameListItem, BaseGameListItemOptions } from './BaseGameListItem';
 import { FinishedGameListItem } from './FinishedGameListItem';
 
 describe(FinishedGameListItem.name, () => {
   let gameV1Fixture: apiModels.GameV1;
-  let finishedGameWinnerFixture: UseGetFinishedGameWinnerResult;
+  let finishedGameWinnerFixture: apiModels.UserV1;
+  let gameWithWinnerUserPairFixture: GameWithWinnerUserPair;
 
   beforeAll(() => {
     gameV1Fixture = {
@@ -38,11 +35,14 @@ describe(FinishedGameListItem.name, () => {
     };
 
     finishedGameWinnerFixture = {
-      finishedGameWinner: {
-        active: true,
-        id: 'id-fixture-1',
-        name: 'name-fixture-1',
-      },
+      active: true,
+      id: 'id-fixture-1',
+      name: 'name-fixture-1',
+    };
+
+    gameWithWinnerUserPairFixture = {
+      game: gameV1Fixture,
+      winnerUser: finishedGameWinnerFixture,
     };
   });
 
@@ -61,15 +61,13 @@ describe(FinishedGameListItem.name, () => {
       );
 
       (
-        useGetFinishedGameWinner as jest.Mock<typeof useGetFinishedGameWinner>
-      ).mockReturnValueOnce(finishedGameWinnerFixture);
-
-      (
         BaseGameListItem as jest.Mock<typeof BaseGameListItem>
       ).mockReturnValueOnce(baseGameListItemFixture);
 
       const renderResult = render(
-        <FinishedGameListItem game={gameV1Fixture} />,
+        <FinishedGameListItem
+          gameWithWinnerUser={gameWithWinnerUserPairFixture}
+        />,
       );
 
       const baseGameListItem: ChildNode | undefined =
@@ -91,11 +89,6 @@ describe(FinishedGameListItem.name, () => {
 
       expect(BaseGameListItem).toHaveBeenCalledTimes(1);
       expect(BaseGameListItem).toHaveBeenCalledWith(expectedOptions, undefined);
-    });
-
-    it('should call useGetFinishedGameWinner()', () => {
-      expect(useGetFinishedGameWinner).toHaveBeenCalledTimes(1);
-      expect(useGetFinishedGameWinner).toHaveBeenCalledWith(gameV1Fixture);
     });
 
     it('should return expected content', () => {

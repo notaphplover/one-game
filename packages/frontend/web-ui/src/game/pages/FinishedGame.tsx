@@ -1,32 +1,26 @@
-import { models as apiModels } from '@cornie-js/api-models';
 import { Box, Grid2 } from '@mui/material';
 import { useState } from 'react';
 
-import { mapUseQueryHookResult } from '../../common/helpers/mapUseQueryHookResult';
-import { cornieApi } from '../../common/http/services/cornieApi';
 import { CornieLayout } from '../../common/layout/CornieLayout';
-import { Either } from '../../common/models/Either';
 import { GameStatus } from '../../game/models/GameStatus';
 import { FinishedGameList } from '../components/FinishedGameList';
+import { useGetGamesWithWinnerPairV1 } from '../hooks/useGetGamesWithWinnerPairV1';
 
 const GAME_STATUS_FINISHED: GameStatus = 'finished';
 const GAMES_REFRESH_INTERVAL_MS = 10000;
 const PAGE_SIZE: number = 10;
 const ONE_PAGE: number = 1;
 
-function useGetGamesV1Mine(
-  page: number,
-  status: string,
-): {
-  result: Either<string, apiModels.GameArrayV1> | null;
-} {
-  const result = cornieApi.useGetGamesV1MineQuery(
+export const FinishedGame = (): React.JSX.Element => {
+  const [finishedPage, setFinishedPage] = useState<number>(1);
+
+  const { result: gameFinishedGamesResult } = useGetGamesWithWinnerPairV1(
     {
       params: [
         {
-          page: page.toString(),
+          page: finishedPage.toString(),
           pageSize: PAGE_SIZE.toString(),
-          status,
+          status: GAME_STATUS_FINISHED,
         },
       ],
     },
@@ -35,23 +29,12 @@ function useGetGamesV1Mine(
     },
   );
 
-  return { result: mapUseQueryHookResult(result) };
-}
-
-export const FinishedGame = (): React.JSX.Element => {
-  const [finishedPage, setFinishedPage] = useState<number>(1);
-
-  const { result: finishedGamesResult } = useGetGamesV1Mine(
-    finishedPage,
-    GAME_STATUS_FINISHED,
-  );
-
   const onNextPageFinished = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (
-      finishedGamesResult?.isRight === true &&
-      finishedGamesResult.value.length > 0
+      gameFinishedGamesResult?.isRight === true &&
+      gameFinishedGamesResult.value.length > 0
     ) {
       setFinishedPage(finishedPage + ONE_PAGE);
     }
@@ -75,7 +58,7 @@ export const FinishedGame = (): React.JSX.Element => {
         <Grid2 container>
           <Grid2 size={12}>
             <FinishedGameList
-              gameResourcesListResult={finishedGamesResult}
+              gameResourcesListResult={gameFinishedGamesResult}
               pagination={{
                 onNextPageButtonClick: onNextPageFinished,
                 onPreviousPageButtonClick: onPreviousPageFinished,
