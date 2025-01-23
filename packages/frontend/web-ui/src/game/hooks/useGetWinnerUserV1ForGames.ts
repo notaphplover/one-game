@@ -4,6 +4,7 @@ import { SerializedError } from '@reduxjs/toolkit';
 import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 
 import { Either } from '../../common/models/Either';
+import { getWinnerUserId } from '../helpers/getWinnerUserId';
 import { useGetUsersV1 } from './useGetUsersV1';
 
 export type UseQuerySubscriptionOptions = SubscriptionOptions & {
@@ -25,9 +26,11 @@ export const useGetWinnerUserV1ForGames = (
   > | null,
   subscriptionOptions: UseQuerySubscriptionOptions,
 ): UseGetWinnerUserV1ForGamesResult => {
-  const gameIds: string[] =
+  const userIds: string[] =
     gamesV1Result?.isRight === true
-      ? gamesV1Result.value.map((gameV1: apiModels.GameV1): string => gameV1.id)
+      ? gamesV1Result.value.map(
+          (gameV1: apiModels.GameV1): string => getWinnerUserId(gameV1) ?? '',
+        )
       : [];
 
   const userSortOptionV1: apiModels.UserSortOptionV1 = 'ids';
@@ -36,14 +39,14 @@ export const useGetWinnerUserV1ForGames = (
     {
       params: [
         {
-          gameId: gameIds,
+          id: userIds,
           sort: userSortOptionV1,
         },
       ],
     },
     {
       ...subscriptionOptions,
-      skip: gameIds.length === 0,
+      skip: userIds.length === 0,
     },
   );
 };
