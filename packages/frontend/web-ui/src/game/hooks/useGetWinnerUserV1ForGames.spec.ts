@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
 jest.mock('./useGetUsersV1');
+jest.mock('../helpers/getWinnerUserId');
 
 import { models as apiModels } from '@cornie-js/api-models';
 import {
@@ -12,6 +13,7 @@ import { SubscriptionOptions } from '@reduxjs/toolkit/query';
 import { renderHook, RenderHookResult } from '@testing-library/react';
 
 import { Either, Left, Right } from '../../common/models/Either';
+import { getWinnerUserId } from '../helpers/getWinnerUserId';
 import { useGetUsersV1, UseGetUsersV1Result } from './useGetUsersV1';
 import {
   useGetWinnerUserV1ForGames,
@@ -29,13 +31,15 @@ describe(useGetWinnerUserV1ForGames.name, () => {
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
 
+    let userIdFixture: string;
+
     beforeAll(() => {
       gamesV1ResultFixture = null;
 
       getUsersV1ArgsFixture = {
         params: [
           {
-            gameId: [],
+            id: [],
             sort: 'ids',
           },
         ],
@@ -45,6 +49,8 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         pollingInterval: 10000,
         skip: true,
       };
+
+      userIdFixture = '';
     });
 
     describe('when called', () => {
@@ -64,6 +70,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         winnerUserV1ResultFixture = null;
         useGetUsersV1ResultFixture = { result: null };
 
+        (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+          userIdFixture,
+        );
+
         (useGetUsersV1 as jest.Mock<typeof useGetUsersV1>).mockReturnValue(
           useGetUsersV1ResultFixture,
         );
@@ -78,6 +88,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should not call getWinnerUserId()', () => {
+        expect(getWinnerUserId).not.toHaveBeenCalled();
       });
 
       it('should call useGetUsersV1()', () => {
@@ -102,6 +116,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
     let gamesV1ResultFixture: Left<SerializableAppError | SerializedError>;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
+    let userIdFixture: string;
 
     beforeAll(() => {
       gamesV1ResultFixture = {
@@ -114,7 +129,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
       getUsersV1ArgsFixture = {
         params: [
           {
-            gameId: [],
+            id: [],
             sort: 'ids',
           },
         ],
@@ -124,6 +139,8 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         pollingInterval: 10000,
         skip: true,
       };
+
+      userIdFixture = '';
     });
 
     describe('when called', () => {
@@ -143,6 +160,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         winnerUserV1ResultFixture = null;
         useGetUsersV1ResultFixture = { result: null };
 
+        (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+          userIdFixture,
+        );
+
         (useGetUsersV1 as jest.Mock<typeof useGetUsersV1>).mockReturnValue(
           useGetUsersV1ResultFixture,
         );
@@ -157,6 +178,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should not call getWinnerUserId()', () => {
+        expect(getWinnerUserId).not.toHaveBeenCalled();
       });
 
       it('should call useGetUsersV1()', () => {
@@ -181,6 +206,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
     let gamesV1ResultFixture: Right<apiModels.GameArrayV1>;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
+    let userIdFixture: string;
 
     beforeAll(() => {
       gamesV1ResultFixture = {
@@ -191,7 +217,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
       getUsersV1ArgsFixture = {
         params: [
           {
-            gameId: [],
+            id: [],
             sort: 'ids',
           },
         ],
@@ -201,6 +227,8 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         pollingInterval: 10000,
         skip: true,
       };
+
+      userIdFixture = '';
     });
 
     describe('when called', () => {
@@ -220,6 +248,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         winnerUserV1ResultFixture = null;
         useGetUsersV1ResultFixture = { result: null };
 
+        (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+          userIdFixture,
+        );
+
         (useGetUsersV1 as jest.Mock<typeof useGetUsersV1>).mockReturnValue(
           useGetUsersV1ResultFixture,
         );
@@ -234,6 +266,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should not call getWinnerUserId()', () => {
+        expect(getWinnerUserId).not.toHaveBeenCalled();
       });
 
       it('should call useGetUsersV1()', () => {
@@ -262,13 +298,17 @@ describe(useGetWinnerUserV1ForGames.name, () => {
     >;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
+    let userIdFixture: string;
 
     beforeAll(() => {
       gameV1Fixture = {
         id: 'game-id',
         isPublic: true,
         state: {
-          slots: [],
+          slots: [
+            { cardsAmount: 0, userId: 'user-id-1-fixture' },
+            { cardsAmount: 34, userId: 'user-id-2-fixture' },
+          ],
           status: 'finished',
         },
       };
@@ -281,11 +321,13 @@ describe(useGetWinnerUserV1ForGames.name, () => {
       getUsersV1ArgsFixture = {
         params: [
           {
-            gameId: [gameV1Fixture.id],
+            id: ['user-id-1-fixture'],
             sort: 'ids',
           },
         ],
       };
+
+      userIdFixture = 'user-id-1-fixture';
 
       useGetUsersV1ResultFixture = {
         isRight: false,
@@ -319,6 +361,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
           },
         };
 
+        (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+          userIdFixture,
+        );
+
         (useGetUsersV1 as jest.Mock<typeof useGetUsersV1>).mockReturnValue({
           result: useGetUsersV1ResultFixture,
         });
@@ -333,6 +379,11 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should call getWinnerUserId()', () => {
+        expect(getWinnerUserId).toHaveBeenCalledTimes(1);
+        expect(getWinnerUserId).toHaveBeenCalledWith(gameV1Fixture);
       });
 
       it('should call useGetUsersV1()', () => {
@@ -360,13 +411,17 @@ describe(useGetWinnerUserV1ForGames.name, () => {
     let useGetUsersV1ResultFixture: Right<apiModels.MaybeUserArrayV1>;
     let getUsersV1ArgsFixture: GetUsersV1Args;
     let subscriptionOptionsFixture: UseQuerySubscriptionOptions;
+    let userIdFixture: string;
 
     beforeAll(() => {
       gameV1Fixture = {
         id: 'game-id',
         isPublic: true,
         state: {
-          slots: [],
+          slots: [
+            { cardsAmount: 0, userId: 'user-id-1-fixture' },
+            { cardsAmount: 34, userId: 'user-id-2-fixture' },
+          ],
           status: 'finished',
         },
       };
@@ -381,6 +436,8 @@ describe(useGetWinnerUserV1ForGames.name, () => {
         skip: false,
       };
 
+      userIdFixture = 'user-id-1-fixture';
+
       userV1Fixture = {
         active: true,
         id: 'user-id-fixture',
@@ -390,7 +447,7 @@ describe(useGetWinnerUserV1ForGames.name, () => {
       getUsersV1ArgsFixture = {
         params: [
           {
-            gameId: [gameV1Fixture.id],
+            id: ['user-id-1-fixture'],
             sort: 'ids',
           },
         ],
@@ -409,6 +466,10 @@ describe(useGetWinnerUserV1ForGames.name, () => {
           value: [userV1Fixture],
         };
 
+        (getWinnerUserId as jest.Mock<typeof getWinnerUserId>).mockReturnValue(
+          userIdFixture,
+        );
+
         (useGetUsersV1 as jest.Mock<typeof useGetUsersV1>).mockReturnValue({
           result: useGetUsersV1ResultFixture,
         });
@@ -423,6 +484,11 @@ describe(useGetWinnerUserV1ForGames.name, () => {
 
       afterAll(() => {
         jest.clearAllMocks();
+      });
+
+      it('should call getWinnerUserId()', () => {
+        expect(getWinnerUserId).toHaveBeenCalledTimes(1);
+        expect(getWinnerUserId).toHaveBeenCalledWith(gameV1Fixture);
       });
 
       it('should call useGetUsersV1()', () => {

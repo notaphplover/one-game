@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import PublicIcon from '@mui/icons-material/Public';
+import VideogameAssetOutlinedIcon from '@mui/icons-material/VideogameAssetOutlined';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 
 import { getSlug } from '../helpers/getSlug';
@@ -47,6 +48,20 @@ const NavbarGamesMenuItems = (
           startIcon={<PublicIcon />}
         >
           PUBLIC GAMES
+        </Button>
+      </MenuItem>
+      <MenuItem
+        className="navbar-menu-item"
+        key={PageName.finishedGames}
+        onClick={buildCloseMenu(params)}
+      >
+        <Button
+          component="a"
+          className="navbar-link"
+          href={getSlug(PageName.finishedGames)}
+          startIcon={<VideogameAssetOutlinedIcon />}
+        >
+          FINISHED GAMES
         </Button>
       </MenuItem>
     </Box>
