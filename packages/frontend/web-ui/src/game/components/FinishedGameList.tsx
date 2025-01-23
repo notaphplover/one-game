@@ -85,6 +85,7 @@ export const FinishedGameList = (options: FinishedGameListOptions) => {
       gameResourcesListResult={getGameResourcesListResult(
         options.gameResourcesListResult,
       )}
+      title={options.title}
     />
   );
 };
