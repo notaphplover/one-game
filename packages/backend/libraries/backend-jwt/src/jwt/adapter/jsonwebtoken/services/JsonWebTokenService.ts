@@ -21,7 +21,8 @@ export class JsonWebTokenService {
     this.#signOptions = {
       algorithm,
       audience: options.audience,
-      expiresIn: options.expirationMs.toString(),
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      expiresIn: `${options.expirationMs} ms`,
       issuer: options.issuer,
     };
 
