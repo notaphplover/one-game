@@ -14,7 +14,7 @@ RUN pnpm run build --filter=@cornie-js/web-ui
 RUN mkdir -p /prod/web-ui
 RUN cp -r ./packages/frontend/web-ui/dist /prod/web-ui
 
-FROM nginx:1.27.3-alpine AS frontendservicewebui
+FROM nginx:1.27.4-alpine AS frontendservicewebui
 
 COPY ./docker/frontend/nginx/nginx.conf /etc/nginx/nginx.conf
 

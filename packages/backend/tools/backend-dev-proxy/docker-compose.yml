@@ -1,6 +1,6 @@
 services:
   proxy:
-    image: nginx:1.27.3-alpine
+    image: nginx:1.27.4-alpine
     environment:
       - USER_SERVICE_BASE_URL=${USER_SERVICE_BASE_URL}
       - GAME_SERVICE_BASE_URL=${GAME_SERVICE_BASE_URL}
