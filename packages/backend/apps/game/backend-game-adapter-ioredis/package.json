@@ -9,7 +9,7 @@
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-pub-sub": "workspace:*",
-    "@nestjs/common": "^11.0.8",
+    "@nestjs/common": "^11.0.9",
     "ioredis": "^5.5.0"
   },
   "devDependencies": {
