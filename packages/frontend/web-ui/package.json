@@ -34,7 +34,7 @@
     "react-dom": "19.0.0",
     "react-redux": "9.2.0",
     "react-router": "7.1.5",
-    "worker-timers": "8.0.13"
+    "worker-timers": "8.0.14"
   },
   "devDependencies": {
     "@babel/cli": "7.26.4",
