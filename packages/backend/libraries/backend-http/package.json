@@ -24,7 +24,7 @@
     "fastify": "^5.2.1",
     "fastify4": "npm:fastify@^4.29.0",
     "jest": "29.7.0",
-    "prettier": "3.5.0",
+    "prettier": "3.5.1",
     "rimraf": "6.0.1",
     "ts-jest": "29.2.5",
     "ts-node": "10.9.2",
