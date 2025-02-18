@@ -1,6 +1,6 @@
 services:
   tempo:
-    image: grafana/tempo:2.7.0
+    image: grafana/tempo:2.7.1
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
@@ -23,7 +23,7 @@ services:
       - "4040:4040"
 
   prometheus:
-    image: prom/prometheus:v3.1.0
+    image: prom/prometheus:v3.2.0
     command:
       - --config.file=/etc/prometheus.yaml
       - --web.enable-remote-write-receiver
