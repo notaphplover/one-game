@@ -58,8 +58,8 @@
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "prettier": "3.5.2",
-    "sass": "1.85.0",
+    "sass": "1.85.1",
     "typescript": "5.7.3",
-    "vite": "6.1.1"
+    "vite": "6.2.0"
   }
 }
