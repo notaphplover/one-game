@@ -72,7 +72,7 @@ export const NonStartedGameList = (options: NonStartedGameListOptions) => {
         message={message?.content}
         onClose={close}
         open={open}
-        TransitionProps={{ onExited: dequeue }}
+        slotProps={{ transition: { onExited: dequeue } }}
       ></Snackbar>
       <BaseGameList
         buildGameItem={buildGameItemBuilder(enqueue, options)}
