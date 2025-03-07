@@ -6,9 +6,9 @@
   "description": "One game",
   "devDependencies": {
     "@changesets/cli": "2.28.1",
-    "@commitlint/cli": "19.7.1",
-    "@commitlint/config-conventional": "19.7.1",
-    "@commitlint/prompt-cli": "19.7.1",
+    "@commitlint/cli": "19.8.0",
+    "@commitlint/config-conventional": "19.8.0",
+    "@commitlint/prompt-cli": "19.8.0",
     "@cornie-js/backend-eslint-config": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
@@ -29,7 +29,7 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.6.1",
   "private": true,
   "repository": {
     "type": "git",

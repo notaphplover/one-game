@@ -45,11 +45,13 @@ export class AreCardsEqualsSpec implements Spec<Card[]> {
     return cards.every((card: Card): boolean => card.kind === cardKind);
   }
 
-  #areSameColoredCards<TCard extends Card & ColoredCard>(
+  #areSameColoredCards(
     color: CardColor,
-    cards: TCard[],
+    cards: (Card & ColoredCard)[],
   ): boolean {
-    return cards.every((card: TCard): boolean => card.color === color);
+    return cards.every(
+      (card: Card & ColoredCard): boolean => card.color === color,
+    );
   }
 
   #areSameNormalCards(
