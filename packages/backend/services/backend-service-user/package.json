@@ -10,9 +10,9 @@
   "description": "Backend user service for one-game-js",
   "dependencies": {
     "@fastify/helmet": "^13.0.1",
-    "@nestjs/common": "^11.0.11",
-    "@nestjs/core": "^11.0.11",
-    "@nestjs/platform-fastify": "^11.0.11",
+    "@nestjs/common": "^11.0.12",
+    "@nestjs/core": "^11.0.12",
+    "@nestjs/platform-fastify": "^11.0.12",
     "@nestjs/typeorm": "^11.0.0",
     "@cornie-js/api-models": "workspace:*",
     "@cornie-js/backend-adapter-nodemailer": "workspace:*",
