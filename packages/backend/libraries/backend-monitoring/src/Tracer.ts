@@ -8,7 +8,7 @@ import {
   hostDetector,
   osDetector,
   processDetector,
-  Resource,
+  resourceFromAttributes,
 } from '@opentelemetry/resources';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { NodeSDK } from '@opentelemetry/sdk-node';
@@ -35,7 +35,7 @@ export class Tracer {
       metricReader: new PeriodicExportingMetricReader({
         exporter: new OTLPMetricExporter(),
       }),
-      resource: new Resource({
+      resource: resourceFromAttributes({
         [ATTR_SERVICE_NAME]: options.serviceName,
       }),
       resourceDetectors: [
