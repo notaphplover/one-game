@@ -5,7 +5,7 @@
   },
   "description": "Backend app jwt",
   "dependencies": {
-    "@nestjs/common": "^11.0.11",
+    "@nestjs/common": "^11.0.12",
     "@cornie-js/backend-jwt": "workspace:*"
   },
   "devDependencies": {
