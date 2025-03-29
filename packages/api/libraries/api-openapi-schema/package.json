@@ -21,7 +21,7 @@
     "ts-jest": "29.3.0",
     "ts-node": "10.9.2",
     "typescript": "5.8.2",
-    "yaml": "2.7.0"
+    "yaml": "2.7.1"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "license": "See license in \"LICENSE\" file",
