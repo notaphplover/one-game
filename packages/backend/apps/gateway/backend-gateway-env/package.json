@@ -5,7 +5,7 @@
   },
   "description": "Backend user app env",
   "dependencies": {
-    "@nestjs/common": "^11.0.12",
+    "@nestjs/common": "^11.0.13",
     "@cornie-js/backend-env": "workspace:*",
     "envalid": "^8.0.0"
   },
