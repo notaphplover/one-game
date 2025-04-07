@@ -1,6 +1,6 @@
 services:
   openapi_doc_server:
-    image: swaggerapi/swagger-ui:v5.20.6
+    image: swaggerapi/swagger-ui:v5.20.7
     environment:
       - SHOW_COMMON_EXTENSIONS=true
       - SWAGGER_JSON=/schemas/one-game.yaml
