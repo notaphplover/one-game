@@ -9,8 +9,8 @@
     "@cornie-js/backend-game-application": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-pub-sub": "workspace:*",
-    "@nestjs/common": "^11.0.15",
-    "ioredis": "^5.6.0"
+    "@nestjs/common": "^11.0.16",
+    "ioredis": "^5.6.1"
   },
   "devDependencies": {
     "@eslint/js": "9.24.0",
