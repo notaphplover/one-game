@@ -5,7 +5,7 @@
   },
   "description": "Backend app jwt",
   "dependencies": {
-    "@nestjs/common": "^11.0.16"
+    "@nestjs/common": "^11.0.17"
   },
   "devDependencies": {
     "@eslint/js": "9.24.0",
