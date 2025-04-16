@@ -17,7 +17,7 @@
     "@cornie-js/backend-game-domain": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-pub-sub": "workspace:*",
-    "@nestjs/common": "^11.0.19"
+    "@nestjs/common": "^11.0.20"
   },
   "devDependencies": {
     "@eslint/js": "9.24.0",
