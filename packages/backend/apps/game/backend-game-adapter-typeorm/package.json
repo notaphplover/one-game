@@ -11,7 +11,7 @@
     "@cornie-js/backend-game-domain": "workspace:*",
     "@cornie-js/backend-common": "workspace:*",
     "@cornie-js/backend-db": "workspace:*",
-    "pg": "^8.14.1",
+    "pg": "^8.15.0",
     "reflect-metadata": "~0.2.2",
     "typeorm": "~0.3.22"
   },
