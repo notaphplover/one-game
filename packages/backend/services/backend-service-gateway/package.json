@@ -18,8 +18,8 @@
     "@cornie-js/backend-graphql": "workspace:*",
     "@cornie-js/backend-http": "workspace:*",
     "@fastify/cors": "^9.0.1",
-    "@nestjs/common": "^11.0.20",
-    "@nestjs/core": "^11.0.20",
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
     "fastify": "^4.29.0",
     "graphql": "^16.10.0",
     "reflect-metadata": "~0.2.2",
@@ -44,7 +44,7 @@
     "pnpm": "^9.12.1"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.15.0"
   },
   "os": [
     "darwin",
