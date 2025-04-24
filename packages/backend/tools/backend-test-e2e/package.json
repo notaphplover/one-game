@@ -17,7 +17,7 @@
     "@nestjs/common": "11.1.0",
     "@nestjs/core": "11.1.0",
     "@nestjs/typeorm": "11.0.0",
-    "axios": "1.8.4",
+    "axios": "1.9.0",
     "envalid": "8.0.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@eslint/js": "9.25.1",
     "@faker-js/faker": "9.7.0",
-    "@types/node": "22.14.1",
+    "@types/node": "22.15.0",
     "@typescript-eslint/eslint-plugin": "8.31.0",
     "@typescript-eslint/parser": "8.31.0",
     "eslint": "9.25.1",
