@@ -33,7 +33,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-redux": "9.2.0",
-    "react-router": "7.5.2",
+    "react-router": "7.5.3",
     "worker-timers": "8.0.20"
   },
   "devDependencies": {
@@ -48,8 +48,8 @@
     "@testing-library/react": "^16.3.0",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
-    "@typescript-eslint/eslint-plugin": "8.31.0",
-    "@typescript-eslint/parser": "8.31.0",
+    "@typescript-eslint/eslint-plugin": "8.31.1",
+    "@typescript-eslint/parser": "8.31.1",
     "@vitejs/plugin-react": "4.4.1",
     "babel-jest": "29.7.0",
     "babel-preset-vite": "1.1.3",
