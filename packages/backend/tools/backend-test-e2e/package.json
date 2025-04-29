@@ -25,9 +25,9 @@
   "devDependencies": {
     "@eslint/js": "9.25.1",
     "@faker-js/faker": "9.7.0",
-    "@types/node": "22.15.2",
-    "@typescript-eslint/eslint-plugin": "8.31.0",
-    "@typescript-eslint/parser": "8.31.0",
+    "@types/node": "22.15.3",
+    "@typescript-eslint/eslint-plugin": "8.31.1",
+    "@typescript-eslint/parser": "8.31.1",
     "eslint": "9.25.1",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
