@@ -8,11 +8,11 @@
     "@nestjs/common": "^11.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.25.1",
+    "@eslint/js": "9.26.0",
     "@jest/globals": "29.7.0",
     "@typescript-eslint/eslint-plugin": "8.31.1",
     "@typescript-eslint/parser": "8.31.1",
-    "eslint": "9.25.1",
+    "eslint": "9.26.0",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
     "typescript": "5.8.3"
