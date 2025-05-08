@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-application-mail": "workspace:*",
     "@nestjs/common": "^11.1.0",
-    "nodemailer": "^7.0.2"
+    "nodemailer": "^7.0.3"
   },
   "devDependencies": {
     "@eslint/js": "9.26.0",
@@ -15,7 +15,7 @@
     "@stryker-mutator/core": "8.7.1",
     "@stryker-mutator/jest-runner": "8.7.1",
     "@stryker-mutator/typescript-checker": "8.7.1",
-    "@types/node": "22.15.12",
+    "@types/node": "22.15.17",
     "@types/nodemailer": "6.4.17",
     "@typescript-eslint/eslint-plugin": "8.32.0",
     "@typescript-eslint/parser": "8.32.0",

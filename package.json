@@ -6,9 +6,9 @@
   "description": "One game",
   "devDependencies": {
     "@changesets/cli": "2.29.3",
-    "@commitlint/cli": "19.8.0",
-    "@commitlint/config-conventional": "19.8.0",
-    "@commitlint/prompt-cli": "19.8.0",
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@commitlint/prompt-cli": "19.8.1",
     "@cornie-js/backend-eslint-config": "workspace:*",
     "@cornie-js/backend-jest-config": "workspace:*",
     "@cornie-js/backend-prettier-config": "workspace:*",
