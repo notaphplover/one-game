@@ -6,7 +6,7 @@
   "description": "Eventsource spec compliant with useful extensions",
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@types/node": "22.15.12",
+    "@types/node": "22.15.17",
     "@types/express": "5.0.1",
     "@typescript-eslint/eslint-plugin": "8.32.0",
     "@typescript-eslint/parser": "8.32.0",
