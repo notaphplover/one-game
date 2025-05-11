@@ -16,7 +16,7 @@
     "@cornie-js/backend-http": "workspace:*",
     "@cornie-js/backend-user-domain": "workspace:*",
     "@nestjs/common": "^11.1.0",
-    "bcrypt": "^5.1.1"
+    "bcrypt": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "9.26.0",
