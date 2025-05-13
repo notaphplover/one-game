@@ -5,7 +5,7 @@
   },
   "description": "One game",
   "devDependencies": {
-    "@changesets/cli": "2.29.3",
+    "@changesets/cli": "2.29.4",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/prompt-cli": "19.8.1",
