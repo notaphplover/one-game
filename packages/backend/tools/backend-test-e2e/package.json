@@ -25,7 +25,7 @@
   "devDependencies": {
     "@eslint/js": "9.27.0",
     "@faker-js/faker": "9.8.0",
-    "@types/node": "22.15.18",
+    "@types/node": "22.15.19",
     "@typescript-eslint/eslint-plugin": "8.32.1",
     "@typescript-eslint/parser": "8.32.1",
     "eslint": "9.27.0",
