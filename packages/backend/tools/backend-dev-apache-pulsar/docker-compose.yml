@@ -3,7 +3,7 @@ networks:
     driver: bridge
 services:
   standalone:
-    image: apachepulsar/pulsar:4.0.4
+    image: apachepulsar/pulsar:4.0.5
     command: bin/pulsar standalone
     ports:
       - "6650:6650"
