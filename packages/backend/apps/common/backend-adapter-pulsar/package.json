@@ -6,7 +6,7 @@
   "description": "Backend apache pulsar adapter for mail application",
   "dependencies": {
     "@cornie-js/backend-application-messaging": "workspace:*",
-    "@nestjs/common": "^11.1.1",
+    "@nestjs/common": "^11.1.2",
     "pulsar-client": "^1.13.1"
   },
   "devDependencies": {
