@@ -7,7 +7,7 @@
   "dependencies": {
     "@cornie-js/backend-application-messaging": "workspace:*",
     "@nestjs/common": "^11.1.2",
-    "pulsar-client": "^1.13.1"
+    "pulsar-client": "^1.13.2"
   },
   "devDependencies": {
     "@eslint/js": "9.27.0",
@@ -15,7 +15,7 @@
     "@stryker-mutator/core": "8.7.1",
     "@stryker-mutator/jest-runner": "8.7.1",
     "@stryker-mutator/typescript-checker": "8.7.1",
-    "@types/node": "22.15.24",
+    "@types/node": "22.15.27",
     "@typescript-eslint/eslint-plugin": "8.33.0",
     "@typescript-eslint/parser": "8.33.0",
     "eslint": "9.27.0",
