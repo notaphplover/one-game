@@ -5,7 +5,7 @@
   },
   "description": "Backend api models",
   "devDependencies": {
-    "@apidevtools/json-schema-ref-parser": "12.0.2",
+    "@apidevtools/json-schema-ref-parser": "13.0.1",
     "@cornie-js/api-json-schemas-provider": "workspace:*",
     "@cornie-js/json-schema-utils": "workspace:*",
     "@eslint/js": "9.28.0",
