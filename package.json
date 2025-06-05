@@ -21,7 +21,7 @@
     "@cornie-js/frontend-typescript-config": "workspace:*",
     "husky": "9.1.7",
     "lint-staged": "16.1.0",
-    "turbo": "2.5.3"
+    "turbo": "2.5.4"
   },
   "homepage": "https://github.com/notaphplover/one-game#readme",
   "keywords": [
@@ -29,7 +29,7 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "private": true,
   "repository": {
     "type": "git",
