@@ -5,7 +5,7 @@
   },
   "description": "Backend user typeorm package",
   "dependencies": {
-    "@nestjs/common": "^11.1.2",
+    "@nestjs/common": "^11.1.3",
     "@nestjs/typeorm": "^11.0.0",
     "@cornie-js/backend-user-application": "workspace:*",
     "@cornie-js/backend-user-domain": "workspace:*",
@@ -18,7 +18,7 @@
   "devDependencies": {
     "@eslint/js": "9.28.0",
     "@jest/globals": "29.7.0",
-    "@types/node": "22.15.29",
+    "@types/node": "22.15.30",
     "@typescript-eslint/eslint-plugin": "8.33.1",
     "@typescript-eslint/parser": "8.33.1",
     "eslint": "9.28.0",
