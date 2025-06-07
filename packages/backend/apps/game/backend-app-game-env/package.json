@@ -5,7 +5,7 @@
   },
   "description": "Backend game app env",
   "dependencies": {
-    "@nestjs/common": "^11.1.2",
+    "@nestjs/common": "^11.1.3",
     "@cornie-js/backend-env": "workspace:*",
     "@cornie-js/backend-jwt": "workspace:*",
     "envalid": "^8.0.0"
@@ -13,7 +13,7 @@
   "devDependencies": {
     "@eslint/js": "9.28.0",
     "@jest/globals": "29.7.0",
-    "@types/node": "22.15.29",
+    "@types/node": "22.15.30",
     "@typescript-eslint/eslint-plugin": "8.33.1",
     "@typescript-eslint/parser": "8.33.1",
     "eslint": "9.28.0",
