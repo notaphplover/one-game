@@ -1,4 +1,4 @@
-FROM node:22.16.0-alpine AS base
+FROM node:22.17.0-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -14,7 +14,7 @@ RUN pnpm run build --filter=@cornie-js/web-ui
 RUN mkdir -p /prod/web-ui
 RUN cp -r ./packages/frontend/web-ui/dist /prod/web-ui
 
-FROM nginx:1.28.0-alpine AS frontendservicewebui
+FROM nginx:1.29.0-alpine AS frontendservicewebui
 
 COPY ./docker/frontend/nginx/nginx.conf /etc/nginx/nginx.conf
 
