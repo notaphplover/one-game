@@ -5,7 +5,7 @@
   },
   "description": "One game",
   "devDependencies": {
-    "@changesets/cli": "2.29.4",
+    "@changesets/cli": "2.29.5",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/prompt-cli": "19.8.1",
@@ -29,7 +29,7 @@
   ],
   "license": "See license in \"LICENSE\" file",
   "name": "root",
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.13.1",
   "private": true,
   "repository": {
     "type": "git",
