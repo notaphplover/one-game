@@ -21,13 +21,13 @@ runs:
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22
+        node-version: 22.19.0
 
     - uses: pnpm/action-setup@v3
       name: Install pnpm
       id: pnpm-install
       with:
-        version: 9
+        version: 9.15.9
         run_install: false
 
     - name: build docker image
